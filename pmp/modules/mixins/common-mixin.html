@@ -62,18 +62,18 @@
      * Reset field validation
      */
     fieldValidationReset(selector, useValidate) {
-      // if (!useValidate) {
-      //   useValidate = false;
-      // }
-      // let field = this.shadowRoot.querySelector(selector);
-      // if (field) {
-      //   if (useValidate) {
-      //     field.validate();
-      //   } else {
-      //     field.set('invalid', false);
-      //   }
-      // }
-      // return field;
+      if (!useValidate) {
+        useValidate = false;
+      }
+      let field = this.shadowRoot.querySelector(selector);
+      if (field) {
+        if (useValidate) {
+          field.validate();
+        } else {
+          field.set('invalid', false);
+        }
+      }
+      return field;
     }
   };
 

@@ -313,18 +313,25 @@
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.Common
     ], Polymer.Element);
-
+/*
+"activeAjaxRequests": [],
+    "reqProgress": null,
+    "editMode": true,
+    "isNewAgreement": false,
+    "staffMembers": [],
+    "cpStructureOptions": [],
+    "enableEditForAuthorizedOfficers": false,
+    "agreement": {}
+*/
     /**
      * @polymer
      * @customElement
      * @appliesMixin AgreementDetailsRequiredMixins
      */
     class AgreementDetails extends AgreementDetailsRequiredMixins {
-
       static get is() {
         return 'agreement-details';
       }
-
 
       static get properties() {
         return {
@@ -350,6 +357,10 @@
           agreementTypes: {
             type: Array,
             statePath: 'agreementTypes'
+          },
+          staffMembers: {
+            type: Array,
+            value: []
           },
           authorizedOfficers: {
             type: Array,
@@ -382,6 +393,7 @@
           }
         };
       }
+
       static get observers() {
         return [
           '_agreementFieldChanged(agreement.*)',
@@ -398,9 +410,9 @@
 
       connectedCallback() {
         /**
-          * Disable loading message for details tab elements load,
-          * triggered by parent element on stamp
-          */
+         * Disable loading message for details tab elements load,
+         * triggered by parent element on stamp
+         */
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.fireEvent('tab-content-attached');
 
@@ -430,9 +442,9 @@
       }
 
       /**
-        * Refer to unicef/etools-issues#232:
-        * For Draft Status, only Change option is available. No delete option is available in Draft.
-        */
+       * Refer to unicef/etools-issues#232:
+       * For Draft Status, only Change option is available. No delete option is available in Draft.
+       */
       _hideDeleteBtn() {
         if (this._isDraft() && this.agreement && this.agreement.attached_agreement_file) {
           return true;
@@ -445,7 +457,9 @@
       }
 
       _editModeChanged(editMode) {
-        this._setDraftStatus(editMode, this.isNewAgreement);
+        if(typeof editMode !== 'undefined') {
+          this._setDraftStatus(editMode, this.isNewAgreement);
+        }
       }
 
       _statusIsNotDraft(status) {
@@ -466,15 +480,15 @@
       }
 
       /**
-        * When agreement data is changed we need to check and prepare attached agreement file and
-        * display amendments if needed
-        */
+       * When agreement data is changed we need to check and prepare attached agreement file and
+       * display amendments if needed
+       */
       _agreementChanged(agreement) {
-        // if (this.generatePCADialog) {
-        //   this.generatePCADialog.agreementId = agreement.id;
-        // }
-        if (typeof agreement === 'object' && agreement !== null && agreement.id) {
+        if (this.generatePCADialog) {
+          this.generatePCADialog.agreementId = agreement.id;
+        }
 
+        if (typeof agreement === 'object' && agreement !== null && agreement.id) {
           // prevent wrong new agreement value
           this.set('isNewAgreement', false);
 
@@ -488,7 +502,6 @@
 
           this.resetAttachedAgreementElem(agreement);
           this._initAuthorizedOfficers(agreement.authorized_officers);
-
         } else {
           this.set('agreement.attached_agreement', {});
           this.set('agreement.attached_agreement_file', '');
@@ -503,12 +516,12 @@
 
       resetAttachedAgreementElem(agreement) {
         // forces etools-single-file to redraw the element
-          if (!agreement.attached_agreement) {
-            this.set('agreement.attached_agreement', {});
-          }
-          if (!agreement.attached_agreement_file) {
-            this.set('agreement.attached_agreement_file', '');
-          }
+        if (!agreement.attached_agreement) {
+          this.set('agreement.attached_agreement', {});
+        }
+        if (!agreement.attached_agreement_file) {
+          this.set('agreement.attached_agreement_file', '');
+        }
       }
 
       resetSignedByFields(agreement) {
@@ -516,13 +529,13 @@
           return;
         }
         this.fieldValidationReset('#signedByPartner');
-        if (this.$.signedByPartnerDateField) {
-          this.$.signedByPartnerDateField.$.dateInput.invalid = false;
-        }
+        // if (this.$.signedByPartnerDateField) {
+        //   this.$.signedByPartnerDateField.$.dateInput.invalid = false;
+        // }
         this.fieldValidationReset('#signedByUnicef');
-        if (this.$.signedByUnicefDateField) {
-          this.$.signedByUnicefDateField.$.dateInput.invalid = false;
-        }
+        // if (this.$.signedByUnicefDateField) {
+        //   this.$.signedByUnicefDateField.$.dateInput.invalid = false;
+        // }
       }
 
       _resetDropdown(selector) {
@@ -533,8 +546,9 @@
       }
 
       /**
-        * Verify if agreement status is 'draft'
-        */
+       * Verify if agreement status is 'draft'
+       */
+      //TODO: is this and _statusIsNotDraft needed?
       _isDraft() {
         if (!this.agreement || !this.agreement.status) {
           return false;
@@ -562,9 +576,10 @@
       }
 
       _partnerChanged(currentPartnerId) {
-        if (typeof currentPartnerId === 'undefined') {
+        if(typeof currentPartnerId === 'undefined') {
           return;
         }
+
         this.set('staffMembers', []);
         if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
           // partner not set or changed, reset related fields
@@ -577,8 +592,8 @@
       }
 
       /**
-        * Validate agreements fields on change
-        */
+       * Validate agreements fields on change
+       */
       _agreementFieldChanged(agreementProperty) {
         if (typeof agreementProperty === 'undefined') {
           return;
@@ -644,18 +659,18 @@
       }
 
       /**
-        * Check if agreement type is expected type
-        */
+       * Check if agreement type is expected type
+       */
       _typeMatches(agreementType, expectedType) {
         return agreementType === expectedType;
       }
 
       /**
-        * Filter Country programmes:
-        *    - omit any CP where the end date is in the past
-        *    - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
-        *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
-        */
+       * Filter Country programmes:
+       *    - omit any CP where the end date is in the past
+       *    - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
+       *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
+       */
       _filterCountryProgrammesForAgreements(countryProgrammes) {
         var self = this;
         return countryProgrammes.filter(function(cp) {
@@ -664,17 +679,17 @@
       }
 
       _openGeneratePCADialog() {
-        console.log('generate PCA Dialog not ported yet');
         // if (!this.generatePCADialog.agreementId) {
         //   this.generatePCADialog.set('agreementId', this.agreement.id);
         // }
         // this.generatePCADialog.open();
+        console.log('generate PCA dialog pending implementation');
       }
 
       /**
-        * Filter CP to obtain agreement CP Structure options.
-        * If the result is just one option then set it as selected by default, make dropdown readonly
-        */
+       * Filter CP to obtain agreement CP Structure options.
+       * If the result is just one option then set it as selected by default, make dropdown readonly
+       */
       _countryProgrammesChanged(cp, agreement) {
         if (typeof cp === 'undefined' || typeof agreement === 'undefined') {
           return;
@@ -724,9 +739,9 @@
           return false;
         }
         /**
-          * canBeEdited = false - either field is locked or the user has no edit permissions;
-          * not knowing exactly why is false we need to check user editMode first(first method lines)
-          */
+         * canBeEdited = false - either field is locked or the user has no edit permissions;
+         * not knowing exactly why is false we need to check user editMode first(first method lines)
+         */
         let canBeEdited = this.agreement.permissions.edit.authorized_officers;
         // if is locked (in signed status), enableEditForAuthorizedOfficers will make this field editable
         if (!canBeEdited && enableEditForAuthorizedOfficers) {
@@ -766,18 +781,18 @@
       */
       _validateAgreement() {
         var valid = true;
-        var reqFieldsIds = ['partner', 'agreementType', 'officers'];
+        var reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
         if (this.agreement.agreement_type === 'PCA') {
-          reqFieldsIds.push('cpStructure');
-          reqFieldsIds.push('agreementAmendments');
+          reqFieldsSelectors.push('#cpStructure');
+          reqFieldsSelectors.push('#agreementAmendments');
         }
         if (this.agreement.agreement_type !== 'SSFA') {
           if (!this._validateSignedByFields()) {
             valid = false;
           }
         }
-        reqFieldsIds.forEach(function(fSelector) {
-          let field = this.$[fSelector];
+        reqFieldsSelectors.forEach(function(fSelector) {
+          let field = this.shadowRoot.querySelector(fSelector);
           if (field && !field.validate()) {
             valid = false;
           }
@@ -787,10 +802,10 @@
 
       _validateSignedByFields() {
         var valid = true;
-        var signedByFieldIds = ['signedByPartner', 'signedByPartnerDateField',
-          'signedByUnicef', 'signedByUnicefDateField'];
-        signedByFieldIds.forEach(function(selector) {
-          let field = this.$[selector];
+        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
+          '#signedByUnicef', '#signedByUnicefDateField'];
+        signedByFields.forEach(function(selector) {
+          let field = this.shadowRoot.querySelector(selector);
           if (field && !field.validate()) {
             valid = false;
           }
