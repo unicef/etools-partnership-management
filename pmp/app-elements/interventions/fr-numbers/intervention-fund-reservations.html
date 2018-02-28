@@ -191,7 +191,7 @@
                 });
             this.updateFrNumbersEl.set('dataItems', frs);
             // deactivate save button until any valid change is made
-            enableConfirmBtn = enableConfirmBtn || true;
+            enableConfirmBtn = typeof enableConfirmBtn === 'boolean' ? enableConfirmBtn : true;
             this.updateFrNumbersEl.set('disableConfirmBtn', enableConfirmBtn);
 
             this.updateFrNumbersEl.set('interventionStatus', this.intervention.status);
