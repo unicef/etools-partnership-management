@@ -63,8 +63,7 @@
 
       <div class="errors-box-actions">
         <paper-button class="primary-btn danger-btn"
-                      on-tap="_resetErrors"
-                      hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
+                      on-tap="_resetErrors">
           Ok
         </paper-button>
       </div>
@@ -105,10 +104,7 @@
 
         _resetErrors: function() {
           this.set('errors', []);
-        },
-        _hideSuspendAndTerminateBtns: function(status) {
-          return status !== 'active';
-        },
+        }
 
       });
     })();

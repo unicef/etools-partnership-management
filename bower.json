@@ -53,7 +53,7 @@
     "etools-searchable-multiselection-menu": "2.2.13",
     "etools-piwik-analytics": "1.0.3",
     "etools-profile-dropdown": "2.0.1",
-    "etools-info-tooltip": "^1.0.1",
+    "etools-info-tooltip": "^1.1.0",
     "paper-checkbox": "2.0.0",
     "paper-radio-button": "2.0.0",
     "paper-radio-group": "^2.0.0",
@@ -69,6 +69,7 @@
     "iron-test-helpers": "^2.0.0",
     "lodash": "^4.17.4",
     "paper-checkbox": "2.0.0",
-    "paper-radio-button": "2.0.0"
+    "paper-radio-button": "2.0.0",
+    "webcomponentsjs": "^0.7.24"
   }
 }
