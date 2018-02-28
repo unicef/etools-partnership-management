@@ -58,14 +58,15 @@
                          disabled$="[[!editMode]]"></paper-icon-button>
       <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
         <etools-info-tooltip class="frs-inline-list"
-                             icon="report"
                              icon-first
+                             custom-icon
                              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
           <div slot="field">
             <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
               <span class="fr-number">[[item.fr_number]]</span>
             </template>
           </div>
+          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
           <span slot="message"><span>[[_frsConsistencyWarning]]</span></span>
         </etools-info-tooltip>
       </div>
@@ -289,7 +290,6 @@
           // check added frs currencies mismatch
           frsDetails.currencies_match = this._frsCurrenciesMatch(frsDetails.frs);
           let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
-          console.log(warning);
           this.set('_frsConsistencyWarning', warning);
           if (warning) {
             this._frsUpdateWarningMessage(warning);

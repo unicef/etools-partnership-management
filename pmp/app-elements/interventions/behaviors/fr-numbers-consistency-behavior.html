@@ -10,13 +10,14 @@
       frsConsistencyWarnings: {
         type: Object,
         value: {
-          tooManyFrsCurencies: 'More than 1 FR currency is available. FR amount \n' +
-            'and Actual Disbursement can not be displayed',
+          amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution cannot be compared.',
+          tooManyFrsCurencies: 'More than 1 FR currency is available.',
+          amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
           currencyMismatch: 'FR currency does not match PD/SSFA currency.',
           cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
-          mainWarnCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
-          'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
-          'as the FR.\n',
+          addedFrsCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
+            'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
+            'as the FR.\n',
           amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
           dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
           warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
@@ -83,7 +84,7 @@
         }
       } else {
         // currencies of the frs and planned budget do NOT match
-        computedWarning = this.frsConsistencyWarnings.mainWarnCurrenciesMismatch;
+        computedWarning = this.frsConsistencyWarnings.addedFrsCurrenciesMismatch;
       }
 
       if (warnFrsFields.length > 0) {
@@ -93,7 +94,6 @@
             warnFrsFields.length > 1 ? 'are' : 'is');
         computedWarning = this._buildFrsWarningMsg(computedWarning, '<<pd_fields>>', warnIntervFields.join(', '));
       }
-      console.log(computedWarning);
       return computedWarning !== '' ? computedWarning : false;
     },
 
@@ -157,50 +157,85 @@
     emptyFrsList: function(intervention, interventionIsFromWhere) {
       // * The intervention object from interventions-list
       // has different properties than the one on intervention-details
-      if (interventionIsFromWhere === 'interventionDetails') {
-        return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
-      } else if (interventionIsFromWhere === 'interventionsList') {
-        return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
+      switch (interventionIsFromWhere) {
+        case 'interventionDetails':
+          return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
+        case 'interventionsList':
+          return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
       }
     },
 
-    getFrsCurrency: function(currencyMatch, frs) {
-      return currencyMatch ? frs[0].currency : 'N/A';
+    getFrsCurrency: function(frsCurrencyMatch, frs) {
+      return frsCurrencyMatch ? frs[0].currency : 'N/A';
     },
 
-    getFrsTotal: function(currencyMatch, totalAmt) {
-      return currencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
+    getFrsTotal: function(frsCurrencyMatch, totalAmt) {
+      return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
     },
 
-    allCurrenciesMatch: function(currencyMatch, frs, plannedBudgetCurrency) {
-      return currencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
+    allCurrenciesMatch: function(frsCurrencyMatch, frs, plannedBudgetCurrency) {
+      return frsCurrencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
     },
 
-    hideFrCurrencyTooltip: function(currencyMatch, frCurrency, plannedBudgetCurrency) {
-      return !currencyMatch ? frCurrency === plannedBudgetCurrency : true;
+    hideFrCurrencyTooltip: function(frsCurrencyMatch, frCurrency, plannedBudgetCurrency) {
+      return !frsCurrencyMatch ? frCurrency === plannedBudgetCurrency : true;
     },
 
-    hideFrsAmountTooltip: function(currencyMatch, frs, plannedBudgetCurrency, frsTotalAmountWarning) {
-      let allCurrenciesMatch = this.allCurrenciesMatch(currencyMatch, frs, plannedBudgetCurrency);
+    hideFrsAmountTooltip: function(frsCurrencyMatch, frs, plannedBudgetCurrency, frsTotalAmountWarning) {
+      let allCurrenciesMatch = this.allCurrenciesMatch(frsCurrencyMatch, frs, plannedBudgetCurrency);
       return !allCurrenciesMatch || !frsTotalAmountWarning;
     },
 
-    getFrsCurrencyTooltipIcon: function(currencyMatch) {
-      if (!currencyMatch) {
+    getFrsCurrencyTooltipIcon: function(frsCurrencyMatch) {
+      if (!frsCurrencyMatch) {
         return 'pmp-custom-icons:1+';
       }
       return 'pmp-custom-icons:not-equal';
     },
 
-    getFrsCurrencyTooltipMsg: function(currencyMatch) {
-      return !currencyMatch
-          ? this.frsConsistencyWarnings.tooManyFrsCurencies
-          : this.frsConsistencyWarnings.currencyMismatch;
+    getFrsCurrencyTooltipMsg: function(frsCurrencyMatch) {
+      let tooManyCurrenciesMsg = this.frsConsistencyWarnings.tooManyFrsCurencies + '\n' +
+          this.frsConsistencyWarnings.amountAndDisbursementNotDisplayed;
+      return !frsCurrencyMatch ? tooManyCurrenciesMsg : this.frsConsistencyWarnings.currencyMismatch;
     },
 
     getFrCurrencyTooltipMsg: function() {
       return this.frsConsistencyWarnings.currencyMismatch + '\n' + this.frsConsistencyWarnings.cannotCalcDisbursement;
-    }
+    },
+
+    /**
+     * Check if all currencies are consistent by the flag received from API
+     * If allCurrenciesAreConsistent is undefined or null => PD has not FRs added
+     * @param allCurrenciesAreConsistent
+     * @return {boolean}
+     */
+    _allCurrenciesAreConsistent: function(allCurrenciesAreConsistent) {
+      return typeof allCurrenciesAreConsistent === 'boolean'
+          ? allCurrenciesAreConsistent
+          : true;
+    },
+
+    hideIntListUnicefCashAmountTooltip: function(allCurrenciesAreConsistent, unicefCash, frsTotalAmt, intervention) {
+      let consistentCurrencies = this._allCurrenciesAreConsistent(allCurrenciesAreConsistent);
+      if (consistentCurrencies) {
+        return this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, 'interventionsList');
+      }
+      return false;
+    },
+
+    getCurrencyMismatchClass: function(allCurrenciesAreConsistent) {
+      return this._allCurrenciesAreConsistent(allCurrenciesAreConsistent) ? '' : 'currency-mismatch';
+    },
+
+    getIntListUnicefCashAmountTooltipMsg: function(allCurrenciesAreConsistent, frsCurrenciesAreConsistent) {
+      if (this._allCurrenciesAreConsistent(allCurrenciesAreConsistent)) {
+        return this.getFrsTotalAmountInconsistencyMsg();
+      }
+      let msg = !frsCurrenciesAreConsistent
+          ? this.frsConsistencyWarnings.tooManyFrsCurencies
+          : this.frsConsistencyWarnings.currencyMismatch;
+      return msg + '\n' + this.frsConsistencyWarnings.amountsCannotBeCompared;
+    },
 
   };
 

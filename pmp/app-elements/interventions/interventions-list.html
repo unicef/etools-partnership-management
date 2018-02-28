@@ -237,16 +237,18 @@
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
               <etools-info-tooltip
-                  class$="fr-nr-warn [[_getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]]"
+                  class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]]"
                   icon-first
                   custom-icon
-                  hide-tooltip="[[_hideListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
+                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
                 <span slot="field">
                   <span class="list-currency">[[intervention.budget_currency]]</span>
                   <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
                 </span>
-                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                <span slot="message">[[_getListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent)]]</span>
+                <iron-icon icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]" slot="custom-icon"></iron-icon>
+                <span slot="message">
+                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent, intervention.fr_currencies_are_consistent)]]</span>
+                </span>
               </etools-info-tooltip>
             </div>
             <div class="row-details-content col-2">
@@ -823,41 +825,12 @@
           this.set('pageNumber', 1);
         },
 
-        _canShowListFrsWarnings: function(status) {
+        _canShowListDatesFrsWarnings: function(status) {
           return (status !== 'draft' && status !== 'closed');
         },
 
         _hideDateFrsWarningTooltip: function(pdDate, frsDate, status) {
-           return !(this._canShowListFrsWarnings(status) && !this.validateFrsVsInterventionDates(pdDate, frsDate));
-        },
-
-        /**
-         * If allCurrenciesAreConsistent is undefined or null => PD has not FRs added
-         * @param allCurrenciesAreConsistent
-         * @return {boolean}
-         */
-        _currenciesAreConsistent: function(allCurrenciesAreConsistent) {
-          return typeof allCurrenciesAreConsistent === 'boolean'
-              ? allCurrenciesAreConsistent
-              : true;
-        },
-
-        _hideListUnicefCashAmountTooltip: function(allCurrenciesAreConsistent, unicefCash, frsTotalAmt, intervention) {
-          let consistentCurrencies = this._currenciesAreConsistent(allCurrenciesAreConsistent);
-          if (consistentCurrencies) {
-            return this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, 'interventionsList');
-          }
-          return false;
-        },
-
-        _getCurrencyMismatchClass: function(allCurrenciesAreConsistent) {
-          return this._currenciesAreConsistent(allCurrenciesAreConsistent) ? '' : 'currency-mismatch';
-        },
-
-        _getListUnicefCashAmountTooltipMsg: function(allCurrenciesAreConsistent) {
-          return this._currenciesAreConsistent(allCurrenciesAreConsistent)
-              ? this.getFrsTotalAmountInconsistencyMsg()
-              : this.frsConsistencyWarnings.currencyMismatch;
+           return !(this._canShowListDatesFrsWarnings(status) && !this.validateFrsVsInterventionDates(pdDate, frsDate));
         },
 
         _triggerInterventionLoadingMsg: function() {

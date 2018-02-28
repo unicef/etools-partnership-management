@@ -168,8 +168,9 @@
             <div class="col col-3 word-break left-align">Partnership</div>
             <div class="col col-2 left-align">Start Date - End Date</div>
             <div class="col col-2 right-align">UNICEF Cash</div>
+            <div class="col col-2 right-align">FR Amount</div>
             <div class="col col-2 right-align">Actual Disbursement</div>
-            <div class="col col-3">Status</div>
+            <div class="col col-1">Status</div>
           </div>
         </div>
         <div class="hact-body">
@@ -199,9 +200,30 @@
                   <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
-              <div class="col col-3 center-align overflow-hidden">
+              <div class="col col-2 right-align">
+                <span class="list-currency">[[partnership.budget_currency]]</span>
+                <span>[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</span>
+              </div>
+              <div class="col col-2 right-align">
+                <etools-info-tooltip
+                    class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]]"
+                    icon-first
+                    custom-icon
+                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
+                  <span slot="field">
+                    <span class="list-currency">[[partnership.fr_currency]]</span>
+                    <span>[[displayCurrencyAmount(partnership.frs_total_frs_amt, '0.00')]]</span>
+                  </span>
+                  <iron-icon icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)]]" slot="custom-icon"></iron-icon>
+                  <span slot="message">
+                    <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
+                  </span>
+                </etools-info-tooltip>
+              </div>
+              <div class="col col-2 right-align">
+                [[partnership.fr_currency]] [[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]
+              </div>
+              <div class="col center-align overflow-hidden">
                 <span class="partnership-status">[[partnership.status]]</span>
               </div>
 
