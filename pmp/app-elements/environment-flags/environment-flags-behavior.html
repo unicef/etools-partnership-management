@@ -27,7 +27,6 @@
       return new Promise((resolve, reject) => {
         let envFlagsCheck = setInterval(() => {
           if (this.envFlagsLoaded()) {
-            console.log('interval cleared');
             clearInterval(envFlagsCheck);
             resolve(true);
           }
