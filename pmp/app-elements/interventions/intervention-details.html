@@ -741,7 +741,7 @@
             return;
           }
           this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-              frsEarliestStartDate, this.frValidationFieldsToCheckNames.start_date, true));
+              frsEarliestStartDate, this.frsValidationFields.start_date, true));
           this.$.intStart.updateStyles();
         },
 
@@ -753,7 +753,7 @@
             return;
           }
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
-              frsLatestEndDate, this.frValidationFieldsToCheckNames.end_date, true));
+              frsLatestEndDate, this.frsValidationFields.end_date, true));
           this.$.intEnd.updateStyles();
         },
 

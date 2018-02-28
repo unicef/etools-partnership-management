@@ -23,7 +23,7 @@
           warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
         }
       },
-      frValidationFieldsToCheckNames: {
+      frsValidationFields: {
         type: Object,
         value: {
           start_date: 'Start Date',
@@ -65,12 +65,12 @@
       let warnFrsFields = []; // FR fields
       let warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
-        warnFrsFields.push(this.frValidationFieldsToCheckNames.fr_earliest_date);
-        warnIntervFields.push(this.frValidationFieldsToCheckNames.start_date);
+        warnFrsFields.push(this.frsValidationFields.fr_earliest_date);
+        warnIntervFields.push(this.frsValidationFields.start_date);
       }
       if (this.checkFrsAndIntervDateConsistency(intervention.end, frsDetails.latest_end_date)) {
-        warnFrsFields.push(this.frValidationFieldsToCheckNames.fr_latest_date);
-        warnIntervFields.push(this.frValidationFieldsToCheckNames.end_date);
+        warnFrsFields.push(this.frsValidationFields.fr_latest_date);
+        warnIntervFields.push(this.frsValidationFields.end_date);
       }
 
       let computedWarning = '';
@@ -79,8 +79,8 @@
         // currencies are the same => check amounts consistency
         if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
                 frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
-          warnFrsFields.push(this.frValidationFieldsToCheckNames.fr_total_amount);
-          warnIntervFields.push(this.frValidationFieldsToCheckNames.pd_unicef_cash_contribution);
+          warnFrsFields.push(this.frsValidationFields.fr_total_amount);
+          warnIntervFields.push(this.frsValidationFields.pd_unicef_cash_contribution);
         }
       } else {
         // currencies of the frs and planned budget do NOT match
@@ -144,11 +144,11 @@
     },
     getFrsStartDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', this.frValidationFieldsToCheckNames.start_date);
+          '<<field_name>>', this.frsValidationFields.start_date);
     },
     getFrsEndDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', this.frValidationFieldsToCheckNames.end_date);
+          '<<field_name>>', this.frsValidationFields.end_date);
     },
     frsConsistencyWarningIsActive: function(warnMsg) {
       return !!warnMsg;
