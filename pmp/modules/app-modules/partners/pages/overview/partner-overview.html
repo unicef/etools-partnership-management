@@ -1,6 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
@@ -34,20 +33,6 @@
       paper-input,
       paper-dropdown-menu {
         width: 100%;
-      }
-
-      paper-toolbar {
-        --paper-toolbar-height: 40px;
-        --paper-toolbar-background: var(--medium-theme-background-color);
-        --paper-toolbar: {
-          -webkit-border-radius: 8px;
-          -moz-border-radius: 8px;
-          border-radius: 8px;
-        };
-        --paper-toolbar-title: {
-          @apply --nested-content-panel-title;
-          margin-left: 0;
-        };
       }
 
       .assessments {

@@ -96,7 +96,7 @@
                             placeholder="&#8212;"
                             allowed-pattern="[0-9\ \.\+\-\(\)]"
                             readonly$="[[!editMode]]">
-                  <iron-icon prefix icon="communication:phone"></iron-icon>
+                  <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
                 </paper-input>
               </div>
               <div class="col col-4">
@@ -108,7 +108,7 @@
                             readonly$="[[!_canBeRemoved(item.id)]]"
                             invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                             error-message="A valid & unused email address is required">
-                  <iron-icon prefix icon="communication:email"></iron-icon>
+                  <iron-icon slot="prefix" icon="communication:email"></iron-icon>
                 </paper-input>
               </div>
               <div class="col col-4">

@@ -107,7 +107,7 @@
                       value="[[prettyDate(partner.core_values_assessment_date)]]"
                       placeholder="&#8212;"
                       readonly>
-            <div prefix>
+            <div slot="prefix">
               <iron-icon icon="date-range"></iron-icon>
             </div>
           </paper-input>
@@ -131,7 +131,7 @@
                     value="{{partner.address}}"
                     placeholder="&#8212;"
                     readonly>
-          <iron-icon prefix icon="communication:location-on"></iron-icon>
+          <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
         </paper-input>
       </div>
       <div class="row-h flex-c">
@@ -140,7 +140,7 @@
                       value="{{partner.phone_number}}"
                       placeholder="&#8212;"
                       readonly>
-            <iron-icon prefix icon="communication:phone"></iron-icon>
+            <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
           </paper-input>
         </div>
         <div class="col col-4">
@@ -148,7 +148,7 @@
                       value="{{partner.email}}"
                       placeholder="&#8212;"
                       readonly>
-            <iron-icon prefix icon="communication:email"></iron-icon>
+            <iron-icon slot="prefix" icon="communication:email"></iron-icon>
           </paper-input>
         </div>
         <div class="col col-4"></div>
@@ -176,7 +176,7 @@
                       value="[[prettyDate(partner.last_assessment_date)]]"
                       placeholder="&#8212;"
                       readonly>
-            <div prefix>
+            <div slot="prefix">
               <iron-icon icon="date-range"></iron-icon>
             </div>
           </paper-input>

@@ -66,7 +66,7 @@
                     autocomplete="off"
                     value="{{q}}"
                     placeholder="Search">
-          <iron-icon icon="search" prefix></iron-icon>
+          <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
@@ -80,7 +80,7 @@
                           on-iron-activate="_dropdownSelected"
                           selected="[[filter.alreadySelected]]">
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                  <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
+                  <paper-item name$="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
               </paper-listbox>
             </paper-dropdown-menu>
@@ -300,6 +300,9 @@
           _sortableFieldNames: {
             type: Array,
             value: ['vendor_number', 'name']
+          },
+          visibleRange: {
+            type: Array
           }
         };
       }

@@ -2,7 +2,7 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../../bower_components/iron-collapse/iron-collapse.html">
@@ -46,23 +46,26 @@
 
         --paper-radio-button-size: 20px;
 
-        --paper-toolbar-height: 40px;
-        --paper-toolbar-background: var(--medium-theme-background-color);
-        --paper-toolbar: {
-          -webkit-border-radius: 8px;
-          -moz-border-radius: 8px;
-          border-radius: 8px;
-        };
-        --paper-toolbar-title: {
-          @apply --nested-content-panel-title;
-        };
-
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply --paper-fab-btn-green;
         };
 
       }
+      app-toolbar {
+        height: 40px;
+        background-color: var(--medium-theme-background-color);
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+      }
+      app-toolbar paper-icon-button {
+        @apply --nested-content-panel-collapse-btn;
+      }
+      app-toolbar div[main-title] {
+        @apply --nested-content-panel-title;
+      }
+
       div[elevation="1"] {
         @apply --paper-material-elevation-1;
       }
@@ -77,10 +80,6 @@
       }
       div[elevation="5"] {
         @apply --paper-material-elevation-5;
-      }
-
-      paper-toolbar paper-icon-button {
-        @apply --nested-content-panel-collapse-btn;
       }
 
       #assessments-wrapper {
@@ -115,10 +114,10 @@
 
     <div elevation="[[elevation]]">
 
-      <paper-toolbar>
+      <app-toolbar>
         <paper-icon-button on-tap="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
-        <div class="title">Assessments</div>
-      </paper-toolbar>
+        <div main-title>Assessments</div>
+      </app-toolbar>
 
       <iron-collapse id="collapse" opened="{{open}}">
         <div id="assessments-wrapper">
