@@ -160,9 +160,10 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      */
-    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-          EtoolsPmpApp.Mixins.ModuleRouting, EtoolsPmpApp.Mixins.EventHelper], Polymer.Element);
+    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
+          EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+          EtoolsPmpApp.Mixins.ModuleRouting, EtoolsPmpApp.Mixins.EventHelper
+        ], Polymer.Element);
 
     /**
      * @polymer
@@ -371,7 +372,7 @@
       _handleCreatePartnerError(errorDetails) {
         this.fireEvent('toast', {
           text: errorDetails,
-          showCloseBtn: true,
+          showCloseBtn: true
         });
       }
 
