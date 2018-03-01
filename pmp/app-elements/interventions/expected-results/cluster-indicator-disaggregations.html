@@ -1,0 +1,79 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/buttons-styles.html">
+
+<dom-module id="cluster-indicator-disaggregations">
+  <template strip-whitespace>
+    <style include="grid-layout-styles shared-styles buttons-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      paper-input {
+        width: 100%;
+      }
+
+    </style>
+    <div hidden$="[[!disaggregations.length]]">
+      <template is="dom-repeat" items="{{disaggregations}}" as="item">
+        <div class="row-h ">
+            <div class="col col-4">
+              <div class="layout-vertical">
+                <label class="paper-label">Disaggregate By</label>
+                <label class="input-label" empty$="[[!item.name]]">[[item.name]]</label>
+              </div>
+            </div>
+            <div class="col col-8">
+              <div class="layout-vertical">
+                <label class="paper-label">Disaggregation Groups</label>
+                <label class="input-label" empty$="[[!item.choices]]">[[_getGroupNames(item.choices)]]</label>
+              </div>
+            </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="row-h" hidden$="[[!_noDisaggregations(disaggregations, disaggregations.length)]]">
+      <p>There are no disaggregations added.</p>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'cluster-indicator-disaggregations',
+
+        properties: {
+          disaggregations: {
+            type: Array
+          }
+        },
+        _noDisaggregations: function(disaggregations, disaggregLength) {
+          return (!disaggregations || !disaggregLength);
+        },
+        _getGroupNames: function(groups) {
+          if (!groups) {
+            return '';
+          }
+          let groupNames = '';
+          groups.forEach(function(g) {
+            groupNames += g.value + '; ';
+          });
+          return groupNames;
+        }
+      });
+    })();
+  </script>
+</dom-module>

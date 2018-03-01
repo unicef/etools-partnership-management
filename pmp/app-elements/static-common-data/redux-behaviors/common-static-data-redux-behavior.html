@@ -1,11 +1,14 @@
+<link rel="import" href="../../../../scripts/redux.html">
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
 
+
 <script>
+  'use strict';
   // shuts up the linting script
   var Redux = Redux || {};
   var PolymerRedux = PolymerRedux || {};
 
-  var initialDropdownPmpData = {
+  let reduxStoreDefaultData = {
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -31,14 +34,26 @@
     agreementTypes: [],
     agreementStatuses: [],
     csoPartners: [],
-    countryData: {}
+    countryData: {},
+    disaggregations: [],
+    PRPCountryData: [],
+    currentUser: {},
+    reportStatuses: [
+      // TODO: reports list filter statuses? To be confirmed by unicef team.
+      {value: 'Acc', label: 'Accepted'},
+      {value: 'Due', label: 'Due'},
+      {value: 'Sen', label: 'Sent Back'},
+      {value: 'Sub', label: 'Submitted'},
+      {value: 'Ove', label: 'Overdue'}
+    ],
+    locationTypes: []
   };
 
-  var commonStaticDataStore = Redux.createStore(function(state, action) {
-    if (!state) {
-      return initialDropdownPmpData;
-    }
+  let commonStaticDataStore = Redux.createStore(function(state, action) {
 
+    if (!state) {
+      return reduxStoreDefaultData;
+    }
     switch (action.type) {
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
@@ -124,8 +139,10 @@
         if (indexP > -1) {
           partnersDdDataCopy.splice(indexP, 1);
         }
-        return Object.assign({}, state, {partnersDropdownData: partnersDdDataCopy,
-                                         csoPartners: csoPartnerCopy});
+        return Object.assign({}, state, {
+          partnersDropdownData: partnersDdDataCopy,
+          csoPartners: csoPartnerCopy
+        });
 
       case 'SET_AGREEMENTS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
@@ -172,8 +189,36 @@
 
       case 'SET_USER_COUNTRY_DATA':
         return Object.assign({}, state, {countryData: action.countryData});
+
+      case 'SET_DISAGGREGATIONS_DATA':
+        return Object.assign({}, state, {disaggregations: action.disaggregations});
+
+      case 'ADD_DISAGGREGATION':
+        let disaggregsCopy = state.disaggregations.slice(0);
+        disaggregsCopy.push(action.disaggregation);
+        return Object.assign({}, state, {disaggregations: disaggregsCopy});
+
+      case 'SET_CURRENT_USER':
+        return Object.assign({}, state, {currentUser: action.user});
+
+      case 'SET_LOCATION_TYPES':
+        return Object.assign({}, state, {locationTypes: action.locationTypes});
+
+      case 'SET_PRP_COUNTRY_DATA':
+        return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
+
+      case 'SET_ENV_FLAGS':
+        return Object.assign({}, state, {envFlags: action.envFlags});
     }
   });
+
+  window.addEventListener('storage', function(ev) {
+    if (ev.key !== 'update-redux' || !ev.newValue) {
+      return;
+    }
+    commonStaticDataStore.dispatch(JSON.parse(ev.newValue));
+  });
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 

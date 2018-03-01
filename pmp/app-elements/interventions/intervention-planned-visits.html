@@ -27,7 +27,7 @@
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
       paper-input {
@@ -186,7 +186,7 @@
          * The planned visit row data can be removed only if it doesn't have and id assigned(only if is not saved)
          */
         _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
+          if (!editMode || !this.dataItems || !this.dataItems.length) {
             return false;
           }
           var plannedVisit = this.dataItems[index];

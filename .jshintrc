@@ -24,8 +24,7 @@
     "EtoolsPmpApp": true,
     "EtoolsAjaxRequestBehavior": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
-    "_data": true,
-    "_setData": true,
-    "moment": true
+    "moment": true,
+    "App": true
   }
 }

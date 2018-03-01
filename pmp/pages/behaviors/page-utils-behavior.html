@@ -5,23 +5,45 @@
   EtoolsPmpApp.Behaviors.PageUtils = {
 
     properties: {
-      _subPageOrTabAttached: {
-        type: Boolean,
-        value: false
-      },
+      /* Gets updated by app-route */
       listPageQueryParams: {
         type: Object,
         observer: '_handleQueryParams'
       },
-      listQueryParams: {
+      /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
+         otherwise preservedListQueryParams holds on to it's previous data.
+         This is to preserve set list page filters like : rows per page , search string, any other filters,
+         while navigating between pages from the same category
+         (ex. go to intervention list, select to filter by intervention status, go to intervention details,
+         click on the Interventions left side menu item => the intervention list is
+         still filtered by intervention status).
+      */
+      preservedListQueryParams: {
         type: Object,
         value: {}
       },
+      serverErrors: {
+        type: Array,
+        value: []
+      }
+    },
+
+    listeners: {
+      'clear-server-errors': '_clearServerErrors',
+      'set-server-errors': '_setServerErrors'
+    },
+
+    _clearServerErrors: function() {
+      this.set('serverErrors', []);
+    },
+
+    _setServerErrors: function(e) {
+      this.set('serverErrors', e.detail);
     },
 
     _handleQueryParams: function(params) {
       if (params !== null && Object.keys(params).length) {
-        this.set('listQueryParams', params);
+        this.set('preservedListQueryParams', params);
       }
     },
 
@@ -29,44 +51,16 @@
       return activePage === expectedPage;
     },
 
-    _triggerPageNotFound: function() {
-      this.fire('404');
-    },
-
     _removeStrDash: function(str) {
-      return str.replace(new RegExp('-', 'g'), ' ');
+      return str ? str.replace(new RegExp('-', 'g'), ' ') : '';
     },
 
     _showPageTabs: function(page) {
       return page !== 'list';
     },
 
-    _getTopContentAdditionalClass: function(page) {
-      if (this._showPageTabs(page)) {
-        return 'with-tabs';
-      }
-      return '';
-    },
-
-    _importPageElement: function(page, pagePrefix, pageBaseUrl) {
-      let self = this;
-      return new Promise(function(resolve, reject) {
-        let pageName = pagePrefix + page;
-        if (!Polymer.isInstance(self.$$(pageName))) {
-          let resolvedPageUrl = self.resolveUrl(pageBaseUrl + pageName + '.html');
-          self.importHref(resolvedPageUrl, function() {
-            resolve();
-          }, function(err) {
-            reject(err);
-          }, true);
-        } else {
-          resolve();
-        }
-      });
-    },
-
-    _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix) {
-      let clickedTabName = e.detail.item.getAttribute('name');
+    _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix, tab) {
+      let clickedTabName = tab ? tab : e.detail.item.getAttribute('name');
       if (Polymer.isInstance(this.$$(tabPrefix + clickedTabName))) {
         // tab element already loaded, no need for loading messages
         return;
@@ -79,17 +73,12 @@
     },
 
     /**
-     * "other" can be any property that must be defined before the method is executed
+     * "other" can be any property that must be defined before the method
+     * is executed (main item displayed on the page, activePage)
      */
-    _showSidebarStatus: function(listPageActive, subPageOrTabAttached, other) {
-      let showStatus = !listPageActive && !!subPageOrTabAttached;
+    _showSidebarStatus: function(listPageActive, tabAttached, other) {
+      let showStatus = !listPageActive && !!tabAttached;
       return !other ? showStatus : (showStatus && other);
-    },
-
-    _handlePageTabAttached: function(e) {
-      e.stopImmediatePropagation();
-      // just a flag to know when to show sidebar status element
-      this.set('_subPageOrTabAttached', true);
     }
 
   };

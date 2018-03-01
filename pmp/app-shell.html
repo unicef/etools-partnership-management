@@ -18,24 +18,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="app-config/app-dexie-db-config.html">
-<link rel="import" href="app-config/app-config-behavior.html">
+<link rel="import" href="app-config/app-config.html">
+<link rel="import" href="app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
+<link rel="import" href="app-behaviors/amendment-mode-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
 <link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
 <link rel="import" href="app-menu/styles/app-drawer-styles.html">
 
+<link rel="import" href="app-elements/environment-flags/environment-flags.html">
 <link rel="import" href="app-elements/users-data/user-data.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
+
 <link rel="import" href="app-elements/notification-toasts/notification-toasts-behavior.html">
+<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
@@ -44,14 +50,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
-<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
 <link rel="import" href="../styles/app-theme.html">
+<link rel="import" href="../styles/buttons-styles.html">
 
 <dom-module id="app-shell">
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style">
+    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style buttons-styles">
 
       :host {
         display: block;
@@ -66,7 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .main-page {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
 
       :host(.ie) page-footer {
@@ -76,23 +82,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       :host(:not(.ie)) page-footer {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
-        @apply(--layout-end-justified);
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-end-justified;
+      }
+
+      #floating-footer {
+        background-color: var(--amendment-mode-color);
+        color: var(--light-primary-text-color);
+        padding: 12px 12px 12px 65px;
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        width: 100%; /* paper-buttons have a z-index of 51 */
+        z-index: 52;
+      }
+
+      #page-container.in-amendment {
+        border-top: 12px solid var(--amendment-mode-color);
+        border-left: 12px solid var(--amendment-mode-color);
+        border-right: 12px solid var(--amendment-mode-color);
+      }
+
+      :host(:not(.ie)) #page-container.in-amendment {
+        padding-bottom: 48px;
+      }
+
+      :host(.ie) #page-container.in-amendment {
+        margin-bottom: -40px;
       }
     </style>
+
+    <environment-flags></environment-flags>
 
     <etools-piwik-analytics page="[[subroute.path]]"
                             user="[[user]]"
                             toast="[[currentToastMessage]]"></etools-piwik-analytics>
+
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
 
     <app-route
         route="{{route}}"
-        pattern$="[[baseUrl]]:page"
-        data="{{routeData}}"></app-route>
+        pattern="[[baseUrl]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
 
     <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
@@ -106,38 +141,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <!-- Main content -->
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
+
         <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
-          <page-partners id="partners" class="main-page"
-                         show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
-                         current-page="[[_lastActivePartnerPage]]"
-                         route="[[subroute]]"
-                         permissions="[[permissions]]">
-          </page-partners>
-        </template>
+        <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
 
-        <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
-          <page-agreements id="agreements" class="main-page"
-                           route="[[subroute]]"
+          <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
+            <page-partners id="partners" class="main-page"
+                           show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
+                           current-page="[[_lastActivePartnerPage]]"
+                           route="{{subroute}}"
                            permissions="[[permissions]]">
-          </page-agreements>
-        </template>
+            </page-partners>
+          </template>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
-          <page-interventions id="interventions" class="main-page"
-                              route="[[subroute]]"
-                              permissions="[[permissions]]">
-          </page-interventions>
-        </template>
+          <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
+            <page-agreements id="agreements" class="main-page"
+                             route="{{subroute}}"
+                             permissions="[[permissions]]">
+            </page-agreements>
+          </template>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
-          <page-not-found class="main-page"></page-not-found>
-        </template>
+          <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
+            <page-interventions id="interventions" class="main-page"
+                                route="{{subroute}}"
+                                permissions="[[permissions]]">
+            </page-interventions>
+          </template>
 
-        <page-footer></page-footer>
+          <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
+            <page-reports id="reports" class="main-page"
+                          route="{{subroute}}"
+                          permissions="[[permissions]]">
+            </page-reports>
+          </template>
+
+          <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
+            <page-not-found class="main-page"></page-not-found>
+          </template>
+
+          <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
+            <page-settings id="settings" class="main-page"></page-settings>
+          </template>
+
+        </div>
+        <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
+        <div id="floating-footer"
+             hidden$="[[!amendmentModeActive]]">
+          <strong> AMENDMENT MODE </strong>
+          | All fields in the details tab are now open for editing.
+          Please save before clicking "I am done".
+          <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
+        </div>
 
       </app-header-layout>
     </app-drawer-layout>
@@ -157,12 +214,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       behaviors: [
-        EtoolsPmpApp.Behaviors.AppConfig,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.IE11,
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
         etoolsBehaviors.LoadingBehavior,
-        EtoolsPmpApp.Behaviors.ScrollControl
+        EtoolsPmpApp.Behaviors.ScrollControl,
+        EtoolsPmpApp.Behaviors.AmendmentMode
       ],
 
       properties: {
@@ -190,7 +248,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         routeData: {
           type: Object
         },
-        _lastActivePartnerPage: String
+        _lastActivePartnerPage: String,
+        prpPages: {
+          type: Array,
+          value: ['reports', 'settings']
+        }
       },
 
       observers: [
@@ -199,29 +261,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       listeners: {
         'drawer': 'toggleDrawer',
-        '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
+        'update-route-query-params': '_updateQueryParams',
         'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog'
+        'open-data-refresh-dialog': '_openDataRefreshDialog',
+        '404': '_pageNotFound'
       },
 
-      toastFired: function() {
-        this.set('toast', event.detail.text)
-      },
-
-      _onForbidden: function(event) {
-        window.location.href = this.loginPath;
+      _onForbidden: function() {
+        window.location.href = EtoolsPmpApp.Config.loginPath;
       },
 
       created: function() {
         this.checkIE11Browser();
       },
+
       _routeChanged: function() {
-        this._setContentScrollPosition(0);
+        this.scrollToTop();
       },
+
       ready: function() {
+        window.EtoolsEsmmFitIntoEl = Polymer.dom(document.querySelector('app-shell').root)
+            .querySelector('#appHeadLayout').$$('#contentContainer');
         // for some reason the "$=" will make basePath undefined, we need to use a local property
-        this.baseUrl = this.basePath;
+        this.baseUrl = EtoolsPmpApp.Config.basePath;
 
         this.addIE11StyleTweaks();
 
@@ -246,59 +309,68 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.drawer.toggle();
       },
 
-      _updateMainPath: function(event) {
-        if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
+      _updateMainPath: function(e) {
+        if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this.set('route.__queryParams', null);
-          this.set('route.path', this.baseUrl + event.detail.path);
+          this._updatePath(e.detail.path);
         }
-        event.stopImmediatePropagation();
+        e.stopImmediatePropagation();
+      },
+      _updateQueryParams: function(e) {
+        this.set('route.__queryParams', e.detail);
+      },
+      _updatePath: function(path) {
+        this.set('route.__queryParams', null);
+        this.set('route.path', this.baseUrl + path);
       },
 
       _pageChanged: function(page) {
-        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
-          this.set('_lastActivePartnerPage', page);
-        }
+        // set last partners active page... needed to make a difference between partners and government-partners
+        this._updateLastPartnersActivePage(page);
+        // clear loading messages queue
+        this.fire('clear-loading-messages', {});
+        this._setAmendMode(false);
       },
 
       _routePageChanged: function(routePage) {
-        this.debounce('routePageChanges', function() {
+        this.debounce('routePageChanges', () => {
           if (!routePage) {
-            this.fire('update-main-path', {path: 'partners/list'});
+            this._updatePath('partners/list');
             return;
           }
 
-          this._importMainPage(routePage);
-
-          if (this.route && this.baseUrl && this.page !== 'not-found') {
-            let subroute = JSON.parse(JSON.stringify(this.route));
-            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
-            this.set('subroute', subroute);
-          }
-          this.set('page', routePage);
-        }.bind(this), 10);
+          this._canAccessPage(routePage).then((accessGranted) => {
+            if (!accessGranted) {
+              this._pageNotFound();
+            } else {
+              this._importMainPage(routePage);
+              this.set('page', routePage);
+            }
+          });
+        }, 10);
       },
 
       _importMainPage: function(page) {
         if (!page) {
           return;
         }
-        var mainPageName = this._getMainPageName(page);
-        var resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
-        // check if page has been loaded, only if wasn't use importHref to load it
-        var pageEl = this._getPageElement(mainPageName);
+        let mainPageName = this._getMainPageName(page);
+        let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
+        // import main page if needed
+        let pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
-          // make the import
-          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
+          // pageEl is null => make the import
+          this.importHref(resolvedPageUrl, this._successfulImportCallback.bind(this, mainPageName),
               this._pageNotFound, false);
         }
       },
 
-      // load all the other main pages after first page is loaded
-      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
-        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+      // main page import success callback
+      _successfulImportCallback: function(currentLoadingPage) {
+        // pageEl will be available only after import successfully completes
+        let pageEl = this._getPageElement(currentLoadingPage);
         // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
+        Polymer.RenderStatus.afterNextRender(pageEl, this._redirectToProperListPage.bind(this));
       },
 
       _getMainPageName: function(page) {
@@ -306,8 +378,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-        this.set('route.path', this.baseUrl + 'not-found');
-        this.set('route.__queryParams', null);
+        this._updatePath('not-found');
+        // the _pageChanged method will trigger and clear loading messages so no need to do that here
         this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 
@@ -315,11 +387,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.$$('#' + pageId);
       },
 
+      _canAccessPage: function(page) {
+        // TODO: (future task) use defer method from utils behavior
+        // (NOTE: not all utils behavior functionality is needed)
+        let defer = {};
+        defer.promise = new Promise(function(resolve, reject) {
+          defer.resolve = resolve;
+          defer.reject = reject;
+        });
+
+        let isPrpPage = this.prpPages.indexOf(page) > -1;
+
+        if (!isPrpPage) {
+          defer.resolve(true);
+        } else {
+          // only prp pages can have access restricted
+          this._waitForEnvFlagsToLoad().then(() => {
+            defer.resolve(this.showPrpReports());
+          });
+        }
+
+        return defer.promise;
+      },
+
       _activePageIs: function(activePage, expectedPages) {
         let pagesToMatch = expectedPages.split('|');
         return pagesToMatch.indexOf(activePage) > -1;
       },
-
       _redirectToProperListPage: function() {
         if (this.route.path.indexOf('not-found') > -1) {
           return;
@@ -331,22 +425,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
-        var currentPath = this.route.path;
+        let currentPath = this.route.path;
+        if (currentPath.indexOf('settings') > -1) {
+          return;
+        }
         if (currentPath.substr(-1) === '/') {
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
         if (currentPath === this.baseUrl + this.routeData.page) {
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
-          return;
         }
       },
 
       _showOnlyGovernmentPartners: function(page) {
         return page === 'government-partners';
+      },
+
+      _updateLastPartnersActivePage: function(page) {
+        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
+          this.set('_lastActivePartnerPage', page);
+        }
       }
 
     });
 
   </script>
-
 </dom-module>

@@ -1,0 +1,43 @@
+<link rel="import" href="../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl */
+  EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl = {
+    properties: {
+      environmentFlags: {
+        type: Object,
+        statePath: 'envFlags'
+      }
+    },
+
+    envFlagsLoaded: function() {
+      return typeof this.environmentFlags !== 'undefined';
+    },
+
+    showPrpReports: function() {
+      return this.environmentFlags && !this.environmentFlags.prp_mode_off;
+    },
+
+    prpServerIsOn: function() {
+      return this.environmentFlags && this.environmentFlags.prp_server_on;
+    },
+
+    _waitForEnvFlagsToLoad: function(page) {
+      return new Promise((resolve, reject) => {
+        let envFlagsCheck = setInterval(() => {
+          if (this.envFlagsLoaded()) {
+            clearInterval(envFlagsCheck);
+            resolve(true);
+          }
+        }, 50);
+      });
+    }
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlags */
+  EtoolsPmpApp.Behaviors.EnvironmentFlags = [
+    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+    EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl
+  ];
+</script>

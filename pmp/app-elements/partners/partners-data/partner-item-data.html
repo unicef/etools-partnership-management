@@ -116,7 +116,7 @@
           if (this._skipDefaultErrorHandler) {
             this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
           } else {
-            this.handleErrorResponse(response, ajaxMethod);
+            this.handleErrorResponse(response, ajaxMethod, true);
           }
           this.set('_skipDefaultErrorHandler', false);
 

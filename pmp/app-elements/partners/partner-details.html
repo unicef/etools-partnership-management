@@ -17,7 +17,7 @@
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
@@ -30,14 +30,10 @@
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
-
-        --etools-checkable-input-label: {
-          padding-bottom: 2px;
-        }
       }
 
       paper-input {
@@ -263,7 +259,7 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
-          this.fire('partners-page-attached');
+          this.fire('tab-content-attached');
         },
 
         _hideDeleteBtn: function() {

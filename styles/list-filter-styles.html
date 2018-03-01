@@ -6,7 +6,7 @@
   <template>
     <style>
         #listControls {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
         padding: 8px 24px;
         margin-bottom: 24px;
         background: var(--list-bg-color);
@@ -14,13 +14,13 @@
 
       .wrap-controls, .fixed-controls,
       .wrap-controls .filter {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       .wrap-controls {
-        @apply(--layout-wrap);
-        @apply(--layout-flex);
+        @apply --layout-wrap;
+        @apply --layout-flex;
         margin-right: auto;
         min-height: 62px;
         height: auto;
@@ -44,14 +44,14 @@
       }
 
       .fixed-controls {
-        @apply(--layout-wrap);
+        @apply --layout-wrap;
         padding: 8px 0;
       }
 
       .filter-bar-action-wrapper {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        @apply(--layout-self-stretch);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --layout-self-stretch;
         padding: 0 0 0 24px;
         border-left: 2px solid var(--list-divider-color, #9D9D9D);
         margin-left: 24px;
@@ -72,6 +72,7 @@
 
       #filterMenu .button {
         color: var(--list-primary-color, #40c4ff);
+        font-weight: 500;
         margin: 0;
       }
 
@@ -97,7 +98,7 @@
       }
 
       #hiddenToggle {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
 
         padding: 10px 8px 10px 8px;
         cursor: pointer;

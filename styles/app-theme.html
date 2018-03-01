@@ -7,11 +7,11 @@
 
 <style is="custom-style">
 
-  :root {
+  html {
 
     --primary-color: #0099ff;
     --secondary-color: #0061e9; /* TODO: unused color, remove? */
-    --ternary-color: #009a54; /* TODO: unused color, remove? */
+    --ternary-color: #009a54;
 
     --primary-background-color: #FFFFFF;
     --light-theme-background-color: var(--paper-grey-50);
@@ -50,9 +50,11 @@
     --header-bg-color: var(--dark-theme-background-color);
     --header-primary-text-color: var(--light-primary-text-color);
     --header-secondary-text-color: var(--light-secondary-text-color);
+    --amendment-mode-color: #8B00D8;
 
     --error-color: #ea4022;
     --light-error-color: #f1b8ae;
+    --dark-error-color: #c5102a;
 
     --warning-color: #ff9044;
     --light-warning-color: #ffc8a2;
@@ -116,17 +118,13 @@
 
     /* custom etools polymer elements general customization */
 
-    /* etools-checkable-input, paper-checkbox, radio btns style */
-    --etools-checkable-input-size: 20px;
-    --etools-checkable-input-ripple-color: rgba(255, 255, 255, 0);
-    --etools-checkable-input-checked-color: var(--primary-color);
-    --etools-checkable-input-unchecked-color: var(--secondary-text-color);
-    --paper-checkbox-checked-color: var(--etools-checkable-input-checked-color);
-    --paper-checkbox-unchecked-color: var(--etools-checkable-input-unchecked-color);
-    --paper-radio-button-checked-color: var(--etools-checkable-input-checked-color);
-    --paper-radio-button-unchecked-color: var(--etools-checkable-input-unchecked-color);
-    --paper-toggle-button-checked-bar-color: var(--etools-checkable-input-checked-color);
-    --paper-toggle-button-checked-button-color: var(--etools-checkable-input-checked-color);
+    /* paper-checkbox, radio btns style */
+    --paper-checkbox-checked-color: var(--primary-color);
+    --paper-checkbox-unchecked-color: var(--secondary-text-color);
+    --paper-radio-button-checked-color: var(--primary-color);
+    --paper-radio-button-unchecked-color: var(--secondary-text-color);
+    --paper-toggle-button-checked-bar-color: var(--primary-color);
+    --paper-toggle-button-checked-button-color: var(--primary-color);
 
     /* etools-panel styles */
     --ecp-content-bg-color: var(--primary-background-color);
