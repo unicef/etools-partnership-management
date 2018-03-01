@@ -18,7 +18,7 @@
         },
         selectedFilters: {
           type: Array
-        },
+        }
       };
     }
 
@@ -30,8 +30,8 @@
       // init add filter menu options
       this.setProperties({
         listFilterOptions: filterOptions,
-        availableListFilterOptions: availableListFilterOptions,
-        selectedFilters: [] });
+        availableListFilterOptions: this.listFilterOptions,
+        selectedFilters: []});
     }
 
     // update filter data
@@ -96,7 +96,7 @@
 
     // remove already selected filter, also reset filter path value
     removeFilter(event) {
-      let filterName = event.target.getAttribute('data-filter-name'); //TODO: polymer2 - test on IE11
+      let filterName = event.target.getAttribute('data-filter-name'); // TODO: polymer2 - test on IE11
       let path = event.target.getAttribute('data-reset-path');
 
       this.removeFilterOption(filterName, path);
@@ -141,14 +141,14 @@
     /**
      * Check filter type. Filter type can be:
      *  - 'dropdown'(dropdown created using polymer catalog elements)
-     *  - 'esmm' (etools-multi-selection-menu)
+     *  - 'esmm' (etools-dropdown-multi)
      *  - 'datepicker' (etools-datepicker)
      */
     filterTypeIs(expentedType, checkedTypeValue) {
       return expentedType === checkedTypeValue;
     }
 
-    // 'esmm' (etools-multi-selection-menu) filter value changed
+    // 'esmm' (etools-dropdown-multi) filter value changed
     esmmValueChanged(event) {
       let filterPath = event.target.getAttribute('data-filter-path');
       let filterVal = event.detail.selectedItems;
@@ -158,7 +158,7 @@
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event) {
       let filterPath = event.target.getAttribute('data-filter-path');
-      let parentId  = event.target.getAttribute('parent-id');
+      let parentId = event.target.getAttribute('parent-id');
       let parentField = this.shadowRoot.querySelector('#' + parentId);
       if (parentField) {
         parentField.value = event.detail.prettyDate;

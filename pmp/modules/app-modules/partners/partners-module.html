@@ -10,6 +10,7 @@
 <link rel="import" href="../../scripts/lodash.html">
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
@@ -154,13 +155,15 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
-     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      */
-    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-          EtoolsPmpApp.Mixins.ModuleRouting], Polymer.Element);
+    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
+          EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+          EtoolsPmpApp.Mixins.ModuleRouting, EtoolsPmpApp.Mixins.EventHelper
+        ], Polymer.Element);
 
     /**
      * @polymer
@@ -228,8 +231,7 @@
       connectedCallback() {
         super.connectedCallback();
         // deactivate main page loading msg triggered in app-shell
-        let eventPayload = {active: false, loadingSource: 'main-page'};
-        this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+        this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
         /**
          * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
@@ -254,7 +256,7 @@
         document.querySelector('body').appendChild(this.newPartnerDialog);
 
         this.newPartnerDialog.addEventListener('create-partner', (event) => {
-          this.dispatchEvent(new CustomEvent('create-partner', {detail: event.detail, bubbles: true, composed: true}));
+          this.fireEvent('create-partner', event.detail);
         }, false);
       }
 
@@ -293,12 +295,11 @@
 
       _deletePartner(event) {
         event.stopImmediatePropagation();
-        let eventPayload = {
+        this.fireEvent('global-loading', {
           active: true,
           message: 'Deleting partner...',
           loadingSource: 'partner-data'
-        };
-        this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+        });
 
         let partnerData = this.shadowRoot.querySelector('#partnerData');
         if (partnerData) {
@@ -308,29 +309,24 @@
       }
 
       _handlePartnerDeleted() {
-        this.dispatchEvent(new CustomEvent('global-loading', {
-          detail: {active: false, loadingSource: 'partner-data'},
-          bubbles: true,
-          composed: true
-        }));
-        this.dispatchEvent(new CustomEvent('toast', {
-          detail: {text: 'Partner successfully deleted', showCloseBtn: true},
-          bubbles: true,
-          composed: true
-        }));
-        this.dispatchEvent(new CustomEvent('update-main-path', {
-          detail: {path: 'partners/list'},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('global-loading', {
+          active: false,
+          loadingSource: 'partner-data'
+        });
+        this.fireEvent('toast', {
+          text: 'Partner successfully deleted',
+          showCloseBtn: true
+        });
+        this.fireEvent('update-main-path', {
+          path: 'partners/list'
+        });
       }
 
       _handlePartnerNotDeleted() {
-        this.dispatchEvent(new CustomEvent('global-loading', {
-          detail: {active: false, loadingSource: 'partner-data'},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('global-loading', {
+          active: false,
+          loadingSource: 'partner-data'
+        });
       }
 
       _observeRouteDataId(id) {
@@ -346,11 +342,7 @@
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
-          this.dispatchEvent(new CustomEvent('set-server-errors', {
-            detail: event.detail,
-            bubbles: true,
-            composed: true
-          }));
+          this.fireEvent('set-server-errors', event.detail);
           this.scrollToTop();
         }
       }
@@ -372,36 +364,29 @@
       }
 
       _newPartnerCreated(partner) {
-        this.dispatchEvent(new CustomEvent('update-main-path', {
-          detail: {path: 'partners/' + partner.id + '/details'},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('update-main-path', {
+          path: 'partners/' + partner.id + '/details'
+        });
       }
 
       _handleCreatePartnerError(errorDetails) {
-        this.dispatchEvent(new CustomEvent('toast', {
-          detail: {text: errorDetails, showCloseBtn: true},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('toast', {
+          text: errorDetails,
+          showCloseBtn: true
+        });
       }
 
       _partnerChanged(partner) {
         if (!_.isEmpty(partner)) {
           // dismiss partner details pages loading
-          this.dispatchEvent(new CustomEvent('global-loading', {
-            detail: {active: false, loadingSource: 'partner-data'},
-            bubbles: true,
-            composed: true
-          }));
+          this.fireEvent('global-loading', {
+            active: false,
+            loadingSource: 'partner-data'
+          });
           // keep a copy of loaded partner to be able to check changed data
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
-        this.dispatchEvent(new CustomEvent('clear-server-errors', {
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('clear-server-errors');
       }
 
       _reloadPartnersList(e) {
@@ -427,14 +412,10 @@
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
         } else {
-          this.dispatchEvent(new CustomEvent('toast', {
-            detail: {
+          this.fireEvent('toast', {
               text: 'Please check assessments and partner contacts for ' +
               'invalid fields or empty data rows!', showCloseBtn: true
-            },
-            bubbles: true,
-            composed: true
-          }));
+          });
         }
       }
 
@@ -480,15 +461,11 @@
        */
       _showPartnersPageLoadingMessage() {
         let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
-        this.dispatchEvent(new CustomEvent('global-loading', {
-          detail: {
-            message: 'Loading ' + appSection + ' elements...',
-            active: true,
-            loadingSource: 'partners-page'
-          },
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('global-loading', {
+          message: 'Loading ' + appSection + ' elements...',
+          active: true,
+          loadingSource: 'partners-page'
+        });
       }
 
     }

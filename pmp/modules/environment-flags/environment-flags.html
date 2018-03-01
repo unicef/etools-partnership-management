@@ -16,8 +16,10 @@
      * @appliesMixins EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixins EtoolsPmpApp.Mixins.Endpoints
      */
-    const EnvironmentFlagsRequiredMixins = EtoolsMixinFactory.combineMixins([EtoolsAjaxRequestMixin,
-      EtoolsLogsMixin, EtoolsPmpApp.Mixins.EtoolsDataReduxStore, EtoolsPmpApp.Mixins.Endpoints], Polymer.Element);
+    const EnvironmentFlagsRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsAjaxRequestMixin, EtoolsLogsMixin, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.Endpoints
+    ], Polymer.Element);
 
     /**
      * This element will request and set the environment flags into redux store

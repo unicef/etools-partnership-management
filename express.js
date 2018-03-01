@@ -2,11 +2,13 @@ var express = require('express');
 var prplServer = require('prpl-server');
 
 var app = express();
+
 var basedir = __dirname + '/build/';
 var serveFromDir = basedir + 'es6-bundled/';
 //var basedir = '/Users/rob/Desktop/etools/etools-infra/pmp/build/pmp/bundled/';
+
 // var node_modulesReduxDir = __dirname + '/node_modules/redux/dist/';
-//var node_modulesReduxDir = '/Users/rob/Desktop/etools/etools-infra/pmp/node_modules/redux/dist/';
+// var node_modulesReduxDir = '/Users/rob/Desktop/etools/etools-infra/pmp/node_modules/redux/dist/';
 
  app.use('/pmp/', prplServer.makeHandler('build/pmp/', {
   builds: [

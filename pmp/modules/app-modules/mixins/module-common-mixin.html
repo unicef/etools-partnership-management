@@ -1,3 +1,4 @@
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
@@ -6,9 +7,10 @@
    * Module main elements common functionality
    * @polymer
    * @mixinFunction
+   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    */
   EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality = Polymer.dedupingMixin(
-      (superClass) => class extends superClass {
+      (superClass) => class extends EtoolsPmpApp.Mixins.EventHelper(superClass) {
         static get properties() {
           return {
             /* Gets updated by app-route */
@@ -74,12 +76,11 @@
             // tab element already loaded, no need for loading messages
             return;
           }
-          let eventPayload = {
+           this.fireEvent('global-loading', {
             message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
             active: true,
             loadingSource: loadingSource
-          };
-          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+          });
         }
 
         /**
