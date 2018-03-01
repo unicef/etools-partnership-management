@@ -80,15 +80,14 @@
                                               placeholder="&#8212;"
                                               selected="{{item.year}}"
                                               options="[[years]]"
-                                              required$="[[item.programmatic]]"
-                                              auto-validate
-                                              error-message="Required if visits are specified"
-                                              on-iron-activate="_yearChanged"
+                                              required
+                                              error-message="Required"
+                                              on-iron-select="_yearChanged"
                                               readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
               </div>
               <div class="col col-1">
-                <paper-input id$="visit_[[index]]_1"
+                <paper-input id$="visit_[[index]]_q1"
                              label="Quarter 1"
                              value="{{item.programmatic_q1}}"
                              type="number"
@@ -102,7 +101,7 @@
                 </paper-input>
               </div>
               <div class="col col-1">
-                <paper-input id$="visit_[[index]]_2"
+                <paper-input id$="visit_[[index]]_q2"
                              label="Quarter 2"
                              value="{{item.programmatic_q2}}"
                              type="number"
@@ -116,7 +115,7 @@
                 </paper-input>
               </div>
               <div class="col col-1">
-                <paper-input id$="visit_[[index]]_3"
+                <paper-input id$="visit_[[index]]_q3"
                              label="Quarter 3"
                              value="{{item.programmatic_q3}}"
                              type="number"
@@ -130,7 +129,7 @@
                 </paper-input>
               </div>
               <div class="col col-1">
-                <paper-input id$="visit_[[index]]_4"
+                <paper-input id$="visit_[[index]]_q4"
                              label="Quarter 4"
                              value="{{item.programmatic_q4}}"
                              type="number"
@@ -220,18 +219,39 @@
           return true;
         },
         validate: function() {
-          var valid = true;
+          let valid = true;
           this.dataItems.forEach(function(item, index) {
-            var yearEl = this.$$('#year_' + index);
-            var visitsEl = this.$$('#visit_' + index);
-            if (yearEl && !yearEl.validate()) {
-              valid = false;
-            }
-            if (visitsEl && !visitsEl.validate()) {
-              valid = false;
-            }
+            valid = this._validateYear(index) && this._validateQuarters(item, index);
           }.bind(this));
 
+          return valid;
+        },
+        _validateYear: function(index) {
+          let valid = true;
+          let yearEl = this.$$('#year_' + index);
+
+          if (yearEl && !yearEl.validate()) {
+            valid = false;
+          }
+          return valid;
+        },
+        _validateQuarters: function(item, index) {
+          let valid = true;
+          let q1 = this.$$('#visit_' + index + "_q1");
+          let q2 = this.$$('#visit_' + index + "_q2");
+          let q3 = this.$$('#visit_' + index + "_q3");
+          let q4 = this.$$('#visit_' + index + "_q4");
+
+          [q1, q2, q3, q4].forEach(function(q) {
+            if (q) {
+              if (!q.validate()) {
+                valid = false;
+              }
+            }
+          });
+          if (!this._getTotal(item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)) {
+            valid = false;
+          }
           return valid;
         },
 
@@ -274,19 +294,19 @@
 
         _yearChanged: function(event) {
           var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
+          var yearDropdown = this.$$('#year_' + event.model.index);
 
           if (this._yearAlreadySelected(yearSelected, event.model.index)) {
             this.fire('toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
-            var yearDropdown = this.$$('#year_' + event.model.index);
             if (yearDropdown) {
               yearDropdown.selected = null;
             }
-             this.set('dataItems.' + event.model.index + '.year', null);
+            this.set('dataItems.' + event.model.index + '.year', null);
             event.preventDefault();
-            return;
+          } else {
+            this.set('dataItems.' + event.model.index + '.year', yearSelected);
+            yearDropdown.invalid = false; // Needed because auto-validate has been removed to avoid eager validation
           }
-
-          this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
 
         _yearAlreadySelected: function(year, dropdownIdx) {
@@ -309,6 +329,10 @@
          * Validate last added planned visit and if is not empty add a new one
          */
         _addNewPlannedVisit: function() {
+          if (!this.validate()) {
+            this.fire('toast', {text: 'Last added planned visit data is not valid yet', showCloseBtn: true});
+            return;
+          }
           this._addElement();
         }
 
