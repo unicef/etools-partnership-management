@@ -21,14 +21,16 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../modules/mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../data/staff-members-data-mixin.html">
 
+<link rel="lazy-import" href="../amendments/agreement-amendments.html">
+
 <!--
-<link rel="import" href="agreement-amendments.html">
 <link rel="import" href="agreement-status.html">
 <link rel="import" href="generate-PCA-dialog.html">
 -->
@@ -285,8 +287,8 @@
       </div>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
+    <!-- <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
+      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])"> -->
         <agreement-amendments id="agreementAmendments"
                               data-items="{{agreement.amendments}}"
                               agreement-type="[[agreement.agreement_type]]"
@@ -294,13 +296,13 @@
                               on-unlock-authorized-officers="_unlockAuthorizedOfficers"
                               on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
         </agreement-amendments>
-      </etools-content-panel>
-    </template>
+      <!-- </etools-content-panel>
+    </template> -->
 
   </template>
 
   <script>
-
+    'use strict';
     /**
      * @polymer
      * @mixinFunction
@@ -315,16 +317,7 @@
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.Common
     ], Polymer.Element);
-      /*
-      "activeAjaxRequests": [],
-          "reqProgress": null,
-          "editMode": true,
-          "isNewAgreement": false,
-          "staffMembers": [],
-          "cpStructureOptions": [],
-          "enableEditForAuthorizedOfficers": false,
-          "agreement": {}
-      */
+
     /**
      * @polymer
      * @customElement
@@ -645,6 +638,9 @@
       }
 
       _getReadonlySignedByPartner(staffMembers, selectedId) {
+        if (!this.agreement) {
+          return '';
+        }
         if (this.agreement.partner_signatory) {
           return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
         } else if (this.staffMembers && this.staffMembers.length) {
