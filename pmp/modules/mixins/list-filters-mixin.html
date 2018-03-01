@@ -18,7 +18,7 @@
         },
         selectedFilters: {
           type: Array
-        },
+        }
       };
     }
 
@@ -31,7 +31,7 @@
       this.setProperties({
         listFilterOptions: filterOptions,
         availableListFilterOptions: this.listFilterOptions,
-        selectedFilters: [] });
+        selectedFilters: []});
     }
 
     // update filter data
@@ -96,7 +96,7 @@
 
     // remove already selected filter, also reset filter path value
     removeFilter(event) {
-      let filterName = event.target.getAttribute('data-filter-name'); //TODO: polymer2 - test on IE11
+      let filterName = event.target.getAttribute('data-filter-name'); // TODO: polymer2 - test on IE11
       let path = event.target.getAttribute('data-reset-path');
 
       this.removeFilterOption(filterName, path);
@@ -158,7 +158,7 @@
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event) {
       let filterPath = event.target.getAttribute('data-filter-path');
-      let parentId  = event.target.getAttribute('parent-id');
+      let parentId = event.target.getAttribute('parent-id');
       let parentField = this.shadowRoot.querySelector('#' + parentId);
       if (parentField) {
         parentField.value = event.detail.prettyDate;

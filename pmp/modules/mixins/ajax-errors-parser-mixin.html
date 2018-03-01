@@ -87,7 +87,7 @@
           }
           if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
             let parentErr = 'Field ' + errField + ': ';
-            let nestedErrs =  this._getErrorsArray(errors[errField]);
+            let nestedErrs = this._getErrorsArray(errors[errField]);
             if (nestedErrs.length === 1) {
               parentErr += nestedErrs[0];
               errorsArray.push(parentErr);
@@ -114,7 +114,7 @@
     }
 
     _markNestedErrors(errs) {
-      return errs.map(er => ' ' + er);
+      return errs.map((er) => ' ' + er);
     }
 
     _isArrayOfStrings(arr) {
