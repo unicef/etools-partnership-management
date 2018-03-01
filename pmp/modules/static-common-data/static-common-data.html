@@ -24,28 +24,31 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliedMixin EtoolsLogsMixin
-     * @appliedMixin EtoolsAjaxRequestMixin
-     * @appliedMixin EtoolsPmpApp.Mixins.EnvironmentFlags
-     * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-     * @appliedMixin EtoolsPmpApp.Mixins.CountryProgrammesData
-     * @appliedMixin EtoolsPmpApp.Mixins.DropdownsPmpData
-     * @appliedMixin EtoolsPmpApp.Mixins.DropdownsStaticData
-     * @appliedMixin EtoolsPmpApp.Mixins.LocationsData
-     * @appliedMixin EtoolsPmpApp.Mixins.OfficesData
-     * @appliedMixin EtoolsPmpApp.Mixins.SectionsData
-     * @appliedMixin EtoolsPmpApp.Mixins.SectorsData
-     * @appliedMixin EtoolsPmpApp.Mixins.UnicefUsersData
-     * @appliedMixin EtoolsPmpApp.Mixins.UserCountryData
-     * @appliedMixin EtoolsPmpApp.Mixins.DisaggregationsData
-     * @appliedMixin EtoolsPmpApp.Mixins.PRPCountries
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsAjaxRequestMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.CountryProgrammesData
+     * @appliesMixin EtoolsPmpApp.Mixins.DropdownsPmpData
+     * @appliesMixin EtoolsPmpApp.Mixins.DropdownsStaticData
+     * @appliesMixin EtoolsPmpApp.Mixins.LocationsData
+     * @appliesMixin EtoolsPmpApp.Mixins.OfficesData
+     * @appliesMixin EtoolsPmpApp.Mixins.SectionsData
+     * @appliesMixin EtoolsPmpApp.Mixins.SectorsData
+     * @appliesMixin EtoolsPmpApp.Mixins.UnicefUsersData
+     * @appliesMixin EtoolsPmpApp.Mixins.UserCountryData
+     * @appliesMixin EtoolsPmpApp.Mixins.DisaggregationsData
+     * @appliesMixin EtoolsPmpApp.Mixins.PRPCountries
      */
-    const StaticCommonDataMixin = EtoolsMixinFactory.combineMixins([EtoolsLogsMixin, EtoolsAjaxRequestMixin,
-      EtoolsPmpApp.Mixins.EnvironmentFlags, EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.CountryProgrammesData,
-      EtoolsPmpApp.Mixins.DropdownsPmpData, EtoolsPmpApp.Mixins.DropdownsStaticData, EtoolsPmpApp.Mixins.LocationsData,
-      EtoolsPmpApp.Mixins.OfficesData, EtoolsPmpApp.Mixins.SectionsData, EtoolsPmpApp.Mixins.SectorsData,
-      EtoolsPmpApp.Mixins.UnicefUsersData, EtoolsPmpApp.Mixins.UserCountryData, EtoolsPmpApp.Mixins.DisaggregationsData,
-      EtoolsPmpApp.Mixins.PRPCountries], Polymer.Element);
+    const StaticCommonDataMixin = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.CountryProgrammesData,
+      EtoolsPmpApp.Mixins.DropdownsPmpData, EtoolsPmpApp.Mixins.DropdownsStaticData,
+      EtoolsPmpApp.Mixins.LocationsData, EtoolsPmpApp.Mixins.OfficesData,
+      EtoolsPmpApp.Mixins.SectionsData, EtoolsPmpApp.Mixins.SectorsData,
+      EtoolsPmpApp.Mixins.UnicefUsersData, EtoolsPmpApp.Mixins.UserCountryData,
+      EtoolsPmpApp.Mixins.DisaggregationsData, EtoolsPmpApp.Mixins.PRPCountries
+    ], Polymer.Element);
 
     class StaticCommonData extends StaticCommonDataMixin {
       static get is() {

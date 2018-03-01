@@ -37,7 +37,7 @@
     /**
      * @polymer
      * @customElement
-     * @appliedMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
      */
     class EtoolsSingleFile extends EtoolsPmpApp.Mixins.Common(Polymer.Element) {
 
@@ -137,7 +137,7 @@
 
       validate() {
         if (this.required && !this.readonly && this.file instanceof File === false &&
-            (typeof this.file === 'string' ? !!!this.file.length : true)) {
+            (typeof this.file === 'string' ? !this.file.length : true)) {
           this.set('invalid', true);
           return false;
         }

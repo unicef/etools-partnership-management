@@ -1,3 +1,4 @@
+<link rel="import" href="event-helper-mixin.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
@@ -5,8 +6,9 @@
   /*
   * @polymer
   * @mixinFunction
+  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   */
-  EtoolsPmpApp.Mixins.ListsCommon = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.ListsCommon = (baseClass) => class extends EtoolsPmpApp.Mixins.EventHelper(baseClass) {
     static get properties() {
       return {
         q: {
@@ -131,9 +133,11 @@
     listAttachedCallback(active, loadingMsg, loadingSource) {
       this.set('stampListData', true);
       if (active) {
-        this.dispatchEvent(new CustomEvent('global-loading',
-         {detail:{message: loadingMsg, active: true, loadingSource: loadingSource},
-         bubbles: true, composed: true}));
+        this.fireEvent('global-loading', {
+          message: loadingMsg,
+          active: true,
+          loadingSource: loadingSource
+        });
       } else {
         this.set('showQueryLoading', true);
       }

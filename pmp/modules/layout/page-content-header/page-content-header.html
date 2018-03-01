@@ -1,5 +1,5 @@
-<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="page-content-header">
   <template>
@@ -37,33 +37,6 @@
       .title-row h1 {
         @apply --layout-flex;
         @apply --page-title;
-      }
-
-      .title-row ::slotted(.content-header-actions) {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-      }
-
-      .title-row ::slotted(.content-header-actions .action) {
-        @apply --layout-vertical;
-        @apply --layout-center-justified;
-      }
-
-      .title-row ::slotted(.content-header-actions a) {
-        @apply --layout;
-        @apply --layout-self-center;
-      }
-
-      .title-row ::slotted(.content-header-actions paper-button:not(.primary-btn)) {
-        padding-top: 0;
-        padding-bottom: 0;
-        font-size: 16px;
-        font-weight: bold;
-        color: var(--dark-secondary-text-color);
-      }
-
-      .title-row ::slotted(.content-header-actions paper-button iron-icon) {
-        margin-right: 10px;
       }
 
       .tabs {

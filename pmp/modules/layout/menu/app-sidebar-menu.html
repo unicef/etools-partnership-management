@@ -8,6 +8,7 @@
 <link rel="import" href="../../../../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../../../../bower_components/neon-animation/web-animations.html">
 
+<link rel="import" href="../../../modules/mixins/event-helper-mixin.html">
 <link rel="import" href="mixins/app-menu-mixin.html">
 <link rel="import" href="styles/nav-menu-styles.html">
 <link rel="import" href="../../styles/custom-iconsets/pmp-icons.html">
@@ -140,14 +141,24 @@
 
   <script>
     'use strict';
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     */
+    const AppSidebarMenuMixins = EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.EventHelper,
+        EtoolsPmpApp.Mixins.EnvironmentFlags
+      ], Polymer.Element);
 
     /**
      * PMP main menu
      * @polymer
      * @customElement
-     * @appliedMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     * @appliesMixin AppSidebarMenuMixins
      */
-    class AppSidebarMenu extends EtoolsPmpApp.Mixins.EnvironmentFlags(Polymer.Element) {
+    class AppSidebarMenu extends AppSidebarMenuMixins {
 
       static get is() {
         return 'app-sidebar-menu';
@@ -168,7 +179,7 @@
 
       _menuSizeChange(newVal, oldVal) {
         if (newVal !== oldVal) {
-          setTimeout(() => this.dispatchEvent(new CustomEvent('resize-main-layout', {bubbles: true, composed: true})));
+          setTimeout(() => this.fireEvent('resize-main-layout'));
         }
       }
 
@@ -182,19 +193,17 @@
         }
 
         if (newModuleName !== this.module) {
-          let eventPayload = {
+          this.fireEvent('global-loading', {
             message: 'Loading ' + newModuleName + ' pages elements...',
             active: true,
             loadingSource: 'main-page'
-          };
-          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload,
-            bubbles: true, composed: true}));
+          });
         }
       }
 
       _toggleSmallMenu(e) {
         e.stopImmediatePropagation();
-        this.dispatchEvent(new CustomEvent('toggle-small-menu', {bubbles: true, composed: true}));
+        this.fireEvent('toggle-small-menu');
       }
 
     }

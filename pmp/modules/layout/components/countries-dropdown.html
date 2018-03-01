@@ -1,0 +1,188 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-page-refresh-mixin.html">
+<link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
+<link rel="import" href="../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
+<dom-module id="countries-dropdown">
+  <template strip-whitespace>
+    <style>
+
+      :host {
+        display: block;
+      }
+
+      :host(:hover) {
+        cursor: pointer;
+      }
+
+      paper-dropdown-menu {
+        width: 160px;
+        --paper-input-container-color: var(--countries-dropdown-color);
+        --paper-input-container-focus-color: var(--countries-dropdown-color);
+        --paper-input-container-underline: {
+          display: none;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        };
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+
+        --paper-dropdown-menu-icon: {
+          color: var(--countries-dropdown-color);
+          align-self: flex-end;
+        };
+
+        --paper-input-container-label: {
+          top: 4px;
+        };
+        --paper-input-container-input: {
+          color: var(--countries-dropdown-color);
+          cursor: pointer;
+          min-height: 24px;
+          text-align: right;
+        };
+        --paper-menu-button-dropdown: {
+          max-height: 380px;
+        }
+      }
+
+      paper-item {
+        font-size: 15px;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      iron-icon {
+        bottom: 2px;
+        min-width: 24px;
+        min-height: 20px;
+        margin-right: 8px;
+      }
+
+      paper-item iron-icon {
+        margin-right: 16px;
+      }
+    </style>
+
+    <template is="dom-if" if="[[countrySelectorVisible]]">
+      <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
+        <paper-listbox slot="dropdown-content"
+                       id="countriesListbox"
+                       attr-for-selected="country-id"
+                       selected="[[currentCountry.id]]"
+                       on-iron-select="_countrySelected">
+          <template id="repeat" is="dom-repeat" items="[[countries]]">
+            <paper-item country-id="[[item.id]]">
+              [[item.name]]
+            </paper-item>
+          </template>
+        </paper-listbox>
+
+      </paper-dropdown-menu>
+    </template>
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsAjaxRequestMixin
+     * @appliesMixin EtoolsPageRefreshMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+    */
+    const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
+        EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
+        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper
+      ], Polymer.Element);
+
+    /**
+    *
+    * @polymer
+    * @customElement
+    * @appliesMixin CountriesDropdownMixin
+    */
+    class CountriesDropdown extends CountriesDropdownMixin {
+
+      static get is() {
+          return 'countries-dropdown';
+      }
+
+      static get properties() {
+        return {
+          currentCountry: {
+            type: Object
+          },
+          countries: {
+            type: Array,
+            observer: '_countrySelectorUpdate'
+          },
+          countrySelectorVisible: Boolean
+        };
+      }
+
+      _countrySelected(e) {
+        if (e.detail.item.countryId !== this.currentCountry.id) {
+          // send post request to change_coutry endpoint
+          let selectedCountryId = e.detail.item.countryId;
+          this._triggerCountryChangeRequest(selectedCountryId);
+        }
+      }
+
+      _triggerCountryChangeRequest(countryId) {
+        let self = this;
+        this.fireEvent('global-loading', {
+          message: 'Please wait while country is changing...',
+          active: true,
+          loadingSource: 'country-change'
+        });
+
+        this.sendRequest({
+          endpoint: this.getEndpoint('changeCountry'),
+          method: 'POST',
+          body: {country: countryId}
+        }).then(function(resp) {
+          self._handleResponse();
+        }).catch(function(error) {
+          self._handleError(error);
+        });
+      }
+
+      _handleResponse() {
+        this.fireEvent('update-main-path', {path: ''});
+        // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
+        // TODO for TODO - refresh method is used elsewhere also and the code relies on the redirect trigerred
+        // by the refresh method
+        this.refresh();
+      }
+
+      _countrySelectorUpdate(countries) {
+        if (Array.isArray(countries) && (countries.length > 1)) {
+          this.countrySelectorVisible = true;
+        }
+      }
+
+      _handleError(error) {
+        this.logError('Country change failed!', 'countries-dropdown', error);
+        // TODO: this should be a larger alert.
+        this.$.countriesListbox.selected = this.currentCountry;
+        this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
+        this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});
+      }
+    }
+
+    window.customElements.define(CountriesDropdown.is, CountriesDropdown);
+  </script>
+
+</dom-module>

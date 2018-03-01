@@ -6,14 +6,14 @@
    /*
   * @polymer
   * @mixinFunction
-  * @appliedMixin EtoolsPmpApp.Mixins.Date
+  * @appliesMixin EtoolsPmpApp.Mixins.Date
   */
   EtoolsPmpApp.Mixins.Common = (baseClass) => class extends EtoolsPmpApp.Mixins.Date(baseClass) {
     /**
      * Prepare and return the string value we have to display on the interface.
      * Ex: partners and agreements lists data values.
      */
-    getDisplayValue(value, isDate, separator, skipSpaces) {//TODO - apply single responsability
+    getDisplayValue(value, isDate, separator, skipSpaces) {// TODO - apply single responsability
       if (typeof value === 'string' && value !== '') {
         if (isDate) {
           return this.prettyDate(value);

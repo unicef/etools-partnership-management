@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../styles/app-mixins.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 
 <dom-module id="not-found">
   <template>
@@ -43,8 +44,9 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class NotFound extends Polymer.Element {
+    class NotFound extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'not-found';
@@ -54,18 +56,14 @@
         return {
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
-          rootPath: String,
-        }
+          rootPath: String
+        };
       }
 
       connectedCallback() {
         super.connectedCallback();
         // deactivate main page loading msg triggered in app-shell
-        this.dispatchEvent(new CustomEvent('global-loading', {
-          detail: {active: false, loadingSource: 'main-page'},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
       }
 
     }

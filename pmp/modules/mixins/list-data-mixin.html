@@ -1,4 +1,5 @@
 <link rel="import" href="../endpoints/endpoints-mixin.html"/>
+<link rel="import" href="event-helper-mixin.html">
 <link rel="import" href="ajax-server-errors-mixin.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <script>
@@ -7,11 +8,18 @@
    /*
   * @polymer
   * @mixinFunction
-  * @appliedMixin EtoolsAjaxRequestMixin
-  * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-  * @appliedMixin EtoolsPmpApp.Mixins.AjaxServerErrors
+  * @appliesMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+  * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
   */
-  EtoolsPmpApp.Mixins.ListData = (baseClass) => class extends EtoolsAjaxRequestMixin(EtoolsPmpApp.Mixins.Endpoints(EtoolsPmpApp.Mixins.AjaxServerErrors(baseClass))) {
+  EtoolsPmpApp.Mixins.ListData = (baseClass) => class extends EtoolsAjaxRequestMixin(
+      EtoolsPmpApp.Mixins.Endpoints(
+        EtoolsPmpApp.Mixins.AjaxServerErrors(
+          EtoolsPmpApp.Mixins.EventHelper(baseClass)
+        )
+      )
+    ) {
 
     static get properties() {
       return {
@@ -20,7 +28,7 @@
           value: {
             endpoint: null,
             csrf: true
-          },
+          }
         },
         data: {
           type: Array,
@@ -47,8 +55,8 @@
       ];
     }
 
-    disconnectedCallback () {
-      super.disconnectedCallback ();
+    disconnectedCallback() {
+      super.disconnectedCallback();
       this._removeAutomaticDataRefreshLoop();
     }
 
@@ -85,7 +93,7 @@
         if (!this.dataLoadedEventName) {
           console.warn('Please specify data loaded event name(dataLoadedEventName property)');
         } else {
-          this.dispatchEvent(new CustomEvent(this.dataLoadedEventName, {bubbles: true, composed: true }));
+          this.fireEvent(this.dataLoadedEventName);
         }
       }
     }
