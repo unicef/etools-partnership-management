@@ -1,4 +1,4 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/iron-validatable-behavior/iron-validatable-behavior.html">
@@ -32,19 +32,20 @@
                  required$="[[required]]"
                  invalid$="[[invalid]]"
                  error-message="[[errorMessage]]">
-      <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
-      <etools-datepicker-button id="datePickerButton"
-                                prefix
-                                format="[[format]]"
-                                pretty-date="{{value}}"
-                                json-date="{{jsonValue}}"
-                                date="[[prepareDate(value)]]"
-                                is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
-                                hidden$="[[readonly]]"
-                                no-init="[[noInit]]"
-                                open="{{open}}"
-                                show-clear-btn="[[showClearBtn]]">
-      </etools-datepicker-button>
+      <span slot="prefix">
+        <iron-icon icon="date-range" hidden$="[[!readonly]]"></iron-icon>
+        <etools-datepicker-button id="datePickerButton"
+                                  format="[[format]]"
+                                  pretty-date="{{value}}"
+                                  json-date="{{jsonValue}}"
+                                  date="[[prepareDate(value)]]"
+                                  is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
+                                  hidden$="[[readonly]]"
+                                  no-init="[[noInit]]"
+                                  open="{{open}}"
+                                  show-clear-btn="[[showClearBtn]]">
+        </etools-datepicker-button>
+      </span>
     </paper-input>
   </template>
 
@@ -53,11 +54,16 @@
 
     /**
      * @polymer
-     * @customElement
-     * @appliedMixin EtoolsPmpApp.Mixins.Date
+     * @mixinFunction
      */
-    class EtoolsDateInput extends Polymer.mixinBehaviors([Polymer.IronValidatableBehavior],
-        EtoolsPmpApp.Mixins.Date(Polymer.Element)) {
+    const EtoolsDateInputRequiredMixins = EtoolsPmpApp.Mixins.Date(Polymer.Element);
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Date
+     */
+    class EtoolsDateInput extends
+        Polymer.mixinBehaviors([Polymer.IronValidatableBehavior], EtoolsDateInputRequiredMixins) {
 
       static get is() {
         return 'etools-date-input';

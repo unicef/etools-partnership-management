@@ -9,73 +9,72 @@
 <link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../modules/mixins/event-helper-mixin.html">
 
 <dom-module id="etools-action-button">
-
-  <style>
-    :host {
-      display: block;
-    }
-
-    paper-button {
-      @apply --layout-horizontal;
-      padding: 0;
-      margin: 0;
-      height: 36px;
-      background-color: var(--etools-action-button-main-color, #0099FF);
-      color: var(--etools-action-button-text-color, #fff);
-    }
-
-    paper-button.grey {
-      background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, .54));
-    }
-
-    paper-menu-button {
-      padding: 0 4px;
-    }
-
-    paper-icon-button {
-      border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
-    }
-
-    .main-btn-part {
-      @apply --layout-flex;
-      text-align: center;
-      font-weight: 500;
-      line-height: 34px;
-    }
-
-    .list-wrapper {
-      position: relative;
-      outline: none;
-      z-index: 5;
-      width: 100%;
-      overflow-y: hidden;
-      background: var(--etools-action-button-text-color, #fff);
-      font-size: 0;
-    }
-
-    .list-wrapper::after {
-      display: none;
-    }
-
-    .list-wrapper paper-item {
-      padding: 0 16px;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      box-sizing: border-box;
-      display: inline-block;
-      line-height: 47px;
-      background: var(--etools-action-button-text-color, #fff);
-      width: 100%;
-      min-width: 120px;
-    }
-
-  </style>
-
   <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-button {
+        @apply --layout-horizontal;
+        padding: 0;
+        margin: 0;
+        height: 36px;
+        background-color: var(--etools-action-button-main-color, #0099FF);
+        color: var(--etools-action-button-text-color, #fff);
+      }
+
+      paper-button.grey {
+        background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, .54));
+      }
+
+      paper-menu-button {
+        padding: 0 4px;
+      }
+
+      paper-icon-button {
+        border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
+      }
+
+      .main-btn-part {
+        @apply --layout-flex;
+        text-align: center;
+        font-weight: 500;
+        line-height: 34px;
+      }
+
+      .list-wrapper {
+        position: relative;
+        outline: none;
+        z-index: 5;
+        width: 100%;
+        overflow-y: hidden;
+        background: var(--etools-action-button-text-color, #fff);
+        font-size: 0;
+      }
+
+      .list-wrapper::after {
+        display: none;
+      }
+
+      .list-wrapper paper-item {
+        padding: 0 16px;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        display: inline-block;
+        line-height: 47px;
+        background: var(--etools-action-button-text-color, #fff);
+        width: 100%;
+        min-width: 120px;
+      }
+
+    </style>
 
     <template is="dom-if" if="[[primaryAction]]">
       <paper-button raised>
@@ -85,8 +84,8 @@
         <template is="dom-if" if="[[secondaryActions.length]]">
           <paper-menu-button horizontal-align="right">
 
-            <paper-icon-button icon="expand-more" class="dropdown-trigger"></paper-icon-button>
-            <paper-listbox class="dropdown-content">
+            <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
+            <paper-listbox slot="dropdown-content">
               <div class="list-wrapper">
                 <template is="dom-repeat" items="[[secondaryActions]]" as="item">
                   <paper-item on-tap="_handleSecondaryClick"> [[item.label]]</paper-item>
@@ -106,8 +105,9 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class EtoolsActionButton extends Polymer.Element {
+    class EtoolsActionButton extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'etools-action-button';
@@ -171,13 +171,12 @@
 
       _handleSecondaryClick(event) {
         let action = event.model.item;
-        this.dispatchEvent(new CustomEvent(action.event, {bubbles: true, composed: true}));
+        this.fireEvent(action.event);
       }
 
       _handlePrimaryClick() {
-        this.dispatchEvent(new CustomEvent(this.primaryAction.event, {bubbles: true, composed: true}));
+        this.fireEvent(this.primaryAction.event);
       }
-
     }
 
     window.customElements.define(EtoolsActionButton.is, EtoolsActionButton);

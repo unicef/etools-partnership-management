@@ -2,10 +2,13 @@
   "entrypoint": "index.html",
   "shell": "pmp/app-shell.html",
   "fragments": [
-
+    "pmp/modules/app-modules/partners/partners-module.html",
+    "pmp/app-elements/partners/partners-list.html",
+    "pmp/app-elements/partners/partner-overview.html",
+    "pmp/app-elements/partners/partner-details.html"
   ],
   "sources": [
-    "src/**/*",
+    "pmp/**/*",
     "images/**/*"
   ],
   "extraDependencies": [

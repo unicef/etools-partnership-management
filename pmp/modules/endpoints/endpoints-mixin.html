@@ -14,8 +14,8 @@
    * PMP endpoints functionality
    * @polymer
    * @mixinFunction
-   * @appliedMixin EtoolsAjaxRequestMixin
-   * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+   * @appliesMixin EtoolsAjaxRequestMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
   EtoolsPmpApp.Mixins.Endpoints = Polymer.dedupingMixin(
       (superClass) => class extends EtoolsAjaxRequestMixin(EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass)) {

@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../endpoints/endpoints-mixin.html">
+<link rel="import" href="event-helper-mixin.html">
 
 <link rel="import" href="../styles/app-mixins.html">
 
@@ -11,13 +12,22 @@
    /*
   * @polymer
   * @mixinFunction
-  * @appliedMixin EtoolsLogsMixin
-  * @appliedMixin etoolsMixins.DynamicDialogBehavior
-  * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-  * @appliedMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsLogsMixin
+  * @appliesMixin EtoolsMixins.DynamicDialogMixin
+  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+  * @appliesMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   */
   EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends
-    EtoolsLogsMixin(etoolsMixins.DynamicDialogBehavior(EtoolsPmpApp.Mixins.Endpoints(EtoolsAjaxRequestMixin(baseClass)))) {
+    EtoolsLogsMixin(
+      EtoolsMixins.DynamicDialogMixin(
+        EtoolsPmpApp.Mixins.Endpoints(
+          EtoolsAjaxRequestMixin(
+            EtoolsPmpApp.Mixins.EventHelper(baseClass)
+          )
+        )
+      )
+     ) {
     // make sure you add DynamicDialogBehavior too in your element //TODO: polymer2 - is comment still valid?
     static get properties() {
       return {
@@ -113,12 +123,10 @@
     _handleDeleteResponse() {
       this._deleteElement();
       this.elToDeleteIndex = -1;
-      let eventPayload = {active: false, loadingSource: this.deleteLoadingSource};
-      this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+      this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
     }
     _handleDeleteError(responseErr) {
-      let eventPayload = {active: false, loadingSource: this.deleteLoadingSource};
-      this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+      this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
 
       let msg = this.deleteActionDefaultErrMsg;
       if (responseErr instanceof Array && responseErr.length > 0) {
@@ -126,8 +134,7 @@
       } else if (typeof responseErr === 'string') {
         msg = responseErr;
       }
-      let toastEventPayload = {text: msg, showCloseBtn: true};
-      this.dispatchEvent(new CustomEvent('toast', {detail: toastEventPayload, bubbles: true, composed: true}));
+      this.fireEvent('toast', {text: msg, showCloseBtn: true});
     }
     _onDeleteConfirmation(event) {
       this.deleteDialog.opened = false;
@@ -142,12 +149,11 @@
             return;
           }
 
-          let eventPayload = {
+          this.fireEvent('global-loading', {
             message: this.deleteActionLoadingMsg,
             active: true,
             loadingSource: this.deleteLoadingSource
-          };
-          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+          });
 
           let self = this;
           let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
@@ -179,8 +185,7 @@
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
 
-        let eventPayload = {index: this.elToDeleteIndex};
-        this.dispatchEvent(new CustomEvent('delete-confirm', {detail: eventPayload, bubbles: true, composed: true}));
+        this.fireEvent('delete-confirm', {index: this.elToDeleteIndex});
       }
     }
 
