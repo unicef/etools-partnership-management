@@ -251,11 +251,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins(
-        [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
+    const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
+          EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
           EtoolsPmpApp.Mixins.EnvironmentFlags, EtoolsPmpApp.Mixins.ScrollControl,
-          EtoolsPmpApp.Mixins.AmendmentMode, EtoolsPmpApp.Mixins.UserData, EtoolsPmpApp.Mixins.EventHelper],
-        Polymer.Element);
+          EtoolsPmpApp.Mixins.AmendmentMode, EtoolsPmpApp.Mixins.UserData, EtoolsPmpApp.Mixins.EventHelper
+        ], Polymer.Element);
 
     /**
      * PMP main element used to configure and display all app modules
@@ -278,7 +278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           module: {
             type: String,
             reflectToAttribute: true,
-            observer: '_moduleChanged',
+            observer: '_moduleChanged'
           },
           route: Object,
           routeData: Object,

@@ -9,7 +9,7 @@
   EtoolsPmpApp.Mixins.EventHelper = Polymer.dedupingMixin((baseClass) => class extends baseClass {
 
     fireEvent(eventName, eventDetail) {
-      this.dispatchEvent(new CustomEvent(eventName,  {
+      this.dispatchEvent(new CustomEvent(eventName, {
         detail: eventDetail,
         bubbles: true,
         composed: true

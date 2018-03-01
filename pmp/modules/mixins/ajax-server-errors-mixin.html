@@ -10,7 +10,7 @@
   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
   */
-  EtoolsPmpApp.Mixins.AjaxServerErrors  = (baseClass) => class extends
+  EtoolsPmpApp.Mixins.AjaxServerErrors = (baseClass) => class extends
       EtoolsPmpApp.Mixins.AjaxErrorsParser(
         EtoolsPmpApp.Mixins.EventHelper(baseClass)
       ) {
@@ -33,7 +33,7 @@
         ajaxLoadingMsgSource: {
           type: String,
           value: ''
-        },
+        }
       };
     }
 
@@ -45,7 +45,7 @@
 
       this.fireEvent('global-loading', {
         active: false,
-        loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
+        loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
       });
 
       let errors = this.tryGetResponseError(response);

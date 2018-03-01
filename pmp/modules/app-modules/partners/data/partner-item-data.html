@@ -23,10 +23,11 @@
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
-    const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints,
+    const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
+          EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints,
           EtoolsPmpApp.Mixins.AjaxServerErrors, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-          EtoolsPmpApp.Mixins.EventHelper], Polymer.Element);
+          EtoolsPmpApp.Mixins.EventHelper
+        ], Polymer.Element);
 
     /**
      * @polymer
@@ -60,7 +61,7 @@
             observer: '_partnerIdChanged'
           },
           deletedPartnerId: {
-            type: Number,
+            type: Number
           },
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
