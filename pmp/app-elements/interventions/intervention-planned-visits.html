@@ -224,7 +224,9 @@
         validate: function() {
           let valid = true;
           this.dataItems.forEach(function(item, index) {
-            valid = this._validateYear(index) && this._validateQuarters(item, index);
+            if (!item.id) {// Avoid validating already saved data which is readonly
+              valid = this._validateYear(item, index) && this._validateQuarters(item, index);
+            }
           }.bind(this));
 
           return valid;
@@ -296,6 +298,9 @@
         },
 
         _yearChanged: function(event) {
+          if (this._plannedVisitIsAlreadySaved(event)) {// Avoid executing logic on page load
+            return;
+          }
           var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
           var yearDropdown = this.$$('#year_' + event.model.index);
 
@@ -311,7 +316,9 @@
             yearDropdown.invalid = false; // Needed because auto-validate has been removed to avoid eager validation
           }
         },
-
+        _plannedVisitIsAlreadySaved: function(event) {
+          return event.model.item && event.model.item.id;
+        },
         _yearAlreadySelected: function(year, dropdownIdx) {
           var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
           if (!dropdowns || !dropdowns.length) {
