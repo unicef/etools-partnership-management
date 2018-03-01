@@ -28,7 +28,7 @@
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../data/staff-members-data-mixin.html">
 
-<link rel="lazy-import" href="../amendments/agreement-amendments.html">
+<link rel="import" href="../amendments/agreement-amendments.html">
 
 <!--
 <link rel="import" href="agreement-status.html">
@@ -287,8 +287,8 @@
       </div>
     </etools-content-panel>
 
-    <!-- <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])"> -->
+    <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
+      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
         <agreement-amendments id="agreementAmendments"
                               data-items="{{agreement.amendments}}"
                               agreement-type="[[agreement.agreement_type]]"
@@ -296,8 +296,8 @@
                               on-unlock-authorized-officers="_unlockAuthorizedOfficers"
                               on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
         </agreement-amendments>
-      <!-- </etools-content-panel>
-    </template> -->
+      </etools-content-panel>
+    </template>
 
   </template>
 
