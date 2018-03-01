@@ -29,10 +29,10 @@
 <link rel="import" href="../../data/staff-members-data-mixin.html">
 
 <link rel="import" href="../amendments/agreement-amendments.html">
+<link rel="import" href="generate-PCA-dialog.html">
 
 <!--
 <link rel="import" href="agreement-status.html">
-<link rel="import" href="generate-PCA-dialog.html">
 -->
 
 <dom-module id="agreement-details">
@@ -262,8 +262,8 @@
               class="form-field-wrapper secondary-btn-wrapper"
               always-float-label>
             <!-- Generate PCA -->
-            <label aria-hidden="true">PCA Agreement to Sign</label>
-            <paper-button class="paper-input-input secondary-btn" on-tap="_openGeneratePCADialog">
+            <label slot="label" aria-hidden="true">PCA Agreement to Sign</label>
+            <paper-button slot="input" class="paper-input-input secondary-btn" id="generateMyPca" on-tap="_openGeneratePCADialog">
               <iron-icon icon="refresh"></iron-icon>
               GENERATE
             </paper-button>
@@ -404,9 +404,9 @@
 
       ready() {
         super.ready();
-        // this.generatePCADialog = document.createElement('generate-pca-dialog');
-        // this.generatePCADialog.setAttribute('id', 'generatePCADialog');
-        // document.querySelector('body').appendChild(this.generatePCADialog);
+        this.generatePCADialog = document.createElement('generate-pca-dialog');
+        this.generatePCADialog.setAttribute('id', 'generatePCADialog');
+        document.querySelector('body').appendChild(this.generatePCADialog);
       }
 
       connectedCallback() {
@@ -423,9 +423,9 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        // if (this.generatePCADialog) {
-        //   document.querySelector('body').removeChild(this.generatePCADialog);
-        // }
+        if (this.generatePCADialog) {
+          document.querySelector('body').removeChild(this.generatePCADialog);
+        }
       }
 
       _isSignedByFieldRequired(permission, relatedSignedByField) {
@@ -532,6 +532,7 @@
           return;
         }
         this.fieldValidationReset('#signedByPartner');
+        //TODO:  check to see if the commented code is still needed
         // if (this.$.signedByPartnerDateField) {
         //   this.$.signedByPartnerDateField.$.dateInput.invalid = false;
         // }
@@ -685,11 +686,10 @@
       }
 
       _openGeneratePCADialog() {
-        // if (!this.generatePCADialog.agreementId) {
-        //   this.generatePCADialog.set('agreementId', this.agreement.id);
-        // }
-        // this.generatePCADialog.open();
-        console.log('generate PCA dialog pending implementation');
+        if (!this.generatePCADialog.agreementId) {
+          this.generatePCADialog.set('agreementId', this.agreement.id);
+        }
+        this.generatePCADialog.open();
       }
 
       /**
@@ -740,6 +740,9 @@
 
       // set authorized officers field readonly mode
       _allowAuthorizedOfficersEditing(agreementStatus, editMode, enableEditForAuthorizedOfficers) {
+        if (!this.agreement) {
+          return false;
+        }
         if (!editMode) {
           // used has no edit permissions
           return false;
