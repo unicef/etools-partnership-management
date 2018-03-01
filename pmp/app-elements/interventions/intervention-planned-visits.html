@@ -39,7 +39,7 @@
       div.col-1 {
         min-width: 85px;
       }
-      div.col-1.year {
+      div.col-1.yearContainer {
         min-width: 100px;
       }
       .error-msg {
@@ -76,7 +76,7 @@
           </div>
           <div class="item-content">
             <div class="row-h">
-              <div class="col col-1 year">
+              <div class="col col-1 yearContainer">
                 <etools-single-selection-menu id$="year_[[index]]"
                                               class="year"
                                               label="Year"
@@ -225,7 +225,7 @@
           let valid = true;
           this.dataItems.forEach(function(item, index) {
             if (!item.id) {// Avoid validating already saved data which is readonly
-              valid = this._validateYear(item, index) && this._validateQuarters(item, index);
+              valid = this._validateYear(index) && this._validateQuarters(item, index);
             }
           }.bind(this));
 
