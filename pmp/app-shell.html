@@ -166,7 +166,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main content -->
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
 
-        <app-header slot="header" condenses reveals effects="waterfall">
+        <app-header slot="header" condenses reveals shadow>
           <page-header id="pageheader" title="eTools"></page-header>
         </app-header>
 
@@ -279,6 +279,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: String,
             reflectToAttribute: true,
             observer: '_moduleChanged',
+          },
+          shadow: {
+            type: Boolean,
+            value: true
           },
           route: Object,
           routeData: Object,
