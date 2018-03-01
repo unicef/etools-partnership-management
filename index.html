@@ -93,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       const BASE_URL = '/pmp/';
       window.Polymer = {rootPath: BASE_URL};
 
-      let prefixPathForRelativeUrls = document.querySelector('base').href;
+      const prefixPathForRelativeUrls = document.querySelector('base').href;
 
       // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
@@ -101,6 +101,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // check express.js to see how service-worker.js file path is set
           navigator.serviceWorker.register('service-worker.js', {
             scope: Polymer.rootPath
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
           });
         });
       }
