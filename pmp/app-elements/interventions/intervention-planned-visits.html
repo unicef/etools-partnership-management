@@ -1,20 +1,22 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
 <dom-module id="intervention-planned-visits">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -25,11 +27,6 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply --paper-fab-btn-green;
-        };
       }
       paper-input {
         width: 100%;
@@ -49,6 +46,15 @@
         @apply --layout-vertical;
         @apply --layout-flex;
         @apply --layout-center-justified;
+      }
+      .add-btn {
+        padding: 0 0;
+        margin-bottom: 20px;
+      }
+      .add-btn iron-icon {
+        margin-right: 0;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
       }
     </style>
 
@@ -156,10 +162,12 @@
       <p>There are no planned visits added.</p>
     </div>
 
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_addNewPlannedVisit"
-                 title="Add"></paper-fab>
+
+    <div class="row-h" hidden$="[[!editMode]]">
+      <paper-button class="secondary-btn add-btn" on-tap="_addNewPlannedVisit">
+          <iron-icon icon="add"></iron-icon>
+          ADD YEAR
+      </paper-button>
     </div>
 
   </template>
