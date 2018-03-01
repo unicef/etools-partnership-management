@@ -3,8 +3,9 @@
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-page-refresh-mixin.html">
 
-<link rel="import" href="../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../modules/mixins/event-helper-mixin.html">
 <link rel="import" href="../redux/etools-data-redux-store.html">
+<link rel="import" href="../endpoints/endpoints-mixin.html">
 <link rel="import" href="user-permissions-mixin.html">
 
 <dom-module id="user-data">
@@ -15,15 +16,16 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsAjaxRequestMixin
-     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-     * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
      * @appliesMixin EtoolsPageRefreshMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
-    const UserDataMixin = EtoolsMixinFactory.combineMixins(
-        [EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-          EtoolsPmpApp.Mixins.UserPermissions, EtoolsPageRefreshMixin],
-        Polymer.Element);
+    const UserDataMixin = EtoolsMixinFactory.combineMixins([
+        EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+        EtoolsPmpApp.Mixins.UserPermissions, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.EventHelper
+      ], Polymer.Element);
 
     /**
      * @polymer
@@ -53,7 +55,7 @@
           permissions: {
             type: Object,
             readOnly: true,
-            notify: true,
+            notify: true
           }
         };
       }
@@ -66,7 +68,7 @@
               user: user
             };
           }
-        }
+        };
       }
 
       connectedCallback() {
@@ -83,7 +85,7 @@
           this._resetUserAndPermissions();
           this.logError('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
-            this.dispatchEvent(new CustomEvent('forbidden', {bubbles: true, composed: true}));
+            this.fireEvent('forbidden');
           }
         });
       }
@@ -98,18 +100,11 @@
             .then((response) => {
               if (response.length > 0) {
                 if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
-
-                  let eventPayload = {
+                  this.fireEvent('global-loading', {
                     message: 'Please wait while data is refreshed...',
                     active: true,
                     loadingSource: 'country-update'
-                  };
-
-                  this.dispatchEvent(new CustomEvent('global-loading', {
-                    detail: eventPayload,
-                    bubbles: true,
-                    composed: true
-                  }));
+                  });
 
                   this.refresh();
                 }
@@ -123,7 +118,7 @@
       addCountryInIndexedDb(country) {
         let dataToCache = {
           cacheKey: 'currentCountry',
-          data: country,
+          data: country
         };
         EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
       }

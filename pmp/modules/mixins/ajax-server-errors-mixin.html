@@ -1,4 +1,5 @@
 <link rel="import" href="ajax-errors-parser-mixin.html">
+<link rel="import" href="event-helper-mixin.html">
 <script>
     /* @namespace EtoolsPmpApp */
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -6,8 +7,13 @@
    /*
   * @polymer
   * @mixinFunction
+  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+  * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
   */
-  EtoolsPmpApp.Mixins.AjaxServerErrors  = (baseClass) => class extends EtoolsPmpApp.Mixins.AjaxErrorsParser(baseClass) {
+  EtoolsPmpApp.Mixins.AjaxServerErrors = (baseClass) => class extends
+      EtoolsPmpApp.Mixins.AjaxErrorsParser(
+        EtoolsPmpApp.Mixins.EventHelper(baseClass)
+      ) {
 
     static get properties() {
       return {
@@ -27,21 +33,20 @@
         ajaxLoadingMsgSource: {
           type: String,
           value: ''
-        },
+        }
       };
     }
 
     handleErrorResponse(response, ajaxMethod, redirectOn404) {
       if (redirectOn404 && response.status === 404) {
-        this.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
+        this.fireEvent('404');
         return;
       }
 
-      let eventPayload = {
+      this.fireEvent('global-loading', {
         active: false,
-        loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
-      };
-      this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+        loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
+      });
 
       let errors = this.tryGetResponseError(response);
 
@@ -59,8 +64,7 @@
         if (this.serverErrors.length > 1) {
           errorMessage = this.serverErrors.join('\n');
         }
-        let eventPayload = {text: errorMessage, showCloseBtn: true};
-        this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
+        this.fireEvent('toast', {text: errorMessage, showCloseBtn: true});
       } else {
         if (this.serverErrors.length === 0) {
           this._fireAjaxErrorEvent(errorMessage);
@@ -75,7 +79,7 @@
         if (typeof errors === 'string') {
           errors = [errors];
         }
-        this.dispatchEvent(new CustomEvent(this.errorEventName, {detail: errors, bubbles: true, composed: true}));
+        this.fireEvent(this.errorEventName, errors);
       }
     }
 
