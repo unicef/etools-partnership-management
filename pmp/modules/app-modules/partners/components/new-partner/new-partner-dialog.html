@@ -7,31 +7,33 @@
 <dom-module id="new-partner-dialog">
   <template>
     <style>
-     #vendorNo {
-      margin-bottom: 30px;
-    }
+      #vendorNo {
+        margin-bottom: 30px;
+      }
     </style>
 
     <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
-       dialog-title="New Partner" on-close="_handleDialogClosed">
+                   dialog-title="New Partner" on-close="_handleDialogClosed">
 
-    <paper-input id="vendorNo" label="Vendor #" value="{{vendor_number}}"
-      placeholder="&#8212;" autofocus
-      required auto-validate error-message="Vendor# is required"
-      allowed-pattern="[0-9]"
-      char-counter
-      maxlength="11"></paper-input>
+      <paper-input id="vendorNo" label="Vendor #" value="{{vendorNumber}}"
+                   placeholder="&#8212;" autofocus
+                   required auto-validate error-message="Vendor# is required"
+                   allowed-pattern="[0-9]"
+                   char-counter
+                   maxlength="11"></paper-input>
 
     </etools-dialog>
 
   </template>
   <script>
     'use strict';
+
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class NewPartnerDialog extends  EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
+    class NewPartnerDialog extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'new-partner-dialog';
@@ -39,12 +41,13 @@
 
       static get properties() {
         return {
-          vendor_number: {
-          type: String
+          vendorNumber: {
+            type: String,
+            value: ''
           },
           vendorNumberIsEmpty: {
             type: Boolean,
-            computed: '_vendorNumberIsEmpty(vendor_number)'
+            computed: '_vendorNumberIsEmpty(vendorNumber)'
           }
         };
       }
@@ -53,18 +56,19 @@
         this.$.vendorNo.invalid = false;
         this.$.newPartnerDialog.opened = true;
       }
+
       _vendorNumberIsEmpty() {
-        return !!!this.vendor_number;
+        return !this.vendorNumber;
       }
 
       _handleDialogClosed(closingReason) {
         if (closingReason.detail.confirmed) {
-          if (!this.vendor_number) {
+          if (!this.vendorNumber) {
             return;
           }
-          this.fireEvent('create-partner', {vendor: this.vendor_number});
+          this.fireEvent('create-partner', {vendor: this.vendorNumber});
         } else {
-          this.vendor_number = '';
+          this.vendorNumber = '';
         }
       }
     }
