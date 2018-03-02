@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
 <link rel="import" href="../../../mixins/list-data-mixin.html">
 <link rel="import" href="../../../config/dexie-db-config.html">
@@ -14,6 +15,7 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPmpApp.Mixins.ListData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
@@ -21,7 +23,8 @@
     const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.ListData
+      EtoolsPmpApp.Mixins.ListData,
+      EtoolsLogsMixin
     ], Polymer.Element);
 
     /**
@@ -171,7 +174,7 @@
           self._setFilteredAgreements(result);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
         }).catch(function(error) {
-          console.error('Error querying agreements: ' + error);
+          this.logError('Error querying agreements: ' + error);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
         });
       }
