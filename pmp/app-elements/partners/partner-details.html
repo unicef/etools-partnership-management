@@ -22,7 +22,6 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
 
-<link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
 
@@ -166,10 +165,6 @@
           </div>
           <div class="col col-4"></div>
         </div>
-
-      </etools-content-panel>
-
-      <etools-content-panel class="content-section" panel-title="Risk Rating & Assessments">
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Risk rating -->
@@ -198,11 +193,6 @@
             </paper-input>
           </div>
         </div>
-
-        <!-- Assessments section -->
-        <div class="assessments">
-          <assessments-items id="assessmentsList" data-items="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
-        </div>
       </etools-content-panel>
 
       <!-- Partner Contacts section-->
@@ -212,6 +202,7 @@
   </template>
 
   <script>
+
     (function() {
       'use strict';
 
@@ -295,15 +286,8 @@
           return false;
         },
 
-        _validatePartner: function() {
-          var valid = true;
-          if (!this.$.assessmentsList.validate()) {
-            valid = false;
-          }
-          if (!this.$.staffMembersList.validate()) {
-            valid = false;
-          }
-          return valid;
+        _validatPageData: function() {
+          return this.$.staffMembersList.validate();
         },
 
       });

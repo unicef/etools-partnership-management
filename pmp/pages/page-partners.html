@@ -113,6 +113,15 @@
                              edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
           </template>
 
+          <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
+            <partner-financial-assurance
+                id="financialAssurance"
+                partner="[[partner]]"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                name="financial-assurance">
+            </partner-financial-assurance>
+          </template>
+
         </iron-pages>
 
       </div> <!-- page content end -->
@@ -127,10 +136,12 @@
               partner="[[partner]]"
               edit-mode$="[[_hasEditPermissions(permissions)]]">
           </partner-status>
-        </div> <!-- sidebar content end -->
+        </div>
       </template>
+      <!-- sidebar content end -->
 
-    </div> <!-- main container end -->
+    </div>
+    <!-- main container end -->
 
     <partner-item-data id="partnerData"
                        partner-id="[[selectedPartnerId]]"
@@ -165,6 +176,11 @@
             {
               tab: 'details',
               tabLabel: 'Partner Details',
+              hidden: false
+            },
+            {
+              tab: 'financial-assurance',
+              tabLabel: 'Financial Assurance',
               hidden: false
             }
           ]
@@ -344,8 +360,17 @@
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        let partnerDetails = this.$$('#partnerDetails');
-        if (partnerDetails && partnerDetails._validatePartner()) {
+
+        let pageToValidate;
+
+        if (this.activePage==='financial-assurance'){
+          pageToValidate = this.$$('#financialAssurance');
+        }
+        else if (this.activePage==='details') {
+          pageToValidate = this.$$('#partnerDetails');
+        }
+
+        if (pageToValidate && pageToValidate._validatePageData()) {
           let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
@@ -363,7 +388,9 @@
           'shared_with',
           'staff_members',
           'assessments',
-          'core_values_assessment'
+          'core_values_assessment',
+          'planned_engagement',
+          'basis_for_risk_rating'
         ];
         let changes = {};
         updateableFields.forEach(function(fieldName) {
