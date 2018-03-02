@@ -18,6 +18,7 @@
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-config/app-constants.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -83,7 +84,7 @@
               <etools-multi-selection-menu
                   label="[[filter.filterName]]"
                   placeholder="&#8212;"
-                  disabled$="[[!filter.selectionOptions.length]"
+                  disabled$="[[!filter.selectionOptions.length]]"
                   options="[[filter.selectionOptions]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
@@ -289,7 +290,8 @@
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.ListFilters,
           EtoolsPmpApp.Behaviors.ListsCommon,
-          EtoolsPmpApp.Behaviors.FrNumbersConsistency
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency,
+          EtoolsPmpApp.Behaviors.Constants
         ],
 
         properties: {
@@ -390,7 +392,8 @@
           _sortableFieldNames: {
             type: Array,
             value: ['number', 'partner_name', 'start', 'end']
-          }
+          },
+          exportType: String
         },
 
         listeners: {
@@ -723,7 +726,12 @@
 
           params.push('format=csv');
           queryString = params.join('&');
-          endpointUrl = this.getEndpoint('interventions').url;
+
+          if (this.exportType === this.PdExportTypes.PdResult) {
+            endpointUrl = this.getEndpoint('engagements').url;
+          } else {
+            endpointUrl = this.getEndpoint('interventions').url;
+          }
 
           return endpointUrl + '?' + queryString;
         },

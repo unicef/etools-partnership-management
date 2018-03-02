@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
@@ -21,6 +23,7 @@
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
+<link rel="import" href="../app-config/app-constants.html">
 
 <link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -41,6 +44,17 @@
 
       .no-capitalization {
         text-transform: none;
+      }
+      .export-dd {
+        width: 105px;
+      }
+      .export-options {
+        padding-bottom: 20px;
+      }
+      paper-dropdown-menu {
+        --paper-input-container: {
+          padding-bottom: 3px;
+        };
       }
     </style>
 
@@ -68,8 +82,14 @@
         </template>
       </div>
 
-      <div slot="title-row-actions" class="content-header-actions">
-        <div class="action" hidden$="[[!listActive]]">
+      <div slot="title-row-actions" class="content-header-actions export-options">
+        <paper-dropdown-menu class="export-dd" label="Export" hidden$="[[!listActive]]">
+          <paper-listbox attr-for-selected="exp-type" class="dropdown-content" selected="{{exportType}}">
+              <paper-item exp-type$="[[PdExportTypes.PdBudget]]">[[PdExportTypes.PdBudget]]</paper-item>
+              <paper-item exp-type$="[[PdExportTypes.PdResult]]">[[PdExportTypes.PdResult]]</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <div hidden$="[[!listActive]]">
           <a target="_blank" href$="[[csvDownloadUrl]]">
             <paper-button>
               <iron-icon icon="file-download"></iron-icon>
@@ -77,7 +97,7 @@
             </paper-button>
           </a>
         </div>
-        <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+        <div hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
           <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
             <iron-icon icon="add"></iron-icon>
             Add new PD/SSFA
@@ -104,6 +124,7 @@
             <interventions-list id="intList"
                                 name="list"
                                 active="[[listActive]]"
+                                export-type="[[exportType]]"
                                 csv-download-url="{{csvDownloadUrl}}"
                                 url-params="[[preservedListQueryParams]]">
             </interventions-list>
@@ -204,7 +225,8 @@
         EtoolsPmpApp.Behaviors.Subroute,
         EtoolsPmpApp.Behaviors.InterventionPageTabs,
         EtoolsPmpApp.Behaviors.InterventionPermissions,
-        EtoolsPmpApp.Behaviors.SaveIntervention
+        EtoolsPmpApp.Behaviors.SaveIntervention,
+        EtoolsPmpApp.Behaviors.Constants
       ],
       properties: {
         permissions: {
@@ -292,7 +314,11 @@
         },
         _forceDetUiValidationOnAttach: Boolean,
         _forceReviewUiValidationOnAttach: Boolean,
-        reportsPrevParams: Object
+        reportsPrevParams: Object,
+        exportType: {
+          type: String,
+          value: 'PD Budget'
+        }
       },
       observers: [
         '_pageChanged(listActive, tabsActive, routeData)',
