@@ -1,0 +1,67 @@
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../app-config/app-endpoints.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<dom-module id="environment-flags">
+  <script>
+    Polymer({
+      is: 'environment-flags',
+      properties: {
+        envFlagsDefaultValue: {
+          type: Object,
+          value: {
+            prp_mode_off: true,
+            prp_server_on: false
+          }
+        }
+      },
+      actions: {
+        processAndSetEnvFlags: function(envFlags) {
+          let flags = envFlags.active_flags;
+          let flagObject = {
+            prp_mode_off: false
+          };
+
+          for (let key in flags) {
+            let flag = flags[key];
+            flagObject[flag] = true;
+          }
+          return {
+            type: 'SET_ENV_FLAGS',
+            envFlags: flagObject
+          };
+        },
+        setEnvFlags: function(flagsObj) {
+          return {
+            type: 'SET_ENV_FLAGS',
+            envFlags: flagsObj
+          };
+        }
+      },
+      behaviors: [
+        EtoolsLogsBehavior,
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+      ],
+
+      ready: function() {
+        let self = this;
+        let requestConfig = {
+          endpoint: EtoolsPmpApp.Endpoints.environmentFlags
+        };
+
+        this.sendRequest(requestConfig).then(function(response) {
+          if (response) {
+            self.dispatch('processAndSetEnvFlags', response);
+          } else {
+            self.dispatch('setEnvFlags', self.envFlagsDefaultValue);
+          }
+        }).catch(function(error) {
+          self.logError('Env flags request failed', null, error);
+          self.dispatch('setEnvFlags', self.envFlagsDefaultValue);
+        });
+      },
+    });
+  </script>
+</dom-module>

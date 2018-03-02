@@ -21,12 +21,12 @@ function minify() {
  * .pipe(gulpCssLint.formatter('fail')); // Fail on error
  */
 
-var lint = lazypipe()
-  .pipe(csslint, {
-    // options
-    'shorthand': false
-  })
-  .pipe(csslint.formatter);
+const lint = lazypipe()
+    .pipe(csslint, {
+      // options
+      'shorthand': false
+    })
+    .pipe(csslint.formatter);
 
 module.exports = {
   minify: minify,

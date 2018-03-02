@@ -21,11 +21,6 @@
         type: Object,
         value: null
       },
-      open: {
-        type: Boolean,
-        value: true,
-        reflectToAttribute: true
-      },
       editMode: {
         type: Boolean,
         reflectToAttribute: true,
@@ -63,22 +58,14 @@
       this.removeDialog(this.deleteDialog);
     },
 
-    _toggle: function() {
-      this.set('open', !this.open);
-    },
-
-    _getExpandBtnIcon: function(open) {
-      if (!open) {
-        return 'icons:expand-more';
-      }
-      return 'icons:expand-less';
-    },
-
     _emptyList: function(listLength) {
       return listLength === 0;
     },
 
-    _getItemModelObject: function() {
+    _getItemModelObject: function(addNull) {
+      if (addNull) {
+        return null;
+      }
       if (this.dataSetModel === null) {
         let newObj = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
@@ -86,23 +73,25 @@
             newObj[property] = ''; //(this.model[0][property]) ? this.model[0][property] :
           }.bind(this));
         }
+
         return newObj;
       } else {
         return JSON.parse(JSON.stringify(this.dataSetModel));
       }
     },
 
-    _addElement: function() {
+    _addElement: function(addNull) {
       if (!this.editMode) {
         return;
       }
       this._makeSureDataItemsAreValid();
 
-      let newObj = this._getItemModelObject();
+      let newObj = this._getItemModelObject(addNull);
       this.push('dataItems', newObj);
     },
 
     _openDeleteConfirmation: function(event) {
+      event.stopPropagation();
       if (!this.editMode) {
         return;
       }
@@ -128,7 +117,8 @@
     _onDeleteConfirmation: function(event) {
       this.deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
-        let id = this.dataItems[this.elToDeleteIndex].id;
+
+        let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
 
         if (id) {
 

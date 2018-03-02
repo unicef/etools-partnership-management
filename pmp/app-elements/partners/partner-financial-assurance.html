@@ -21,16 +21,17 @@
 
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html"/>
+<link rel="import" href="../../app-config/app-config.html"/>
 <link rel="import" href="../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
-<link rel="import" href="../../app-config/app-config-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
@@ -41,7 +42,7 @@
 
 <dom-module id="partner-financial-assurance">
   <template>
-    <style include="page-layout-styles grid-layout-styles shared-styles iron-flex-factors iron-flex iron-flex-alignment">
+    <style include="page-common-styles grid-layout-styles shared-styles iron-flex-factors iron-flex iron-flex-alignment">
 
       :host {
         --paper-radio-button-label-spacing: 0px;
@@ -229,7 +230,7 @@
           <etools-single-selection-menu label="Basis For Risk Rating"
                                        options="[[basisOptions]]"
                                        selected="{{partner.basis_for_risk_rating}}"
-                                       readonly$="[[!editmode]]"
+                                        disabled="[[!editMode]]"
                                        avoid-header-overlapping-dropdown
           ></etools-single-selection-menu>
         </div>
@@ -354,7 +355,6 @@
                     selected="{{scheduledAuditRequired}}"
                     hide-search
                     disabled="[[!editMode]]"
-
                 >
                 </etools-single-selection-menu>
               </div>
@@ -445,6 +445,7 @@
         EtoolsPmpApp.Behaviors.Common,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Config,
         EtoolsPmpApp.Behaviors.AjaxServerErrors,
         EtoolsPmpApp.Behaviors.ListsCommon,
         etoolsBehaviors.EtoolsCurrencyBehavior,
@@ -521,7 +522,7 @@
          * triggered by parent element on stamp or by tap event on tabs
          */
         this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
-        this.fire('partners-page-attached');
+        this.fire('tab-content-attached');
       },
 
       _init(engagements){

@@ -10,9 +10,9 @@ const gulp = require('gulp');
 const del = require('del');
 const useref = require('gulp-useref');
 
-var indexPath = '';
-var bowerPath = '';
-var templatePath = '';
+let indexPath = '';
+let bowerPath = '';
+let templatePath = '';
 
 // Configure the main eTools project paths
 function config() {
@@ -25,7 +25,7 @@ function config() {
 }
 
 // Move index.html and bower.json to templates dir
-var moveToTemplate = function() {
+function moveToTemplate() {
   return new Promise(resolve => {
     gulp.src([indexPath, bowerPath])
       .pipe(useref({ //replace import paths
@@ -39,7 +39,7 @@ var moveToTemplate = function() {
 }
 
 // Delete index.html and bower.json from the assets dir
-var deleteFromBase = function() {
+function deleteFromBase() {
   return del([indexPath, bowerPath], {force: true});
 }
 

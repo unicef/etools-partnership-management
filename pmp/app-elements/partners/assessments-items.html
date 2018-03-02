@@ -1,16 +1,17 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
@@ -26,7 +27,7 @@
 
 <dom-module id="assessments-items">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles paper-material-styles">
       [hidden] {
         display: none !important;
       }
@@ -39,6 +40,8 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
 
+        --paper-radio-button-size: 20px;
+
         --paper-toolbar-height: 40px;
         --paper-toolbar-background: var(--medium-theme-background-color);
         --paper-toolbar: {
@@ -47,22 +50,33 @@
           border-radius: 8px;
         };
         --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
+          @apply --nested-content-panel-title;
         };
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
 
       }
-
-      paper-material {
-        padding: 0;
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+      div[elevation="2"] {
+        @apply --paper-material-elevation-2;
+      }
+      div[elevation="3"] {
+        @apply --paper-material-elevation-3;
+      }
+      div[elevation="4"] {
+        @apply --paper-material-elevation-4;
+      }
+      div[elevation="5"] {
+        @apply --paper-material-elevation-5;
       }
 
       paper-toolbar paper-icon-button {
-        @apply(--nested-content-panel-collapse-btn);
+        @apply --nested-content-panel-collapse-btn;
       }
 
       #assessments-wrapper {
@@ -81,12 +95,24 @@
         padding-bottom: 15px;
       }
 
+      paper-radio-button[disabled][checked] {
+        --paper-radio-button-unchecked-color: var(--primary-color);
+        opacity: 1 !important;
+      }
+      etools-form-element-wrapper {
+        --etools-form-element-wrapper-max-width: 150px;
+        --paper-input-container: {
+          text-align: center;
+        };
+        --paper-input-container-focus-color: var(--secondary-text-color);
+      }
+
     </style>
 
-    <paper-material elevation="[[elevation]]">
+    <div elevation="[[elevation]]">
 
       <paper-toolbar>
-        <paper-icon-button on-click="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
+        <paper-icon-button on-tap="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
         <div class="title">Assessments</div>
       </paper-toolbar>
 
@@ -144,15 +170,13 @@
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
-                      <div class="custom-field-wrapper">
-                        <etools-checkable-input checked="{{item.current}}"
-                                                label="Basis for Risk Rating"
-                                                type="radio"
-                                                label-alignment="top"
-                                                readonly$="[[!editMode]]"
-                                                on-value-changed="_basisForRiskRatingChanged"
-                                                data-args$="[[index]]"></etools-checkable-input>
-                      </div>
+                        <etools-form-element-wrapper label="Basis for Risk Rating">
+                          <paper-radio-button checked="{{item.current}}"
+                            disabled="[[!editMode]]"
+                            on-checked-changed="_basisForRiskRatingChanged"
+                            data-args$="[[index]]">
+                          </paper-radio-button>
+                        </etools-form-element-wrapper>
                     </div>
                   </div>
                   <div class="row-h file-container">
@@ -184,7 +208,7 @@
         </div>
       </iron-collapse>
 
-    </paper-material>
+    </div>
 
   </template>
 
@@ -221,6 +245,16 @@
               missing: 'Date of Assessment is required',
               futureDate: 'Date of Assesment cannot be in the future'
             }
+          },
+          open: {
+            type: Boolean,
+            value: true,
+            reflectToAttribute: true
+          },
+          editMode: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_editModeChanged'
           }
         },
 
@@ -238,6 +272,9 @@
             report_file: ''
           };
         },
+        _editModeChanged: function() {
+          this.updateStyles();
+        },
         _hideDeleteBtn: function(itemReportFile) {
            if (!itemReportFile) {
             return false;
@@ -252,6 +289,17 @@
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
+        },
+
+        _toggle: function() {
+          this.set('open', !this.open);
+        },
+
+        _getExpandBtnIcon: function(open) {
+          if (!open) {
+            return 'icons:expand-more';
+          }
+          return 'icons:expand-less';
         },
 
         _assessmentPropertyChanged: function(dataPath) {
@@ -271,7 +319,7 @@
           if (!this.editMode) {
             return;
           }
-          if (event.detail.checked === true) {
+          if (event.detail.value === true) {
             var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
             for (var i = 0; i < this.dataItems.length; i++) {
               if (i !== index) {

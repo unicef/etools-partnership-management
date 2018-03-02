@@ -7,13 +7,13 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
-<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
@@ -23,7 +23,7 @@
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
-<link rel="import" href="intervention-amendments.html">
+<link rel="import" href="amendments/intervention-amendments.html">
 <link rel="import" href="fr-numbers/intervention-fund-reservations.html">
 <link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
@@ -31,7 +31,7 @@
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles file-styles required-field-starred-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles file-styles required-field-starred-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -40,8 +40,20 @@
       paper-input {
         width: 100%;
       }
-      etools-checkable-input[readonly] {
+
+      paper-checkbox {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        min-height: 24px;
+      }
+
+      paper-checkbox[disabled] {
         cursor: not-allowed;
+        --paper-checkbox-unchecked-color:black;
+        --paper-checkbox-label:{
+          color: var(--primary-text-color);
+          opacity: 1;
+        };
       }
     </style>
 
@@ -59,14 +71,11 @@
           <div class="col col-3">
             <!-- Submitted to PRC? -->
             <etools-form-element-wrapper>
-              <etools-checkable-input checked="{{intervention.submitted_to_prc}}"
-                                      label="Submitted to PRC?"
-                                      type="checkbox"
-                                      label-alignment="right"
-                                      readonly$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
-                                      unchanged-readonly-style
+              <paper-checkbox checked="{{intervention.submitted_to_prc}}"
+                                      disabled$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
                                       hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
-              </etools-checkable-input>
+                                      Submitted to PRC?
+              </paper-checkbox>
             </etools-form-element-wrapper>
           </div>
         </div>
@@ -143,8 +152,8 @@
                                       label="Signed by UNICEF"
                                       placeholder="&#8212;"
                                       options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
-                                      option-value="user_id"
-                                      option-label="full_name"
+                                      option-value="id"
+                                      option-label="name"
                                       selected="{{intervention.unicef_signatory}}"
                                       dynamic-align
                                       readonly$="[[!intervention.permissions.edit.unicef_signatory]]"
@@ -206,12 +215,13 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments">
-        <intervention-amendments id="intervAmendments"
-                                 intervention-document-type="[[intervention.document_type]]"
-                                 data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[intervention.permissions.edit.amendments]]"></intervention-amendments>
-      </etools-content-panel>
+      <intervention-amendments  class="content-section"
+                                intervention-document-type="[[intervention.document_type]]"
+                                intervention-id="[[intervention.id]]"
+                                amend-action-in-progress="{{intervention.in_amendment}}"
+                                data-items="{{intervention.amendments}}"
+                                edit-mode$="[[intervention.permissions.edit.amendments]]">
+      </intervention-amendments>
     </template>
 
     <intervention-fund-reservations class="content-section"
@@ -270,7 +280,8 @@
         },
         observers: [
           '_interventionDocTypeChanged(intervention.document_type)',
-          '_signedPdDocHasChanged(intervention.signed_pd_document)'
+          '_signedPdDocHasChanged(intervention.signed_pd_document)',
+          '_updateStyles(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)'
         ],
 
         attached: function() {
@@ -279,8 +290,11 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-          this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
+          this.fire('tab-content-attached');
+        },
+        _updateStyles: function() {
+          this.updateStyles();
         },
         _isDraft: function(status) {
           return status === 'draft' || status === '';
@@ -336,7 +350,7 @@
         },
         validate: function() {
           let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByUnicef','#signedIntervFile',
-            '#signedByPartnerDateField', '#signedByUnicefDateField', '#intervAmendments'];
+            '#signedByPartnerDateField', '#signedByUnicefDateField'];
           let valid = true;
 
           fieldsToValidateSelectors.forEach(function(selector) {
@@ -383,9 +397,8 @@
           e.stopImmediatePropagation();
           try {
             this.set('intervention.frs_details', e.detail.frsDetails);
-            this.set('intervention.frs', e.detail.frsDetails.frs.map(function(fr) {
-              return fr.id;
-            }));
+            let frIds = e.detail.frsDetails.frs.map((fr) => fr.id);
+            this.set('intervention.frs', frIds);
           } catch (err) {
             this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
           }

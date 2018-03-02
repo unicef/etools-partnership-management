@@ -55,8 +55,8 @@
       }
 
       .right-side {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       .titlebar {
@@ -71,8 +71,8 @@
       }
 
       .content-align {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       #second-logo {
@@ -90,7 +90,7 @@
         }
       }
     </style>
-    <user-profile-data id="userProfileData" user-profile="{{profile}}"></user-profile-data>
+    <user-profile-data id="userProfileData" user-profile="{{originalProfile}}"></user-profile-data>
     <app-toolbar sticky class="content-align">
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
       <div class="titlebar content-align">
@@ -99,7 +99,7 @@
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
-                            current="[[user.profile.country]]"></countries-dropdown>
+                            current-country="[[user.country]]"></countries-dropdown>
         <etools-profile-dropdown
             sections="[[allSections]]"
             offices="[[allOffices]]"
@@ -153,16 +153,36 @@
             notify: true,
             computed: '_convertUsers(users)'
           },
+          originalProfile: {
+            type: Object,
+            observer: '_handleProfileLoaded'
+          },
+          editableFields: {
+            type: Array,
+            value: [
+              'office',
+              'section',
+              'job_title',
+              'phone_number',
+              'oic',
+              'supervisor'
+            ]
+          },
 
           userProfileDialog: Object
         },
         observers: [
-          '_updateCountriesList(user.profile.countries_available)'
+          '_updateCountriesList(user.countries_available)'
         ],
 
         openDrawer: function() {
           this.fire('drawer');
         },
+
+        _handleProfileLoaded: function(profileData) {
+          this.set('profile', JSON.parse(JSON.stringify(profileData)));
+        },
+
         _getFlagIconClass: function(id) {
           var flagIdMap = {
             '0': 'us',
@@ -212,14 +232,15 @@
         _convertUsers: function(data) {
           return data.map(function(d) {
             return {
-              value: parseInt(d.user_id, 10),
-              label: d.full_name
+              value: parseInt(d.id, 10),
+              label: d.name
             };
           });
         },
         _saveProfile: function(e) {
           this.set('profile', e.detail.profile);
-          this.$.userProfileData.saveProfile(this.profile);
+          let modifiedFields = this._getModifiedFields(this.originalProfile, this.profile);
+          this.$.userProfileData.saveProfile(modifiedFields);
         },
         _signOut: function() {
           this._clearDexieDbs();
@@ -232,6 +253,16 @@
         _clearLocalStorage: function() {
           localStorage.clear();
         },
+        _getModifiedFields: function(originalData, newData) {
+          let modifiedFields = {};
+          this.editableFields.forEach(function(field) {
+            if (originalData[field] !== newData[field]) {
+              modifiedFields[field] = newData[field];
+            }
+          });
+
+          return modifiedFields;
+        }
       });
     })();
   </script>

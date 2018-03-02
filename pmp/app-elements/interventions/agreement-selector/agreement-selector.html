@@ -152,9 +152,9 @@
             return partner.id === agreement.partner;
           });
           if (!partner) {
-            let partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name + ' is not CSO or it\'s hidden!' +
-              ' In edit mode you will not be able to see this partner in the available partners organizations and ' +
-              'nor the agreement number.';
+            let partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name +
+              ' is not CSO or it\'s hidden! In edit mode you will not be able to see this partner in the ' +
+              'available partners organizations and nor the agreement number.';
             this.fire('toast', {text: partnerIsHiddenOrNotCSOMsg, showCloseBtn: true});
             return;
           }
@@ -193,11 +193,11 @@
         },
 
         resetValidations: function() {
-          let agEl = this.$.agreements;
+          let agEl = this.$$('#agreements');
           if (agEl) {
             agEl.resetInvalidState();
           }
-          let pEl = this.$.partner;
+          let pEl = this.$$('#partner');
           if (pEl) {
             pEl.resetInvalidState();
           }
@@ -207,14 +207,14 @@
           let valid = true;
           if (!this.agreementId) {
             valid = false;
-            let agEl = this.$.agreements;
+            let agEl = this.$$('#agreements');
             if (agEl) {
               agEl.invalid = true;
             }
           }
           if (!this.partnerId) {
             valid = false;
-            let pEl = this.$.partner;
+            let pEl = this.$$('#partner');
             if (pEl) {
               pEl.invalid = true;
             }

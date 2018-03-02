@@ -1,0 +1,269 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../edit-delete-actions.html">
+
+
+<dom-module id="applied-indicator">
+  <template strip-whitespace>
+    <style include="grid-layout-styles data-table-styles shared-styles">
+       [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+         /* '!important' is for IE */
+        --list-bg-color: #eeeeee !important;
+        --list-second-bg-color: #dfdfdf !important;
+        --list-icon-color: white !important;
+        --edit-delete-actions: {
+          background-color: #dfdfdf !important;
+          margin-right: -8px;
+        };
+        --list-row-wrapper: {
+          padding: 0 24px 0 0 !important;
+        };
+
+        --list-row-collapse-wrapper: {
+          padding: 16px 24px 16px 24px !important;
+          max-height: 220px;
+          overflow-y: auto;
+        };
+
+        --icon-wrapper: {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          @apply --layout-self-stretch;
+          min-height: 48px;
+          height: auto;
+          padding: 0 !important;
+          margin-right: 16px !important;
+          background-color: var(--collapse-icon-bg-color, var(--primary-color));
+        };
+      }
+
+      .divider {
+        height: 24px;
+      }
+      .padd-left {
+        padding-left: 16px;
+      }
+
+      edit-delete-actions {
+        visibility:hidden;
+      }
+      etools-data-table-row div[slot="row-data"]:hover edit-delete-actions{
+        visibility: visible;
+      }
+      .bolder-txt {
+        font-weight: 600;
+      }
+    </style>
+
+
+    <etools-data-table-row>
+      <div slot="row-data" class="p-relative">
+        <div class="col-8">
+            [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
+        </div>
+        <div class="col-2 right-align">
+            [[_displayIndicatorValue(indicator.baseline)]]
+        </div>
+        <div class="col-2 right-align">
+            [[_displayIndicatorValue(indicator.target)]]
+        </div>
+        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[_showDelete(interventionStatus)]]"></edit-delete-actions>
+      </div>
+
+      <div slot="row-data-details">
+        <div class="layout-horizontal w100">
+          <div class="col-4">
+            <div class="header-text">Section / Cluster</div>
+            <div>[[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]</div>
+            <div class="divider"></div>
+            <div class="header-text">Disaggregation</div>
+            <template is="dom-repeat" items="[[disaggregationNames]]">
+                <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
+            </template>
+            <div hidden="[[disaggregationNames.length]]">—</div>
+          </div>
+          <div class="col-8 padd-left">
+              <div class="header-text">Locations</div>
+              <template is="dom-repeat" items="[[locationNames]]">
+                  <div><span class="bolder-txt">[[item.name]]</span> [[item.adminLevel]]</div>
+              </template>
+          </div>
+        </div>
+      </div>
+      </etools-data-table-row>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'applied-indicator',
+        properties: {
+          indicator: {
+            type: Object
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
+          locationNames: {
+            type: Array,
+            value: []
+          },
+          sections: {
+            type: Array,
+            statePath: 'sections'
+          },
+          disaggregations: {
+            type: Array,
+            statePath: 'disaggregations'
+          },
+          disaggregationNames: {
+            type: Array,
+            value: ['—']
+          },
+          showDelete: {
+            type: Boolean,
+            value: false
+          },
+          editMode: {
+            type: Boolean
+          },
+          interventionStatus: String
+        },
+        behaviors: [
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+        ],
+        observers: [
+          'setIndicatorDetails(indicator, disaggregations, locations)'
+        ],
+        listeners: {
+          'edit': '_editIndicator',
+          'delete': '_deleteIndicator'
+        },
+        _showDelete: function(interventionStatus) {
+          return (!interventionStatus || interventionStatus === 'draft');
+        },
+        setIndicatorDetails: function(indicator) {
+          this._updateCollapsableIconBg(indicator);
+          this._setLocationNames();
+          this._setDisaggregationNames();
+        },
+        _editIndicator: function(e) {
+          e.stopPropagation();
+          this.fire('edit-indicator');
+        },
+
+        _deleteIndicator: function(e) {
+          e.stopPropagation();
+          this.fire('delete-indicator');
+        },
+        _updateCollapsableIconBg: function(indicator) {
+          if (indicator.cluster_indicator_id) {
+            this.customStyle['--collapse-icon-bg-color'] = 'var(--ternary-color)';
+          } else {
+            this.customStyle['--collapse-icon-bg-color'] = 'var(--primary-color)';
+          }
+
+          this.updateStyles();
+        },
+        _setLocationNames: function() {
+          if (!this.locations) {
+            return;
+          }
+          let locations = this.locations.filter(function(loc) {
+            return this.indicator.locations.indexOf(parseInt(loc.id)) > -1;
+          }.bind(this));
+          let locNames = locations.map(function(l) {
+            return {name: l.name.substring(0, l.name.indexOf('[')),
+                    adminLevel: l.name.substring(l.name.indexOf('['))
+                   };
+          });
+          this.locationNames = locNames;
+        },
+        getSectionName: function(sectionId) {
+          if (!sectionId) {
+            return '—';
+          }
+          let section = this.sections.find(function(s) {
+            return parseInt(s.id) === parseInt(sectionId);
+          });
+          if (!section) {
+            return '—';
+          }
+          return section.name;
+        },
+        getClusterName: function(clusterName) {
+          if (!clusterName) {
+            return '—';
+          }
+          return clusterName;
+        },
+        _setDisaggregationNames: function() {
+          if (!this.indicator.disaggregation || !this.indicator.disaggregation.length) {
+            this.disaggregationNames = [];
+            return;
+          }
+          let disaggregs = this.disaggregations.filter(function(d) {
+            return this.indicator.disaggregation.indexOf(parseInt(d.id)) > -1;
+          }.bind(this));
+          let disaggregNames = disaggregs.map(function(d) {
+            return {name: d.name , groups: this._getDisaggregGroups(d.disaggregation_values)};
+          }.bind(this));
+          this.disaggregationNames = disaggregNames;
+        },
+        _getDisaggregGroups: function(disaggregGroups) {
+          if (!disaggregGroups || !disaggregGroups.length) {
+            return '—';
+          }
+          let groups = disaggregGroups.reduce(function(flattened, current) {
+            return flattened + ', ' + current.value;
+          }, '');
+
+          return groups.substring(1, groups.length);
+        },
+
+        _getIndicatorType: function(unit) {
+          if (!unit) {
+            return '';
+          }
+          switch (unit) {
+            case 'number':
+              return '# ';
+            case 'percentage':
+              return '% ';
+          }
+        },
+        _getIndicatorTitle: function(indicator) {
+          if (!indicator) {
+            return '—';
+          }
+          if (indicator.cluster_indicator_id) {
+            return indicator.cluster_indicator_title;
+          } else {
+            return indicator.indicator ? indicator.indicator.title : '—';
+          }
+
+        },
+        _displayIndicatorValue: function(value) {
+          value = (value || parseInt(value) === 0) ? value.toString() : '';
+          if (value) {
+            return value;
+          } else {
+            return '—';
+          }
+        },
+      });
+    })();
+  </script>
+</dom-module>

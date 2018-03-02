@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <style is="custom-style">
-  :root {
+  html {
 
     --page-title: {
       margin: 0;
@@ -46,9 +46,17 @@
       font-weight: bold;
     };
 
+    --text-btn-style: {
+      color: var(--primary-color);
+      text-transform: uppercase;
+      font-weight: 500;
+      text-decoration: none;
+      outline: inherit;
+    };
+
     --partner-status-wrapper: {
-      @apply(--layout-vertical);
-      @apply(--layout-center-justified);
+      @apply --layout-vertical;
+      @apply --layout-center-justified;
       width: 24px;
       height: 24px;
       -webkit-border-radius: 50%;
@@ -61,12 +69,6 @@
       overflow-x: hidden;
       overflow-y: auto;
     };
-
-    --pmp-form-field-frs-inconsistency-icon: {
-      margin-left: 8px;
-      align-self: flex-end;
-      margin-bottom: 11px;
-    }
 
   }
 </style>
