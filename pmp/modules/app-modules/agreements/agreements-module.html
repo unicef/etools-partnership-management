@@ -25,6 +25,7 @@
 <link rel="import" href="../../styles/buttons-styles.html">
 
 <link rel="import" href="data/agreement-item-data.html">
+<link rel="import" href="pages/status/agreement-status.html">
 <link rel="lazy-import" href="pages/list/agreements-list.html">
 <link rel="lazy-import" href="pages/details/agreement-details.html">
 <!-- TODO: Check for unused imports -->
@@ -120,7 +121,7 @@
       <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, agreement)]]">
         <!-- sidebar content start -->
         <div id="sidebar">
-          <!-- <agreement-status status$="[[agreement.status]]"
+          <agreement-status status$="[[agreement.status]]"
                             active="[[!listActive]]"
                             new-agreement$="[[newAgreementActive]]"
                             agreement-id$="[[agreement.id]]"
@@ -128,7 +129,7 @@
                             on-save-agreement="_validateAndTriggerAgreementSave"
                             edit-mode="[[_hasEditPermissions(permissions)]]"
                             on-update-agreement-status="_updateAgreementStatus">
-          </agreement-status> -->
+          </agreement-status>
         </div><!-- sidebar content end -->
       </template>
 
