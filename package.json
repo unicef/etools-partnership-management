@@ -14,7 +14,7 @@
   "scripts": {
     "lint": "npm run lint:javascript && polymer lint && exit 0",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore && exit 0",
-    "build": "npm run lint && polymer build",
+    "build": "polymer build",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
   },
