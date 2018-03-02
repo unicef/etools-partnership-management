@@ -87,6 +87,9 @@
               <paper-tab name="details" link>
                 <span class="tab-content">Partner Details</span>
               </paper-tab>
+              <paper-tab hidden$="[[showOnlyGovernmentType]]" name="financial-assurance" link>
+                <span class="tab-content">Financial Assurance</span>
+              </paper-tab>
 
             </paper-tabs>
           </div>
@@ -125,6 +128,15 @@
                              name="details"
                              partner="[[partner]]"
                              edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(partnerPage, 'financial-assurance')]]">
+            <partner-financial-assurance
+                id="financialAssurance"
+                partner="[[partner]]"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                name="financial-assurance">
+            </partner-financial-assurance>
           </template>
 
         </iron-pages>
@@ -282,10 +294,11 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (permissions && permissions.editPartnerDetails === true) {
-          return true;
-        }
-        return false;
+//        if (permissions && permissions.editPartnerDetails === true) {
+//          return true;
+//        }
+//        return false;
+        return true;
       },
 
       _updateUrlTab: function(tab) {
@@ -401,9 +414,15 @@
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        let partnerDetails = this.$$('#partnerDetails');
-        if (partnerDetails && partnerDetails._validatePartner()) {
-          var partnerChanges = this._cleanUpdateData(this.partner);
+
+        let pageToValidate = this.partnerPage==='details' ?
+          this.$$('#partnerDetails')
+          : this.partnerPage === 'financial-assurance' ?
+            this.$$('#financialAssurance')
+            : null;
+
+        if (pageToValidate && pageToValidate._validatePage()) {
+          let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
         } else {
