@@ -1,19 +1,22 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
 <dom-module id="intervention-planned-visits">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -24,14 +27,37 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply --paper-fab-btn-green;
-        };
       }
       paper-input {
         width: 100%;
+      }
+      etools-form-element-wrapper {
+        --paper-input-container: {
+          text-align: center;
+        };
+      }
+      div.col-1 {
+        min-width: 85px;
+      }
+      div.col-1.yearContainer {
+        min-width: 100px;
+      }
+      .error-msg {
+        color: var(--error-color);
+        font-size: 12px;
+
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-center-justified;
+      }
+      .add-btn {
+        padding: 0 0;
+        margin-bottom: 20px;
+      }
+      .add-btn iron-icon {
+        margin-right: 0;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
       }
     </style>
 
@@ -50,57 +76,84 @@
           </div>
           <div class="item-content">
             <div class="row-h">
-              <div class="col col-2">
+              <div class="col col-1 yearContainer">
                 <etools-single-selection-menu id$="year_[[index]]"
                                               class="year"
                                               label="Year"
                                               placeholder="&#8212;"
                                               selected="{{item.year}}"
                                               options="[[years]]"
-                                              required$="[[item.programmatic]]"
-                                              auto-validate
-                                              error-message="Required if visits are specified"
-                                              on-iron-activate="_yearChanged"
+                                              required
+                                              error-message="Required"
+                                              on-iron-select="_yearChanged"
                                               readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
               </div>
-              <div class="col col-3">
-                <!-- TODO: min="0" not enought, re-check and restrict to values >= 0 -->
-                <paper-input id$="visit_[[index]]"
-                             label="Programmatic Visits"
-                             value="{{item.programmatic}}"
+              <div class="col col-1">
+                <paper-input id$="visit_[[index]]_q1"
+                             label="Quarter 1"
+                             value="{{item.programmatic_q1}}"
                              type="number"
                              min="0"
                              allowed-pattern="[0-9\.]"
                              placeholder="&#8212;"
                              required$="[[item.year]]"
-                             error-message="Required if a year has been specified"
+                             error-message="Required"
                              auto-validate
                              readonly$="[[!editMode]]">
                 </paper-input>
               </div>
-              <!--<div class="col col-3">-->
-                <!--<paper-input label="Spot Checks"-->
-                             <!--value="{{item.spot_checks}}"-->
-                             <!--type="number"-->
-                             <!--min="0"-->
-                             <!--allowed-pattern="[0-9\.]"-->
-                             <!--hidden-->
-                             <!--placeholder="&#8212;"-->
-                             <!--readonly$="[[!editMode]]">-->
-                <!--</paper-input>-->
-              <!--</div>-->
-              <!--<div class="col col-3">-->
-                <!--<paper-input label="Audit"-->
-                             <!--value="{{item.audit}}"-->
-                             <!--type="number"-->
-                             <!--min="0"-->
-                             <!--allowed-pattern="[0-9\.]"-->
-                             <!--hidden-->
-                             <!--placeholder="&#8212;"-->
-                             <!--readonly$="[[!editMode]]">-->
-                <!--</paper-input>-->
-              <!--</div>-->
+              <div class="col col-1">
+                <paper-input id$="visit_[[index]]_q2"
+                             label="Quarter 2"
+                             value="{{item.programmatic_q2}}"
+                             type="number"
+                             min="0"
+                             allowed-pattern="[0-9\.]"
+                             placeholder="&#8212;"
+                             required$="[[item.year]]"
+                             error-message="Required"
+                             auto-validate
+                             readonly$="[[!editMode]]">
+                </paper-input>
+              </div>
+              <div class="col col-1">
+                <paper-input id$="visit_[[index]]_q3"
+                             label="Quarter 3"
+                             value="{{item.programmatic_q3}}"
+                             type="number"
+                             min="0"
+                             allowed-pattern="[0-9\.]"
+                             placeholder="&#8212;"
+                             required$="[[item.year]]"
+                             error-message="Required"
+                             auto-validate
+                             readonly$="[[!editMode]]">
+                </paper-input>
+              </div>
+              <div class="col col-1">
+                <paper-input id$="visit_[[index]]_q4"
+                             label="Quarter 4"
+                             value="{{item.programmatic_q4}}"
+                             type="number"
+                             min="0"
+                             allowed-pattern="[0-9\.]"
+                             placeholder="&#8212;"
+                             required$="[[item.year]]"
+                             error-message="Required"
+                             auto-validate
+                             readonly$="[[!editMode]]">
+                </paper-input>
+              </div>
+              <div class="col col-1">
+                <etools-form-element-wrapper label="TOTAL" class="row-second-bg" >
+                  [[_getTotal(item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)]]
+                </etools-form-element-wrapper>
+
+              </div>
+              <div class="col col-4"
+                  hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)]]">
+                  <div class="error-msg">Total has to be greater than 0</div>
             </div>
           </div>
         </div>
@@ -111,10 +164,12 @@
       <p>There are no planned visits added.</p>
     </div>
 
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_addNewPlannedVisit"
-                 title="Add"></paper-fab>
+
+    <div class="row-h" hidden$="[[!editMode]]">
+      <paper-button class="secondary-btn add-btn" on-tap="_addNewPlannedVisit">
+          <iron-icon icon="add"></iron-icon>
+          ADD YEAR
+      </paper-button>
     </div>
 
   </template>
@@ -148,25 +203,60 @@
           this.dataSetModel = {
             id: null,
             year: null,
-            programmatic: null,
-//            spot_checks: null,
-//            audit: null
+            programmatic_q1: 0,
+            programmatic_q2: 0,
+            programmatic_q3: 0,
+            programmatic_q4: 0,
           };
         },
-
+        _getTotal: function(q1, q2, q3, q4) {
+          return (Number(q1) || 0) + (Number(q2) || 0) + (Number(q3) || 0) + (Number(q4) || 0);
+        },
+        _showErrorMsg: function(year, q1, q2, q3, q4) {
+          if (!year) {
+            return false;
+          }
+          if (this._getTotal(q1, q2, q3, q4)) {
+            return false;
+          }
+          return true;
+        },
         validate: function() {
-          var valid = true;
+          let valid = true;
           this.dataItems.forEach(function(item, index) {
-            var yearEl = this.$$('#year_' + index);
-            var visitsEl = this.$$('#visit_' + index);
-            if (yearEl && !yearEl.validate()) {
-              valid = false;
-            }
-            if (visitsEl && !visitsEl.validate()) {
+            if(!(this._validateYear(index) && this._validateQuarters(item, index))) {
               valid = false;
             }
           }.bind(this));
 
+          return valid;
+        },
+        _validateYear: function(index) {
+          let valid = true;
+          let yearEl = this.$$('#year_' + index);
+
+          if (yearEl && !yearEl.validate()) {
+            valid = false;
+          }
+          return valid;
+        },
+        _validateQuarters: function(item, index) {
+          let valid = true;
+          let q1 = this.$$('#visit_' + index + "_q1");
+          let q2 = this.$$('#visit_' + index + "_q2");
+          let q3 = this.$$('#visit_' + index + "_q3");
+          let q4 = this.$$('#visit_' + index + "_q4");
+
+          [q1, q2, q3, q4].forEach(function(q) {
+            if (q) {
+              if (!q.validate()) {
+                valid = false;
+              }
+            }
+          });
+          if (!this._getTotal(item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)) {
+            valid = false;
+          }
           return valid;
         },
 
@@ -192,7 +282,7 @@
           var plannedVisit = this.dataItems[index];
           var plannedVisitId = parseInt(plannedVisit.id, 10);
           if (plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0) {
-            // planned budget already saved (has an id assigned)
+            // planned visit already saved (has an id assigned)
             return false;
           }
           return true;
@@ -208,22 +298,27 @@
         },
 
         _yearChanged: function(event) {
+          if (this._plannedVisitIsAlreadySaved(event)) {// Avoid executing logic on page load
+            return;
+          }
           var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
+          var yearDropdown = this.$$('#year_' + event.model.index);
 
           if (this._yearAlreadySelected(yearSelected, event.model.index)) {
             this.fire('toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
-            var yearDropdown = this.$$('#year_' + event.model.index);
             if (yearDropdown) {
               yearDropdown.selected = null;
             }
-             this.set('dataItems.' + event.model.index + '.year', null);
+            this.set('dataItems.' + event.model.index + '.year', null);
             event.preventDefault();
-            return;
+          } else {
+            this.set('dataItems.' + event.model.index + '.year', yearSelected);
+            yearDropdown.invalid = false; // Needed because auto-validate has been removed to avoid eager validation
           }
-
-          this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
-
+        _plannedVisitIsAlreadySaved: function(event) {
+          return event.model.item && event.model.item.id;
+        },
         _yearAlreadySelected: function(year, dropdownIdx) {
           var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
           if (!dropdowns || !dropdowns.length) {
@@ -244,6 +339,10 @@
          * Validate last added planned visit and if is not empty add a new one
          */
         _addNewPlannedVisit: function() {
+          if (!this.validate()) {
+            this.fire('toast', {text: 'Already added planned visit data is not valid yet', showCloseBtn: true});
+            return;
+          }
           this._addElement();
         }
 
