@@ -228,7 +228,7 @@
         <div class="col-4">
           <etools-single-selection-menu label="Basis For Risk Rating"
                                        options="[[basisOptions]]"
-                                       selected-value="{{partner.basis_for_risk_rating}}"
+                                       selected="{{partner.basis_for_risk_rating}}"
                                        readonly$="[[!editmode]]"
                                        avoid-header-overlapping-dropdown
           ></etools-single-selection-menu>
@@ -300,6 +300,7 @@
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q1}}"
                     on-value-changed="_calculateFollowUpTotal"
+                    disabled="[[!editMode]]"
                     max="2"
                     >
                 </paper-input>
@@ -310,6 +311,7 @@
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q2}}"
                     on-value-changed="_calculateFollowUpTotal"
+                    disabled="[[!editMode]]"
                     max="2">
                 </paper-input>
               </div>
@@ -319,6 +321,7 @@
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q3}}"
                     on-value-changed="_calculateFollowUpTotal"
+                    disabled="[[!editMode]]"
                     max="2">
                 </paper-input>
               </div>
@@ -328,6 +331,7 @@
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q4}}"
                     on-value-changed="_calculateFollowUpTotal"
+                    disabled="[[!editMode]]"
                     max="2">
                 </paper-input>
               </div>
@@ -339,16 +343,30 @@
 
           <div class="table-main col-3 layout vertical audits">
             <div class="table-main panel-row-tall row-h panel-table-row layout horizontal center view-only">
-              <div class="col-8 table-title">AUDITS</div>
-              <div class="col-4">Required?</div>
+              <div class="flex-1 table-title">AUDITS</div>
+              <div class="col-5">Required?</div>
             </div>
             <div class="panel-row-extra-tall row-h panel-table-row layout horizontal center">
-              <div class="col-8">Scheduled Audit</div>
-              <div class="col-4">
+              <div class="flex-1">Scheduled Audit</div>
+              <div class="col-5 self-end">
                 <etools-single-selection-menu
                     options="[[auditOptions]]"
                     selected="{{scheduledAuditRequired}}"
                     hide-search
+                    disabled="[[!editMode]]"
+
+                >
+                </etools-single-selection-menu>
+              </div>
+            </div>
+            <div class="panel-row-extra-tall row-h panel-table-row layout horizontal center">
+              <div class="flex-1">Special Audit</div>
+              <div class="col-5 self-end">
+                <etools-single-selection-menu
+                    options="[[auditOptions]]"
+                    selected="{{specialAuditRequired}}"
+                    hide-search
+                    disabled="[[!editMode]]"
                 >
                 </etools-single-selection-menu>
               </div>
@@ -476,7 +494,11 @@
         },
         scheduledAuditRequired: {
           type: String,
-          value: 'NO'
+          observer: '_scheduledAuditChanged'
+        },
+        specialAuditRequired: {
+          type: String,
+          observer: '_specialAuditChanged'
         },
         auditOptions: {
           type: Array,
@@ -528,8 +550,9 @@
         this.sendRequest(this.ajaxOptions).
           then((results) => this._init(results)).
           catch(err=> this.handleErrorResponse(err));
-        this.set('partner.basis_for_risk_rating', 'Micro Assessment - 25 June 2017');
         this.set('basisOptions', []);
+        this.set('specialAuditRequired', !partner.planned_engagement.special_audit? 'NO': 'YES');
+        this.set('scheduledAuditRequired', !partner.planned_engagement.scheduled_audit ? 'NO': 'YES');
         this._addBasisFromPartner();
         this._applyRiskRatingColor();
       },
@@ -591,7 +614,7 @@
         this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
       },
 
-      _calculateFollowUpTotal(e){
+      _calculateFollowUpTotal(){
         this.set('partner.planned_engagement.total_spot_check_follow_up_required',
           _.sum([
             this.partner.planned_engagement.spot_check_follow_up_q1,
@@ -599,6 +622,14 @@
             this.partner.planned_engagement.spot_check_follow_up_q3,
             this.partner.planned_engagement.spot_check_follow_up_q4,
           ]));
+      },
+
+      _specialAuditChanged(value){
+        this.set("partner.planned_engagement.special_audit", value!=='NO');
+      },
+
+      _scheduledAuditChanged(value){
+        this.set("partner.planned_engagement.special_audit", value!=='NO');
       }
 
     });

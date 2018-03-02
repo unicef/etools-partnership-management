@@ -294,10 +294,11 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (permissions && permissions.editPartnerDetails === true) {
-          return true;
-        }
-        return false;
+//        if (permissions && permissions.editPartnerDetails === true) {
+//          return true;
+//        }
+//        return false;
+        return true;
       },
 
       _updateUrlTab: function(tab) {
@@ -438,7 +439,9 @@
           'shared_with',
           'staff_members',
           'assessments',
-          'core_values_assessment'
+          'core_values_assessment',
+          'planned_engagement',
+          'basis_for_risk_rating'
         ];
         var changes = {};
         updateableFields.forEach(function(fieldName) {
