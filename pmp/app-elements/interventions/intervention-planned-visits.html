@@ -224,8 +224,8 @@
         validate: function() {
           let valid = true;
           this.dataItems.forEach(function(item, index) {
-            if (!item.id) {// Avoid validating already saved data which is readonly
-              valid = this._validateYear(index) && this._validateQuarters(item, index);
+            if(!(this._validateYear(index) && this._validateQuarters(item, index))) {
+              valid = false;
             }
           }.bind(this));
 
@@ -282,7 +282,7 @@
           var plannedVisit = this.dataItems[index];
           var plannedVisitId = parseInt(plannedVisit.id, 10);
           if (plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0) {
-            // planned budget already saved (has an id assigned)
+            // planned visit already saved (has an id assigned)
             return false;
           }
           return true;
@@ -340,7 +340,7 @@
          */
         _addNewPlannedVisit: function() {
           if (!this.validate()) {
-            this.fire('toast', {text: 'Last added planned visit data is not valid yet', showCloseBtn: true});
+            this.fire('toast', {text: 'Already added planned visit data is not valid yet', showCloseBtn: true});
             return;
           }
           this._addElement();
