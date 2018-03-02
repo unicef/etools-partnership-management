@@ -27,7 +27,7 @@ jobs:
             - bower_components
       - run:
           name: Gulping
-          command: gulp
+          command: gulp --max_old_space_size=2048
       - run:
           name: Run Tests
           command: |
@@ -76,4 +76,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - prp-refactor
+                - prp-integration

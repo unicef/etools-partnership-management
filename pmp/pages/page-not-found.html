@@ -1,12 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../styles/app-mixins.html">
 <dom-module id="page-not-found">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="shared-styles paper-material-styles">
 
       :host {
         display: block;
@@ -16,8 +16,8 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
-
-      paper-material {
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
         @apply --layout-vertical;
         @apply --layout-flex;
       }
@@ -33,10 +33,10 @@
 
     </style>
 
-    <paper-material elevation="1">
+    <div elevation="1">
       <h1>404 - Page not found!</h1>
       <a href="/pmp/partners/list">Head back home.</a>
-    </paper-material>
+    </div>
 
   </template>
 

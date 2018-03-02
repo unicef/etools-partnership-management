@@ -16,7 +16,7 @@ function minify() {
   });
 }
 
-var htmlLintOptions = {
+const htmlLintOptions = {
   // options
   'tag-pair': true,
   'doctype-first': false,
@@ -30,7 +30,7 @@ var htmlLintOptions = {
  *
  */
 
-// var productionBasePath = lazypipe()
+// const productionBasePath = lazypipe()
 //    .pipe(replace, /([A-Za-z]+[/]app-shell.html)/g, 'app-shell.html');
 
 /**
@@ -38,7 +38,7 @@ var htmlLintOptions = {
  *
  * use if you want to stop when there are errors .pipe(htmlhint.failReporter({ suppress: true }));
  */
-var lint = lazypipe()
+const lint = lazypipe()
   .pipe(htmlhint, htmlLintOptions)
   .pipe(htmlhint.reporter, 'htmlhint-stylish')
   .pipe(htmlhint.failReporter, { suppress: true });

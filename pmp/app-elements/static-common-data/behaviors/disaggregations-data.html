@@ -1,0 +1,32 @@
+<link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DisaggregationsDataImpl */
+    EtoolsPmpApp.Behaviors.DisaggregationsDataImpl = {
+       actions: {
+        setDisaggregationsData: function(disaggregs) {
+          return {
+            type: 'SET_DISAGGREGATIONS_DATA',
+            disaggregations: disaggregs
+          };
+        }
+      },
+
+      _handleDisaggregationsResponse: function(response) {
+        if (!_.isEmpty(response)) {
+          this.dispatch('setDisaggregationsData', response);
+        }
+      }
+    };
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DisaggregationsData */
+    EtoolsPmpApp.Behaviors.DisaggregationsData = [
+      EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+      EtoolsPmpApp.Behaviors.DisaggregationsDataImpl
+    ];
+
+  })();
+</script>

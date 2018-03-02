@@ -4,7 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-elements/common-elements/etools-form-element-wrapper.html">
@@ -27,7 +27,7 @@
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
 
@@ -112,12 +112,10 @@
               <div class="col col-4">
                 <!-- Active? -->
                 <etools-form-element-wrapper>
-                  <etools-checkable-input checked="{{item.active}}"
-                                          label="Active?"
-                                          type="checkbox"
-                                          label-alignment="right"
-                                          readonly$="[[!editMode]]">
-                  </etools-checkable-input>
+                  <paper-checkbox checked="{{item.active}}"
+                                  disabled$="[[!editMode]]">
+                                  Active?
+                  </paper-checkbox>
                 </etools-form-element-wrapper>
               </div>
             </div>

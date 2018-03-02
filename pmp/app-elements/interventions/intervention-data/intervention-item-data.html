@@ -2,9 +2,11 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
-<link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-elements/environment-flags/environment-flags-behavior.html">
 <link rel="import"
       href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -21,7 +23,8 @@
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsLogsBehavior,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags,
         ],
         properties: {
           pdEndpoints: {
@@ -52,9 +55,9 @@
             type: Array,
             statePath: 'offices'
           },
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
           /**
            * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
@@ -62,14 +65,14 @@
           ajaxLoadingMsgSource: {
             type: String,
             value: 'pd-ssfa-data'
-          },
+          }
         },
 
         _triggerInterventionRequest: function(options) {
           let self = this;
           let ajaxMethod = options.method || 'GET';
           this.sendRequest(options).then(function(resp) {
-            self._handleSuccResponse(resp, ajaxMethod);
+            self._handleResponse(resp, ajaxMethod);
           }).catch(function(error) {
             self._handleErrorResponse(error, ajaxMethod);
           });
@@ -77,29 +80,63 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {
-              message: 'Loading PD/SSFA data...',
-              active: true,
-              loadingSource: this.ajaxLoadingMsgSource
-            });
-            this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
+            this.fetchIntervention(newId);
           }
         },
 
+        fetchIntervention: function(id) {
+          this.fire('global-loading', {
+            message: 'Loading PD/SSFA data...',
+            active: true,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
+          this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: id})});
+        },
+
         _handleErrorResponse: function(response, ajaxMethod) {
-          this.handleErrorResponse(response, ajaxMethod);
-          this._restoreUnsuccessfullyDeletedFrs();
+          this.handleErrorResponse(response, ajaxMethod, true);
+          if (this.intervention) {
+            this._restoreUnsuccessfullyDeletedFrs();
+            this._restoreInAmmendmentFlag();
+          }
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
           this.set('intervention.frs_details', this.originalIntervention.frs_details);
           this.set('intervention.frs', this.originalIntervention.frs);
         },
+        _restoreInAmmendmentFlag: function() {
+          this.set('intervention.in_amendment', this.originalIntervention.in_amendment);
+        },
+
+        _convertIdsToStrings: function(dataArray) {
+          return dataArray.map(function(elem) {
+            return typeof elem === 'number' ? String(elem) : elem;
+          });
+        },
+
+        _handleDataConversions: function(intervention) {
+          let fieldsToConvert = [
+            'flat_locations',
+            'offices',
+            'partner_focal_points',
+            'sections',
+            'unicef_focal_points'
+          ];
+
+          fieldsToConvert.forEach(function(propName) {
+            if (!intervention[propName] || !intervention[propName].length) {
+              return;
+            }
+            intervention[propName] = this._convertIdsToStrings(intervention[propName]);
+          }.bind(this));
+
+          return intervention;
+        },
         /**
          * Handle received data from request
          */
-        _handleSuccResponse: function(response, ajaxMethod) {
-          response.original_sectors = JSON.parse(JSON.stringify(response.sector_locations));
-          this._setIntervention(response);
+        _handleResponse: function(response, ajaxMethod) {
+          this._setIntervention(this._handleDataConversions(response));
 
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
@@ -256,11 +293,6 @@
             if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
               prepareMultipartData = true;
             }
-            if (Array.isArray(intervention.sector_locations)) {
-              intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
-                return elem.sector || (Array.isArray(elem.locations) && elem.locations.length);
-              });
-            }
             if (Array.isArray(intervention.result_links)) {
               intervention.result_links = intervention.result_links.filter(function(elem) {
                 return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
@@ -278,14 +310,15 @@
             });
 
             let method = (isNew) ? 'POST' : 'PATCH';
-            this._triggerInterventionRequest({method: method, endpoint: endpoint, body: intervention,
-              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData});
+            this._triggerInterventionRequest({
+              method: method, endpoint: endpoint, body: intervention,
+              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
+            });
           }
         },
 
         _formatResponseDataForDexie: function(responseDetail) {
           let dexieObject = {};
-          dexieObject.sectors = [];
           dexieObject.cp_outputs = [];
           dexieObject.unicef_budget = 0;
           dexieObject.cso_contribution = 0;
@@ -302,10 +335,10 @@
           dexieObject.document_type = responseDetail.document_type;
           dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
 
+          this._updateSections(dexieObject, responseDetail);
           this._updatePlannedBudgetInfo(dexieObject, responseDetail);
           this._updateOffices(dexieObject, responseDetail);
-          this._updateSectors(dexieObject, responseDetail);
-          this._updateFrInfo(dexieObject, responseDetail.frs_details);
+          this._updateFrInfo(dexieObject, responseDetail.frs_details, responseDetail.planned_budget.currency);
 
           responseDetail.result_links.forEach(function(elem) {
             dexieObject.cp_outputs.push(elem.cp_output);
@@ -314,24 +347,44 @@
           return dexieObject;
         },
 
-        _updatePlannedBudgetInfo: function(dexieObject, intervention) {
-          dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash) +
-              parseFloat(intervention.planned_budget.in_kind_amount);
-          dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution);
-          dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
-          dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash);
+        _updateSections: function(dexieObject, intervention) {
+          let selectedSections = this._getSelectedSections(intervention);
+          dexieObject.sections = selectedSections.sectionIds;
+          dexieObject.section_names = selectedSections.section_names;
         },
-        _updateFrInfo: function(dexieObject, intervFrDetails) {
+
+        _updatePlannedBudgetInfo: function(dexieObject, intervention) {
+          dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash_local) +
+              parseFloat(intervention.planned_budget.in_kind_amount_local);
+          dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution_local);
+          dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
+          dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash_local);
+          dexieObject.budget_currency = intervention.planned_budget.currency;
+        },
+
+        _updateFrInfo: function(dexieObject, intervFrDetails, plannedBudgetCurrency) {
           if (this._noFrOnIntervention(intervFrDetails)) {
+            dexieObject.fr_currency = null;
+            dexieObject.fr_currencies_are_consistent = null;
+            dexieObject.all_currencies_are_consistent = null;
             return;
           }
           dexieObject.frs_total_frs_amt = intervFrDetails.total_frs_amt;
           dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
           dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
+          dexieObject.fr_currency = intervFrDetails.currencies_match
+              ? intervFrDetails.frs[0].currency
+              : null;
+          dexieObject.fr_currencies_are_consistent = intervFrDetails.currencies_match;
+          dexieObject.all_currencies_are_consistent = intervFrDetails.currencies_match
+              ? intervFrDetails.frs[0].currency === plannedBudgetCurrency
+              : false;
         },
+
         _noFrOnIntervention: function(intervFrDetails) {
           return (!intervFrDetails || !intervFrDetails.earliest_start_date);
         },
+
         _updateOffices: function(dexieObject, responseDetail) {
           if (!responseDetail.offices || !responseDetail.offices.length) {
             dexieObject.offices_names = [];
@@ -340,6 +393,7 @@
 
           dexieObject.offices_names = this._getSelectedOfficesNames(responseDetail);
         },
+
         _getSelectedOfficesNames: function(responseDetail) {
           let selectedOffices = this.offices.filter(function(office) {
             return responseDetail.offices.indexOf(office.id.toString()) > -1;
@@ -351,28 +405,30 @@
             return office.name;
           });
         },
-        _updateSectors: function(dexieObject, responseDetail) {
-          if (!responseDetail.sector_locations || !responseDetail.sector_locations.length) {
-            dexieObject.sectors = [];
-            return;
+
+        _getSelectedSections: function(responseDetail) {
+          let selectedSections = {
+            sectionIds: [],
+            section_names: []
+          };
+
+          let sections = responseDetail.sections;
+
+          if (sections) {
+            let sectionNames = [];
+            let interventionSectionIds = _.map(sections, function(sectionId) {
+              return parseInt(sectionId, 10);
+            });
+            selectedSections.sectionIds = interventionSectionIds;
+
+            this.sections.forEach(function(section) {
+              if (interventionSectionIds.indexOf(parseInt(section.id, 10)) > -1) {
+                sectionNames.push(section.name);
+              }
+            });
+            selectedSections.section_names = sectionNames;
           }
-          dexieObject.sectors = this._getSelectedSectorsNames(responseDetail);
-        },
-        _getSelectedSectorsNames: function(responseDetail) {
-          let selectedSectorIds = responseDetail.sector_locations.map(function(sl) {
-            return (sl.sector && typeof sl.sector === 'object')
-                ? sl.sector.id.toString()
-                : sl.sector.toString();
-          });
-          let selectedSectors = this.sectors.filter(function(sector) {
-            return selectedSectorIds.indexOf(sector.id.toString()) > -1;
-          });
-          if (!selectedSectors) {
-            return [];
-          }
-          return selectedSectors.map(function(s) {
-            return s.name;
-          });
+          return selectedSections;
         }
 
       });
