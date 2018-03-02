@@ -540,6 +540,9 @@
       _displayType(type){ return this.TYPES[type]},
 
       _partnerReceived(partner){
+        if (_.keys(partner).length <2 ){
+          return;
+        }
         this.set('ajaxOptions', _.assign({}, this.ajaxOptions, {
           endpoint: this.getEndpoint('engagements'),
           params: {
