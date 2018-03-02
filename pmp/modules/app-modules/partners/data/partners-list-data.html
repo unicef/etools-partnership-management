@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
 <link rel="import" href="../../../mixins/list-data-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
@@ -12,11 +13,13 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPmpApp.Mixins.ListData
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.ListData,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.EventHelper
@@ -77,6 +80,7 @@
           }
         };
       }
+
       static get actions() {
         return {
           setPartnersDropdown: function(partnersDropdownData) {
@@ -97,7 +101,7 @@
               csoPartners: csoPartners
             };
           }
-        }
+        };
       }
 
       _handleMyResponse(res) {
@@ -123,7 +127,7 @@
       }
 
       query(field, order, searchString, partnerType, csoType,
-                        pageNumber, pageSize, showHidden, showQueryLoading) {
+            pageNumber, pageSize, showHidden, showQueryLoading) {
 
         // If an active query transaction exists, abort it and start
         // a new one
@@ -135,9 +139,9 @@
 
         if (showQueryLoading) {
           this.fireEvent('global-loading', {
-              message: 'Loading partners list data...',
-              active: true,
-              loadingSource: 'partners-list'
+            message: 'Loading partners list data...',
+            active: true,
+            loadingSource: 'partners-list'
           });
         }
 
@@ -199,15 +203,15 @@
         }).then(function(result) {
           self._setFilteredPartners(result);
           self.fireEvent('global-loading', {
-              active: false,
-              loadingSource: 'partners-list'
-            });
+            active: false,
+            loadingSource: 'partners-list'
+          });
         }).catch(function(error) {
-          console.error('Error querying partners: ' + error);
-          self.fireEvent('global-loading',  {
-              active: false,
-              loadingSource: 'partners-list'
-            });
+          self.logError('Error querying partners!', 'partners-list-data', error, true);
+          self.fireEvent('global-loading', {
+            active: false,
+            loadingSource: 'partners-list'
+          });
         });
       }
     }
