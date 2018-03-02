@@ -72,7 +72,7 @@
       </div>
 
       <div slot="title-row-actions" class="content-header-actions">
-        <paper-dropdown-menu label="Export">
+        <paper-dropdown-menu label="Export" hidden$="[[!listActive]]">
           <paper-listbox attr-for-selected="exp-type" class="dropdown-content" selected="{{exportType}}">
               <paper-item exp-type$="[[PdExportTypes.PdBudget]]">[[PdExportTypes.PdBudget]]</paper-item>
               <paper-item exp-type$="[[PdExportTypes.PdResult]]">[[PdExportTypes.PdResult]]</paper-item>
