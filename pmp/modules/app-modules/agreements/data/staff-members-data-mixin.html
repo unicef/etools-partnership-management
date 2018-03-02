@@ -39,10 +39,9 @@
       };
     }
 
-    /**
-      * This method will be used in the main element as observer for agreement.partner
-      * or in other partner id changed observer
-      */
+
+    // This method will be used in the main element as observer for agreement.partner
+    // or in other partner id changed observer
     getPartnerStaffMembers(newId) {
       if (newId > 0) {
         this.fireEvent('global-loading', {
@@ -80,6 +79,6 @@
       this.fireEvent('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
     }
 
-  }
+  };
 
 </script>

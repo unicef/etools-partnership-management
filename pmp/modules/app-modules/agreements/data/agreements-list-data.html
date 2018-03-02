@@ -21,7 +21,7 @@
     const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.ListData,
+      EtoolsPmpApp.Mixins.ListData
     ], Polymer.Element);
 
     /**
@@ -92,7 +92,6 @@
       query(field, order, searchString, agreementType,
             agreementStatus, selectedPartnerNames, startDate,
             endDate, pageNumber, pageSize, showQueryLoading) {
-
         // If an active query transaction exists, abort it and start
         // a new one
         if (this.currentQuery) {
@@ -122,7 +121,6 @@
           }
 
           queryResult = queryResult.filter(function(agreement) {
-
             if (selectedPartnerNames &&
                 selectedPartnerNames.length &&
                 !_.includes(selectedPartnerNames, agreement.partner_name)) {
@@ -169,7 +167,6 @@
               .offset((pageNumber - 1) * pageSize)
               .limit(pageSize)
               .toArray();
-
         }).then(function(result) {
           self._setFilteredAgreements(result);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});

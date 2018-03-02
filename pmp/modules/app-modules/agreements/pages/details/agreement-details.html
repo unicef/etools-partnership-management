@@ -411,10 +411,9 @@
 
       connectedCallback() {
         super.connectedCallback();
-        /**
-         * Disable loading message for details tab elements load,
-         * triggered by parent element on stamp
-         */
+
+        // Disable loading message for details tab elements load,
+        // triggered by parent element on stamp
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.fireEvent('tab-content-attached');
 
@@ -444,10 +443,8 @@
         return (this.agreement && this.agreement.id);
       }
 
-      /**
-       * Refer to unicef/etools-issues#232:
-       * For Draft Status, only Change option is available. No delete option is available in Draft.
-       */
+      // Refer to unicef/etools-issues#232:
+      // For Draft Status, only Change option is available. No delete option is available in Draft.
       _hideDeleteBtn() {
         if (this._isDraft() && this.agreement && this.agreement.attached_agreement_file) {
           return true;
@@ -482,10 +479,8 @@
         return false;
       }
 
-      /**
-       * When agreement data is changed we need to check and prepare attached agreement file and
-       * display amendments if needed
-       */
+      // When agreement data is changed we need to check and prepare attached agreement file and
+      // display amendments if needed
       _agreementChanged(agreement) {
         if (this.generatePCADialog) {
           this.generatePCADialog.agreementId = agreement.id;
@@ -532,7 +527,7 @@
           return;
         }
         this.fieldValidationReset('#signedByPartner');
-        //TODO:  check to see if the commented code is still needed
+        // TODO:  check to see if the commented code is still needed
         // if (this.$.signedByPartnerDateField) {
         //   this.$.signedByPartnerDateField.$.dateInput.invalid = false;
         // }
@@ -549,10 +544,8 @@
         }
       }
 
-      /**
-       * Verify if agreement status is 'draft'
-       */
-      //TODO: is this and _statusIsNotDraft needed?
+      // Verify if agreement status is 'draft'
+      // TODO: is this and _statusIsNotDraft needed?
       _isDraft() {
         if (!this.agreement || !this.agreement.status) {
           return false;
@@ -595,9 +588,7 @@
         this.getPartnerStaffMembers(currentPartnerId);
       }
 
-      /**
-       * Validate agreements fields on change
-       */
+      // Validate agreements fields on change
       _agreementFieldChanged(agreementProperty) {
         if (typeof agreementProperty === 'undefined') {
           return;
@@ -665,21 +656,16 @@
         return names.join(' | ');
       }
 
-      /**
-       * Check if agreement type is expected type
-       */
+      // Check if agreement type is expected type
       _typeMatches(agreementType, expectedType) {
         return agreementType === expectedType;
       }
 
-      /**
-       * Filter Country programmes:
-       *    - omit any CP where the end date is in the past
-       *    - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
-       *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
-       */
+      // Filter Country programmes:
+      //   - omit any CP where the end date is in the past
+      //   - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
+      //   - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
       _filterCountryProgrammesForAgreements(countryProgrammes) {
-        var self = this;
         return countryProgrammes.filter(function(cp) {
           return (cp.active || cp.future) && !cp.special;
         });
@@ -692,10 +678,8 @@
         this.generatePCADialog.open();
       }
 
-      /**
-       * Filter CP to obtain agreement CP Structure options.
-       * If the result is just one option then set it as selected by default, make dropdown readonly
-       */
+      // Filter CP to obtain agreement CP Structure options.
+      // If the result is just one option then set it as selected by default, make dropdown readonly
       _countryProgrammesChanged(cp, agreement) {
         if (typeof cp === 'undefined' || typeof agreement === 'undefined') {
           return;
@@ -747,10 +731,9 @@
           // used has no edit permissions
           return false;
         }
-        /**
-         * canBeEdited = false - either field is locked or the user has no edit permissions;
-         * not knowing exactly why is false we need to check user editMode first(first method lines)
-         */
+
+        // canBeEdited = false - either field is locked or the user has no edit permissions;
+        // not knowing exactly why is false we need to check user editMode first(first method lines)
         let canBeEdited = this.agreement.permissions.edit.authorized_officers;
         // if is locked (in signed status), enableEditForAuthorizedOfficers will make this field editable
         if (!canBeEdited && enableEditForAuthorizedOfficers) {
@@ -785,9 +768,7 @@
         return false;
       }
 
-      /**
-      * Validate agreement fields
-      */
+      // Validate agreement fields
       _validateAgreement() {
         var valid = true;
         var reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];

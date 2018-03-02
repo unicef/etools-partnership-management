@@ -219,7 +219,7 @@
                   signed_by_id: true,
                   signed_by_partner_date: true,
                   signed_by_unicef_date: true,
-                  start: true,
+                  start: true
                 },
                 required: {
                   agreement_type: true,
@@ -228,7 +228,7 @@
                   partner_manager: false,
                   signed_by: false,
                   signed_by_partner_date: false,
-                  signed_by_unicef_date: false,
+                  signed_by_unicef_date: false
                 }
               }
             }
@@ -333,9 +333,7 @@
         this.$.agreementData.updateAgreementStatus(event.detail);
       }
 
-      /**
-       * Go to details page once the new agreement has been saved
-       */
+      // Go to details page once the new agreement has been saved
       _newAgreementSaved(agreement) {
         this.fireEvent('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
       }
@@ -386,9 +384,7 @@
         this.fireEvent('clear-server-errors');
       }
 
-      /**
-       * Save agreement if all fields are validated
-       */
+      // Save agreement if all fields are validated
       _validateAndTriggerAgreementSave(event) {
         event.stopImmediatePropagation();
         if (!this._hasEditPermissions(this.permissions)) {
@@ -415,7 +411,6 @@
       }
 
       _prepareNewAgreementDataForSave(agreement) {
-        let self = this;
         // we do not need all the agreement object data for the first save
         let newAgreement = {
           id: null,
@@ -433,7 +428,7 @@
           signed_by_partner_date: agreement.signed_by_partner_date,
           signed_by: agreement.signed_by,
           partner_manager: agreement.partner_manager,
-          attached_agreement: agreement.attached_agreement,
+          attached_agreement: agreement.attached_agreement
         });
         if (agreement.agreement_type === 'MOU') {
           newAgreement.start = agreement.start;
@@ -446,9 +441,7 @@
         return newAgreement;
       }
 
-      /**
-       * Get agreement changed properties
-       */
+      // Get agreement changed properties
       _getCurrentChanges() {
         let changes = {};
         if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
@@ -529,9 +522,7 @@
         this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
       }
 
-      /**
-       * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-       */
+      // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
       _showAgreementsPageLoadingMessage() {
         let appSection = this.listActive ? 'agreements list' : 'agreement details page';
         this.fireEvent('global-loading', {

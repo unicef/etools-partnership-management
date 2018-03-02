@@ -214,7 +214,7 @@
           _deleteEpName: {
             type: String,
             value: 'agreementAmendmentsDelete',
-            readOnly: true,
+            readOnly: true
           },
           agreementType: {
             type: String,
@@ -235,7 +235,7 @@
 
       static get observers() {
         return [
-          '_dataItemsChanged(dataItems.length)',
+          '_dataItemsChanged(dataItems.length)'
         ];
       }
 
@@ -296,10 +296,8 @@
         return isValid;
       }
 
-      /**
-        * If the amendment can be removed, the left border and top badge needs to have a different style.
-        * This class will help with that.
-        */
+      // If the amendment can be removed, the left border and top badge needs to have a different style.
+      // This class will help with that.
       _getLockedClass(amendmentId) {
         if (this._showReadonlyDetails(amendmentId)) {
           return 'locked';
@@ -318,9 +316,7 @@
         return parseInt(index, 10) + 1;
       }
 
-      /**
-        * Check if amendment fields are empty
-        */
+      // Check if amendment fields are empty
       _amendmentFieldsAreEmpty(amendmentItem, index) {
         return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
             && !amendmentItem.signed_amendment &&
@@ -328,9 +324,7 @@
             !amendmentItem.types);
       }
 
-      /**
-        * Validate last added amendment and if is not empty add a new one
-        */
+      // Validate last added amendment and if is not empty add a new one
       _addNewAmendment() {
         var lastAmendmentItemIndex = this.dataItems.length - 1;
         if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] &&
@@ -416,15 +410,15 @@
 
       _getReadonlyAmendmentTypes(types) {
         if (types instanceof Array && types.length > 0) {
-          let legacyAmTypesFiltered  = [];
-          let amTypesFiltered  = [];
+          let legacyAmTypesFiltered = [];
+          let amTypesFiltered = [];
 
           // search for item amendments types
           let amTypes = this._amendmentTypes.filter((t) => types.indexOf(t.value) > -1);
 
           if (amTypes.length) {
             // map to get the labels
-            amTypesFiltered = amTypes.map((t) =>  t.label);
+            amTypesFiltered = amTypes.map((t) => t.label);
           }
 
           for (let key in this.legacyAmendmentTypes) {

@@ -28,7 +28,7 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
     /*
     * @polymer
@@ -36,7 +36,7 @@
     * @appliesMixin AgreementItemDataRequiredMixin
     */
     class AgreementItemData extends AgreementItemDataRequiredMixin {
-      static get is(){
+      static get is() {
         return 'agreement-item-data';
       }
 
@@ -65,9 +65,7 @@
           },
 
           handleSuccResponseAdditionalCallback: Object,
-          /**
-           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
-           */
+          // ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
           ajaxLoadingMsgSource: {
             type: String,
             value: 'ag-data'
@@ -106,9 +104,7 @@
           this._triggerAgreementRequest({endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: newId})});
         }
       }
-      /**
-        * Handle received data from request
-        */
+      // Handle received data from request
       _handleSuccResponse(response, ajaxMethod) {
         this._setAgreement(response);
 
@@ -155,9 +151,7 @@
         return minimalAgrData;
       }
 
-      /**
-        * Update agreement status. In addition set a callback to be called after request is complete.
-        */
+      // Update agreement status. In addition set a callback to be called after request is complete.
       updateAgreementStatus(data, callback) {
         if (!data.agreementId) {
           this.fireEvent('toast', {text: 'Invalid agreement ID', showCloseBtn: true});
@@ -205,9 +199,7 @@
         return hasF;
       }
 
-      /**
-        * Save agreement data
-        */
+      // Save agreement data
       saveAgreement(agreement, succCallback) {
         if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
           this.fireEvent('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
