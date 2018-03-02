@@ -294,11 +294,10 @@
       },
 
       _hasEditPermissions: function(permissions) {
-//        if (permissions && permissions.editPartnerDetails === true) {
-//          return true;
-//        }
-//        return false;
-        return true;
+        if (permissions && permissions.editPartnerDetails === true) {
+          return true;
+        }
+        return false;
       },
 
       _updateUrlTab: function(tab) {
