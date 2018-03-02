@@ -32,6 +32,7 @@
         @apply --layout-center;
         margin: 30px 0 0;
         padding: 0 24px;
+        @apply --page-content-header-title-row;
       }
 
       .title-row h1 {
@@ -42,6 +43,10 @@
       .title-row ::slotted(.content-header-actions) {
         @apply --layout-horizontal;
         @apply --layout-center;
+      }
+      .title-row ::slotted(.content-header-actions.export-options) {
+        @apply --layout-horizontal;
+        @apply --layout-end;
       }
 
       .title-row ::slotted(.content-header-actions .action) {
