@@ -55,7 +55,7 @@
           <span>Agreements</span>
         </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <!-- <span>[[_getAgreementDetailsTitle(agreement, newAgreementActive)]]</span> -->
+          <span>[[_getAgreementDetailsTitle(agreement, newAgreementActive)]]</span>
         </template>
       </div>
 
@@ -304,6 +304,9 @@
 
       // compute agreement details page title including partner name and agreement number
       _getAgreementDetailsTitle(agreement, newAgreement) {
+        if (!agreement) {
+          return '';
+        }
         if (newAgreement) {
           return 'Add Agreement';
         }
