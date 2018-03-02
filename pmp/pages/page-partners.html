@@ -415,13 +415,16 @@
           return;
         }
 
-        let pageToValidate = this.partnerPage==='details' ?
-          this.$$('#partnerDetails')
-          : this.partnerPage === 'financial-assurance' ?
-            this.$$('#financialAssurance')
-            : null;
+        let pageToValidate;
+        
+        if (this.partnerPage==='financial-assurance'){
+          pageToValidate = this.$$('#financialAssurance');
+        }
+        else if (this.partnerPage==='details') {
+          pageToValidate = this.$$('#partnerDetails');
+        }
 
-        if (pageToValidate && pageToValidate._validatePage()) {
+        if (pageToValidate && pageToValidate._validatePageData()) {
           let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
