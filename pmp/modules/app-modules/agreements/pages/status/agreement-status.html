@@ -1,11 +1,8 @@
 <link rel="import" href="../../../../../../bower_components/iron-icons/av-icons.html">
 
-<link rel="import" href="../../../../styles/app-theme.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../layout/components/etools-status/etools-status.html">
 <link rel="import" href="../../../../layout/components/etools-status/etools-status-common-mixin.html">
-
-
 
 <dom-module id="agreement-status">
   <template strip-whitespace>
@@ -67,39 +64,7 @@
           },
           possibleStatuses: {
             type: Array,
-            value: function() {
-              return [
-                {
-                  label: 'Draft',
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: 'Signed',
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: 'Suspended',
-                  icon: 'av:pause-circle-filled',
-                  iconStyles: 'color: ' + ShadyCSS.getComputedStyleValue(this, '--warning-color'),
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: 'Terminated',
-                  icon: 'report-problem',
-                  iconStyles: 'color: ' + ShadyCSS.getComputedStyleValue(this, '--error-color'),
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: 'Ended',
-                  hidden: false,
-                  completed: false
-                },
-              ];
-            }
+            value: []
           },
           possibleActions: {
             type: Array,
@@ -136,6 +101,42 @@
         this.set('sectionName', 'Agreement');
         this._createStatusChangeWarningDialog();
         this._handleStickyScroll();
+        // has to be run async for shadycss to load
+        setTimeout(this.setPossibleStatuses.bind(this), 0);
+      }
+
+      setPossibleStatuses() {
+        this.set('possibleStatuses', [
+          {
+            label: 'Draft',
+            hidden: false,
+            completed: false
+          },
+          {
+            label: 'Signed',
+            hidden: false,
+            completed: false
+          },
+          {
+            label: 'Suspended',
+            icon: 'av:pause-circle-filled',
+            iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+            hidden: false,
+            completed: false
+          },
+          {
+            label: 'Terminated',
+            icon: 'report-problem',
+            iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+            hidden: false,
+            completed: false
+          },
+          {
+            label: 'Ended',
+            hidden: false,
+            completed: false
+          },
+        ]);
       }
 
       _computeAvailableActions(status) {
