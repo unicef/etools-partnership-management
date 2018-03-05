@@ -43,7 +43,8 @@
                                   hidden$="[[readonly]]"
                                   no-init="[[noInit]]"
                                   open="{{open}}"
-                                  show-clear-btn="[[showClearBtn]]">
+                                  show-clear-btn="[[showClearBtn]]"
+                                  fire-date-has-changed="[[fireDateHasChanged]]">
         </etools-datepicker-button>
       </span>
     </paper-input>
@@ -96,7 +97,11 @@
           disabled: {
             type: Boolean,
             value: false,
-            reflectToAttribute: true,
+            reflectToAttribute: true
+          },
+          fireDateHasChanged: {
+            type: Boolean,
+            value: false
           },
           required: {
             type: Boolean,

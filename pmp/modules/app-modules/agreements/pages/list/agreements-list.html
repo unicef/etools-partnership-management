@@ -16,7 +16,6 @@
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
@@ -31,6 +30,7 @@
 <link rel="import" href="../../../../styles/partner-status-styles.html">
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../layout/components/etools-date-input.html">
 
 <link rel="import" href="../../data/agreements-list-data.html">
 <dom-module id="agreements-list">
@@ -123,24 +123,16 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
-              <!-- TODO: Why not etools-date-input?  -->
-              <!-- TODO: Event handler used to be on-down, find the correct replacement -->
-              <paper-input id$="datepicker_parent_[[filter.path]]"
-                           label="[[filter.filterName]]"
-                           value="[[prettyDate(filter.dateSelected)]]"
-                           on-tap="openDatePicker"
-                           data-selector$="datepicker_[[filter.path]]">
-                <etools-datepicker-button prefix
-                                          id$="datepicker_[[filter.path]]"
-                                          parent-id$="datepicker_parent_[[filter.path]]"
-                                          date="[[prepareDate(filter.dateSelected)]]"
-                                          format="D MMM YYYY"
-                                          data-filter-path$="[[filter.path]]"
-                                          on-date-has-changed="_filterDateHasChanged"
-                                          no-init show-clear-btn fire-date-has-changed>
-                </etools-datepicker-button>
-                </paper-icon-button>
-              </paper-input>
+              <etools-date-input id$="datepicker_[[filter.path]]"
+                                label="[[filter.filterName]]"
+                                value="{{filter.dateSelected}}"
+                                readonly$="[[!agreement.permissions.edit.start]]"
+                                format="D MMM YYYY"
+                                required$="[[agreement.permissions.required.start]]"
+                                on-date-has-changed="_filterDateHasChanged"
+                                data-filter-path$="[[filter.path]]"
+                                fire-date-has-changed no-init show-clear-btn>
+              </etools-date-input>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
@@ -527,10 +519,11 @@
             if (!agreements) {
               return;
             }
+            console.log(this.startDate, this.endDate);
             agreements.query(
                 this.sortOrder.field,
                 this.sortOrder.direction,
-                this.q.toLowerCase(),
+                this.q.trim().toLowerCase(),
                 this.agreementType,
                 this.agreementStatus,
                 _.map(this.selectedPartners, 'label'),
