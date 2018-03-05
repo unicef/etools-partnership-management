@@ -42,6 +42,16 @@
       }
 
       @media only screen and (min-width: 1360px)  {
+        :host {
+          --etools-status-bottom-container: {
+            flex-direction: row;
+            display: block;
+          };
+          --etools-status-top-container-styles : {
+            display: block;
+            width: auto;
+          };
+        }
         #pageContent {
           @apply --layout-flex;
         }

@@ -31,6 +31,7 @@
     "EtoolsAjaxRequestMixin": true,
     "EtoolsMixins": true,
     "EtoolsLogsMixin": true,
-    "_": true
+    "_": true,
+    "ShadyCSS": true
   }
 }

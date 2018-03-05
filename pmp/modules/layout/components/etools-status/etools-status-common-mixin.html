@@ -11,7 +11,7 @@
    * Common functionality for etools status element
    * @polymer
    * @mixinFunction
-   * @appliesMixin DynamicDialogMixin
+   * @appliesMixin EtoolsMixins.DynamicDialogMixin
    * @appliesMixin EtoolsLogsMixin
    * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
    */
@@ -230,6 +230,15 @@
         _getDefaultWarningMessage() {
           return 'You are changing the status from <strong>\''
               + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+        }
+
+        getComputedStyleValue(varName) {
+          let style;
+          if (ShadyCSS) {
+            return ShadyCSS.getComputedStyleValue(this, varName);
+          } else {
+            return getComputedStyle(this).getPropertyValue(varName);
+          }
         }
 
       });
