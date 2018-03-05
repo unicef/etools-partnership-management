@@ -93,12 +93,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       const BASE_URL = '/pmp/';
       window.Polymer = {rootPath: BASE_URL};
 
+      const prefixPathForRelativeUrls = document.querySelector('base').href;
+
       // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           // check express.js to see how service-worker.js file path is set
           navigator.serviceWorker.register('service-worker.js', {
             scope: Polymer.rootPath
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
           });
         });
       }
@@ -107,13 +111,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Load webcomponents-loader.js to check and load any polyfills your browser needs
         const webcomponentsLoaderScript = document.createElement('script');
         webcomponentsLoaderScript.async = true;
-        webcomponentsLoaderScript.src = BASE_URL + 'bower_components/webcomponentsjs/webcomponents-loader.js';
+        webcomponentsLoaderScript.src = prefixPathForRelativeUrls + 'bower_components/webcomponentsjs/webcomponents-loader.js';
         document.head.appendChild(webcomponentsLoaderScript);
 
         // Load application shell
         const appShellImport = document.createElement('link');
         appShellImport.rel = 'import';
-        appShellImport.href = BASE_URL + 'pmp/app-shell.html';
+        appShellImport.href = prefixPathForRelativeUrls + 'pmp/app-shell.html';
         document.head.appendChild(appShellImport);
       })();
     </script>
