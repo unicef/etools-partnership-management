@@ -160,9 +160,12 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      */
-    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-          EtoolsPmpApp.Mixins.ModuleRouting, EtoolsPmpApp.Mixins.EventHelper], Polymer.Element);
+    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl,
+      EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+      EtoolsPmpApp.Mixins.ModuleRouting,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
      * @polymer
@@ -412,8 +415,8 @@
           this._savePartner(partnerChanges);
         } else {
           this.fireEvent('toast', {
-              text: 'Please check assessments and partner contacts for ' +
-              'invalid fields or empty data rows!', showCloseBtn: true
+            text: 'Please check assessments and partner contacts for ' +
+            'invalid fields or empty data rows!', showCloseBtn: true
           });
         }
       }

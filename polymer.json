@@ -2,28 +2,39 @@
   "entrypoint": "index.html",
   "shell": "pmp/app-shell.html",
   "fragments": [
+    "pmp/modules/app-modules/agreements/agreements-module.html",
+    "pmp/modules/app-modules/interventions/interventions-module.html",
     "pmp/modules/app-modules/partners/partners-module.html",
-    "pmp/app-elements/partners/partners-list.html",
-    "pmp/app-elements/partners/partner-overview.html",
-    "pmp/app-elements/partners/partner-details.html"
+    "pmp/modules/app-modules/reports/reports-module.html",
+    "pmp/modules/app-modules/settings/settings-module.html",
+    "pmp/modules/app-modules/partners/pages/list/partners-list.html",
+    "pmp/modules/app-modules/partners/pages/overview/partner-overview.html",
+    "pmp/modules/app-modules/partners/pages/details/partner-details.html"
   ],
   "sources": [
     "pmp/**/*",
-    "images/**/*"
+    "images/**/*",
+    "bower.json"
   ],
   "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/*.js"
   ],
   "lint": {
-    "rules": ["polymer-2"]
+    "rules": ["polymer-2"],
+    "ignoreWarnings": []
   },
   "builds": [
     {
-      "preset": "es6-bundled"
+      "preset": "es6-bundled",
+      "name": "pmp/es6-bundled",
+      "browserCapabilities": ["es2015"],
+      "basePath": true
     },
     {
-      "preset": "es5-bundled"
+      "preset": "es5-bundled",
+      "name": "pmp/es5-bundled",
+      "basePath": true
     }
   ]
 }

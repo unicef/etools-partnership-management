@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/shadycss/apply-shim.html">
 <link rel="import" href="../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <link rel="import" href="../../../../layout/components/etools-status/etools-status-common-mixin.html">
@@ -186,9 +187,7 @@
           if (!this.editMode) {
             return;
           }
-          this.fire('delete-partner', {
-            id: this.partner.id,
-          });
+          this.fireEvent('delete-partner', {id: this.partner.id});
         }
       }
 

@@ -3,39 +3,68 @@
 <dom-module id="new-partner-dialog">
   <template>
     <style>
-      :host {
-        /* host CSS */
+      #vendorNo {
+        margin-bottom: 30px;
       }
     </style>
 
-    <!-- Polymer 2 element template -->
+    <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
+                   dialog-title="New Partner" on-close="_handleDialogClosed">
+
+      <paper-input id="vendorNo" label="Vendor #" value="{{vendorNumber}}"
+                   placeholder="&#8212;" autofocus
+                   required auto-validate error-message="Vendor# is required"
+                   allowed-pattern="[0-9]"
+                   char-counter
+                   maxlength="11"></paper-input>
+
+    </etools-dialog>
 
   </template>
   <script>
-    class NewPartnerDialog extends Polymer.Element {
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    class NewPartnerDialog extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'new-partner-dialog';
       }
 
       static get properties() {
-        return {};
+        return {
+          vendorNumber: {
+            type: String,
+            value: ''
+          },
+          vendorNumberIsEmpty: {
+            type: Boolean,
+            computed: '_vendorNumberIsEmpty(vendorNumber)'
+          }
+        };
       }
 
       constructor() {
         super();
       }
 
-      ready() {
-        super.ready();
+      _vendorNumberIsEmpty() {
+        return !this.vendorNumber;
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
+      _handleDialogClosed(closingReason) {
+        if (closingReason.detail.confirmed) {
+          if (!this.vendorNumber) {
+            return;
+          }
+          this.fireEvent('create-partner', {vendor: this.vendorNumber});
+        } else {
+          this.vendorNumber = '';
+        }
       }
 
     }
