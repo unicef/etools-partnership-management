@@ -76,7 +76,7 @@
             // tab element already loaded, no need for loading messages
             return;
           }
-           this.fireEvent('toast', {
+           this.fireEvent('global-loading', {
             message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
             active: true,
             loadingSource: loadingSource

@@ -10,10 +10,12 @@
     "html"
   ],
   "rules": {
+    "padded-blocks": "off",
     "brace-style": "off",
     "new-cap": ["error", { "capIsNewExceptions": ["Polymer"], "capIsNewExceptionPattern": "^Etools.." }],
     "no-var": "off",
     "require-jsdoc": "off",
+    "valid-jsdoc": "off",
     "comma-dangle": ["error", "never"],
     "max-len": ["error", { "code": 120 }],
     "camelcase": ["error", {"properties": "never"}]

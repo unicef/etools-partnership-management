@@ -1,5 +1,35 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
+<link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
+<link rel="import" href="../../../../mixins/list-filters-mixin.html">
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/lists-common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../styles/partner-status-styles.html">
+<link rel="import" href="../../../../styles/app-mixins.html">
+
+<link rel="import" href="../../data/partners-list-data.html">
 
 <dom-module id="partners-list">
   <template>
@@ -216,8 +246,7 @@
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class PartnersList extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
-
+    class PartnersList extends PartnersListRequiredMixins {
       static get is() {
         return 'partners-list';
       }
@@ -280,12 +309,18 @@
         };
       }
 
-      constructor() {
-        super();
+      static get observers() {
+        return [
+          '_initListFilters(partnerTypes, csoTypes)',
+          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
+          'requiredDataLoaded, initComplete)',
+          '_init(active)'
+        ];
       }
 
       ready() {
         super.ready();
+        this.addEventListener('sort-changed', this._sortOrderChanged);
       }
 
       connectedCallback() {
@@ -385,8 +420,45 @@
         );
       }
 
-      disconnectedCallback() {
-        super.disconnectedCallback();
+      // Updates URL state with new query string, and launches query
+      _updateURL() {
+        if (!this.requiredDataLoaded || !this.initComplete) {
+          return;
+        }
+
+        this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+        let qs = this._buildQueryString();
+
+        if (qs !== _partnersLastNavigated) {
+          _partnersLastNavigated = qs;
+          // update URL
+          this.updateAppState(this.currentPage + '/list', qs, true);
+          // filter partners, but only after data has been loaded
+          if (this.requiredDataLoaded) {
+            this._filterPartnersData();
+          }
+        } else {
+          if (location.search === '') {
+            // only update URL query string, without location change event being fired(no page refresh)
+            this.updateAppState(this.currentPage + '/list', qs, false);
+          }
+          if (this.forceDataRefresh && this.requiredDataLoaded) {
+            // refilter partners data
+            // this will only execute when partners-loaded event is received
+            this._filterPartnersData();
+            this.set('forceDataRefresh', false);
+          }
+        }
+      }
+
+      _filterPartnersData(forceNoLoading) {
+        // Query is debounced with a debounce time
+        // set depending on what action the user takes
+        this._actionsChangedDebouncer = Polymer.Debouncer.debounce(this._actionsChangedDebouncer,
+            Polymer.Async.timeOut.after(this.debounceTime),
+            () => {
+              this._handleFilterPartnersData(forceNoLoading);
+            });
       }
 
       _handleFilterPartnersData(forceNoLoading) {

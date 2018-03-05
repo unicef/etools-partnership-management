@@ -1,8 +1,34 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../../layout/components/etools-error-messages-box.html">
+<link rel="import" href="../../../../scripts/lodash.html">
+
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../mixins/risk-rating-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../styles/page-common-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/risk-rating-styles.html">
+
+<link rel="import" href="components/assessments-items.html">
+<link rel="import" href="components/staff-members.html">
 
 <dom-module id="partner-details">
   <template>
-    <style>
+    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -191,14 +217,41 @@
      * @polymer
      * @customElement
      */
-    class PartnerDetails extends Polymer.Element {
+    class PartnerDetails extends PartnerDetailsRequiredMixins {
 
       static get is() {
         return 'partner-details';
       }
 
       static get properties() {
-        return {};
+        return {
+          partner: {
+            type: Object,
+            value: {},
+            notify: true,
+            observer: '_partnerChanged'
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          csoTypes: {
+            type: Array,
+            statePath: 'csoTypes'
+          },
+          partnerTypes: {
+            type: Array,
+            statePath: 'partnerTypes'
+          },
+          sharedPartenerValues: {
+            type: Array,
+            statePath: 'agencyChoices'
+          },
+          showCoreValuesAssessmentAttachment: {
+            type: Boolean,
+            value: false
+          }
+        };
       }
 
       constructor() {

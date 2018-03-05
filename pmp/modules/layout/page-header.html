@@ -134,11 +134,11 @@
           },
           offices: {
             type: Array,
-            statePath: 'offices',
+            statePath: 'offices'
           },
           sections: {
             type: Array,
-            statePath: 'sections',
+            statePath: 'sections'
           },
           users: {
             type: Array,
@@ -223,7 +223,7 @@
 
       _convertCollection(data) {
         return data.map((item) => {
-          return {label: item.name, value: item.id}
+          return {label: item.name, value: item.id};
         });
       }
 
