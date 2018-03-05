@@ -117,7 +117,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="[[errorMsgBox_Title]]"
+                                   title$="[[errorMsgBoxTitle]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
           <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
@@ -299,7 +299,7 @@
           type: Boolean
         },
         _redirectToNewIntervPageInProgress: Boolean,
-        errorMsgBox_Title: {
+        errorMsgBoxTitle: {
           type: String,
           value: 'Errors Saving PD/SSFA'
         },
@@ -398,7 +398,7 @@
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
             //Avoid showing msg again after save
-            this.set('errorMsgBox_Title',
+            this.set('errorMsgBoxTitle',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.fire('set-server-errors', intervention.metadata.error_msg);
           }
