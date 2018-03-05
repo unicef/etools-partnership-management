@@ -232,5 +232,14 @@
               + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
         }
 
+        getComputedStyleValue(varName) {
+          let style;
+          if (ShadyCSS) {
+            return ShadyCSS.getComputedStyleValue(this, varName);
+          } else {
+            return getComputedStyle(this).getPropertyValue(varName);
+          }
+        }
+
       });
 </script>
