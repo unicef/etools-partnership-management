@@ -28,7 +28,6 @@
 <link rel="import" href="../../../../../styles/file-styles.html">
 <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
 
-
 <dom-module id="assessments-items">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles paper-material-styles">
@@ -52,6 +51,7 @@
         };
 
       }
+
       app-toolbar {
         height: 40px;
         background-color: var(--medium-theme-background-color);
@@ -59,9 +59,11 @@
         -moz-border-radius: 8px;
         border-radius: 8px;
       }
+
       app-toolbar paper-icon-button {
         @apply --nested-content-panel-collapse-btn;
       }
+
       app-toolbar div[main-title] {
         @apply --nested-content-panel-title;
       }
@@ -69,15 +71,19 @@
       div[elevation="1"] {
         @apply --paper-material-elevation-1;
       }
+
       div[elevation="2"] {
         @apply --paper-material-elevation-2;
       }
+
       div[elevation="3"] {
         @apply --paper-material-elevation-3;
       }
+
       div[elevation="4"] {
         @apply --paper-material-elevation-4;
       }
+
       div[elevation="5"] {
         @apply --paper-material-elevation-5;
       }
@@ -102,6 +108,7 @@
         --paper-radio-button-unchecked-color: var(--primary-color);
         opacity: 1 !important;
       }
+
       etools-form-element-wrapper {
         --etools-form-element-wrapper-max-width: 150px;
         --paper-input-container: {
@@ -128,10 +135,10 @@
 
                   <div class="actions">
                     <paper-icon-button class="action delete"
-                                        on-tap="_openDeleteConfirmation"
-                                        data-args$="[[index]]"
-                                        disabled$="[[!editMode]]"
-                                        icon="cancel">
+                                       on-tap="_openDeleteConfirmation"
+                                       data-args$="[[index]]"
+                                       disabled$="[[!editMode]]"
+                                       icon="cancel">
                     </paper-icon-button>
                   </div>
 
@@ -142,17 +149,17 @@
                       <!-- Assessment type -->
                       <template is="dom-if" if="[[!editMode]]">
                         <paper-input label="Assessment Type"
-                                      value="[[item.type]]"
-                                      placeholder="&#8212;"
-                                      readonly></paper-input>
+                                     value="[[item.type]]"
+                                     placeholder="&#8212;"
+                                     readonly></paper-input>
                       </template>
                       <template is="dom-if" if="[[editMode]]">
                         <etools-dropdown id$="assessmentType_[[index]]"
-                                                      label="Assessment Type"
-                                                      options="[[assessmentTypesOptions]]"
-                                                      selected="{{item.type}}"
-                                                      dynamic-align
-                                                      error-message="Assessment Type is required">
+                                         label="Assessment Type"
+                                         options="[[assessmentTypesOptions]]"
+                                         selected="{{item.type}}"
+                                         dynamic-align
+                                         error-message="Assessment Type is required">
                         </etools-dropdown>
                       </template>
                     </div>
@@ -163,37 +170,37 @@
                       </required-and-not-future-date-validator>
                       <!-- Date submitted -->
                       <etools-date-input id$="dateSubmited_[[index]]"
-                                          label="Date of Assessment"
-                                          value="{{item.completed_date}}"
-                                          readonly$="[[!editMode]]"
-                                          auto-validate
-                                          validator="dateSubmited_[[index]]_validator"
-                                          error-message="[[item.dateErrorMessage]]"
-                                          no-init show-clear-btn>
+                                         label="Date of Assessment"
+                                         value="{{item.completed_date}}"
+                                         readonly$="[[!editMode]]"
+                                         auto-validate
+                                         validator="dateSubmited_[[index]]_validator"
+                                         error-message="[[item.dateErrorMessage]]"
+                                         no-init show-clear-btn>
                       </etools-date-input>
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
-                        <etools-form-element-wrapper label="Basis for Risk Rating">
-                          <paper-radio-button checked="{{item.current}}"
-                            disabled="[[!editMode]]"
-                            on-checked-changed="_basisForRiskRatingChanged"
-                            data-args$="[[index]]">
-                          </paper-radio-button>
-                        </etools-form-element-wrapper>
+                      <etools-form-element-wrapper label="Basis for Risk Rating">
+                        <paper-radio-button checked="{{item.current}}"
+                                            disabled="[[!editMode]]"
+                                            on-checked-changed="_basisForRiskRatingChanged"
+                                            data-args$="[[index]]">
+                        </paper-radio-button>
+                      </etools-form-element-wrapper>
                     </div>
                   </div>
                   <div class="row-h file-container">
                     <!-- Report file -->
                     <etools-single-file
-                                  id$="report_[[index]]"
-                                  file="{{item.report}}"
-                                  internal-file="{{item.report_file}}"
-                                  label="Report"
-                                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
-                                  readonly="[[!editMode]]"
-                                  accept=".doc,.docx,.pdf,.jpg,.png"
-                                  error-message="Please select the report file"></etools-single-file>
+                        id$="report_[[index]]"
+                        file="{{item.report}}"
+                        internal-file="{{item.report_file}}"
+                        label="Report"
+                        hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
+                        readonly="[[!editMode]]"
+                        accept=".doc,.docx,.pdf,.jpg,.png"
+                        error-message="Please select the report file"></etools-single-file>
                   </div>
                 </div>
               </div>
@@ -206,8 +213,8 @@
 
           <div id="bottom-actions" class="row-h no-h-margin" hidden$="[[!editMode]]">
             <paper-fab icon="add"
-                        on-tap="_addNewAssessment"
-                        title="Add"></paper-fab>
+                       on-tap="_addNewAssessment"
+                       title="Add"></paper-fab>
           </div>
         </div>
       </iron-collapse>
@@ -216,18 +223,20 @@
   </template>
 
   <script>
+    'use strict';
     /**
-    * @polymer
-    * @mixinFunction
-    * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
-    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-    */
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
     const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
-        EtoolsPmpApp.Mixins.RepeatableDataSets,
-        EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-        EtoolsPmpApp.Mixins.EventHelper
-      ], Polymer.Element);
+      EtoolsPmpApp.Mixins.RepeatableDataSets,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
+
     /**
      *
      * @customElement
@@ -276,14 +285,15 @@
           }
         };
       }
-       static get observers() {
-         return [
+
+      static get observers() {
+        return [
           '_dataHasChanged(dataItems)',
           '_assessmentPropertyChanged(dataItems.*)'
-         ];
-       }
+        ];
+      }
 
-     ready() {
+      ready() {
         super.ready();
 
         this.dataSetModel = {
@@ -298,16 +308,15 @@
       _editModeChanged() {
         this.updateStyles();
       }
+
       _hideDeleteBtn(itemReportFile) {
-          if (!itemReportFile) {
-          return false;
-        }
-        return true;
+        return !!itemReportFile;
       }
+
       /**
-        * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
-        * we can make it common in the behavior
-        */
+       * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
+       * we can make it common in the behavior
+       */
       _dataHasChanged(dataItems) {
         if (!Array.isArray(dataItems)) {
           this.set('dataItems', []);
@@ -328,11 +337,11 @@
       _assessmentPropertyChanged(dataPath) {
         if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
             dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
-          var dataPathPieces = dataPath.path.split('.');
-          var path = dataPathPieces[0] + '.' + dataPathPieces[1];
+          let dataPathPieces = dataPath.path.split('.');
+          let path = dataPathPieces[0] + '.' + dataPathPieces[1];
           if (path.indexOf('#') > -1) {
-            var item = this.get(path);
-            var index = this.dataItems.indexOf(item);
+            let item = this.get(path);
+            let index = this.dataItems.indexOf(item);
             this._validateAssessment(index);
           }
         }
@@ -343,8 +352,8 @@
           return;
         }
         if (event.detail.value === true) {
-          var index = parseInt(event.target.getAttribute('data-args'));
-          for (var i = 0; i < this.dataItems.length; i++) {
+          let index = parseInt(event.target.getAttribute('data-args'));
+          for (let i = 0; i < this.dataItems.length; i++) {
             if (i !== index) {
               this.set('dataItems.' + i + '.current', false);
             }
@@ -357,23 +366,23 @@
       }
 
       _isValid(field, assessmentType, completedDate, reportFile, reportFileLength, element) {
-        var valid = true;
+        let valid = true;
         switch (field) {
           case 'assessmentType':
             if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) ||
-                reportFileLength > 0 || reportFile instanceof File)) {
+                    reportFileLength > 0 || reportFile instanceof File)) {
               valid = false;
             }
             break;
           case 'dateSubmited':
             if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) ||
-                reportFileLength > 0 || reportFile instanceof File)) {
+                    reportFileLength > 0 || reportFile instanceof File)) {
               valid = false;
             }
             break;
           case 'report':
             if (!this._hasReport(reportFile, reportFileLength) && (this._notEmpty(assessmentType) ||
-                this._notEmpty(completedDate))) {
+                    this._notEmpty(completedDate))) {
               valid = false;
             }
             break;
@@ -387,7 +396,7 @@
 
       _addNewAssessment() {
         if (this.editMode) {
-          var lastAssessmentAdded = this._getLastDataItem();
+          let lastAssessmentAdded = this._getLastDataItem();
           if (this._emptyAssessment(lastAssessmentAdded)) {
             this.fireEvent('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
           } else {
@@ -397,7 +406,7 @@
       }
 
       validate() {
-        var valid = true;
+        let valid = true;
         if (this.dataItems instanceof Array && this.dataItems.length > 0) {
           this.dataItems.forEach(function(item, index) {
             if (!this._emptyAssessment(item)) {
@@ -413,19 +422,19 @@
       }
 
       _validateAssessment(index) {
-        var valid = true;
-        var fields = ['#assessmentType_' + index, '#dateSubmited_' + index, '#report_' + index];
+        let valid = true;
+        let fields = ['#assessmentType_' + index, '#dateSubmited_' + index, '#report_' + index];
 
         fields.forEach(function(fieldSelector) {
-          var fieldEl = this.shadowRoot.querySelector(fieldSelector);
-          var reportFileLength = 0;
+          let fieldEl = this.shadowRoot.querySelector(fieldSelector);
+          let reportFileLength = 0;
 
           if (typeof this.dataItems[index].report_file === 'string') {
-              reportFileLength = this.dataItems[index].report_file.length;
+            reportFileLength = this.dataItems[index].report_file.length;
           }
           if (fieldEl) {
-            var fieldName = this._getFileTypeForValidation(fieldSelector);
-            var validField = this._isValid(fieldName, this.dataItems[index].type,
+            let fieldName = this._getFileTypeForValidation(fieldSelector);
+            let validField = this._isValid(fieldName, this.dataItems[index].type,
                 this.dataItems[index].completed_date, this.dataItems[index].report,
                 reportFileLength, fieldEl);
             fieldEl.invalid = !validField;

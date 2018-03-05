@@ -4,7 +4,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<!-- <link rel="import" href="../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html"> -->
+<link rel="import" href="../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../../../../bower_components/etools-data-table/data-table-styles.html">
 
 <link rel="import" href="../../../../mixins/common-mixin.html">
@@ -239,13 +239,13 @@
     * @mixinFunction
     * @appliesMixin EtoolsPmpApp.Mixins.Common
     * @appliesMixin EtoolsPmpApp.Mixins.RiskRating
-    * @appliesMixin EtoolsCurrencyMixin
+    * @appliesMixin EtoolsMixins.EtoolsCurrency
     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Behaviors.Common,
         EtoolsPmpApp.Behaviors.RiskRating,
-        EtoolsCurrencyMixin,
+        EtoolsMixins.EtoolsCurrency,
         EtoolsPmpApp.Mixins.EventHelper
         ], Polymer.Element);
     /**

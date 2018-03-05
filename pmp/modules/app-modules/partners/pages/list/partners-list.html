@@ -38,16 +38,18 @@
       div[elevation="1"] {
         @apply --paper-material-elevation-1;
       }
+
       .sm-status-wrapper {
         padding-left: 10px;
       }
+
       .vendor-nr {
         @apply --text-btn-style;
         text-transform: none;
       }
     </style>
 
-   <template is="dom-if" if="[[stampListData]]">
+    <template is="dom-if" if="[[stampListData]]">
       <partners-list-data id="partners"
                           filtered-partners="{{filteredPartners}}"
                           total-results="{{totalResults}}"
@@ -62,10 +64,10 @@
       <div class="wrap-controls">
 
         <paper-input id="query"
-                    type="search"
-                    autocomplete="off"
-                    value="{{q}}"
-                    placeholder="Search">
+                     type="search"
+                     autocomplete="off"
+                     value="{{q}}"
+                     placeholder="Search">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
@@ -73,23 +75,23 @@
           <div class="dropdown-with-clear-btn">
             <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
               <paper-listbox slot="dropdown-content"
-                          attr-for-selected="name"
-                          on-iron-select="filterValueChanged"
-                          on-iron-deselect="filterValueChanged"
-                          data-filter-path$="[[filter.path]]"
-                          on-iron-activate="_dropdownSelected"
-                          selected="[[filter.alreadySelected]]">
+                             attr-for-selected="name"
+                             on-iron-select="filterValueChanged"
+                             on-iron-deselect="filterValueChanged"
+                             data-filter-path$="[[filter.path]]"
+                             on-iron-activate="_dropdownSelected"
+                             selected="[[filter.alreadySelected]]">
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
                   <paper-item name$="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
               </paper-listbox>
             </paper-dropdown-menu>
             <paper-icon-button class="remove" icon="cancel"
-                              on-tap="removeFilter"
-                              data-filter-name$="[[filter.filterName]]"
-                              data-reset-path$="[[filter.path]]"
-                              disabled$="[[filter.disabled]]"
-                              hidden$="[[filter.disabled]]">
+                               on-tap="removeFilter"
+                               data-filter-name$="[[filter.filterName]]"
+                               data-reset-path$="[[filter.path]]"
+                               disabled$="[[filter.disabled]]"
+                               hidden$="[[filter.disabled]]">
             </paper-icon-button>
           </div>
         </template>
@@ -148,9 +150,9 @@
           <div slot="row-data">
               <span class="col-data flex">
                 <a class="vendor-nr truncate"
-                  href$="[[currentPage]]/[[partner.id]]/details"
-                  title$="[[getDisplayValue(partner.vendor_number)]]"
-                  on-tap="_triggerPartnerLoadingMsg">
+                   href$="[[currentPage]]/[[partner.id]]/details"
+                   title$="[[getDisplayValue(partner.vendor_number)]]"
+                   on-tap="_triggerPartnerLoadingMsg">
                   [[getDisplayValue(partner.vendor_number)]]
                 </a>
               </span>
@@ -218,7 +220,7 @@
   <script>
     'use strict';
     var _partnersLastNavigated = null;
-     /**
+    /**
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
@@ -236,7 +238,7 @@
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ListsCommon,
       EtoolsPmpApp.Mixins.EventHelper
-     ], Polymer.Element);
+    ], Polymer.Element);
 
 
     /**
@@ -280,7 +282,7 @@
           },
 
           urlParams: {
-            type: Object,
+            type: Object
           },
 
           initComplete: {
@@ -331,21 +333,22 @@
           active: false,
           loadingSource: 'partners-page'
         });
-         this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
+        this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
       }
 
       _initListFilters(partnerTypes, csoTypes) {
         if (partnerTypes === undefined || csoTypes === undefined) {
           return;
         }
-        this.initFiltersDebouncer = Polymer.Debouncer.debounce(this.initFiltersDebouncer,
-          Polymer.Async.timeOut.after(100),
+        this._initFiltersDebouncer = Polymer.Debouncer.debounce(this._initFiltersDebouncer,
+            Polymer.Async.timeOut.after(100),
             () => {
               // init list filter options
               this.initListFiltersData(this._computeFiltersData(partnerTypes, csoTypes));
               this._updateSelectedFiltersValues();
-        });
+            });
       }
+
       _computeFiltersData(partnerTypes, csoTypes) {
         return [
           {
@@ -366,6 +369,7 @@
           }
         ];
       }
+
       _getPartnerType(partnerType) {
         if (this.showOnlyGovernmentType) {
           return 'Government';
@@ -398,7 +402,7 @@
 
       _updateSelectedFiltersValues() {
         this._updateShownFilters = Polymer.Debouncer.debounce(this._updateShownFilters,
-          Polymer.Async.timeOut.after(100),
+            Polymer.Async.timeOut.after(100),
             () => {
               let filtersValues = [
                 {
@@ -456,6 +460,7 @@
               this._handleFilterPartnersData(forceNoLoading);
             });
       }
+
       _handleFilterPartnersData(forceNoLoading) {
         var partners = this.shadowRoot.querySelector('#partners');
         if (!partners) {
@@ -474,99 +479,99 @@
         );
       }
 
-       // Outputs the query string for the list
-       _buildQueryString() {
-          var out = [];
-          if (this.pageNumber && this.pageNumber > 1) {
-            out.push('page=' + this.pageNumber);
-          }
-          if (this.pageSize) {
-            out.push('size=' + this.pageSize);
-          }
-          if (this.q && this.q.length) {
-            out.push('q=' + this.q);
-          }
-          if (this.partnerType && this.partnerType.length) {
-            out.push('partner_type=' + this.partnerType);
-          }
-          if (this.csoType && this.csoType.length) {
-            out.push('cso_type=' + this.csoType);
-          }
-          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-          }
-          if (this.showHidden) {
-            out.push('hidden=true');
-          }
-          return out.join('&');
+      // Outputs the query string for the list
+      _buildQueryString() {
+        var out = [];
+        if (this.pageNumber && this.pageNumber > 1) {
+          out.push('page=' + this.pageNumber);
         }
-
-        _buildCsvDownloadUrl() {
-          var queryString = '';
-          var endpointUrl = '';
-          var params = [];
-
-          if (this.q && this.q.length) {
-            params.push('search=' + this.q);
-          }
-          if (this.partnerType && this.partnerType.length) {
-            params.push('partner_type=' + this.partnerType);
-          }
-          if (this.csoType && this.csoType.length) {
-            params.push('cso_type=' + this.csoType);
-          }
-          params.push('hidden=' + this.showHidden);
-
-          params.push('format=csv');
-          queryString = params.join('&');
-          endpointUrl = this.getEndpoint('partners').url;
-
-          return endpointUrl + '?' + queryString;
+        if (this.pageSize) {
+          out.push('size=' + this.pageSize);
         }
-
-        _dropdownSelected() {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
+        if (this.q && this.q.length) {
+          out.push('q=' + this.q);
         }
-
-        _toggleHidden() {
-          this.set('debounceTime', 50);
-          this.set('showHidden', this.showHidden ? false : true);
-          this.set('pageNumber', 1);
+        if (this.partnerType && this.partnerType.length) {
+          out.push('partner_type=' + this.partnerType);
         }
-
-        _computeName(name, shortName) {
-          return this.getDisplayValue([shortName, name], false, ' / ', true);
+        if (this.csoType && this.csoType.length) {
+          out.push('cso_type=' + this.csoType);
         }
-
-        _computeType(csoType, partnerType) {
-          if (!csoType) {
-            return partnerType;
-          } else if (csoType === 'Community Based Organization') {
-            return 'CSO / Community Based';
-          } else {
-            return 'CSO / ' + csoType;
-          }
+        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
         }
-
-        _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType) {
-          if (showOnlyGovernmentType) {
-            // lock list to government partners only
-            this.set('partnerType', 'Government');
-            this._updateSelectedFiltersValues();
-          } else {
-            // unlock list from government partners only
-            this.set('partnerType', null);
-            this.removeFilterOption('Partner Type', 'partnerType');
-          }
-          this.removeFilterOption('CSO Type', 'csoType');
-          this.set('pageNumber', 1);
-          this.set('showHidden', false);
+        if (this.showHidden) {
+          out.push('hidden=true');
         }
+        return out.join('&');
+      }
 
-        _triggerPartnerLoadingMsg() {
-          this.fireEvent('trigger-partner-loading-msg');
+      _buildCsvDownloadUrl() {
+        var queryString = '';
+        var endpointUrl = '';
+        var params = [];
+
+        if (this.q && this.q.length) {
+          params.push('search=' + this.q);
         }
+        if (this.partnerType && this.partnerType.length) {
+          params.push('partner_type=' + this.partnerType);
+        }
+        if (this.csoType && this.csoType.length) {
+          params.push('cso_type=' + this.csoType);
+        }
+        params.push('hidden=' + this.showHidden);
+
+        params.push('format=csv');
+        queryString = params.join('&');
+        endpointUrl = this.getEndpoint('partners').url;
+
+        return endpointUrl + '?' + queryString;
+      }
+
+      _dropdownSelected() {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+      }
+
+      _toggleHidden() {
+        this.set('debounceTime', 50);
+        this.set('showHidden', this.showHidden ? false : true);
+        this.set('pageNumber', 1);
+      }
+
+      _computeName(name, shortName) {
+        return this.getDisplayValue([shortName, name], false, ' / ', true);
+      }
+
+      _computeType(csoType, partnerType) {
+        if (!csoType) {
+          return partnerType;
+        } else if (csoType === 'Community Based Organization') {
+          return 'CSO / Community Based';
+        } else {
+          return 'CSO / ' + csoType;
+        }
+      }
+
+      _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType) {
+        if (showOnlyGovernmentType) {
+          // lock list to government partners only
+          this.set('partnerType', 'Government');
+          this._updateSelectedFiltersValues();
+        } else {
+          // unlock list from government partners only
+          this.set('partnerType', null);
+          this.removeFilterOption('Partner Type', 'partnerType');
+        }
+        this.removeFilterOption('CSO Type', 'csoType');
+        this.set('pageNumber', 1);
+        this.set('showHidden', false);
+      }
+
+      _triggerPartnerLoadingMsg() {
+        this.fireEvent('trigger-partner-loading-msg');
+      }
     }
 
     window.customElements.define(PartnersList.is, PartnersList);
