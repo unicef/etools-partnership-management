@@ -70,6 +70,8 @@
     "lodash": "^4.17.4",
     "paper-checkbox": "2.0.0",
     "paper-radio-button": "2.0.0",
-    "webcomponentsjs": "^0.7.24"
+    "webcomponentsjs": "^0.7.24",
+    "etools-ajax": "^2.0.3",
+    "etools-loading": "2.0.0"
   }
 }
