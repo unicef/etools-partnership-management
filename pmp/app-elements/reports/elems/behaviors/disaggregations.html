@@ -1,10 +1,12 @@
 <script>
   (function() {
     'use strict';
-    window.App = window.App || {};
-    window.App.Behaviors = window.App.Behaviors || {};
 
-    window.App.Behaviors.DisaggregationBehavior = {
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DisaggregationBehavior */
+    EtoolsPmpApp.Behaviors.DisaggregationBehavior = {
 
       //Used to display rows for two and three disaggregations.
       //It will NOT work for one and zero disaggregations.
