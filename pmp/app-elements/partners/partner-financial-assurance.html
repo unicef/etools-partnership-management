@@ -264,36 +264,32 @@
                 <paper-radio-button
                     data-idx="q1"
                     on-tap="_toggleRadio"
-                    toggles=false
-                    disabled="[[!!partner.planned_engagement.spot_check_required]]"
-                    checked="[[!!partner.planned_engagement.spot_check_mr.q1]]">
+                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q1)]]">
                 </paper-radio-button>
               </div>
               <div class="quarter">
                 <paper-radio-button
                     data-idx="q2"
                     on-tap="_toggleRadio"
-                    toggles=false
-                    disabled="[[!!partner.planned_engagement.spot_check_required]]"
-                    checked="[[!!partner.planned_engagement.spot_check_mr.q2]]">
+                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q2)]]">
                 </paper-radio-button>
               </div>
               <div class="quarter">
                 <paper-radio-button
                     data-idx="q3"
                     on-tap="_toggleRadio"
-                    toggles=false
-                    disabled="[[!!partner.planned_engagement.spot_check_required]]"
-                    checked="[[!!partner.planned_engagement.spot_check_mr.q3]]">
+                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q3)]]">
                 </paper-radio-button>
               </div>
               <div class="quarter">
                 <paper-radio-button
                     data-idx="q4"
                     on-tap="_toggleRadio"
-                    toggles=false
-                    disabled="[[!!partner.planned_engagement.spot_check_required]]"
-                    checked="[[!!partner.planned_engagement.spot_check_mr.q4]]">
+                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q4)]]">
                 </paper-radio-button>
               </div>
               <div class="col-2 view-only totals layout-horizontal">
@@ -305,7 +301,7 @@
               <div class="col-4">Follow-up Required(1)</div>
               <div class="quarter">
                 <paper-input
-                    no-label-float=""
+                    no-label-float
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q1}}"
                     on-value-changed="_calculateFollowUpTotal"
@@ -315,7 +311,7 @@
               </div>
               <div class="quarter">
                 <paper-input
-                    no-label-float=""
+                    no-label-float
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q2}}"
                     on-value-changed="_calculateFollowUpTotal"
@@ -325,7 +321,7 @@
               </div>
               <div class="quarter">
                 <paper-input
-                    no-label-float=""
+                    no-label-float
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q3}}"
                     on-value-changed="_calculateFollowUpTotal"
@@ -335,7 +331,7 @@
               </div>
               <div class="quarter">
                 <paper-input
-                    no-label-float=""
+                    no-label-float
                     type="number"
                     value="{{partner.planned_engagement.spot_check_follow_up_q4}}"
                     on-value-changed="_calculateFollowUpTotal"
@@ -556,19 +552,26 @@
           return this.TYPES[type];
         },
 
-        _partnerReceived: function(partner) {
-          if (_.keys(partner).length < 2) {
-            return;
-          }
-          this.set('ajaxOptions', _.assign({}, this.ajaxOptions, {
+        _getEngagementsRequestOptions: function(partnerId) {
+          return {
             endpoint: this.getEndpoint('engagements'),
             params: {
               ordering: 'unique_id',
               status: 'final',
-              partner: partner.id
-            }
-          }));
-          this.sendRequest(this.ajaxOptions).then((results) => this._init(results)).catch(err => this.handleErrorResponse(err));
+              partner: partnerId
+            },
+            csrf: true
+          };
+        },
+
+        _partnerReceived: function(partner) {
+          if (!partner.id) {
+            return;
+          }
+          let requestOptions = this._getEngagementsRequestOptions(partner.id);
+          this.sendRequest(requestOptions)
+              .then((results) => this._init(results))
+              .catch((err) => this.handleErrorResponse(err));
           this.set('basisOptions', []);
           this.set('specialAuditRequired', !partner.planned_engagement.special_audit ? 'NO' : 'YES');
           this.set('scheduledAuditRequired', !partner.planned_engagement.scheduled_audit ? 'NO' : 'YES');
@@ -614,10 +617,13 @@
           return moment().year();
         },
 
-        _toggleRadio: function({target}) {
-          console.log('target: ', target);
-          const checked = target.checked;
-          const quarter = target.getAttribute('data-idx');
+        _getSpotCheckBoolVal: function(val) {
+          return !!val;
+        },
+
+        _toggleRadio: function(e) {
+          const checked = e.target.checked;
+          const quarter = e.target.getAttribute('data-idx');
           let spotChecksMr = _.assign({
             q1: 0,
             q2: 0,
