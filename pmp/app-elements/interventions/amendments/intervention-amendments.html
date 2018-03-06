@@ -150,6 +150,10 @@
             type: Boolean,
             value: false
           },
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
+          },
         },
 
         observers: [
@@ -168,6 +172,12 @@
           this.addAmendmentDialog.toastEventSource = this;
           this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
           document.querySelector('body').appendChild(this.addAmendmentDialog);
+        },
+
+        _interventionIdChanged: function(newInterventionId) {
+          if (this.addAmendmentDialog) {
+            this.addAmendmentDialog.interventionId = newInterventionId;
+          }
         },
 
         _getReadonlyAmendmentTypes: function(types) {
