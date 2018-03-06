@@ -209,10 +209,10 @@
                     class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]]"
                     icon-first
                     custom-icon
-                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_intervention_amt, partnership, 'interventionsList')]]">
+                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
                   <span slot="field" class$="[[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
                     <span class="amount-currency">[[partnership.fr_currency]]</span>
-                    <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_intervention_amt)]]</span>
+                    <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
                   </span>
                   <iron-icon icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
                              slot="custom-icon"></iron-icon>
