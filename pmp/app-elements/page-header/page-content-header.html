@@ -41,21 +41,17 @@
 
       .title-row ::slotted(.content-header-actions) {
         @apply --layout-horizontal;
-        @apply --layout-center;
-      }
-      .title-row ::slotted(.content-header-actions.export-options) {
-        @apply --layout-horizontal;
         @apply --layout-end;
+
+      }
+
+      .title-row ::slotted(.content-header-actions.export-options) {
+        padding-bottom: 16px;
       }
 
       .title-row ::slotted(.content-header-actions .action) {
-        @apply --layout-vertical;
-        @apply --layout-center-justified;
-      }
-
-      .title-row ::slotted(.content-header-actions a) {
-        @apply --layout;
-        @apply --layout-self-center;
+        @apply --layout-horizontal;
+        @apply --layout-end;
       }
 
       .title-row ::slotted(.content-header-actions paper-button:not(.primary-btn)) {

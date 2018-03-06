@@ -70,7 +70,7 @@
       is: 'three-disaggregations',
 
       behaviors: [
-        App.Behaviors.DisaggregationBehavior,
+        EtoolsPmpApp.Behaviors.DisaggregationBehavior,
       ],
 
       observers: [
@@ -95,6 +95,8 @@
           type: Array,
           computed: '_getRows(mapping)',
         },
+
+        bottomRows: Array,
 
         middleRows: {
           type: Array,

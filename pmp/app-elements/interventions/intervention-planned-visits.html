@@ -224,7 +224,7 @@
         validate: function() {
           let valid = true;
           this.dataItems.forEach(function(item, index) {
-            if(!(this._validateYear(index) && this._validateQuarters(item, index))) {
+            if (!(this._validateYear(index) && this._validateQuarters(item, index))) {
               valid = false;
             }
           }.bind(this));
@@ -242,10 +242,10 @@
         },
         _validateQuarters: function(item, index) {
           let valid = true;
-          let q1 = this.$$('#visit_' + index + "_q1");
-          let q2 = this.$$('#visit_' + index + "_q2");
-          let q3 = this.$$('#visit_' + index + "_q3");
-          let q4 = this.$$('#visit_' + index + "_q4");
+          let q1 = this.$$('#visit_' + index + '_q1');
+          let q2 = this.$$('#visit_' + index + '_q2');
+          let q3 = this.$$('#visit_' + index + '_q3');
+          let q4 = this.$$('#visit_' + index + '_q4');
 
           [q1, q2, q3, q4].forEach(function(q) {
             if (q) {

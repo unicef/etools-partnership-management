@@ -2,10 +2,11 @@
   (function() {
     'use strict';
 
-    window.App = window.App || {};
-    window.App.Behaviors = window.App.Behaviors || {};
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
-    window.App.Behaviors.DisaggregationFieldBehavior = {
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DisaggregationFieldBehavior*/
+    EtoolsPmpApp.Behaviors.DisaggregationFieldBehavior = {
       _toNumericValues: function(obj) {
         return Object.keys(obj).reduce(function(prev, curr) {
           prev[curr] = Number(obj[curr]);
