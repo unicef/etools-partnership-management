@@ -355,22 +355,28 @@
         }
       },
 
+      /**
+       * All partners pages with editable fields should be validated on save
+       */
+      _partnerDataIsValid: function() {
+        let valid = true;
+        let partnersPages = [this.$$('#financialAssurance'), this.$$('#partnerDetails')];
+        partnersPages.forEach((pageEl) => {
+          if (pageEl && !pageEl._validatePageData()) {
+            valid = false;
+          }
+        });
+        return valid;
+      },
+
       _validateAndTriggerPartnerSave: function(event) {
         event.stopImmediatePropagation();
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
 
-        let pageToValidate;
-
-        if (this.activePage === 'financial-assurance') {
-          pageToValidate = this.$$('#financialAssurance');
-        }
-        else if (this.activePage === 'details') {
-          pageToValidate = this.$$('#partnerDetails');
-        }
-
-        if (pageToValidate && pageToValidate._validatePageData()) {
+        if (this._partnerDataIsValid()) {
+          // both partner details and financial assurance data is valid
           let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
@@ -383,7 +389,7 @@
       },
 
       _cleanUpdateData: function(partner) {
-        let updateableFields = [
+        let updatableFields = [
           'alternate_name',
           'shared_with',
           'staff_members',
@@ -393,7 +399,7 @@
           'basis_for_risk_rating'
         ];
         let changes = {};
-        updateableFields.forEach(function(fieldName) {
+        updatableFields.forEach(function(fieldName) {
           // TODO: improve this
           if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
