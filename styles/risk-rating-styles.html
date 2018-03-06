@@ -13,8 +13,9 @@
           text-align: center;
           padding: 0 5px;
           background-color: var(--risk-rating-significant-color);
-          color: var(light-primary-text-color);
+          color: var(--light-primary-text-color);
           text-transform: uppercase;
+          box-sizing: border-box;
         };
 
         --risk-rating-low: {
@@ -58,7 +59,7 @@
       }
 
       span.risk-rating-field.low {
-          @apply --risk-rating-low;
+        @apply --risk-rating-low;
       }
       .risk-rating-field.low {
         --paper-input-container-input: {
