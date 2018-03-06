@@ -248,8 +248,8 @@
         ],
 
         _initLocalCurrency: function(plannedBudget, countryData) {
-          if (!plannedBudget.currency && countryData && countryData.local_currency_id) {
-            this.set('plannedBudget.currency', countryData.local_currency_id);
+          if (!plannedBudget.currency && countryData && countryData.local_currency_code) {
+            this.set('plannedBudget.currency', countryData.local_currency_code);
           }
         },
 

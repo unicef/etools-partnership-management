@@ -48,12 +48,9 @@
       .export-dd {
         width: 105px;
       }
-      .export-options {
-        padding-bottom: 20px;
-      }
       paper-dropdown-menu {
         --paper-input-container: {
-          padding-bottom: 3px;
+          padding: 0 0 4px 0;
         };
       }
     </style>
@@ -83,13 +80,15 @@
       </div>
 
       <div slot="title-row-actions" class="content-header-actions export-options">
-        <paper-dropdown-menu class="export-dd" label="Export" hidden$="[[!listActive]]">
-          <paper-listbox attr-for-selected="exp-type" class="dropdown-content" selected="{{exportType}}">
-              <paper-item exp-type$="[[PdExportTypes.PdBudget]]">[[PdExportTypes.PdBudget]]</paper-item>
-              <paper-item exp-type$="[[PdExportTypes.PdResult]]">[[PdExportTypes.PdResult]]</paper-item>
-          </paper-listbox>
-        </paper-dropdown-menu>
-        <div hidden$="[[!listActive]]">
+
+        <div class="action" hidden$="[[!listActive]]">
+          <paper-dropdown-menu class="export-dd" label="Export">
+            <paper-listbox attr-for-selected="exp-type" class="dropdown-content" selected="{{exportType}}">
+                <paper-item exp-type$="[[PdExportTypes.PdBudget]]">[[PdExportTypes.PdBudget]]</paper-item>
+                <paper-item exp-type$="[[PdExportTypes.PdResult]]">[[PdExportTypes.PdResult]]</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
           <a target="_blank" href$="[[csvDownloadUrl]]">
             <paper-button>
               <iron-icon icon="file-download"></iron-icon>
@@ -97,7 +96,8 @@
             </paper-button>
           </a>
         </div>
-        <div hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+
+        <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
           <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
             <iron-icon icon="add"></iron-icon>
             Add new PD/SSFA
@@ -117,7 +117,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="[[errorMsgBox_Title]]"
+                                   title$="[[errorMsgBoxTitle]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
           <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
@@ -299,7 +299,7 @@
           type: Boolean
         },
         _redirectToNewIntervPageInProgress: Boolean,
-        errorMsgBox_Title: {
+        errorMsgBoxTitle: {
           type: String,
           value: 'Errors Saving PD/SSFA'
         },
@@ -398,7 +398,7 @@
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
             //Avoid showing msg again after save
-            this.set('errorMsgBox_Title',
+            this.set('errorMsgBoxTitle',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.fire('set-server-errors', intervention.metadata.error_msg);
           }
