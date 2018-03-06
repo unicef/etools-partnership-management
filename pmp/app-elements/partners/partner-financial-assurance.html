@@ -45,6 +45,9 @@
           -webkit-appearance: none;
           margin: 0;
         };
+        --engagements-row : {
+          padding: 0 24px;
+        }
       }
 
       /* overview panel styles */
@@ -99,9 +102,9 @@
       }
 
 
-      etools-content-panel.engagements > div {
-        padding: 0 24px;
+      .engagements-header {
         background-color: var(--light-theme-background-color);
+        @apply --engagements-row;
       }
 
       .panel-table-row {
@@ -131,6 +134,7 @@
         height: 48px;
         font-size: 13px;
         color: var(--list-text-color, #2b2b2b);
+        @apply --engagements-row;
       }
 
       .assessments {
@@ -381,9 +385,9 @@
 
     <etools-content-panel
         show-expand-btn
-        class="content-section engagements"
-        panel-title="Assessments ([[allEngagements.length]])">
-      <div class="panel-row-tall panel-table-row layout-horizontal">
+        class="content-section"
+        panel-title="Assessments  and Assurance ([[allEngagements.length]])">
+      <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
         <etools-data-table-column class="col-3">
           Engagement Type
         </etools-data-table-column>

@@ -169,21 +169,21 @@
           <div class="col col-4">
             <!-- Risk rating -->
             <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                         label="Risk Rating"
+                         label="Partner Risk Rating"
                          value="[[getRiskRatingValue(partner.rating)]]"
                          placeholder="&#8212;"
                          readonly ></paper-input>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <paper-input label="Assessment Type"
+            <paper-input label="Basis For Risk Rating"
                          value="[[partner.type_of_assessment]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <paper-input label="Date of Assessment"
+            <paper-input label="Date of Report"
                          value="[[prettyDate(partner.last_assessment_date)]]"
                          placeholder="&#8212;"
                          readonly>
