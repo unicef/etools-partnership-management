@@ -1,4 +1,4 @@
-<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <script>
     'use strict';
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -8,7 +8,7 @@
     * @mixinFunction
     * @appliesMixin EtoolsMixins.EtoolsCurrency
     */
-    EtoolsPmpApp.Mixins.FrNumbersConsistencyImpl = superClass => class extends EtoolsMixins.EtoolsCurrency(superClass) {
+    EtoolsPmpApp.Mixins.FrNumbersConsistency = (superClass) => class extends EtoolsMixins.EtoolsCurrency(superClass) {
       static get properties() {
         return {
           frsConsistencyWarnings: {
@@ -246,3 +246,4 @@
     }
 
   }
+</script>
