@@ -63,11 +63,7 @@
           this._toast = document.createElement('paper-toast');
           this._toast.set('fitInto', this.$.appHeadLayout);
           this._toast.classList.add('toast-general-style');
-          let closeToastBtn = document.createElement('paper-button');
-          closeToastBtn.innerHTML = 'Ok';
-          closeToastBtn.classList.add('toast-dismiss-btn-general-style');
-          closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
-          this._toast.appendChild(closeToastBtn);
+          this._toast.appendChild(this._getCloseToastBtn());
           // this.$.layout is app-drawer-layout element from app-shell.html
           let layout = this.$.layout;
           if (layout) {
@@ -76,6 +72,13 @@
             this.logWarn('app-drawer-layout element from app-shell must have id="layout"', 'toast-notification-mixin');
           }
           this._toastAfterRenderSetup();
+        }
+        _getCloseToastBtn() {
+          let btn = document.createElement('paper-button');
+          btn.innerHTML = 'Ok';
+          btn.classList.add('toast-dismiss-btn-general-style');
+          btn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
+          return btn
         }
 
         _toastAfterRenderSetup() {
