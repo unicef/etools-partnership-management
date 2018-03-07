@@ -95,9 +95,9 @@
                 </span>
               </etools-info-tooltip>
             </span>
-            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.intervention_amt, '0.00')]] </span>
-            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</span>
-            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</span>
+            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.total_amt_local, '0.00')]] </span>
+            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.actual_amt_local, '0.00')]]</span>
+            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt_local, '0.00')]]</span>
           </div>
         </etools-data-table-row>
       </template>
@@ -125,7 +125,7 @@
                  icon-first
                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
               <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
-                [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_intervention_amt)]]
+                [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_frs_amt)]]
               </span>
               <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
               <span slot="message">[[_frsTotalAmountWarning]]</span>
