@@ -7,11 +7,11 @@
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 
-
 <dom-module id="agreement-list-data">
 
   <script>
-   'use strict';
+    'use strict';
+
     /**
      * @polymer
      * @mixinFunction
@@ -21,10 +21,10 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.ListData,
-      EtoolsLogsMixin
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
     /**
@@ -36,13 +36,6 @@
 
       static get is() {
         return 'agreement-list-data';
-      }
-
-      static get behaviors() {
-        return [
-          EtoolsPmpApp.Behaviors.ListData,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
-        ];
       }
 
       static get properties() {
@@ -174,7 +167,7 @@
           self._setFilteredAgreements(result);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
         }).catch(function(error) {
-          this.logError('Error querying agreements: ' + error);
+          self.logError('Error querying agreements: ', 'agreements-list-data', error, true);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
         });
       }
@@ -182,5 +175,4 @@
 
     window.customElements.define(AgreementsListData.is, AgreementsListData);
   </script>
-
 </dom-module>
