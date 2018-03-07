@@ -116,7 +116,7 @@
         cacheKey: 'currentCountry',
         data: country
       };
-      EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
+      EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.put(dataToCache);
     }
     _findGroup(groupName) {
       return _.find(this.userGroups, function(grp) {
