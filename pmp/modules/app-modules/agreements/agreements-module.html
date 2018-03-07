@@ -10,7 +10,6 @@
 <link rel="import" href="../../scripts/lodash.html">
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
-<link rel="import" href="../../mixins/common-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 
 <link rel="import" href="../mixins/module-routing-mixin.html">
@@ -154,12 +153,11 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-        EtoolsLogsMixin,
-        EtoolsPmpApp.Mixins.Common,
-        EtoolsPmpApp.Mixins.ScrollControl,
-        EtoolsPmpApp.Mixins.ModuleRouting,
-        EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
-      ], Polymer.Element);
+      EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.ScrollControl,
+      EtoolsPmpApp.Mixins.ModuleRouting,
+      EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+    ], Polymer.Element);
 
     /**
      * @polymer
@@ -177,10 +175,10 @@
           agreementsTabs: {
             type: Array,
             value: [{
-                tab: 'details',
-                tabLabel: 'Agreement Details',
-                hidden: false
-              }]
+              tab: 'details',
+              tabLabel: 'Agreement Details',
+              hidden: false
+            }]
           },
           permissions: {
             type: Object
@@ -248,14 +246,6 @@
         };
       }
 
-      static get listeners() {
-        return {
-          'agreement-save-error': '_agreementSaveErrors',
-          'reload-list': '_reloadAgreementsList',
-          'trigger-agreement-loading-msg': '_handleAgreementSelectionLoadingMsg'
-        };
-      }
-
       static get observers() {
         return [
           '_pageChanged(listActive, tabsActive, routeData)',
@@ -265,6 +255,7 @@
 
       ready() {
         super.ready();
+        this._initListeners();
         if (this.newAgreementActive) {
           // Useful when refreshing the page
           this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
@@ -281,6 +272,12 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
+      }
+
+      _initListeners() {
+        this.addEventListener('agreement-save-error', this._agreementSaveErrors);
+        this.addEventListener('reload-list', this._reloadAgreementsList);
+        this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
       }
 
       _showNewAgreementAddButton(listActive, permissions) {
@@ -338,6 +335,7 @@
       _newAgreementSaved(agreement) {
         this.fireEvent('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
       }
+
       _agreementSaveErrors(event) {
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
