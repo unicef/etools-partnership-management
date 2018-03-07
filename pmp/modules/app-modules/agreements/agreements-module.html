@@ -10,8 +10,8 @@
 <link rel="import" href="../../scripts/lodash.html">
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
-
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
 <link rel="import" href="../../layout/page-content-header/page-content-header.html">
@@ -147,6 +147,7 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
@@ -154,6 +155,7 @@
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.ScrollControl,
       EtoolsPmpApp.Mixins.ModuleRouting,
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
@@ -248,7 +250,7 @@
 
       static get observers() {
         return [
-          '_pageChanged(listActive, tabsActive, routeData)',
+          '_pageChanged(listActive, tabsActive, newAgreementActive)',
           '_observeRouteDataId(routeData.id)'
         ];
       }
@@ -268,10 +270,6 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
         // fire agreement page loading message
         this._showAgreementsPageLoadingMessage();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
       }
 
       _initListeners() {
@@ -312,10 +310,7 @@
       }
 
       _hasEditPermissions(permissions) {
-        if (permissions && permissions.editAgreementDetails === true) {
-          return true;
-        }
-        return false;
+        return permissions && permissions.editAgreementDetails === true;
       }
 
       _saveAgreement(agreementData) {
@@ -326,9 +321,9 @@
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
       }
 
-      _updateAgreementStatus(event) {
-        event.stopImmediatePropagation();
-        this.$.agreementData.updateAgreementStatus(event.detail);
+      _updateAgreementStatus(e) {
+        e.stopImmediatePropagation();
+        this.$.agreementData.updateAgreementStatus(e.detail);
       }
 
       // Go to details page once the new agreement has been saved
@@ -336,11 +331,11 @@
         this.fireEvent('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
       }
 
-      _agreementSaveErrors(event) {
-        event.stopImmediatePropagation();
-        if ((event.detail instanceof Array && event.detail.length > 0) ||
-            (typeof event.detail === 'string' && event.detail !== '')) {
-          this.fireEvent('set-server-errors', event.detail);
+      _agreementSaveErrors(e) {
+        e.stopImmediatePropagation();
+        if ((e.detail instanceof Array && e.detail.length > 0) ||
+            (typeof e.detail === 'string' && e.detail !== '')) {
+          this.fireEvent('set-server-errors', e.detail);
           this.scrollToTop();
         }
       }
@@ -384,8 +379,8 @@
       }
 
       // Save agreement if all fields are validated
-      _validateAndTriggerAgreementSave(event) {
-        event.stopImmediatePropagation();
+      _validateAndTriggerAgreementSave(e) {
+        e.stopImmediatePropagation();
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
@@ -499,9 +494,7 @@
       }
 
       _objectFieldIsModified(fieldName) {
-        // jscs:disable maximumLineLength
         return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(this.agreement[fieldName]);
-        // jscs:enable maximumLineLength
       }
 
       _getInitialAuthorizedOfficersIds() {
