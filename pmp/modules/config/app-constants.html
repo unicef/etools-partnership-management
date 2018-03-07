@@ -1,0 +1,23 @@
+<script>
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Mixins = EtoolsPmpApp.Mixins || {};
+
+    /*
+     * @polymer
+     * @mixinFunction
+     */
+    EtoolsPmpApp.Mixins.AppConstants = (superClass) => class extends superClass {
+
+      static get properties() {
+        return {
+          PdExportTypes: {
+            type: Object,
+            value: {
+                PdResult: 'PD Result',
+                PdBudget: 'PD Budget'
+            },
+            readOnly: true
+          }
+        };
+      }
+    }
