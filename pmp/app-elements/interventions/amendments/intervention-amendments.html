@@ -234,7 +234,7 @@
           return listLength === 0;
         },
 
-        _canAddAmendment: function() {
+        _canAddAmendment: function(editMode, amendActionInProgress) {
           return editMode && !amendActionInProgress;
         }
 
