@@ -1,45 +1,47 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../layout/page-content-header/page-content-header.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
+<link rel="import" href="components/disaggregation-list.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
 
 <dom-module id="settings-module">
   <template>
-    <style>
-      :host {
-        /* host CSS */
-      }
+    <style include="page-layout-styles">
     </style>
 
-    <!-- Polymer 2 element template -->
-    Polymer 2 is awesome!<br>
-    Settings pages will be displayed soon
+    <page-content-header>
+      <div slot="page-title">
+        Settings
+      </div>
+    </page-content-header>
+
+    <div id="main">
+      <div id="pageContent">
+        <disaggregation-list></disaggregation-list>
+      </div>
+    </div>
 
   </template>
   <script>
-    class SettingsModule extends Polymer.Element {
+    'use strict'
+    /**
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    class SettingsModule extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'settings-module';
       }
 
-      static get properties() {
-        return {};
-      }
-
-      constructor() {
-        super();
-      }
-
-      ready() {
-        super.ready();
-      }
-
       connectedCallback() {
         super.connectedCallback();
+        // deactivate main page loading msg triggered in app-shell
+        this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
       }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-      }
-
     }
 
     window.customElements.define(SettingsModule.is, SettingsModule);
