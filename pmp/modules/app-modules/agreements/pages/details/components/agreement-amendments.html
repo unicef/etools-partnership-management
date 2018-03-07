@@ -1,13 +1,14 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/utils/debounce.html">
 
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import"
-      href="../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../scripts/lodash.html">
 
@@ -21,12 +22,10 @@
 <link rel="import" href="../../../../../styles/file-styles.html">
 <link rel="import" href="../../../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
 <link rel="import" href="../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
-
 
 <dom-module id="agreement-amendments">
   <template strip-whitespace>
@@ -57,6 +56,7 @@
       #amendments-wrapper {
         margin-top: 16px;
       }
+
       :host(:not([edit-mode])) #amendments-wrapper {
         margin-bottom: 24px;
       }
@@ -65,17 +65,21 @@
       #download-template-wrapper {
         @apply --layout-justified;
       }
+
       #download-template-msg {
         max-width: calc(100% - 210px);
       }
+
       #download-template-btn {
         max-width: 220px;
         margin: 0 0 0 24px;
         padding: 0;
       }
+
       #download-template-a {
         display: inherit;
       }
+
       /* amendment template download section styles end */
     </style>
 
@@ -98,11 +102,11 @@
         <div class="row-h item-container">
           <div class$="item-actions-container [[_getLockedClass(item.id)]]" data-item-nr$="[[_getItemNr(index)]]">
             <div class="actions">
-              <!-- <paper-icon-button class="action delete"
+              <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
                                  icon="cancel">
-              </paper-icon-button> -->
+              </paper-icon-button>
             </div>
           </div>
           <div class="item-content">
@@ -187,12 +191,12 @@
     'use strict';
 
     /**
-    * @polymer
-    * @mixinFunction
-    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
-    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-    */
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
     const AgreementAmendmentsRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.RepeatableDataSets,
@@ -250,14 +254,6 @@
         };
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-      }
-
       _getAmendmentTypes(agreementType, _amendmentTypes) {
         if (['PCA', 'SSFA'].indexOf(agreementType) === -1 ||
             !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
@@ -273,7 +269,7 @@
         if (!this.dataItems) {
           return true;
         }
-        var isValid = true;
+        let isValid = true;
         this.dataItems.forEach((amendm, index) => {
           if (amendm.id) {
             return;
@@ -299,17 +295,11 @@
       // If the amendment can be removed, the left border and top badge needs to have a different style.
       // This class will help with that.
       _getLockedClass(amendmentId) {
-        if (this._showReadonlyDetails(amendmentId)) {
-          return 'locked';
-        }
-        return '';
+        return this._showReadonlyDetails(amendmentId) ? 'locked' : '';
       }
 
       _showReadonlyDetails(amendmentId) {
-        if (parseInt(amendmentId, 10) > 0) {
-          return true;
-        }
-        return false;
+        return parseInt(amendmentId, 10) > 0;
       }
 
       _getItemNr(index) {
@@ -317,20 +307,20 @@
       }
 
       // Check if amendment fields are empty
-      _amendmentFieldsAreEmpty(amendmentItem, index) {
-        return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
-            && !amendmentItem.signed_amendment &&
+      _amendmentFieldsAreEmpty(amendmentItem) {
+        return (amendmentItem.signed_date === null || amendmentItem.signed_date === '') &&
+            !amendmentItem.signed_amendment &&
             ((amendmentItem.types instanceof Array && amendmentItem.types.length === 0) ||
-            !amendmentItem.types);
+                !amendmentItem.types);
       }
 
       // Validate last added amendment and if is not empty add a new one
       _addNewAmendment() {
-        var lastAmendmentItemIndex = this.dataItems.length - 1;
+        let lastAmendmentItemIndex = this.dataItems.length - 1;
         if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] &&
             !this._showReadonlyDetails(this.dataItems[lastAmendmentItemIndex].id)) {
-          var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
-          if (this._amendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
+          let lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
+          if (this._amendmentFieldsAreEmpty(lastAmendmentItem)) {
             this.fireEvent('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
@@ -368,9 +358,8 @@
       }
 
       _newAmendmentsHaveChangeAuthOfficersSelected() {
-        let self = this;
         let changeAuthOfficersTypeSelected = this.dataItems.find(
-          (amendment) => !amendment.id && self._changeAuthorizedOfficersTypeSelected(amendment.types)
+            (amendment) => !amendment.id && this._changeAuthorizedOfficersTypeSelected(amendment.types)
         );
         return !!changeAuthOfficersTypeSelected;
       }
@@ -400,11 +389,11 @@
             Polymer.Async.timeOut.after(10),
             () => {
               if (e.detail && e.detail.value) {
-                  if (e.target.is && e.target.is === 'etools-multi-selection-menu' &&
-                      !e.target.autoValidate) {
-                    e.target.set('autoValidate', true);
-                  }
+                if (e.target.is && e.target.is === 'etools-multi-selection-menu' &&
+                    !e.target.autoValidate) {
+                  e.target.set('autoValidate', true);
                 }
+              }
             });
       }
 
@@ -430,7 +419,6 @@
 
           return amTypesFiltered.concat(legacyAmTypesFiltered).join(' | ');
         }
-
         return null;
       }
     }
