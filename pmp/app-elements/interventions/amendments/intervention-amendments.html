@@ -150,6 +150,9 @@
             type: Boolean,
             value: false
           },
+          interventionId: {
+            type: Number
+          },
         },
 
         observers: [
@@ -164,7 +167,6 @@
           this.addAmendmentDialog = document.createElement('add-amendment-dialog');
           this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
           this.addAmendmentDialog.interventionDocumentType = this.interventionDocumentType;
-          this.addAmendmentDialog.interventionId = this.interventionId;
           this.addAmendmentDialog.toastEventSource = this;
           this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
           document.querySelector('body').appendChild(this.addAmendmentDialog);
@@ -195,6 +197,7 @@
         _showAddAmendmentDialog: function() {
           if (this.addAmendmentDialog) {
             this.addAmendmentDialog.opened = true;
+            this.addAmendmentDialog.interventionId = this.interventionId;
           }
         },
 
