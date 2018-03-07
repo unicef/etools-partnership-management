@@ -48,9 +48,9 @@
             notify: true,
             observer: '_interventionIdChanged'
           },
-
-          handleResponseAdditionalCallback: Object,
-
+          handleResponseAdditionalCallback: {
+            type: Object
+          },
           offices: {
             type: Array,
             statePath: 'offices'
@@ -78,19 +78,29 @@
           });
         },
 
-        _interventionIdChanged: function(newId) {
-          if (newId) {
-            this.fetchIntervention(newId);
-          }
+        refreshPermissions: function() {
+          let self = this;
+          let options = {
+            endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
+          };
+          this.sendRequest(options).then(function(resp) {
+            self.set('intervention.permissions', resp.permissions);
+          }).catch(function(error) {
+            self._handleErrorResponse(error, 'GET');
+          });
         },
 
-        fetchIntervention: function(id) {
+        _interventionIdChanged: function(newId) {
+          if (!newId) {
+            return;
+          }
+
           this.fire('global-loading', {
             message: 'Loading PD/SSFA data...',
             active: true,
             loadingSource: this.ajaxLoadingMsgSource
           });
-          this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: id})});
+          this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
         },
 
         _handleErrorResponse: function(response, ajaxMethod) {

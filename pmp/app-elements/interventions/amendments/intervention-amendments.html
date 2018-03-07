@@ -49,7 +49,7 @@
     </style>
 
     <etools-content-panel panel-title="Amendments">
-      <template is="dom-if" if="[[editMode]]">
+      <template is="dom-if" if="[[_canAddAmendment(editMode, amendActionInProgress)]]">
         <div slot="panel-btns">
           <paper-icon-button icon="add-box"
                             title="Add Amendment"
@@ -217,9 +217,9 @@
 
         _unlockInterventionDetailsFields: function() {
           if (!this.amendActionInProgress) {
-            // we need the new permissions for ammendment mode, so we have to refresh the intervention data;
+            // we need the new permissions for ammendment mode;
             // after the permissions are updated, the fields will automatically unlock
-            this.fire('refresh-intervention');
+            this.fire('refresh-intervention-permissions');
           }
         },
 
@@ -233,6 +233,10 @@
         _emptyList: function(listLength) {
           return listLength === 0;
         },
+
+        _canAddAmendment: function() {
+          return editMode && !amendActionInProgress;
+        }
 
       });
     })();

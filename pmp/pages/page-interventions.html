@@ -332,7 +332,7 @@
         'reload-list': '_reloadInterventionsList',
         'tab-content-attached': '_interventionPageAttached',
         'trigger-intervention-loading-msg': '_handleInterventionSelectionLoadingMsg',
-        'refresh-intervention': '_forceInterventionRefresh'
+        'refresh-intervention-permissions': '_refreshInterventionPermissions'
       },
 
       ready: function() {
@@ -364,17 +364,21 @@
         }
       },
 
-      _amendmentModeChanged: function(newValue) {
+      _amendmentModeChanged: function(amendmentModeActive) {
         if (!this.intervention) {
           return;
         }
         if (!this.tabAttached || this.listActive) {
           return;
         }
-        if (typeof newValue === 'undefined') {
+        if (typeof amendmentModeActive === 'undefined') {
           return;
         }
-        this.fire('set-amendment-mode', {active: newValue});
+        if (amendmentModeActive === true) {
+          // if amendment mode was just switched on, redirect to the details tab for editing
+          this.set('routeData.tab', 'details');
+        }
+        this.fire('set-amendment-mode', {active: amendmentModeActive});
       },
 
       _interventionChanged: function(intervention, permissions) {
@@ -499,9 +503,9 @@
         return !this.intervention.id;
       },
 
-      _forceInterventionRefresh: function(e) {
+      _refreshInterventionPermissions: function(e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.fetchIntervention(this.intervention.id);
+        this.$.interventionData.refreshPermissions();
       },
 
       _updateInterventionStatus: function(event) {
