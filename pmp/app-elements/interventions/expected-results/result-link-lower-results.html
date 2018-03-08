@@ -87,7 +87,6 @@
         height: 49px;
       }
 
-
     </style>
 
     <div hidden$="[[!_emptyList(dataItems.length)]]">
@@ -182,7 +181,8 @@
           'delete-confirm': '_updateInterventionLocAndClusters',
         },
         observers: [
-          '_seeIfThereAreIndicators(dataItems.*)'
+          '_seeIfThereAreIndicators(dataItems.*)',
+          '_makeSureDataItemsAreValid(dataItems)'
         ],
 
         _seeIfThereAreIndicators: function() {
@@ -199,6 +199,7 @@
           }
           this.thereAreIndicators = foundSomeIndicators;
         },
+
         getColumnLength: function(column, thereAreIndicators) {
           switch (column) {
             case 'result':
