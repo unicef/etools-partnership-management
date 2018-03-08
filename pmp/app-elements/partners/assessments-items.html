@@ -90,11 +90,11 @@
          class="secondary-btn add-other-assessment">
         ADD OTHER ASSESSMENT
       </paper-button>
-        <div id="assessments-wrapper">
-          <div hidden$="[[_emptyList(filteredDataItems.length)]]">
-            <template is="dom-repeat" items="[[filteredDataItems]]">
-              <div class="row-h item-container no-h-margin">
-                <div class="item-actions-container">
+      <div id="assessments-wrapper">
+        <div hidden$="[[_emptyList(filteredDataItems.length)]]">
+          <template is="dom-repeat" items="[[filteredDataItems]]">
+            <div class="row-h item-container no-h-margin">
+              <div class="item-actions-container">
 
                 <div class="actions">
                   <paper-icon-button class="action delete"
