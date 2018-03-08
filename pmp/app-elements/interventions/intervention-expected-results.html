@@ -194,26 +194,31 @@
          * Add/update indicators data
          */
         indicatorDialogDataReceived: function(data) {
-          let actionParams = data.actionParams;
-          let indicator = data.indicatorData;
-          let i;
-          for (i = 0; i < this.dataItems.length; i++) {
-            //search expected result item by output id
-            if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
-              let indicatorPaths = 'dataItems.' + i + '.ll_results.' +
-                  actionParams.llResultIndex + '.applied_indicators';
-              if (actionParams.appliedIndicatorsIndex !== null) {
-                // we just edited an indicator, replace data in indicators list
-                this.set(indicatorPaths + '.' + actionParams.appliedIndicatorsIndex,
-                    JSON.parse(JSON.stringify(indicator)));
-              } else {
-                // new indicator added
-                this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'], indicator);
+          try {
+            let actionParams = data.actionParams;
+            let indicator = data.indicatorData;
+            let i;
+            for (i = 0; i < this.dataItems.length; i++) {
+              //search expected result item by output id
+              if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
+
+                if (actionParams.appliedIndicatorsIndex !== null) {
+                  // we just edited an indicator, replace data in indicators list
+                  this.set(['dataItems', i, 'll_results', actionParams.llResultIndex,
+                    'applied_indicators', actionParams.appliedIndicatorsIndex], JSON.parse(JSON.stringify(indicator)));
+                } else {
+                  // new indicator added
+                  this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'],
+                      indicator);
+                }
+                break;
               }
-              break;
             }
+            this._updateInterventionLocAndClusters();
+          } catch (err) {
+            this.logError('Updating/adding new indicator data in displayed list has failed!',
+                'lower-results-behavior', err);
           }
-          this._updateInterventionLocAndClusters();
         },
 
         // open indicator dialog to add or edit indicator
