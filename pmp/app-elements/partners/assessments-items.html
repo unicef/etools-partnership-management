@@ -1,9 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
@@ -11,20 +11,20 @@
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
-<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-config/app-constants.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
 <dom-module id="assessments-items">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles paper-material-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles paper-material-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -36,12 +36,6 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply --paper-fab-btn-green;
-        };
-
       }
       div[elevation="1"] {
         @apply --paper-material-elevation-1;
@@ -65,12 +59,6 @@
 
       .add-other-assessment {
         padding-left: 48px;
-        color: var(--primary-color);
-        cursor: pointer;
-      }
-
-      #collapse {
-        position: relative;
       }
 
       etools-single-file {
@@ -92,12 +80,11 @@
     </style>
 
     <div elevation="[[elevation]]">
-      <div
-          hidden$="[[!editMode]]"
-          on-tap="_addNewAssessment"
-          class="add-other-assessment">
-          ADD OTHER ASSESSMENT
-      </div>
+      <paper-button hidden$="[[!editMode]]"
+         on-tap="_addNewAssessment"
+         class="secondary-btn add-other-assessment">
+        ADD OTHER ASSESSMENT
+      </paper-button>
         <div id="assessments-wrapper">
           <div hidden$="[[_emptyList(filteredDataItems.length)]]">
             <template is="dom-repeat" items="[[filteredDataItems]]">
@@ -173,7 +160,6 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.RepeatableDataSets,
           EtoolsPmpApp.Behaviors.Constants,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
         properties: {
