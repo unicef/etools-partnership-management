@@ -37,18 +37,23 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
+
       div[elevation="1"] {
         @apply --paper-material-elevation-1;
       }
+
       div[elevation="2"] {
         @apply --paper-material-elevation-2;
       }
+
       div[elevation="3"] {
         @apply --paper-material-elevation-3;
       }
+
       div[elevation="4"] {
         @apply --paper-material-elevation-4;
       }
+
       div[elevation="5"] {
         @apply --paper-material-elevation-5;
       }
@@ -91,61 +96,61 @@
               <div class="row-h item-container no-h-margin">
                 <div class="item-actions-container">
 
-                  <div class="actions">
-                    <paper-icon-button class="action delete"
-                                       on-tap="_openDeleteConfirmation"
-                                       data-args$="[[index]]"
-                                       disabled$="[[!editMode]]"
-                                       icon="cancel">
-                    </paper-icon-button>
-                  </div>
-                </div>
-                <div class="item-content">
-                  <div class="row-h">
-                    <div class="col col-4">
-                      <!-- Assessment type -->
-                      <etools-form-element-wrapper label="Assessment Type">
-                        [[item.type]]
-                      </etools-form-element-wrapper>
-                    </div>
-                    <div class="col col-4">
-                      <required-and-not-future-date-validator validator-name="dateSubmited_[[index]]_validator"
-                                                              required
-                                                              error-message="{{item.dateErrorMessage}}">
-                      </required-and-not-future-date-validator>
-                      <!-- Date submitted -->
-                      <etools-date-input id$="dateSubmited_[[index]]"
-                                         label="Date of Assessment"
-                                         value="{{item.completed_date}}"
-                                         readonly$="[[!editMode]]"
-                                         auto-validate
-                                         validator="dateSubmited_[[index]]_validator"
-                                         error-message="[[item.dateErrorMessage]]"
-                                         no-init show-clear-btn>
-                      </etools-date-input>
-                    </div>
-                  </div>
-                  <div class="row-h file-container">
-                    <!-- Report file -->
-                    <etools-single-file
-                                  id$="report_[[index]]"
-                                  file="{{item.report}}"
-                                  internal-file="{{item.report_file}}"
-                                  label="Report"
-                                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
-                                  readonly="[[!editMode]]"
-                                  accept=".doc,.docx,.pdf,.jpg,.png"
-                                  error-message="Please select the report file"></etools-single-file>
-                  </div>
+                <div class="actions">
+                  <paper-icon-button class="action delete"
+                                     on-tap="_openDeleteConfirmation"
+                                     data-args$="[[index]]"
+                                     disabled$="[[!editMode]]"
+                                     icon="cancel">
+                  </paper-icon-button>
                 </div>
               </div>
-            </template>
-          </div>
-
-          <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-            <p>There are no assessments added.</p>
-          </div>
+              <div class="item-content">
+                <div class="row-h">
+                  <div class="col col-4">
+                    <!-- Assessment type -->
+                    <etools-form-element-wrapper label="Assessment Type">
+                      [[item.type]]
+                    </etools-form-element-wrapper>
+                  </div>
+                  <div class="col col-4">
+                    <required-and-not-future-date-validator validator-name="dateSubmited_[[index]]_validator"
+                                                            required
+                                                            error-message="{{item.dateErrorMessage}}">
+                    </required-and-not-future-date-validator>
+                    <!-- Date submitted -->
+                    <etools-date-input id$="dateSubmited_[[index]]"
+                                       label="Date of Assessment"
+                                       value="{{item.completed_date}}"
+                                       readonly$="[[!editMode]]"
+                                       auto-validate
+                                       validator="dateSubmited_[[index]]_validator"
+                                       error-message="[[item.dateErrorMessage]]"
+                                       no-init show-clear-btn>
+                    </etools-date-input>
+                  </div>
+                </div>
+                <div class="row-h file-container">
+                  <!-- Report file -->
+                  <etools-single-file
+                      id$="report_[[index]]"
+                      file="{{item.report}}"
+                      internal-file="{{item.report_file}}"
+                      label="Report"
+                      hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
+                      readonly="[[!editMode]]"
+                      accept=".doc,.docx,.pdf,.jpg,.png"
+                      error-message="Please select the report file"></etools-single-file>
+                </div>
+              </div>
+            </div>
+          </template>
         </div>
+
+        <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+          <p>There are no assessments added.</p>
+        </div>
+      </div>
     </div>
 
   </template>
@@ -210,7 +215,7 @@
           this.updateStyles();
         },
         _hideDeleteBtn: function(itemReportFile) {
-           if (!itemReportFile) {
+          if (!itemReportFile) {
             return false;
           }
           return true;
@@ -226,7 +231,7 @@
         },
 
         _setFilteredDataItems: function(items) {
-          this.set('filteredDataItems',items.filter(item=> item.type === 'Other'));
+          this.set('filteredDataItems', items.filter(item => item.type === 'Other'));
         },
 
         _toggle: function() {
@@ -241,9 +246,9 @@
         },
 
         _dataItemsChanged: function(path) {
-          if (!_.isEmpty(path)){
+          if (!_.isEmpty(path)) {
             this._setFilteredDataItems([_.last(this.dataItems), ...this.filteredDataItems]);
-          }else {
+          } else {
             this._setFilteredDataItems(this.dataItems);
           }
         },
@@ -270,19 +275,19 @@
           switch (field) {
             case 'assessmentType':
               if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) ||
-                  reportFileLength > 0 || reportFile instanceof File)) {
+                      reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
             case 'dateSubmited':
               if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) ||
-                  reportFileLength > 0 || reportFile instanceof File)) {
+                      reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
             case 'report':
               if (!this._hasReport(reportFile, reportFileLength) && (this._notEmpty(assessmentType) ||
-                  this._notEmpty(completedDate))) {
+                      this._notEmpty(completedDate))) {
                 valid = false;
               }
               break;
@@ -330,7 +335,7 @@
             var reportFileLength = 0;
 
             if (typeof this.dataItems[index].report_file === 'string') {
-               reportFileLength = this.dataItems[index].report_file.length;
+              reportFileLength = this.dataItems[index].report_file.length;
             }
             if (fieldEl) {
               var fieldName = this._getFileTypeForValidation(fieldSelector);
