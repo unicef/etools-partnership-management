@@ -220,7 +220,7 @@
             <div class="risk-rating"></div>
             [[partner.rating]]
           </div>
-          <div class="col col-6">[[partner.basis_for_risk_rating]]asasd</div>
+          <div class="col col-6">[[partner.basis_for_risk_rating]]</div>
           <div class="col col-3 center-align">
             $ [[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]]
           </div>
@@ -271,7 +271,7 @@
                 <paper-radio-button
                     data-idx="q1"
                     on-tap="_toggleRadio"
-                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
                     checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q1)]]">
                 </paper-radio-button>
               </div>
@@ -279,7 +279,7 @@
                 <paper-radio-button
                     data-idx="q2"
                     on-tap="_toggleRadio"
-                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
                     checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q2)]]">
                 </paper-radio-button>
               </div>
@@ -287,7 +287,7 @@
                 <paper-radio-button
                     data-idx="q3"
                     on-tap="_toggleRadio"
-                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
                     checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q3)]]">
                 </paper-radio-button>
               </div>
@@ -295,12 +295,12 @@
                 <paper-radio-button
                     data-idx="q4"
                     on-tap="_toggleRadio"
-                    disabled="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_required)]]"
+                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
                     checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q4)]]">
                 </paper-radio-button>
               </div>
               <div class="col-2 view-only totals layout-horizontal">
-                <strong>[[partner.planned_engagement.spot_check_required]]</strong>
+                <strong>[[partner.hact_min_requirements.spot_checks]]</strong>
               </div>
             </div>
 
@@ -431,7 +431,7 @@
     </etools-content-panel>
 
     <etools-content-panel
-        panel-title="Other Assessments([[partner.assessments.length]])"
+        panel-title="Other Assessments([[filteredAssessments.length]])"
         class="content-section">
       <div class="assessments">
         <assessments-items id="assessmentsList"
@@ -460,7 +460,7 @@
         ],
 
         observers: [
-          '_paginate(pageNumber, pageSize)'
+          '_paginate(pageNumber, pageSize)',
         ],
 
         properties: {
@@ -580,6 +580,11 @@
           this.set('scheduledAuditRequired', !partner.planned_engagement.scheduled_audit ? 'NO' : 'YES');
           this._addBasisFromPartner();
           this._applyRiskRatingColor();
+          this._filterPartnerAssessments();
+        },
+
+        _filterPartnerAssessments: function() {
+          this.set('filteredAssessments', this.partner.assessments.filter(a=> a.type === 'Other'));
         },
 
         _addBasisFromPartner: function() {
@@ -603,7 +608,10 @@
         },
 
         _paginate: function() {
-          const engagements = this.allEngagements.slice((this.pageNumber - 1) * this.pageSize, this.pageNumber * this.pageSize);
+          let engagements = this.allEngagements;
+          engagements = engagements
+            .sort((a,b)=> moment(b.status_date) - moment(a.status_date))
+            .slice((this.pageNumber - 1) * this.pageSize, this.pageNumber * this.pageSize);
           this.set('engagements', engagements);
         },
 
@@ -652,11 +660,11 @@
         },
 
         _specialAuditChanged: function(value) {
-          this.set("partner.planned_engagement.special_audit", value !== 'NO');
+          this.set('partner.planned_engagement.special_audit', value !== 'NO');
         },
 
         _scheduledAuditChanged: function(value) {
-          this.set("partner.planned_engagement.special_audit", value !== 'NO');
+          this.set('partner.planned_engagement.special_audit', value !== 'NO');
         },
 
         _goToReport: function(e) {
