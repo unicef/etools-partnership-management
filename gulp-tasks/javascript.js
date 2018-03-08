@@ -29,8 +29,7 @@ const lint = lazypipe()
     .pipe(jscsStylish.combineWithHintResults)
     .pipe(jshint.reporter, jshintStylish)
     // Option to have js linting fail on error
-    // .pipe(jshint.reporter, 'fail');
-    .pipe(jshint.reporter);
+    .pipe(jshint.reporter, 'fail');
 
 //babel transpile JS
 const babelify = lazypipe()
