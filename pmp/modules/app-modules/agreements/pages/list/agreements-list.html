@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
 
+<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
@@ -12,9 +13,9 @@
 <link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
@@ -33,8 +34,8 @@
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 
 <link rel="import" href="../../data/agreements-list-data.html">
-<dom-module id="agreements-list">
 
+<dom-module id="agreements-list">
   <template strip-whitespace>
 
     <style
@@ -49,6 +50,7 @@
       div[elevation="1"] {
         @apply --paper-material-elevation-1;
       }
+
       .ag-ref {
         @apply --text-btn-style;
         text-transform: none;
@@ -56,13 +58,13 @@
     </style>
 
     <!-- <template is="dom-if" if="[[stampListData]]"> -->
-      <agreement-list-data id="agreements"
-                           filtered-agreements="{{filteredAgreements}}"
-                           total-results="{{totalResults}}"
-                           list-data-path="filteredAgreements"
-                           on-agreements-loaded="_requiredDataHasBeenLoaded"
-                           fire-data-loaded>
-      </agreement-list-data>
+    <agreement-list-data id="agreements"
+                         filtered-agreements="{{filteredAgreements}}"
+                         total-results="{{totalResults}}"
+                         list-data-path="filteredAgreements"
+                         on-agreements-loaded="_requiredDataHasBeenLoaded"
+                         fire-data-loaded>
+    </agreement-list-data>
     <!-- </template> -->
 
     <div id="listControls" elevation="1">
@@ -74,7 +76,7 @@
                      placeholder="Search"
                      autocomplete="off"
                      value="{{q}}">
-          <iron-icon icon="search" prefix></iron-icon>
+          <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
@@ -83,12 +85,12 @@
             <div class="dropdown-with-clear-btn">
               <paper-dropdown-menu label$="[[filter.filterName]]" noink>
                 <paper-listbox slot="dropdown-content"
-                            attr-for-selected="name"
-                            on-iron-select="filterValueChanged"
-                            on-iron-deselect="filterValueChanged"
-                            data-filter-path$="[[filter.path]]"
-                            on-iron-activate="_dropdownSelected"
-                            selected=[[filter.alreadySelected]]>
+                               attr-for-selected="name"
+                               on-iron-select="filterValueChanged"
+                               on-iron-deselect="filterValueChanged"
+                               data-filter-path$="[[filter.path]]"
+                               on-iron-activate="_dropdownSelected"
+                               selected=[[filter.alreadySelected]]>
                   <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
                     <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
                   </template>
@@ -124,14 +126,14 @@
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
               <etools-date-input id$="datepicker_[[filter.path]]"
-                                label="[[filter.filterName]]"
-                                value="{{filter.dateSelected}}"
-                                readonly$="[[!agreement.permissions.edit.start]]"
-                                format="D MMM YYYY"
-                                required$="[[agreement.permissions.required.start]]"
-                                on-date-has-changed="_filterDateHasChanged"
-                                data-filter-path$="[[filter.path]]"
-                                fire-date-has-changed no-init show-clear-btn>
+                                 label="[[filter.filterName]]"
+                                 value="{{filter.dateSelected}}"
+                                 readonly$="[[!agreement.permissions.edit.start]]"
+                                 format="D MMM YYYY"
+                                 required$="[[agreement.permissions.required.start]]"
+                                 on-date-has-changed="_filterDateHasChanged"
+                                 data-filter-path$="[[filter.path]]"
+                                 fire-date-has-changed no-init show-clear-btn>
               </etools-date-input>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
@@ -167,7 +169,8 @@
 
     <div id="list" elevation="1" class="hidden">
 
-      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+      <etools-data-table-header id="listHeader"
+                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
         <etools-data-table-column class="col-2" field="agreement_number" sortable>
           Reference Number #
         </etools-data-table-column>
@@ -351,19 +354,22 @@
         };
       }
 
-      static get listeners() {
-        return {
-          'sort-changed': '_sortOrderChanged'
-        };
-      }
-
       static get observers() {
         return [
           '_initListFilters(agreementTypes, agreementStatuses, partnersDropdownData)',
           '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
-            'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
+          'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
+      }
+
+      ready() {
+        super.ready();
+        this._initListeners();
+      }
+
+      _initListeners() {
+        this.addEventListener('sort-changed', this._sortOrderChanged);
       }
 
       _initListFilters(agreementTypes, agreementStatuses, partnersDropdownData) {
@@ -371,55 +377,55 @@
           return;
         }
         // init list filter options
-        this.initAgFiltersDebouncer = Polymer.Debouncer.debounce(this.initAgFiltersDebouncer,
-          Polymer.Async.timeOut.after(100),
-          () => {
-            this.initListFiltersData([
-              {
-                filterName: 'Agreement Type',
-                type: 'dropdown',
-                selectionOptions: agreementTypes,
-                alreadySelected: null,
-                path: 'agreementType'
-              },
-              {
-                filterName: 'Agreement Status',
-                type: 'dropdown',
-                selectionOptions: agreementStatuses,
-                alreadySelected: null,
-                path: 'agreementStatus'
-              },
-              {
-                filterName: 'Partner',
-                type: 'esmm', // etools-multi-selection-menu
-                multiple: true,
-                selectionOptions: partnersDropdownData,
-                alreadySelected: [],
-                path: 'selectedPartners'
-              },
-              {
-                filterName: 'Starts After',
-                type: 'datepicker', // etools-datepicker
-                dateSelected: '',
-                path: 'startDate'
-              },
-              {
-                filterName: 'Ends Before',
-                type: 'datepicker', // etools-datepicker
-                dateSelected: '',
-                path: 'endDate'
-              }
-            ]);
-            this._updateSelectedFiltersValues();
-          });
+        this._initAgFiltersDebouncer = Polymer.Debouncer.debounce(this._initAgFiltersDebouncer,
+            Polymer.Async.timeOut.after(100),
+            () => {
+              this.initListFiltersData([
+                {
+                  filterName: 'Agreement Type',
+                  type: 'dropdown',
+                  selectionOptions: agreementTypes,
+                  alreadySelected: null,
+                  path: 'agreementType'
+                },
+                {
+                  filterName: 'Agreement Status',
+                  type: 'dropdown',
+                  selectionOptions: agreementStatuses,
+                  alreadySelected: null,
+                  path: 'agreementStatus'
+                },
+                {
+                  filterName: 'Partner',
+                  type: 'esmm', // etools-multi-selection-menu
+                  multiple: true,
+                  selectionOptions: partnersDropdownData,
+                  alreadySelected: [],
+                  path: 'selectedPartners'
+                },
+                {
+                  filterName: 'Starts After',
+                  type: 'datepicker', // etools-datepicker
+                  dateSelected: '',
+                  path: 'startDate'
+                },
+                {
+                  filterName: 'Ends Before',
+                  type: 'datepicker', // etools-datepicker
+                  dateSelected: '',
+                  path: 'endDate'
+                }
+              ]);
+              this._updateSelectedFiltersValues();
+            });
       }
 
-       connectedCallback() {
+      connectedCallback() {
         super.connectedCallback();
         /**
-          * Disable loading message for main list elements load,
-          * triggered by parent element on stamp
-          */
+         * Disable loading message for main list elements load,
+         * triggered by parent element on stamp
+         */
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.listAttachedCallback(this.active, 'Loading agreements list data...', 'ag-list');
       }
@@ -450,32 +456,32 @@
 
       _updateSelectedFiltersValues() {
         this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
-          Polymer.Async.timeOut.after(500),
-          () => {
-            var filtersValues = [
-              {
-                filterName: 'Agreement Type',
-                selectedValue: this.agreementType
-              },
-              {
-                filterName: 'Agreement Status',
-                selectedValue: this.agreementStatus
-              },
-              {
-                filterName: 'Partner',
-                selectedValue: _.map(this.selectedPartners, 'value')
-              },
-              {
-                filterName: 'Starts After',
-                selectedValue: this.startDate
-              },
-              {
-                filterName: 'Ends Before',
-                selectedValue: this.endDate
-              }
-            ];
-            this.updateShownFilters(filtersValues);
-          });
+            Polymer.Async.timeOut.after(500),
+            () => {
+              let filtersValues = [
+                {
+                  filterName: 'Agreement Type',
+                  selectedValue: this.agreementType
+                },
+                {
+                  filterName: 'Agreement Status',
+                  selectedValue: this.agreementStatus
+                },
+                {
+                  filterName: 'Partner',
+                  selectedValue: _.map(this.selectedPartners, 'value')
+                },
+                {
+                  filterName: 'Starts After',
+                  selectedValue: this.startDate
+                },
+                {
+                  filterName: 'Ends Before',
+                  selectedValue: this.endDate
+                }
+              ];
+              this.updateShownFilters(filtersValues);
+            });
       }
 
       // Updates URL state with new query string, and launches query
@@ -485,7 +491,7 @@
         }
 
         this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-        var qs = this._buildQueryString();
+        let qs = this._buildQueryString();
 
         if (qs !== _agreementsLastNavigated) {
           _agreementsLastNavigated = qs;
@@ -513,32 +519,33 @@
         // Query is debounced with a debounce time
         // set depending on what action the user takes
         this.queryDebouncer = Polymer.Debouncer.debounce(this.queryDebouncer,
-          Polymer.Async.timeOut.after(this.debounceTime),
-          () => {
-            var agreements = this.$.agreements;
-            if (!agreements) {
-              return;
-            }
-            console.log(this.startDate, this.endDate);
-            agreements.query(
-                this.sortOrder.field,
-                this.sortOrder.direction,
-                this.q.trim().toLowerCase(),
-                this.agreementType,
-                this.agreementStatus,
-                _.map(this.selectedPartners, 'label'),
-                this.startDate,
-                this.endDate,
-                this.pageNumber,
-                this.pageSize,
-                forceNoLoading ? false : this.showQueryLoading
-            );
-          });
+            Polymer.Async.timeOut.after(this.debounceTime),
+            () => {
+              let agreements = this.$.agreements;
+              if (!agreements) {
+                return;
+              }
+              // TODO: remove this console log
+              console.log(this.startDate, this.endDate);
+              agreements.query(
+                  this.sortOrder.field,
+                  this.sortOrder.direction,
+                  this.q.trim().toLowerCase(),
+                  this.agreementType,
+                  this.agreementStatus,
+                  _.map(this.selectedPartners, 'label'),
+                  this.startDate,
+                  this.endDate,
+                  this.pageNumber,
+                  this.pageSize,
+                  forceNoLoading ? false : this.showQueryLoading
+              );
+            });
       }
 
       // Outputs the query string for the list
       _buildQueryString() {
-        var out = [];
+        let out = [];
         if (this.pageNumber && this.pageNumber > 1) {
           out.push('page=' + this.pageNumber);
         }
@@ -571,9 +578,7 @@
       }
 
       _buildCsvDownloadUrl() {
-        var queryString = '';
-        var endpointUrl = '';
-        var params = [];
+        let params = [];
 
         if (this.agreementType && this.agreementType.length) {
           params.push('agreement_type=' + this.agreementType);
@@ -595,15 +600,15 @@
         }
 
         params.push('format=csv');
-        queryString = params.join('&');
-        endpointUrl = this.getEndpoint('agreements').url;
+        let queryString = params.length ? params.join('&') : '';
+        let endpointUrl = this.getEndpoint('agreements').url;
 
         return endpointUrl + '?' + queryString;
       }
 
       // Convert ids from URL into array of ids
       _getPartners(urlIds) {
-        var urlIdsArr = urlIds.split('|');
+        let urlIdsArr = urlIds.split('|');
         if (urlIdsArr.length) {
           return this._getPartnersByIds(urlIdsArr);
         }
@@ -614,7 +619,7 @@
       _getPartnersByIds(partnerIds) {
         if (partnerIds instanceof Array && partnerIds.length &&
             this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
-          var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+          let _selectedPartners = this.partnersDropdownData.filter(function(partner) {
             return partnerIds.indexOf(partner.value + '') > -1;
           });
           return _selectedPartners;
@@ -655,5 +660,4 @@
 
     window.customElements.define(AgreementsList.is, AgreementsList);
   </script>
-
 </dom-module>
