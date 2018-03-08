@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
@@ -50,18 +51,29 @@
         @apply --layout-flex;
         @apply --layout-center-justified;
       }
-      .add-btn {
-        padding: 0 0;
-        margin-bottom: 20px;
+
+      .no-top-padd {
+        padding-top: 0px;
       }
-      .add-btn iron-icon {
-        margin-right: 0;
-        --iron-icon-height: 18px;
-        --iron-icon-width: 18px;
+      .padd-left-with-items {
+        padding-left: 70px;
       }
+      .extra-top-padd {
+        padding-top: 25px;
+      }
+      .pv-container {
+        @apply --layout-vertical-reverse;
+      }
+
     </style>
 
-    <div hidden$="[[_emptyList(dataItems.length)]]">
+    <div class="row-h extra-top-padd" hidden$="[[!editMode]]">
+      <paper-button class$="secondary-btn [[_getAddBtnPadding(dataItems.length)]]" on-tap="_addNewPlannedVisit">
+          ADD YEAR
+      </paper-button>
+    </div>
+
+    <div hidden$="[[_emptyList(dataItems.length)]]" class="pv-container">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
           <div class="item-actions-container">
@@ -160,16 +172,8 @@
       </template>
     </div>
 
-    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+    <div class="row-h no-top-padd" hidden$="[[!_emptyList(dataItems.length)]]">
       <p>There are no planned visits added.</p>
-    </div>
-
-
-    <div class="row-h" hidden$="[[!editMode]]">
-      <paper-button class="secondary-btn add-btn" on-tap="_addNewPlannedVisit">
-          <iron-icon icon="add"></iron-icon>
-          ADD YEAR
-      </paper-button>
     </div>
 
   </template>
@@ -208,6 +212,12 @@
             programmatic_q3: 0,
             programmatic_q4: 0,
           };
+        },
+        _getAddBtnPadding: function(itemsLength) {
+          if (!itemsLength) {
+            return '';
+          }
+          return 'padd-left-with-items';
         },
         _getTotal: function(q1, q2, q3, q4) {
           return (Number(q1) || 0) + (Number(q2) || 0) + (Number(q3) || 0) + (Number(q4) || 0);
