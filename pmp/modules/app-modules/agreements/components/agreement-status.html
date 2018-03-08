@@ -1,3 +1,4 @@
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/iron-icons/av-icons.html">
 
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
@@ -7,19 +8,20 @@
 <dom-module id="agreement-status">
   <template strip-whitespace>
     <style>
-       :host {
+      :host {
         width: 100%;
         --status-top: auto;
       }
+
       etools-status {
         top: var(--status-top);
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
-                    actions="[[possibleActions]]"
-                    on-agreement-suspend-event="_setStatusSuspended"
-                    on-agreement-terminate-event="_setStatusTerminated"
-                    on-agreement-unsuspend-event="_unsuspendAgreement">
+                   actions="[[possibleActions]]"
+                   on-agreement-suspend-event="_setStatusSuspended"
+                   on-agreement-terminate-event="_setStatusTerminated"
+                   on-agreement-unsuspend-event="_unsuspendAgreement">
     </etools-status>
   </template>
 
@@ -39,11 +41,11 @@
     ], Polymer.Element);
 
 
-   /**
-    * @polymer
-    * @customElement
-    * @appliesMixin AgreementStatusRequiredMixins
-    */
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AgreementStatusRequiredMixins
+     */
     class AgreementStatus extends AgreementStatusRequiredMixins {
       static get is() {
         return 'agreement-status';
@@ -90,7 +92,7 @@
                 label: 'Terminate',
                 hidden: true,
                 event: 'agreement-terminate-event'
-              },
+              }
             ]
           }
         };
@@ -135,7 +137,7 @@
             label: 'Ended',
             hidden: false,
             completed: false
-          },
+          }
         ]);
       }
 
@@ -173,10 +175,12 @@
         }
 
         for (let key in this.possibleActions) {
-          let actionName = this.possibleActions[key].label;
+          if (this.possibleActions[key].label) {
+            let actionName = this.possibleActions[key].label;
 
-          if (availableOptions.indexOf(actionName) > -1) {
-            this.set(['possibleActions', key, 'hidden'], false);
+            if (availableOptions.indexOf(actionName) > -1) {
+              this.set(['possibleActions', key, 'hidden'], false);
+            }
           }
         }
       }
@@ -192,7 +196,7 @@
             availableStatuses = [
               'Draft',
               'Signed',
-              'Ended',
+              'Ended'
             ];
             activeStatus = 'Draft';
             break;
@@ -201,7 +205,7 @@
             availableStatuses = [
               'Draft',
               'Signed',
-              'Ended',
+              'Ended'
             ];
             activeStatus = 'Signed';
             break;
@@ -211,7 +215,7 @@
               'Draft',
               'Signed',
               'Suspended',
-              'Ended',
+              'Ended'
             ];
             activeStatus = 'Suspended';
             break;
@@ -221,7 +225,7 @@
               'Draft',
               'Signed',
               'Terminated',
-              'Ended',
+              'Ended'
             ];
             activeStatus = 'Terminated';
             break;
@@ -230,7 +234,7 @@
             availableStatuses = [
               'Draft',
               'Signed',
-              'Ended',
+              'Ended'
             ];
             activeStatus = 'Ended';
             break;
@@ -238,7 +242,7 @@
             availableStatuses = [
               'Draft',
               'Signed',
-              'Ended',
+              'Ended'
             ];
             activeStatus = '';
             break;
@@ -272,7 +276,7 @@
           return false;
         }
 
-        if (newStatus === 'draft') { //TODO Is this check necessary?
+        if (newStatus === 'draft') { // TODO Is this check necessary?
           // if agreement was not saved (is new) or the status is already changed
           // from draft, stop status change
           if (this.status !== 'draft') {
@@ -281,7 +285,7 @@
         }
         if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
           if (this.status !== 'signed') {
-            //prevent suspending or terminating anything other than signed agreement
+            // prevent suspending or terminating anything other than signed agreement
             return false;
           }
         }
