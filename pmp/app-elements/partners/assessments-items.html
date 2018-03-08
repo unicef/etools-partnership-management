@@ -62,6 +62,10 @@
         padding: 15px 0 0;
       }
 
+      .assessments {
+        @apply --layout-vertical-reverse;
+      }
+
       .add-other-assessment {
         padding-left: 48px;
       }
@@ -91,7 +95,8 @@
         ADD OTHER ASSESSMENT
       </paper-button>
       <div id="assessments-wrapper">
-        <div hidden$="[[_emptyList(filteredDataItems.length)]]">
+        <div class="assessments"
+            hidden$="[[_emptyList(filteredDataItems.length)]]">
           <template is="dom-repeat" items="[[filteredDataItems]]">
             <div class="row-h item-container no-h-margin">
               <div class="item-actions-container">
