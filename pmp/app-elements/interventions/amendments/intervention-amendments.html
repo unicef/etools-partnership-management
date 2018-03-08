@@ -152,7 +152,7 @@
           },
           interventionId: {
             type: Number
-          },
+          }
         },
 
         observers: [
@@ -207,6 +207,7 @@
           this._unlockInterventionDetailsFields();
           this.push('dataItems', data);
           this.set('amendActionInProgress', true);
+          this.fire('new-amendment-added');
         },
 
         _dataHasChanged: function(dataItems) {

@@ -332,7 +332,8 @@
         'reload-list': '_reloadInterventionsList',
         'tab-content-attached': '_interventionPageAttached',
         'trigger-intervention-loading-msg': '_handleInterventionSelectionLoadingMsg',
-        'refresh-intervention-permissions': '_refreshInterventionPermissions'
+        'refresh-intervention-permissions': '_refreshInterventionPermissions',
+        'new-amendment-added': '_amendmentAddedHandler'
       },
 
       ready: function() {
@@ -374,11 +375,13 @@
         if (typeof amendmentModeActive === 'undefined') {
           return;
         }
-        if (amendmentModeActive === true) {
-          // if amendment mode was just switched on, redirect to the details tab for editing
-          this.set('routeData.tab', 'details');
-        }
         this.fire('set-amendment-mode', {active: amendmentModeActive});
+      },
+
+      _amendmentAddedHandler: function(event) {
+        event.stopImmediatePropagation();
+        // redirect to the details tab for editing
+        this.set('routeData.tab', 'details');
       },
 
       _interventionChanged: function(intervention, permissions) {
@@ -401,7 +404,7 @@
       _displayAnyMigrationErrors: function(intervention) {
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
-            //Avoid showing msg again after save
+            // Avoid showing msg again after save
             this.set('errorMsgBoxTitle',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.fire('set-server-errors', intervention.metadata.error_msg);
