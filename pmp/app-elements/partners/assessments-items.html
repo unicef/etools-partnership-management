@@ -245,12 +245,8 @@
           return 'icons:expand-less';
         },
 
-        _dataItemsChanged: function(path) {
-          if (!_.isEmpty(path)) {
-            this._setFilteredDataItems([_.last(this.dataItems), ...this.filteredDataItems]);
-          } else {
+        _dataItemsChanged: function() {
             this._setFilteredDataItems(this.dataItems);
-          }
         },
 
         _assessmentPropertyChanged: function(dataPath) {
@@ -270,15 +266,9 @@
           return typeof value !== 'undefined' && value !== null && value !== '';
         },
 
-        _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength, element) {
+        _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength) {
           var valid = true;
           switch (field) {
-            case 'assessmentType':
-              if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) ||
-                      reportFileLength > 0 || reportFile instanceof File)) {
-                valid = false;
-              }
-              break;
             case 'dateSubmited':
               if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) ||
                       reportFileLength > 0 || reportFile instanceof File)) {
@@ -312,8 +302,8 @@
 
         validate: function() {
           var valid = true;
-          if (this.dataItems instanceof Array && this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
+          if (this.filteredDataItems instanceof Array && this.filteredDataItems.length > 0) {
+            this.filteredDataItems.forEach(function(item, index) {
               if (!this._emptyAssessment(item)) {
                 if (!this._validateAssessment(index)) {
                   valid = false;
@@ -328,19 +318,18 @@
 
         _validateAssessment: function(index) {
           var valid = true;
-          var fields = ['#assessmentType_' + index, '#dateSubmited_' + index, '#report_' + index];
-
+          var fields = ['#dateSubmited_' + index, '#report_' + index];
           fields.forEach(function(fieldSelector) {
             var fieldEl = this.$$(fieldSelector);
             var reportFileLength = 0;
 
-            if (typeof this.dataItems[index].report_file === 'string') {
-              reportFileLength = this.dataItems[index].report_file.length;
+            if (typeof this.filteredDataItems[index].report_file === 'string') {
+              reportFileLength = this.filteredDataItems[index].report_file.length;
             }
             if (fieldEl) {
               var fieldName = this._getFileTypeForValidation(fieldSelector);
-              var validField = this._isValid(fieldName, this.dataItems[index].type,
-                  this.dataItems[index].completed_date, this.dataItems[index].report,
+              var validField = this._isValid(fieldName, this.filteredDataItems[index].type,
+                  this.filteredDataItems[index].completed_date, this.filteredDataItems[index].report,
                   reportFileLength, fieldEl);
               fieldEl.invalid = !validField;
               if (!validField) {
