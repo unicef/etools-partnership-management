@@ -115,9 +115,8 @@
       }
       let totalUnicefContribution = parseFloat(unicefCash);
       let totalFrsAmount = parseFloat(frsTotalAmt);
-      let unicefContibutionDiff = Math.abs(totalUnicefContribution - totalFrsAmount);
 
-      return unicefContibutionDiff < 10;
+      return totalUnicefContribution === totalFrsAmount;
     },
 
     checkFrsAndIntervDateConsistency: function(intervDateStr, frsDateStr, fieldName, returnMsg) {

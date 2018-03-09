@@ -189,8 +189,9 @@
     /**
      * Check is dataItems is Array, if not init with empty Array
      */
-    _makeSureDataItemsAreValid: function() {
-      if (!Array.isArray(this.dataItems)) {
+    _makeSureDataItemsAreValid: function(dataItems) {
+      let items = dataItems ? dataItems : this.dataItems;
+      if (!Array.isArray(items)) {
         this.set('dataItems', []);
       }
     }
