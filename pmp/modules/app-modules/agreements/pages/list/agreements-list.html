@@ -58,15 +58,15 @@
       }
     </style>
 
-    <!-- <template is="dom-if" if="[[stampListData]]"> -->
-    <agreement-list-data id="agreements"
-                         filtered-agreements="{{filteredAgreements}}"
-                         total-results="{{totalResults}}"
-                         list-data-path="filteredAgreements"
-                         on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded>
-    </agreement-list-data>
-    <!-- </template> -->
+    <template is="dom-if" if="[[stampListData]]">
+      <agreement-list-data id="agreements"
+                          filtered-agreements="{{filteredAgreements}}"
+                          total-results="{{totalResults}}"
+                          list-data-path="filteredAgreements"
+                          on-agreements-loaded="_requiredDataHasBeenLoaded"
+                          fire-data-loaded>
+      </agreement-list-data>
+    </template>
 
     <div id="listControls" elevation="1">
 
@@ -192,7 +192,7 @@
         </etools-data-table-column>
       </etools-data-table-header>
 
-      <template id="rows" is="dom-repeat" notify-dom-change
+      <template id="rows" is="dom-repeat"
                 items="[[filteredAgreements]]" as="agreement"
                 initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
@@ -519,7 +519,7 @@
         this.queryDebouncer = Polymer.Debouncer.debounce(this.queryDebouncer,
             Polymer.Async.timeOut.after(this.debounceTime),
             () => {
-              let agreements = this.$.agreements;
+              let agreements = this.shadowRoot.querySelector('#agreements');
               if (!agreements) {
                 return;
               }
