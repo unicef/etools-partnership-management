@@ -332,7 +332,8 @@
         'reload-list': '_reloadInterventionsList',
         'tab-content-attached': '_interventionPageAttached',
         'trigger-intervention-loading-msg': '_handleInterventionSelectionLoadingMsg',
-        'refresh-intervention': '_forceInterventionRefresh'
+        'refresh-intervention-permissions': '_refreshInterventionPermissions',
+        'new-amendment-added': '_amendmentAddedHandler'
       },
 
       ready: function() {
@@ -364,17 +365,23 @@
         }
       },
 
-      _amendmentModeChanged: function(newValue) {
+      _amendmentModeChanged: function(amendmentModeActive) {
         if (!this.intervention) {
           return;
         }
         if (!this.tabAttached || this.listActive) {
           return;
         }
-        if (typeof newValue === 'undefined') {
+        if (typeof amendmentModeActive === 'undefined') {
           return;
         }
-        this.fire('set-amendment-mode', {active: newValue});
+        this.fire('set-amendment-mode', {active: amendmentModeActive});
+      },
+
+      _amendmentAddedHandler: function(event) {
+        event.stopImmediatePropagation();
+        // redirect to the details tab for editing
+        this.set('routeData.tab', 'details');
       },
 
       _interventionChanged: function(intervention, permissions) {
@@ -397,7 +404,7 @@
       _displayAnyMigrationErrors: function(intervention) {
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
-            //Avoid showing msg again after save
+            // Avoid showing msg again after save
             this.set('errorMsgBoxTitle',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.fire('set-server-errors', intervention.metadata.error_msg);
@@ -499,9 +506,9 @@
         return !this.intervention.id;
       },
 
-      _forceInterventionRefresh: function(e) {
+      _refreshInterventionPermissions: function(e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.fetchIntervention(this.intervention.id);
+        this.$.interventionData.refreshPermissions();
       },
 
       _updateInterventionStatus: function(event) {
