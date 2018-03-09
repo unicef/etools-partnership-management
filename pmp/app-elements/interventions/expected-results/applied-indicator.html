@@ -90,7 +90,7 @@
             <template is="dom-repeat" items="[[disaggregationNames]]">
                 <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
             </template>
-            <div hidden$="[[disaggregationNames.length]]">—</div>
+            <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">—</div>
           </div>
           <div class="col-8 padd-left">
               <div class="header-text">Locations</div>
@@ -263,6 +263,9 @@
             return '—';
           }
         },
+        _lengthIs0: function(length) {
+          return length === 0;
+        }
       });
     })();
   </script>
