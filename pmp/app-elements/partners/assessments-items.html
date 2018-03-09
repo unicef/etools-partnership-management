@@ -7,7 +7,6 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
-<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
@@ -24,7 +23,8 @@
 
 <dom-module id="assessments-items">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles paper-material-styles buttons-styles">
+    <style
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -32,42 +32,22 @@
       :host {
         display: block;
         width: 100%;
-        padding: 0 25px 25px;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
 
-      div[elevation="1"] {
-        @apply --paper-material-elevation-1;
-      }
-
-      div[elevation="2"] {
-        @apply --paper-material-elevation-2;
-      }
-
-      div[elevation="3"] {
-        @apply --paper-material-elevation-3;
-      }
-
-      div[elevation="4"] {
-        @apply --paper-material-elevation-4;
-      }
-
-      div[elevation="5"] {
-        @apply --paper-material-elevation-5;
-      }
-
-      #assessments-wrapper {
-        padding: 15px 0 0;
-      }
-
       .assessments {
+        padding-bottom: 24px;
         @apply --layout-vertical-reverse;
       }
 
-      .add-other-assessment {
-        padding-left: 48px;
+      .add-btn-wrapper {
+        padding-top: 24px;
+      }
+
+      .add-btn-lm {
+        margin-left: 46px;
       }
 
       etools-single-file {
@@ -78,84 +58,79 @@
         padding-bottom: 15px;
       }
 
-      etools-form-element-wrapper {
-        --etools-form-element-wrapper-max-width: 150px;
-        --paper-input-container: {
-          text-align: center;
-        };
-        --paper-input-container-focus-color: var(--secondary-text-color);
+      .no-assessments-warning {
+        padding-top: 0;
       }
 
     </style>
 
-    <div elevation="[[elevation]]">
+    <div class="row-h add-btn-wrapper">
       <paper-button hidden$="[[!editMode]]"
-         on-tap="_addNewAssessment"
-         class="secondary-btn add-other-assessment">
+                    on-tap="_addNewAssessment"
+                    class$="secondary-btn [[_getAddBtnAdditionalClass(filteredDataItems.length)]]">
         ADD OTHER ASSESSMENT
       </paper-button>
-      <div id="assessments-wrapper">
-        <div class="assessments"
-            hidden$="[[_emptyList(filteredDataItems.length)]]">
-          <template is="dom-repeat" items="[[filteredDataItems]]">
-            <div class="row-h item-container no-h-margin">
-              <div class="item-actions-container">
+    </div>
 
-                <div class="actions">
-                  <paper-icon-button class="action delete"
-                                     on-tap="_openDeleteConfirmation"
-                                     data-args$="[[index]]"
-                                     disabled$="[[!editMode]]"
-                                     icon="cancel">
-                  </paper-icon-button>
-                </div>
+    <div class="assessments"
+         hidden$="[[_emptyList(filteredDataItems.length)]]">
+      <template is="dom-repeat" items="[[filteredDataItems]]">
+        <div class="row-h item-container">
+          <div class="item-actions-container">
+
+            <div class="actions">
+              <paper-icon-button class="action delete"
+                                 on-tap="_openDeleteConfirmation"
+                                 data-args$="[[index]]"
+                                 disabled$="[[!editMode]]"
+                                 icon="cancel">
+              </paper-icon-button>
+            </div>
+          </div>
+          <div class="item-content">
+            <div class="row-h">
+              <div class="col col-4">
+                <!-- Assessment type -->
+                <etools-form-element-wrapper label="Assessment Type">
+                  [[item.type]]
+                </etools-form-element-wrapper>
               </div>
-              <div class="item-content">
-                <div class="row-h">
-                  <div class="col col-4">
-                    <!-- Assessment type -->
-                    <etools-form-element-wrapper label="Assessment Type">
-                      [[item.type]]
-                    </etools-form-element-wrapper>
-                  </div>
-                  <div class="col col-4">
-                    <required-and-not-future-date-validator validator-name="dateSubmited_[[index]]_validator"
-                                                            required
-                                                            error-message="{{item.dateErrorMessage}}">
-                    </required-and-not-future-date-validator>
-                    <!-- Date submitted -->
-                    <etools-date-input id$="dateSubmited_[[index]]"
-                                       label="Date of Assessment"
-                                       value="{{item.completed_date}}"
-                                       readonly$="[[!editMode]]"
-                                       auto-validate
-                                       validator="dateSubmited_[[index]]_validator"
-                                       error-message="[[item.dateErrorMessage]]"
-                                       no-init show-clear-btn>
-                    </etools-date-input>
-                  </div>
-                </div>
-                <div class="row-h file-container">
-                  <!-- Report file -->
-                  <etools-single-file
-                      id$="report_[[index]]"
-                      file="{{item.report}}"
-                      internal-file="{{item.report_file}}"
-                      label="Report"
-                      hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
-                      readonly="[[!editMode]]"
-                      accept=".doc,.docx,.pdf,.jpg,.png"
-                      error-message="Please select the report file"></etools-single-file>
-                </div>
+              <div class="col col-4">
+                <required-and-not-future-date-validator validator-name="dateSubmited_[[index]]_validator"
+                                                        required
+                                                        error-message="{{item.dateErrorMessage}}">
+                </required-and-not-future-date-validator>
+                <!-- Date submitted -->
+                <etools-date-input id$="dateSubmited_[[index]]"
+                                   label="Date of Assessment"
+                                   value="{{item.completed_date}}"
+                                   readonly$="[[!editMode]]"
+                                   auto-validate
+                                   validator="dateSubmited_[[index]]_validator"
+                                   error-message="[[item.dateErrorMessage]]"
+                                   no-init show-clear-btn>
+                </etools-date-input>
               </div>
             </div>
-          </template>
+            <div class="row-h file-container">
+              <!-- Report file -->
+              <etools-single-file
+                  id$="report_[[index]]"
+                  file="{{item.report}}"
+                  internal-file="{{item.report_file}}"
+                  label="Report"
+                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
+                  readonly="[[!editMode]]"
+                  accept=".doc,.docx,.pdf,.jpg,.png"
+                  error-message="Please select the report file"></etools-single-file>
+            </div>
+          </div>
         </div>
+      </template>
+    </div>
 
-        <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-          <p>There are no assessments added.</p>
-        </div>
-      </div>
+    <div class="row-h no-assessments-warning" hidden$="[[!_emptyList(dataItems.length)]]">
+      <p>There are no assessments added.</p>
     </div>
 
   </template>
@@ -173,10 +148,6 @@
         ],
 
         properties: {
-          elevation: {
-            type: Number,
-            value: 0
-          },
           _deleteEpName: {
             type: String,
             value: 'partnerAssessmentDelete',
@@ -220,10 +191,7 @@
           this.updateStyles();
         },
         _hideDeleteBtn: function(itemReportFile) {
-          if (!itemReportFile) {
-            return false;
-          }
-          return true;
+          return !!itemReportFile;
         },
         /**
          * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
@@ -239,29 +207,18 @@
           this.set('filteredDataItems', items.filter(item => item.type === 'Other'));
         },
 
-        _toggle: function() {
-          this.set('open', !this.open);
-        },
-
-        _getExpandBtnIcon: function(open) {
-          if (!open) {
-            return 'icons:expand-more';
-          }
-          return 'icons:expand-less';
-        },
-
         _dataItemsChanged: function() {
-            this._setFilteredDataItems(this.dataItems);
+          this._setFilteredDataItems(this.dataItems);
         },
 
         _assessmentPropertyChanged: function(dataPath) {
           if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
               dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
-            var dataPathPieces = dataPath.path.split('.');
-            var path = dataPathPieces[0] + '.' + dataPathPieces[1];
+            let dataPathPieces = dataPath.path.split('.');
+            let path = dataPathPieces[0] + '.' + dataPathPieces[1];
             if (path.indexOf('#') > -1) {
-              var item = this.get(path);
-              var index = this.dataItems.indexOf(item);
+              let item = this.get(path);
+              let index = this.dataItems.indexOf(item);
               this._validateAssessment(index);
             }
           }
@@ -272,7 +229,7 @@
         },
 
         _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength) {
-          var valid = true;
+          let valid = true;
           switch (field) {
             case 'dateSubmited':
               if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) ||
@@ -347,10 +304,10 @@
         },
 
         _emptyAssessment: function(assessment) {
-          return assessment && assessment.type === null
-              && assessment.completed_date === null
-              && assessment.report_file.length === 0
-              && assessment.report instanceof File === false;
+          return assessment &&
+              assessment.completed_date === null &&
+              assessment.report_file.length === 0 &&
+              assessment.report instanceof File === false;
         },
 
         _getFileTypeForValidation: function(fieldSelector) {
@@ -358,6 +315,10 @@
             return fieldSelector.slice(1).slice(0, fieldSelector.indexOf('_') - 1);
           }
           return '';
+        },
+
+        _getAddBtnAdditionalClass: function(shownAssessmentsNumber) {
+          return shownAssessmentsNumber ? 'add-btn-lm' : '';
         }
 
       });

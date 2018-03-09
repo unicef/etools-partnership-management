@@ -102,7 +102,6 @@
         font-size: 19px;
       }
 
-
       .engagements-header {
         background-color: var(--light-theme-background-color);
         @apply --engagements-row;
@@ -136,10 +135,6 @@
         font-size: 13px;
         color: var(--list-text-color, #2b2b2b);
         @apply --engagements-row;
-      }
-
-      .assessments {
-        margin-top: 24px;
       }
 
       .report {
@@ -433,11 +428,11 @@
     <etools-content-panel
         panel-title="Other Assessments([[filteredAssessments.length]])"
         class="content-section">
-      <div class="assessments">
-        <assessments-items id="assessmentsList"
-                           data-items="{{partner.assessments}}"
-                           edit-mode="[[editMode]]"></assessments-items>
-      </div>
+
+      <assessments-items id="assessmentsList"
+                         data-items="{{partner.assessments}}"
+                         edit-mode="[[editMode]]"></assessments-items>
+
     </etools-content-panel>
 
   </template>
