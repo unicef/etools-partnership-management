@@ -54,6 +54,20 @@
           padding: 8px 0 0 0;
         };
       }
+      #pdExportMenuBtn paper-item {
+        --paper-item-selected: {
+          font-weight: normal !important;
+        };
+        /* Prevent first item highlighted by default */
+        --paper-item-focused-before: {
+          background: none;
+          opacity: 0;
+        };
+        --paper-item-focused-after: {
+          background: none;
+          opacity: 0;
+        }
+      }
 
     </style>
 
@@ -84,12 +98,12 @@
       <div slot="title-row-actions" class="content-header-actions export-options">
 
         <div class="action" hidden$="[[!listActive]]">
-          <paper-menu-button close-on-activate>
+          <paper-menu-button id="pdExportMenuBtn"close-on-activate>
               <paper-button class="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
                 Export
               </paper-button>
-              <paper-listbox class="dropdown-content" activate-event="">
+              <paper-listbox class="dropdown-content">
                   <paper-item on-tap="_exportPdBudget">[[PdExportTypes.PdBudget]] Export</paper-item>
                   <paper-item on-tap="_exportPdResult">[[PdExportTypes.PdResult]] Export</paper-item>
               </paper-listbox>
