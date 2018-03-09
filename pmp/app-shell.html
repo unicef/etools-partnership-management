@@ -64,8 +64,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/mixins/amendment-mode-mixin.html">
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
 
-<!-- import static data element -->
+<!-- import static data elements -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
+<link rel="import" href="modules/app-modules/partners/data/partners-list-data.html">
+<link rel="import" href="modules/app-modules/agreements/data/agreements-list-data.html">
 
 <!-- lazy imports -->
 <link rel="lazy-import" href="modules/app-modules/not-found/not-found.html">
@@ -229,7 +231,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- TODO: polymer2 - static data load here -->
     <static-common-data></static-common-data>
-
+    <partners-list-data></partners-list-data>
+    <agreements-list-data></agreements-list-data>
   </template>
 
   <script>

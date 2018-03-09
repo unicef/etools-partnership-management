@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 
 <link rel="import" href="../../../../../scripts/lodash.html">
 
@@ -146,18 +147,17 @@
             </div>
             <div class="row-h flex-c">
               <template is="dom-if" if="[[!_showReadonlyDetails(item.id)]]">
-                <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
-                                             label="Amendment Types"
-                                             placeholder="&#8212;"
-                                             trigger-value-change-event$="[[!_showReadonlyDetails(item.id)]]"
-                                             options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
-                                             selected-values="{{item.types}}"
-                                             hide-search
-                                             error-message="Please select amendment type"
-                                             required
-                                             on-etools-selected-items-changed="_onAmendmentTypesSelected"
-                                             on-focused-changed="_onAmendmentTypesFocusChanged">
-                </etools-multi-selection-menu>
+                <etools-dropdown-multi id$="amendmentTypes_[[index]]"
+                                        label="Amendment Types"
+                                        trigger-value-change-event$="[[!_showReadonlyDetails(item.id)]]"
+                                        options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
+                                        selected-values="{{item.types}}"
+                                        hide-search
+                                        error-message="Please select amendment type"
+                                        required
+                                        auto-validate
+                                        on-etools-selected-items-changed="_onAmendmentTypesSelected">
+                </etools-dropdown-multi>
               </template>
               <template is="dom-if" if="[[_showReadonlyDetails(item.id)]]">
                 <!-- readonly amendment types -->
@@ -380,21 +380,6 @@
         } else {
           this._handleNoChangeAuthorizedOfficersTypeInAmendments();
         }
-      }
-
-      // set autoValidate to true on first focus
-      // TODO: revise auto validate behavior, this could be made global using a behavior
-      _onAmendmentTypesFocusChanged(e) {
-        this._dropdownFocusDebouncer = Polymer.Debouncer.debounce(this._dropdownFocusDebouncer,
-            Polymer.Async.timeOut.after(10),
-            () => {
-              if (e.detail && e.detail.value) {
-                if (e.target.is && e.target.is === 'etools-multi-selection-menu' &&
-                    !e.target.autoValidate) {
-                  e.target.set('autoValidate', true);
-                }
-              }
-            });
       }
 
       _getReadonlyAmendmentTypes(types) {
