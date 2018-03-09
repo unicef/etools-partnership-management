@@ -30,8 +30,7 @@
       alreadySelectedCpOutputs: {
         type: Array,
         value: []
-      },
-      mainDataPath: String
+      }
     },
 
     _computeAvailableCpOutputs: function(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure) {
@@ -131,7 +130,6 @@
       }
       let resultLink = e.detail.result;
       this._initializeToBeAbleToAddLowerResult(resultLink);
-
       this.push('dataItems', resultLink);
     },
     _initializeToBeAbleToAddLowerResult: function(resultLink) {

@@ -6,6 +6,7 @@
   EtoolsPmpApp.Behaviors.LowerResultsImpl = {
     properties: {
       lowerResultNameEditElem: Object,
+      dataItems: Array
     },
 
     observers: [
@@ -26,6 +27,12 @@
         this.lowerResultNameEditElem.addEventListener('lower-result-saved',
             this._lowerResultSaved.bind(this));
         document.querySelector('body').appendChild(this.lowerResultNameEditElem);
+      }
+    },
+
+    removeLowerResultNameDialog: function() {
+      if (this.lowerResultNameEditElem) {
+        document.querySelector('body').removeChild(this.lowerResultNameEditElem);
       }
     },
 
