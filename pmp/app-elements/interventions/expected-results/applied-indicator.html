@@ -77,7 +77,8 @@
         <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.target)]]
         </div>
-        <edit-delete-actions hidden$="[[!editMode]]" show-deactivate="[[intervention.in_amendment]]" show-delete="[[_showDelete(intervention.status)]]"></edit-delete-actions>
+        <edit-delete-actions hidden$="[[!editMode]]" show-deactivate="[[intervention.in_amendment]]" show-delete="[[_showDelete(intervention.status)]]">
+        </edit-delete-actions>
       </div>
 
       <div slot="row-data-details">
@@ -147,9 +148,10 @@
         observers: [
           'setIndicatorDetails(indicator, disaggregations, locations)'
         ],
-        listeners: {
-          'edit': '_editIndicator',
-          'delete': '_deleteIndicator'
+        ready: function() {
+          this.addEventListener('edit', this._editIndicator);
+          this.addEventListener('delete', this._deleteIndicator);
+          this.addEventListener('deactivate', this._deactivateIndicator);
         },
         _showDelete: function(intervStatus) {
           return (!intervStatus || intervStatus === 'draft');
@@ -168,6 +170,10 @@
         _deleteIndicator: function(e) {
           e.stopPropagation();
           this.fire('delete-indicator');
+        },
+        _deactivateIndicator: function(e) {
+          e.stopPropagation();
+          this.fire('deactivate-indicator');
         },
         _updateCollapsableIconBg: function(indicator) {
           if (indicator.cluster_indicator_id) {

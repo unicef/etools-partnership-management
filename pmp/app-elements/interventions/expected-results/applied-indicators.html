@@ -14,6 +14,7 @@
     <applied-indicator data-args$="[[indicatorIndex]]"
                   on-edit-indicator="_editIndicator"
                   on-delete-indicator="_openDeleteConfirmation"
+                  on-deactivate-indicator="_openDeactivateConfirmation"
                   indicator="[[indicator]]"
                   edit-mode="[[editMode]]"
                   intervention="[[intervention]]"></applied-indicator>
@@ -54,6 +55,9 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
+        _openDeactivateConfirmation: function() {
+
+        }
       });
     })();
   </script>
