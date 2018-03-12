@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
 
 
@@ -147,15 +148,15 @@
             <div class="row-h flex-c">
               <template is="dom-if" if="[[!_showReadonlyDetails(item.id)]]">
                 <etools-dropdown-multi id$="amendmentTypes_[[index]]"
-                                        label="Amendment Types"
-                                        trigger-value-change-event$="[[!_showReadonlyDetails(item.id)]]"
-                                        options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
-                                        selected-values="{{item.types}}"
-                                        hide-search
-                                        error-message="Please select amendment type"
-                                        required
-                                        auto-validate
-                                        on-etools-selected-items-changed="_onAmendmentTypesSelected">
+                                       label="Amendment Types"
+                                       trigger-value-change-event$="[[!_showReadonlyDetails(item.id)]]"
+                                       options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
+                                       selected-values="{{item.types}}"
+                                       hide-search
+                                       error-message="Please select amendment type"
+                                       required
+                                       auto-validate
+                                       on-etools-selected-items-changed="_onAmendmentTypesSelected">
                 </etools-dropdown-multi>
               </template>
               <template is="dom-if" if="[[_showReadonlyDetails(item.id)]]">
