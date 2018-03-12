@@ -56,13 +56,13 @@
     </style>
 
     <template is="dom-if" if="[[stampListData]]">
-      <agreement-list-data id="agreements"
+      <agreements-list-data id="agreements"
                           filtered-agreements="{{filteredAgreements}}"
                           total-results="{{totalResults}}"
                           list-data-path="filteredAgreements"
                           on-agreements-loaded="_requiredDataHasBeenLoaded"
                           fire-data-loaded>
-      </agreement-list-data>
+      </agreements-list-data>
     </template>
 
     <div id="listControls" elevation="1">
