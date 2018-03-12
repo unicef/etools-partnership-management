@@ -577,7 +577,7 @@
         },
 
         _mergeAssessments: function() {
-          if (this.filteredAssessments.length){
+          if (this.filteredAssessments.length) {
             this.set(
               'partner.assessments',
               _.unionBy(this.filteredAssessments, this.partner.assessments, 'id')
