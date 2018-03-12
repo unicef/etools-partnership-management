@@ -1,7 +1,8 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
+<link rel="import"
+      href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
@@ -10,8 +11,7 @@
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/risk-rating-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
-
-<!-- <link rel="import" href="../validators/fr-numbers-consistency-behavior.html"> TODO -->
+<link rel="import" href="../../../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/page-common-styles.html">
@@ -19,15 +19,15 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/risk-rating-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-
+<link rel="import" href="../../../../styles/fr-warnings-styles.html">
 
 <dom-module id="partner-overview">
   <template strip-whitespace>
-    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
+    <style
+        include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles fr-warnings-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
-
       }
 
       paper-input,
@@ -80,42 +80,12 @@
         color: var(--paper-green-500);
       }
 
-      .signed {
-        text-transform: uppercase;
-        /* color: var(--paper-red-500); TBD*/
-      }
-
-      .suspended {
-        text-transform: uppercase;
-        color: var(--paper-orange-500);
-      }
-
-      .draft {
-        text-transform: uppercase;
-        color: var(--paper-yellow-700);
-      }
-
-      .active {
-        text-transform: uppercase;
-        color: var(--paper-green-500);
-      }
-
-      .closed {
-        text-transform: uppercase;
-        color: var(--paper-blue-500);
-      }
-
-      .terminated {
-        text-transform: uppercase;
-        color: var(--paper-purple-500);
+      .partnership-status {
+        text-transform: capitalize;
       }
 
       .block {
         display: block;
-      }
-
-      small {
-        color: var(--dark-secondary-text-color);
       }
 
       .word-break {
@@ -128,15 +98,12 @@
       }
 
       .timeline-col {
-        @apply --layout-start-justified;
-      }
-
-      .timeline-col .date-delimiter {
-        margin: 0 8px;
+        @apply --layout-vertical;
+        @apply --layout-start;
       }
     </style>
 
-    <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
+    <etools-content-panel class="content-section" panel-title="Partner Overview">
       <div class="hact-heading">
         <div class="row-h">
           <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
@@ -147,7 +114,7 @@
         <div class="row-h">
           <div class="col col-2"> Risk Rating</div>
           <div class="col col-2"> Current CP Cycle</div>
-          <div class="col col-2"> Cash Transfers (1 Oct - 30 Sep)</div>
+          <div class="col col-2"> Current Year (Jan - Dec)</div>
           <div class="col col-2"> Planned / M.R. / Done</div>
           <div class="col col-2"> Done / M.R.</div>
           <div class="col col-2"> Done / M.R.</div>
@@ -185,11 +152,12 @@
       <template is="dom-if" if="[[partner.interventions.length]]">
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-3 word-break left-align"> Partnership</div>
-            <div class="col col-2 right-align"> Total Planned Budget</div>
-            <div class="col col-2 right-align"> Actual</div>
-            <div class="col col-2"> Status</div>
-            <div class="col col-3 left-align"> Timeline</div>
+            <div class="col col-3 word-break left-align">Partnership</div>
+            <div class="col col-2 left-align">Start Date - End Date</div>
+            <div class="col col-2 right-align">UNICEF Cash</div>
+            <div class="col col-2 right-align">FR Amount</div>
+            <div class="col col-2 right-align">Actual Disbursement</div>
+            <div class="col">Status</div>
           </div>
         </div>
         <div class="hact-body">
@@ -198,33 +166,59 @@
               <div class="col col-3 block word-break">
                 <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
                 <span>
-                [[partnership.title]]
-              </span>
+                  [[partnership.title]]
+                  </span>
               </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.total_budget, '0', 0)]]
-              </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
-              <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
-              </div>
-              <div class="col col-3 center-align timeline-col">
-                <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-                  hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]" -->
-                <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip
-                                    important-warning>
+              <div class="col col-2 center-align timeline-col">
+                <etools-info-tooltip class="fr-nr-warn"
+                                     custom-icon
+                                     icon-first
+                                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]">
                   <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
-                  <!--<span slot="message">[[getFrsStartDateValidationMsg()]]</span>-->
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
                 </etools-info-tooltip>
-                <span class="date-delimiter"> - </span>
-                <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-                  hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]" -->
-                <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip
-                                    important-warning>
+                <etools-info-tooltip class="fr-nr-warn"
+                                     custom-icon
+                                     icon-first
+                                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]">
                   <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
-                  <!--<span slot="message">[[getFrsEndDateValidationMsg()]]</span>-->
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
                 </etools-info-tooltip>
               </div>
+              <div class="col col-2 right-align">
+                <span class="amount-currency">[[partnership.budget_currency]]</span>
+                <span>[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</span>
+              </div>
+              <div class="col col-2 right-align">
+                <etools-info-tooltip
+                    class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]]"
+                    icon-first
+                    custom-icon
+                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
+                    <span slot="field"
+                          class$="[[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
+                      <span class="amount-currency">[[partnership.fr_currency]]</span>
+                      <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
+                    </span>
+                  <iron-icon
+                      icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
+                      slot="custom-icon"></iron-icon>
+                  <span slot="message">
+                      <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
+                    </span>
+                </etools-info-tooltip>
+              </div>
+              <div
+                  class$="col col-2 right-align [[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
+                [[partnership.fr_currency]] [[getFrsTotal(partnership.fr_currencies_are_consistent,
+                partnership.actual_amount)]]
+              </div>
+              <div class="col center-align overflow-hidden">
+                <span class="partnership-status">[[partnership.status]]</span>
+              </div>
+
             </div>
           </template>
         </div>
@@ -235,19 +229,22 @@
   <script>
     'use strict';
     /**
-    * @polymer
-    * @mixinFunction
-    * @appliesMixin EtoolsPmpApp.Mixins.Common
-    * @appliesMixin EtoolsPmpApp.Mixins.RiskRating
-    * @appliesMixin EtoolsMixins.EtoolsCurrency
-    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-    */
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsMixins.EtoolsCurrency
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.RiskRating
+     * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
+     */
     const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
-        EtoolsPmpApp.Behaviors.Common,
-        EtoolsPmpApp.Behaviors.RiskRating,
-        EtoolsMixins.EtoolsCurrency,
-        EtoolsPmpApp.Mixins.EventHelper
-        ], Polymer.Element);
+      EtoolsMixins.EtoolsCurrency,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.RiskRating,
+      EtoolsPmpApp.Mixins.FrNumbersConsistency
+    ], Polymer.Element);
+
     /**
      * @polymer
      * @customElement
@@ -285,12 +282,13 @@
       connectedCallback() {
         super.connectedCallback();
         /**
-          * Disable loading message for overview tab elements load,
-          * triggered by parent element on stamp or by tap event on tabs
-          */
+         * Disable loading message for overview tab elements load,
+         * triggered by parent element on stamp or by tap event on tabs
+         */
         this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
         this.fireEvent('tab-content-attached');
       }
+
       _partnerChanged(partner) {
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           this.contentVisible = true;

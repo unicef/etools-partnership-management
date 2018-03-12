@@ -233,7 +233,6 @@
         }
 
         getComputedStyleValue(varName) {
-          let style;
           if (ShadyCSS) {
             return ShadyCSS.getComputedStyleValue(this, varName);
           } else {
