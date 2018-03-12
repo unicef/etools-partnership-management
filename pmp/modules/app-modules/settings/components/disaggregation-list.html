@@ -20,46 +20,45 @@
       }
     </style>
 
-<etools-content-panel panel-title="Disaggregations">
-    <paper-icon-button slot="panel-btns"
-                       icon="add-box"
-                       on-tap="_addDisaggregation">
-    </paper-icon-button>
-    <div hidden$="[[_emptyList(disaggregations)]]">
-      <etools-data-table-header no-collapse no-title>
-        <etools-data-table-column class="col-4" field="name">
-          Name
-        </etools-data-table-column>
-        <etools-data-table-column class="col-8" field="disaggregation_values">
-          Disaggregation Groups
-        </etools-data-table-column>
-      </etools-data-table-header>
-      <template is="dom-repeat" items="[[dataItems]]">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-4">
-              [[item.name]]
-            </span>
-            <span class="col-data col-8">
-              [[_displayGroups(item.disaggregation_values)]]
-            </span>
-          </div>
-        </etools-data-table-row>
-      </template>
+    <etools-content-panel panel-title="Disaggregations">
+      <paper-icon-button slot="panel-btns"
+                         icon="add-box"
+                         on-tap="_addDisaggregation">
+      </paper-icon-button>
+      <div hidden$="[[_emptyList(disaggregations)]]">
+        <etools-data-table-header no-collapse no-title>
+          <etools-data-table-column class="col-4" field="name">
+            Name
+          </etools-data-table-column>
+          <etools-data-table-column class="col-8" field="disaggregation_values">
+            Disaggregation Groups
+          </etools-data-table-column>
+        </etools-data-table-header>
+        <template is="dom-repeat" items="[[dataItems]]">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-4">
+                [[item.name]]
+              </span>
+              <span class="col-data col-8">
+                [[_displayGroups(item.disaggregation_values)]]
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
 
-      <etools-data-table-footer
-        page-size="[[pagination.pageSize]]"
-        page-number="[[pagination.pageNumber]]"
-        total-results="[[pagination.totalResults]]"
-        on-page-size-changed="_pageSizeChanged"
-        on-page-number-changed="_pageNumberChanged">
-      </etools-data-table-footer>
-    </div>
-    <div class="row-padding" hidden$="[[!_emptyList(disaggregations)]]">
-      <p>The are no disaggregations defined.</p>
-    </div>
-  </etools-content-panel>
-
+        <etools-data-table-footer
+            page-size="[[pagination.pageSize]]"
+            page-number="[[pagination.pageNumber]]"
+            total-results="[[pagination.totalResults]]"
+            on-page-size-changed="_pageSizeChanged"
+            on-page-number-changed="_pageNumberChanged">
+        </etools-data-table-footer>
+      </div>
+      <div class="row-padding" hidden$="[[!_emptyList(disaggregations)]]">
+        <p>The are no disaggregations defined.</p>
+      </div>
+    </etools-content-panel>
 
   </template>
 
@@ -83,8 +82,8 @@
     ], Polymer.Element);
 
     /**
-     * @customElement
      * @polymer
+     * @customElement
      * @extends {Polymer.Element}
      * @appliesMixin DisagregationListRequiredMixins
      */
@@ -115,6 +114,7 @@
           }
         };
       }
+
       static get observers() {
         return [
           'paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)',
@@ -129,6 +129,7 @@
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
         document.querySelector('body').appendChild(this.disaggregationModal);
       }
+
       disconnectedCallback() {
         super.disconnectedCallback();
 
@@ -140,6 +141,7 @@
       _emptyList() {
         return !this.disaggregations || !this.disaggregations.length;
       }
+
       _disagregationsChanged(disaggregs, envFlags) {
         if (!disaggregs || !disaggregs.length) {
           this.dataItems = [];
@@ -147,13 +149,16 @@
         }
         this.set('pagination.totalResults', this.disaggregations.length);
       }
+
       _pageSizeChanged(ev) {
         this.set('pagination.pageNumber', 1);
         this.set('pagination.pageSize', parseInt(ev.detail.value));
       }
+
       _pageNumberChanged(ev) {
         this.set('pagination.pageNumber', parseInt(ev.detail.value));
       }
+
       paginationChanged(pageNumber, pageSize, disaggregations) {
         if (this._anyUndefined([pageNumber, pageSize, disaggregations])) {
           return;
@@ -163,17 +168,21 @@
         let startingIndex = (pageNumber - 1) * pageSize;
         this.dataItems = this.disaggregations.slice(startingIndex, startingIndex + pageSize);
       }
+
       _anyUndefined(items) {
         return items.some(this._isUndefined);
       }
+
       _isUndefined(item) {
         return item === undefined;
       }
+
       _openModal() {
         this.disaggregationModal.toastEventSource = this;
         this.disaggregationModal.resetValidations();
         this.disaggregationModal.open();
       }
+
       _displayGroups(groups) {
         if (!groups || !groups.length) {
           return '-';
@@ -182,6 +191,7 @@
           return g.value;
         }).join('; ');
       }
+
       _addDisaggregation() {
         this.disaggregationModal.initializeDisaggregation();
         this._openModal();
