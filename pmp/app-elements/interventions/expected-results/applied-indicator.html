@@ -69,7 +69,9 @@
     <etools-data-table-row>
       <div slot="row-data" class="p-relative">
         <div class="col-8">
-            [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
+            [[_getIndicatorType(indicator.indicator.unit)]]
+            <b>[[_addInactivePrefix(indicator)]]</b>
+            [[_getIndicatorTitle(indicator)]]
         </div>
         <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.baseline)]]
@@ -250,6 +252,12 @@
             case 'percentage':
               return '% ';
           }
+        },
+        _addInactivePrefix: function(indicator) {
+          if (!indicator || indicator.active) {
+            return '';
+          }
+         return '(inactive)';
         },
         _getIndicatorTitle: function(indicator) {
           if (!indicator) {

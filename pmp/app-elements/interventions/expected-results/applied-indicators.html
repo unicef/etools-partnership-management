@@ -12,7 +12,8 @@
     <template is="dom-repeat"
     items="[[dataItems]]"
     as="indicator" index-as="indicatorIndex">
-    <applied-indicator data-args$="[[indicatorIndex]]"
+    <applied-indicator hidden$="[[_isInactive(indicator, showInactiveIndicators)]]"
+                       data-args$="[[indicatorIndex]]"
                        on-edit-indicator="_editIndicator"
                        on-delete-indicator="_openDeleteConfirmation"
                        on-deactivate-indicator="_openDeactivateConfirmation"
@@ -39,7 +40,8 @@
           intervention: Object,
           cpOutputId: Number,
           deactivateConfirmDialog: Object,
-          indicatorToDeactivateIndex: String
+          indicatorToDeactivateIndex: String,
+          showInactiveIndicators: Boolean
         },
         behaviors: [
           EtoolsPmpApp.Behaviors.RepeatableDataSets
@@ -53,6 +55,12 @@
           } else {
             this._createDeactivateIndicatorDialog();
           }
+        },
+        _isInactive: function(indicator, showInactiveIndicators) {
+          if (indicator.active) {
+            return false;
+          }
+          return showInactiveIndicators;
         },
         _createDeactivateIndicatorDialog: function() {
           let dialogContent = document.createElement('div');

@@ -118,6 +118,7 @@
                                   result-link-index="[[index]]"
                                   cp-output-id="[[cpOutputId]]"
                                   intervention="[[intervention]]"
+                                  show-inactive-indicators="[[showInactiveIndicators]]"
                                   edit-mode="[[editMode]]">
               </applied-indicators>
             </div>
@@ -175,7 +176,8 @@
             type: Boolean,
             value: false
           },
-          intervention: Object
+          intervention: Object,
+          showInactiveIndicators: Boolean
         },
         listeners: {
           'delete-confirm': '_updateInterventionLocAndClusters',
