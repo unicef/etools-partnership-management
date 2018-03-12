@@ -190,14 +190,12 @@
             this.thereAreIndicators = false;
             return;
           }
-          let foundSomeIndicators = false;
           for (let i in this.dataItems) {
             if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
-              foundSomeIndicators = true;
+              this.thereAreIndicators = true;
               break;
             }
           }
-          this.thereAreIndicators = foundSomeIndicators;
         },
 
         getColumnLength: function(column, thereAreIndicators) {

@@ -86,6 +86,14 @@
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
       }
+      paper-toggle-button#showInactive {
+        --paper-toggle-button-label-color: white;
+        --paper-toggle-button-checked-bar-color: white;
+        padding-right: 10px;
+      }
+      div[slot="panel-btns"]#add-show-inactive-btns {
+        @apply --layout-horizontal;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -316,7 +324,10 @@
       <etools-content-panel class="content-section" panel-title="PD output or SSFA Expected Result ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
-            <div slot="panel-btns" id="edit-btns">
+            <div slot="panel-btns" id="add-show-inactive-btns">
+              <paper-toggle-button id="showInactive" hidden$="[[!thereAreInactiveIndicators]]" checked="[[showInactiveIndicators]]">
+                Show Inactive
+              </paper-toggle-button>
               <paper-icon-button icon="add-box"
                                  title="Add"
                                  on-tap="openCpOutputAndRamIndicatorsDialog">
@@ -467,6 +478,14 @@
           noOfPdOutputs: {
             type: String,
             value: '0'
+          },
+          thereAreInactiveIndicators: {
+            type: Boolean,
+            value: false
+          },
+          showInactiveIndicators: {
+            type: Boolean,
+            value: false
           }
         },
 
@@ -508,6 +527,17 @@
           this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
             return rl.ll_results.length;
           }).reduce((a, b) => a + b, 0);
+
+          if (!this.noOfPdOutputs) {
+            this.thereAreInactiveIndicators = false;
+          } else {
+            let noOfInactiveIndicators = this.intervention.result_links.forEach((rl) => {
+              return rl.ll_results.map(llr => {
+                      return llr.applied_indicators.filter(i => !i.active).lenth;
+                    }).reduce((a,b) => a + b, 0);
+            });
+            this.thereAreInactiveIndicators = true; //!!noOfInactiveIndicators;
+          }
         },
         openCpOutputAndRamIndicatorsDialog: function() {
           let expectedResultsElem = this.$$('#expectedResults');
