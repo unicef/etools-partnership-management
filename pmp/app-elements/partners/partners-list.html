@@ -1,20 +1,16 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+<link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
-<link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
@@ -28,9 +24,7 @@
 <link rel="import" href="partner-item.html">
 
 <dom-module id="partners-list">
-
   <template strip-whitespace>
-
     <style
         include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles paper-material-styles">
       div[elevation="1"] {
@@ -56,7 +50,6 @@
     </template>
 
     <div id="listControls" elevation="1">
-
       <div class="wrap-controls">
 
         <paper-input id="query"
@@ -67,54 +60,33 @@
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
-        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-          <div class="dropdown-with-clear-btn">
-            <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
-              <paper-listbox class="dropdown-content"
-                          attr-for-selected="name"
-                          on-iron-select="filterValueChanged"
-                          on-iron-deselect="filterValueChanged"
-                          data-filter-path$="[[filter.path]]"
-                          on-iron-activate="_dropdownSelected"
-                          selected="[[filter.alreadySelected]]">
-                <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                  <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
-                </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-            <paper-icon-button class="remove" icon="cancel"
-                               on-tap="removeFilter"
-                               data-filter-name$="[[filter.filterName]]"
-                               data-reset-path$="[[filter.path]]"
-                               disabled$="[[filter.disabled]]"
-                               hidden$="[[filter.disabled]]">
-            </paper-icon-button>
-          </div>
-        </template>
+        <div class="filter esmm">
+          <etools-multi-selection-menu
+              id="partnerTypes"
+              label="Partner Type"
+              disabled$="[[showOnlyGovernmentType]]"
+              options="[[partnerTypes]]"
+              selected-values="{{selectedPartnerTypes}}"
+              hide-search></etools-multi-selection-menu>
+        </div>
+
+        <div class="filter esmm">
+          <etools-multi-selection-menu
+              id="csoTypes"
+              label="CSO Type"
+              options="[[csoTypes]]"
+              selected-values="{{selectedCsoTypes}}"
+              hide-search></etools-multi-selection-menu>
+        </div>
 
       </div>
       <div class="fixed-controls">
-
-        <div class="filter-bar-action-wrapper menu-btn-wrapper">
-          <paper-menu-button id="filterMenu">
-            <paper-button class="button dropdown-trigger">
-              <iron-icon icon="filter-list"></iron-icon>
-              add filter
-            </paper-button>
-            <paper-listbox class="dropdown-content">
-              <template is="dom-repeat" items="[[availableListFilterOptions]]">
-                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
-              </template>
-            </paper-listbox>
-          </paper-menu-button>
-        </div>
         <div class="filter-bar-action-wrapper">
           <div id="hiddenToggle" on-tap="_toggleHidden">
             Show hidden
             <paper-toggle-button checked="[[showHidden]]"></paper-toggle-button>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -225,7 +197,6 @@
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.ListFilters,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.ListsCommon
         ],
@@ -248,12 +219,14 @@
             statePath: 'partnerTypes'
           },
 
-          partnerType: {
-            type: String
+          selectedPartnerTypes: {
+            type: Array,
+            value: []
           },
 
-          csoType: {
-            type: String
+          selectedCsoTypes: {
+            type: String,
+            value: []
           },
 
           showHidden: {
@@ -281,43 +254,21 @@
           _sortableFieldNames: {
             type: Array,
             value: ['vendor_number', 'name']
+          },
+          _governmentLockedPartnerTypes: {
+            type: Array,
+            value: ['Government']
           }
         },
 
         observers: [
-          '_initListFilters(partnerTypes, csoTypes)',
-          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
-          'requiredDataLoaded, initComplete)',
+          '_updateURL(q, selectedPartnerTypes.length, selectedCsoTypes.length, pageNumber, pageSize, sortOrder, ' +
+            'showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
         listeners: {
           'sort-changed': '_sortOrderChanged',
-        },
-
-        _initListFilters: function(partnerTypes, csoTypes) {
-          this.debounce('init-p-filters', function() {
-            // init list filter options
-            this.initListFiltersData([
-              {
-                filterName: 'Partner Type',
-                type: 'dropdown',
-                alreadySelected: null,
-                selectionOptions: _.map(partnerTypes, 'value'),
-                path: 'partnerType',
-                disabled: false
-              },
-              {
-                filterName: 'CSO Type',
-                alreadySelected: null,
-                type: 'dropdown',
-                selectionOptions: _.map(csoTypes, 'value'),
-                path: 'csoType',
-                disabled: false
-              }
-            ]);
-            this._updateSelectedFiltersValues();
-          }, 100);
         },
 
         attached: function() {
@@ -329,11 +280,14 @@
           this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
         },
 
-        _getPartnerType: function(partnerType) {
-          if (this.showOnlyGovernmentType) {
-            return 'Government';
-          }
-          return partnerType ? partnerType : '';
+        _getFilterUrlValuesAsArray: function(types) {
+          return types ? types.split('|') : [];
+        },
+
+        _getSelectedPartnerTypes: function(selectedPartnerTypes) {
+          return this.showOnlyGovernmentType
+              ? this._governmentLockedPartnerTypes
+              : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
         },
 
         // Input: URL query params
@@ -346,8 +300,8 @@
           }
           this.set('initComplete', false);
           this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-          this.set('partnerType', this._getPartnerType(urlQueryParams.partner_type));
-          this.set('csoType', urlQueryParams.cso_type ? urlQueryParams.cso_type : '');
+          this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
+          this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
           this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
           this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
           this.set('showHidden', urlQueryParams.hidden ? true : false);
@@ -355,26 +309,6 @@
           let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
           this.set('initComplete', true);
-
-          this._updateSelectedFiltersValues();
-        },
-
-        _updateSelectedFiltersValues: function() {
-          this.debounce('updateShownFilters', function() {
-            let filtersValues = [
-              {
-                filterName: 'Partner Type',
-                selectedValue: this.partnerType,
-                disabled: this.showOnlyGovernmentType ? true : false
-              },
-              {
-                filterName: 'CSO Type',
-                selectedValue: this.csoType
-              }
-            ];
-            this.updateShownFilters(filtersValues);
-
-          }.bind(this), 100);
         },
 
         // Updates URL state with new query string, and launches query
@@ -412,7 +346,7 @@
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            var partners = this.$$('#partners');
+            let partners = this.$$('#partners');
             if (!partners) {
               return;
             }
@@ -421,8 +355,8 @@
                 this.sortOrder.field,
                 this.sortOrder.direction,
                 this.q.toLowerCase(),
-                this.partnerType,
-                this.csoType,
+                this.selectedPartnerTypes,
+                this.selectedCsoTypes,
                 this.pageNumber,
                 this.pageSize,
                 this.showHidden,
@@ -433,7 +367,7 @@
 
         // Outputs the query string for the list
         _buildQueryString: function() {
-          var out = [];
+          let out = [];
           if (this.pageNumber && this.pageNumber > 1) {
             out.push('page=' + this.pageNumber);
           }
@@ -443,11 +377,11 @@
           if (this.q && this.q.length) {
             out.push('q=' + this.q);
           }
-          if (this.partnerType && this.partnerType.length) {
-            out.push('partner_type=' + this.partnerType);
+          if (!_.isEmpty(this.selectedPartnerTypes)) {
+            out.push('partner_types=' + this.selectedPartnerTypes.join('|'));
           }
-          if (this.csoType && this.csoType.length) {
-            out.push('cso_type=' + this.csoType);
+          if (!_.isEmpty(this.selectedCsoTypes)) {
+            out.push('cso_types=' + this.selectedCsoTypes.join('|'));
           }
           if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
@@ -459,24 +393,22 @@
         },
 
         _buildCsvDownloadUrl: function() {
-          var queryString = '';
-          var endpointUrl = '';
-          var params = [];
+          let params = [];
 
           if (this.q && this.q.length) {
             params.push('search=' + this.q);
           }
-          if (this.partnerType && this.partnerType.length) {
-            params.push('partner_type=' + this.partnerType);
+          if (!_.isEmpty(this.selectedPartnerTypes)) {
+            params.push('partner_types=' + this.selectedPartnerTypes.join(','));
           }
-          if (this.csoType && this.csoType.length) {
-            params.push('cso_type=' + this.csoType);
+          if (!_.isEmpty(this.selectedCsoTypes)) {
+            params.push('cso_types=' + this.selectedCsoTypes.join(','));
           }
           params.push('hidden=' + this.showHidden);
 
           params.push('format=csv');
-          queryString = params.join('&');
-          endpointUrl = this.getEndpoint('partners').url;
+          let queryString = params.join('&');
+          let endpointUrl = this.getEndpoint('partners').url;
 
           return endpointUrl + '?' + queryString;
         },
@@ -509,14 +441,12 @@
         _showOnlyGovernmentTypeFlagChanged: function(showOnlyGovernmentType) {
           if (showOnlyGovernmentType) {
             // lock list to government partners only
-            this.set('partnerType', 'Government');
-            this._updateSelectedFiltersValues();
+            this.set('selectedPartnerTypes', this._governmentLockedPartnerTypes);
           } else {
             // unlock list from government partners only
-            this.set('partnerType', null);
-            this.removeFilterOption('Partner Type', 'partnerType');
+            this.set('selectedPartnerTypes', []);
           }
-          this.removeFilterOption('CSO Type', 'csoType');
+          this.set('selectedCsoTypes', []);
           this.set('pageNumber', 1);
           this.set('showHidden', false);
         },
