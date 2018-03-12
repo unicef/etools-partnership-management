@@ -174,31 +174,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
             <partners-module id="partners" class="main-page"
-                      show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
-                      current-page="[[_lastActivePartnersModule]]"
-                      route="{{subroute}}"
-                      permissions="[[permissions]]">
+                             show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+                             current-page="[[_lastActivePartnersModule]]"
+                             route="{{subroute}}"
+                             permissions="[[permissions]]">
             </partners-module>
           </template>
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
             <agreements-module id="agreements" class="main-page"
-                        route="{{subroute}}"
-                        permissions="[[permissions]]">
+                               route="{{subroute}}"
+                               permissions="[[permissions]]">
             </agreements-module>
           </template>
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
             <interventions-module id="interventions" class="main-page"
-                           route="{{subroute}}"
-                           permissions="[[permissions]]">
+                                  route="{{subroute}}"
+                                  permissions="[[permissions]]">
             </interventions-module>
           </template>
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
             <reports-module id="reports" class="main-page"
-                     route="{{subroute}}"
-                     permissions="[[permissions]]">
+                            route="{{subroute}}"
+                            permissions="[[permissions]]">
             </reports-module>
           </template>
 
@@ -252,10 +252,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
-          EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
-          EtoolsPmpApp.Mixins.EnvironmentFlags, EtoolsPmpApp.Mixins.ScrollControl,
-          EtoolsPmpApp.Mixins.AmendmentMode, EtoolsPmpApp.Mixins.UserData, EtoolsPmpApp.Mixins.EventHelper
-        ], Polymer.Element);
+      EtoolsPmpApp.Mixins.AppMenu,
+      EtoolsPmpApp.Mixins.ToastNotifications,
+      EtoolsMixins.LoadingMixin,
+      EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.ScrollControl,
+      EtoolsPmpApp.Mixins.AmendmentMode,
+      EtoolsPmpApp.Mixins.UserData,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
      * PMP main element used to configure and display all app modules
