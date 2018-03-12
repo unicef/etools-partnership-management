@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
@@ -13,8 +14,6 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
-<link rel="import"
-      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html"/>
@@ -354,24 +353,18 @@
             </div>
             <div class="panel-row-extra-tall row-h panel-table-row ">
               <div class="flex-c">Scheduled Audit</div>
-              <div class="col-5 self-end">
-                <etools-single-selection-menu
-                    options="[[auditOptions]]"
-                    selected="{{scheduledAuditRequired}}"
-                    hide-search
-                    disabled="[[!editMode]]">
-                </etools-single-selection-menu>
+              <div class="col-5 layout-horizontal center-align">
+                <paper-toggle-button
+                    disabled="[[!editMode]]"
+                    checked="{{partner.planned_engagement.scheduled_audit}}" ></paper-toggle-button>
               </div>
             </div>
             <div class="panel-row-extra-tall row-h panel-table-row ">
               <div class="flex-c">Special Audit</div>
-              <div class="col-5 self-end">
-                <etools-single-selection-menu
-                    options="[[auditOptions]]"
-                    selected="{{specialAuditRequired}}"
-                    hide-search
-                    disabled="[[!editMode]]">
-                </etools-single-selection-menu>
+              <div class="col-5 layout-horizontal center-align">
+                <paper-toggle-button
+                    disabled="[[!editMode]]"
+                    checked="{{partner.planned_engagement.special_audit}}" ></paper-toggle-button>
               </div>
             </div>
           </div>
@@ -430,7 +423,7 @@
         class="content-section">
 
       <assessments-items id="assessmentsList"
-                         data-items="{{partner.assessments}}"
+                         data-items="{{filteredAssessments}}"
                          edit-mode="[[editMode]]"></assessments-items>
 
     </etools-content-panel>
@@ -520,6 +513,10 @@
                 value: 'YES'
               }
             ]
+          },
+          filteredAssessments: {
+            type: Array,
+            value: []
           }
         },
 
@@ -564,15 +561,12 @@
           if (!partner.id) {
             return;
           }
-
           let requestOptions = this._getEngagementsRequestOptions(partner.id);
           this.sendRequest(requestOptions)
               .then((results) => this._init(results))
               .catch((err) => this.handleErrorResponse(err));
 
           this.set('basisOptions', []);
-          this.set('specialAuditRequired', !partner.planned_engagement.special_audit ? 'NO' : 'YES');
-          this.set('scheduledAuditRequired', !partner.planned_engagement.scheduled_audit ? 'NO' : 'YES');
           this._addBasisFromPartner();
           this._applyRiskRatingColor();
           this._filterPartnerAssessments();
@@ -580,6 +574,15 @@
 
         _filterPartnerAssessments: function() {
           this.set('filteredAssessments', this.partner.assessments.filter(a=> a.type === 'Other'));
+        },
+
+        _mergeAssessments: function() {
+          if(this.filteredAssessments.length){
+            this.set(
+              'partner.assessments',
+              _.unionBy(this.filteredAssessments,this.partner.assessments, 'id')
+            );
+          }
         },
 
         _addBasisFromPartner: function() {
@@ -611,6 +614,7 @@
         },
 
         _validatePageData: function() {
+          this._mergeAssessments();
           return this.$.assessmentsList.validate();
         },
 

@@ -67,14 +67,14 @@
     <div class="row-h add-btn-wrapper">
       <paper-button hidden$="[[!editMode]]"
                     on-tap="_addNewAssessment"
-                    class$="secondary-btn [[_getAddBtnAdditionalClass(filteredDataItems.length)]]">
+                    class$="secondary-btn [[_getAddBtnAdditionalClass(dataItems.length)]]">
         ADD OTHER ASSESSMENT
       </paper-button>
     </div>
 
     <div class="assessments"
-         hidden$="[[_emptyList(filteredDataItems.length)]]">
-      <template is="dom-repeat" items="[[filteredDataItems]]">
+         hidden$="[[_emptyList(dataItems.length)]]">
+      <template is="dom-repeat" items="[[dataItems]]">
         <div class="row-h item-container">
           <div class="item-actions-container">
 
@@ -174,8 +174,7 @@
 
         observers: [
           '_dataHasChanged(dataItems)',
-          '_assessmentPropertyChanged(dataItems.*)',
-          '_dataItemsChanged(dataItems.splices)'
+          '_assessmentPropertyChanged(dataItems.*)'
         ],
 
         ready: function() {
@@ -203,14 +202,6 @@
           }
         },
 
-        _setFilteredDataItems: function(items) {
-          this.set('filteredDataItems', items.filter(item => item.type === 'Other'));
-        },
-
-        _dataItemsChanged: function() {
-          this._setFilteredDataItems(this.dataItems);
-        },
-
         _assessmentPropertyChanged: function(dataPath) {
           if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
               dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
@@ -228,18 +219,16 @@
           return typeof value !== 'undefined' && value !== null && value !== '';
         },
 
-        _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength) {
+        _isValid: function(field, completedDate, reportFile, reportFileLength) {
           let valid = true;
           switch (field) {
             case 'dateSubmited':
-              if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) ||
-                      reportFileLength > 0 || reportFile instanceof File)) {
+              if (_.isEmpty(completedDate) && (reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
             case 'report':
-              if (!this._hasReport(reportFile, reportFileLength) && (this._notEmpty(assessmentType) ||
-                      this._notEmpty(completedDate))) {
+              if (!this._hasReport(reportFile, reportFileLength) && !_.isEmpty(completedDate)) {
                 valid = false;
               }
               break;
@@ -264,8 +253,8 @@
 
         validate: function() {
           var valid = true;
-          if (this.filteredDataItems instanceof Array && this.filteredDataItems.length > 0) {
-            this.filteredDataItems.forEach(function(item, index) {
+          if (this.dataItems instanceof Array && this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
               if (!this._emptyAssessment(item)) {
                 if (!this._validateAssessment(index)) {
                   valid = false;
@@ -285,13 +274,13 @@
             var fieldEl = this.$$(fieldSelector);
             var reportFileLength = 0;
 
-            if (typeof this.filteredDataItems[index].report_file === 'string') {
-              reportFileLength = this.filteredDataItems[index].report_file.length;
+            if (typeof this.dataItems[index].report_file === 'string') {
+              reportFileLength = this.dataItems[index].report_file.length;
             }
             if (fieldEl) {
               var fieldName = this._getFileTypeForValidation(fieldSelector);
-              var validField = this._isValid(fieldName, this.filteredDataItems[index].type,
-                  this.filteredDataItems[index].completed_date, this.filteredDataItems[index].report,
+              var validField = this._isValid(fieldName, this.dataItems[index].completed_date,
+                this.dataItems[index].report,
                   reportFileLength, fieldEl);
               fieldEl.invalid = !validField;
               if (!validField) {
