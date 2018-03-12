@@ -17,7 +17,6 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-config/app-constants.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
@@ -284,7 +283,6 @@
 
         behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
@@ -385,7 +383,7 @@
             type: Array,
             observer: '_filtersChanged'
           },
-          csvDownloadUrl: {
+          csvDownloadQs: {
             type: String,
             notify: true
           },
@@ -393,7 +391,6 @@
             type: Array,
             value: ['number', 'partner_name', 'start', 'end']
           },
-          exportType: String
         },
 
         listeners: {
@@ -404,7 +401,7 @@
           '_initListFilters(documentTypes, sections, interventionStatuses, offices, cpOutputs, unicefUsersData)',
           '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSections, ' +
           'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
-          'requiredDataLoaded, initComplete, exportType)',
+          'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -578,7 +575,7 @@
             return;
           }
 
-          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+          this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
           var qs = this._buildQueryString();
 
           if (qs !== _interventionsLastNavigated) {
@@ -685,7 +682,7 @@
           return out.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {
+        _buildCsvDownloadQueryString: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -726,14 +723,7 @@
 
           params.push('format=csv');
           queryString = params.join('&');
-
-          if (this.exportType === this.PdExportTypes.PdResult) {
-            endpointUrl = this.getEndpoint('engagements').url;
-          } else {
-            endpointUrl = this.getEndpoint('interventions').url;
-          }
-
-          return endpointUrl + '?' + queryString;
+          return queryString;
         },
 
         _setSelectedOffices: function(officesStr) {
