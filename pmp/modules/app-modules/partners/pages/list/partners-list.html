@@ -219,7 +219,7 @@
   </template>
   <script>
     'use strict';
-    var _partnersLastNavigated = null;
+    let _partnersLastNavigated = null;
     /**
      * @polymer
      * @mixinFunction
@@ -462,7 +462,7 @@
       }
 
       _handleFilterPartnersData(forceNoLoading) {
-        var partners = this.shadowRoot.querySelector('#partners');
+        let partners = this.shadowRoot.querySelector('#partners');
         if (!partners) {
           return;
         }
@@ -481,7 +481,7 @@
 
       // Outputs the query string for the list
       _buildQueryString() {
-        var out = [];
+        let out = [];
         if (this.pageNumber && this.pageNumber > 1) {
           out.push('page=' + this.pageNumber);
         }
@@ -507,9 +507,9 @@
       }
 
       _buildCsvDownloadUrl() {
-        var queryString = '';
-        var endpointUrl = '';
-        var params = [];
+        let queryString = '';
+        let endpointUrl = '';
+        let params = [];
 
         if (this.q && this.q.length) {
           params.push('search=' + this.q);
