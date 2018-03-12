@@ -452,7 +452,7 @@
       }
 
       _editModeChanged(editMode) {
-        if(typeof editMode !== 'undefined') {
+        if (typeof editMode !== 'undefined') {
           this._setDraftStatus(editMode, this.isNewAgreement);
         }
       }
@@ -533,7 +533,7 @@
       }
 
       _resetDropdown(selector) {
-        var field = this.fieldValidationReset(selector);
+        let field = this.fieldValidationReset(selector);
         if (field) {
           field.set('selected', null);
         }
@@ -568,7 +568,7 @@
       }
 
       _partnerChanged(currentPartnerId) {
-        if(typeof currentPartnerId === 'undefined') {
+        if (typeof currentPartnerId === 'undefined') {
           return;
         }
 
@@ -631,12 +631,12 @@
         if (this.agreement.partner_signatory) {
           return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
         } else if (this.staffMembers && this.staffMembers.length) {
-            var selectedPartner = this.staffMembers.filter(function(s) {
-              return parseInt(s.id) === parseInt(selectedId);
-            });
-            if (selectedPartner && selectedPartner.length) {
-              return selectedPartner[0];
-            }
+          let selectedPartner = this.staffMembers.filter(function(s) {
+            return parseInt(s.id) === parseInt(selectedId);
+          });
+          if (selectedPartner && selectedPartner.length) {
+            return selectedPartner[0];
+          }
         }
         return '';
       }
@@ -645,7 +645,7 @@
         if (!agreement.authorized_officers || !agreement.authorized_officers.length) {
           return '';
         }
-        var names = agreement.authorized_officers.map(function(officer) {
+        let names = agreement.authorized_officers.map(function(officer) {
           return officer.first_name + ' ' + officer.last_name;
         });
         return names.join(' | ');
@@ -765,8 +765,8 @@
 
       // Validate agreement fields
       _validateAgreement() {
-        var valid = true;
-        var reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
+        let valid = true;
+        let reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
         if (this.agreement.agreement_type === 'PCA') {
           reqFieldsSelectors.push('#cpStructure');
           reqFieldsSelectors.push('#agreementAmendments');
@@ -786,8 +786,8 @@
       }
 
       _validateSignedByFields() {
-        var valid = true;
-        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
+        let valid = true;
+        let signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
           '#signedByUnicef', '#signedByUnicefDateField'];
         signedByFields.forEach(function(selector) {
           let field = this.shadowRoot.querySelector(selector);
