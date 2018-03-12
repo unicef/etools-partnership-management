@@ -6,7 +6,7 @@
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 
-<dom-module id="agreement-list-data">
+<dom-module id="agreements-list-data">
 
   <script>
     'use strict';
@@ -22,8 +22,8 @@
     const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.ListData,
-      EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
     /**
@@ -34,7 +34,7 @@
     class AgreementsListData extends AgreementsListDataRequiredMixins {
 
       static get is() {
-        return 'agreement-list-data';
+        return 'agreements-list-data';
       }
 
       static get properties() {
