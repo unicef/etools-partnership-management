@@ -52,7 +52,7 @@
     <etools-dialog keep-dialog-open id="etoolsDialog" size="lg" ok-btn-text="Save"
                    dialog-title="Add Disaggregation" disable-confirm-btn="[[disableConfirmBtn]]"
                    on-confirm-btn-clicked="_validateAndSaveDisaggregation">
-      <div class="row-h flex-c">
+      <div class="layout-horizontal flex-c row-padding-v">
         <div class="col col-4">
           <paper-input id="disaggregateByEl" label="Disaggregation" value="{{disaggregation.name}}"
                        required auto-validate error-message="Please add disaggregation" placeholder="&#8212;">
