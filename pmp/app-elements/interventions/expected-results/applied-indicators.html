@@ -1,4 +1,5 @@
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="applied-indicator.html">
 
 <dom-module id="applied-indicators">
@@ -12,12 +13,13 @@
     items="[[dataItems]]"
     as="indicator" index-as="indicatorIndex">
     <applied-indicator data-args$="[[indicatorIndex]]"
-                  on-edit-indicator="_editIndicator"
-                  on-delete-indicator="_openDeleteConfirmation"
-                  on-deactivate-indicator="_openDeactivateConfirmation"
-                  indicator="[[indicator]]"
-                  edit-mode="[[editMode]]"
-                  intervention="[[intervention]]"></applied-indicator>
+                       on-edit-indicator="_editIndicator"
+                       on-delete-indicator="_openDeleteConfirmation"
+                       on-deactivate-indicator="_openDeactivateConfirmation"
+                       indicator="[[indicator]]"
+                       edit-mode="[[editMode]]"
+                       intervention="[[intervention]]">
+    </applied-indicator>
 </template>
   </template>
   <script>
@@ -35,11 +37,30 @@
           resultLinkIndex: Number,
           editMode: Boolean,
           intervention: Object,
-          cpOutputId: Number
+          cpOutputId: Number,
+          deactivateConfirmDialog: Object,
+          indicatorToDeactivateIndex: String
         },
         behaviors: [
           EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
+        ready: function() {
+          console.log('ready');
+          let deactivateDialog = document.querySelector('body').querySelector('etools-dialog#deactivateIndicatorDialog');
+          if (deactivateDialog) {
+            console.log('deactivateConfirmDialog', this.deactivateConfirmDialog, deactivateDialog);
+            this.deactivateConfirmDialog = deactivateDialog;
+          } else {
+            this._createDeactivateIndicatorDialog();
+          }
+        },
+        _createDeactivateIndicatorDialog: function() {
+          let dialogContent = document.createElement('div');
+          dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
+          this.deactivateConfirmDialog = this.createDialog('Deactivate confirmation', 'md', 'Yes',
+          'No', this._onDeactivateConfirmation.bind(this), dialogContent,'','', 'deactivateIndicatorDialog');
+          console.log('added deactivate dialog');
+        },
 
         _editIndicator: function(event) {
           let indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
@@ -55,9 +76,45 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
-        _openDeactivateConfirmation: function() {
 
+        _openDeactivateConfirmation: function(event) {
+          this.indicatorToDeactivateIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
+          this.deactivateConfirmDialog.opened = true;
+        },
+
+        _onDeactivateConfirmation: function(event) {
+          if (!event.detail.confirmed) {
+            this.indicatorToDeactivateIndex = -1;
+            return;
+          }
+          let indicatorId = this.dataItems[this.indicatorToDeactivateIndex] ? this.dataItems[this.indicatorToDeactivateIndex].id : null;
+          if (!indicatorId) {
+            return;
+          }
+          let self = this;
+          let endpoint = this.getEndpoint('deactivateIndicator', {id: indicatorId});
+          this.sendRequest({
+            method: 'PATCH',
+            endpoint: endpoint,
+            body: {}
+          }).then(function(resp) {
+            self._handleDeactivateResponse(resp);
+          }).catch(function(error) {
+            self._handleDeactivateError(error.response);
+          });
+        },
+
+        _handleDeactivateResponse: function(resp) {
+          console.log('deactivate response', resp);
+          this.dataItems[this.indicatorToDeactivateIndex].active = false;
+          this.indicatorToDeactivateIndex = -1;
+        },
+
+        _handleDeactivateError: function(err) {
+          console.log('deactivate err', err);
+          this.indicatorToDeactivateIndex = -1;
         }
+
       });
     })();
   </script>

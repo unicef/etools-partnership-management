@@ -131,7 +131,8 @@
             type: Boolean,
             value: true
           },
-          intervention: Object
+          intervention: Object,
+          deactivateConfirmDialog: Object
         },
 
         observers: [
@@ -164,6 +165,14 @@
           }
           this.removeCpOutputRamIndicatorsDialog();
           this.removeLowerResultNameDialog();
+          this.removeDeactivateIndicatorDialog();
+        },
+
+        removeDeactivateIndicatorDialog: function() {
+          let body = document.querySelector('body');
+          let dialogs = body.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
+          console.log('dialogs', dialogs);
+          dialogs.forEach(d => body.removeChild(d));
         },
 
         _dataItemsChanged: function(dataItemsLength) {
