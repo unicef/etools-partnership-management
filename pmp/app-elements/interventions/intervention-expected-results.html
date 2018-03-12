@@ -83,7 +83,7 @@
                                        edit-mode$="[[editMode]]"
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
-                                       intervention-status="[[interventionStatus]]"
+                                       intervention="[[intervention]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
           </div>
@@ -131,7 +131,7 @@
             type: Boolean,
             value: true
           },
-          interventionStatus: String
+          intervention: Object
         },
 
         observers: [

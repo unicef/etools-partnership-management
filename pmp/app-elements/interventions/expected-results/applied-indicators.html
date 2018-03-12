@@ -16,7 +16,7 @@
                   on-delete-indicator="_openDeleteConfirmation"
                   indicator="[[indicator]]"
                   edit-mode="[[editMode]]"
-                  intervention-status="[[interventionStatus]]"></applied-indicator>
+                  intervention="[[intervention]]"></applied-indicator>
 </template>
   </template>
   <script>
@@ -33,7 +33,7 @@
           },
           resultLinkIndex: Number,
           editMode: Boolean,
-          interventionStatus: String,
+          intervention: Object,
           cpOutputId: Number
         },
         behaviors: [

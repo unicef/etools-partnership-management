@@ -117,7 +117,7 @@
               <applied-indicators data-items="[[item.applied_indicators]]"
                                   result-link-index="[[index]]"
                                   cp-output-id="[[cpOutputId]]"
-                                  intervention-status="[[interventionStatus]]"
+                                  intervention="[[intervention]]"
                                   edit-mode="[[editMode]]">
               </applied-indicators>
             </div>
@@ -175,7 +175,7 @@
             type: Boolean,
             value: false
           },
-          interventionStatus: String
+          intervention: Object
         },
         listeners: {
           'delete-confirm': '_updateInterventionLocAndClusters',
