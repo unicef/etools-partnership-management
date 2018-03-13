@@ -19,6 +19,7 @@
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../../mixins/repeatable-data-sets-mixin.html">
+<link rel="import" href="../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -151,6 +152,7 @@
      */
     const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.RepeatableDataSets,
+      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
