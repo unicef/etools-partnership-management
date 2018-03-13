@@ -5,6 +5,7 @@
 <link rel="import" href="../../../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
@@ -110,12 +111,16 @@
                     hidden$=[[_unitIsNumeric(indicator.indicator.unit)]]>
         </paper-input>
       </div>
+      <div class="col col-6">
+        <paper-toggle-button checked="{{indicator.highFrequency}}">
+          High Frequency Humanitarian Indicator
+        </paper-toggle-button>
+      </div>
     </div>
     <div class="unknown">
       <paper-checkbox checked="{{baselineIsUnknown}}">Unknown </paper-checkbox>
     </div>
     <!-- Baseline & Target -->
-
 
     <div class="row-h flex-c">
         <paper-textarea label="Means of Verification"
