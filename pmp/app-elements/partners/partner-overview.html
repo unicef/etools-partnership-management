@@ -23,7 +23,8 @@
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles fr-warnings-styles">
+    <style
+        include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles fr-warnings-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -157,7 +158,7 @@
           <div class="col col-2 center-align">
             <strong>
               <span class="green">[[partner.hact_values.audits.completed]] </span>
-              / [[partner.hact_values.audits.minimum_requirements]]
+              / [[_getMinReqAudits(partner.planned_engagement)]]
             </strong>
           </div>
         </div>
@@ -210,19 +211,23 @@
                     icon-first
                     custom-icon
                     hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
-                  <span slot="field" class$="[[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
+                  <span slot="field"
+                        class$="[[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
                     <span class="amount-currency">[[partnership.fr_currency]]</span>
                     <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
                   </span>
-                  <iron-icon icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
-                             slot="custom-icon"></iron-icon>
+                  <iron-icon
+                      icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
+                      slot="custom-icon"></iron-icon>
                   <span slot="message">
                     <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
                   </span>
                 </etools-info-tooltip>
               </div>
-              <div class$="col col-2 right-align [[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
-                [[partnership.fr_currency]] [[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.actual_amount)]]
+              <div
+                  class$="col col-2 right-align [[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
+                [[partnership.fr_currency]] [[getFrsTotal(partnership.fr_currencies_are_consistent,
+                partnership.actual_amount)]]
               </div>
               <div class="col center-align overflow-hidden">
                 <span class="partnership-status">[[partnership.status]]</span>
@@ -284,6 +289,11 @@
           } else {
             this.contentVisible = false;
           }
+        },
+
+        _getMinReqAudits: function(plannedEngagement) {
+          return !plannedEngagement ? 0
+            : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
         }
       });
 
