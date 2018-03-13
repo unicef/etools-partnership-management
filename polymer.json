@@ -9,7 +9,8 @@
     "pmp/modules/app-modules/settings/settings-module.html",
     "pmp/modules/app-modules/partners/pages/list/partners-list.html",
     "pmp/modules/app-modules/partners/pages/overview/partner-overview.html",
-    "pmp/modules/app-modules/partners/pages/details/partner-details.html"
+    "pmp/modules/app-modules/partners/pages/details/partner-details.html",
+    "pmp/app-elements/partners/partner-financial-assurance.html",
   ],
   "sources": [
     "pmp/**/*",

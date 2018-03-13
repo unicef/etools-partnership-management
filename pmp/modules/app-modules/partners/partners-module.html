@@ -122,6 +122,14 @@
                              edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
           </template>
 
+          <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
+            <partner-financial-assurance id="financialAssurance"
+                                         partner="[[partner]]"
+                                         edit-mode="[[_hasEditPermissions(permissions)]]"
+                                         name="financial-assurance">
+            </partner-financial-assurance>
+          </template>
+
         </iron-pages>
 
       </div> <!-- page content end -->
@@ -191,6 +199,11 @@
               {
                 tab: 'details',
                 tabLabel: 'Partner Details',
+                hidden: false
+              },
+              {
+                tab: 'financial-assurance',
+                tabLabel: 'Financial Assurance',
                 hidden: false
               }
             ]
@@ -403,18 +416,32 @@
         }
       }
 
+      /**
+       * All partners pages with editable fields should be validated on save
+       */
+       _partnerDataIsValid() {
+        let valid = true;
+        let partnersPages = [this.$$('#financialAssurance'), this.$$('#partnerDetails')];
+        partnersPages.forEach((pageEl) => {
+          if (pageEl && !pageEl._validatePageData()) {
+            valid = false;
+          }
+        });
+        return valid;
+      }
+
       _validateAndTriggerPartnerSave(event) {
         event.stopImmediatePropagation();
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        let partnerDetails = this.shadowRoot.querySelector('#partnerDetails');
-        if (partnerDetails && partnerDetails._validatePartner()) {
+        if (this._partnerDataIsValid()) {
+          // both partner details and financial assurance data is valid
           let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
         } else {
-          this.fireEvent('toast', {
+          this.fire('toast', {
             text: 'Please check assessments and partner contacts for ' +
             'invalid fields or empty data rows!', showCloseBtn: true
           });
@@ -422,15 +449,17 @@
       }
 
       _cleanUpdateData(partner) {
-        let updateableFields = [
+        let updatableFields = [
           'alternate_name',
           'shared_with',
           'staff_members',
           'assessments',
-          'core_values_assessment'
+          'core_values_assessment',
+          'planned_engagement',
+          'basis_for_risk_rating'
         ];
         let changes = {};
-        updateableFields.forEach(function(fieldName) {
+        updatableFields.forEach(function(fieldName) {
           // TODO: improve this
           if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
