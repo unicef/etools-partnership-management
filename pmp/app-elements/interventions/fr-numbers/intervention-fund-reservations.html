@@ -259,8 +259,11 @@
             // confirmed, add numbers to intervention
             this._triggerPdFrsUpdate(Object.assign({}, this._lastFrsDetailsReceived));
             this.set('_lastFrsDetailsReceived', null);
+          } else {
+            // frs warning not confirmed/cancelled, frs update is canceled
+            // re-check frs warning on initial data
+            this._frsDetailsChanged(this.intervention.frs_details);
           }
-          // frs warning not confirmed/cancelled, frs update is canceled
         },
 
         /**
