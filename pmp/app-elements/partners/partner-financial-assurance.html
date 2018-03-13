@@ -424,7 +424,7 @@
         class="content-section">
 
       <assessments-items id="assessmentsList"
-                         data-items="{{filteredAssessments}}"
+                         data-items="{{partner.assessments}}"
                          edit-mode="[[editMode]]"></assessments-items>
 
     </etools-content-panel>
@@ -657,14 +657,6 @@
               Number(this.partner.planned_engagement.spot_check_follow_up_q3),
               Number(this.partner.planned_engagement.spot_check_follow_up_q4),
             ]));
-        },
-
-        _specialAuditChanged: function(value) {
-          this.set('partner.planned_engagement.special_audit', value !== 'NO');
-        },
-
-        _scheduledAuditChanged: function(value) {
-          this.set('partner.planned_engagement.scheduled_audit', value !== 'NO');
         },
 
         _goToReport: function(e) {
