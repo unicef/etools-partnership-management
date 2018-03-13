@@ -10,18 +10,18 @@
       }
     </style>
     <template is="dom-repeat"
-    items="[[dataItems]]"
-    as="indicator" index-as="indicatorIndex">
-    <applied-indicator hidden$="[[_isInactive(indicator, showInactiveIndicators)]]"
-                       data-args$="[[indicatorIndex]]"
-                       on-edit-indicator="_editIndicator"
-                       on-delete-indicator="_openDeleteConfirmation"
-                       on-deactivate-indicator="_openDeactivateConfirmation"
-                       indicator="[[indicator]]"
-                       edit-mode="[[editMode]]"
-                       intervention="[[intervention]]">
-    </applied-indicator>
-</template>
+              items="[[dataItems]]"
+              as="indicator" index-as="indicatorIndex">
+      <applied-indicator hidden$="[[_isInactive(indicator, showInactiveIndicators)]]"
+                        data-args$="[[indicatorIndex]]"
+                        on-edit-indicator="_editIndicator"
+                        on-delete-indicator="_openDeleteConfirmation"
+                        on-deactivate-indicator="_openDeactivateConfirmation"
+                        indicator="[[indicator]]"
+                        edit-mode="[[editMode]]"
+                        intervention="[[intervention]]">
+      </applied-indicator>
+    </template>
   </template>
   <script>
     (function() {
@@ -40,7 +40,7 @@
           intervention: Object,
           cpOutputId: Number,
           deactivateConfirmDialog: Object,
-          indicatorToDeactivateIndex: String,
+          indicToDeactivateIndex: String,
           showInactiveIndicators: Boolean
         },
         behaviors: [
@@ -48,7 +48,8 @@
           etoolsBehaviors.DynamicDialogBehavior
         ],
         ready: function() {
-          let deactivateDialog = document.querySelector('body').querySelector('etools-dialog#deactivateIndicatorDialog');
+          let deactivateDialog = document.querySelector('body')
+                                  .querySelector('etools-dialog#deactivateIndicatorDialog');
           if (deactivateDialog) {
             console.log('deactivateConfirmDialog', this.deactivateConfirmDialog, deactivateDialog);
             this.deactivateConfirmDialog = deactivateDialog;
@@ -74,7 +75,7 @@
             closeCallback: this._onDeactivateConfirmation.bind(this)
           });
 
-          document.querySelector('body').appendChild(dialog);
+          document.querySelector('body').appendChild( this.deactivateConfirmDialog);
           console.log('added deactivate dialog');
         },
 
@@ -94,16 +95,16 @@
         },
 
         _openDeactivateConfirmation: function(event) {
-          this.indicatorToDeactivateIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
+          this.indicToDeactivateIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
           this.deactivateConfirmDialog.opened = true;
         },
 
         _onDeactivateConfirmation: function(event) {
           if (!event.detail.confirmed) {
-            this.indicatorToDeactivateIndex = -1;
+            this.indicToDeactivateIndex = -1;
             return;
           }
-          let indicatorId = this.dataItems[this.indicatorToDeactivateIndex] ? this.dataItems[this.indicatorToDeactivateIndex].id : null;
+          let indicatorId = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex].id : null;
           if (!indicatorId) {
             return;
           }
@@ -122,13 +123,13 @@
 
         _handleDeactivateResponse: function(resp) {
           console.log('deactivate response', resp);
-          this.dataItems[this.indicatorToDeactivateIndex].active = false;
-          this.indicatorToDeactivateIndex = -1;
+          this.dataItems[this.indicToDeactivateIndex].active = false;
+          this.indicToDeactivateIndex = -1;
         },
 
         _handleDeactivateError: function(err) {
           console.log('deactivate err', err);
-          this.indicatorToDeactivateIndex = -1;
+          this.indicToDeactivateIndex = -1;
         }
 
       });

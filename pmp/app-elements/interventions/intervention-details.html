@@ -537,7 +537,7 @@
                       return llr.applied_indicators.filter(i => !i.active).lenth;
                     }).reduce((a,b) => a + b, 0);
             });
-            this.thereAreInactiveIndicators = true; //!!noOfInactiveIndicators;
+            this.thereAreInactiveIndicators = !!noOfInactiveIndicators;
           }
         },
         openCpOutputAndRamIndicatorsDialog: function() {
