@@ -4,8 +4,8 @@
 <script>
   'use strict';
   // shuts up the linting script
-  let Redux = Redux || {};
-  let PolymerRedux = PolymerRedux || {};
+  var Redux = Redux || {}; // eslint-disable-line
+  var PolymerRedux = PolymerRedux || {}; // eslint-disable-line
 
   let reduxStoreDefaultData = {
     fileTypes: [],
@@ -49,6 +49,13 @@
   };
 
   const reduxStoreReducer = (state, action) => {
+    /* eslint-disable indent */
+    let partnersDdDataCopy;
+    let disaggregsCopy;
+    let agreementsCopy;
+    let csoPartnerCopy;
+    let indexP;
+    let index;
 
     switch (action.type) {
       case 'SET_FILE_TYPES':
@@ -103,9 +110,9 @@
         // console.log('set partners data...', action.partners);
         return Object.assign({}, state, {agreementsList: action.agreementsList});
 
-      case 'ADD_EDIT_AGREEMENT': // eslint-disable-line
-        let agreementsCopy = state.agreementsList.slice(0);
-        let index = agreementsCopy.findIndex(function(agr) {
+      case 'ADD_EDIT_AGREEMENT':
+        agreementsCopy = state.agreementsList.slice(0);
+        index = agreementsCopy.findIndex(function(agr) {
           return agr.id === action.agreement.id;
         });
 
@@ -120,11 +127,11 @@
         // console.log('set offices data...', action.partnersDropdownData);
         return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
 
-      case 'DELETE_PARTNER': // eslint-disable-line
-        let csoPartnerCopy = state.csoPartners.slice(0);
-        let partnersDdDataCopy = state.partnersDropdownData.slice(0);
+      case 'DELETE_PARTNER':
+        csoPartnerCopy = state.csoPartners.slice(0);
+        partnersDdDataCopy = state.partnersDropdownData.slice(0);
 
-        let indexP = csoPartnerCopy.findIndex(function(partner) {
+        indexP = csoPartnerCopy.findIndex(function(partner) {
           return partner.id === action.partnerId;
         });
         if (indexP > -1) {
@@ -190,8 +197,8 @@
       case 'SET_DISAGGREGATIONS_DATA':
         return Object.assign({}, state, {disaggregations: action.disaggregations});
 
-      case 'ADD_DISAGGREGATION': // eslint-disable-line
-        let disaggregsCopy = state.disaggregations.slice(0);
+      case 'ADD_DISAGGREGATION':
+        disaggregsCopy = state.disaggregations.slice(0);
         disaggregsCopy.push(action.disaggregation);
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
 
@@ -211,6 +218,7 @@
         // no change
         return reduxStoreDefaultData;
     }
+    /* eslint-enable indent */
   };
 
   const dataReduxStore = Redux.createStore(reduxStoreReducer, reduxStoreDefaultData);
