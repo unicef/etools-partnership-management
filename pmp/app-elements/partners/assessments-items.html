@@ -74,7 +74,7 @@
 
     <div class="assessments"
          hidden$="[[_emptyList(dataItems.length)]]">
-      <template is="dom-repeat" items="[[dataItems]]">
+      <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
           <div class="item-actions-container">
 
@@ -96,17 +96,17 @@
                 </etools-form-element-wrapper>
               </div>
               <div class="col col-4">
-                <required-and-not-future-date-validator validator-name="dateSubmited_[[index]]_validator"
+                <required-and-not-future-date-validator validator-name="dateSubmitted_[[index]]_validator"
                                                         required
                                                         error-message="{{item.dateErrorMessage}}">
                 </required-and-not-future-date-validator>
                 <!-- Date submitted -->
-                <etools-date-input id$="dateSubmited_[[index]]"
+                <etools-date-input id$="dateSubmitted_[[index]]"
                                    label="Date of Assessment"
                                    value="{{item.completed_date}}"
                                    readonly$="[[!editMode]]"
                                    auto-validate
-                                   validator="dateSubmited_[[index]]_validator"
+                                   validator="dateSubmitted_[[index]]_validator"
                                    error-message="[[item.dateErrorMessage]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
@@ -153,13 +153,6 @@
             value: 'partnerAssessmentDelete',
             readOnly: true,
           },
-          dateSubmitedErrorMessages: {
-            type: Object,
-            value: {
-              missing: 'Date of Assessment is required',
-              futureDate: 'Date of Assesment cannot be in the future'
-            }
-          },
           open: {
             type: Boolean,
             value: true,
@@ -173,7 +166,7 @@
         },
 
         observers: [
-          '_dataHasChanged(dataItems)',
+          '_makeSureDataItemsAreValid(dataItems)',
           '_assessmentPropertyChanged(dataItems.*)'
         ],
 
@@ -186,20 +179,13 @@
             report_file: ''
           };
         },
+
         _editModeChanged: function() {
           this.updateStyles();
         },
+
         _hideDeleteBtn: function(itemReportFile) {
           return !!itemReportFile;
-        },
-        /**
-         * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
-         * we can make it common in the behavior
-         */
-        _dataHasChanged: function(dataItems) {
-          if (!Array.isArray(dataItems)) {
-            this.set('dataItems', []);
-          }
         },
 
         _assessmentPropertyChanged: function(dataPath) {
@@ -218,8 +204,8 @@
         _isValid: function(field, completedDate, reportFile, reportFileLength) {
           let valid = true;
           switch (field) {
-            case 'dateSubmited':
-              if (_.isEmpty(completedDate) && (reportFileLength > 0 || reportFile instanceof File)) {
+            case 'dateSubmitted':
+              if (_.isEmpty(completedDate) && this._hasReport(reportFile, reportFileLength)) {
                 valid = false;
               }
               break;
@@ -238,7 +224,7 @@
 
         _addNewAssessment: function() {
           if (this.editMode) {
-            var lastAssessmentAdded = this._getLastDataItem();
+            let lastAssessmentAdded = this._getLastDataItem();
             if (this._emptyAssessment(lastAssessmentAdded)) {
               this.fire('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
             } else {
@@ -248,34 +234,31 @@
         },
 
         validate: function() {
-          var valid = true;
+          let valid = true;
           if (this.dataItems instanceof Array && this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
-              if (!this._emptyAssessment(item)) {
-                if (!this._validateAssessment(index)) {
-                  valid = false;
-                }
-              } else {
+            this.dataItems.forEach((item, index) => {
+              if (this._emptyAssessment(item) ||
+                  (!this._emptyAssessment(item) && !this._validateAssessment(index))) {
                 valid = false;
               }
-            }.bind(this));
+            });
           }
           return valid;
         },
 
         _validateAssessment: function(index) {
-          var valid = true;
-          var fields = ['#dateSubmited_' + index, '#report_' + index];
-          fields.forEach(function(fieldSelector) {
-            var fieldEl = this.$$(fieldSelector);
-            var reportFileLength = 0;
+          let valid = true;
+          let fields = ['#dateSubmitted_' + index, '#report_' + index];
+          fields.forEach((fieldSelector) => {
+            let fieldEl = this.$$(fieldSelector);
+            let reportFileLength = 0;
 
             if (typeof this.dataItems[index].report_file === 'string') {
               reportFileLength = this.dataItems[index].report_file.length;
             }
             if (fieldEl) {
-              var fieldName = this._getFileTypeForValidation(fieldSelector);
-              var validField = this._isValid(fieldName, this.dataItems[index].completed_date,
+              let fieldName = this._getFieldNameFromSelector(fieldSelector);
+              let validField = this._isValid(fieldName, this.dataItems[index].completed_date,
                 this.dataItems[index].report,
                   reportFileLength, fieldEl);
               fieldEl.invalid = !validField;
@@ -283,7 +266,7 @@
                 valid = false;
               }
             }
-          }.bind(this));
+          });
 
           return valid;
         },
@@ -295,7 +278,7 @@
               assessment.report instanceof File === false;
         },
 
-        _getFileTypeForValidation: function(fieldSelector) {
+        _getFieldNameFromSelector: function(fieldSelector) {
           if (typeof fieldSelector === 'string' && fieldSelector !== '') {
             return fieldSelector.slice(1).slice(0, fieldSelector.indexOf('_') - 1);
           }
