@@ -47,13 +47,12 @@
           EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
         ready: function() {
-          console.log('ready');
           let deactivateDialog = document.querySelector('body').querySelector('etools-dialog#deactivateIndicatorDialog');
           if (deactivateDialog) {
             console.log('deactivateConfirmDialog', this.deactivateConfirmDialog, deactivateDialog);
             this.deactivateConfirmDialog = deactivateDialog;
           } else {
-            this._createDeactivateIndicatorDialog();
+            this._createDeactivateConfirmDialog();
           }
         },
         _isInactive: function(indicator, showInactiveIndicators) {
@@ -62,11 +61,19 @@
           }
           return showInactiveIndicators;
         },
-        _createDeactivateIndicatorDialog: function() {
+        _createDeactivateConfirmDialog: function() {
           let dialogContent = document.createElement('div');
           dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
-          this.deactivateConfirmDialog = this.createDialog('Deactivate confirmation', 'md', 'Yes',
-          'No', this._onDeactivateConfirmation.bind(this), dialogContent,'','', 'deactivateIndicatorDialog');
+
+          this.deactivateConfirmDialog = this.createDynamicDialog({
+            title: 'Deactivate confirmation',
+            size: 'md',
+            content: dialogContent,
+            id: 'deactivateIndicatorDialog',
+            closeCallback: this._onDeactivateConfirmation.bind(this)
+          });
+
+          document.querySelector('body').appendChild(dialog);
           console.log('added deactivate dialog');
         },
 
