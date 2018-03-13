@@ -55,9 +55,9 @@
 
     // When the list data rows are changing check and close any details opened
     _listDataChanged: function(event) {
-      var rows = this.$.list.querySelectorAll('etools-data-table-row');
+      let rows = this.$.list.querySelectorAll('etools-data-table-row');
       if (rows && rows.length) {
-        for (var i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
           if (rows[i].detailsOpened) {
             rows[i].set('detailsOpened', false);
           }
@@ -88,7 +88,7 @@
 
     // List fade in fade out effect
     _listChanged: function(filteredList, oldFilteredList) {
-      var classList = this.$.list.classList;
+      let classList = this.$.list.classList;
       if (filteredList instanceof Array && classList.contains('hidden')) {
         classList.remove('hidden');
       }
@@ -106,8 +106,8 @@
     _requiredDataHasBeenLoaded: function(event) {
       event.stopImmediatePropagation();
 
-      var listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
-      var list = this.get(listDataPath);
+      let listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
+      let list = this.get(listDataPath);
 
       if (typeof list === 'undefined' ||
           (Array.isArray(list) && list.length === 0)) {

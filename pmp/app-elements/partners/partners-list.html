@@ -221,12 +221,14 @@
 
           selectedPartnerTypes: {
             type: Array,
-            value: []
+            value: [],
+            observer: '_filtersChanged'
           },
 
           selectedCsoTypes: {
             type: String,
-            value: []
+            value: [],
+            observer: '_filtersChanged'
           },
 
           showHidden: {
@@ -262,6 +264,7 @@
         },
 
         observers: [
+          '_filtersChanged(selectedPartnerTypes.length, selectedCsoTypes.length)',
           '_updateURL(q, selectedPartnerTypes.length, selectedCsoTypes.length, pageNumber, pageSize, sortOrder, ' +
             'showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -413,11 +416,6 @@
           return endpointUrl + '?' + queryString;
         },
 
-        _dropdownSelected: function() {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-        },
-
         _toggleHidden: function() {
           this.set('debounceTime', 50);
           this.set('showHidden', this.showHidden ? false : true);
@@ -453,6 +451,12 @@
 
         _triggerPartnerLoadingMsg: function() {
           this.fire('trigger-partner-loading-msg');
+        },
+
+        _filtersChanged: function(a, b) {
+          console.log(a, b);
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
         }
 
       });
