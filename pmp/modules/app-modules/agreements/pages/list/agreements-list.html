@@ -494,7 +494,7 @@
           this.updateAppState('agreements/list', qs, true);
           // filter agreements
           if (this.requiredDataLoaded) {
-            this._filterAgreementsData();
+            this._filterListData();
           }
         } else {
           if (location.search === '') {
@@ -504,13 +504,13 @@
           if (this.forceDataRefresh && this.requiredDataLoaded) {
             // refilter agreements data
             // this will only execute when agreements-loaded event is received
-            this._filterAgreementsData();
+            this._filterListData();
             this.set('forceDataRefresh', false);
           }
         }
       }
 
-      _filterAgreementsData(forceNoLoading) {
+      _filterListData(forceNoLoading) {
         // Query is debounced with a debounce time
         // set depending on what action the user takes
         this.queryDebouncer = Polymer.Debouncer.debounce(this.queryDebouncer,

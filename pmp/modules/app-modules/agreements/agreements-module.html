@@ -25,7 +25,6 @@
 <link rel="import" href="components/agreement-status.html">
 <link rel="lazy-import" href="pages/list/agreements-list.html">
 <link rel="lazy-import" href="pages/details/agreement-details.html">
-<!-- TODO: Check for unused imports -->
 
 <dom-module id="agreements-module">
   <template strip-whitespace>
@@ -241,6 +240,10 @@
           agreement: {
             type: Object,
             observer: '_agreementChanged'
+          },
+          moduleName: {
+            type: String,
+            value: 'agreements'
           }
         };
       }
@@ -271,7 +274,6 @@
 
       _initListeners() {
         this.addEventListener('agreement-save-error', this._agreementSaveErrors);
-        this.addEventListener('reload-list', this._reloadAgreementsList);
         this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
       }
 
@@ -354,19 +356,6 @@
           return;
         }
         this.set('selectedAgreementId', id);
-      }
-
-      // TODO: this method could be common in all page categories, refactor!
-      _reloadAgreementsList(e) {
-        e.stopImmediatePropagation();
-        try {
-          let agreementsList = this.$.list;
-          if (agreementsList && !agreementsList.classList.contains('hidden')) {
-            agreementsList._filterAgreementsData(true);
-          }
-        } catch (err) {
-          this.logWarn('List refresh error occurred', '[agreements-page]', err);
-        }
       }
 
       _agreementChanged(agreement) {

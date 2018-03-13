@@ -435,7 +435,7 @@
           this.updateAppState(this.currentPage + '/list', qs, true);
           // filter partners, but only after data has been loaded
           if (this.requiredDataLoaded) {
-            this._filterPartnersData();
+            this._filterListData();
           }
         } else {
           if (location.search === '') {
@@ -445,13 +445,13 @@
           if (this.forceDataRefresh && this.requiredDataLoaded) {
             // refilter partners data
             // this will only execute when partners-loaded event is received
-            this._filterPartnersData();
+            this._filterListData();
             this.set('forceDataRefresh', false);
           }
         }
       }
 
-      _filterPartnersData(forceNoLoading) {
+      _filterListData(forceNoLoading) {
         // Query is debounced with a debounce time
         // set depending on what action the user takes
         this._actionsChangedDebouncer = Polymer.Debouncer.debounce(this._actionsChangedDebouncer,

@@ -195,6 +195,10 @@
               }
             ]
           },
+          moduleName: {
+            type: String,
+            value: 'partners'
+          },
           csvDownloadUrl: {
             type: String
           },
@@ -248,7 +252,6 @@
       _initListeners() {
         this.addEventListener('partner-save-error', this._partnerSaveError);
         this.addEventListener('create-partner', this._createPartner);
-        this.addEventListener('reload-list', this._reloadPartnersList);
         this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
       }
 
@@ -389,18 +392,6 @@
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
         this.fireEvent('clear-server-errors');
-      }
-
-      _reloadPartnersList(e) {
-        e.stopImmediatePropagation();
-        try {
-          let partners = this.shadowRoot.querySelector('#list');
-          if (partners && !partners.$.list.classList.contains('hidden')) {
-            partners._filterPartnersData(true);
-          }
-        } catch (err) {
-          this.logWarn('List refresh error occurred', '[partners-page]', err);
-        }
       }
 
       _validateAndTriggerPartnerSave(event) {
