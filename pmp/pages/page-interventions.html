@@ -299,6 +299,7 @@
             result_links: [],
             planned_budget: {},
             planned_visits: [],
+            in_amendment: false,
             amendments: [],
             attachments: [],
             distributions: []
@@ -517,7 +518,9 @@
 
       _refreshInterventionPermissions: function(e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.refreshPermissions();
+        this.$.interventionData.refreshPermissions().finally(() => {
+          this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
+        });
       },
 
       _updateInterventionStatus: function(event) {

@@ -83,8 +83,9 @@
           let options = {
             endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
           };
-          this.sendRequest(options).then(function(resp) {
+          return this.sendRequest(options).then(function(resp) {
             self.set('intervention.permissions', resp.permissions);
+            self.set('originalIntervention.in_amendment', resp.in_amendment);
           }).catch(function(error) {
             self._handleErrorResponse(error, 'GET');
           });
