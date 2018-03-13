@@ -457,18 +457,14 @@
         }
       }
 
-      _statusIsNotDraft(status) {
-        return status !== 'draft' && status !== '';
-      }
-
       _setDraftStatus(editMode, isNewAgreement) {
-        if (editMode && isNewAgreement && this.agreement && this._statusIsNotDraft(this.agreement.status)) {
+        if (editMode && isNewAgreement && this.agreement && !this._isDraft()) {
           this.set('agreement.status', '');
         }
       }
 
       _showAmendments(type, status) {
-        if (type === 'PCA' && this._statusIsNotDraft(status)) {
+        if (type === 'PCA' && !this._isDraft()) {
           return true;
         }
         return false;
@@ -502,7 +498,6 @@
           this._setDraftStatus(this.editMode, this.isNewAgreement);
           this._resetDropdown('#partner');
           this._resetDropdown('#agreementType');
-          this.resetSignedByFields(agreement);
         }
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-data'});
       }
@@ -517,21 +512,6 @@
         }
       }
 
-      resetSignedByFields(agreement) {
-        if (agreement.agreement_type === 'SSFA') {
-          return;
-        }
-        this.fieldValidationReset('#signedByPartner');
-        // TODO:  check to see if the commented code is still needed
-        // if (this.$.signedByPartnerDateField) {
-        //   this.$.signedByPartnerDateField.$.dateInput.invalid = false;
-        // }
-        this.fieldValidationReset('#signedByUnicef');
-        // if (this.$.signedByUnicefDateField) {
-        //   this.$.signedByUnicefDateField.$.dateInput.invalid = false;
-        // }
-      }
-
       _resetDropdown(selector) {
         let field = this.fieldValidationReset(selector);
         if (field) {
@@ -540,7 +520,6 @@
       }
 
       // Verify if agreement status is 'draft'
-      // TODO: is this and _statusIsNotDraft needed?
       _isDraft() {
         if (!this.agreement || !this.agreement.status) {
           return false;
