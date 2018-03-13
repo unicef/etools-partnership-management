@@ -31,6 +31,7 @@
 <link rel="lazy-import" href="pages/list/partners-list.html">
 <link rel="lazy-import" href="pages/overview/partner-overview.html">
 <link rel="lazy-import" href="pages/details/partner-details.html">
+<link rel="lazy-import" href="pages/financial-assurance/partner-financial-assurance.html">
 
 <dom-module id="partners-module">
   <template>
@@ -421,7 +422,7 @@
        */
        _partnerDataIsValid() {
         let valid = true;
-        let partnersPages = [this.$$('#financialAssurance'), this.$$('#partnerDetails')];
+        let partnersPages = [this.shadowRoot.querySelector('#financialAssurance'), this.shadowRoot.querySelector('#partnerDetails')];
         partnersPages.forEach((pageEl) => {
           if (pageEl && !pageEl._validatePageData()) {
             valid = false;
@@ -441,7 +442,7 @@
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
         } else {
-          this.fire('toast', {
+          this.fireEvent('toast', {
             text: 'Please check assessments and partner contacts for ' +
             'invalid fields or empty data rows!', showCloseBtn: true
           });

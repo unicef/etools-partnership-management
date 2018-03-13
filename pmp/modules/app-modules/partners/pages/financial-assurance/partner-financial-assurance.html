@@ -13,6 +13,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/moment-element/moment-import.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-error-messages-box.html">
@@ -235,12 +236,11 @@
     <div class="row-h overview-row">
       <div class="col col-2"></div>
       <div class="col col-4">
-        <etools-single-selection-menu label="Basis For Risk Rating"
-                                      options="[[basisOptions]]"
-                                      selected="{{partner.basis_for_risk_rating}}"
-                                      disabled="[[!editMode]]"
-                                      avoid-header-overlapping-dropdown>
-        </etools-single-selection-menu>
+        <etools-dropdown label="Basis For Risk Rating"
+                         options="[[basisOptions]]"
+                         selected="{{partner.basis_for_risk_rating}}"
+                         disabled="[[!editMode]]">
+        </etools-dropdown>
       </div>
     </div>
   </etools-content-panel>
@@ -432,7 +432,7 @@
   <script>
     'use strict';
     /**
-     * @appliesMixin etoolsBehaviors.EtoolsCurrencyMixin,
+     * @appliesMixin EtoolsMixins.EtoolsCurrency,
      * @appliesMixin EtoolsPmpApp.Mixins.Common,
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints,
      * @appliesMixin EtoolsAjaxRequestMixin,
@@ -441,10 +441,10 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnerFinancialAssuranceMixins =  EtoolsMixinFactory.combineMixins([
-      etoolsBehaviors.EtoolsCurrencyMixin,
+      EtoolsMixins.EtoolsCurrency,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsAjaxRequestBehavior,
+      EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
       EtoolsPmpApp.Mixins.ListsCommon,
       EtoolsPmpApp.Mixins.EventHelper
@@ -528,7 +528,8 @@
           filteredAssessments: {
             type: Array,
             value: []
-          }
+          },
+          editMode: Boolean
         };
       }
 
@@ -638,9 +639,7 @@
       }
 
       _applyRiskRatingColor() {
-        //TODO poly2
-        this.customStyle['--risk-rating-color'] = `background: ${this.RISKRATINGCOLORS[this.partner.rating]}`;
-        this.updateStyles();
+        this.updateStyles({'--risk-rating-color': `background: ${this.RISKRATINGCOLORS[this.partner.rating]}`});
       }
 
       _getYear() {
