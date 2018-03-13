@@ -44,7 +44,8 @@
           showInactiveIndicators: Boolean
         },
         behaviors: [
-          EtoolsPmpApp.Behaviors.RepeatableDataSets
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          etoolsBehaviors.DynamicDialogBehavior
         ],
         ready: function() {
           let deactivateDialog = document.querySelector('body').querySelector('etools-dialog#deactivateIndicatorDialog');
