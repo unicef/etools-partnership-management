@@ -291,8 +291,9 @@
           }
         },
 
-        _getMinReqAudits: function({scheduled_audit: scheduledAudit, special_audit: specialAudit}) {
-          return Number(scheduledAudit) + Number(specialAudit);
+        _getMinReqAudits: function(plannedEngagement) {
+          return !plannedEngagement ? 0
+            : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
         }
       });
 

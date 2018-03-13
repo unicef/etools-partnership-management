@@ -229,7 +229,7 @@
         <div class="col-2 col center-align hact-values">
           <strong>
             <span class="green">[[partner.hact_values.audits.completed]] </span>
-            / [[partner.hact_values.audits.minimum_requirements]]
+            / [[_getMinReqAudits(partner.planned_engagement)]]
           </strong>
         </div>
       </div>
@@ -674,6 +674,11 @@
             e.preventDefault();
             window.location.href = path;
           }
+        },
+
+        _getMinReqAudits: function(plannedEngagement) {
+          return !plannedEngagement ? 0
+            : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
         }
 
       });
