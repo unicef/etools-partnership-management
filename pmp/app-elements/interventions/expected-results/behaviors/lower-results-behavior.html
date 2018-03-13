@@ -5,7 +5,7 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.LowerResultsImpl */
   EtoolsPmpApp.Behaviors.LowerResultsImpl = {
     properties: {
-      lowerResultNameEditElem: Object,
+      lowerResultNameEditElem: Object
     },
 
     observers: [
@@ -26,6 +26,12 @@
         this.lowerResultNameEditElem.addEventListener('lower-result-saved',
             this._lowerResultSaved.bind(this));
         document.querySelector('body').appendChild(this.lowerResultNameEditElem);
+      }
+    },
+
+    removeLowerResultNameDialog: function() {
+      if (this.lowerResultNameEditElem) {
+        document.querySelector('body').removeChild(this.lowerResultNameEditElem);
       }
     },
 

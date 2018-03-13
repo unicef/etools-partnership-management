@@ -152,7 +152,7 @@
           },
           interventionId: {
             type: Number
-          },
+          }
         },
 
         observers: [
@@ -207,6 +207,7 @@
           this._unlockInterventionDetailsFields();
           this.push('dataItems', data);
           this.set('amendActionInProgress', true);
+          this.fire('new-amendment-added');
         },
 
         _dataHasChanged: function(dataItems) {
@@ -217,9 +218,9 @@
 
         _unlockInterventionDetailsFields: function() {
           if (!this.amendActionInProgress) {
-            // we need the new permissions for ammendment mode, so we have to refresh the intervention data;
+            // we need the new permissions for ammendment mode;
             // after the permissions are updated, the fields will automatically unlock
-            this.fire('refresh-intervention');
+            this.fire('refresh-intervention-permissions');
           }
         },
 
@@ -232,8 +233,7 @@
 
         _emptyList: function(listLength) {
           return listLength === 0;
-        },
-
+        }
       });
     })();
   </script>
