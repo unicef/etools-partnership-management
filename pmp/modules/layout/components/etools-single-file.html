@@ -26,7 +26,8 @@
                    readonly$="[[readonly]]"
                    invalid$="[[invalid]]"
                    error-message=[[errorMessage]]
-                   hide-delete-btn="[[hideDeleteBtn]]">
+                   hide-delete-btn="[[hideDeleteBtn]]"
+                   on-blur="_fileInputFocused">
       </etools-file>
     </div>
   </template>
@@ -74,6 +75,10 @@
             type: Object,
             observer: '_fileChanged'
           },
+          elemAttached: {
+            type: Boolean,
+            value: false
+          },
           invalid: {
             type: Boolean,
             value: false
@@ -95,6 +100,11 @@
           '_fileReplaced(attachments.*)',
           '_refreshStyles(readonly, required)'
         ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.elemAttached = true;
       }
 
       _fileChanged(intr) {
@@ -149,7 +159,8 @@
         if (file === undefined) {
           return;
         }
-        if (this.autoValidate) {
+        // elemAttached condition is to prevent eager validation
+        if (this.autoValidate && this.elemAttached) {
           this.validate();
         }
       }
@@ -168,6 +179,11 @@
         if (req === false) {
           this.validate();
         }
+      }
+
+      // covers the case when the users cancels file upload
+      _fileInputFocused() {
+        this._autoValidateFile(this.file);
       }
 
     }

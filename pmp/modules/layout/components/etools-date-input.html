@@ -75,8 +75,7 @@
           label: String,
           value: {
             value: null,
-            notify: true,
-            observer: '_valueChanged'
+            notify: true
           },
           jsonValue: {
             value: null,
@@ -122,7 +121,8 @@
           open: {
             type: Boolean,
             value: false,
-            notify: true
+            notify: true,
+            observer: '_openChanged'
           },
           errorMessage: {
             type: String,
@@ -132,8 +132,17 @@
             type: String,
             value: 'YYYY-MM-DD'
           },
+          elemAttached: {
+            type: Boolean,
+            value: false
+          },
           validator: String
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.elemAttached = true;
       }
 
       _readonlyStateChange(newValue, oldValue) {
@@ -154,8 +163,9 @@
         return readonly || disabled;
       }
 
-      _valueChanged(value) {
-        if (this.autoValidate && value !== undefined) {
+      _openChanged(datepickerOpen) {
+        // elemAttached condition is to prevent eager validation
+        if (this.autoValidate && !datepickerOpen && this.elemAttached) {
           this.validate();
         }
       }
