@@ -1,6 +1,8 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
 <link rel="import" href="../endpoints/endpoints-mixin.html">
 <link rel="import" href="event-helper-mixin.html">
 
@@ -19,205 +21,196 @@
   * @appliesMixin EtoolsAjaxRequestMixin
   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   */
-  EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends
-    EtoolsLogsMixin(
-      EtoolsMixins.DynamicDialogMixin(
-        EtoolsPmpApp.Mixins.Endpoints(
-          EtoolsAjaxRequestMixin(
-            EtoolsPmpApp.Mixins.EventHelper(baseClass)
-          )
-        )
-      )
-     ) {
-    // make sure you add DynamicDialogBehavior too in your element //TODO: polymer2 - is comment still valid?
-    static get properties() {
-      return {
-        dataItems: {
-          type: Array,
-          value: [],
-          notify: true
-        },
-        dataSetModel: {
-          type: Object,
-          value: null
-        },
-        editMode: {
-          type: Boolean,
-          reflectToAttribute: true,
-          value: false
-        },
-        deleteConfirmationTitle: {
-          type: String,
-          value: 'Delete confirmation'
-        },
-        deleteConfirmationMessage: {
-          type: String,
-          value: 'Are you sure you want to delete this item?'
-        },
-        deleteLoadingSource: {
-          type: String,
-          value: 'delete-data-set'
-        },
-        deleteActionLoadingMsg: {
-          type: String,
-          value: 'Deleting items from server...'
-        },
-        deleteActionDefaultErrMsg: {
-          type: String,
-          value: 'Deleting items from server action has failed!'
+  EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends EtoolsMixinFactory.combineMixins([
+    EtoolsLogsMixin,
+    EtoolsMixins.DynamicDialogMixin,
+    EtoolsPmpApp.Mixins.Endpoints,
+    EtoolsAjaxRequestMixin,
+    EtoolsPmpApp.Mixins.EventHelper], baseClass) {
+      // make sure you add DynamicDialogBehavior too in your element //TODO: polymer2 - is comment still valid?
+      static get properties() {
+        return {
+          dataItems: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          dataSetModel: {
+            type: Object,
+            value: null
+          },
+          editMode: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+          },
+          deleteConfirmationTitle: {
+            type: String,
+            value: 'Delete confirmation'
+          },
+          deleteConfirmationMessage: {
+            type: String,
+            value: 'Are you sure you want to delete this item?'
+          },
+          deleteLoadingSource: {
+            type: String,
+            value: 'delete-data-set'
+          },
+          deleteActionLoadingMsg: {
+            type: String,
+            value: 'Deleting items from server...'
+          },
+          deleteActionDefaultErrMsg: {
+            type: String,
+            value: 'Deleting items from server action has failed!'
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        // create delete confirmation dialog
+        this._createDeleteConfirmationDialog();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        // remove delete confirmation dialog when the element is detached
+        this.removeDialog(this.deleteDialog);
+      }
+
+      _emptyList(listLength) {
+        return listLength === 0;
+      }
+
+      _getItemModelObject(addNull) {
+        if (addNull) {
+          return null;
         }
-      };
-    }
-
-    connectedCallback() {
-      super.connectedCallback();
-      // create delete confirmation dialog
-      this._createDeleteConfirmationDialog();
-    }
-
-    disconnectedCallback() {
-      super.disconnectedCallback();
-      // remove delete confirmation dialog when the element is detached
-      this.removeDialog(this.deleteDialog);
-    }
-
-    _emptyList(listLength) {
-      return listLength === 0;
-    }
-
-    _getItemModelObject(addNull) {
-      if (addNull) {
-        return null;
-      }
-      if (this.dataSetModel === null) {
-        let newObj = {};
-        if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
-          Object.keys(this.dataItems[0]).forEach(function(property) {
-            newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
-          });
-        }
-
-        return newObj;
-      } else {
-        return JSON.parse(JSON.stringify(this.dataSetModel));
-      }
-    }
-
-    _addElement(addNull) {
-      if (!this.editMode) {
-        return;
-      }
-      this._makeSureDataItemsAreValid();
-
-      let newObj = this._getItemModelObject(addNull);
-      this.push('dataItems', newObj);
-    }
-
-    _openDeleteConfirmation(event) {
-      event.stopPropagation();
-      if (!this.editMode) {
-        return;
-      }
-      this.elToDeleteIndex = parseInt(event.target.getAttribute('data-args'), 10);
-      this.deleteDialog.opened = true;
-    }
-    _handleDeleteResponse() {
-      this._deleteElement();
-      this.elToDeleteIndex = -1;
-      this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
-    }
-    _handleDeleteError(responseErr) {
-      this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
-
-      let msg = this.deleteActionDefaultErrMsg;
-      if (responseErr instanceof Array && responseErr.length > 0) {
-        msg = responseErr.join('\n');
-      } else if (typeof responseErr === 'string') {
-        msg = responseErr;
-      }
-      this.fireEvent('toast', {text: msg, showCloseBtn: true});
-    }
-    _onDeleteConfirmation(event) {
-      this.deleteDialog.opened = false;
-      if (event.detail.confirmed === true) {
-
-        let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
-
-        if (id) {
-
-          if (!this._deleteEpName) {
-            this.logError('You must define _deleteEpName property to be able to remove existing records');
-            return;
+        if (this.dataSetModel === null) {
+          let newObj = {};
+          if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
+            Object.keys(this.dataItems[0]).forEach(function(property) {
+              newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
+            });
           }
 
-          this.fireEvent('global-loading', {
-            message: this.deleteActionLoadingMsg,
-            active: true,
-            loadingSource: this.deleteLoadingSource
-          });
-
-          let self = this;
-          let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
-          this.sendRequest({
-            method: 'DELETE',
-            endpoint: deleteEndpoint,
-            body: {}
-          }).then(function(resp) {
-            self._handleDeleteResponse(resp);
-          }).catch(function(error) {
-            self._handleDeleteError(error.response);
-          });
-
+          return newObj;
         } else {
-          this._deleteElement();
+          return JSON.parse(JSON.stringify(this.dataSetModel));
+        }
+      }
+
+      _addElement(addNull) {
+        if (!this.editMode) {
+          return;
+        }
+        this._makeSureDataItemsAreValid();
+
+        let newObj = this._getItemModelObject(addNull);
+        this.push('dataItems', newObj);
+      }
+
+      _openDeleteConfirmation(event) {
+        event.stopPropagation();
+        if (!this.editMode) {
+          return;
+        }
+        this.elToDeleteIndex = parseInt(event.target.getAttribute('data-args'), 10);
+        this.deleteDialog.opened = true;
+      }
+      _handleDeleteResponse() {
+        this._deleteElement();
+        this.elToDeleteIndex = -1;
+        this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      }
+      _handleDeleteError(responseErr) {
+        this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+
+        let msg = this.deleteActionDefaultErrMsg;
+        if (responseErr instanceof Array && responseErr.length > 0) {
+          msg = responseErr.join('\n');
+        } else if (typeof responseErr === 'string') {
+          msg = responseErr;
+        }
+        this.fireEvent('toast', {text: msg, showCloseBtn: true});
+      }
+      _onDeleteConfirmation(event) {
+        this.deleteDialog.opened = false;
+        if (event.detail.confirmed === true) {
+          let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
+
+          if (id) {
+            if (!this._deleteEpName) {
+              this.logError('You must define _deleteEpName property to be able to remove existing records');
+              return;
+            }
+
+            this.fireEvent('global-loading', {
+              message: this.deleteActionLoadingMsg,
+              active: true,
+              loadingSource: this.deleteLoadingSource
+            });
+
+            let self = this;
+            let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
+            this.sendRequest({
+              method: 'DELETE',
+              endpoint: deleteEndpoint,
+              body: {}
+            }).then(function(resp) {
+              self._handleDeleteResponse(resp);
+            }).catch(function(error) {
+              self._handleDeleteError(error.response);
+            });
+          } else {
+            this._deleteElement();
+            this.elToDeleteIndex = -1;
+          }
+        } else {
           this.elToDeleteIndex = -1;
         }
-
-      } else {
-        this.elToDeleteIndex = -1;
-      }
-    }
-
-    _deleteElement() {
-      if (!this.editMode) {
-        return;
-      }
-      let index = this.elToDeleteIndex;
-      if (index !== null && typeof index !== 'undefined' && index !== -1) {
-        this.splice('dataItems', index, 1);
-
-        this.fireEvent('delete-confirm', {index: this.elToDeleteIndex});
-      }
-    }
-
-    _createDeleteConfirmationDialog() {
-      let deleteConfirmationContent = document.createElement('div');
-      deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
-      this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
-          'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
-    }
-
-    /**
-     * Get last data item
-     */
-    _getLastDataItem() {
-      if (Array.isArray(this.dataItems) && this.dataItems.length > 0) {
-        return this.dataItems[this.dataItems.length - 1];
-      } else {
-        this._makeSureDataItemsAreValid();
-        return null;
       }
 
-    }
+      _deleteElement() {
+        if (!this.editMode) {
+          return;
+        }
+        let index = this.elToDeleteIndex;
+        if (index !== null && typeof index !== 'undefined' && index !== -1) {
+          this.splice('dataItems', index, 1);
 
-    /**
-     * Check is dataItems is Array, if not init with empty Array
-     */
-    _makeSureDataItemsAreValid() {
-      if (!Array.isArray(this.dataItems)) {
-        this.set('dataItems', []);
+          this.fireEvent('delete-confirm', {index: this.elToDeleteIndex});
+        }
       }
-    }
-  };
+
+      _createDeleteConfirmationDialog() {
+        let deleteConfirmationContent = document.createElement('div');
+        deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
+        this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
+            'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
+      }
+
+      /**
+      * Get last data item
+      */
+      _getLastDataItem() {
+        if (Array.isArray(this.dataItems) && this.dataItems.length > 0) {
+          return this.dataItems[this.dataItems.length - 1];
+        } else {
+          this._makeSureDataItemsAreValid();
+          return null;
+        }
+      }
+
+      /**
+      * Check is dataItems is Array, if not init with empty Array
+      */
+      _makeSureDataItemsAreValid() {
+        if (!Array.isArray(this.dataItems)) {
+          this.set('dataItems', []);
+        }
+      }
+    };
 
 </script>
