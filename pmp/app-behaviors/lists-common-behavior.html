@@ -1,3 +1,4 @@
+<link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
@@ -75,15 +76,15 @@
       this.set('sortOrder', e.detail);
     },
 
+    // TODO: to be deleted after filters refactor
     _pageSizeChanged: function(e) {
-      console.log(e, e.target);
       this.set('debounceTime', 200);
       this.set('pageNumber', 1);
       this.set('pageSize', parseInt(e.detail.value));
     },
 
+    // TODO: to be deleted after filters refactor
     _pageNumberChanged: function(e) {
-      console.log(e, e.target);
       this.set('debounceTime', 50);
       this.set('pageNumber', e.detail.value);
     },
@@ -155,6 +156,62 @@
         }
       }
       return defaultSortData;
+    },
+
+    _getFilterUrlValuesAsArray: function(types) {
+      return types ? types.split('|') : [];
+    },
+
+    // Outputs the query string for the list
+    _buildUrlQueryString: function(filters) {
+      let queryParams = [];
+
+      for (let field in filters) {
+        if (filters[field]) {
+          let filterValue = filters[field];
+          let filterUrlValue;
+
+          if (filterValue instanceof Array && !_.isEmpty(filterValue)) {
+            filterUrlValue = filterValue.join('|');
+          } else if (field === 'sort' && filterValue.field && filterValue.direction) {
+            filterUrlValue = filterValue.field + '.' + filterValue.direction;
+          } else {
+            if (!(field === 'page' && filterValue === 1)) {
+              let filterStrVal = String(filterValue).trim();
+              if (filterStrVal != '') {
+                filterUrlValue = filterStrVal;
+              }
+            }
+          }
+
+          if (filterUrlValue) {
+            queryParams.push(field + '=' + filterUrlValue);
+          }
+        }
+      }
+
+      return queryParams.join('&');
+    },
+
+    _buildCsvExportUrl: function(filters, endpointUrl) {
+      let params = [];
+
+      for (let field in filters) {
+        if (filters[field]) {
+          if (filters[field] instanceof Array && !_.isEmpty(filters[field])) {
+            params.push(field + '=' + filters[field].join(','));
+          } else {
+            let filterStrVal = String(filters[field]).trim();
+            if (filterStrVal != '') {
+              params.push(field + '=' + filterStrVal);
+            }
+          }
+        }
+      }
+      params.push('format=csv');
+      let queryString = params.join('&');
+      return endpointUrl + '?' + queryString;
     }
+
   };
 </script>

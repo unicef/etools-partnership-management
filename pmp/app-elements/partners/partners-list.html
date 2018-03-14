@@ -28,9 +28,6 @@
   <template strip-whitespace>
     <style
         include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles paper-material-styles">
-      div[elevation="1"] {
-        @apply --paper-material-elevation-1;
-      }
       .sm-status-wrapper {
         padding-left: 10px;
       }
@@ -50,7 +47,7 @@
       </partners-list-data>
     </template>
 
-    <div id="listControls" elevation="1">
+    <div id="listControls" class="paper-material" elevation="1">
       <div class="wrap-controls">
 
         <paper-input id="query"
@@ -63,7 +60,6 @@
 
         <div class="filter esmm">
           <etools-multi-selection-menu
-              id="partnerTypes"
               label="Partner Type"
               disabled$="[[showOnlyGovernmentType]]"
               options="[[partnerTypes]]"
@@ -73,7 +69,6 @@
 
         <div class="filter esmm">
           <etools-multi-selection-menu
-              id="csoTypes"
               label="CSO Type"
               options="[[csoTypes]]"
               selected-values="{{selectedCsoTypes}}"
@@ -263,7 +258,7 @@
         },
 
         observers: [
-          '_filtersChanged(selectedPartnerTypes.length, selectedCsoTypes.length, showHidden)',
+          'resetPageNumber(selectedPartnerTypes.length, selectedCsoTypes.length, showHidden)',
           '_updateURL(q, selectedPartnerTypes.length, selectedCsoTypes.length, paginator.page, paginator.page_size, ' +
             'sortOrder, showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -280,10 +275,6 @@
            */
           this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
           this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
-        },
-
-        _getFilterUrlValuesAsArray: function(types) {
-          return types ? types.split('|') : [];
         },
 
         _getSelectedPartnerTypes: function(selectedPartnerTypes) {
@@ -370,50 +361,26 @@
 
         // Outputs the query string for the list
         _buildQueryString: function() {
-          let out = [];
-          if (this.paginator.page && this.paginator.page > 1) {
-            out.push('page=' + this.paginator.page);
-          }
-          if (this.paginator.page_size) {
-            out.push('size=' + this.paginator.page_size);
-          }
-          if (this.q && this.q.length) {
-            out.push('q=' + this.q);
-          }
-          if (!_.isEmpty(this.selectedPartnerTypes)) {
-            out.push('partner_types=' + this.selectedPartnerTypes.join('|'));
-          }
-          if (!_.isEmpty(this.selectedCsoTypes)) {
-            out.push('cso_types=' + this.selectedCsoTypes.join('|'));
-          }
-          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-          }
-          if (this.showHidden) {
-            out.push('hidden=true');
-          }
-          return out.join('&');
+          return this._buildUrlQueryString({
+            page: this.paginator.page,
+            size: this.paginator.page_size,
+            q: this.q,
+            partner_types: this.selectedPartnerTypes,
+            cso_types: this.selectedCsoTypes,
+            hidden: this.showHidden ? 'true' : '',
+            sort: this.sortOrder
+          });
         },
 
         _buildCsvDownloadUrl: function() {
-          let params = [];
-
-          if (this.q && this.q.length) {
-            params.push('search=' + this.q);
-          }
-          if (!_.isEmpty(this.selectedPartnerTypes)) {
-            params.push('partner_types=' + this.selectedPartnerTypes.join(','));
-          }
-          if (!_.isEmpty(this.selectedCsoTypes)) {
-            params.push('cso_types=' + this.selectedCsoTypes.join(','));
-          }
-          params.push('hidden=' + this.showHidden);
-
-          params.push('format=csv');
-          let queryString = params.join('&');
           let endpointUrl = this.getEndpoint('partners').url;
-
-          return endpointUrl + '?' + queryString;
+          let params = {
+            search: this.q,
+            partner_type: this.selectedPartnerTypes,
+            cso_type: this.selectedCsoTypes,
+            hidden: this.showHidden ? 'true' : 'false'
+          };
+          return this._buildCsvExportUrl(params, endpointUrl);
         },
 
         _computeName: function(name, shortName) {
@@ -445,10 +412,6 @@
 
         _triggerPartnerLoadingMsg: function() {
           this.fire('trigger-partner-loading-msg');
-        },
-
-        _filtersChanged: function() {
-          this.resetPageNumber();
         }
 
       });

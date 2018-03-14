@@ -1,5 +1,4 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -20,6 +19,7 @@
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="../../app-behaviors/pagination-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -42,22 +42,20 @@
         @apply --text-btn-style;
         text-transform: none;
       }
-      div[elevation="1"] {
-        @apply --paper-material-elevation-1;
-      }
+
     </style>
 
     <template is="dom-if" if="[[stampListData]]">
       <agreement-list-data id="agreements"
                            filtered-agreements="{{filteredAgreements}}"
-                           total-results="{{totalResults}}"
+                           total-results="{{paginator.count}}"
                            list-data-path="filteredAgreements"
                            on-agreements-loaded="_requiredDataHasBeenLoaded"
                            fire-data-loaded>
       </agreement-list-data>
     </template>
 
-    <div id="listControls" elevation="1">
+    <div id="listControls" class="paper-material" elevation="1">
 
       <div class="wrap-controls">
 
@@ -69,31 +67,23 @@
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
+        <div class="filter esmm">
+          <etools-multi-selection-menu
+              label="Agreement Type"
+              options="[[agreementTypes]]"
+              selected-values="{{selectedAgTypes}}"
+              hide-search></etools-multi-selection-menu>
+        </div>
+
+        <div class="filter esmm">
+          <etools-multi-selection-menu
+              label="Agreement Status"
+              options="[[agreementStatuses]]"
+              selected-values="{{selectedAgStatuses}}"
+              hide-search></etools-multi-selection-menu>
+        </div>
+
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-
-          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
-            <div class="dropdown-with-clear-btn">
-              <paper-dropdown-menu label$="[[filter.filterName]]" noink>
-                <paper-listbox class="dropdown-content"
-                            attr-for-selected="name"
-                            on-iron-select="filterValueChanged"
-                            on-iron-deselect="filterValueChanged"
-                            data-filter-path$="[[filter.path]]"
-                            on-iron-activate="_dropdownSelected"
-                            selected=[[filter.alreadySelected]]>
-                  <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
-                  </template>
-                </paper-listbox>
-              </paper-dropdown-menu>
-              <paper-icon-button class="remove" icon="cancel"
-                                 on-tap="removeFilter"
-                                 data-filter-name$="[[filter.filterName]]"
-                                 data-reset-path$="[[filter.path]]">
-              </paper-icon-button>
-            </div>
-          </template>
-
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <div class="filter esmm">
               <etools-multi-selection-menu
@@ -129,7 +119,6 @@
                                           on-date-has-changed="_filterDateHasChanged"
                                           no-init show-clear-btn fire-date-has-changed>
                 </etools-datepicker-button>
-                </paper-icon-button>
               </paper-input>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
@@ -163,7 +152,9 @@
 
     <div id="list" elevation="1" class="hidden">
 
-      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+      <etools-data-table-header
+          id="listHeader"
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
         <etools-data-table-column class="col-2" field="agreement_number" sortable>
           Reference Number #
         </etools-data-table-column>
@@ -230,12 +221,10 @@
       </template>
 
       <etools-data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeChanged"
-          on-page-number-changed="_pageNumberChanged">
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
       </etools-data-table-footer>
 
     </div>
@@ -258,7 +247,8 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.ListFilters,
-          EtoolsPmpApp.Behaviors.ListsCommon
+          EtoolsPmpApp.Behaviors.ListsCommon,
+          EtoolsPmpApp.Behaviors.Pagination
         ],
 
         properties: {
@@ -269,27 +259,29 @@
             observer: '_listChanged'
           },
 
-          agreementType: {
-            type: String
+          selectedAgTypes: {
+            type: Array,
+            value: []
           },
 
-          agreementStatus: {
-            type: String,
+          selectedAgStatuses: {
+            type: Array,
+            value: []
           },
 
           selectedPartners: {
             type: Array,
-            observer: '_selectedPartnersChanged'
+            observer: 'resetPageNumber'
           },
 
           startDate: {
             type: String,
-            observer: '_dateChanged'
+            observer: 'resetPageNumber'
           },
 
           endDate: {
             type: String,
-            observer: '_dateChanged'
+            observer: 'resetPageNumber'
           },
 
           totalPages: {
@@ -337,53 +329,38 @@
         },
 
         observers: [
-          '_initListFilters(agreementTypes, agreementStatuses, partnersDropdownData)',
-          '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
-            'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
+          'resetPageNumber(selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
+          '_initFiltersMenuList(partnersDropdownData)',
+          '_updateURL(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
+            'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
-        _initListFilters: function(agreementTypes, agreementStatuses, partnersDropdownData) {
+        _initFiltersMenuList: function(partnersDropdownData) {
           // init list filter options
-          this.debounce('init-ag-filters', function() {
-            this.initListFiltersData([
-              {
-                filterName: 'Agreement Type',
-                type: 'dropdown',
-                selectionOptions: agreementTypes,
-                alreadySelected: null,
-                path: 'agreementType'
-              },
-              {
-                filterName: 'Agreement Status',
-                type: 'dropdown',
-                selectionOptions: agreementStatuses,
-                alreadySelected: null,
-                path: 'agreementStatus'
-              },
-              {
-                filterName: 'Partner',
-                type: 'esmm', // etools-multi-selection-menu
-                multiple: true,
-                selectionOptions: partnersDropdownData,
-                alreadySelected: [],
-                path: 'selectedPartners'
-              },
-              {
-                filterName: 'Starts After',
-                type: 'datepicker', // etools-datepicker
-                dateSelected: '',
-                path: 'startDate'
-              },
-              {
-                filterName: 'Ends Before',
-                type: 'datepicker', // etools-datepicker
-                dateSelected: '',
-                path: 'endDate'
-              }
-            ]);
-            this._updateSelectedFiltersValues();
-          }, 100);
+          this.initListFiltersData([
+            {
+              filterName: 'Partner',
+              type: 'esmm', // etools-multi-selection-menu
+              multiple: true,
+              selectionOptions: partnersDropdownData,
+              alreadySelected: [],
+              path: 'selectedPartners'
+            },
+            {
+              filterName: 'Starts After',
+              type: 'datepicker', // etools-datepicker
+              dateSelected: '',
+              path: 'startDate'
+            },
+            {
+              filterName: 'Ends Before',
+              type: 'datepicker', // etools-datepicker
+              dateSelected: '',
+              path: 'endDate'
+            }
+          ]);
+          this._updateSelectedFiltersValues();
         },
 
         attached: function() {
@@ -405,13 +382,14 @@
           }
           this.set('initComplete', false);
           this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-          this.set('agreementType', urlQueryParams.type ? urlQueryParams.type : '');
-          this.set('agreementStatus', urlQueryParams.status ? urlQueryParams.status : '');
+          this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
+          this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
           this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
           this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
           this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
-          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
-          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+
+          this.setPaginationDataFromUrlParams(urlQueryParams);
+
           // format of sort param is sort=field.order ex: sort=name.asc
           let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
@@ -421,16 +399,7 @@
 
         _updateSelectedFiltersValues: function() {
           this.debounce('updateShownFilters', function() {
-
-            var filtersValues = [
-              {
-                filterName: 'Agreement Type',
-                selectedValue: this.agreementType
-              },
-              {
-                filterName: 'Agreement Status',
-                selectedValue: this.agreementStatus
-              },
+            let filtersValues = [
               {
                 filterName: 'Partner',
                 selectedValue: _.map(this.selectedPartners, 'value')
@@ -445,8 +414,7 @@
               },
             ];
             this.updateShownFilters(filtersValues);
-
-          }.bind(this), 500);
+          }.bind(this), 20);
         },
 
         // Updates URL state with new query string, and launches query
@@ -456,7 +424,7 @@
           }
 
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-          var qs = this._buildQueryString();
+          let qs = this._buildQueryString();
 
           if (qs !== _lastNavigated) {
             _lastNavigated = qs;
@@ -484,7 +452,7 @@
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            var agreements = this.$$('#agreements');
+            let agreements = this.$$('#agreements');
             if (!agreements) {
               return;
             }
@@ -492,13 +460,13 @@
                 this.sortOrder.field,
                 this.sortOrder.direction,
                 this.q.toLowerCase(),
-                this.agreementType,
-                this.agreementStatus,
+                this.selectedAgTypes,
+                this.selectedAgStatuses,
                 _.map(this.selectedPartners, 'label'),
                 this.startDate,
                 this.endDate,
-                this.pageNumber,
-                this.pageSize,
+                this.paginator.page,
+                this.paginator.page_size,
                 forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
@@ -506,72 +474,35 @@
 
         // Outputs the query string for the list
         _buildQueryString: function() {
-          var out = [];
-          if (this.pageNumber && this.pageNumber > 1) {
-            out.push('page=' + this.pageNumber);
-          }
-          if (this.pageSize) {
-            out.push('size=' + this.pageSize);
-          }
-          if (this.q && this.q.length) {
-            out.push('q=' + this.q);
-          }
-          if (this.agreementType && this.agreementType.length) {
-            out.push('type=' + this.agreementType);
-          }
-          if (this.agreementStatus && this.agreementStatus.length) {
-            out.push('status=' + this.agreementStatus);
-          }
-          if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
-          }
-          if (this.startDate && this.startDate.length) {
-            out.push('start=' + this.startDate);
-          }
-          if (this.endDate && this.endDate.length) {
-            out.push('end=' + this.endDate);
-          }
-          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-          }
-
-          return out.join('&');
+          return this._buildUrlQueryString({
+            page: this.paginator.page,
+            size: this.paginator.page_size,
+            q: this.q,
+            type: this.selectedAgTypes,
+            status: this.selectedAgStatuses,
+            partners: _.map(this.selectedPartners, 'value'),
+            start: this.startDate,
+            end: this.endDate,
+            sort: this.sortOrder
+          });
         },
 
         _buildCsvDownloadUrl: function() {
-          var queryString = '';
-          var endpointUrl = '';
-          var params = [];
-
-          if (this.agreementType && this.agreementType.length) {
-            params.push('agreement_type=' + this.agreementType);
-          }
-          if (this.agreementStatus && this.agreementStatus.length) {
-            params.push('status=' + this.agreementStatus);
-          }
-          if (this.selectedPartners && this.selectedPartners.length) {
-            params.push('partner_name=' + this.selectedPartners[0].label);
-          }
-          if (this.startDate && this.startDate.length) {
-            params.push('start=' + this.startDate);
-          }
-          if (this.endDate && this.endDate.length) {
-            params.push('end=' + this.endDate);
-          }
-          if (this.q && this.q.length) {
-            params.push('search=' + this.q);
-          }
-
-          params.push('format=csv');
-          queryString = params.join('&');
-          endpointUrl = this.getEndpoint('agreements').url;
-
-          return endpointUrl + '?' + queryString;
+          let endpointUrl = this.getEndpoint('agreements').url;
+          let params = {
+            agreement_type: this.selectedAgTypes,
+            status: this.selectedAgStatuses,
+            partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners[0].label : '',
+            start: this.startDate,
+            end: this.endDate,
+            search: this.q
+          };
+          return this._buildCsvExportUrl(params, endpointUrl);
         },
 
         // Convert ids from URL into array of ids
         _getPartners: function(urlIds) {
-          var urlIdsArr = urlIds.split('|');
+          let urlIdsArr = urlIds.split('|');
           if (urlIdsArr.length) {
             return this._getPartnersByIds(urlIdsArr);
           }
@@ -582,26 +513,12 @@
         _getPartnersByIds: function(partnerIds) {
           if (partnerIds instanceof Array && partnerIds.length &&
               this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
-            var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+            let _selectedPartners = this.partnersDropdownData.filter(function(partner) {
               return partnerIds.indexOf(partner.value + '') > -1;
             });
             return _selectedPartners;
           }
           return [];
-        },
-
-        _dropdownSelected: function() {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-        },
-
-        _selectedPartnersChanged: function() {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-        },
-
-        _dateChanged: function(date) {
-          this.set('pageNumber', 1);
         },
 
         _convertToDate: function(date) {
