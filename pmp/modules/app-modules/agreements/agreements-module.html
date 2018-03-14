@@ -370,7 +370,7 @@
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        let agreementDetailsEl = this.$.agreementDetails;
+        let agreementDetailsEl = this.shadowRoot.querySelector('#agreementDetails');
         if (!agreementDetailsEl) {
           return;
         }
