@@ -8,19 +8,25 @@
   * @mixinFunction
   * @appliesMixin EtoolsLogsMixin
   */
-  EtoolsPmpApp.Mixins.ScrollControl = (baseClass) => class extends EtoolsLogsMixin(baseClass) {
+  EtoolsPmpApp.Mixins.ScrollControl = Polymer.dedupingMixin((baseClass) => class extends EtoolsLogsMixin(baseClass) {
 
     static get properties() {
       return {
         contentContainer: {
-          type: Object
+          type: Object,
+          value: function() {
+            return window.contentContainer;
+          },
+          readOnly: true
         }
       };
     }
 
     connectedCallback() {
       super.connectedCallback();
-      this.set('contentContainer', this._getContentContainer());
+      if (!window.contentContainer) {
+        window.contentContainer = this._getContentContainer();
+      }
     }
 
     _getContentContainer() {
@@ -52,5 +58,5 @@
       }
     }
 
-  };
+  });
 </script>
