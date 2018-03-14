@@ -14,6 +14,7 @@
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="../../app-behaviors/pagination-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
@@ -42,7 +43,7 @@
     <template is="dom-if" if="[[stampListData]]">
       <partners-list-data id="partners"
                           filtered-partners="{{filteredPartners}}"
-                          total-results="{{totalResults}}"
+                          total-results="{{paginator.count}}"
                           on-partners-loaded="_requiredDataHasBeenLoaded"
                           list-data-path="filteredPartners"
                           fire-data-loaded>
@@ -82,9 +83,9 @@
       </div>
       <div class="fixed-controls">
         <div class="filter-bar-action-wrapper">
-          <div id="hiddenToggle" on-tap="_toggleHidden">
+          <div id="hiddenToggle">
             Show hidden
-            <paper-toggle-button checked="[[showHidden]]"></paper-toggle-button>
+            <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
           </div>
         </div>
       </div>
@@ -94,7 +95,7 @@
     <div id="list" elevation="1" class="hidden">
 
       <etools-data-table-header id="listHeader"
-                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+                                label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
         <etools-data-table-column class="flex" field="vendor_number" sortable>
           Vendor #
         </etools-data-table-column>
@@ -171,12 +172,10 @@
       </template>
 
       <etools-data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeChanged"
-          on-page-number-changed="_pageNumberChanged">
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
       </etools-data-table-footer>
 
     </div>
@@ -198,7 +197,8 @@
           EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.ListsCommon
+          EtoolsPmpApp.Behaviors.ListsCommon,
+          EtoolsPmpApp.Behaviors.Pagination
         ],
 
         properties: {
@@ -221,18 +221,17 @@
 
           selectedPartnerTypes: {
             type: Array,
-            value: [],
-            observer: '_filtersChanged'
+            value: []
           },
 
           selectedCsoTypes: {
             type: String,
-            value: [],
-            observer: '_filtersChanged'
+            value: []
           },
 
           showHidden: {
-            type: Boolean
+            type: Boolean,
+            value: false
           },
 
           urlParams: {
@@ -264,9 +263,9 @@
         },
 
         observers: [
-          '_filtersChanged(selectedPartnerTypes.length, selectedCsoTypes.length)',
-          '_updateURL(q, selectedPartnerTypes.length, selectedCsoTypes.length, pageNumber, pageSize, sortOrder, ' +
-            'showHidden, requiredDataLoaded, initComplete)',
+          '_filtersChanged(selectedPartnerTypes.length, selectedCsoTypes.length, showHidden)',
+          '_updateURL(q, selectedPartnerTypes.length, selectedCsoTypes.length, paginator.page, paginator.page_size, ' +
+            'sortOrder, showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -305,9 +304,10 @@
           this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
           this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
           this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
-          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
-          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
           this.set('showHidden', urlQueryParams.hidden ? true : false);
+
+          this.setPaginationDataFromUrlParams(urlQueryParams);
+
           // format of sort param is sort=field.order ex: sort=name.asc
           let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
@@ -360,8 +360,8 @@
                 this.q.toLowerCase(),
                 this.selectedPartnerTypes,
                 this.selectedCsoTypes,
-                this.pageNumber,
-                this.pageSize,
+                this.paginator.page,
+                this.paginator.page_size,
                 this.showHidden,
                 forceNoLoading ? false : this.showQueryLoading
             );
@@ -371,11 +371,11 @@
         // Outputs the query string for the list
         _buildQueryString: function() {
           let out = [];
-          if (this.pageNumber && this.pageNumber > 1) {
-            out.push('page=' + this.pageNumber);
+          if (this.paginator.page && this.paginator.page > 1) {
+            out.push('page=' + this.paginator.page);
           }
-          if (this.pageSize) {
-            out.push('size=' + this.pageSize);
+          if (this.paginator.page_size) {
+            out.push('size=' + this.paginator.page_size);
           }
           if (this.q && this.q.length) {
             out.push('q=' + this.q);
@@ -416,12 +416,6 @@
           return endpointUrl + '?' + queryString;
         },
 
-        _toggleHidden: function() {
-          this.set('debounceTime', 50);
-          this.set('showHidden', this.showHidden ? false : true);
-          this.set('pageNumber', 1);
-        },
-
         _computeName: function(name, shortName) {
           return this.getDisplayValue([shortName, name], false, ' / ', true);
         },
@@ -445,7 +439,7 @@
             this.set('selectedPartnerTypes', []);
           }
           this.set('selectedCsoTypes', []);
-          this.set('pageNumber', 1);
+          this.resetPageNumber();
           this.set('showHidden', false);
         },
 
@@ -453,10 +447,8 @@
           this.fire('trigger-partner-loading-msg');
         },
 
-        _filtersChanged: function(a, b) {
-          console.log(a, b);
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
+        _filtersChanged: function() {
+          this.resetPageNumber();
         }
 
       });

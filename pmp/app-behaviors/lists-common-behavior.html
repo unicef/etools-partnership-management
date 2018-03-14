@@ -17,6 +17,10 @@
         value: 50
       },
 
+      /**
+       * TODO: `defaultListsSize`, `pageSize`, `totalResults` and `pageNumber` should be replaced
+       * by Pagination behavior; to be removed after replacement
+       */
       pageSize: {
         type: Number
       },
@@ -39,6 +43,7 @@
         value: false
       },
 
+      // TODO: move it to Pagination behavior
       defaultListsSize: {
         type: Number,
         value: 10
@@ -71,12 +76,14 @@
     },
 
     _pageSizeChanged: function(e) {
+      console.log(e, e.target);
       this.set('debounceTime', 200);
       this.set('pageNumber', 1);
       this.set('pageSize', parseInt(e.detail.value));
     },
 
     _pageNumberChanged: function(e) {
+      console.log(e, e.target);
       this.set('debounceTime', 50);
       this.set('pageNumber', e.detail.value);
     },

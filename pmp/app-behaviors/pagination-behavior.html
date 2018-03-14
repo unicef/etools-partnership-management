@@ -11,21 +11,30 @@
           return {
             page: 1,
             page_size: 10,
-            count: 0,
+            count: null,
             visible_range: []
           };
         },
         notify: true
+      },
+
+      defaultListsSize: {
+        type: Number,
+        value: 10
       }
     },
 
+    observers: [
+      '_pageInsidePaginationRange(paginator.page, paginator.count)'
+    ],
+
     pageSizeChanged: function(e) {
-      this.set('paginator.page', 1);
-      this.set('paginator.page_size', parseInt(e.detail.value, 10));
+      this.resetPageNumber();
+      this.setPageSize(parseInt(e.detail.value, 10));
     },
 
     pageNumberChanged: function(e) {
-      this.set('paginator.page', parseInt(e.detail.value, 10));
+      this.setPageNumber(parseInt(e.detail.value, 10));
     },
 
     getRequestPaginationParams: function() {
@@ -44,6 +53,44 @@
         }
       }
       this.set('paginator.count', 0);
+    },
+
+    setPageSize: function(size) {
+      this.set('paginator.page_size', size);
+    },
+
+    setPageNumber: function(page) {
+      this.set('paginator.page', page);
+    },
+
+    resetPageNumber: function() {
+      this.setPageNumber(1);
+    },
+
+    setPaginationDataFromUrlParams: function(urlParams) {
+      this.setPageNumber(urlParams.page ? parseInt(urlParams.page) : 1);
+      this.setPageSize(urlParams.size ? parseInt(urlParams.size) : this.defaultListsSize);
+    },
+
+    _pageInsidePaginationRange: function(page, totalResults) {
+      if (page < 1) {
+        this.resetPageNumber();
+      }
+      let total = parseInt(totalResults, 10);
+      if (isNaN(total)) {
+        return;
+      }
+
+      let lastPageNr = this._getLastPageNr(this.paginator.page_size, total);
+      if (page > lastPageNr) {
+        // page is bigger than last page number (possible by modifying url page param)
+        // set page to last available page
+        this.setPageNumber(lastPageNr);
+      }
+    },
+
+    _getLastPageNr: function(pageSize, total) {
+      return pageSize < total ? (Math.ceil(total / pageSize)) : 1;
     }
   };
 </script>
