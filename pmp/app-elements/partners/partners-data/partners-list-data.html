@@ -110,8 +110,7 @@
 
         query: function(field, order, searchString, partnerTypes, csoTypes,
                         pageNumber, pageSize, showHidden, showQueryLoading) {
-          console.log(field, order, searchString, partnerTypes, csoTypes,
-              pageNumber, pageSize, showHidden, showQueryLoading);
+
           // If an active query transaction exists, abort it and start
           // a new one
           if (this.currentQuery) {
