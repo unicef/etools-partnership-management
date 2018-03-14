@@ -229,7 +229,7 @@
       <div class="col-2 col center-align hact-values">
         <strong>
           <span class="green">[[partner.hact_values.audits.completed]] </span>
-          / [[partner.hact_values.audits.minimum_requirements]]
+          / [[_getMinReqAudits(partner.planned_engagement)]]
         </strong>
       </div>
     </div>
@@ -259,7 +259,7 @@
             <div class="col-2 center-align">TOTAL</div>
           </div>
           <div class="panel-row-extra-tall row-h panel-table-row  center">
-            <div class="col-4">Minimum Required(1)</div>
+            <div class="col-4">Minimum Required([[partner.hact_min_requirements.spot_checks]])</div>
             <div class="quarter">
               <paper-radio-button
                   data-idx="q1"
@@ -298,7 +298,7 @@
           </div>
 
           <div class="panel-row-extra-tall row-h panel-table-row ">
-            <div class="col-4">Follow-up Required(1)</div>
+            <div class="col-4">Follow-up Required</div>
             <div class="quarter">
               <paper-input
                   no-label-float
@@ -418,11 +418,11 @@
   </etools-content-panel>
 
   <etools-content-panel
-      panel-title="Other Assessments([[filteredAssessments.length]])"
+      panel-title="Other Assessments([[partner.assessments.length]])"
       class="content-section">
 
     <assessments-items id="assessmentsList"
-                       data-items="{{filteredAssessments}}"
+                       data-items="{{partner.assessments}}"
                        edit-mode="[[editMode]]"></assessments-items>
 
   </etools-content-panel>
@@ -525,10 +525,6 @@
               }
             ]
           },
-          filteredAssessments: {
-            type: Array,
-            value: []
-          },
           editMode: Boolean
         };
       }
@@ -589,20 +585,6 @@
         this.set('basisOptions', []);
         this._addBasisFromPartner();
         this._applyRiskRatingColor();
-        this._filterPartnerAssessments();
-      }
-
-      _filterPartnerAssessments() {
-        this.set('filteredAssessments', this.partner.assessments.filter(a => a.type === 'Other'));
-      }
-
-      _mergeAssessments() {
-        if (this.filteredAssessments.length) {
-          this.set(
-            'partner.assessments',
-            _.unionBy(this.filteredAssessments, this.partner.assessments, 'id')
-          );
-        }
       }
 
       _addBasisFromPartner() {
@@ -634,7 +616,6 @@
       }
 
       _validatePageData() {
-        this._mergeAssessments();
         return this.$.assessmentsList.validate();
       }
 
@@ -677,14 +658,6 @@
           ]));
       }
 
-      _specialAuditChanged(value) {
-        this.set('partner.planned_engagement.special_audit', value !== 'NO');
-      }
-
-      _scheduledAuditChanged(value) {
-        this.set('partner.planned_engagement.scheduled_audit', value !== 'NO');
-      }
-
       _goToReport(e) {
         let id = e.model.item.id;
         let sourceEvent = e.detail.sourceEvent;
@@ -694,6 +667,11 @@
           window.location.href = path;
         }
       }
+
+      _getMinReqAudits(plannedEngagement) {
+        return !plannedEngagement ? 0
+          : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+        }
     }
 
     window.customElements.define(PartnerFinancialAssurance.is, PartnerFinancialAssurance);
