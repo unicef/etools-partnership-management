@@ -220,17 +220,17 @@
       }
       params.push('format=csv');
       let queryString = params.join('&');
-      return endpointUrl + '?' + queryString;
+      return endpointUrl ? (endpointUrl + '?' + queryString) : queryString;
     },
 
     // Updates URL state with new query string, and launches query
     _updateUrlAndDislayedData: function(currentPageUrlPath, lastUrlQueryStr, buildCsvExportUrl,
-                                        buildQueryString, filterData) {
+                                        buildQueryString, filterData, csvDownloadProp) {
       if (!this.requiredDataLoaded || !this.initComplete) {
         return;
       }
 
-      this.set('csvDownloadUrl', buildCsvExportUrl());
+      this.set(csvDownloadProp ? csvDownloadProp : 'csvDownloadUrl', buildCsvExportUrl());
       let qs = buildQueryString();
 
       if (qs !== lastUrlQueryStr) {
