@@ -19,8 +19,7 @@
     }
     connectedCallback() {
       super.connectedCallback();
-      Polymer.RenderStatus.afterNextRender(this,
-      () => this.addEventListener('set-amendment-mode', this._updateAmendmentMode));
+      this.addEventListener('set-amendment-mode', this._updateAmendmentMode);
     }
 
     _updateAmendmentMode(event) {
