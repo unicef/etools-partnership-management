@@ -41,6 +41,7 @@
           super.ready();
           this.addEventListener('clear-server-errors', this._clearServerErrors.bind(this));
           this.addEventListener('set-server-errors', this._setServerErrors.bind(this));
+          this.addEventListener('reload-list', this._reloadListData.bind(this));
         }
 
         _clearServerErrors() {
@@ -90,6 +91,18 @@
         _showSidebarStatus(listPageActive, tabAttached, other) {
           let showStatus = !listPageActive && !!tabAttached;
           return !other ? showStatus : (showStatus && other);
+        }
+
+        _reloadListData(e) {
+          e.stopImmediatePropagation();
+          try {
+            let listElem = this.$.list;
+            if (listElem && !listElem.classList.contains('hidden')) {
+              listElem._filterListData(true);
+            }
+          } catch (err) {
+            this.logWarn('List refresh error occurred', '[' + this.moduleName +'-module]', err);
+          }
         }
 
       });

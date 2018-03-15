@@ -2,7 +2,8 @@
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-  /*
+
+  /**
   * @polymer
   * @mixinFunction
   */
@@ -157,12 +158,10 @@
 
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event) {
-      let filterPath = event.target.getAttribute('data-filter-path');
-      let parentId = event.target.getAttribute('parent-id');
-      let parentField = this.shadowRoot.querySelector('#' + parentId);
-      if (parentField) {
-        parentField.value = event.detail.prettyDate;
+      if (!event.detail.jsonDate) {
+        return;
       }
+      let filterPath = event.target.getAttribute('data-filter-path');
       let selectedDate = new Date(event.detail.jsonDate);
       this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     }

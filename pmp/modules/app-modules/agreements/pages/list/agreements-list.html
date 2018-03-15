@@ -1,0 +1,655 @@
+<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
+
+<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../layout/components/etools-date-input.html">
+
+<link rel="import" href="../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
+<link rel="import" href="../../../../mixins/list-filters-mixin.html">
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+
+<link rel="import" href="../../data/agreements-list-data.html">
+
+<dom-module id="agreements-list">
+  <template strip-whitespace>
+
+    <style
+        include="shared-styles data-table-styles list-filter-styles paper-material-styles grid-layout-styles">
+      /* the condition below used to fix reponsive issues, please check if it is still the case
+         Happened whenever there was text overflowing a table column */
+      /*
+      :host {
+        width: 100%;
+      } */
+
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+
+      .ag-ref {
+        @apply --text-btn-style;
+        text-transform: none;
+      }
+    </style>
+
+    <template is="dom-if" if="[[stampListData]]">
+      <agreements-list-data id="agreements"
+                            filtered-agreements="{{filteredAgreements}}"
+                            total-results="{{totalResults}}"
+                            list-data-path="filteredAgreements"
+                            on-agreements-loaded="_requiredDataHasBeenLoaded"
+                            fire-data-loaded>
+      </agreements-list-data>
+    </template>
+
+    <div id="listControls" elevation="1">
+
+      <div class="wrap-controls">
+
+        <paper-input id="query"
+                     type="search"
+                     placeholder="Search"
+                     autocomplete="off"
+                     value="{{q}}">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </paper-input>
+
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+
+          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
+            <div class="dropdown-with-clear-btn">
+              <paper-dropdown-menu label$="[[filter.filterName]]" noink>
+                <paper-listbox slot="dropdown-content"
+                               attr-for-selected="name"
+                               on-iron-select="filterValueChanged"
+                               on-iron-deselect="filterValueChanged"
+                               data-filter-path$="[[filter.path]]"
+                               on-iron-activate="_dropdownSelected"
+                               selected=[[filter.alreadySelected]]>
+                  <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
+                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
+                  </template>
+                </paper-listbox>
+              </paper-dropdown-menu>
+              <paper-icon-button class="remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <div class="filter esmm">
+              <etools-dropdown-multi
+                  label="[[filter.filterName]]"
+                  disabled$="[[!filter.selectionOptions.length]"
+                  options="[[filter.selectionOptions]]"
+                  selected-values="[[filter.alreadySelected]]"
+                  data-filter-path$="[[filter.path]]"
+                  on-etools-selected-items-changed="esmmValueChanged"
+                  trigger-value-change-event>
+              </etools-dropdown-multi>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+            <div class="filter">
+              <etools-date-input id$="datepicker_[[filter.path]]"
+                                 label="[[filter.filterName]]"
+                                 value="{{filter.dateSelected}}"
+                                 readonly$="[[!agreement.permissions.edit.start]]"
+                                 format="D MMM YYYY"
+                                 required$="[[agreement.permissions.required.start]]"
+                                 on-date-has-changed="_filterDateHasChanged"
+                                 data-filter-path$="[[filter.path]]"
+                                 fire-date-has-changed no-init show-clear-btn>
+              </etools-date-input>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+        </template>
+
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filter-bar-action-wrapper menu-btn-wrapper">
+          <paper-menu-button id="filterMenu">
+            <paper-button class="button" slot="dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              Add filter
+            </paper-button>
+            <paper-listbox slot="dropdown-content">
+              <template is="dom-repeat" items="[[availableListFilterOptions]]">
+                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="list" elevation="1" class="hidden">
+
+      <etools-data-table-header id="listHeader"
+                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="agreement_number" sortable>
+          Reference Number #
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4" field="partner_name" sortable>
+          Partner Full Name
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_type">
+          Type
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_status">
+          Status
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="start" sortable>
+          Start Date
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="end" sortable>
+          End Date
+        </etools-data-table-column>
+      </etools-data-table-header>
+
+      <template id="rows" is="dom-repeat"
+                items="[[filteredAgreements]]" as="agreement"
+                initial-count="10" on-dom-change="_listDataChanged">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
+          <div slot="row-data">
+            <span class="col-data col-2 ">
+              <a class="ag-ref truncate"
+                 href="agreements/[[agreement.id]]/details"
+                 title="[[getDisplayValue(agreement.agreement_number)]]"
+                 on-tap="_triggerAgreementLoadingMsg">
+                [[getDisplayValue(agreement.agreement_number)]]
+              </a>
+            </span>
+            <span class="col-data col-4" title="[[getDisplayValue(agreement.partner_name)]]">
+              <span class="truncate"> [[getDisplayValue(agreement.partner_name)]] </span>
+            </span>
+            <span class="col-data col-2">
+                [[getDisplayValue(agreement.agreement_type)]]
+            </span>
+            <span class="col-data col-2 capitalize">
+                [[getDisplayValue(agreement.status)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.start)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.end)]]
+            </span>
+
+          </div>
+          <div slot="row-data-details">
+
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By Partner Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_partner_date)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By UNICEF Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_unicef_date)]]</span>
+            </div>
+
+          </div>
+        </etools-data-table-row>
+      </template>
+
+      <etools-data-table-footer
+          page-size="[[pageSize]]"
+          page-number="[[pageNumber]]"
+          total-results="[[totalResults]]"
+          visible-range="{{visibleRange}}"
+          on-page-size-changed="_pageSizeChanged"
+          on-page-number-changed="_pageNumberChanged">
+      </etools-data-table-footer>
+
+    </div>
+
+  </template>
+
+  <script>
+    'use strict';
+    let _agreementsLastNavigated = null;
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    const AgreementsListRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.ListFilters,
+      EtoolsPmpApp.Mixins.ListsCommon,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.AppNavigationHelper,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    ], Polymer.Element);
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AgreementsListRequiredMixins
+     */
+    class AgreementsList extends AgreementsListRequiredMixins {
+      static get is() {
+        return 'agreements-list';
+      }
+
+      static get properties() {
+        return {
+          filteredAgreements: {
+            type: Array,
+            notify: true,
+            observer: '_listChanged'
+          },
+
+          agreementType: {
+            type: String
+          },
+
+          agreementStatus: {
+            type: String
+          },
+
+          selectedPartners: {
+            type: Array,
+            observer: '_selectedPartnersChanged'
+          },
+
+          startDate: {
+            type: String,
+            observer: '_dateChanged'
+          },
+
+          endDate: {
+            type: String,
+            observer: '_dateChanged'
+          },
+
+          totalPages: {
+            type: Number
+          },
+
+          visibleRange: {
+            type: Array
+          },
+
+          urlParams: {
+            type: Object
+          },
+
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
+
+          initComplete: {
+            type: Boolean,
+            value: false
+          },
+
+          agreementTypes: {
+            type: Array,
+            statePath: 'agreementTypes'
+          },
+          agreementStatuses: {
+            type: Array,
+            statePath: 'agreementStatuses'
+          },
+          csvDownloadUrl: {
+            type: String,
+            notify: true
+          },
+          _sortableFieldNames: {
+            type: Array,
+            value: ['agreement_number', 'partner_name', 'start', 'end']
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_initListFilters(agreementTypes, agreementStatuses, partnersDropdownData)',
+          '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
+          'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
+          '_init(active)'
+        ];
+      }
+
+      ready() {
+        super.ready();
+        this._initListeners();
+      }
+
+      _initListeners() {
+        this.addEventListener('sort-changed', this._sortOrderChanged);
+      }
+
+      _initListFilters(agreementTypes, agreementStatuses, partnersDropdownData) {
+        // init list filter options
+        this._initAgFiltersDebouncer = Polymer.Debouncer.debounce(this._initAgFiltersDebouncer,
+            Polymer.Async.timeOut.after(100),
+            () => {
+              this.initListFiltersData([
+                {
+                  filterName: 'Agreement Type',
+                  type: 'dropdown',
+                  selectionOptions: agreementTypes,
+                  alreadySelected: null,
+                  path: 'agreementType'
+                },
+                {
+                  filterName: 'Agreement Status',
+                  type: 'dropdown',
+                  selectionOptions: agreementStatuses,
+                  alreadySelected: null,
+                  path: 'agreementStatus'
+                },
+                {
+                  filterName: 'Partner',
+                  type: 'esmm', // etools-dropdown-multi
+                  multiple: true,
+                  selectionOptions: partnersDropdownData,
+                  alreadySelected: [],
+                  path: 'selectedPartners'
+                },
+                {
+                  filterName: 'Starts After',
+                  type: 'datepicker', // etools-datepicker
+                  dateSelected: '',
+                  path: 'startDate'
+                },
+                {
+                  filterName: 'Ends Before',
+                  type: 'datepicker', // etools-datepicker
+                  dateSelected: '',
+                  path: 'endDate'
+                }
+              ]);
+              this._updateSelectedFiltersValues();
+            });
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        /**
+         * Disable loading message for main list elements load,
+         * triggered by parent element on stamp
+         */
+        this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
+        this.listAttachedCallback(this.active, 'Loading agreements list data...', 'ag-list');
+      }
+
+      // Input: URL query params
+      // Initializes the properties of the list at page load
+      // to the params interpretted from the URL string.
+      _init(active) {
+        let urlQueryParams = this.urlParams;
+        if (!active || !urlQueryParams) {
+          return;
+        }
+        this.set('initComplete', false);
+        this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+        this.set('agreementType', urlQueryParams.type ? urlQueryParams.type : '');
+        this.set('agreementStatus', urlQueryParams.status ? urlQueryParams.status : '');
+        this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
+        this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
+        this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+        this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
+        this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+        // format of sort param is sort=field.order ex: sort=name.asc
+        let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
+        this.set('sortOrder', result);
+        this.set('initComplete', true);
+        this._updateSelectedFiltersValues();
+      }
+
+      _updateSelectedFiltersValues() {
+        this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
+            Polymer.Async.timeOut.after(500),
+            () => {
+              let filtersValues = [
+                {
+                  filterName: 'Agreement Type',
+                  selectedValue: this.agreementType
+                },
+                {
+                  filterName: 'Agreement Status',
+                  selectedValue: this.agreementStatus
+                },
+                {
+                  filterName: 'Partner',
+                  selectedValue: _.map(this.selectedPartners, 'value')
+                },
+                {
+                  filterName: 'Starts After',
+                  selectedValue: this.startDate
+                },
+                {
+                  filterName: 'Ends Before',
+                  selectedValue: this.endDate
+                }
+              ];
+              this.updateShownFilters(filtersValues);
+            });
+      }
+
+      // Updates URL state with new query string, and launches query
+      _updateURL() {
+        if (!this.requiredDataLoaded || !this.initComplete) {
+          return;
+        }
+
+        this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+        let qs = this._buildQueryString();
+
+        if (qs !== _agreementsLastNavigated) {
+          _agreementsLastNavigated = qs;
+          // update URL
+          this.updateAppState('agreements/list', qs, true);
+          // filter agreements
+          if (this.requiredDataLoaded) {
+            this._filterListData();
+          }
+        } else {
+          if (location.search === '') {
+            // only update URL query string, without location change event being fired(no page refresh)
+            this.updateAppState('agreements/list', qs, false);
+          }
+          if (this.forceDataRefresh && this.requiredDataLoaded) {
+            // refilter agreements data
+            // this will only execute when agreements-loaded event is received
+            this._filterListData();
+            this.set('forceDataRefresh', false);
+          }
+        }
+      }
+
+      _filterListData(forceNoLoading) {
+        // Query is debounced with a debounce time
+        // set depending on what action the user takes
+        this.queryDebouncer = Polymer.Debouncer.debounce(this.queryDebouncer,
+            Polymer.Async.timeOut.after(this.debounceTime),
+            () => {
+              let agreements = this.shadowRoot.querySelector('#agreements');
+              if (!agreements) {
+                return;
+              }
+              agreements.query(
+                  this.sortOrder.field,
+                  this.sortOrder.direction,
+                  this.q.trim().toLowerCase(),
+                  this.agreementType,
+                  this.agreementStatus,
+                  _.map(this.selectedPartners, 'label'),
+                  this.startDate,
+                  this.endDate,
+                  this.pageNumber,
+                  this.pageSize,
+                  forceNoLoading ? false : this.showQueryLoading
+              );
+            });
+      }
+
+      // Outputs the query string for the list
+      _buildQueryString() {
+        let out = [];
+        if (this.pageNumber && this.pageNumber > 1) {
+          out.push('page=' + this.pageNumber);
+        }
+        if (this.pageSize) {
+          out.push('size=' + this.pageSize);
+        }
+        if (this.q && this.q.length) {
+          out.push('q=' + this.q);
+        }
+        if (this.agreementType && this.agreementType.length) {
+          out.push('type=' + this.agreementType);
+        }
+        if (this.agreementStatus && this.agreementStatus.length) {
+          out.push('status=' + this.agreementStatus);
+        }
+        if (this.selectedPartners && this.selectedPartners.length) {
+          out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
+        }
+        if (this.startDate && this.startDate.length) {
+          out.push('start=' + this.startDate);
+        }
+        if (this.endDate && this.endDate.length) {
+          out.push('end=' + this.endDate);
+        }
+        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
+        }
+
+        return out.join('&');
+      }
+
+      _buildCsvDownloadUrl() {
+        let params = [];
+
+        if (this.agreementType && this.agreementType.length) {
+          params.push('agreement_type=' + this.agreementType);
+        }
+        if (this.agreementStatus && this.agreementStatus.length) {
+          params.push('status=' + this.agreementStatus);
+        }
+        if (this.selectedPartners && this.selectedPartners.length) {
+          params.push('partner_name=' + this.selectedPartners[0].label);
+        }
+        if (this.startDate && this.startDate.length) {
+          params.push('start=' + this.startDate);
+        }
+        if (this.endDate && this.endDate.length) {
+          params.push('end=' + this.endDate);
+        }
+        if (this.q && this.q.length) {
+          params.push('search=' + this.q);
+        }
+
+        params.push('format=csv');
+        let queryString = params.length ? params.join('&') : '';
+        let endpointUrl = this.getEndpoint('agreements').url;
+
+        return endpointUrl + '?' + queryString;
+      }
+
+      // Convert ids from URL into array of ids
+      _getPartners(urlIds) {
+        let urlIdsArr = urlIds.split('|');
+        if (urlIdsArr.length) {
+          return this._getPartnersByIds(urlIdsArr);
+        }
+        return [];
+      }
+
+      // get partners by ids
+      _getPartnersByIds(partnerIds) {
+        if (partnerIds instanceof Array && partnerIds.length &&
+            this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
+          let _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+            return partnerIds.indexOf(partner.value + '') > -1;
+          });
+          return _selectedPartners;
+        }
+        return [];
+      }
+
+      _dropdownSelected() {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+      }
+
+      _selectedPartnersChanged() {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+      }
+
+      _dateChanged(date) {
+        this.set('pageNumber', 1);
+      }
+
+      _convertToDate(date) {
+        if (date && date.length) {
+          return new Date(date);
+        }
+      }
+
+      // verify date and prettify or not
+      _checkAndShowAgreementDate(dateString) {
+        return this.getDisplayValue(dateString, true);
+      }
+
+      _triggerAgreementLoadingMsg() {
+        this.fireEvent('trigger-agreement-loading-msg');
+      }
+    }
+
+    window.customElements.define(AgreementsList.is, AgreementsList);
+  </script>
+</dom-module>
