@@ -15,7 +15,7 @@
         contentContainer: {
           type: Object,
           value: function() {
-            return window.contentContainer;
+            return EtoolsPmpApp.ContentContainer;
           },
           readOnly: true
         }
@@ -24,8 +24,12 @@
 
     connectedCallback() {
       super.connectedCallback();
-      if (!window.contentContainer) {
-        window.contentContainer = this._getContentContainer();
+      if (!EtoolsPmpApp.ContentContainer) {
+        EtoolsPmpApp.ContentContainer = this._getContentContainer();
+
+        //we still have to set contentContainer property
+        //(undefined at this level, until next elem that uses this mixin is attached)
+        this._setContentContainer(EtoolsPmpApp.ContentContainer);
       }
     }
 
