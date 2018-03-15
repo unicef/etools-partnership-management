@@ -41,6 +41,7 @@
           max-height: 400px;
         }
       }
+
       .type-warning {
         width: 100%;
         color: var(--warning-color);
@@ -58,6 +59,7 @@
         border-right: 1px solid var(--dark-divider-color);
         margin-right: 24px;
       }
+
       .generate-pca[hidden] + .col {
         padding-left: 0;
       }
@@ -85,11 +87,11 @@
         <div class="col col-3">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
-                        value="[[agreement.agreement_number]]"
-                        title$="[[agreement.agreement_number]]"
-                        hidden$="[[!agreement.id]]"
-                        placeholder="&#8212;"
-                        readonly>
+                       value="[[agreement.agreement_number]]"
+                       title$="[[agreement.agreement_number]]"
+                       hidden$="[[!agreement.id]]"
+                       placeholder="&#8212;"
+                       readonly>
           </paper-input>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
@@ -117,27 +119,28 @@
               required
               avoid-header-overlapping-dropdown>
           </etools-dropdown>
-          <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]" hidden$="[[agreement.permissions.edit.partner]]">
-              <span>[[agreement.partner_name]]</span>
+          <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
+                                       hidden$="[[agreement.permissions.edit.partner]]">
+            <span>[[agreement.partner_name]]</span>
           </etools-form-element-wrapper>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
           <div class="col col-3">
             <etools-date-input id="startDateField"
-                                label="Start date"
-                                value="{{agreement.start}}"
-                                readonly$="[[!agreement.permissions.edit.start]]"
-                                no-init show-clear-btn
-                                required$="[[agreement.permissions.required.start]]">
+                               label="Start date"
+                               value="{{agreement.start}}"
+                               readonly$="[[!agreement.permissions.edit.start]]"
+                               no-init show-clear-btn
+                               required$="[[agreement.permissions.required.start]]">
             </etools-date-input>
           </div>
           <div class="col col-3">
             <etools-date-input id="endDateField"
-                                label="End date"
-                                value="{{agreement.end}}"
-                                readonly$="[[!agreement.permissions.edit.end]]"
-                                no-init show-clear-btn
-                                required$="[[agreement.permissions.required.end]]">
+                               label="End date"
+                               value="{{agreement.end}}"
+                               readonly$="[[!agreement.permissions.edit.end]]"
+                               no-init show-clear-btn
+                               required$="[[agreement.permissions.required.end]]">
             </etools-date-input>
           </div>
         </template>
@@ -179,20 +182,22 @@
                 required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]"
                 avoid-header-overlapping-dropdown>
             </etools-dropdown>
-            <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner_manager]]" hidden$="[[agreement.permissions.edit.partner_manager]]">
+            <etools-form-element-wrapper label="Partner Name"
+                                         required$="[[agreement.permissions.required.partner_manager]]"
+                                         hidden$="[[agreement.permissions.edit.partner_manager]]">
               <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
             </etools-form-element-wrapper>
           </div>
           <div class="col col-3">
             <!-- Signed By Partner Date -->
             <etools-date-input id="signedByPartnerDateField"
-                              label="Signed By Partner Date"
-                              value="{{agreement.signed_by_partner_date}}"
-                              no-init show-clear-btn
-                              auto-validate
-                              readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                              error-message="Please select Signed By Partner Date"
-                              required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager, agreement)]]">
+                               label="Signed By Partner Date"
+                               value="{{agreement.signed_by_partner_date}}"
+                               no-init show-clear-btn
+                               auto-validate
+                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
+                               error-message="Please select Signed By Partner Date"
+                               required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager, agreement)]]">
             </etools-date-input>
           </div>
         </div>
@@ -219,12 +224,12 @@
           <div class="col col-3">
             <!-- Signed By UNICEF Date -->
             <etools-date-input id="signedByUnicefDateField"
-                              label="Signed By UNICEF Date"
-                              value="{{agreement.signed_by_unicef_date}}"
-                              readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                              no-init show-clear-btn auto-validate
-                              error-message="Please select Signed By UNICEF Date"
-                              required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_unicef_date, agreement.signed_by, agreement)]]">
+                               label="Signed By UNICEF Date"
+                               value="{{agreement.signed_by_unicef_date}}"
+                               readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
+                               no-init show-clear-btn auto-validate
+                               error-message="Please select Signed By UNICEF Date"
+                               required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_unicef_date, agreement.signed_by, agreement)]]">
             </etools-date-input>
           </div>
         </div>
@@ -233,40 +238,42 @@
       <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
         <!-- Partner Authorized Officers (partner staff members) -->
         <etools-dropdown-multi id="officers"
-                                      label="Authorized Officers"
-                                      placeholder="&#8212;"
-                                      options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-                                      option-value="id"
-                                      option-label="name"
-                                      selected-values="{{authorizedOfficers}}"
-                                      hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
-                                      error-message="Please enter Partner Authorized Officer(s)"
-                                      required$="[[agreement.permissions.required.authorized_officers]]"
-                                      auto-validate$="[[enableEditForAuthorizedOfficers]]">
+                               label="Authorized Officers"
+                               placeholder="&#8212;"
+                               options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+                               option-value="id"
+                               option-label="name"
+                               selected-values="{{authorizedOfficers}}"
+                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                               error-message="Please enter Partner Authorized Officer(s)"
+                               required$="[[agreement.permissions.required.authorized_officers]]"
+                               auto-validate$="[[enableEditForAuthorizedOfficers]]">
         </etools-dropdown-multi>
-        <etools-form-element-wrapper label="Authorized Officers" required$="[[agreement.permissions.required.authorized_officers]]"
-          hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]">
-              <span>[[_getReadonlyAuthorizedOfficers(agreement)]]</span>
+        <etools-form-element-wrapper label="Authorized Officers"
+                                     required$="[[agreement.permissions.required.authorized_officers]]"
+                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]">
+          <span>[[_getReadonlyAuthorizedOfficers(agreement)]]</span>
         </etools-form-element-wrapper>
       </div>
 
       <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
         <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
+             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
           <paper-input-container
               class="form-field-wrapper secondary-btn-wrapper"
               always-float-label>
             <!-- Generate PCA -->
             <label slot="label" aria-hidden="true">PCA Agreement to Sign</label>
-            <paper-button slot="input" class="paper-input-input secondary-btn" id="generateMyPca" on-tap="_openGeneratePCADialog">
+            <paper-button slot="input" class="paper-input-input secondary-btn" id="generateMyPca"
+                          on-tap="_openGeneratePCADialog">
               <iron-icon icon="refresh"></iron-icon>
               GENERATE
             </paper-button>
           </paper-input-container>
         </div>
         <div class="generate-pca col col-3"
-              hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
-              <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
+             hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
+          <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
           <etools-single-file
@@ -427,10 +434,7 @@
       }
 
       _getTBorderClassIfApplicable(agreementType) {
-        if (agreementType !== 'SSFA') {
-          return ' t-border';
-        }
-        return '';
+        return agreementType !== 'SSFA'? 't-border' : '';
       }
 
       // Editing Agreement Type is allowed only if Agreement is new/unsaved
@@ -441,10 +445,7 @@
       // Refer to unicef/etools-issues#232:
       // For Draft Status, only Change option is available. No delete option is available in Draft.
       _hideDeleteBtn() {
-        if (this._isDraft() && this.agreement && this.agreement.attached_agreement_file) {
-          return true;
-        }
-        return false;
+        return this._isDraft() && this.agreement && this.agreement.attached_agreement_file;
       }
 
       _isNewAgreementChanged(isNew) {
@@ -464,10 +465,7 @@
       }
 
       _showAmendments(type, status) {
-        if (type === 'PCA' && !this._isDraft()) {
-          return true;
-        }
-        return false;
+        return type === 'PCA' && !this._isDraft();
       }
 
       // When agreement data is changed we need to check and prepare attached agreement file and
@@ -521,10 +519,7 @@
 
       // Verify if agreement status is 'draft'
       _isDraft() {
-        if (!this.agreement || !this.agreement.status) {
-          return false;
-        }
-        return this.agreement.status === 'draft' || this.agreement.status === '';
+        return this.isNewAgreement || (this.agreement && this.agreement.status === 'draft');
       }
 
       _allowEdit(agreementStatus, editMode) {
@@ -532,10 +527,7 @@
         if (!editMode) {
           return false;
         }
-        if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft())) {
-          return true;
-        }
-        return false;
+        return !(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft());
       }
 
       _showGeneratePcaBtn(type, isNewAgreement) {
@@ -780,5 +772,4 @@
 
     window.customElements.define(AgreementDetails.is, AgreementDetails);
   </script>
-
 </dom-module>
