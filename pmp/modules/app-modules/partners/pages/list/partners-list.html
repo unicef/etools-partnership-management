@@ -143,7 +143,7 @@
         </etools-data-table-column>
       </etools-data-table-header>
 
-      <template id="rows" is="dom-repeat" notify-dom-change
+      <template id="rows" is="dom-repeat"
                 items="[[filteredPartners]]" as="partner"
                 initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
@@ -219,6 +219,7 @@
   </template>
   <script>
     'use strict';
+    // eslint-disable-next-line
     var _partnersLastNavigated = null;
     /**
      * @polymer
@@ -435,7 +436,7 @@
           this.updateAppState(this.currentPage + '/list', qs, true);
           // filter partners, but only after data has been loaded
           if (this.requiredDataLoaded) {
-            this._filterPartnersData();
+            this._filterListData();
           }
         } else {
           if (location.search === '') {
@@ -445,13 +446,13 @@
           if (this.forceDataRefresh && this.requiredDataLoaded) {
             // refilter partners data
             // this will only execute when partners-loaded event is received
-            this._filterPartnersData();
+            this._filterListData();
             this.set('forceDataRefresh', false);
           }
         }
       }
 
-      _filterPartnersData(forceNoLoading) {
+      _filterListData(forceNoLoading) {
         // Query is debounced with a debounce time
         // set depending on what action the user takes
         this._actionsChangedDebouncer = Polymer.Debouncer.debounce(this._actionsChangedDebouncer,
@@ -462,7 +463,7 @@
       }
 
       _handleFilterPartnersData(forceNoLoading) {
-        var partners = this.shadowRoot.querySelector('#partners');
+        let partners = this.shadowRoot.querySelector('#partners');
         if (!partners) {
           return;
         }
@@ -481,7 +482,7 @@
 
       // Outputs the query string for the list
       _buildQueryString() {
-        var out = [];
+        let out = [];
         if (this.pageNumber && this.pageNumber > 1) {
           out.push('page=' + this.pageNumber);
         }
@@ -507,9 +508,9 @@
       }
 
       _buildCsvDownloadUrl() {
-        var queryString = '';
-        var endpointUrl = '';
-        var params = [];
+        let queryString = '';
+        let endpointUrl = '';
+        let params = [];
 
         if (this.q && this.q.length) {
           params.push('search=' + this.q);

@@ -18,12 +18,12 @@
     "etools-data-table": "d767d01",
     "etools-datepicker": "8d2f0c294d80bbea",
     "etools-dialog": "c943e5f",
-    "etools-dropdown": "25956004e814126216adf4ca4b151d7a32c54ee8",
+    "etools-dropdown": "32f7ce0",
     "etools-file": "f98a943",
     "etools-info-tooltip": "261b888",
     "etools-loading": "6bdf1e7",
     "etools-piwik-analytics": "ab010e4",
-    "etools-profile-dropdown": "d5e2396",
+    "etools-profile-dropdown": "c968d73",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.2",
     "iron-icons": "PolymerElements/iron-icons#^2.0.1",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^2.1.1",
@@ -64,3 +64,4 @@
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   }
 }
+
