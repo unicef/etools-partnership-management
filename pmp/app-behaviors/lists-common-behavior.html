@@ -1,10 +1,15 @@
 <link rel="import" href="../../scripts/lodash/lodash.html">
+<link rel="import" href="app-navigation-helper-behavior.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
   /** @polymerBehavior EtoolsPmpApp.Behaviors.ListsCommon */
-  EtoolsPmpApp.Behaviors.ListsCommon = {
+  EtoolsPmpApp.Behaviors.ListsCommonImpl = {
     properties: {
+      urlParams: {
+        type: Object
+      },
+
       q: {
         type: String,
         notify: true,
@@ -44,6 +49,11 @@
         value: false
       },
 
+      initComplete: {
+        type: Boolean,
+        value: false
+      },
+
       // TODO: move it to Pagination behavior
       defaultListsSize: {
         type: Number,
@@ -53,6 +63,11 @@
       showQueryLoading: {
         type: Boolean,
         value: false
+      },
+
+      csvDownloadUrl: {
+        type: String,
+        notify: true
       },
 
       stampListData: Boolean,
@@ -177,10 +192,7 @@
             filterUrlValue = filterValue.field + '.' + filterValue.direction;
           } else {
             if (!(field === 'page' && filterValue === 1)) {
-              let filterStrVal = String(filterValue).trim();
-              if (filterStrVal != '') {
-                filterUrlValue = filterStrVal;
-              }
+              filterUrlValue = String(filterValue).trim();
             }
           }
 
@@ -202,16 +214,52 @@
             params.push(field + '=' + filters[field].join(','));
           } else {
             let filterStrVal = String(filters[field]).trim();
-            if (filterStrVal != '') {
-              params.push(field + '=' + filterStrVal);
-            }
+            params.push(field + '=' + filterStrVal);
           }
         }
       }
       params.push('format=csv');
       let queryString = params.join('&');
       return endpointUrl + '?' + queryString;
+    },
+
+    // Updates URL state with new query string, and launches query
+    _updateUrlAndDislayedData: function(currentPageUrlPath, lastUrlQueryStr, buildCsvExportUrl,
+                                        buildQueryString, filterData) {
+      if (!this.requiredDataLoaded || !this.initComplete) {
+        return;
+      }
+
+      this.set('csvDownloadUrl', buildCsvExportUrl());
+      let qs = buildQueryString();
+
+      if (qs !== lastUrlQueryStr) {
+        // update URL
+        this.updateAppState(currentPageUrlPath, qs, true);
+        // filter agreements
+        if (this.requiredDataLoaded) {
+          filterData();
+        }
+      } else {
+        if (location.search === '') {
+          // only update URL query string, without location change event being fired(no page refresh)
+          this.updateAppState(currentPageUrlPath, qs, false);
+        }
+        if (this.forceDataRefresh && this.requiredDataLoaded) {
+          // re-filter list data
+          // this will only execute when [list-data]-loaded event is received
+          filterData();
+          this.set('forceDataRefresh', false);
+        }
+      }
+      return qs;
     }
 
   };
+
+  /** @polymerBehavior */
+  EtoolsPmpApp.Behaviors.ListsCommon = [
+    EtoolsPmpApp.Behaviors.AppNavigationHelper,
+    EtoolsPmpApp.Behaviors.ListsCommonImpl
+  ]
 </script>

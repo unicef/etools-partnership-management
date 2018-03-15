@@ -15,7 +15,6 @@
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
@@ -150,7 +149,7 @@
 
     </div>
 
-    <div id="list" elevation="1" class="hidden">
+    <div id="list" class="paper-material hidden" elevation="1">
 
       <etools-data-table-header
           id="listHeader"
@@ -243,7 +242,6 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.ListFilters,
@@ -284,26 +282,9 @@
             observer: 'resetPageNumber'
           },
 
-          totalPages: {
-            type: Number
-          },
-
-          visibleRange: {
-            type: Array
-          },
-
-          urlParams: {
-            type: Object
-          },
-
           partnersDropdownData: {
             type: Array,
             statePath: 'partnersDropdownData'
-          },
-
-          initComplete: {
-            type: Boolean,
-            value: false
           },
 
           agreementTypes: {
@@ -313,10 +294,6 @@
           agreementStatuses: {
             type: Array,
             statePath: 'agreementStatuses'
-          },
-          csvDownloadUrl: {
-            type: String,
-            notify: true
           },
           _sortableFieldNames: {
             type: Array,
@@ -331,7 +308,7 @@
         observers: [
           'resetPageNumber(selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
           '_initFiltersMenuList(partnersDropdownData)',
-          '_updateURL(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
+          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
             'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
@@ -418,33 +395,12 @@
         },
 
         // Updates URL state with new query string, and launches query
-        _updateURL: function() {
-          if (!this.requiredDataLoaded || !this.initComplete) {
-            return;
-          }
-
-          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-          let qs = this._buildQueryString();
-
-          if (qs !== _lastNavigated) {
-            _lastNavigated = qs;
-            // update URL
-            this.updateAppState('agreements/list', qs, true);
-            // filter agreements
-            if (this.requiredDataLoaded) {
-              this._filterAgreementsData();
-            }
-          } else {
-            if (location.search === '') {
-              // only update URL query string, without location change event being fired(no page refresh)
-              this.updateAppState('agreements/list', qs, false);
-            }
-            if (this.forceDataRefresh && this.requiredDataLoaded) {
-              // refilter agreements data
-              // this will only execute when agreements-loaded event is received
-              this._filterAgreementsData();
-              this.set('forceDataRefresh', false);
-            }
+        _updateUrlAndData: function() {
+          let newQueryStr = this._updateUrlAndDislayedData('agreements/list', _lastNavigated,
+              this._buildCsvDownloadUrl.bind(this), this._buildQueryString.bind(this),
+              this._filterAgreementsData.bind(this));
+          if (newQueryStr) {
+            _lastNavigated = newQueryStr;
           }
         },
 
@@ -519,12 +475,6 @@
             return _selectedPartners;
           }
           return [];
-        },
-
-        _convertToDate: function(date) {
-          if (date && date.length) {
-            return new Date(date);
-          }
         },
 
         // verify date and prettify or not
