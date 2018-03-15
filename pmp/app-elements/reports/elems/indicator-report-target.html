@@ -1,0 +1,96 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../app-behaviors/utils-behavior.html">
+
+<dom-module id="indicator-report-target">
+  <template>
+    <style>
+      :host {
+        font-size: 12px;
+      }
+
+      .target-row {
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
+        color: var(--secondary-text-color);
+        width: 100%;
+        text-align: right;
+        box-sizing: border-box;
+        @apply --indicator-report-target-row;
+      }
+
+      .target-row span:last-child {
+        display: inline-block;
+        width: 50px;
+        margin-left: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @apply --indicator-report-row-value;
+      }
+
+      :host([bold]) .target-row {
+        font-weight: 500;
+      }
+      :host([bold]) .target-row span:last-child {
+        font-weight: bold;
+      }
+    </style>
+
+    <div class="target-row">
+      <span>Target:</span>
+      <span title$="[[_prepareValue(target)]]">[[_prepareValue(target)]]</span>
+    </div>
+    <div class="target-row">
+      <span>Cumulative progress in all locations:</span>
+      <span title$="[[_prepareValue(cumulativeProgress)]]">[[_prepareValue(cumulativeProgress)]]</span>
+    </div>
+    <div class="target-row">
+      <span>Achivement in last reporting period in all locations:</span>
+      <span title$="[[_prepareValue(achivement)]]">[[_prepareValue(achivement)]]</span>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'indicator-report-target',
+      behaviors: [
+        EtoolsPmpApp.Behaviors.Utils
+      ],
+      properties: {
+        target: {
+          type: String,
+          value: '-'
+        },
+        cumulativeProgress: {
+          type: String,
+          value: '-'
+        },
+        achivement: {
+          type: String,
+          value: '-'
+        },
+        bold: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+        valuesType: {
+          type: String,
+          value: 'number'
+        }
+      },
+
+      _prepareValue: function(value) {
+        switch (this.valuesType) {
+          case 'number':
+            value = this._formatNumber(value, '-', 0, '\,');
+            break;
+          case 'percentage':
+            value = this._toPercentage(value);
+            break;
+        }
+        return value ? value : '-';
+      }
+    });
+  </script>
+</dom-module>

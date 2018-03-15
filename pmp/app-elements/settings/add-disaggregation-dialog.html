@@ -1,0 +1,214 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
+<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/action-icons-btns-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
+
+<dom-module id="add-disaggregation-dialog">
+  <template>
+    <style include="grid-layout-styles action-icons-btns-styles buttons-styles shared-styles required-field-starred-styles">
+      paper-input {
+        width: 100%
+      }
+      .groups {
+       align-items: center;
+       flex-wrap: wrap;
+       width: 520px;  /* For IE */
+      }
+      .newGroup {
+        width: 80px;
+      }
+      .action.delete.no-padding {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        height: 20px;
+      }
+      etools-dialog paper-input.newGroup {
+        --paper-input-container: {
+          padding: 0px 0px !important;
+        };
+      }
+
+    </style>
+
+    <etools-dialog keep-dialog-open id="etoolsDialog" size="lg" ok-btn-text="Save"
+      dialog-title="Add Disaggregation" disable-confirm-btn="[[disableConfirmBtn]]"
+      on-confirm-btn-clicked="_validateAndSaveDisaggregation">
+      <div class="row-h flex-c">
+        <div class="col col-4">
+          <paper-input id="disaggregateByEl" label="Disaggregation" value="{{disaggregation.name}}"
+            required auto-validate error-message="Please add disaggregation" placeholder="&#8212;">
+          </paper-input>
+        </div>
+        <div class="col col-8">
+          <div class="layout-vertical">
+            <label class="paper-label">Disaggregation Group</label>
+            <div class="layout-horizontal groups">
+              <template is="dom-repeat" items="[[dataItems]]">
+                <paper-input class="newGroup" no-label-float
+                  label="New Group"
+                  value="{{item.value}}"></paper-input>
+                  <paper-icon-button class="action delete no-padding" icon="cancel"
+                    on-tap="_openDeleteConfirmation"
+                    data-args$="[[index]]"
+                    title="Delete">
+                  </paper-icon-button>
+              </template>
+              <paper-button class="secondary-btn" on-tap="_addNewGroup"
+                    title="Add Disaggregation Group">+Add </paper-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </etools-dialog>
+
+ </template>
+</dom-module>
+
+<script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'add-disaggregation-dialog',
+      behaviors: [
+        EtoolsPmpApp.Behaviors.RepeatableDataSets,
+        EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+      ],
+      properties: {
+        disaggregation: {
+          type: Object,
+          observer: '_disaggregationChanged'
+        },
+        dataItems: {
+          type: Array
+        },
+        disaggregationModel: {
+          type: Object,
+          value: {
+            id: null,
+            active: true,
+            name: undefined,
+            disaggregation_values: []
+          }
+        },
+        toastEventSource: {
+          type: Object
+        },
+        disableConfirmBtn: {
+          type: Boolean,
+          value: false
+        }
+      },
+      actions: {
+        addDisaggregation: function(disaggreg) {
+          return {
+            type: 'ADD_DISAGGREGATION',
+            disaggregation: disaggreg
+          };
+        }
+      },
+      ready: function() {
+        this.dataSetModel = {
+          value: null,
+          active: true
+        };
+        this.editMode = true;
+      },
+
+      broadcastAddDisaggregToOtherTabs: function(disaggregation) {
+        localStorage.setItem('update-redux',
+          JSON.stringify(this.actions.addDisaggregation(disaggregation)));
+        localStorage.removeItem('update-redux');
+      },
+      initializeDisaggregation: function() {
+        this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
+      },
+      open: function() {
+        this.$.etoolsDialog.opened = true;
+      },
+      close: function() {
+        this.$.etoolsDialog.opened = false;
+      },
+      startSpinner: function() {
+        this.disableConfirmBtn = true;
+        this.$.etoolsDialog.startSpinner();
+      },
+      stopSpinner: function() {
+        this.disableConfirmBtn = false;
+        this.$.etoolsDialog.stopSpinner();
+      },
+      _disaggregationChanged: function(disaggreg) {
+        this.set('dataItems', disaggreg.disaggregation_values);
+        if (!this.dataItems) {
+          this.dataItems = [];
+        }
+      },
+      _addNewGroup: function() {
+        this._addElement();
+      },
+      _validateAndSaveDisaggregation: function() {
+        if (!this.validate()) {
+          return;
+        }
+        this.startSpinner();
+        let self = this;
+        let requestParams = {
+          method: 'POST',
+          endpoint: this.getEndpoint('addGetDisaggregations'),
+          body: this._getBody()
+        };
+        this.sendRequest(requestParams).then(function(response) {
+          self.disaggregation = response;
+          self.dispatch('addDisaggregation', response);
+          self.broadcastAddDisaggregToOtherTabs(response);
+          self.stopSpinner();
+          self.close();
+        }).catch(function(error) {
+          self.stopSpinner();
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+        });
+
+      },
+      _getBody: function() {
+        this.disaggregation.disaggregation_values = this.dataItems;
+        this._cleanUpDisaggregations(this.disaggregation.disaggregation_values);
+        return this.disaggregation;
+      },
+      _cleanUpDisaggregations: function(disaggregs) {
+        if (!disaggregs || !disaggregs.length) {
+          return;
+        }
+        let i;
+        for (i = 0; i < disaggregs.length; i++) {
+          if (disaggregs[i] !== undefined && this._isEmpty(disaggregs[i].value)) {
+            disaggregs.splice(i, 1);
+          }
+        }
+
+      },
+      _isEmpty: function(value) {
+        return (value === null || value === undefined || value === '');
+      },
+      validate: function() {
+        return this.$$('#disaggregateByEl').validate();
+      },
+      resetValidations: function() {
+        this.$$('#disaggregateByEl').invalid = false;
+      }
+    });
+  })();
+</script>

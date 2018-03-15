@@ -5,8 +5,8 @@
   <template>
     <style>
       .synced, .blocked, .marked-for-deletion, .not-synced {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
         width: 24px;
         height: 24px;
         -webkit-border-radius: 50%;
@@ -30,7 +30,7 @@
         --iron-icon-height: 16px;
         --iron-icon-width: 16px;
         color: var(--light-primary-text-color);
-        @apply(--layout-self-center);
+        @apply --layout-self-center;
       }
 
       .marked-for-deletion iron-icon {
@@ -56,8 +56,8 @@
       }
 
       .sm-status-wrapper {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
       }
 
       .sm-status-wrapper .marked-for-deletion iron-icon:after {

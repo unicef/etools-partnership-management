@@ -16,6 +16,7 @@
         width: 235px;
         @apply --etools-date-input;
       }
+
       /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
       then include it in shared-styles(do not use shared-styles here) */
     </style>
@@ -41,6 +42,7 @@
                                 is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
                                 hidden$="[[readonly]]"
                                 no-init="[[noInit]]"
+                                open="{{open}}"
                                 show-clear-btn="[[showClearBtn]]">
       </etools-datepicker-button>
     </paper-input>
@@ -101,6 +103,11 @@
             value: false,
             reflectToAttribute: true
           },
+          open: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
           errorMessage: {
             type: String,
             value: 'Please select a date'
@@ -135,20 +142,30 @@
         },
 
         /**
-        * overwrites default functionality from iron-input
-        */
+         * overwrites default functionality from iron-input
+         */
         validate: function() {
           let hasValidator = this.hasValidator();
           let valid = true;
-          if (this.required && !hasValidator && this.value === '') {
-            valid = false;
-          } else if (hasValidator) {
+
+          if (hasValidator) {
+            // custom validator provided, use it to validate this field
             valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
+          } else {
+            // let paper-input use it's default validator
+            valid = this.$.dateInput.validate();
           }
 
           this.set('invalid', !valid);
           return valid;
         },
+
+        resetInvalidState: function() {
+          this.set('invalid', false);
+          // because `invalid` has one-way binding, the paper-input doesn't always follow the invalid flag
+          // so to make sure, we have to set it manually
+          this.$.dateInput.set('invalid', false);
+        }
       });
     })();
   </script>

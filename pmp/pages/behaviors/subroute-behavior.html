@@ -1,0 +1,143 @@
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="page-import-behavior.html">
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.SubrouteImpl */
+  EtoolsPmpApp.Behaviors.SubrouteImpl = {
+    properties: {
+      listActive: Boolean,
+      tabsActive: Boolean,
+      routeData: Object,
+      activePage: {
+        type: String,
+        notify: true,
+        observer: '_activePageChanged'
+      },
+      /**
+       * This flag is used to make sure status sidebar doesn't show before tab content is loaded.
+       * The flag is updated:
+       *    - true: when the main tab element fires tab-content-attached event (_requestedTabContentHasBeenAttached)
+       *    - false: - when activePage is changed and it's one of the main tabs &&
+       *             - the previous activePage value is not the list &&
+       *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
+       */
+      tabAttached: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    listeners: {
+      'tab-content-attached': '_requestedTabContentHasBeenAttached',
+    },
+
+    _activePageChanged: function(currentPage, previousPage) {
+      this._clearRouteQueryParamsIfNeeded(previousPage);
+      this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
+    },
+    /**
+     *Avoid Reports page query string lingering on other intervention tabs
+     */
+    _clearRouteQueryParamsIfNeeded: function(previousPage) {
+      if (previousPage === 'reports') {
+        //* Info:Clearing the query params in the subroute doesn't work,
+        //  has to be in the parent route
+        this.fire('update-route-query-params', null);
+      }
+    },
+
+    /**
+     * Use tabAttached to mark when requested tab has been attached to DOM.
+     * Used to make sure sidebar doesn't show while tab element is still loading
+     */
+    _requestedTabContentHasBeenAttached: function() {
+      this.set('tabAttached', true);
+    },
+
+    /**
+     * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
+     */
+    _resetTabAttachedFlagIfNeeded: function(currentPage, previousPage) {
+      let selectedTab = this.$$('[name="' + currentPage + '"]');
+      if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
+        this.set('tabAttached', false);
+      }
+      if (selectedTab) {
+        // tab already loaded, make sure the flag is true when coming from the list
+        this.set('tabAttached', true);
+      }
+    },
+
+    _getFilenamePrefix: function(listActive, fileImportDetails) {
+      // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
+      return (listActive ? (fileImportDetails.filenamePrefix + 's') : fileImportDetails.filenamePrefix) + '-';
+    },
+
+    _getFileBaseUrl: function(page, fileImportDetails, appendBasePathAdditionalFolder) {
+      let baseUrl = fileImportDetails.baseUrl;
+      if (typeof appendBasePathAdditionalFolder === 'function') {
+        // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
+        baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
+      }
+      return baseUrl;
+    },
+
+    _handleSuccessfulImport: function(page, successCallback) {
+      // set active page
+      this.set('activePage', page);
+      if (typeof successCallback === 'function') {
+        successCallback.bind(this)();
+      }
+    },
+
+    _handleFailedImport: function(err, page, fileImportDetails) {
+      // log page element import failed error
+      let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
+      this.logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
+      this.fire('global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
+      this.fire('404');
+    },
+
+    setActivePage: function(listActive, tab, fileImportDetails, canAccessTab,
+                            appendBasePathAdditionalFolder, successfulImportCallback) {
+      let page = listActive ? 'list' : tab;
+
+      if (listActive) {
+        // clear server errors for the list
+        this.fire('clear-server-errors');
+      } else {
+        if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
+          // the user cannot access this tab (ex: prp tabs on interventions)
+          this.fire('404');
+          return;
+        }
+      }
+
+      if (page && page !== this.activePage) {
+        // import main page element
+        let importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
+        let baseUrl = this._getFileBaseUrl(page, fileImportDetails, appendBasePathAdditionalFolder);
+        let fileName = importFilenamePrefix + page;
+        this.importPageElement(fileName, baseUrl).then(() => {
+          this._handleSuccessfulImport(page, successfulImportCallback);
+        }).catch((err) => {
+          this._handleFailedImport(err, page, fileImportDetails);
+        });
+      }
+    },
+
+    _updateNewItemPageFlag: function(routeData, listActive) {
+      return routeData && routeData.id === 'new' && !listActive;
+    }
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.Subroute */
+  EtoolsPmpApp.Behaviors.Subroute = [
+    EtoolsLogsBehavior,
+    EtoolsPmpApp.Behaviors.PageImportBehavior,
+    EtoolsPmpApp.Behaviors.SubrouteImpl
+  ];
+</script>

@@ -11,6 +11,7 @@
         width: 100%;
         --status-top: auto;
       }
+
       etools-status {
         top: var(--status-top);
       }
@@ -21,7 +22,7 @@
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
                    on-intervention-unsuspend-event="_unsuspendIntervention">
-        </etools-status>
+    </etools-status>
   </template>
 
   <script>
@@ -175,7 +176,7 @@
               }
               break;
 
-            // legacy version of 'ended'
+              // legacy version of 'ended'
             case 'implemented':
               if (this.activeTab === 'attachments') {
                 availableOptions.push('Save');
@@ -280,7 +281,7 @@
               activeStatus = 'Ended';
               break;
 
-            // legacy version of 'ended'
+              // legacy version of 'ended'
             case 'implemented':
               availableStatuses = [
                 'Draft',
@@ -328,7 +329,7 @@
         },
 
         _statusChangeIsValid: function(newStatus) {
-           if (this.newIntervention) {
+          if (this.newIntervention) {
             return false;
           }
 

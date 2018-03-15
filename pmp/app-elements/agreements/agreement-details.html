@@ -13,8 +13,7 @@
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
 
-
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
@@ -33,7 +32,8 @@
 
 <dom-module id="agreement-details">
   <template strip-whitespace>
-    <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
+
+    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -42,6 +42,7 @@
         }
       }
       .type-warning {
+        width: 100%;
         color: var(--warning-color);
         @apply --layout-self-center;
         @apply --layout-vertical;
@@ -204,8 +205,8 @@
                   label="Signed By UNICEF"
                   placeholder="&#8212;"
                   options="[[unicefSeniorStaff]]"
-                  option-value="user_id"
-                  option-label="full_name"
+                  option-value="id"
+                  option-label="name"
                   selected="{{agreement.signed_by}}"
                   dynamic-align
                   error-message="Please select Signed By UNICEF"
@@ -263,7 +264,7 @@
             </paper-input-container>
           </div>
           <div class="generate-pca col col-3"
-               hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
+               hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
                <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
@@ -375,7 +376,7 @@
         ready: function() {
           this.generatePCADialog = document.createElement('generate-pca-dialog');
           this.generatePCADialog.setAttribute('id', 'generatePCADialog');
-          Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
+          document.querySelector('body').appendChild(this.generatePCADialog);
         },
         attached: function() {
           /**
@@ -383,13 +384,13 @@
            * triggered by parent element on stamp
            */
           this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
-          this.fire('agreements-page-attached');
+          this.fire('tab-content-attached');
 
           this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
         },
         detached: function() {
           if (this.generatePCADialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.generatePCADialog);
+            document.querySelector('body').removeChild(this.generatePCADialog);
           }
         },
 
@@ -427,14 +428,18 @@
           this._setDraftStatus(editMode, this.isNewAgreement);
         },
 
+        _statusIsNotDraft: function(status) {
+          return status !== 'draft' && status !== '';
+        },
+
         _setDraftStatus: function(editMode, isNewAgreement) {
-          if (editMode && isNewAgreement && this.agreement && this.agreement.status !== 'draft') {
-            this.set('agreement.status', 'draft');
+          if (editMode && isNewAgreement && this.agreement && this._statusIsNotDraft(this.agreement.status)) {
+            this.set('agreement.status', '');
           }
         },
 
         _showAmendments: function(type, status) {
-          if (type === 'PCA' && status !== 'draft') {
+          if (type === 'PCA' && this._statusIsNotDraft(status)) {
             return true;
           }
           return false;

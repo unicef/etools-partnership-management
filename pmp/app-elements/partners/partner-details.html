@@ -17,12 +17,11 @@
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
 
-<link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
 
@@ -30,14 +29,10 @@
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
-
-        --etools-checkable-input-label: {
-          padding-bottom: 2px;
-        }
       }
 
       paper-input {
@@ -170,29 +165,25 @@
           </div>
           <div class="col col-4"></div>
         </div>
-
-      </etools-content-panel>
-
-      <etools-content-panel class="content-section" panel-title="Risk Rating & Assessments">
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Risk rating -->
             <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                         label="Risk Rating"
+                         label="Partner Risk Rating"
                          value="[[getRiskRatingValue(partner.rating)]]"
                          placeholder="&#8212;"
                          readonly ></paper-input>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <paper-input label="Assessment Type"
+            <paper-input label="Basis For Risk Rating"
                          value="[[partner.type_of_assessment]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <paper-input label="Date of Assessment"
+            <paper-input label="Date of Report"
                          value="[[prettyDate(partner.last_assessment_date)]]"
                          placeholder="&#8212;"
                          readonly>
@@ -201,11 +192,6 @@
               </div>
             </paper-input>
           </div>
-        </div>
-
-        <!-- Assessments section -->
-        <div class="assessments">
-          <assessments-items id="assessmentsList" data-items="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
         </div>
       </etools-content-panel>
 
@@ -216,6 +202,7 @@
   </template>
 
   <script>
+
     (function() {
       'use strict';
 
@@ -263,7 +250,7 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
-          this.fire('partners-page-attached');
+          this.fire('tab-content-attached');
         },
 
         _hideDeleteBtn: function() {
@@ -299,15 +286,8 @@
           return false;
         },
 
-        _validatePartner: function() {
-          var valid = true;
-          if (!this.$.assessmentsList.validate()) {
-            valid = false;
-          }
-          if (!this.$.staffMembersList.validate()) {
-            valid = false;
-          }
-          return valid;
+        _validatePageData: function() {
+          return this.$.staffMembersList.validate();
         },
 
       });

@@ -11,6 +11,7 @@
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="styles/fr-warnings-styles.html">
 
 <link rel="import" href="../../../app-behaviors/array-helper-behavior.html">
 
@@ -19,7 +20,7 @@
 
 <dom-module id="intervention-fund-reservations">
   <template strip-whitespace>
-    <style>
+    <style include="fr-warnings-styles">
       [hidden] {
         display: none !important;
       }
@@ -47,32 +48,26 @@
       .fr-number {
         line-height: 24px;
       }
-      etools-info-tooltip {
-        --etools-tooltip-trigger-icon: {
-          margin-left: 24px !important;
-        };
-      }
     </style>
 
     <etools-content-panel panel-title="Fund Reservations">
       <paper-icon-button slot="panel-btns"
-                         icon="add"
+                         icon="add-box"
                          on-tap="_openFrsUpdateDialog"
                          hidden$="[[!editMode]]"
                          disabled$="[[!editMode]]"></paper-icon-button>
       <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
-        <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-        hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
-         -->
-        <etools-info-tooltip icon="report" icon-first
-                             hide-tooltip
-                             important-warning>
+        <etools-info-tooltip class="frs-inline-list"
+                             icon-first
+                             custom-icon
+                             hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
           <div slot="field">
             <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
               <span class="fr-number">[[item.fr_number]]</span>
             </template>
           </div>
-          <!-- <span slot="message">[[_frsConsistencyWarning]]</span> -->
+          <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+          <span slot="message"><span>[[_frsConsistencyWarning]]</span></span>
         </etools-info-tooltip>
       </div>
       <div class="warning" hidden$="[[noFrsWarning(intervention.frs_details)]]">
@@ -128,7 +123,7 @@
         },
 
         observers: [
-          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' +
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash_local,' +
             ' intervention.start, intervention.end)',
         ],
 
@@ -144,7 +139,7 @@
         detached: function() {
           // remove update frs el on fr el detached
           if (this.updateFrNumbersEl) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.updateFrNumbersEl);
+            document.querySelector('body').removeChild(this.updateFrNumbersEl);
           }
           // remove confirmations frs dialog on fr element detached
           if (this.frsConfirmationsDialog) {
@@ -160,7 +155,7 @@
           // attach frs update handler (on modal/dialog close)
           this.updateFrNumbersEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler.bind(this));
 
-          Polymer.dom(document.querySelector('body')).appendChild(this.updateFrNumbersEl);
+          document.querySelector('body').appendChild(this.updateFrNumbersEl);
         },
 
         _createFrsConfirmationsDialog: function() {
@@ -173,16 +168,17 @@
         },
 
         _frsUpdateWarningMessage: function(warning) {
-          if (this.frsConfirmationsDialog && this._frsConfirmationsDialogMessage) {
-            if (this._frsConfirmationsDialogMessage) {
-              this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
-            } else {
-              this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
-            }
+          if (!this.frsConfirmationsDialog) {
+            return;
+          }
+          if (this._frsConfirmationsDialogMessage) {
+            this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
+          } else {
+            this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
           }
         },
 
-        _openFrsUpdateDialog: function(frNumbersList) {
+        _openFrsUpdateDialog: function(frNumbersList, enableConfirmBtn) {
           if (!this.editMode) {
             return;
           }
@@ -196,7 +192,8 @@
                 });
             this.updateFrNumbersEl.set('dataItems', frs);
             // deactivate save button until any valid change is made
-            this.updateFrNumbersEl.set('disableConfirmBtn', true);
+            enableConfirmBtn = typeof enableConfirmBtn === 'boolean' ? enableConfirmBtn : true;
+            this.updateFrNumbersEl.set('disableConfirmBtn', enableConfirmBtn);
 
             this.updateFrNumbersEl.set('interventionStatus', this.intervention.status);
             // open dialog
@@ -262,8 +259,11 @@
             // confirmed, add numbers to intervention
             this._triggerPdFrsUpdate(Object.assign({}, this._lastFrsDetailsReceived));
             this.set('_lastFrsDetailsReceived', null);
+          } else {
+            // frs warning not confirmed/cancelled, frs update is canceled
+            // re-check frs warning on initial data
+            this._frsDetailsChanged(this.intervention.frs_details);
           }
-          // frs warning not confirmed/cancelled, frs update is canceled
         },
 
         /**
@@ -287,8 +287,12 @@
 
         },
 
-        _frsDetailsSuccessHandler: function(response) {
-          let frsDetails = response;
+        /*
+         * Frs details received, check frs consistency
+         */
+        _frsDetailsSuccessHandler: function(frsDetails) {
+          // check added frs currencies mismatch
+          frsDetails.currencies_match = this._frsCurrenciesMatch(frsDetails.frs);
           let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
           this.set('_frsConsistencyWarning', warning);
           if (warning) {
@@ -313,7 +317,7 @@
             return {fr_number: fr};
           });
           // open FR Numbers modal with the same state as before details request
-          this._openFrsUpdateDialog(frs);
+          this._openFrsUpdateDialog(frs, false);
           this.set('_lastFrsDetailsRequested', []);
           // show the invalid frs warning
           this.fire('toast', {

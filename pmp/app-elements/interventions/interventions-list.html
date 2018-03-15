@@ -1,12 +1,12 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
@@ -17,10 +17,9 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-config/app-constants.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
-<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
@@ -28,6 +27,8 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="fr-numbers/styles/fr-warnings-styles.html">
 
 <link rel="import" href="intervention-data/interventions-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -36,10 +37,20 @@
 
   <template strip-whitespace>
 
-    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
+    <style
+        include="shared-styles data-table-styles grid-layout-styles list-filter-styles paper-material-styles fr-warnings-styles">
       :host {
         @apply --layout-flex;
         width: 100%;
+      }
+
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+
+      .pd-ref {
+        @apply --text-btn-style;
+        text-transform: none;
       }
     </style>
 
@@ -53,7 +64,7 @@
       </interventions-list-data>
     </template>
 
-    <paper-material id="listControls" elevation="1">
+    <div id="listControls" elevation="1">
 
       <div class="wrap-controls">
 
@@ -72,7 +83,7 @@
               <etools-multi-selection-menu
                   label="[[filter.filterName]]"
                   placeholder="&#8212;"
-                  disabled$="[[!filter.selectionOptions.length]"
+                  disabled$="[[!filter.selectionOptions.length]]"
                   options="[[filter.selectionOptions]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
@@ -125,18 +136,18 @@
               <iron-icon icon="filter-list"></iron-icon>
               add filter
             </paper-button>
-            <paper-menu class="dropdown-content">
+            <paper-listbox class="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>
-            </paper-menu>
+            </paper-listbox>
           </paper-menu-button>
         </div>
 
       </div>
-    </paper-material>
+    </div>
 
-    <paper-material id="list" elevation="1">
+    <div id="list" elevation="1">
 
       <etools-data-table-header id="listHeader"
                                 label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
@@ -166,11 +177,12 @@
       <template id="rows" is="dom-repeat" notify-dom-change items="[[filteredInterventions]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
-          <div slot="row-data">
+          <div slot="row-data" class="p-relative">
             <span class="col-data col-2">
-              <a class="truncate"
+              <a class="pd-ref truncate"
                  href="interventions/[[intervention.id]]/details"
-                 title="[[getDisplayValue(intervention.number)]]">
+                 title="[[getDisplayValue(intervention.number)]]"
+                 on-tap="_triggerInterventionLoadingMsg">
                 [[getDisplayValue(intervention.number)]]
               </a>
             </span>
@@ -187,27 +199,28 @@
                 [[getDisplayValue(intervention.title)]]
             </span>
             <span class="col-data flex-c">
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]" -->
-              <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip
-                                   important-warning>
+              <etools-info-tooltip class="fr-nr-warn"
+                                   custom-icon
+                                   icon-first
+                                   hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
-                <!--<span slot="message">[[getFrsStartDateValidationMsg()]]</span>-->
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]" -->
-               <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip
-                                    important-warning>
+               <etools-info-tooltip class="fr-nr-warn"
+                                    custom-icon
+                                    icon-first
+                                    hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]">
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
-                 <!--<span slot="message">[[getFrsEndDateValidationMsg()]]</span>-->
+                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
           </div>
-          <div slot="row-data-details">
+
+          <div slot="row-data-details" class="p-relative">
 
             <div class="row-details-content col-2">
               <span class="rdc-title">Offices</span>
@@ -215,25 +228,31 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Section</span>
-              <span>[[getDisplayValue(intervention.sectors)]]</span>
+              <span>[[getDisplayValue(intervention.section_names)]]</span>
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]" -->
-              <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip
-                                   important-warning>
-                <span slot="field">$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
-                <!--<span slot="message">-->
-                  <!--[[getFrsTotalAmountInconsistencyMsg()]]-->
-                <!--</span>-->
+              <etools-info-tooltip
+                  class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]]"
+                  icon-first
+                  custom-icon
+                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
+                <span slot="field">
+                  <span class="amount-currency">[[intervention.budget_currency]]</span>
+                  <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
+                </span>
+                <iron-icon icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]" slot="custom-icon"></iron-icon>
+                <span slot="message">
+                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent, intervention.fr_currencies_are_consistent)]]</span>
+                </span>
               </etools-info-tooltip>
-
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Total Budget</span>
-              <span>$ [[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
+              <span>
+                <span class="amount-currency">[[intervention.budget_currency]]</span>
+                <span>[[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
+              </span>
             </div>
 
           </div>
@@ -249,7 +268,7 @@
           on-page-number-changed="_pageNumberChanged">
       </etools-data-table-footer>
 
-    </paper-material>
+    </div>
 
   </template>
 
@@ -264,14 +283,13 @@
 
         behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.Dropdown,
           EtoolsPmpApp.Behaviors.ListFilters,
           EtoolsPmpApp.Behaviors.ListsCommon,
-          EtoolsPmpApp.Behaviors.FrNumbersConsistency
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency,
+          EtoolsPmpApp.Behaviors.Constants
         ],
 
         properties: {
@@ -336,12 +354,12 @@
             observer: '_filtersChanged'
           },
 
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
 
-          selectedSectors: {
+          selectedSections: {
             type: Array,
             observer: '_filtersChanged'
           },
@@ -365,14 +383,14 @@
             type: Array,
             observer: '_filtersChanged'
           },
-          csvDownloadUrl: {
+          csvDownloadQs: {
             type: String,
             notify: true
           },
           _sortableFieldNames: {
             type: Array,
             value: ['number', 'partner_name', 'start', 'end']
-          }
+          },
         },
 
         listeners: {
@@ -380,8 +398,8 @@
         },
 
         observers: [
-          '_initListFilters(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData)',
-          '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSectors, ' +
+          '_initListFilters(documentTypes, sections, interventionStatuses, offices, cpOutputs, unicefUsersData)',
+          '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSections, ' +
           'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
           'requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -400,7 +418,7 @@
 
           this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...', 'pd-ssfa-list');
         },
-        _initListFilters: function(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData) {
+        _initListFilters: function(documentTypes, sections, interventionStatuses, offices, cpOutputs, unicefUsersData) {
           this.debounce('init-intervention-filters', function() {
             // init list filter options
             // IMPORTANT!!!
@@ -426,13 +444,13 @@
                 path: 'selectedCpOutputs'
               },
               {
-                filterName: 'Section/Cluster',
+                filterName: 'Sections',
                 type: 'esmm', // etools-multi-selection-menu
                 optionValue: 'id',
                 optionLabel: 'name',
-                selectionOptions: this.sectors,
+                selectionOptions: this.sections,
                 alreadySelected: [],
-                path: 'selectedSectors'
+                path: 'selectedSections'
               },
               {
                 filterName: 'Status',
@@ -446,8 +464,8 @@
               {
                 filterName: 'UNICEF focal point',
                 type: 'esmm', // etools-multi-selection-menu
-                optionValue: 'user_id',
-                optionLabel: 'full_name',
+                optionValue: 'id',
+                optionLabel: 'name',
                 selectionOptions: this.unicefUsersData,
                 alreadySelected: [],
                 path: 'selectedUnicefFocalPoints'
@@ -492,7 +510,8 @@
           this.set('selectedStatuses', urlQueryParams.status ? this._setSelectedStatuses(urlQueryParams.status) : []);
           this.set('selectedCpOutputs',
               urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
-          this.set('selectedSectors', urlQueryParams.sector ? this._setSelectedSectors(urlQueryParams.sector) : []);
+          this.set('selectedSections',
+              urlQueryParams.sections ? this._setSelectedSections(urlQueryParams.sections) : []);
           this.set('selectedUnicefFocalPoints',
               urlQueryParams.unicef_focal_points ?
                   this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points) : []);
@@ -526,12 +545,12 @@
                 selectedValue: _.map(this.selectedCpOutputs, 'id')
               },
               {
-                filterName: 'Section/Cluster',
-                selectedValue: _.map(this.selectedSectors, 'id')
+                filterName: 'Sections',
+                selectedValue: _.map(this.selectedSections, 'id')
               },
               {
                 filterName: 'UNICEF focal point',
-                selectedValue: _.map(this.selectedUnicefFocalPoints, 'user_id')
+                selectedValue: _.map(this.selectedUnicefFocalPoints, 'id')
               },
               {
                 filterName: 'Offices',
@@ -556,7 +575,7 @@
             return;
           }
 
-          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+          this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
           var qs = this._buildQueryString();
 
           if (qs !== _interventionsLastNavigated) {
@@ -601,8 +620,8 @@
                 _.map(this.selectedDocumentTypes, 'value'),
                 this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
                 _.map(this.selectedStatuses, 'value'),
-                _.map(this.selectedSectors, 'name'),
-                this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
+                this._prepareQueryStrVal(this.selectedSections, 'id'),
+                this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'id'),
                 this._prepareQueryStrVal(this.selectedOffices, 'id'),
                 this.startDate,
                 this.endDate,
@@ -638,12 +657,12 @@
             out.push('status=' + _.map(this.selectedStatuses, 'value').join('|'));
           }
 
-          if (this.selectedSectors && this.selectedSectors.length) {
-            out.push('sector=' + _.map(this.selectedSectors, 'id').join('|'));
+          if (this.selectedSections && this.selectedSections.length) {
+            out.push('sections=' + _.map(this.selectedSections, 'id').join('|'));
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            out.push('unicef_focal_points=' + _.map(this.selectedUnicefFocalPoints, 'user_id').join('|'));
+            out.push('unicef_focal_points=' + _.map(this.selectedUnicefFocalPoints, 'id').join('|'));
           }
 
           if (this.selectedOffices && this.selectedOffices.length) {
@@ -663,7 +682,7 @@
           return out.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {
+        _buildCsvDownloadQueryString: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -671,8 +690,11 @@
           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
             params.push('document_type=' + this.selectedDocumentTypes[0].value);
           }
-          if (this.selectedSectors && this.selectedSectors.length) {
-            params.push('sector=' + this.selectedSectors[0].id);
+          // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
+          //   params.push('country_programme=' + this.selectedCpOutputs[0].id);
+          // }
+          if (this.selectedSections && this.selectedSections.length) {
+            params.push('sections=' + this.selectedSections[0].id);
           }
           if (this.selectedStatuses && this.selectedStatuses.length) {
             let statuses = [];
@@ -682,7 +704,7 @@
             params.push('status=' + statuses.join(','));
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'user_id');
+            var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'id');
             serializedFocalPoints = encodeURIComponent(serializedFocalPoints);
             params.push('unicef_focal_points=' + serializedFocalPoints);
           }
@@ -701,9 +723,7 @@
 
           params.push('format=csv');
           queryString = params.join('&');
-          endpointUrl = this.getEndpoint('interventions').url;
-
-          return endpointUrl + '?' + queryString;
+          return queryString;
         },
 
         _setSelectedOffices: function(officesStr) {
@@ -732,21 +752,21 @@
               return [];
             }
             return this.unicefUsersData.filter(function(u) {
-              return focalPtsStrArr.indexOf(parseInt(u.user_id, 10)) > -1;
+              return focalPtsStrArr.indexOf(parseInt(u.id, 10)) > -1;
             });
           }
           return [];
         },
-        _setSelectedSectors: function(sectors) {
-          var sectorsArr = sectors.split('|');
-          if (!this.sectors || !this.sectors.length) {
+        _setSelectedSections: function(sections) {
+          let sectionsArr = sections.split('|');
+          if (!this.sections || !this.sections.length) {
             return [];
           }
-          if (sectorsArr && sectorsArr.length) {
-            var selectedSectors = this.sectors.filter(function(s) {
-              return sectorsArr.indexOf(s.id) > -1;
+          if (sectionsArr && sectionsArr.length) {
+            let selectedSections = this.sections.filter(function(s) {
+              return sectionsArr.indexOf(String(s.id)) > -1;
             });
-            return selectedSectors;
+            return selectedSections;
           }
           return [];
         },
@@ -799,8 +819,16 @@
           this.set('pageNumber', 1);
         },
 
-        _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
-          return status === 'draft' || status === 'closed' || this.validateFrsVsInterventionDates(pdDate, frsDate);
+        _canShowListDatesFrsWarnings: function(status) {
+          return (status !== 'draft' && status !== 'closed');
+        },
+
+        _hideDateFrsWarningTooltip: function(pdDate, frsDate, status) {
+           return !(this._canShowListDatesFrsWarnings(status) && !this.validateFrsVsInterventionDates(pdDate, frsDate));
+        },
+
+        _triggerInterventionLoadingMsg: function() {
+          this.fire('trigger-intervention-loading-msg');
         }
 
       });

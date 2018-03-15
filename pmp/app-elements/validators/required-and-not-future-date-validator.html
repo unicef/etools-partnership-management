@@ -2,6 +2,8 @@
 <dom-module id="required-and-not-future-date-validator">
 
 <script>
+  'use strict';
+
   Polymer({
 
     is: 'required-and-not-future-date-validator',
@@ -21,12 +23,17 @@
       },
       requiredErrorMessage: {
         type: String,
-        value: "This field is required!"
+        value: 'This field is required!'
       },
       noFutureDateErrorMessage: {
         type: String,
-        value: "Date cannot be in the future!"
+        value: 'Date cannot be in the future!'
       }
+    },
+
+    attached: function() {
+      // set default message
+      this._setRequiredErrorMessage();
     },
 
     validate: function(dateValueStr) {

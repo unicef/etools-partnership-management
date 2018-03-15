@@ -1,0 +1,294 @@
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
+<link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-filter-styles.html">
+
+<link rel="import" href="elems/reports-display-list.html">
+
+<dom-module id="reports-list">
+
+  <template strip-whitespace>
+
+    <style include="shared-styles list-filter-styles paper-material-styles">
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+
+    </style>
+
+    <div id="listControls" elevation="1">
+
+      <div class="wrap-controls">
+
+        <paper-input id="query"
+                     type="search"
+                     autocomplete="off"
+                     value="{{queryParams.pd_ref_title}}"
+                     placeholder="Search">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
+
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+          <div class="filter esmm">
+            <etools-single-selection-menu
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected="[[filter.alreadySelected]]"
+                on-iron-select="filterValueChanged"
+                data-filter-path$="[[filter.path]]">
+            </etools-single-selection-menu>
+            <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                               on-tap="removeFilter"
+                               data-filter-name$="[[filter.filterName]]"
+                               data-reset-path$="[[filter.path]]">
+            </paper-icon-button>
+          </div>
+        </template>
+
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filter-bar-action-wrapper menu-btn-wrapper">
+          <paper-menu-button id="filterMenu">
+            <paper-button class="button dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              Add filter
+            </paper-button>
+            <paper-listbox class="dropdown-content">
+              <template is="dom-repeat" items="[[availableListFilterOptions]]">
+                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
+      </div>
+
+    </div>
+
+    <reports-display-list query-params="[[queryParams]]"
+                          paginator="{{paginator}}"
+                          wait-query-params-init></reports-display-list>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      let _reportsLastNavigated = null;
+
+      Polymer({
+
+        is: 'reports-list',
+
+        behaviors: [
+          EtoolsPmpApp.Behaviors.AppNavigationHelper,
+          EtoolsPmpApp.Behaviors.ListFilters,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+        ],
+
+        properties: {
+          urlParams: {
+            type: Object
+          },
+          active: {
+            type: Boolean,
+            value: false
+          },
+          csvDownloadUrl: {
+            type: String,
+            notify: true
+          },
+          // filters options
+          partners: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
+          cpOutputs: {
+            type: Array,
+            statePath: 'cpOutputs'
+          },
+          sections: {
+            type: Array,
+            statePath: 'sections'
+          },
+          reportStatuses: {
+            type: Array,
+            statePath: 'reportStatuses'
+          },
+          // selected filters values
+          queryParams: {
+            type: Object,
+            value: {
+              pd_ref_title: null,
+              external_partner_id: null,
+              cp_output: null,
+              section: null,
+              status: null
+            }
+          },
+          paginator: {
+            type: Object
+          }
+        },
+
+        observers: [
+          '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
+          '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
+          '_init(active, urlParams, paginator)',
+          '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
+            'queryParams.cp_output, queryParams.section, queryParams.status)'
+        ],
+
+        attached: function() {
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'reports-page'});
+        },
+
+        _initListFilters: function(partners, cpOutputs, sections, reportStatuses) {
+          this.debounce('init-reports-filters', function() {
+            // init list filter options
+            // IMPORTANT!!!
+            // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+            // IMPORTANT!!!
+            this.initListFiltersData([
+              {
+                filterName: 'Partner',
+                type: 'esmm',
+                optionValue: 'value',
+                optionLabel: 'label',
+                selectionOptions: partners,
+                alreadySelected: [],
+                path: 'queryParams.external_partner_id'
+              },
+              {
+                filterName: 'CP Output',
+                type: 'esmm',
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: cpOutputs,
+                alreadySelected: [],
+                path: 'queryParams.cp_output'
+              },
+              {
+                filterName: 'Section',
+                type: 'esmm',
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: sections,
+                alreadySelected: [],
+                path: 'queryParams.section'
+              },
+              {
+                filterName: 'Report Status',
+                type: 'esmm',
+                optionValue: 'value',
+                optionLabel: 'label',
+                selectionOptions: reportStatuses,
+                alreadySelected: [],
+                path: 'queryParams.status'
+              }
+            ]);
+            this._updateSelectedFiltersValues();
+          }.bind(this), 10);
+        },
+
+        // update selected filters(prezent in URL) at page refresh
+        _updateSelectedFiltersValues: function() {
+          let filtersValues = [
+            {
+              filterName: 'Partner',
+              selectedValue: this.queryParams.external_partner_id
+            },
+            {
+              filterName: 'CP Output',
+              selectedValue: this.queryParams.cp_output
+            },
+            {
+              filterName: 'Section',
+              selectedValue: this.queryParams.section
+            },
+            {
+              filterName: 'Report Status',
+              selectedValue: this.queryParams.status
+            }
+          ];
+          this.updateShownFilters(filtersValues);
+        },
+
+        _init: function(active, urlQueryParams) {
+          if (!active) {
+            return;
+          }
+          this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
+          this.set('queryParams.external_partner_id',
+              urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
+          this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
+          this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
+          this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
+          if (urlQueryParams.page) {
+            this.set('paginator.page', Number(urlQueryParams.page));
+          }
+          if (urlQueryParams.page_size) {
+            this.set('paginator.page_size', Number(urlQueryParams.page_size));
+          }
+          this._updateSelectedFiltersValues();
+        },
+
+        _updateURL: function() {
+          let self = this;
+          let qs = self._buildQueryString();
+          // update URL
+          self.updateAppState('reports/list', qs, true);
+        },
+
+        // Outputs the query string for the list
+        _buildQueryString: function() {
+          let qStrData = [];
+          if (!_.isEmpty(this.queryParams)) {
+            Object.keys(this.queryParams).forEach(function(k) {
+              if (this.queryParams[k]) {
+                qStrData.push(k + '=' + this.queryParams[k]);
+              }
+            }.bind(this));
+          }
+          if (!_.isEmpty(this.paginator)) {
+            if (this.paginator.page) {
+              qStrData.push('page=' + this.paginator.page);
+            }
+            if (this.paginator.page_size) {
+              qStrData.push('page_size=' + this.paginator.page_size);
+            }
+          }
+          return qStrData.join('&');
+        },
+
+        _filtersChanged: function() {
+          this.set('paginator.page', 1);
+        }
+
+      });
+    })();
+
+  </script>
+
+</dom-module>
