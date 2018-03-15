@@ -664,9 +664,8 @@
       _exportPdBudget: function() {
         this._exportPD(this.getEndpoint('interventions').url);
       },
-
       _exportPdResult: function() {
-        this._exportPD(this.getEndpoint('engagements').url);
+        this._exportPD(this.getEndpoint('resultExports').url);
       },
       _exportPD: function(endpoint) {
         let csvDownloadUrl = endpoint + '?' + this.csvDownloadQs;
