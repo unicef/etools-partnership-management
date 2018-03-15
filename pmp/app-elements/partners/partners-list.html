@@ -296,9 +296,7 @@
           let newQueryStr = this._updateUrlAndDislayedData(this.currentPage + '/list', _partnersLastNavigated,
               this._buildCsvDownloadUrl.bind(this), this._buildQueryString.bind(this),
               this._filterPartnersData.bind(this));
-          if (newQueryStr) {
-            _partnersLastNavigated = newQueryStr;
-          }
+          _partnersLastNavigated = newQueryStr || _partnersLastNavigated;
         },
 
         _filterPartnersData: function(forceNoLoading) {

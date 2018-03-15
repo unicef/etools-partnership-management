@@ -399,9 +399,7 @@
           let newQueryStr = this._updateUrlAndDislayedData('agreements/list', _lastNavigated,
               this._buildCsvDownloadUrl.bind(this), this._buildQueryString.bind(this),
               this._filterAgreementsData.bind(this));
-          if (newQueryStr) {
-            _lastNavigated = newQueryStr;
-          }
+          _lastNavigated = newQueryStr || _lastNavigated;
         },
 
         _filterAgreementsData: function(forceNoLoading) {

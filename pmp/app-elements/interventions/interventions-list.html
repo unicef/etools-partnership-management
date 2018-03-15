@@ -541,9 +541,8 @@
           let newQueryStr = this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated,
               this._buildCsvDownloadQueryString.bind(this), this._buildQueryString.bind(this),
               this._filterInterventionsData.bind(this), 'csvDownloadQs');
-          if (newQueryStr) {
-            _interventionsLastNavigated = newQueryStr;
-          }
+
+          _interventionsLastNavigated = newQueryStr || _interventionsLastNavigated;
         },
 
         _prepareQueryStrVal: function(arr, prop) {
