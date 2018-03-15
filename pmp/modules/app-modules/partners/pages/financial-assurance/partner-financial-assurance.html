@@ -304,7 +304,6 @@
                   no-label-float
                   type="number"
                   value="{{partner.planned_engagement.spot_check_follow_up_q1}}"
-                  on-value-changed="_calculateFollowUpTotal"
                   disabled="[[!editMode]]"
                   max="2">
               </paper-input>
@@ -314,7 +313,6 @@
                   no-label-float
                   type="number"
                   value="{{partner.planned_engagement.spot_check_follow_up_q2}}"
-                  on-value-changed="_calculateFollowUpTotal"
                   disabled="[[!editMode]]"
                   max="2">
               </paper-input>
@@ -324,7 +322,6 @@
                   no-label-float
                   type="number"
                   value="{{partner.planned_engagement.spot_check_follow_up_q3}}"
-                  on-value-changed="_calculateFollowUpTotal"
                   disabled="[[!editMode]]"
                   max="2">
               </paper-input>
@@ -531,7 +528,10 @@
 
       static get observers() {
         return [
-          '_paginate(pageNumber, pageSize)'
+          '_paginate(pageNumber, pageSize)',
+          '_calculateFollowUpTotal(partner.planned_engagement.spot_check_follow_up_q1,'+
+            'partner.planned_engagement.spot_check_follow_up_q2, partner.planned_engagement.spot_check_follow_up_q3,'+
+            'partner.planned_engagement.spot_check_follow_up_q4)'
         ];
       }
 
@@ -645,16 +645,16 @@
         this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
       }
 
-      _calculateFollowUpTotal() {
+      _calculateFollowUpTotal(q1, q2, q3, q4) {
         if (!this.partner) {
           return;
         }
         this.set('partner.planned_engagement.total_spot_check_follow_up_required',
           _.sum([
-            Number(this.partner.planned_engagement.spot_check_follow_up_q1),
-            Number(this.partner.planned_engagement.spot_check_follow_up_q2),
-            Number(this.partner.planned_engagement.spot_check_follow_up_q3),
-            Number(this.partner.planned_engagement.spot_check_follow_up_q4),
+            Number(q1),
+            Number(q2),
+            Number(q3),
+            Number(q4),
           ]));
       }
 
