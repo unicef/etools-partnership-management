@@ -1,3 +1,4 @@
+<link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
@@ -6,42 +7,51 @@
   EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior = {
 
     getAllPermissions: function() {
-     return {
-       defaultPermissions: [
-         'loggedInDefault',
-         'userInfoMenu',
-         'viewPartnerDetails',
-         'viewAgreementDetails',
-         'viewInterventionDetails',
-       ],
-       unicefUserPermissions: [
-         'editInterventionDetails'
-       ],
-       superPermissions: [
-         'loggedInDefault',
-         'userInfoMenu',
-         'interventionsMenu',
-         'statsMenu',
-         'viewPartnerDetails',
-         'editPartnerDetails',
-         'viewAgreementDetails',
-         'editAgreementDetails',
-         'viewInterventionDetails',
-         'editInterventionDetails'
-       ],
-       partnershipManagerPermissions: [
-         'partnershipManager',
-         'editPartnerDetails',
-         'editAgreementDetails',
-         'editInterventionDetails'
-       ],
-       PMEPermissions: [
-         'PME'
-       ],
-       ICTPermissions: [
-         'ICT'
-       ]
-     };
+      return {
+        defaultPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'viewPartnerDetails',
+          'viewAgreementDetails',
+          'viewInterventionDetails',
+        ],
+        unicefUserPermissions: [
+          'editInterventionDetails'
+        ],
+        superPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'interventionsMenu',
+          'statsMenu',
+          'viewPartnerDetails',
+          'editPartnerDetails',
+          'viewAgreementDetails',
+          'editAgreementDetails',
+          'viewInterventionDetails',
+          'editInterventionDetails'
+        ],
+        partnershipManagerPermissions: [
+          'partnershipManager',
+          'editPartnerDetails',
+          'editAgreementDetails',
+          'editInterventionDetails'
+        ],
+        PMEPermissions: [
+          'PME'
+        ],
+        ICTPermissions: [
+          'ICT'
+        ]
+      };
+    },
+
+    userIsPme: function(user) {
+      if (!user || !Array.isArray(user.groups)) {
+        return false;
+      }
+      return !!_.find(user.groups, function(grp) {
+        return grp.name === 'PME';
+      });
     }
 
   };
