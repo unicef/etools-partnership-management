@@ -1,3 +1,4 @@
+<link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
@@ -48,7 +49,7 @@
       if (!user || !Array.isArray(user.groups)) {
         return false;
       }
-      return !!_.find(user.groups, (grp) => {
+      return !!_.find(user.groups, function(grp) {
         return grp.name === 'PME';
       });
     }
