@@ -126,7 +126,8 @@
         }
 
         _setNotStickyStyles() {
-          this.updateStyles({'--status-top': 'auto'});
+          let statusElem = this.shadowRoot.querySelector('etools-status');
+          statusElem.classList.remove('sticky-status');
         }
 
         _resetScrollHandler() {
@@ -140,12 +141,8 @@
              .then((containerDistanceFromViewportTop) => {
                 let statusElem = this.shadowRoot.querySelector('etools-status');
                 if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-                  // if the status element is about to go under the title bar, start moving in down
-                  // let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
-                  // this.updateStyles({'--status-top': newOffset + 'px'});
                   statusElem.classList.add('sticky-status');
                 } else {
-                  // this._setNotStickyStyles();
                   statusElem.classList.remove('sticky-status');
                 }
              });
