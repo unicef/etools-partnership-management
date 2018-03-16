@@ -6,7 +6,7 @@
      * @polymer
      * @mixinFunction
      */
-    EtoolsPmpApp.Mixins.AppConstants = (superClass) => class extends superClass {
+    EtoolsPmpApp.Mixins.Constants = (superClass) => class extends superClass {
 
       static get properties() {
         return {
@@ -17,6 +17,10 @@
                 PdBudget: 'PD Budget'
             },
             readOnly: true
+          },
+          AssessmentDefaultType: {
+            type: String,
+            value: 'Other'
           }
         };
       }

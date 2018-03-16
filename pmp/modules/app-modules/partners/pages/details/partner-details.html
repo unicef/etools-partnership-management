@@ -23,7 +23,6 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/risk-rating-styles.html">
 
-<link rel="import" href="components/assessments-items.html">
 <link rel="import" href="components/staff-members.html">
 
 <dom-module id="partner-details">
@@ -36,10 +35,6 @@
 
       paper-input {
         width: 100%;
-      }
-
-      .assessments {
-        margin-top: 20px;
       }
 
       #core-values-assessment {
@@ -152,39 +147,33 @@
         </div>
         <div class="col col-4"></div>
       </div>
-
-    </etools-content-panel>
-
-    <etools-content-panel class="content-section" panel-title="Risk Rating & Assessments">
       <div class="row-h flex-c">
         <div class="col col-4">
+          <!-- Risk rating -->
           <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                       label="Risk Rating"
+                       label="Partner Risk Rating"
                        value="[[getRiskRatingValue(partner.rating)]]"
                        placeholder="&#8212;"
                        readonly></paper-input>
         </div>
         <div class="col col-4">
-          <paper-input label="Assessment Type"
+          <!-- Type of assessment -->
+          <paper-input label="Basis For Risk Rating"
                        value="[[partner.type_of_assessment]]"
                        placeholder="&#8212;"
                        readonly></paper-input>
         </div>
         <div class="col col-4">
-          <paper-input label="Date of Assessment"
+          <!--Date last assessed-->
+          <paper-input label="Date of Report"
                        value="[[prettyDate(partner.last_assessment_date)]]"
                        placeholder="&#8212;"
                        readonly>
-            <div slot="prefix">
+            <div prefix>
               <iron-icon icon="date-range"></iron-icon>
             </div>
           </paper-input>
         </div>
-      </div>
-
-      <div class="assessments">
-        <assessments-items id="assessmentsList" data-items="{{partner.assessments}}"
-                           edit-mode="[[editMode]]"></assessments-items>
       </div>
     </etools-content-panel>
 
@@ -252,14 +241,6 @@
         };
       }
 
-      constructor() {
-        super();
-      }
-
-      ready() {
-        super.ready();
-      }
-
       connectedCallback() {
         super.connectedCallback();
         /**
@@ -304,15 +285,8 @@
         return false;
       }
 
-      _validatePartner() {
-        let valid = true;
-        if (!this.$.assessmentsList.validate()) {
-          valid = false;
-        }
-        if (!this.$.staffMembersList.validate()) {
-          valid = false;
-        }
-        return valid;
+      _validatePageData() {
+        return this.$.staffMembersList.validate();
       }
 
     }
