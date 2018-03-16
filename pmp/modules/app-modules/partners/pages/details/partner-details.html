@@ -148,33 +148,33 @@
         <div class="col col-4"></div>
       </div>
       <div class="row-h flex-c">
-          <div class="col col-4">
-            <!-- Risk rating -->
-            <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                         label="Partner Risk Rating"
-                         value="[[getRiskRatingValue(partner.rating)]]"
-                         placeholder="&#8212;"
-                         readonly ></paper-input>
-          </div>
-          <div class="col col-4">
-            <!-- Type of assessment -->
-            <paper-input label="Basis For Risk Rating"
-                         value="[[partner.type_of_assessment]]"
-                         placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
-          <div class="col col-4">
-            <!--Date last assessed-->
-            <paper-input label="Date of Report"
-                         value="[[prettyDate(partner.last_assessment_date)]]"
-                         placeholder="&#8212;"
-                         readonly>
-              <div prefix>
-                <iron-icon icon="date-range"></iron-icon>
-              </div>
-            </paper-input>
-          </div>
+        <div class="col col-4">
+          <!-- Risk rating -->
+          <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
+                       label="Partner Risk Rating"
+                       value="[[getRiskRatingValue(partner.rating)]]"
+                       placeholder="&#8212;"
+                       readonly></paper-input>
         </div>
+        <div class="col col-4">
+          <!-- Type of assessment -->
+          <paper-input label="Basis For Risk Rating"
+                       value="[[partner.type_of_assessment]]"
+                       placeholder="&#8212;"
+                       readonly></paper-input>
+        </div>
+        <div class="col col-4">
+          <!--Date last assessed-->
+          <paper-input label="Date of Report"
+                       value="[[prettyDate(partner.last_assessment_date)]]"
+                       placeholder="&#8212;"
+                       readonly>
+            <div prefix>
+              <iron-icon icon="date-range"></iron-icon>
+            </div>
+          </paper-input>
+        </div>
+      </div>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="Partner Contacts ([[partner.staff_members.length]])"
@@ -290,6 +290,7 @@
       }
 
     }
+
     window.customElements.define(PartnerDetails.is, PartnerDetails);
   </script>
 </dom-module>

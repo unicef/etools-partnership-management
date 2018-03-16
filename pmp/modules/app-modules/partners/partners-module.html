@@ -411,9 +411,12 @@
       /**
        * All partners pages with editable fields should be validated on save
        */
-       _partnerDataIsValid() {
+      _partnerDataIsValid() {
         let valid = true;
-        let partnersPages = [this.shadowRoot.querySelector('#financialAssurance'), this.shadowRoot.querySelector('#partnerDetails')];
+        let partnersPages = [
+          this.shadowRoot.querySelector('#financialAssurance'),
+          this.shadowRoot.querySelector('#partnerDetails')
+        ];
         partnersPages.forEach((pageEl) => {
           if (pageEl && !pageEl._validatePageData()) {
             valid = false;

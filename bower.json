@@ -57,8 +57,7 @@
   "resolutions": {
     "polymer": "^2.0.0",
     "lodash": "^4.17.5",
-    "moment-element": "^3.0.0",
-    "etools-dropdown": "25956004e814126216adf4ca4b151d7a32c54ee8"
+    "moment-element": "^3.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
