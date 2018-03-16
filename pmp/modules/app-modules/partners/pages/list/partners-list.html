@@ -2,26 +2,22 @@
 <link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
+<link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+
+<link rel="import" href="../../../../scripts/lodash.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
-<link rel="import" href="../../../../mixins/list-filters-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../../mixins/pagination-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -32,12 +28,9 @@
 <link rel="import" href="../../data/partners-list-data.html">
 
 <dom-module id="partners-list">
-  <template>
+  <template strip-whitespace>
     <style
         include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles paper-material-styles">
-      div[elevation="1"] {
-        @apply --paper-material-elevation-1;
-      }
 
       .sm-status-wrapper {
         padding-left: 10px;
@@ -52,14 +45,14 @@
     <template is="dom-if" if="[[stampListData]]">
       <partners-list-data id="partners"
                           filtered-partners="{{filteredPartners}}"
-                          total-results="{{totalResults}}"
+                          total-results="{{paginator.count}}"
                           on-partners-loaded="_requiredDataHasBeenLoaded"
                           list-data-path="filteredPartners"
                           fire-data-loaded>
       </partners-list-data>
     </template>
 
-    <div id="listControls" elevation="1">
+    <div id="listControls" class="paper-material" elevation="1">
 
       <div class="wrap-controls">
 
@@ -71,53 +64,31 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-          <div class="dropdown-with-clear-btn">
-            <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
-              <paper-listbox slot="dropdown-content"
-                             attr-for-selected="name"
-                             on-iron-select="filterValueChanged"
-                             on-iron-deselect="filterValueChanged"
-                             data-filter-path$="[[filter.path]]"
-                             on-iron-activate="_dropdownSelected"
-                             selected="[[filter.alreadySelected]]">
-                <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                  <paper-item name$="[[filterOption]]">[[filterOption]]</paper-item>
-                </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-            <paper-icon-button class="remove" icon="cancel"
-                               on-tap="removeFilter"
-                               data-filter-name$="[[filter.filterName]]"
-                               data-reset-path$="[[filter.path]]"
-                               disabled$="[[filter.disabled]]"
-                               hidden$="[[filter.disabled]]">
-            </paper-icon-button>
-          </div>
-        </template>
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="Partner Type"
+              disabled$="[[showOnlyGovernmentType]]"
+              options="[[partnerTypes]]"
+              selected-values="{{selectedPartnerTypes}}"
+              hide-search></etools-dropdown-multi>
+        </div>
+
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="CSO Type"
+              options="[[csoTypes]]"
+              selected-values="{{selectedCsoTypes}}"
+              hide-search></etools-dropdown-multi>
+        </div>
 
       </div>
 
       <div class="fixed-controls">
 
-        <div class="filter-bar-action-wrapper menu-btn-wrapper">
-          <paper-menu-button id="filterMenu">
-            <paper-button class="button" slot="dropdown-trigger">
-              <iron-icon icon="filter-list"></iron-icon>
-              add filter
-            </paper-button>
-            <paper-listbox slot="dropdown-content">
-              <template is="dom-repeat" items="[[availableListFilterOptions]]">
-                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
-              </template>
-            </paper-listbox>
-          </paper-menu-button>
-        </div>
-
         <div class="filter-bar-action-wrapper">
-          <div id="hiddenToggle" on-tap="_toggleHidden">
+          <div id="hiddenToggle">
             Show hidden
-            <paper-toggle-button checked="[[showHidden]]"></paper-toggle-button>
+            <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
           </div>
         </div>
 
@@ -125,10 +96,11 @@
 
     </div>
 
-    <div id="list" elevation="1" class="hidden">
+    <div id="list" elevation="1" class="paper-material hidden">
 
-      <etools-data-table-header id="listHeader"
-                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+      <etools-data-table-header
+          id="listHeader"
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
         <etools-data-table-column class="flex" field="vendor_number" sortable>
           Vendor #
         </etools-data-table-column>
@@ -205,12 +177,10 @@
       </template>
 
       <etools-data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeChanged"
-          on-page-number-changed="_pageNumberChanged">
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
       </etools-data-table-footer>
 
     </div>
@@ -225,19 +195,20 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
-     * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ListsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.Pagination
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsPmpApp.Mixins.AppNavigationHelper,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.ListFilters,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ListsCommon,
+      EtoolsPmpApp.Mixins.Pagination,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
@@ -245,7 +216,7 @@
     /**
      * @polymer
      * @customElement
-     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin PartnersListRequiredMixins
      */
     class PartnersList extends PartnersListRequiredMixins {
       static get is() {
@@ -259,40 +230,24 @@
             notify: true,
             observer: '_listChanged'
           },
-
           csoTypes: {
             type: Array,
             statePath: 'csoTypes'
           },
-
           partnerTypes: {
             type: Array,
             statePath: 'partnerTypes'
           },
-
-          partnerType: {
-            type: String
+          selectedPartnerTypes: {
+            type: Array,
+            value: []
           },
-
-          csoType: {
-            type: String
+          selectedCsoTypes: {
+            type: String,
+            value: []
           },
-
           showHidden: {
             type: Boolean
-          },
-
-          urlParams: {
-            type: Object
-          },
-
-          initComplete: {
-            type: Boolean,
-            value: false
-          },
-          csvDownloadUrl: {
-            type: String,
-            notify: true
           },
           showOnlyGovernmentType: {
             type: Boolean,
@@ -304,24 +259,20 @@
             type: Array,
             value: ['vendor_number', 'name']
           },
-          visibleRange: {
-            type: Array
+          _governmentLockedPartnerTypes: {
+            type: Array,
+            value: ['Government']
           }
         };
       }
 
       static get observers() {
         return [
-          '_initListFilters(partnerTypes, csoTypes)',
-          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
-          'requiredDataLoaded, initComplete)',
+          'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, showHidden)',
+          '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, paginator.page, ' +
+          'paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
-      }
-
-      ready() {
-        super.ready();
-        this.addEventListener('sort-changed', this._sortOrderChanged);
       }
 
       connectedCallback() {
@@ -337,45 +288,10 @@
         this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
       }
 
-      _initListFilters(partnerTypes, csoTypes) {
-        if (partnerTypes === undefined || csoTypes === undefined) {
-          return;
-        }
-        this._initFiltersDebouncer = Polymer.Debouncer.debounce(this._initFiltersDebouncer,
-            Polymer.Async.timeOut.after(100),
-            () => {
-              // init list filter options
-              this.initListFiltersData(this._computeFiltersData(partnerTypes, csoTypes));
-              this._updateSelectedFiltersValues();
-            });
-      }
-
-      _computeFiltersData(partnerTypes, csoTypes) {
-        return [
-          {
-            filterName: 'Partner Type',
-            type: 'dropdown',
-            alreadySelected: null,
-            selectionOptions: _.map(partnerTypes, 'value'),
-            path: 'partnerType',
-            disabled: false
-          },
-          {
-            filterName: 'CSO Type',
-            alreadySelected: null,
-            type: 'dropdown',
-            selectionOptions: _.map(csoTypes, 'value'),
-            path: 'csoType',
-            disabled: false
-          }
-        ];
-      }
-
-      _getPartnerType(partnerType) {
-        if (this.showOnlyGovernmentType) {
-          return 'Government';
-        }
-        return partnerType ? partnerType : '';
+      _getSelectedPartnerTypes(selectedPartnerTypes) {
+        return this.showOnlyGovernmentType
+            ? this._governmentLockedPartnerTypes
+            : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
       }
 
       // Input: URL query params
@@ -388,68 +304,24 @@
         }
         this.set('initComplete', false);
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-        this.set('partnerType', this._getPartnerType(urlQueryParams.partner_type));
-        this.set('csoType', urlQueryParams.cso_type ? urlQueryParams.cso_type : '');
-        this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
-        this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+        this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
+        this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
         this.set('showHidden', urlQueryParams.hidden ? true : false);
+
+        this.setPaginationDataFromUrlParams(urlQueryParams);
+
         // format of sort param is sort=field.order ex: sort=name.asc
         let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
         this.set('sortOrder', result);
         this.set('initComplete', true);
-
-        this._updateSelectedFiltersValues();
-      }
-
-      _updateSelectedFiltersValues() {
-        this._updateShownFilters = Polymer.Debouncer.debounce(this._updateShownFilters,
-            Polymer.Async.timeOut.after(100),
-            () => {
-              let filtersValues = [
-                {
-                  filterName: 'Partner Type',
-                  selectedValue: this.partnerType,
-                  disabled: this.showOnlyGovernmentType ? true : false
-                },
-                {
-                  filterName: 'CSO Type',
-                  selectedValue: this.csoType
-                }
-              ];
-              this.updateShownFilters(filtersValues);
-            }
-        );
       }
 
       // Updates URL state with new query string, and launches query
-      _updateURL() {
-        if (!this.requiredDataLoaded || !this.initComplete) {
-          return;
-        }
-
-        this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-        let qs = this._buildQueryString();
-
-        if (qs !== _partnersLastNavigated) {
-          _partnersLastNavigated = qs;
-          // update URL
-          this.updateAppState(this.currentPage + '/list', qs, true);
-          // filter partners, but only after data has been loaded
-          if (this.requiredDataLoaded) {
-            this._filterListData();
-          }
-        } else {
-          if (location.search === '') {
-            // only update URL query string, without location change event being fired(no page refresh)
-            this.updateAppState(this.currentPage + '/list', qs, false);
-          }
-          if (this.forceDataRefresh && this.requiredDataLoaded) {
-            // refilter partners data
-            // this will only execute when partners-loaded event is received
-            this._filterListData();
-            this.set('forceDataRefresh', false);
-          }
-        }
+      _updateUrlAndData() {
+        let newQueryStr = this._updateUrlAndDislayedData(this.currentPage + '/list', _partnersLastNavigated,
+            this._buildCsvDownloadUrl.bind(this), this._buildQueryString.bind(this),
+            this._filterListData.bind(this));
+        _partnersLastNavigated = newQueryStr || _partnersLastNavigated;
       }
 
       _filterListData(forceNoLoading) {
@@ -471,10 +343,10 @@
             this.sortOrder.field,
             this.sortOrder.direction,
             this.q.toLowerCase(),
-            this.partnerType,
-            this.csoType,
-            this.pageNumber,
-            this.pageSize,
+            this.selectedPartnerTypes,
+            this.selectedCsoTypes,
+            this.paginator.page,
+            this.paginator.page_size,
             this.showHidden,
             forceNoLoading ? false : this.showQueryLoading
         );
@@ -482,63 +354,26 @@
 
       // Outputs the query string for the list
       _buildQueryString() {
-        let out = [];
-        if (this.pageNumber && this.pageNumber > 1) {
-          out.push('page=' + this.pageNumber);
-        }
-        if (this.pageSize) {
-          out.push('size=' + this.pageSize);
-        }
-        if (this.q && this.q.length) {
-          out.push('q=' + this.q);
-        }
-        if (this.partnerType && this.partnerType.length) {
-          out.push('partner_type=' + this.partnerType);
-        }
-        if (this.csoType && this.csoType.length) {
-          out.push('cso_type=' + this.csoType);
-        }
-        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-        }
-        if (this.showHidden) {
-          out.push('hidden=true');
-        }
-        return out.join('&');
+        return this._buildUrlQueryString({
+          page: this.paginator.page,
+          size: this.paginator.page_size,
+          q: this.q,
+          partner_types: this.selectedPartnerTypes,
+          cso_types: this.selectedCsoTypes,
+          hidden: this.showHidden ? 'true' : '',
+          sort: this.sortOrder
+        });
       }
 
       _buildCsvDownloadUrl() {
-        let queryString = '';
-        let endpointUrl = '';
-        let params = [];
-
-        if (this.q && this.q.length) {
-          params.push('search=' + this.q);
-        }
-        if (this.partnerType && this.partnerType.length) {
-          params.push('partner_type=' + this.partnerType);
-        }
-        if (this.csoType && this.csoType.length) {
-          params.push('cso_type=' + this.csoType);
-        }
-        params.push('hidden=' + this.showHidden);
-
-        params.push('format=csv');
-        queryString = params.join('&');
-        endpointUrl = this.getEndpoint('partners').url;
-
-        return endpointUrl + '?' + queryString;
-      }
-
-      _dropdownSelected() {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-      }
-
-      _toggleHidden() {
-        this.set('debounceTime', 50);
-        this.set('showHidden', this.showHidden ? false : true);
-        this.set('pageNumber', 1);
+        let endpointUrl = this.getEndpoint('partners').url;
+        let params = {
+          search: this.q,
+          partner_type: this.selectedPartnerTypes,
+          cso_type: this.selectedCsoTypes,
+          hidden: this.showHidden ? 'true' : 'false'
+        };
+        return this._buildCsvExportUrl(params, endpointUrl);
       }
 
       _computeName(name, shortName) {
@@ -558,15 +393,13 @@
       _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType) {
         if (showOnlyGovernmentType) {
           // lock list to government partners only
-          this.set('partnerType', 'Government');
-          this._updateSelectedFiltersValues();
+          this.set('selectedPartnerTypes', this._governmentLockedPartnerTypes);
         } else {
           // unlock list from government partners only
-          this.set('partnerType', null);
-          this.removeFilterOption('Partner Type', 'partnerType');
+          this.set('selectedPartnerTypes', []);
         }
-        this.removeFilterOption('CSO Type', 'csoType');
-        this.set('pageNumber', 1);
+        this.set('selectedCsoTypes', []);
+        this.resetPageNumber();
         this.set('showHidden', false);
       }
 
