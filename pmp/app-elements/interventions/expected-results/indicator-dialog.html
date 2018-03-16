@@ -121,7 +121,7 @@
           </div>
         </div>
         <div class="row-padding" name="disaggregations">
-          <div hidden$="[[_showAddDisaggreations(isCluster, currentUser)]]" class="createDisaggreg">If disaggregation groups that you need are not
+          <div hidden$="[[_hideAddDisaggreations(isCluster, currentUser)]]" class="createDisaggreg">If disaggregation groups that you need are not
             pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
           </div>
           <template is="dom-if" if="[[!isCluster]]" restamp>
@@ -361,8 +361,8 @@
           return options;
         },
 
-        _showAddDisaggreations: function(isCluster, currentUser) {
-          return isCluster && this.userIsPme(currentUser);
+        _hideAddDisaggreations: function(isCluster, currentUser) {
+          return isCluster || !this.userIsPme(currentUser);
         }
 
       });
