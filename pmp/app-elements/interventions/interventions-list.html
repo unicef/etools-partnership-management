@@ -409,12 +409,8 @@
           },
         },
 
-        listeners: {
-          'sort-changed': '_sortOrderChanged',
-        },
-
         observers: [
-          '_filtersChanged(selectedStatuses.length, selectedDocumentTypes.length, ' +
+          '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
             'selectedSections.length, selectedOffices.length)', // used for non removable filters
           '_initFiltersMenuList(cpOutputs, unicefUsersData)',
           '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs, selectedStatuses.length, ' +

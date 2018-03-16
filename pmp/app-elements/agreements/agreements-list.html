@@ -301,12 +301,8 @@
           }
         },
 
-        listeners: {
-          'sort-changed': '_sortOrderChanged',
-        },
-
         observers: [
-          'resetPageNumber(selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
+          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
           '_initFiltersMenuList(partnersDropdownData)',
           '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
             'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',

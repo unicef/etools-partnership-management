@@ -12,8 +12,7 @@
 
       q: {
         type: String,
-        notify: true,
-        observer: '_qChanged'
+        notify: true
       },
 
       sortOrder: Object,
@@ -21,18 +20,6 @@
       debounceTime: {
         type: Number,
         value: 50
-      },
-
-      /**
-       * TODO: `defaultListsSize`, `pageSize`, `totalResults` and `pageNumber` should be replaced
-       * by Pagination behavior; to be removed after replacement
-       */
-      pageSize: {
-        type: Number
-      },
-
-      pageNumber: {
-        type: Number
       },
 
       active: Boolean,
@@ -54,12 +41,6 @@
         value: false
       },
 
-      // TODO: move it to Pagination behavior
-      defaultListsSize: {
-        type: Number,
-        value: 10
-      },
-
       showQueryLoading: {
         type: Boolean,
         value: false
@@ -70,8 +51,11 @@
         notify: true
       },
 
-      stampListData: Boolean,
-      totalResults: Number
+      stampListData: Boolean
+    },
+
+    listeners: {
+      'sort-changed': '_sortOrderChanged',
     },
 
     // When the list data rows are changing check and close any details opened
@@ -89,24 +73,6 @@
     _sortOrderChanged: function(e) {
       this.set('debounceTime', 150);
       this.set('sortOrder', e.detail);
-    },
-
-    // TODO: to be deleted after filters refactor
-    _pageSizeChanged: function(e) {
-      this.set('debounceTime', 200);
-      this.set('pageNumber', 1);
-      this.set('pageSize', parseInt(e.detail.value));
-    },
-
-    // TODO: to be deleted after filters refactor
-    _pageNumberChanged: function(e) {
-      this.set('debounceTime', 50);
-      this.set('pageNumber', e.detail.value);
-    },
-
-    _qChanged: function(q) {
-      this.set('debounceTime', 300);
-      this.set('pageNumber', 1);
     },
 
     // List fade in fade out effect
