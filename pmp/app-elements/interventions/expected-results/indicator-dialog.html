@@ -27,6 +27,7 @@
 <link rel="import" href="../../environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-config/app-user-permissions-behavior.html">
 
 <dom-module id="indicator-dialog">
   <template strip-whitespace>
@@ -120,7 +121,7 @@
           </div>
         </div>
         <div class="row-padding" name="disaggregations">
-          <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not
+          <div hidden$="[[_showAddDisaggreations(isCluster, currentUser)]]" class="createDisaggreg">If disaggregation groups that you need are not
             pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
           </div>
           <template is="dom-if" if="[[!isCluster]]" restamp>
@@ -149,6 +150,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.IndicatorDialogTabs,
           EtoolsPmpApp.Behaviors.SaveIndicator,
+          EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior,
           EtoolsPmpApp.Behaviors.EnvironmentFlags
         ],
 
@@ -357,6 +359,10 @@
             });
           }
           return options;
+        },
+
+        _showAddDisaggreations: function(isCluster, currentUser) {
+          return isCluster && this.userIsPme(currentUser);
         }
 
       });
