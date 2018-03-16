@@ -138,24 +138,33 @@
         _scrollChangedHandler() {
           this._waitForBoundingClientRectToBeSet()
              .then((containerDistanceFromViewportTop) => {
+                let statusElem = this.shadowRoot.querySelector('etools-status');
                 if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
                   // if the status element is about to go under the title bar, start moving in down
-                  let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
-                  this.updateStyles({'--status-top': newOffset + 'px'});
+                  // let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
+                  // this.updateStyles({'--status-top': newOffset + 'px'});
+                  statusElem.classList.add('sticky-status');
                 } else {
-                  this.updateStyles({'--status-top': 'auto'});
+                  // this._setNotStickyStyles();
+                  statusElem.classList.remove('sticky-status');
                 }
              });
         }
         _waitForBoundingClientRectToBeSet() {
           return new Promise((resolve, reject) => {
-            let bcrInterval = setInterval(() => {
-              let top = this.getBoundingClientRect().top;
-              if (top !== 0) {
-                clearInterval(bcrInterval);
-                resolve(top);
-              }
-            }, 50);
+            let top = this.getBoundingClientRect().top;
+            if (top === 0) {
+              let bcrInterval = setInterval(() => {
+                top = this.getBoundingClientRect().top;
+                if (top !== 0) {
+                  clearInterval(bcrInterval);
+                  resolve(top);
+                }
+              }, 0);
+            } else {
+              // no need to run the interval, resolve immediately
+              resolve(top);
+            }
           });
         }
 
