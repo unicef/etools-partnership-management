@@ -152,8 +152,8 @@
           let filterValue = filters[field];
           let filterUrlValue;
 
-          let fiterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
-          switch (fiterValType) {
+          let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+          switch (filterValType) {
             case 'array':
               if (!_.isEmpty(filterValue)) {
                 filterUrlValue = filterValue.join('|');
