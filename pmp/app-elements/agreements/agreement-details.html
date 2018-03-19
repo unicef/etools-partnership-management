@@ -628,7 +628,7 @@
         _filterCountryProgrammesForAgreements: function(countryProgrammes) {
           var self = this;
           return countryProgrammes.filter(function(cp) {
-            return (cp.active || cp.future) && !cp.special;
+            return (cp.active || cp.future);
           });
         },
 
