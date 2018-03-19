@@ -126,7 +126,8 @@
         }
 
         _setNotStickyStyles() {
-          this.updateStyles({'--status-top': 'auto'});
+          let statusElem = this.shadowRoot.querySelector('etools-status');
+          statusElem.classList.remove('sticky-status');
         }
 
         _resetScrollHandler() {
@@ -136,15 +137,32 @@
         }
 
         _scrollChangedHandler() {
-          let containerDistanceFromViewportTop = this.getBoundingClientRect().top;
-
-          if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-            // if the status element is about to go under the title bar, start moving in down
-            let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
-            this.updateStyles({'--status-top': newOffset + 'px'});
-          } else {
-            this.updateStyles({'--status-top': 'auto'});
-          }
+          this._waitForBoundingClientRectToBeSet()
+             .then((containerDistanceFromViewportTop) => {
+                let statusElem = this.shadowRoot.querySelector('etools-status');
+                if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+                  statusElem.classList.add('sticky-status');
+                } else {
+                  statusElem.classList.remove('sticky-status');
+                }
+             });
+        }
+        _waitForBoundingClientRectToBeSet() {
+          return new Promise((resolve, reject) => {
+            let top = this.getBoundingClientRect().top;
+            if (top === 0) {
+              let bcrInterval = setInterval(() => {
+                top = this.getBoundingClientRect().top;
+                if (top !== 0) {
+                  clearInterval(bcrInterval);
+                  resolve(top);
+                }
+              }, 0);
+            } else {
+              // no need to run the interval, resolve immediately
+              resolve(top);
+            }
+          });
         }
 
         _createStatusChangeWarningDialog() {
