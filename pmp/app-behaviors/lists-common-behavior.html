@@ -152,14 +152,22 @@
           let filterValue = filters[field];
           let filterUrlValue;
 
-          if (filterValue instanceof Array && !_.isEmpty(filterValue)) {
-            filterUrlValue = filterValue.join('|');
-          } else if (field === 'sort' && filterValue.field && filterValue.direction) {
-            filterUrlValue = filterValue.field + '.' + filterValue.direction;
-          } else {
-            if (!(field === 'page' && filterValue === 1)) {
-              filterUrlValue = String(filterValue).trim();
-            }
+          let fiterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+          switch (fiterValType) {
+            case 'array':
+              if (!_.isEmpty(filterValue)) {
+                filterUrlValue = filterValue.join('|');
+              }
+              break;
+            case 'object':
+              if (field === 'sort' && filterValue.field && filterValue.direction) {
+                filterUrlValue = filterValue.field + '.' + filterValue.direction;
+              }
+              break;
+            default:
+              if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+                filterUrlValue = String(filterValue).trim();
+              }
           }
 
           if (filterUrlValue) {
@@ -171,34 +179,33 @@
       return queryParams.join('&');
     },
 
-    _buildCsvExportUrl: function(filters, endpointUrl) {
-      let params = [];
-
-      for (let field in filters) {
-        if (filters[field]) {
-          if (filters[field] instanceof Array && !_.isEmpty(filters[field])) {
-            params.push(field + '=' + filters[field].join(','));
-          } else {
-            let filterStrVal = String(filters[field]).trim();
-            params.push(field + '=' + filterStrVal);
+    _buildExportQueryString: function(params) {
+      let qsParams = [];
+      for (let pKey in params) {
+        if (params[pKey]) {
+          if (params[pKey] instanceof Array && !_.isEmpty(params[pKey])) {
+            qsParams.push(pKey + '=' + params[pKey].join(','));
+          }
+          if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
+            let filterStrVal = String(params[pKey]).trim();
+            qsParams.push(pKey + '=' + filterStrVal);
           }
         }
       }
-      params.push('format=csv');
-      let queryString = params.join('&');
-      return endpointUrl ? (endpointUrl + '?' + queryString) : queryString;
+      qsParams.push('format=csv');
+      return qsParams.join('&');
+    },
+
+    _buildCsvExportUrl: function(params, endpointUrl) {
+      return endpointUrl + '?' + this._buildExportQueryString(params);
+    },
+
+    _canFilterData: function() {
+      return this.requiredDataLoaded && this.initComplete;
     },
 
     // Updates URL state with new query string, and launches query
-    _updateUrlAndDislayedData: function(currentPageUrlPath, lastUrlQueryStr, buildCsvExportUrl,
-                                        buildQueryString, filterData, csvDownloadProp) {
-      if (!this.requiredDataLoaded || !this.initComplete) {
-        return;
-      }
-
-      this.set(csvDownloadProp ? csvDownloadProp : 'csvDownloadUrl', buildCsvExportUrl());
-      let qs = buildQueryString();
-
+    _updateUrlAndDislayedData: function(currentPageUrlPath, lastUrlQueryStr, qs, filterData) {
       if (qs !== lastUrlQueryStr) {
         // update URL
         this.updateAppState(currentPageUrlPath, qs, true);
@@ -209,6 +216,7 @@
       } else {
         if (location.search === '') {
           // only update URL query string, without location change event being fired(no page refresh)
+          // used to keep prev list filters values when navigating from details to list page
           this.updateAppState(currentPageUrlPath, qs, false);
         }
         if (this.forceDataRefresh && this.requiredDataLoaded) {
@@ -218,9 +226,7 @@
           this.set('forceDataRefresh', false);
         }
       }
-      return qs;
     }
-
   };
 
   /** @polymerBehavior */

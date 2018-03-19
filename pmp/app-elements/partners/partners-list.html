@@ -289,10 +289,13 @@
 
         // Updates URL state with new query string, and launches query
         _updateUrlAndData: function() {
-          let newQueryStr = this._updateUrlAndDislayedData(this.currentPage + '/list', _partnersLastNavigated,
-              this._buildCsvDownloadUrl.bind(this), this._buildQueryString.bind(this),
-              this._filterPartnersData.bind(this));
-          _partnersLastNavigated = newQueryStr || _partnersLastNavigated;
+          if (this._canFilterData()) {
+            this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+            let qs = this._buildQueryString();
+            this._updateUrlAndDislayedData(this.currentPage + '/list',
+                _partnersLastNavigated, qs, this._filterPartnersData.bind(this));
+            _partnersLastNavigated = qs || _partnersLastNavigated;
+          }
         },
 
         _filterPartnersData: function(forceNoLoading) {

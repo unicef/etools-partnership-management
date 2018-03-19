@@ -534,11 +534,13 @@
 
         // Updates URL state with new query string, and launches query
         _updateUrlAndData: function() {
-          let newQueryStr = this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated,
-              this._buildCsvDownloadQueryString.bind(this), this._buildQueryString.bind(this),
-              this._filterInterventionsData.bind(this), 'csvDownloadQs');
-
-          _interventionsLastNavigated = newQueryStr || _interventionsLastNavigated;
+          if (this._canFilterData()) {
+            this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
+            let qs = this._buildQueryString();
+            this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated, qs,
+                this._filterInterventionsData.bind(this));
+            _interventionsLastNavigated = qs || _interventionsLastNavigated;
+          }
         },
 
         _prepareQueryStrVal: function(arr, prop) {
@@ -585,26 +587,24 @@
             offices: this.selectedOffices.join('|'),
             cp_outputs: _.map(this.selectedCpOutputs, 'id').join('|'),
             unicef_focal_points: _.map(this.selectedUnicefFocalPoints, 'id').join('|'),
-            start: this.prettyDate(this.startDate, 'YYYY-MM-DD'),
-            end: this.prettyDate(this.endDate, 'YYYY-MM-DD'),
+            start: this.startDate,
+            end: this.endDate,
             sort: this.sortOrder
           });
         },
 
         _buildCsvDownloadQueryString: function() {
           let params = {
-            status: !_.isEmpty(this.selectedStatuses) ? this.selectedStatuses[0] : '',
-            document_type: !_.isEmpty(this.selectedDocumentTypes) ? this.selectedDocumentTypes[0] : '',
-            sections: !_.isEmpty(this.selectedSections) ? this.selectedSections[0] : '',
-            office: !_.isEmpty(this.selectedOffices) ? this.selectedOffices[0] : '',
-            unicef_focal_points: !_.isEmpty(this.selectedUnicefFocalPoints)
-                ? encodeURIComponent(_.map(this.selectedUnicefFocalPoints, 'id'))
-                : '',
-            start: this.prettyDate(this.startDate, 'YYYY-MM-DD'),
-            end: this.prettyDate(this.endDate, 'YYYY-MM-DD'),
+            status: this.selectedStatuses,
+            document_type: this.selectedDocumentTypes,
+            sections: this.selectedSections,
+            office: this.selectedOffices,
+            unicef_focal_points: _.map(this.selectedUnicefFocalPoints, 'id'),
+            start: this.startDate,
+            end: this.endDate,
             search: this.q
           };
-          return this._buildCsvExportUrl(params);
+          return this._buildExportQueryString(params);
         },
 
         _setSelectedOffices: function(officesStr) {
