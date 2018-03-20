@@ -93,7 +93,7 @@
 
       static get observers() {
         return [
-          '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked)',
+          '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked, possibleStatuses)',
           '_computeAvailableActions(partner.hidden, editMode)'
         ];
       }
@@ -153,9 +153,9 @@
         ]);
       }
 
-      _partnerStatusChanged(visionSynced, deletedFlag, blocked) {
-        if (partner === undefined && visionSynced === undefined && deletedFlag === undefined
-          && blocked === undefined) {
+      _partnerStatusChanged(visionSynced, deletedFlag, blocked, possibleStatuses) {
+        if (visionSynced === undefined && deletedFlag === undefined
+          && blocked === undefined && possibleStatuses !== undefined && possibleStatuses !== []) {
           return;
         }
         this._computeAvailableStatuses();
