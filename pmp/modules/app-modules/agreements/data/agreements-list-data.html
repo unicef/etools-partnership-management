@@ -2,6 +2,8 @@
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
+<link rel="import" href="../../../scripts/lodash.html">
+
 <link rel="import" href="../../../config/dexie-db-config.html">
 <link rel="import" href="../../../mixins/list-data-mixin.html">
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
@@ -85,8 +87,8 @@
         this.dispatch('setAgreements', res);
       }
 
-      query(field, order, searchString, agreementType,
-            agreementStatus, selectedPartnerNames, startDate,
+      query(field, order, searchString, agreementTypes,
+            agreementStatuses, selectedPartnerNames, startDate,
             endDate, pageNumber, pageSize, showQueryLoading) {
         // If an active query transaction exists, abort it and start
         // a new one
@@ -123,11 +125,11 @@
               return false;
             }
 
-            if (agreementType && agreement.agreement_type !== agreementType) {
+            if (!_.isEmpty(agreementTypes) && agreementTypes.indexOf(agreement.agreement_type) === -1) {
               return false;
             }
 
-            if (agreementStatus && agreement.status !== agreementStatus) {
+            if (!_.isEmpty(agreementStatuses) && agreementStatuses.indexOf(agreement.status) === -1) {
               return false;
             }
 

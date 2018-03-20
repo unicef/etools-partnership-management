@@ -4,7 +4,6 @@
 <link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
 
 <link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -19,11 +18,11 @@
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
 <link rel="import" href="../../../../mixins/list-filters-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../../mixins/pagination-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -38,34 +37,25 @@
 
     <style
         include="shared-styles data-table-styles list-filter-styles paper-material-styles grid-layout-styles">
-      /* the condition below used to fix reponsive issues, please check if it is still the case
-         Happened whenever there was text overflowing a table column */
-      /*
-      :host {
-        width: 100%;
-      } */
-
-      div[elevation="1"] {
-        @apply --paper-material-elevation-1;
-      }
 
       .ag-ref {
         @apply --text-btn-style;
         text-transform: none;
       }
+
     </style>
 
     <template is="dom-if" if="[[stampListData]]">
       <agreements-list-data id="agreements"
                             filtered-agreements="{{filteredAgreements}}"
-                            total-results="{{totalResults}}"
+                            total-results="{{paginator.count}}"
                             list-data-path="filteredAgreements"
                             on-agreements-loaded="_requiredDataHasBeenLoaded"
                             fire-data-loaded>
       </agreements-list-data>
     </template>
 
-    <div id="listControls" elevation="1">
+    <div id="listControls" class="paper-material" elevation="1">
 
       <div class="wrap-controls">
 
@@ -77,31 +67,23 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="Agreement Type"
+              options="[[agreementTypes]]"
+              selected-values="{{selectedAgTypes}}"
+              hide-search></etools-dropdown-multi>
+        </div>
+
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="Agreement Status"
+              options="[[agreementStatuses]]"
+              selected-values="{{selectedAgStatuses}}"
+              hide-search></etools-dropdown-multi>
+        </div>
+
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-
-          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
-            <div class="dropdown-with-clear-btn">
-              <paper-dropdown-menu label$="[[filter.filterName]]" noink>
-                <paper-listbox slot="dropdown-content"
-                               attr-for-selected="name"
-                               on-iron-select="filterValueChanged"
-                               on-iron-deselect="filterValueChanged"
-                               data-filter-path$="[[filter.path]]"
-                               on-iron-activate="_dropdownSelected"
-                               selected=[[filter.alreadySelected]]>
-                  <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
-                  </template>
-                </paper-listbox>
-              </paper-dropdown-menu>
-              <paper-icon-button class="remove" icon="cancel"
-                                 on-tap="removeFilter"
-                                 data-filter-name$="[[filter.filterName]]"
-                                 data-reset-path$="[[filter.path]]">
-              </paper-icon-button>
-            </div>
-          </template>
-
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <div class="filter esmm">
               <etools-dropdown-multi
@@ -165,10 +147,11 @@
 
     </div>
 
-    <div id="list" elevation="1" class="hidden">
+    <div id="list" class="paper-material hidden" elevation="1">
 
-      <etools-data-table-header id="listHeader"
-                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+      <etools-data-table-header
+          id="listHeader"
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
         <etools-data-table-column class="col-2" field="agreement_number" sortable>
           Reference Number #
         </etools-data-table-column>
@@ -235,12 +218,10 @@
       </template>
 
       <etools-data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeChanged"
-          on-page-number-changed="_pageNumberChanged">
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
       </etools-data-table-footer>
 
     </div>
@@ -256,8 +237,9 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
+     * @appliesMixin EtoolsPmpApp.Mixins.ListsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.Pagination
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     const AgreementsListRequiredMixins = EtoolsMixinFactory.combineMixins([
@@ -265,8 +247,8 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.ListFilters,
       EtoolsPmpApp.Mixins.ListsCommon,
+      EtoolsPmpApp.Mixins.Pagination,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.AppNavigationHelper,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
@@ -287,52 +269,30 @@
             notify: true,
             observer: '_listChanged'
           },
-
-          agreementType: {
-            type: String
+          selectedAgTypes: {
+            type: Array,
+            value: []
           },
-
-          agreementStatus: {
-            type: String
+          selectedAgStatuses: {
+            type: Array,
+            value: []
           },
-
           selectedPartners: {
             type: Array,
-            observer: '_selectedPartnersChanged'
+            observer: 'resetPageNumber'
           },
-
           startDate: {
             type: String,
-            observer: '_dateChanged'
+            observer: 'resetPageNumber'
           },
-
           endDate: {
             type: String,
-            observer: '_dateChanged'
+            observer: 'resetPageNumber'
           },
-
-          totalPages: {
-            type: Number
-          },
-
-          visibleRange: {
-            type: Array
-          },
-
-          urlParams: {
-            type: Object
-          },
-
           partnersDropdownData: {
             type: Array,
             statePath: 'partnersDropdownData'
           },
-
-          initComplete: {
-            type: Boolean,
-            value: false
-          },
-
           agreementTypes: {
             type: Array,
             statePath: 'agreementTypes'
@@ -340,10 +300,6 @@
           agreementStatuses: {
             type: Array,
             statePath: 'agreementStatuses'
-          },
-          csvDownloadUrl: {
-            type: String,
-            notify: true
           },
           _sortableFieldNames: {
             type: Array,
@@ -354,65 +310,39 @@
 
       static get observers() {
         return [
-          '_initListFilters(agreementTypes, agreementStatuses, partnersDropdownData)',
-          '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
-          'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
+          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
+          '_initFiltersMenuList(partnersDropdownData)',
+          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
+          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
       }
 
-      ready() {
-        super.ready();
-        this._initListeners();
-      }
-
-      _initListeners() {
-        this.addEventListener('sort-changed', this._sortOrderChanged);
-      }
-
-      _initListFilters(agreementTypes, agreementStatuses, partnersDropdownData) {
+      _initFiltersMenuList(partnersDropdownData) {
         // init list filter options
-        this._initAgFiltersDebouncer = Polymer.Debouncer.debounce(this._initAgFiltersDebouncer,
-            Polymer.Async.timeOut.after(100),
-            () => {
-              this.initListFiltersData([
-                {
-                  filterName: 'Agreement Type',
-                  type: 'dropdown',
-                  selectionOptions: agreementTypes,
-                  alreadySelected: null,
-                  path: 'agreementType'
-                },
-                {
-                  filterName: 'Agreement Status',
-                  type: 'dropdown',
-                  selectionOptions: agreementStatuses,
-                  alreadySelected: null,
-                  path: 'agreementStatus'
-                },
-                {
-                  filterName: 'Partner',
-                  type: 'esmm', // etools-dropdown-multi
-                  multiple: true,
-                  selectionOptions: partnersDropdownData,
-                  alreadySelected: [],
-                  path: 'selectedPartners'
-                },
-                {
-                  filterName: 'Starts After',
-                  type: 'datepicker', // etools-datepicker
-                  dateSelected: '',
-                  path: 'startDate'
-                },
-                {
-                  filterName: 'Ends Before',
-                  type: 'datepicker', // etools-datepicker
-                  dateSelected: '',
-                  path: 'endDate'
-                }
-              ]);
-              this._updateSelectedFiltersValues();
-            });
+        this.initListFiltersData([
+          {
+            filterName: 'Partner',
+            type: 'esmm', // etools-multi-selection-menu
+            multiple: true,
+            selectionOptions: partnersDropdownData,
+            alreadySelected: [],
+            path: 'selectedPartners'
+          },
+          {
+            filterName: 'Starts After',
+            type: 'datepicker', // etools-datepicker
+            dateSelected: '',
+            path: 'startDate'
+          },
+          {
+            filterName: 'Ends Before',
+            type: 'datepicker', // etools-datepicker
+            dateSelected: '',
+            path: 'endDate'
+          }
+        ]);
+        this._updateSelectedFiltersValues();
       }
 
       connectedCallback() {
@@ -435,13 +365,14 @@
         }
         this.set('initComplete', false);
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-        this.set('agreementType', urlQueryParams.type ? urlQueryParams.type : '');
-        this.set('agreementStatus', urlQueryParams.status ? urlQueryParams.status : '');
+        this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
+        this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
         this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
         this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
         this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
-        this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
-        this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+
+        this.setPaginationDataFromUrlParams(urlQueryParams);
+
         // format of sort param is sort=field.order ex: sort=name.asc
         let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
         this.set('sortOrder', result);
@@ -451,17 +382,9 @@
 
       _updateSelectedFiltersValues() {
         this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
-            Polymer.Async.timeOut.after(500),
+            Polymer.Async.timeOut.after(20),
             () => {
               let filtersValues = [
-                {
-                  filterName: 'Agreement Type',
-                  selectedValue: this.agreementType
-                },
-                {
-                  filterName: 'Agreement Status',
-                  selectedValue: this.agreementStatus
-                },
                 {
                   filterName: 'Partner',
                   selectedValue: _.map(this.selectedPartners, 'value')
@@ -480,33 +403,13 @@
       }
 
       // Updates URL state with new query string, and launches query
-      _updateURL() {
-        if (!this.requiredDataLoaded || !this.initComplete) {
-          return;
-        }
-
-        this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-        let qs = this._buildQueryString();
-
-        if (qs !== _agreementsLastNavigated) {
-          _agreementsLastNavigated = qs;
-          // update URL
-          this.updateAppState('agreements/list', qs, true);
-          // filter agreements
-          if (this.requiredDataLoaded) {
-            this._filterListData();
-          }
-        } else {
-          if (location.search === '') {
-            // only update URL query string, without location change event being fired(no page refresh)
-            this.updateAppState('agreements/list', qs, false);
-          }
-          if (this.forceDataRefresh && this.requiredDataLoaded) {
-            // refilter agreements data
-            // this will only execute when agreements-loaded event is received
-            this._filterListData();
-            this.set('forceDataRefresh', false);
-          }
+      _updateUrlAndData() {
+        if (this._canFilterData()) {
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+          let qs = this._buildQueryString();
+          this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs,
+              this._filterListData.bind(this));
+          _agreementsLastNavigated = qs || _agreementsLastNavigated;
         }
       }
 
@@ -524,13 +427,13 @@
                   this.sortOrder.field,
                   this.sortOrder.direction,
                   this.q.trim().toLowerCase(),
-                  this.agreementType,
-                  this.agreementStatus,
+                  this.selectedAgTypes,
+                  this.selectedAgStatuses,
                   _.map(this.selectedPartners, 'label'),
                   this.startDate,
                   this.endDate,
-                  this.pageNumber,
-                  this.pageSize,
+                  this.paginator.page,
+                  this.paginator.page_size,
                   forceNoLoading ? false : this.showQueryLoading
               );
             });
@@ -538,65 +441,30 @@
 
       // Outputs the query string for the list
       _buildQueryString() {
-        let out = [];
-        if (this.pageNumber && this.pageNumber > 1) {
-          out.push('page=' + this.pageNumber);
-        }
-        if (this.pageSize) {
-          out.push('size=' + this.pageSize);
-        }
-        if (this.q && this.q.length) {
-          out.push('q=' + this.q);
-        }
-        if (this.agreementType && this.agreementType.length) {
-          out.push('type=' + this.agreementType);
-        }
-        if (this.agreementStatus && this.agreementStatus.length) {
-          out.push('status=' + this.agreementStatus);
-        }
-        if (this.selectedPartners && this.selectedPartners.length) {
-          out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
-        }
-        if (this.startDate && this.startDate.length) {
-          out.push('start=' + this.startDate);
-        }
-        if (this.endDate && this.endDate.length) {
-          out.push('end=' + this.endDate);
-        }
-        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-        }
-
-        return out.join('&');
+        return this._buildUrlQueryString({
+          page: this.paginator.page,
+          size: this.paginator.page_size,
+          q: this.q,
+          type: this.selectedAgTypes,
+          status: this.selectedAgStatuses,
+          partners: _.map(this.selectedPartners, 'value'),
+          start: this.startDate,
+          end: this.endDate,
+          sort: this.sortOrder
+        });
       }
 
       _buildCsvDownloadUrl() {
-        let params = [];
-
-        if (this.agreementType && this.agreementType.length) {
-          params.push('agreement_type=' + this.agreementType);
-        }
-        if (this.agreementStatus && this.agreementStatus.length) {
-          params.push('status=' + this.agreementStatus);
-        }
-        if (this.selectedPartners && this.selectedPartners.length) {
-          params.push('partner_name=' + this.selectedPartners[0].label);
-        }
-        if (this.startDate && this.startDate.length) {
-          params.push('start=' + this.startDate);
-        }
-        if (this.endDate && this.endDate.length) {
-          params.push('end=' + this.endDate);
-        }
-        if (this.q && this.q.length) {
-          params.push('search=' + this.q);
-        }
-
-        params.push('format=csv');
-        let queryString = params.length ? params.join('&') : '';
         let endpointUrl = this.getEndpoint('agreements').url;
-
-        return endpointUrl + '?' + queryString;
+        let params = {
+          agreement_type: this.selectedAgTypes,
+          status: this.selectedAgStatuses,
+          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners[0].label : '',
+          start: this.startDate,
+          end: this.endDate,
+          search: this.q
+        };
+        return this._buildCsvExportUrl(params, endpointUrl);
       }
 
       // Convert ids from URL into array of ids
@@ -618,26 +486,6 @@
           return _selectedPartners;
         }
         return [];
-      }
-
-      _dropdownSelected() {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-      }
-
-      _selectedPartnersChanged() {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-      }
-
-      _dateChanged(date) {
-        this.set('pageNumber', 1);
-      }
-
-      _convertToDate(date) {
-        if (date && date.length) {
-          return new Date(date);
-        }
       }
 
       // verify date and prettify or not

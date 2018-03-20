@@ -22,7 +22,7 @@
 <link rel="import" href="../../../../config/config.html"/>
 <link rel="import" href="../../../../mixins/ajax-server-errors-mixin.html">
 <link rel="import" href="../../../../mixins/date-mixin.html">
-<link rel="import" href="../../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../../mixins/pagination-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
@@ -180,10 +180,6 @@
         width: 35px;
         font-size: 16px;
         color: var(--primary-text-color);
-      }
-
-      .self-end {
-        @apply --layout-self-end;
       }
 
     </style>
@@ -405,12 +401,10 @@
         </div>
       </template>
       <etools-data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeChanged"
-          on-page-number-changed="_pageNumberChanged">
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
       </etools-data-table-footer>
     </etools-content-panel>
 
@@ -435,7 +429,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints,
      * @appliesMixin EtoolsAjaxRequestMixin,
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors,
-     * @appliesMixin EtoolsPmpApp.Mixins.ListsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.Pagination
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnerFinancialAssuranceMixins = EtoolsMixinFactory.combineMixins([
@@ -444,7 +438,7 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
-      EtoolsPmpApp.Mixins.ListsCommon,
+      EtoolsPmpApp.Mixins.Pagination,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
@@ -470,9 +464,6 @@
             value: []
           },
           allEngagements: {
-            type: Array
-          },
-          visibleRange: {
             type: Array
           },
           partner: {
@@ -529,10 +520,10 @@
 
       static get observers() {
         return [
-          '_paginate(pageNumber, pageSize)',
+          '_paginate(paginator.page, paginator.page_size)',
           '_calculateFollowUpTotal(partner.planned_engagement.spot_check_follow_up_q1,' +
-          'partner.planned_engagement.spot_check_follow_up_q2, partner.planned_engagement.spot_check_follow_up_q3,' +
-          'partner.planned_engagement.spot_check_follow_up_q4)'
+            'partner.planned_engagement.spot_check_follow_up_q2, partner.planned_engagement.spot_check_follow_up_q3,' +
+            'partner.planned_engagement.spot_check_follow_up_q4)'
         ];
       }
 
@@ -548,13 +539,9 @@
 
       _init(engagements) {
         this.set('allEngagements', engagements);
-        this.set('totalResults', engagements.length);
-        if (!this.pageSize) {
-          this.set('pageSize', 5);
-          this.set('pageNumber', 1);
-        } else {
-          this._paginate();
-        }
+        this.set('paginator.count', engagements.length);
+        this.setPageSize(5);
+        this.resetPageNumber();
         this._addBasisFromEngagements(engagements);
       }
 
@@ -591,7 +578,7 @@
       _addBasisFromPartner() {
         this.set('basisOptions', [
           ...this.basisOptions,
-          ...this.partner.assessments.map(a => ({
+          ...this.partner.assessments.map((a) => ({
             label: `${a.type} - ${this.prettyDate(a.completed_date)}`,
             value: `${a.type} - ${this.prettyDate(a.completed_date)}`
           }))
@@ -601,18 +588,21 @@
       _addBasisFromEngagements(engagements) {
         this.set('basisOptions', [
           ...this.basisOptions,
-          ...engagements.map(e => ({
+          ...engagements.map((e) => ({
             label: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`,
             value: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`
           }))
         ]);
       }
 
-      _paginate() {
+      _paginate(pageNumber, pageSize) {
+        if (!this.allEngagements) {
+          return;
+        }
         let engagements = this.allEngagements;
         engagements = engagements
             .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-            .slice((this.pageNumber - 1) * this.pageSize, this.pageNumber * this.pageSize);
+            .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
         this.set('engagements', engagements);
       }
 
@@ -655,7 +645,7 @@
               Number(q1),
               Number(q2),
               Number(q3),
-              Number(q4),
+              Number(q4)
             ]));
       }
 
