@@ -6,7 +6,7 @@
   * @polymer
   * @mixinFunction
   */
-  EtoolsPmpApp.Mixins.Pagination = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.Pagination = Polymer.dedupingMixin((baseClass) => class extends baseClass {
     static get properties() {
       return {
         paginator: {
@@ -15,22 +15,33 @@
             return {
               page: 1,
               page_size: 10,
-              count: 0,
+              count: null,
               visible_range: []
             };
           },
           notify: true
+        },
+
+        defaultListsSize: {
+          type: Number,
+          value: 10
         }
       };
     }
 
+    static get observers() {
+      return [
+        '_pageInsidePaginationRange(paginator.page, paginator.count)'
+      ];
+    }
+
     pageSizeChanged(e) {
-      this.set('paginator.page', 1);
-      this.set('paginator.page_size', parseInt(e.detail.value, 10));
+      this.resetPageNumber();
+      this.setPageSize(parseInt(e.detail.value, 10));
     }
 
     pageNumberChanged(e) {
-      this.set('paginator.page', parseInt(e.detail.value, 10));
+      this.setPageNumber(parseInt(e.detail.value, 10));
     }
 
     getRequestPaginationParams() {
@@ -50,5 +61,43 @@
       }
       this.set('paginator.count', 0);
     }
-  };
+
+    setPageSize(size) {
+      this.set('paginator.page_size', size);
+    }
+
+    setPageNumber(page) {
+      this.set('paginator.page', page);
+    }
+
+    resetPageNumber() {
+      this.setPageNumber(1);
+    }
+
+    setPaginationDataFromUrlParams(urlParams) {
+      this.setPageNumber(urlParams.page ? parseInt(urlParams.page) : 1);
+      this.setPageSize(urlParams.size ? parseInt(urlParams.size) : this.defaultListsSize);
+    }
+
+    _pageInsidePaginationRange(page, totalResults) {
+      if (page < 1) {
+        this.resetPageNumber();
+      }
+      let total = parseInt(totalResults, 10);
+      if (isNaN(total)) {
+        return;
+      }
+
+      let lastPageNr = this._getLastPageNr(this.paginator.page_size, total);
+      if (page > lastPageNr) {
+        // page is bigger than last page number (possible by modifying url page param)
+        // set page to last available page
+        this.setPageNumber(lastPageNr);
+      }
+    }
+
+    _getLastPageNr(pageSize, total) {
+      return pageSize < total ? (Math.ceil(total / pageSize)) : 1;
+    }
+  });
 </script>

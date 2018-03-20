@@ -633,7 +633,7 @@
       //   - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
       _filterCountryProgrammesForAgreements(countryProgrammes) {
         return countryProgrammes.filter(function(cp) {
-          return (cp.active || cp.future) && !cp.special;
+          return (cp.active || cp.future);
         });
       }
 
