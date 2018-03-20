@@ -2,6 +2,8 @@
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
+<link rel="import" href="../../../scripts/lodash.html">
+
 <link rel="import" href="../../../mixins/list-data-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../config/dexie-db-config.html">
@@ -126,7 +128,7 @@
         }
       }
 
-      query(field, order, searchString, partnerType, csoType,
+      query(field, order, searchString, partnerTypes, csoTypes,
             pageNumber, pageSize, showHidden, showQueryLoading) {
 
         // If an active query transaction exists, abort it and start
@@ -159,11 +161,11 @@
           }
 
           queryResult = queryResult.filter(function(partner) {
-            if (partnerType && partner.partner_type !== partnerType) {
+            if (!_.isEmpty(partnerTypes) && partnerTypes.indexOf(partner.partner_type) === -1) {
               return false;
             }
 
-            if (csoType && partner.cso_type !== csoType) {
+            if (!_.isEmpty(csoTypes) && csoTypes.indexOf(partner.cso_type) === -1) {
               return false;
             }
 

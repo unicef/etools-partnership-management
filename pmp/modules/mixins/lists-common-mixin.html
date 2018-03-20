@@ -1,20 +1,30 @@
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../scripts/lodash.html">
 <link rel="import" href="event-helper-mixin.html">
+<link rel="import" href="app-navigation-helper-mixin.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
   /**
-  * @polymer
-  * @mixinFunction
-  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-  */
-  EtoolsPmpApp.Mixins.ListsCommon = (baseClass) => class extends EtoolsPmpApp.Mixins.EventHelper(baseClass) {
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+   * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
+   */
+  EtoolsPmpApp.Mixins.ListsCommon = Polymer.dedupingMixin(
+      (baseClass) => class extends EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.AppNavigationHelper, EtoolsPmpApp.Mixins.EventHelper], baseClass) {
+
     static get properties() {
       return {
+        urlParams: {
+          type: Object
+        },
+
         q: {
           type: String,
-          notify: true,
-          observer: '_qChanged'
+          notify: true
         },
 
         sortOrder: Object,
@@ -22,14 +32,6 @@
         debounceTime: {
           type: Number,
           value: 50
-        },
-
-        pageSize: {
-          type: Number
-        },
-
-        pageNumber: {
-          type: Number
         },
 
         active: Boolean,
@@ -46,9 +48,9 @@
           value: false
         },
 
-        defaultListsSize: {
-          type: Number,
-          value: 10
+        initComplete: {
+          type: Boolean,
+          value: false
         },
 
         showQueryLoading: {
@@ -56,9 +58,18 @@
           value: false
         },
 
-        stampListData: Boolean,
-        totalResults: Number
+        csvDownloadUrl: {
+          type: String,
+          notify: true
+        },
+
+        stampListData: Boolean
       };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      this.addEventListener('sort-changed', this._sortOrderChanged.bind(this));
     }
 
     // When the list data rows are changing check and close any details opened
@@ -76,25 +87,6 @@
     _sortOrderChanged(e) {
       this.set('debounceTime', 150);
       this.set('sortOrder', e.detail);
-    }
-
-    _pageSizeChanged(e) {
-      this.set('debounceTime', 200);
-      this.set('pageNumber', 1);
-      this.set('pageSize', parseInt(e.detail.value));
-    }
-
-    _pageNumberChanged(e) {
-      this.set('debounceTime', 50);
-      this.set('pageNumber', e.detail.value);
-    }
-
-    _qChanged(q) {
-      if (q === undefined) {
-        return;
-      }
-      this.set('debounceTime', 300);
-      this.set('pageNumber', 1);
     }
 
     // List fade in fade out effect
@@ -164,5 +156,95 @@
       }
       return defaultSortData;
     }
-  };
+
+    _getFilterUrlValuesAsArray(types) {
+      return types ? types.split('|') : [];
+    }
+
+    // Outputs the query string for the list
+    _buildUrlQueryString(filters) {
+      let queryParams = [];
+
+      for (let field in filters) {
+        if (filters[field]) {
+          let filterValue = filters[field];
+          let filterUrlValue;
+
+          let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+          switch (filterValType) {
+            case 'array':
+              if (!_.isEmpty(filterValue)) {
+                filterUrlValue = filterValue.join('|');
+              }
+              break;
+            case 'object':
+              if (field === 'sort' && filterValue.field && filterValue.direction) {
+                filterUrlValue = filterValue.field + '.' + filterValue.direction;
+              }
+              break;
+            default:
+              if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+                filterUrlValue = String(filterValue).trim();
+              }
+          }
+
+          if (filterUrlValue) {
+            queryParams.push(field + '=' + filterUrlValue);
+          }
+        }
+      }
+
+      return queryParams.join('&');
+    }
+
+    _buildExportQueryString(params) {
+      let qsParams = [];
+      for (let pKey in params) {
+        if (params[pKey]) {
+          if (params[pKey] instanceof Array && !_.isEmpty(params[pKey])) {
+            qsParams.push(pKey + '=' + params[pKey].join(','));
+          }
+          if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
+            let filterStrVal = String(params[pKey]).trim();
+            qsParams.push(pKey + '=' + filterStrVal);
+          }
+        }
+      }
+      qsParams.push('format=csv');
+      return qsParams.join('&');
+    }
+
+    _buildCsvExportUrl(params, endpointUrl) {
+      return endpointUrl + '?' + this._buildExportQueryString(params);
+    }
+
+    _canFilterData() {
+      return this.requiredDataLoaded && this.initComplete;
+    }
+
+    // Updates URL state with new query string, and launches query
+    _updateUrlAndDislayedData(currentPageUrlPath, lastUrlQueryStr, qs, filterData) {
+      if (qs !== lastUrlQueryStr) {
+        // update URL
+        this.updateAppState(currentPageUrlPath, qs, true);
+        // filter agreements
+        if (this.requiredDataLoaded) {
+          filterData();
+        }
+      } else {
+        if (location.search === '') {
+          // only update URL query string, without location change event being fired(no page refresh)
+          // used to keep prev list filters values when navigating from details to list page
+          this.updateAppState(currentPageUrlPath, qs, false);
+        }
+        if (this.forceDataRefresh && this.requiredDataLoaded) {
+          // re-filter list data
+          // this will only execute when [list-data]-loaded event is received
+          filterData();
+          this.set('forceDataRefresh', false);
+        }
+      }
+    }
+
+  });
 </script>
