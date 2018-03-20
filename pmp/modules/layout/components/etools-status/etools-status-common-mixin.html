@@ -90,7 +90,8 @@
         _setResizeHandler() {
           window.onresize = function() {
             // TODO: polymer2 - Polymer.updateSTyles should not be used unless there is no other way
-            Polymer.updateStyles();
+            //using just this.updateStyles() now, this should be better
+            this.updateStyles();
             this._resetScrollHandler();
             this._setScrollHandler();
           }.bind(this);
