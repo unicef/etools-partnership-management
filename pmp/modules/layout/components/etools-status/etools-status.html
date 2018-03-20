@@ -49,7 +49,7 @@
         etools-action-button {
           min-width: 160px;
         }
-        .horizontal-divider {
+        .media-query-dependent-divider {
           border-left: none;
           margin-top: 32px;
           padding-top: 24px;
@@ -68,7 +68,7 @@
           flex-direction: row;
           display: block;
         }
-        .horizontal-divider {
+        .media-query-dependent-divider {
           margin: 8px 11px;
           border-top: none;
           border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
@@ -198,7 +198,7 @@
     <etools-content-panel panel-title="Status">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-          <div class="divider-line horizontal-divider"></div>
+          <div class="divider-line media-query-dependent-divider"></div>
           <div class$="status-container [[_getStatusCssClass(status, index)]]">
             <div class="status-icon">
                 <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
