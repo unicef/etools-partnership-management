@@ -33,33 +33,58 @@
       etools-content-panel {
         width: 100%;
       }
+      @media only screen and (max-width: 1359px)  {
 
-      .top-container {
-        padding: 24px 24px 35px;
-        @apply --etools-status-top-container-styles;
+        .top-container {
+          padding: 24px 24px 35px;
+          display: inline-flex;
+          width: calc(100% - 48px);
+        }
+        .bottom-container {
+          border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+          padding: 24px;
+          flex-direction: row-reverse;
+            display: flex;
+        }
+        etools-action-button {
+          min-width: 160px;
+        }
+        .horizontal-divider {
+          border-left: none;
+          margin-top: 32px;
+          padding-top: 24px;
+          border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        }
       }
-
-      .bottom-container {
-        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
-        padding: 24px;
-        @apply --etools-status-bottom-container;
-      }
-
-      etools-action-button {
-        @apply --etools-status-button-styles;
+      @media only screen and (min-width: 1360px)  {
+        .top-container {
+          padding: 24px 24px 35px;
+          display: block;
+          width: auto;
+        }
+        .bottom-container {
+          border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+          padding: 24px;
+          flex-direction: row;
+          display: block;
+        }
+        .horizontal-divider {
+          margin: 8px 11px;
+          border-top: none;
+          border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+          padding-top: 40px;
+        }
       }
 
       .divider-line {
         @apply --layout-flex;
-        margin: 8px 11px;
-        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
-        padding-top: 40px;
-        @apply --etools-status-divider-styles;
+
       }
 
       .divider-line:first-child {
         display: none;
       }
+
 
       .status-container {
         @apply --layout-horizontal;
@@ -173,7 +198,7 @@
     <etools-content-panel panel-title="Status">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-          <div class="divider-line"></div>
+          <div class="divider-line horizontal-divider"></div>
           <div class$="status-container [[_getStatusCssClass(status, index)]]">
             <div class="status-icon">
                 <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
