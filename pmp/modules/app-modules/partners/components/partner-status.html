@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../bower_components/shadycss/apply-shim.html">
 <link rel="import" href="../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
+<link rel="import" href="../../../scripts/lodash.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status.html">
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -155,7 +156,7 @@
 
       _partnerStatusChanged(visionSynced, deletedFlag, blocked, possibleStatuses) {
         if (visionSynced === undefined && deletedFlag === undefined
-          && blocked === undefined && possibleStatuses !== undefined && possibleStatuses !== []) {
+          && blocked === undefined && (possibleStatuses === undefined || _.isEmpty(possibleStatuses))) {
           return;
         }
         this._computeAvailableStatuses();
