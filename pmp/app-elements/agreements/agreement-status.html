@@ -2,8 +2,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 <link rel="import" href="../../app-elements/etools-status/pmp-status-behavior.html">
-<link rel="import" href="../../app-config/app-endpoints-behavior.html">
-<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 
@@ -24,7 +22,7 @@
                    on-agreement-suspend-event="_setStatusSuspended"
                    on-agreement-terminate-event="_setStatusTerminated"
                    on-agreement-unsuspend-event="_unsuspendAgreement"
-                   on-agreement-delete-event="openAgDeleteConfirmation">
+                   on-agreement-delete-event="_openDeleteConfirmation">
     </etools-status>
   </template>
 
@@ -35,7 +33,6 @@
       Polymer({
         is: 'agreement-status',
         behaviors: [
-          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.EtoolsStatusCommon
         ],
         properties: {
@@ -311,10 +308,6 @@
 
         _unsuspendAgreement: function() {
           this._updateStatus('signed');
-        },
-
-        openAgDeleteConfirmation: function() {
-          this.deleteConfirmDialog.opened = true;
         },
 
         _triggerAgDeleteOnConfirm: function(e) {

@@ -210,6 +210,10 @@
       let warnDeleteContent = document.createElement('div');
       warnDeleteContent.innerHTML = this.deleteWarningMessage;
       this.deleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteContent);
+    },
+
+    _openDeleteConfirmation: function() {
+      this.deleteConfirmDialog.opened = true;
     }
   };
 
