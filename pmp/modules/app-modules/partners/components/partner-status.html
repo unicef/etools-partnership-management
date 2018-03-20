@@ -69,47 +69,7 @@
           },
           possibleStatuses: {
             type: Array,
-            value: function() {
-              return [
-                {
-                  label: 'Not Synced',
-                  icon: 'info',
-                  iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' +
-                  this.getComputedStyleValue('--status-not-synced-color'),
-                  hidden: true,
-                  completed: false
-                },
-                {
-                  label: 'Synced from VISION',
-                  icon: 'autorenew',
-                  iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
-                  hidden: true,
-                  completed: false
-                },
-                {
-                  label: 'Blocked in VISION',
-                  icon: 'block',
-                  iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
-                  hidden: true,
-                  completed: false
-                },
-                {
-                  label: 'Marked For Deletion in VISION',
-                  icon: 'delete-forever',
-                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
-                  iconContainerStyles: 'background-color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  hidden: true,
-                  completed: false
-                }
-              ];
-            }
+            value: []
           },
           possibleActions: {
             type: Array,
@@ -148,10 +108,54 @@
         this.warningDialog.updateStyles({'--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'});
 
         this._handleStickyScroll();
+        setTimeout(this.setPossibleStatuses.bind(this), 0);
+      }
+
+      setPossibleStatuses() {
+        this.set('possibleStatuses', [
+          {
+            label: 'Not Synced',
+            icon: 'info',
+            iconStyles: 'width: 19px; height: 19px; color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            iconContainerStyles: 'background-color: ' +
+            this.getComputedStyleValue('--status-not-synced-color'),
+            hidden: true,
+            completed: false
+          },
+          {
+            label: 'Synced from VISION',
+            icon: 'autorenew',
+            iconStyles: 'width: 19px; height: 19px; color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
+            hidden: true,
+            completed: false
+          },
+          {
+            label: 'Blocked in VISION',
+            icon: 'block',
+            iconStyles: 'width: 19px; height: 19px; color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
+            hidden: true,
+            completed: false
+          },
+          {
+            label: 'Marked For Deletion in VISION',
+            icon: 'delete-forever',
+            iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+            iconContainerStyles: 'background-color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            hidden: true,
+            completed: false
+          }
+        ]);
       }
 
       _partnerStatusChanged(visionSynced, deletedFlag, blocked) {
-        if (visionSynced === undefined && deletedFlag === undefined && blocked === undefined) {
+        if (partner === undefined && visionSynced === undefined && deletedFlag === undefined
+          && blocked === undefined) {
           return;
         }
         this._computeAvailableStatuses();
