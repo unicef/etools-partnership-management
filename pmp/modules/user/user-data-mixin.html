@@ -68,8 +68,7 @@
         }
       };
     }
-    connectedCallback() {
-      super.connectedCallback();
+    requestUserData() {
       this.sendRequest({
         endpoint: this.getEndpoint(this.endpointName)
       }).then((res) => {

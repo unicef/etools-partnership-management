@@ -332,6 +332,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
         this._initListeners();
+        this.requestUserData();
         window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
 
         // TODO: -polymer2 - integrate IE11 old behavior
