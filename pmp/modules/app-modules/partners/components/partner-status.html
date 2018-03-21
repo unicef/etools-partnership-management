@@ -156,7 +156,7 @@
 
       _partnerStatusChanged(visionSynced, deletedFlag, blocked, possibleStatuses) {
         if (visionSynced === undefined && deletedFlag === undefined
-          && blocked === undefined && (possibleStatuses === undefined || _.isEmpty(possibleStatuses))) {
+          && blocked === undefined && _.isEmpty(possibleStatuses)) {
           return;
         }
         this._computeAvailableStatuses();
