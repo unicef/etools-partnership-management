@@ -46,6 +46,15 @@
         ]
       };
     }
+
+    userIsPme(user) {
+      if (!user || !Array.isArray(user.groups)) {
+        return false;
+      }
+      return !!_.find(user.groups, (grp) => {
+        return grp.name === 'PME';
+      });
+    }
   });
 
 </script>
