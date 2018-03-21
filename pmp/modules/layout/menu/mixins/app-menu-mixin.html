@@ -64,12 +64,14 @@
     }
 
     _updateDrawerStyles() {
+      let drawerLayout = this.$.layout;
+      if (drawerLayout) {
+        drawerLayout.updateStyles();
+      }
       let drawer = this.$.drawer;
       if (drawer) {
         drawer.updateStyles();
       }
-      this.updateStyles();
-      //* Both above .updateStyles have to be called for this to work on IE
     }
 
     _notifyLayoutResize() {
