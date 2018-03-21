@@ -68,6 +68,8 @@
       if (drawer) {
         drawer.updateStyles();
       }
+      this.updateStyles();
+      //* Both above .updateStyles have to be called for this to work on IE
     }
 
     _notifyLayoutResize() {
