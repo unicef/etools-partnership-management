@@ -1,9 +1,9 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 
 <link rel="import" href="etools-action-button.html">
 
@@ -78,13 +78,11 @@
 
       .divider-line {
         @apply --layout-flex;
-
       }
 
       .divider-line:first-child {
         display: none;
       }
-
 
       .status-container {
         @apply --layout-horizontal;
@@ -95,7 +93,7 @@
       .status-icon, .status {
         @apply --layout-vertical;
         @apply --layout-center-justified;
-        @apply --layout-warp;
+        @apply --layout-wrap;
       }
 
       .icon-wrapper {
