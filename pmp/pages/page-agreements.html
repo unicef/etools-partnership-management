@@ -120,7 +120,8 @@
                             agreement-type="[[agreement.agreement_type]]"
                             on-save-agreement="_validateAndTriggerAgreementSave"
                             edit-mode="[[_hasEditPermissions(permissions)]]"
-                            on-update-agreement-status="_updateAgreementStatus">
+                            on-update-agreement-status="_updateAgreementStatus"
+                            on-delete-agreement="_deleteAgreement">
           </agreement-status>
         </div><!-- sidebar content end -->
       </template>
@@ -289,9 +290,13 @@
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
       },
 
-      _updateAgreementStatus: function(event) {
-        event.stopImmediatePropagation();
-        this.$.agreementData.updateAgreementStatus(event.detail);
+      _updateAgreementStatus: function(e) {
+        e.stopImmediatePropagation();
+        this.$.agreementData.updateAgreementStatus(e.detail);
+      },
+
+      _deleteAgreement: function(e) {
+        this.$.agreementData.deleteAgreement(e.detail.id);
       },
 
       /**

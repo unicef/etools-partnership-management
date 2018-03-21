@@ -1,11 +1,11 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import"
+      href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-item-data">
 
@@ -17,9 +17,8 @@
 
         is: 'agreement-item-data',
         behaviors: [
-          EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsLogsBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
@@ -28,7 +27,8 @@
             type: Object,
             value: {
               DETAILS: 'agreementDetails',
-              CREATE: 'agreements'
+              CREATE: 'agreements',
+              DELETE: 'agreementDelete'
             }
           },
           agreement: {
@@ -228,8 +228,10 @@
               });
               // fire in the hole
               let method = (isNew) ? 'POST' : 'PATCH';
-              this._triggerAgreementRequest({method: method, endpoint: endpoint, body: agreement,
-                multiPart: withUpload, prepareMultipartData: withUpload});
+              this._triggerAgreementRequest({
+                method: method, endpoint: endpoint, body: agreement,
+                multiPart: withUpload, prepareMultipartData: withUpload
+              });
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',
@@ -237,6 +239,52 @@
               });
             }
           }
+        },
+
+        deleteAgreement: function(id) {
+          if (!id) {
+            return;
+          }
+          const reqMethod = 'DELETE';
+          this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
+            this._handleAgreementDeleteSuccess(id);
+          }).catch((reqError) => {
+            this.handleErrorResponse(reqError, reqMethod);
+          });
+        },
+
+        _handleAgreementDeleteSuccess: function(id) {
+          EtoolsPmpApp.DexieDb.agreements.where('id')
+              .equals(parseInt(id, 10))
+              .delete()
+              .then(deleteCount => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
+              .catch(dexieDeleteErr => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
+              .finally(() => {
+                // go to agreements list after delete
+                this.fire('update-main-path', {path: 'agreements/list'});
+              });
+        },
+
+        _handleAgreementDeleteFromDexieSuccess: function(deleteCount) {
+          if (deleteCount === 1) {
+            this.fire('reload-list');
+            this.fire('toast', {
+              text: 'Agreement successfully deleted.',
+              showCloseBtn: true
+            });
+          } else {
+            throw new Error('Agreement was not deleted from dexie!');
+          }
+        },
+
+        _handleAgreementDeleteFromDexieErr: function(dexieDeleteErr) {
+          // Agreement dexie deleted issue
+          this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+          this.fire('toast', {
+            text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
+            'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
+            showCloseBtn: true
+          });
         }
 
       });
