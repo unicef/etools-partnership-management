@@ -2,15 +2,21 @@
   "entrypoint": "index.html",
   "shell": "pmp/app-shell.html",
   "fragments": [
-    "pmp/modules/app-modules/agreements/agreements-module.html",
-    "pmp/modules/app-modules/interventions/interventions-module.html",
     "pmp/modules/app-modules/partners/partners-module.html",
-    "pmp/modules/app-modules/reports/reports-module.html",
-    "pmp/modules/app-modules/settings/settings-module.html",
     "pmp/modules/app-modules/partners/pages/list/partners-list.html",
     "pmp/modules/app-modules/partners/pages/overview/partner-overview.html",
     "pmp/modules/app-modules/partners/pages/details/partner-details.html",
-    "pmp/modules/app-modules/partners/pages/financial-assurance/partner-financial-assurance.html"
+    "pmp/modules/app-modules/partners/pages/financial-assurance/partner-financial-assurance.html",
+
+    "pmp/modules/app-modules/agreements/agreements-module.html",
+    "pmp/modules/app-modules/agreements/pages/list/agreements-list.html",
+    "pmp/modules/app-modules/agreements/pages/details/agreement-details.html",
+
+    "pmp/modules/app-modules/interventions/interventions-module.html",
+
+    "pmp/modules/app-modules/reports/reports-module.html",
+
+    "pmp/modules/app-modules/settings/settings-module.html"
   ],
   "sources": [
     "pmp/**/*",
