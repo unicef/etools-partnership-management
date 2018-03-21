@@ -518,7 +518,7 @@
 
       _refreshInterventionPermissions: function(e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.refreshPermissions().finally(() => {
+        this.$.interventionData.refreshPermissions().then(() => {
           this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
         });
       },
