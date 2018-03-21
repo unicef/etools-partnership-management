@@ -89,8 +89,7 @@
 
         _setResizeHandler() {
           window.onresize = function() {
-            // TODO: polymer2 - Polymer.updateSTyles should not be used unless there is no other way
-            Polymer.updateStyles();
+            this.updateStyles();
             this._resetScrollHandler();
             this._setScrollHandler();
           }.bind(this);
@@ -120,7 +119,6 @@
         }
 
         _isStatusHorizontal() {
-          // the styling to make it horizontal at this resolution is in page-layout-styles
           // HD res: 1360/1366 x 768
           return window.innerWidth < 1360;
         }
