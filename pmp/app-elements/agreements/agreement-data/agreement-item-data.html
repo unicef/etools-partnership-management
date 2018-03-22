@@ -259,7 +259,7 @@
               .delete()
               .then(deleteCount => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
               .catch(dexieDeleteErr => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
-              .finally(() => {
+              .then(() => {
                 // go to agreements list after delete
                 this.fire('update-main-path', {path: 'agreements/list'});
               });
