@@ -1,13 +1,18 @@
+<link rel="import" href="../../scripts/lodash/lodash.html">
+<link rel="import" href="app-navigation-helper-behavior.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
   /** @polymerBehavior EtoolsPmpApp.Behaviors.ListsCommon */
-  EtoolsPmpApp.Behaviors.ListsCommon = {
+  EtoolsPmpApp.Behaviors.ListsCommonImpl = {
     properties: {
+      urlParams: {
+        type: Object
+      },
+
       q: {
         type: String,
-        notify: true,
-        observer: '_qChanged'
+        notify: true
       },
 
       sortOrder: Object,
@@ -15,14 +20,6 @@
       debounceTime: {
         type: Number,
         value: 50
-      },
-
-      pageSize: {
-        type: Number
-      },
-
-      pageNumber: {
-        type: Number
       },
 
       active: Boolean,
@@ -39,9 +36,9 @@
         value: false
       },
 
-      defaultListsSize: {
-        type: Number,
-        value: 10
+      initComplete: {
+        type: Boolean,
+        value: false
       },
 
       showQueryLoading: {
@@ -49,15 +46,23 @@
         value: false
       },
 
-      stampListData: Boolean,
-      totalResults: Number
+      csvDownloadUrl: {
+        type: String,
+        notify: true
+      },
+
+      stampListData: Boolean
+    },
+
+    listeners: {
+      'sort-changed': '_sortOrderChanged',
     },
 
     // When the list data rows are changing check and close any details opened
     _listDataChanged: function(event) {
-      var rows = this.$.list.querySelectorAll('etools-data-table-row');
+      let rows = this.$.list.querySelectorAll('etools-data-table-row');
       if (rows && rows.length) {
-        for (var i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
           if (rows[i].detailsOpened) {
             rows[i].set('detailsOpened', false);
           }
@@ -70,25 +75,9 @@
       this.set('sortOrder', e.detail);
     },
 
-    _pageSizeChanged: function(e) {
-      this.set('debounceTime', 200);
-      this.set('pageNumber', 1);
-      this.set('pageSize', parseInt(e.detail.value));
-    },
-
-    _pageNumberChanged: function(e) {
-      this.set('debounceTime', 50);
-      this.set('pageNumber', e.detail.value);
-    },
-
-    _qChanged: function(q) {
-      this.set('debounceTime', 300);
-      this.set('pageNumber', 1);
-    },
-
     // List fade in fade out effect
     _listChanged: function(filteredList, oldFilteredList) {
-      var classList = this.$.list.classList;
+      let classList = this.$.list.classList;
       if (filteredList instanceof Array && classList.contains('hidden')) {
         classList.remove('hidden');
       }
@@ -106,8 +95,8 @@
     _requiredDataHasBeenLoaded: function(event) {
       event.stopImmediatePropagation();
 
-      var listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
-      var list = this.get(listDataPath);
+      let listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
+      let list = this.get(listDataPath);
 
       if (typeof list === 'undefined' ||
           (Array.isArray(list) && list.length === 0)) {
@@ -148,6 +137,101 @@
         }
       }
       return defaultSortData;
+    },
+
+    _getFilterUrlValuesAsArray: function(types) {
+      return types ? types.split('|') : [];
+    },
+
+    // Outputs the query string for the list
+    _buildUrlQueryString: function(filters) {
+      let queryParams = [];
+
+      for (let field in filters) {
+        if (filters[field]) {
+          let filterValue = filters[field];
+          let filterUrlValue;
+
+          let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+          switch (filterValType) {
+            case 'array':
+              if (!_.isEmpty(filterValue)) {
+                filterUrlValue = filterValue.join('|');
+              }
+              break;
+            case 'object':
+              if (field === 'sort' && filterValue.field && filterValue.direction) {
+                filterUrlValue = filterValue.field + '.' + filterValue.direction;
+              }
+              break;
+            default:
+              if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+                filterUrlValue = String(filterValue).trim();
+              }
+          }
+
+          if (filterUrlValue) {
+            queryParams.push(field + '=' + filterUrlValue);
+          }
+        }
+      }
+
+      return queryParams.join('&');
+    },
+
+    _buildExportQueryString: function(params) {
+      let qsParams = [];
+      for (let pKey in params) {
+        if (params[pKey]) {
+          if (params[pKey] instanceof Array && !_.isEmpty(params[pKey])) {
+            qsParams.push(pKey + '=' + params[pKey].join(','));
+          }
+          if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
+            let filterStrVal = String(params[pKey]).trim();
+            qsParams.push(pKey + '=' + filterStrVal);
+          }
+        }
+      }
+      qsParams.push('format=csv');
+      return qsParams.join('&');
+    },
+
+    _buildCsvExportUrl: function(params, endpointUrl) {
+      return endpointUrl + '?' + this._buildExportQueryString(params);
+    },
+
+    _canFilterData: function() {
+      return this.requiredDataLoaded && this.initComplete;
+    },
+
+    // Updates URL state with new query string, and launches query
+    _updateUrlAndDislayedData: function(currentPageUrlPath, lastUrlQueryStr, qs, filterData) {
+      if (qs !== lastUrlQueryStr) {
+        // update URL
+        this.updateAppState(currentPageUrlPath, qs, true);
+        // filter agreements
+        if (this.requiredDataLoaded) {
+          filterData();
+        }
+      } else {
+        if (location.search === '') {
+          // only update URL query string, without location change event being fired(no page refresh)
+          // used to keep prev list filters values when navigating from details to list page
+          this.updateAppState(currentPageUrlPath, qs, false);
+        }
+        if (this.forceDataRefresh && this.requiredDataLoaded) {
+          // re-filter list data
+          // this will only execute when [list-data]-loaded event is received
+          filterData();
+          this.set('forceDataRefresh', false);
+        }
+      }
     }
   };
+
+  /** @polymerBehavior */
+  EtoolsPmpApp.Behaviors.ListsCommon = [
+    EtoolsPmpApp.Behaviors.AppNavigationHelper,
+    EtoolsPmpApp.Behaviors.ListsCommonImpl
+  ];
 </script>
