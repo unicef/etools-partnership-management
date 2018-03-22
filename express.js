@@ -25,6 +25,7 @@ app.get(/.*service-worker\.js/, function(req, res) {
   res.sendFile(getSourcesPath(req) + 'service-worker.js');
 });
 
+// TODO: check if this holds true in Polymer 2
 app.use(function(req, res) {
   // static file requrests that end up here are missing so they should return 404
   if (req.originalUrl.startsWith('/pmp/pmp/')) {
