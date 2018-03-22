@@ -590,7 +590,7 @@
             if (this.intervention && !this.intervention.country_programme) {
               this._setDefaultSelectedCpStructure();
             }
-          }, 20);
+          }, 10);
         },
         _hasExpiredCpAssigned: function(cpId) {
           if (cpId > 0 && this.cpStructureOptions instanceof Array && this.cpStructureOptions.length) {
@@ -615,13 +615,19 @@
           }
         },
         _checkExpiredCp: function() {
-          if (this.intervention && this.intervention.country_programme) {
-            let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
-            if (cpStructureIsOld) {
-              this.logWarn('PD: ' + this.intervention.number + ' has an old/expired CP Structure!');
-              this.set('_hasExpiredCp', true);
-              this.set('_expiredCpId', this.intervention.country_programme);
+          if (this.intervention) {
+            if (this.intervention.country_programme) {
+              let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
+              if (cpStructureIsOld) {
+                this.logWarn('PD: ' + this.intervention.number + ' has an old/expired CP Structure!');
+                this.set('_hasExpiredCp', true);
+                this.set('_expiredCpId', this.intervention.country_programme);
+              } else {
+                this.set('_hasExpiredCp', false);
+                this.set('_expiredCpId', null);
+              }
             } else {
+              // on new intervention page, just reset this properties
               this.set('_hasExpiredCp', false);
               this.set('_expiredCpId', null);
             }
