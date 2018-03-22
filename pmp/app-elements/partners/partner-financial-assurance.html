@@ -523,9 +523,12 @@
 
         _init: function(engagements) {
           this.set('allEngagements', engagements);
-          this.set('paginator.count', engagements.length);
-          this.setPageSize(5);
-          this.resetPageNumber();
+          this.set('engagements', []);
+          this.set('paginator', JSON.parse(JSON.stringify({
+            count: engagements.length,
+            page: 1,
+            page_size: 5
+          })));
           this._addBasisFromEngagements(engagements);
         },
 
@@ -559,6 +562,7 @@
           this._applyRiskRatingColor();
         },
 
+
         _addBasisFromPartner: function() {
           this.set('basisOptions', [
             ...this.basisOptions,
@@ -585,8 +589,8 @@
           }
           let engagements = this.allEngagements;
           engagements = engagements
-              .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-              .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+            .sort((a, b) => moment(b.status_date) - moment(a.status_date))
+            .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
           this.set('engagements', engagements);
         },
 
