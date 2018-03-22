@@ -35,6 +35,8 @@
       possibleActions: Array,
       warningDialog: Object,
       statusChangeWarningDialogContent: Object,
+      deleteConfirmDialog: Object,
+      deleteWarningMessage: String
     },
 
     observers: [
@@ -45,6 +47,9 @@
     detached: function() {
       if (this.warningDialog) {
         this.removeDialog(this.warningDialog);
+      }
+      if (this.deleteConfirmDialog) {
+        this.removeDialog(this.deleteConfirmDialog);
       }
       this._resetScrollHandler();
       this._resetResizeHandler();
@@ -199,6 +204,16 @@
     _getDefaultWarningMessage: function() {
       return 'You are changing the status from <strong>\''
             + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+    },
+
+    _createDeleteConfirmationDialog: function() {
+      let warnDeleteContent = document.createElement('div');
+      warnDeleteContent.innerHTML = this.deleteWarningMessage;
+      this.deleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteContent);
+    },
+
+    _openDeleteConfirmation: function() {
+      this.deleteConfirmDialog.opened = true;
     }
   };
 
