@@ -459,7 +459,7 @@
               .delete()
               .then(deleteCount => this._handleInterventionDeleteFromDexieSuccess(deleteCount))
               .catch(dexieDeleteErr => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr))
-              .finally(() => {
+              .then(() => {
                 // go to pd/ssfa list after delete
                 this.fire('update-main-path', {path: 'interventions/list'});
               });
