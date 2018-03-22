@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
@@ -85,6 +86,19 @@
         margin-bottom: 2px;
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
+      }
+      #readonly-cp {
+        width: auto;
+      }
+      .edit-exp-cp {
+        @apply --layout-self-end;
+        color: var(--dark-icon-color);
+        margin-bottom: 4px;
+        margin-left: 16px;
+      }
+      .edit-exp-cp[icon="cancel"] {
+        color: var(--error-color);
+        margin-bottom: 0;
       }
     </style>
 
@@ -246,20 +260,38 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-single-selection-menu id="cpStructure"
-                                      label="CP Structure"
-                                      placeholder="&#8212;"
-                                      options="[[cpStructureOptions]]"
-                                      option-value="id"
-                                      option-label="name"
-                                      selected="{{intervention.country_programme}}"
-                                      dynamic-align
-                                      hide-search
-                                      readonly$="[[!intervention.permissions.edit.country_programme]]"
-                                      required$="[[intervention.permissions.required.country_programme]]"
-                                      auto-validate
-                                      error-message="Please select CP Structure">
-        </etools-single-selection-menu>
+        <template is="dom-if" if="[[_showExpiredCp(_hasExpiredCp, _editExpiredCpActive)]]">
+          <etools-form-element-wrapper id="readonly-cp" label="CP Structure">
+            <span>[[_getExpiredCpName(intervention.country_programme)]]</span>
+          </etools-form-element-wrapper>
+          <paper-icon-button class="edit-exp-cp"
+                             icon="create"
+                             on-tap="_enableExpCpEdit"
+                             hidden$="[[!intervention.permissions.edit.country_programme]]"
+                             title="Edit expired CP Structure"></paper-icon-button>
+        </template>
+        <template is="dom-if" if="[[!_showExpiredCp(_hasExpiredCp, _editExpiredCpActive)]]">
+          <etools-single-selection-menu id="cpStructure"
+                                        label="CP Structure"
+                                        placeholder="&#8212;"
+                                        options="[[cpStructureOptions]]"
+                                        option-value="id"
+                                        option-label="name"
+                                        selected="{{intervention.country_programme}}"
+                                        dynamic-align
+                                        hide-search
+                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
+                                        required$="[[intervention.permissions.required.country_programme]]"
+                                        auto-validate
+                                        error-message="Please select CP Structure">
+          </etools-single-selection-menu>
+          <paper-icon-button class="edit-exp-cp"
+                             icon="cancel"
+                             on-tap="_cancelExpCpEdit"
+                             hidden$="[[!_editExpiredCpActive]]"
+                             title="Cancel expired CP Structure editing">
+          </paper-icon-button>
+        </template>
       </div>
 
       <div class="row-h flex-c">
@@ -467,7 +499,16 @@
           noOfPdOutputs: {
             type: String,
             value: '0'
-          }
+          },
+          _hasExpiredCp: {
+            type: Boolean,
+            value: false
+          },
+          _editExpiredCpActive: {
+            type: Boolean,
+            value: false
+          },
+          _expiredCpId: Number
         },
 
         observers: [
@@ -544,7 +585,10 @@
         _countryProgrammesChanged: function(cp) {
           let cpStructures = this._filterCountryProgrammes(cp);
           this.set('cpStructureOptions', cpStructures);
-          this._setDefaultSelectedCpStructure(cpStructures);
+          this._checkExpiredCp();
+          if (this.intervention && !this.intervention.country_programme) {
+            this._setDefaultSelectedCpStructure();
+          }
         },
         _hasExpiredCpAssigned: function(cpId) {
           if (cpId > 0 && this.cpStructureOptions instanceof Array && this.cpStructureOptions.length) {
@@ -557,22 +601,31 @@
           }
           return false;
         },
-        _setDefaultSelectedCpStructure: function(cpStructures) {
+        _setDefaultSelectedCpStructure: function() {
+          let currentCP;
+          if (!_.isEmpty(this.cpStructureOptions)) {
+            if (this.cpStructureOptions.length === 1) {
+              currentCP = this.cpStructureOptions[0];
+            } else {
+              currentCP = this._getCurrentCountryProgramme(this.cpStructureOptions);
+            }
+            this.set('intervention.country_programme', currentCP ? currentCP.id : null);
+          }
+        },
+        _checkExpiredCp: function() {
           if (this.intervention && this.intervention.country_programme) {
             let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
             if (cpStructureIsOld) {
-              this.fire('toast', {text: 'This intervention has an old/expired CP Structure!', showCloseBtn: true});
-            }
-            return;
-          }
-          let currentCP;
-          if (cpStructures && cpStructures.length) {
-            if (cpStructures.length === 1) {
-              currentCP = cpStructures[0];
+              this.async(() => {
+                this.fire('toast', {text: 'This intervention has an old/expired CP Structure!', showCloseBtn: true});
+              });
+              this.set('_hasExpiredCp', true);
+              this.set('_expiredCpId', this.intervention.country_programme);
             } else {
-              currentCP = this._getCurrentCountryProgramme(cpStructures);
+              this.set('_hasExpiredCp', false);
+              this.set('_expiredCpId', null);
             }
-            this.set('intervention.country_programme', currentCP ? currentCP.id : null);
+            this.set('_editExpiredCpActive', false);
           }
         },
         _contingencyPDChanged: function(newValue) {
@@ -794,6 +847,26 @@
 
         _showReportingRequirements: function(prpModeOff, permission) {
           return !prpModeOff && permission;
+        },
+
+        _showExpiredCp: function(hasExpiredCp, editExpiredCpActive) {
+          return hasExpiredCp && !editExpiredCpActive;
+        },
+
+        _getExpiredCpName: function(cpId) {
+          let cp = this.countryProgrammes.find(c => c.id === cpId);
+          return cp ? cp.name : '—';
+        },
+
+        _enableExpCpEdit: function() {
+          this.set('_editExpiredCpActive', true);
+          // set default CP
+          this._setDefaultSelectedCpStructure();
+        },
+
+        _cancelExpCpEdit: function() {
+          this.set('_editExpiredCpActive', false);
+          this.set('intervention.country_programme', this._expiredCpId);
         }
 
       });
