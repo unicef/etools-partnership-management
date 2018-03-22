@@ -17,7 +17,8 @@
                    actions="[[possibleActions]]"
                    on-agreement-suspend-event="_setStatusSuspended"
                    on-agreement-terminate-event="_setStatusTerminated"
-                   on-agreement-unsuspend-event="_unsuspendAgreement">
+                   on-agreement-unsuspend-event="_unsuspendAgreement"
+                   on-agreement-delete-event="_openDeleteConfirmation">
     </etools-status>
   </template>
 
@@ -87,8 +88,17 @@
                 label: 'Terminate',
                 hidden: true,
                 event: 'agreement-terminate-event'
+              },
+              {
+                label: 'Delete',
+                hidden: true,
+                event: 'agreement-delete-event'
               }
-            ]
+           ]
+          },
+          deleteWarningMessage: {
+            type: String,
+            value: 'Are you sure you want to delete this agreement?'
           }
         };
       }
@@ -96,8 +106,12 @@
       ready() {
         super.ready();
         this.set('sectionName', 'Agreement');
-        this._createStatusChangeWarningDialog();
         this._handleStickyScroll();
+
+        this._createStatusChangeWarningDialog();
+        this._createDeleteConfirmationDialog();
+        this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm.bind(this));
+
         // has to be run async for shadycss to load
         setTimeout(this.setPossibleStatuses.bind(this), 0);
       }
@@ -144,6 +158,10 @@
         let availableOptions = [];
 
         switch (status) {
+          case 'draft':
+            availableOptions.push('Save');
+            availableOptions.push('Delete');
+            break;
           case 'signed':
             availableOptions.push('Save');
             if (this.agreementType !== 'SSFA') {
@@ -314,6 +332,12 @@
 
       _unsuspendAgreement() {
         this._updateStatus('signed');
+      }
+
+      _triggerAgDeleteOnConfirm(e) {
+        if (e.detail.confirmed) {
+          this.fireEvent('delete-agreement', {id: this.agreementId});
+        }
       }
     }
 

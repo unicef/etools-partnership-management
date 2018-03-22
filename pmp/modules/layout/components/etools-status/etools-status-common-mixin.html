@@ -48,7 +48,9 @@
             possibleStatuses: Array,
             possibleActions: Array,
             warningDialog: Object,
-            statusChangeWarningDialogContent: Object
+            statusChangeWarningDialogContent: Object,
+            deleteConfirmDialog: Object,
+            deleteWarningMessage: String
           };
         }
 
@@ -63,6 +65,9 @@
           super.disconnectedCallback();
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
+          }
+          if (this.deleteConfirmDialog) {
+            this.removeDialog(this.deleteConfirmDialog);
           }
           this._resetScrollHandler();
           this._resetResizeHandler();
@@ -254,6 +259,16 @@
           } else {
             return getComputedStyle(this).getPropertyValue(varName);
           }
+        }
+
+        _createDeleteConfirmationDialog() {
+          let warnDeleteContent = document.createElement('div');
+          warnDeleteContent.innerHTML = this.deleteWarningMessage;
+          this.deleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteContent);
+        }
+
+        _openDeleteConfirmation() {
+          this.deleteConfirmDialog.opened = true;
         }
 
       });
