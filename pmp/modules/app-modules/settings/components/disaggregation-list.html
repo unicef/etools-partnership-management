@@ -8,6 +8,7 @@
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../environment-flags/environment-flags-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../user/user-permissions-mixin.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="add-disaggregation-dialog.html">
@@ -21,10 +22,12 @@
     </style>
 
     <etools-content-panel panel-title="Disaggregations">
-      <paper-icon-button slot="panel-btns"
-                         icon="add-box"
-                         on-tap="_addDisaggregation">
-      </paper-icon-button>
+      <template is="dom-if" if="[[userIsPme(currentUser)]]">
+        <paper-icon-button slot="panel-btns"
+                           icon="add-box"
+                           on-tap="_addDisaggregation">
+        </paper-icon-button>
+      </template>
       <div hidden$="[[_emptyList(disaggregations)]]">
         <etools-data-table-header no-collapse no-title>
           <etools-data-table-column class="col-4" field="name">
@@ -69,6 +72,7 @@
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
      * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
@@ -76,6 +80,7 @@
     const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.UserPermissions,
       EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.EventHelper
@@ -187,7 +192,7 @@
         if (!groups || !groups.length) {
           return '-';
         }
-        return groups.map(function(g) {
+        return groups.map((g) => {
           return g.value;
         }).join('; ');
       }
@@ -196,7 +201,6 @@
         this.disaggregationModal.initializeDisaggregation();
         this._openModal();
       }
-
     }
 
     window.customElements.define(DisaggregationList.is, DisaggregationList);
