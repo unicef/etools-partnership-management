@@ -154,7 +154,6 @@
                                   name="details"
                                   intervention="{{intervention}}"
                                   new-intervention="[[newInterventionActive]]"
-                                  on-update-intervention-status="_updateInterventionStatus"
                                   original-intervention="[[originalIntervention]]">
             </intervention-details>
           </template>
@@ -214,6 +213,7 @@
                                intervention-agreement-status="[[agreement.status]]"
                                on-save-intervention="_validateAndSaveIntervention"
                                on-update-intervention-status="_updateInterventionStatus"
+                               on-delete-intervention="_deleteIntervention"
                                edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
           </intervention-status>
         </div> <!-- sidebar content end -->
@@ -523,9 +523,13 @@
         });
       },
 
-      _updateInterventionStatus: function(event) {
-        event.stopImmediatePropagation();
-        this.$.interventionData.updateInterventionStatus(event.detail);
+      _updateInterventionStatus: function(e) {
+        e.stopImmediatePropagation();
+        this.$.interventionData.updateInterventionStatus(e.detail);
+      },
+
+      _deleteIntervention: function(e) {
+        this.$.interventionData.deleteIntervention(e.detail.id);
       },
 
       _hasEditPermissions: function(permissions, intervention) {
