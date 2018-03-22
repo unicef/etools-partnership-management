@@ -583,12 +583,14 @@
           return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
         },
         _countryProgrammesChanged: function(cp) {
-          let cpStructures = this._filterCountryProgrammes(cp);
-          this.set('cpStructureOptions', cpStructures);
-          this._checkExpiredCp();
-          if (this.intervention && !this.intervention.country_programme) {
-            this._setDefaultSelectedCpStructure();
-          }
+          this.debounce('initCP', () => {
+            let cpStructures = this._filterCountryProgrammes(cp);
+            this.set('cpStructureOptions', cpStructures);
+            this._checkExpiredCp();
+            if (this.intervention && !this.intervention.country_programme) {
+              this._setDefaultSelectedCpStructure();
+            }
+          }, 20);
         },
         _hasExpiredCpAssigned: function(cpId) {
           if (cpId > 0 && this.cpStructureOptions instanceof Array && this.cpStructureOptions.length) {
@@ -616,8 +618,7 @@
           if (this.intervention && this.intervention.country_programme) {
             let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
             if (cpStructureIsOld) {
-              this.logWarn('PD: ' + this.intervention.number + ' has an old/expired CP Structure!',
-                  'intervention-details');
+              this.logWarn('PD: ' + this.intervention.number + ' has an old/expired CP Structure!');
               this.set('_hasExpiredCp', true);
               this.set('_expiredCpId', this.intervention.country_programme);
             } else {
