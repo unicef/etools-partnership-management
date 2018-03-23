@@ -153,7 +153,7 @@
       _hasExpiredCpAssigned: function(cpId) {
         if (cpId > 0 && !_.isEmpty(this.cpStructureOptions)) {
           let cp = this.cpStructureOptions.find((cp) => {
-            return parseInt(cp.id, 10) === parseInt(cpId, 10)
+            return parseInt(cp.id, 10) === parseInt(cpId, 10);
           });
           if (!cp) {
             return true;
