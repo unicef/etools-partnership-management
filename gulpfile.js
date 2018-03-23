@@ -94,8 +94,7 @@ function source() {
   return project.splitSource()
   // // Add your own build tasks here!
     //.pipe(gulpif('**/*index*.js', html.productionBasePath())).on('end', log('Replaced Base'))
-    .pipe(gulpif('**/*.html', html.lint()))
-    .on('end', log('Linted HTML'))
+    .pipe(gulpif('**/*.html', html.lint())).on('end', log('Linted HTML'))
     .pipe(gulpif('**/*.html', html.minify())).on('end', log('Minified HTML'))
 
     // lint CSS not working correctly. Not seeing temporary css files

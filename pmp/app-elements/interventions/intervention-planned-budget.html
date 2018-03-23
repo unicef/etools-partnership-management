@@ -71,6 +71,9 @@
       *[slot="row-data"] .col-data {
         line-height: 1.5;
       }
+      #unicef-cash-val {
+        overflow: hidden;
+      }
     </style>
     <etools-content-panel panel-title="Planned Budget">
       <div slot="panel-btns" id="edit-btns">
@@ -111,7 +114,7 @@
                                               placeholder="&#8212;"
                                               options="[[currencies]]"
                                               selected="{{plannedBudget.currency}}"
-                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget, interventionId)]]"
                                               no-label-float>
                 </etools-single-selection-menu>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
@@ -135,7 +138,7 @@
                                    icon-first
                                    form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
                                    hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
-                <div slot="field">
+                <div slot="field" id="unicef-cash-val">
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
                     <etools-form-element-wrapper no-label-float
@@ -280,6 +283,11 @@
           }
           return !editablePlannedBudget;
         },
+
+        _isCurrencyReadonly: function(inAmendmentMode, editMode, editablePlannedBudget, interventionId) {
+          return inAmendmentMode ? true : this._isReadonly(editMode, editablePlannedBudget, interventionId);
+        },
+
         _editPlannedBudget: function() {
           this.set('editablePlannedBudget', true);
           this.set('_showCancelButton', true);

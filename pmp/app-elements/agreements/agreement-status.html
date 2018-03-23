@@ -1,3 +1,4 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 <link rel="import" href="../../app-elements/etools-status/pmp-status-behavior.html">
@@ -7,19 +8,21 @@
 <dom-module id="agreement-status">
   <template strip-whitespace>
     <style>
-       :host {
+      :host {
         width: 100%;
         --status-top: auto;
       }
+
       etools-status {
         top: var(--status-top);
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
-                    actions="[[possibleActions]]"
-                    on-agreement-suspend-event="_setStatusSuspended"
-                    on-agreement-terminate-event="_setStatusTerminated"
-                    on-agreement-unsuspend-event="_unsuspendAgreement">
+                   actions="[[possibleActions]]"
+                   on-agreement-suspend-event="_setStatusSuspended"
+                   on-agreement-terminate-event="_setStatusTerminated"
+                   on-agreement-unsuspend-event="_unsuspendAgreement"
+                   on-agreement-delete-event="_openDeleteConfirmation">
     </etools-status>
   </template>
 
@@ -105,14 +108,25 @@
                 hidden: true,
                 event: 'agreement-terminate-event'
               },
+              {
+                label: 'Delete',
+                hidden: true,
+                event: 'agreement-delete-event'
+              }
             ]
+          },
+          deleteWarningMessage: {
+            type: String,
+            value: 'Are you sure you want to delete this agreement?'
           }
         },
 
         ready: function() {
           this.set('sectionName', 'Agreement');
-          this._createStatusChangeWarningDialog();
           this._handleStickyScroll();
+          this._createStatusChangeWarningDialog();
+          this._createDeleteConfirmationDialog();
+          this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm.bind(this));
         },
 
         _computeAvailableActions: function(status) {
@@ -123,6 +137,11 @@
           let availableOptions = [];
 
           switch (status) {
+            case 'draft':
+              availableOptions.push('Save');
+              availableOptions.push('Delete');
+              break;
+
             case 'signed':
               availableOptions.push('Save');
               if (this.agreementType !== 'SSFA') {
@@ -290,6 +309,12 @@
         _unsuspendAgreement: function() {
           this._updateStatus('signed');
         },
+
+        _triggerAgDeleteOnConfirm: function(e) {
+          if (e.detail.confirmed) {
+            this.fire('delete-agreement', {id: this.agreementId});
+          }
+        }
 
       });
     })();

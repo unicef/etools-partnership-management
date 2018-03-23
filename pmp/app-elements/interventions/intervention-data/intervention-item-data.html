@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
@@ -19,9 +18,8 @@
 
         is: 'intervention-item-data',
         behaviors: [
-          EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsLogsBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.EnvironmentFlags,
@@ -32,7 +30,8 @@
             value: {
               DETAILS: 'interventionDetails',
               CREATE: 'interventions',
-              AGREEMENT_DETAILS: 'agreementDetails'
+              AGREEMENT_DETAILS: 'agreementDetails',
+              DELETE: 'interventionDelete'
             }
           },
           intervention: {
@@ -83,8 +82,9 @@
           let options = {
             endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
           };
-          this.sendRequest(options).then(function(resp) {
+          return this.sendRequest(options).then(function(resp) {
             self.set('intervention.permissions', resp.permissions);
+            self.set('originalIntervention.in_amendment', resp.in_amendment);
           }).catch(function(error) {
             self._handleErrorResponse(error, 'GET');
           });
@@ -439,6 +439,52 @@
             selectedSections.section_names = sectionNames;
           }
           return selectedSections;
+        },
+
+        deleteIntervention: function(id) {
+          if (!id) {
+            return;
+          }
+          const reqMethod = 'DELETE';
+          this.fireRequest(this.pdEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
+            this._handleInterventionDeleteSuccess(id);
+          }).catch((reqError) => {
+            this.handleErrorResponse(reqError, reqMethod);
+          });
+        },
+
+        _handleInterventionDeleteSuccess: function(id) {
+          EtoolsPmpApp.DexieDb.interventions.where('id')
+              .equals(parseInt(id, 10))
+              .delete()
+              .then(deleteCount => this._handleInterventionDeleteFromDexieSuccess(deleteCount))
+              .catch(dexieDeleteErr => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr))
+              .then(() => {
+                // go to pd/ssfa list after delete
+                this.fire('update-main-path', {path: 'interventions/list'});
+              });
+        },
+
+        _handleInterventionDeleteFromDexieSuccess: function(deleteCount) {
+          if (deleteCount === 1) {
+            this.fire('reload-list');
+            this.fire('toast', {
+              text: 'PD/SSFA successfully deleted.',
+              showCloseBtn: true
+            });
+          } else {
+            throw new Error('Intervention was not deleted from dexie!');
+          }
+        },
+
+        _handleInterventionDeleteFromDexieErr: function(dexieDeleteErr) {
+          // Agreement dexie deleted issue
+          this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+          this.fire('toast', {
+            text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
+            'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
+            showCloseBtn: true
+          });
         }
 
       });

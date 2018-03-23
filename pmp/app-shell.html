@@ -313,6 +313,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
           this._updatePath(e.detail.path);
+          this.scrollToTop();
         }
         e.stopImmediatePropagation();
       },
