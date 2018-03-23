@@ -69,7 +69,9 @@
     <etools-data-table-row>
       <div slot="row-data" class="p-relative">
         <div class="col-8">
-            [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
+            [[_getIndicatorType(indicator.indicator.unit)]]
+            <b>[[_addInactivePrefix(indicator)]]</b>
+            [[_getIndicatorTitle(indicator)]]
         </div>
         <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.baseline)]]
@@ -77,7 +79,8 @@
         <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.target)]]
         </div>
-        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[_showDelete(interventionStatus)]]"></edit-delete-actions>
+        <edit-delete-actions hidden$="[[!editMode]]" show-deactivate="[[intervention.in_amendment]]" show-delete="[[_showDelete(intervention.status)]]">
+        </edit-delete-actions>
       </div>
 
       <div slot="row-data-details">
@@ -139,7 +142,7 @@
           editMode: {
             type: Boolean
           },
-          interventionStatus: String
+          intervention: Object
         },
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
@@ -147,13 +150,15 @@
         observers: [
           'setIndicatorDetails(indicator, disaggregations, locations)'
         ],
-        listeners: {
-          'edit': '_editIndicator',
-          'delete': '_deleteIndicator'
+        ready: function() {
+          this.addEventListener('edit', this._editIndicator);
+          this.addEventListener('delete', this._deleteIndicator);
+          this.addEventListener('deactivate', this._deactivateIndicator);
         },
-        _showDelete: function(interventionStatus) {
-          return (!interventionStatus || interventionStatus === 'draft');
+        _showDelete: function(intervStatus) {
+          return (!intervStatus || intervStatus === 'draft');
         },
+
         setIndicatorDetails: function(indicator) {
           this._updateCollapsableIconBg(indicator);
           this._setLocationNames();
@@ -167,6 +172,10 @@
         _deleteIndicator: function(e) {
           e.stopPropagation();
           this.fire('delete-indicator');
+        },
+        _deactivateIndicator: function(e) {
+          e.stopPropagation();
+          this.fire('deactivate-indicator');
         },
         _updateCollapsableIconBg: function(indicator) {
           if (indicator.cluster_indicator_id) {
@@ -243,6 +252,12 @@
             case 'percentage':
               return '% ';
           }
+        },
+        _addInactivePrefix: function(indicator) {
+          if (!indicator || indicator.active) {
+            return '';
+          }
+         return '(inactive)';
         },
         _getIndicatorTitle: function(indicator) {
           if (!indicator) {

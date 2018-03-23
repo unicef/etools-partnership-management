@@ -117,7 +117,8 @@
               <applied-indicators data-items="[[item.applied_indicators]]"
                                   result-link-index="[[index]]"
                                   cp-output-id="[[cpOutputId]]"
-                                  intervention-status="[[interventionStatus]]"
+                                  intervention="[[intervention]]"
+                                  show-inactive-indicators="[[showInactiveIndicators]]"
                                   edit-mode="[[editMode]]">
               </applied-indicators>
             </div>
@@ -175,7 +176,8 @@
             type: Boolean,
             value: false
           },
-          interventionStatus: String
+          intervention: Object,
+          showInactiveIndicators: Boolean
         },
         listeners: {
           'delete-confirm': '_updateInterventionLocAndClusters',
@@ -190,14 +192,12 @@
             this.thereAreIndicators = false;
             return;
           }
-          let foundSomeIndicators = false;
           for (let i in this.dataItems) {
             if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
-              foundSomeIndicators = true;
+              this.thereAreIndicators = true;
               break;
             }
           }
-          this.thereAreIndicators = foundSomeIndicators;
         },
 
         getColumnLength: function(column, thereAreIndicators) {

@@ -32,6 +32,7 @@ TODO: edit-delete-actions element should be moved to common-elements folder... w
     </style>
     <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
     <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
+    <paper-icon-button hidden$="[[!showDeactivate]]" icon="block" on-tap="_onDeactivate"></paper-icon-button>
   </template>
   <script>
     (function() {
@@ -50,13 +51,21 @@ TODO: edit-delete-actions element should be moved to common-elements folder... w
           showDelete: {
             tye: Boolean,
             value: true
+          },
+          showDeactivate: {
+            tye: Boolean,
+            value: true
           }
+
         },
         _onEdit: function() {
           this.fire('edit');
         },
         _onDelete: function() {
           this.fire('delete');
+        },
+        _onDeactivate: function() {
+          this.fire('deactivate');
         }
 
       });

@@ -1,4 +1,5 @@
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="applied-indicator.html">
 
 <dom-module id="applied-indicators">
@@ -9,15 +10,18 @@
       }
     </style>
     <template is="dom-repeat"
-    items="[[dataItems]]"
-    as="indicator" index-as="indicatorIndex">
-    <applied-indicator data-args$="[[indicatorIndex]]"
-                  on-edit-indicator="_editIndicator"
-                  on-delete-indicator="_openDeleteConfirmation"
-                  indicator="[[indicator]]"
-                  edit-mode="[[editMode]]"
-                  intervention-status="[[interventionStatus]]"></applied-indicator>
-</template>
+              items="[[dataItems]]"
+              as="indicator" index-as="indicatorIndex">
+      <applied-indicator hidden$="[[_isInactive(indicator, showInactiveIndicators)]]"
+                        data-args$="[[indicatorIndex]]"
+                        on-edit-indicator="_editIndicator"
+                        on-delete-indicator="_openDeleteConfirmation"
+                        on-deactivate-indicator="_openDeactivateConfirmation"
+                        indicator="[[indicator]]"
+                        edit-mode="[[editMode]]"
+                        intervention="[[intervention]]">
+      </applied-indicator>
+    </template>
   </template>
   <script>
     (function() {
@@ -33,12 +37,49 @@
           },
           resultLinkIndex: Number,
           editMode: Boolean,
-          interventionStatus: String,
-          cpOutputId: Number
+          intervention: Object,
+          cpOutputId: Number,
+          deactivateConfirmDialog: Object,
+          indicToDeactivateIndex: String,
+          showInactiveIndicators: Boolean
         },
         behaviors: [
-          EtoolsPmpApp.Behaviors.RepeatableDataSets
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          etoolsBehaviors.DynamicDialogBehavior
         ],
+        ready: function() {
+          let deactivateDialog = document.querySelector('body')
+                                  .querySelector('etools-dialog#deactivateIndicatorDialog');
+          if (deactivateDialog) {
+            console.log('deactivateConfirmDialog', this.deactivateConfirmDialog, deactivateDialog);
+            this.deactivateConfirmDialog = deactivateDialog;
+          } else {
+            this._createDeactivateConfirmDialog();
+          }
+        },
+        _isInactive: function(indicator, showInactiveIndicators) {
+          if (indicator.active) {
+            return false;
+          }
+          return showInactiveIndicators;
+        },
+        _createDeactivateConfirmDialog: function() {
+          let dialogContent = document.createElement('div');
+          dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
+
+          this.deactivateConfirmDialog = this.createDynamicDialog({
+            title: 'Deactivate confirmation',
+            okBtnText: 'Deactivate',
+            cancelBtnText: 'Cancel',
+            size: 'md',
+            content: dialogContent,
+            id: 'deactivateIndicatorDialog',
+            closeCallback: this._onDeactivateConfirmation.bind(this)
+          });
+
+          document.querySelector('body').appendChild( this.deactivateConfirmDialog);
+          console.log('added deactivate dialog');
+        },
 
         _editIndicator: function(event) {
           let indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
@@ -54,6 +95,45 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
+
+        _openDeactivateConfirmation: function(event) {
+          this.indicToDeactivateIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
+          this.deactivateConfirmDialog.opened = true;
+        },
+
+        _onDeactivateConfirmation: function(event) {
+          if (!event.detail.confirmed) {
+            this.indicToDeactivateIndex = -1;
+            return;
+          }
+          let indicatorId = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex].id : null;
+          if (!indicatorId) {
+            return;
+          }
+          let self = this;
+          let endpoint = this.getEndpoint('deactivateIndicator', {id: indicatorId});
+          this.sendRequest({
+            method: 'PATCH',
+            endpoint: endpoint,
+            body: {}
+          }).then(function(resp) {
+            self._handleDeactivateResponse(resp);
+          }).catch(function(error) {
+            self._handleDeactivateError(error.response);
+          });
+        },
+
+        _handleDeactivateResponse: function(resp) {
+          console.log('deactivate response', resp);
+          this.dataItems[this.indicToDeactivateIndex].active = false;
+          this.indicToDeactivateIndex = -1;
+        },
+
+        _handleDeactivateError: function(err) {
+          console.log('deactivate err', err);
+          this.indicToDeactivateIndex = -1;
+        }
+
       });
     })();
   </script>
