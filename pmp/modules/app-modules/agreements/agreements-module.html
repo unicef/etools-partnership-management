@@ -124,7 +124,8 @@
                             agreement-type="[[agreement.agreement_type]]"
                             on-save-agreement="_validateAndTriggerAgreementSave"
                             edit-mode="[[_hasEditPermissions(permissions)]]"
-                            on-update-agreement-status="_updateAgreementStatus">
+                            on-update-agreement-status="_updateAgreementStatus"
+                            on-delete-agreement="_deleteAgreement">
           </agreement-status>
         </div><!-- sidebar content end -->
       </template>
@@ -507,6 +508,15 @@
           active: true,
           loadingSource: 'ag-page'
         });
+      }
+
+      _updateAgreementStatus(e) {
+        e.stopImmediatePropagation();
+        this.$.agreementData.updateAgreementStatus(e.detail);
+      }
+
+      _deleteAgreement(e) {
+        this.$.agreementData.deleteAgreement(e.detail.id);
       }
     }
 
