@@ -4,7 +4,7 @@
 <link rel="import" href="../../../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-
+<link rel="import" href="../../../../bower_components/polymer/lib/utils/debounce.html">
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
@@ -188,9 +188,12 @@
       ready() {
         super.ready();
 
-        this.debounce('mockup-list-loaded', function() {
-          this.fireEvent('global-loading', {active: false});
-        }.bind(this), 500);
+        this.mockupListLoadedDebouncer = Polymer.Debouncer.debounce(this.mockupListLoadedDebouncer,
+          Polymer.Async.timeOut.after(500),
+            () => {
+                this.fireEvent('global-loading', {active: false});
+            }
+          );
       }
 
       connectedCallback() {
@@ -234,9 +237,6 @@
       }
 
       _observeRouteDataId(reportId, listActive) {
-        if (reportId === undefined && listActive === undefined) {
-          return;
-        }
         if (listActive) {
           return;
         }
@@ -244,13 +244,18 @@
         if (this.report && this.report.id === id) {
           return;
         }
-        this.async(function() {
+        setTimeout(function() {
           if (isNaN(id)) {
             this.fireEvent('toast', {text: 'Invalid report ID!', showCloseBtn: true});
             this.set('report', null);
             return;
           }
-          this.debounce('loading-report-data', this.requestReportDetails.bind(this, id), 50);
+          this.loadingReportDataDebouncer = Polymer.Debouncer.debounce(this.loadingReportDataDebouncer,
+          Polymer.Async.timeOut.after(50),
+            () => {
+              this.requestReportDetails.bind(this, id);
+            }
+          );
         }.bind(this));
       }
 
