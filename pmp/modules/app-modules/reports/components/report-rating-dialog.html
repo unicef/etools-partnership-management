@@ -5,6 +5,7 @@
 
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -49,7 +50,8 @@
         comment: required when sending a report back
       */
       class ReportRatingDialog extends EtoolsPmpApp.Mixins.AjaxErrorsParser(
-          EtoolsPmpApp.Mixins.Endpoints(Polymer.Element)) {
+          EtoolsPmpApp.Mixins.Endpoints(
+            EtoolsPmpApp.Mixins.EventHelper(Polymer.Element))) {
 
         static get is() {
           return 'report-rating-dialog';
@@ -95,7 +97,7 @@
           this.startSpinner();
           this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
               .then(function(response) {
-                self.fire('report-accepted', {report: response});
+                self.fireEvent('report-accepted', {report: response});
                 self.stopSpinner();
                 self.close();
               }).catch(function(error) {

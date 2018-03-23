@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
@@ -41,11 +42,13 @@
     /**
      * @customElement
      * @polymer
-     * appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
-     * appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     class ReportRejectDialog extends EtoolsPmpApp.Mixins.AjaxErrorsParser(
-          EtoolsPmpApp.Mixins.Endpoints(Polymer.Element)) {
+          EtoolsPmpApp.Mixins.Endpoints(
+            EtoolsPmpApp.Mixins.EventHelper(Polymer.Element))) {
 
       static get is() {
         return 'report-reject-dialog';
@@ -92,7 +95,7 @@
 
         this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
             .then(function(response) {
-              self.fire('report-rejected', {report: response});
+              self.fireEvent('report-rejected', {report: response});
               self.stopSpinner();
               self.close();
             })
