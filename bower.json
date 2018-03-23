@@ -52,7 +52,7 @@
     "etools-page-refresh": "1.1.2",
     "etools-searchable-multiselection-menu": "2.2.18",
     "etools-piwik-analytics": "1.0.9",
-    "etools-profile-dropdown": "2.0.4",
+    "etools-profile-dropdown": "2.0.5",
     "etools-info-tooltip": "^1.1.0",
     "paper-checkbox": "2.0.0",
     "paper-radio-button": "2.0.0",
@@ -72,7 +72,6 @@
     "paper-radio-button": "2.0.0",
     "webcomponentsjs": "^0.7.24",
     "etools-ajax": "^2.0.3",
-    "etools-searchable-multiselection-menu": "3d34e2e",
     "etools-loading": "2.0.0"
   }
 }
