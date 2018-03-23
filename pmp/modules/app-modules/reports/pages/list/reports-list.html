@@ -1,0 +1,118 @@
+<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import"
+      href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../../scripts/lodash.html">
+
+<link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
+<link rel="import" href="../../../../mixins/list-filters-mixin.html">
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+
+<link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+
+<link rel="import" href="components/reports-display-list.html">
+
+
+<dom-module id="reports-list">
+  <template>
+    <style include="shared-styles list-filter-styles paper-material-styles">
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+
+    </style>
+
+    <div id="listControls" elevation="1">
+
+      <div class="wrap-controls">
+
+        <paper-input id="query"
+                      type="search"
+                      autocomplete="off"
+                      value="{{queryParams.pd_ref_title}}"
+                      placeholder="Search">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
+
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+          <div class="filter esmm">
+            <etools-dropdown
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected="[[filter.alreadySelected]]"
+                on-iron-select="filterValueChanged"
+                data-filter-path$="[[filter.path]]">
+            </etools-dropdown>
+            <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                on-tap="removeFilter"
+                                data-filter-name$="[[filter.filterName]]"
+                                data-reset-path$="[[filter.path]]">
+            </paper-icon-button>
+          </div>
+        </template>
+
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filter-bar-action-wrapper menu-btn-wrapper">
+          <paper-menu-button id="filterMenu">
+            <paper-button class="button dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              Add filter
+            </paper-button>
+            <paper-listbox class="dropdown-content">
+              <template is="dom-repeat" items="[[availableListFilterOptions]]">
+                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
+      </div>
+
+    </div>
+    <reports-display-list query-params="[[queryParams]]"
+      paginator="{{paginator}}"
+      wait-query-params-init></reports-display-list>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     */
+    class ReportsList extends Polymer.Element {
+
+      static get is() {
+        return 'reports-list';
+      }
+
+
+      static get properties() {
+        return {
+
+        };
+      }
+
+      ready() {
+        super.ready();
+
+      }
+
+    }
+
+    window.customElements.define(ReportsList.is, ReportsList);
+  </script>
+</dom-module>
