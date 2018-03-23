@@ -7,6 +7,8 @@
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -21,9 +23,8 @@
 <link rel="import" href="../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
-<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="../../app-behaviors/pagination-behavior.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
-
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
@@ -214,7 +215,7 @@
             <div class="risk-rating"></div>
             [[partner.rating]]
           </div>
-          <div class="col col-6">[[partner.basis_for_risk_rating]]</div>
+          <div class="col col-6">[[partner.type_of_assessment]] - [[prettyDate(partner.last_assessment_date)]]</div>
           <div class="col col-3 center-align">
             $ [[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]]
           </div>
@@ -229,7 +230,7 @@
         <div class="col-2 col center-align hact-values">
           <strong>
             <span class="green">[[partner.hact_values.audits.completed]] </span>
-            / [[partner.hact_values.audits.minimum_requirements]]
+            / [[_getMinReqAudits(partner.planned_engagement)]]
           </strong>
         </div>
       </div>
@@ -260,7 +261,7 @@
               <div class="col-2 center-align">TOTAL</div>
             </div>
             <div class="panel-row-extra-tall row-h panel-table-row  center">
-              <div class="col-4">Minimum Required(1)</div>
+              <div class="col-4">Minimum Required([[partner.hact_min_requirements.spot_checks]])</div>
               <div class="quarter">
                 <paper-radio-button
                     data-idx="q1"
@@ -299,7 +300,7 @@
             </div>
 
             <div class="panel-row-extra-tall row-h panel-table-row ">
-              <div class="col-4">Follow-up Required(1)</div>
+              <div class="col-4">Follow-up Required</div>
               <div class="quarter">
                 <paper-input
                     no-label-float
@@ -409,21 +410,19 @@
         </div>
       </template>
       <etools-data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeChanged"
-          on-page-number-changed="_pageNumberChanged">
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
       </etools-data-table-footer>
     </etools-content-panel>
 
     <etools-content-panel
-        panel-title="Other Assessments([[filteredAssessments.length]])"
+        panel-title="Other Assessments([[partner.assessments.length]])"
         class="content-section">
 
       <assessments-items id="assessmentsList"
-                         data-items="{{filteredAssessments}}"
+                         data-items="{{partner.assessments}}"
                          edit-mode="[[editMode]]"></assessments-items>
 
     </etools-content-panel>
@@ -444,11 +443,11 @@
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsPmpApp.Behaviors.ListsCommon
+          EtoolsPmpApp.Behaviors.Pagination
         ],
 
         observers: [
-          '_paginate(pageNumber, pageSize)',
+          '_paginate(paginator.page, paginator.page_size)'
         ],
 
         properties: {
@@ -461,9 +460,6 @@
             value: []
           },
           allEngagements: {
-            type: Array,
-          },
-          visibleRange: {
             type: Array,
           },
           partner: {
@@ -513,10 +509,6 @@
                 value: 'YES'
               }
             ]
-          },
-          filteredAssessments: {
-            type: Array,
-            value: []
           }
         },
 
@@ -531,13 +523,12 @@
 
         _init: function(engagements) {
           this.set('allEngagements', engagements);
-          this.set('totalResults', engagements.length);
-          if (!this.pageSize) {
-            this.set('pageSize', 5);
-            this.set('pageNumber', 1);
-          } else {
-            this._paginate();
-          }
+          this.set('engagements', []);
+          this.set('paginator', JSON.parse(JSON.stringify({
+            count: engagements.length,
+            page: 1,
+            page_size: 5
+          })));
           this._addBasisFromEngagements(engagements);
         },
 
@@ -569,22 +560,8 @@
           this.set('basisOptions', []);
           this._addBasisFromPartner();
           this._applyRiskRatingColor();
-          this._filterPartnerAssessments();
         },
-
-        _filterPartnerAssessments: function() {
-          this.set('filteredAssessments', this.partner.assessments.filter(a => a.type === 'Other'));
-        },
-
-        _mergeAssessments: function() {
-          if (this.filteredAssessments.length) {
-            this.set(
-              'partner.assessments',
-              _.unionBy(this.filteredAssessments, this.partner.assessments, 'id')
-            );
-          }
-        },
-
+        
         _addBasisFromPartner: function() {
           this.set('basisOptions', [
             ...this.basisOptions,
@@ -605,16 +582,18 @@
           ]);
         },
 
-        _paginate: function() {
+        _paginate: function(pageNumber, pageSize) {
+          if (!this.allEngagements) {
+            return;
+          }
           let engagements = this.allEngagements;
           engagements = engagements
             .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-            .slice((this.pageNumber - 1) * this.pageSize, this.pageNumber * this.pageSize);
+            .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
           this.set('engagements', engagements);
         },
 
         _validatePageData: function() {
-          this._mergeAssessments();
           return this.$.assessmentsList.validate();
         },
 
@@ -658,14 +637,6 @@
             ]));
         },
 
-        _specialAuditChanged: function(value) {
-          this.set('partner.planned_engagement.special_audit', value !== 'NO');
-        },
-
-        _scheduledAuditChanged: function(value) {
-          this.set('partner.planned_engagement.scheduled_audit', value !== 'NO');
-        },
-
         _goToReport: function(e) {
           let id = e.model.item.id;
           let sourceEvent = e.detail.sourceEvent;
@@ -674,6 +645,11 @@
             e.preventDefault();
             window.location.href = path;
           }
+        },
+
+        _getMinReqAudits: function(plannedEngagement) {
+          return !plannedEngagement ? 0
+            : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
         }
 
       });

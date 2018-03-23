@@ -71,6 +71,9 @@
       *[slot="row-data"] .col-data {
         line-height: 1.5;
       }
+      #unicef-cash-val {
+        overflow: hidden;
+      }
     </style>
     <etools-content-panel panel-title="Planned Budget">
       <div slot="panel-btns" id="edit-btns">
@@ -135,7 +138,7 @@
                                    icon-first
                                    form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
                                    hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
-                <div slot="field">
+                <div slot="field" id="unicef-cash-val">
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
                     <etools-form-element-wrapper no-label-float

@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-config/app-user-permissions-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../environment-flags/environment-flags-behavior.html">
 
@@ -20,10 +21,13 @@
     </style>
 
     <etools-content-panel panel-title="Disaggregations">
-      <paper-icon-button slot="panel-btns"
-                         icon="add-box"
-                         on-tap="_addDisaggregation">
-      </paper-icon-button>
+      <template is="dom-if" if="[[userIsPme(currentUser)]]">
+        <paper-icon-button slot="panel-btns"
+                           icon="add-box"
+                           on-tap="_addDisaggregation">
+        </paper-icon-button>
+      </template>
+
       <div hidden$="[[_emptyList(disaggregations)]]">
         <etools-data-table-header no-collapse no-title>
           <etools-data-table-column class="col-4" field="name">
@@ -72,13 +76,14 @@
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior,
         EtoolsPmpApp.Behaviors.EnvironmentFlags
       ],
 
       properties: {
         disaggregations: {
           type: Array,
-          statePath: 'disaggregations',
+          statePath: 'disaggregations'
         },
         dataItems: {
           type: Array
@@ -151,7 +156,6 @@
         this.disaggregationModal.initializeDisaggregation();
         this._openModal();
       }
-
     });
   })();
 </script>
