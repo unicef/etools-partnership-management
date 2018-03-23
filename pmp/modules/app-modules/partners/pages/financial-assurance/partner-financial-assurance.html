@@ -540,9 +540,12 @@
 
       _init(engagements) {
         this.set('allEngagements', engagements);
-        this.set('paginator.count', engagements.length);
-        this.setPageSize(5);
-        this.resetPageNumber();
+        this.set('engagements', []);
+        this.set('paginator', JSON.parse(JSON.stringify({
+          count: engagements.length,
+          page: 1,
+          page_size: 5
+        })));
         this._addBasisFromEngagements(engagements);
       }
 
