@@ -1,6 +1,5 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
@@ -15,7 +14,6 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
-     * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
@@ -23,7 +21,6 @@
      */
     const AgreementItemDataRequiredMixin = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
-      EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
@@ -46,7 +43,8 @@
             type: Object,
             value: {
               DETAILS: 'agreementDetails',
-              CREATE: 'agreements'
+              CREATE: 'agreements',
+              DELETE: 'agreementDelete'
             }
           },
           agreement: {
@@ -101,7 +99,9 @@
             active: true,
             loadingSource: this.ajaxLoadingMsgSource
           });
-          this._triggerAgreementRequest({endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: newId})});
+          this._triggerAgreementRequest({
+            endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: newId})
+          });
         }
       }
 
@@ -244,8 +244,11 @@
             // fire in the hole
             let method = (isNew) ? 'POST' : 'PATCH';
             this._triggerAgreementRequest({
-              method: method, endpoint: endpoint, body: agreement,
-              multiPart: withUpload, prepareMultipartData: withUpload
+              method: method,
+              endpoint: endpoint,
+              body: agreement,
+              multiPart: withUpload,
+              prepareMultipartData: withUpload
             });
           } else {
             this.fireEvent('toast', {
@@ -255,8 +258,53 @@
           }
         }
       }
-    }
 
+      deleteAgreement(id) {
+        if (!id) {
+          return;
+        }
+        const reqMethod = 'DELETE';
+        this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
+          this._handleAgreementDeleteSuccess(id);
+        }).catch((reqError) => {
+          this.handleErrorResponse(reqError, reqMethod);
+        });
+      }
+
+      _handleAgreementDeleteSuccess(id) {
+        EtoolsPmpApp.DexieDb.agreements.where('id')
+            .equals(parseInt(id, 10))
+            .delete()
+            .then(deleteCount => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
+            .catch(dexieDeleteErr => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
+            .then(() => {
+              // go to agreements list after delete
+              this.fireEvent('update-main-path', {path: 'agreements/list'});
+            });
+      }
+
+      _handleAgreementDeleteFromDexieSuccess(deleteCount) {
+        if (deleteCount === 1) {
+          this.fireEvent('reload-list');
+          this.fireEvent('toast', {
+            text: 'Agreement successfully deleted.',
+            showCloseBtn: true
+          });
+        } else {
+          throw new Error('Agreement was not deleted from dexie!');
+        }
+      }
+
+      _handleAgreementDeleteFromDexieErr(dexieDeleteErr) {
+        // Agreement dexie deleted issue
+        this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+        this.fireEvent('toast', {
+          text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
+          'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
+          showCloseBtn: true
+        });
+      }
+    }
     window.customElements.define(AgreementItemData.is, AgreementItemData);
   </script>
 </dom-module>
