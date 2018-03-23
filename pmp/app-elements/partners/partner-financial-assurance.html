@@ -378,7 +378,7 @@
         show-expand-btn
         class="content-section"
         panel-title="Assessments  and Assurance ([[allEngagements.length]])">
-      <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
+      <div class="panel-row-tall panel-table-row layout-horizontal engagements-header" hidden$="[[!allEngagements.length]]">
         <etools-data-table-column class="col-3">
           Engagement Type
         </etools-data-table-column>
@@ -461,6 +461,7 @@
           },
           allEngagements: {
             type: Array,
+            value: []
           },
           partner: {
             type: Object,
@@ -561,7 +562,7 @@
           this._addBasisFromPartner();
           this._applyRiskRatingColor();
         },
-        
+
         _addBasisFromPartner: function() {
           this.set('basisOptions', [
             ...this.basisOptions,
