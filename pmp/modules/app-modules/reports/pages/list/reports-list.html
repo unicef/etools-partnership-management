@@ -26,13 +26,9 @@
 <dom-module id="reports-list">
   <template>
     <style include="shared-styles list-filter-styles paper-material-styles">
-      div[elevation="1"] {
-        @apply --paper-material-elevation-1;
-      }
-
     </style>
 
-    <div id="listControls" elevation="1">
+    <div id="listControls" class="paper-material" elevation="1">
 
       <div class="wrap-controls">
 
@@ -41,7 +37,7 @@
                       autocomplete="off"
                       value="{{queryParams.pd_ref_title}}"
                       placeholder="Search">
-          <iron-icon icon="search" prefix></iron-icon>
+          <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
@@ -71,11 +67,11 @@
 
         <div class="filter-bar-action-wrapper menu-btn-wrapper">
           <paper-menu-button id="filterMenu">
-            <paper-button class="button dropdown-trigger">
+            <paper-button slot="dropdown-trigger" class="button">
               <iron-icon icon="filter-list"></iron-icon>
               Add filter
             </paper-button>
-            <paper-listbox class="dropdown-content">
+            <paper-listbox slot="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>
