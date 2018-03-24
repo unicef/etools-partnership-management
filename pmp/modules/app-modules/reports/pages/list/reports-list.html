@@ -6,12 +6,15 @@
 <link rel="import"
       href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
 
 <link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
 <link rel="import" href="../../../../mixins/list-filters-mixin.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -88,29 +91,224 @@
   </template>
 
   <script>
+     'use strict';
+
+     let _reportsLastNavigated = null;
+
+     /**
+      * @polymer
+      * @mixinFunction
+      * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
+      * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
+      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+      */
+    const ReportsListRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.AppNavigationHelper,
+      EtoolsPmpApp.Mixins.ListFilters,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
     /**
      * @customElement
      * @polymer
-     * @extends {Polymer.Element}
+     * @appliesMixin ReportsListRequiredMixins
      */
-    class ReportsList extends Polymer.Element {
+    class ReportsList extends ReportsListRequiredMixins {
 
       static get is() {
         return 'reports-list';
       }
 
-
       static get properties() {
         return {
-
+          urlParams: {
+            type: Object
+          },
+          active: {
+            type: Boolean,
+            value: false
+          },
+          csvDownloadUrl: {
+            type: String,
+            notify: true
+          },
+          // filters options
+          partners: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
+          cpOutputs: {
+            type: Array,
+            statePath: 'cpOutputs'
+          },
+          sections: {
+            type: Array,
+            statePath: 'sections'
+          },
+          reportStatuses: {
+            type: Array,
+            statePath: 'reportStatuses'
+          },
+          // selected filters values
+          queryParams: {
+            type: Object,
+            value: {
+              pd_ref_title: null,
+              external_partner_id: null,
+              cp_output: null,
+              section: null,
+              status: null
+            }
+          },
+          paginator: {
+            type: Object
+          }
         };
       }
 
-      ready() {
-        super.ready();
-
+      static get observers() {
+        return [
+        '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
+        '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
+        '_init(active, urlParams, paginator)',
+        '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
+          'queryParams.cp_output, queryParams.section, queryParams.status)'
+        ];
       }
 
+      connectedCallback() {
+        super.connectedCallback();
+        /**
+         * Disable loading message for main list elements load,
+         * triggered by parent element on stamp
+         */
+        this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+      }
+
+      _initListFilters(partners, cpOutputs, sections, reportStatuses) {
+        this.initFiltersDebouncer = Polymer.Debouncer.debounce(this.initFiltersDebouncer,
+        Polymer.Async.timeOut.after(10),
+          () => {
+            // init list filter options
+            // IMPORTANT!!!
+            // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+            // IMPORTANT!!!
+            this.initListFiltersData([
+              {
+                filterName: 'Partner',
+                type: 'esmm',
+                optionValue: 'value',
+                optionLabel: 'label',
+                selectionOptions: partners,
+                alreadySelected: [],
+                path: 'queryParams.external_partner_id'
+              },
+              {
+                filterName: 'CP Output',
+                type: 'esmm',
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: cpOutputs,
+                alreadySelected: [],
+                path: 'queryParams.cp_output'
+              },
+              {
+                filterName: 'Section',
+                type: 'esmm',
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: sections,
+                alreadySelected: [],
+                path: 'queryParams.section'
+              },
+              {
+                filterName: 'Report Status',
+                type: 'esmm',
+                optionValue: 'value',
+                optionLabel: 'label',
+                selectionOptions: reportStatuses,
+                alreadySelected: [],
+                path: 'queryParams.status'
+              }
+            ]);
+            this._updateSelectedFiltersValues();
+          });
+        }
+
+      // update selected filters(prezent in URL) at page refresh
+      _updateSelectedFiltersValues() {
+        let filtersValues = [
+          {
+            filterName: 'Partner',
+            selectedValue: this.queryParams.external_partner_id
+          },
+          {
+            filterName: 'CP Output',
+            selectedValue: this.queryParams.cp_output
+          },
+          {
+            filterName: 'Section',
+            selectedValue: this.queryParams.section
+          },
+          {
+            filterName: 'Report Status',
+            selectedValue: this.queryParams.status
+          }
+        ];
+        this.updateShownFilters(filtersValues);
+      }
+
+      _init(active, urlQueryParams) {
+        if (!active) {
+          return;
+        }
+        this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
+        this.set('queryParams.external_partner_id',
+            urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
+        this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
+        this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
+        this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
+        if (urlQueryParams.page) {
+          this.set('paginator.page', Number(urlQueryParams.page));
+        }
+        if (urlQueryParams.page_size) {
+          this.set('paginator.page_size', Number(urlQueryParams.page_size));
+        }
+        this._updateSelectedFiltersValues();
+      }
+
+      _updateURL() {
+        let self = this;
+        let qs = self._buildQueryString();
+        // update URL
+        self.updateAppState('reports/list', qs, true);
+      }
+
+      // Outputs the query string for the list
+      _buildQueryString() {
+        let qStrData = [];
+        if (!_.isEmpty(this.queryParams)) {
+          Object.keys(this.queryParams).forEach(function(k) {
+            if (this.queryParams[k]) {
+              qStrData.push(k + '=' + this.queryParams[k]);
+            }
+          }.bind(this));
+        }
+        if (!_.isEmpty(this.paginator)) {
+          if (this.paginator.page) {
+            qStrData.push('page=' + this.paginator.page);
+          }
+          if (this.paginator.page_size) {
+            qStrData.push('page_size=' + this.paginator.page_size);
+          }
+        }
+        return qStrData.join('&');
+      }
+
+      _filtersChanged() {
+        this.set('paginator.page', 1);
+      }
     }
 
     window.customElements.define(ReportsList.is, ReportsList);
