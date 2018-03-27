@@ -239,6 +239,10 @@
         }
       },
 
+      dettached: function() {
+        this.resetListQuery();
+      },
+
       attached: function() {
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
