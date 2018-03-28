@@ -1,5 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+
 <link rel="import" href="../../../app-behaviors/list-data-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -106,7 +108,7 @@
           }
         },
 
-        query: function(field, order, searchString, partnerType, csoType,
+        query: function(field, order, searchString, partnerTypes, csoTypes,
                         pageNumber, pageSize, showHidden, showQueryLoading) {
 
           // If an active query transaction exists, abort it and start
@@ -139,11 +141,11 @@
             }
 
             queryResult = queryResult.filter(function(partner) {
-              if (partnerType && partner.partner_type !== partnerType) {
+              if (!_.isEmpty(partnerTypes) && partnerTypes.indexOf(partner.partner_type) === -1) {
                 return false;
               }
 
-              if (csoType && partner.cso_type !== csoType) {
+              if (!_.isEmpty(csoTypes) && csoTypes.indexOf(partner.cso_type) === -1) {
                 return false;
               }
 

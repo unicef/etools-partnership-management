@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
@@ -27,6 +28,7 @@
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="../common-elements/etools-cp-structure.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="agreement-selector/agreement-selector.html">
@@ -49,7 +51,8 @@
       }
 
       paper-input,
-      agreement-selector {
+      agreement-selector,
+      etools-cp-structure {
         width: 100%;
       }
 
@@ -246,20 +249,13 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-single-selection-menu id="cpStructure"
-                                      label="CP Structure"
-                                      placeholder="&#8212;"
-                                      options="[[cpStructureOptions]]"
-                                      option-value="id"
-                                      option-label="name"
-                                      selected="{{intervention.country_programme}}"
-                                      dynamic-align
-                                      hide-search
-                                      readonly$="[[!intervention.permissions.edit.country_programme]]"
-                                      required$="[[intervention.permissions.required.country_programme]]"
-                                      auto-validate
-                                      error-message="Please select CP Structure">
-        </etools-single-selection-menu>
+        <etools-cp-structure id="cpStructure"
+                             module="interventions"
+                             app-module-item="[[intervention]]"
+                             selected-cp="{{intervention.country_programme}}"
+                             edit-mode="[[intervention.permissions.edit.country_programme]]"
+                             required="[[intervention.permissions.required.country_programme]]">
+        </etools-cp-structure>
       </div>
 
       <div class="row-h flex-c">
@@ -313,7 +309,7 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-      <etools-content-panel class="content-section" panel-title="PD output or SSFA Expected Result ([[noOfPdOutputs]])">
+      <etools-content-panel class="content-section" panel-title="PD Output or SSFA Expected Results ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
             <div slot="panel-btns" id="edit-btns">
@@ -424,14 +420,6 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
-          countryProgrammes: {
-            type: Array,
-            statePath: 'countryProgrammes'
-          },
-          cpStructureOptions: {
-            type: Object,
-            value: []
-          },
           years: {
             type: Array,
             value: []
@@ -476,9 +464,6 @@
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
           'intervention.start, intervention.status)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
-          /*Making sure country_programme is set to default after originalIntervention is set,
-           otherwise on save, country_programme is not seen as modified*/
-          '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
           '_contingencyPDChanged(intervention.contingency_pd)',
           '_updateNoOfPdOutputs(intervention.result_links.*)'
         ],
@@ -528,53 +513,7 @@
           this.locationsDialog.interventionLocationIds = this.intervention.flat_locations;
           this.locationsDialog.open();
         },
-        _filterCountryProgrammes: function(countryProgrammes) {
-          return countryProgrammes.filter(function(cp) {
-            return cp.active || cp.future;
-          });
-        },
-        _getCurrentCountryProgramme: function(countryProgrammes) {
-          if (countryProgrammes && countryProgrammes.length > 1) {
-            return countryProgrammes.find(function(cp) {
-              return !cp.future && !cp.special;
-            });
-          }
-          return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
-        },
-        _countryProgrammesChanged: function(cp) {
-          let cpStructures = this._filterCountryProgrammes(cp);
-          this.set('cpStructureOptions', cpStructures);
-          this._setDefaultSelectedCpStructure(cpStructures);
-        },
-        _hasExpiredCpAssigned: function(cpId) {
-          if (cpId > 0 && this.cpStructureOptions instanceof Array && this.cpStructureOptions.length) {
-            let cp = this.cpStructureOptions.find(function(cp) {
-              return parseInt(cp.id, 10) === parseInt(cpId, 10);
-            });
-            if (!cp) {
-              return true;
-            }
-          }
-          return false;
-        },
-        _setDefaultSelectedCpStructure: function(cpStructures) {
-          if (this.intervention && this.intervention.country_programme) {
-            let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
-            if (cpStructureIsOld) {
-              this.fire('toast', {text: 'This intervention has an old/expired CP Structure!', showCloseBtn: true});
-            }
-            return;
-          }
-          let currentCP;
-          if (cpStructures && cpStructures.length) {
-            if (cpStructures.length === 1) {
-              currentCP = cpStructures[0];
-            } else {
-              currentCP = this._getCurrentCountryProgramme(cpStructures);
-            }
-            this.set('intervention.country_programme', currentCP ? currentCP.id : null);
-          }
-        },
+
         _contingencyPDChanged: function(newValue) {
           if (newValue && this.intervention.status === 'signed') {
             this._updateDatesRequiredState(false);
@@ -632,9 +571,10 @@
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
           this.$.plannedBudget.resetValidations();
+          this.$.cpStructure.resetCpDropdownInvalidState();
 
           let fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
+            'partnerFocalPts', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
