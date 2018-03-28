@@ -1,13 +1,13 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import"
       href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
 
@@ -22,9 +22,8 @@
 
 <link rel="import" href="../../components/reports-display-list.html">
 
-
 <dom-module id="reports-list">
-  <template>
+  <template strip-whitespaces>
     <style include="shared-styles list-filter-styles paper-material-styles">
     </style>
 
@@ -33,10 +32,10 @@
       <div class="wrap-controls">
 
         <paper-input id="query"
-                      type="search"
-                      autocomplete="off"
-                      value="{{queryParams.pd_ref_title}}"
-                      placeholder="Search">
+                     type="search"
+                     autocomplete="off"
+                     value="{{queryParams.pd_ref_title}}"
+                     placeholder="Search">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
@@ -54,9 +53,9 @@
                 data-filter-path$="[[filter.path]]">
             </etools-dropdown>
             <paper-icon-button suffix class="remove-field remove" icon="cancel"
-                                on-tap="removeFilter"
-                                data-filter-name$="[[filter.filterName]]"
-                                data-reset-path$="[[filter.path]]">
+                               on-tap="removeFilter"
+                               data-filter-name$="[[filter.filterName]]"
+                               data-reset-path$="[[filter.path]]">
             </paper-icon-button>
           </div>
         </template>
@@ -64,7 +63,6 @@
       </div>
 
       <div class="fixed-controls">
-
         <div class="filter-bar-action-wrapper menu-btn-wrapper">
           <paper-menu-button id="filterMenu">
             <paper-button slot="dropdown-trigger" class="button">
@@ -82,32 +80,33 @@
 
     </div>
     <reports-display-list query-params="[[queryParams]]"
-      paginator="{{paginator}}"
-      wait-query-params-init></reports-display-list>
+                          paginator="{{paginator}}"
+                          wait-query-params-init></reports-display-list>
   </template>
 
   <script>
-     'use strict';
+    'use strict';
 
-     let _reportsLastNavigated = null;
+    let _reportsLastNavigated = null;
 
-     /**
-      * @polymer
-      * @mixinFunction
-      * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
-      * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
-      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-      */
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
     const ReportsListRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.AppNavigationHelper,
       EtoolsPmpApp.Mixins.ListFilters,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
+
     /**
-     * @customElement
      * @polymer
+     * @customElement
      * @appliesMixin ReportsListRequiredMixins
      */
     class ReportsList extends ReportsListRequiredMixins {
@@ -165,10 +164,10 @@
 
       static get observers() {
         return [
-        '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
-        '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
-        '_init(active, urlParams, paginator)',
-        '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
+          '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
+          '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
+          '_init(active, urlParams, paginator)',
+          '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
           'queryParams.cp_output, queryParams.section, queryParams.status)'
         ];
       }
@@ -183,54 +182,58 @@
       }
 
       _initListFilters(partners, cpOutputs, sections, reportStatuses) {
-        this.initFiltersDebouncer = Polymer.Debouncer.debounce(this.initFiltersDebouncer,
-        Polymer.Async.timeOut.after(10),
-          () => {
-            // init list filter options
-            // IMPORTANT!!!
-            // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
-            // IMPORTANT!!!
-            this.initListFiltersData([
-              {
-                filterName: 'Partner',
-                type: 'esmm',
-                optionValue: 'value',
-                optionLabel: 'label',
-                selectionOptions: partners,
-                alreadySelected: [],
-                path: 'queryParams.external_partner_id'
-              },
-              {
-                filterName: 'CP Output',
-                type: 'esmm',
-                optionValue: 'id',
-                optionLabel: 'name',
-                selectionOptions: cpOutputs,
-                alreadySelected: [],
-                path: 'queryParams.cp_output'
-              },
-              {
-                filterName: 'Section',
-                type: 'esmm',
-                optionValue: 'id',
-                optionLabel: 'name',
-                selectionOptions: sections,
-                alreadySelected: [],
-                path: 'queryParams.section'
-              },
-              {
-                filterName: 'Report Status',
-                type: 'esmm',
-                optionValue: 'value',
-                optionLabel: 'label',
-                selectionOptions: reportStatuses,
-                alreadySelected: [],
-                path: 'queryParams.status'
-              }
-            ]);
-            this._updateSelectedFiltersValues();
-          });
+        if (!partners || !cpOutputs || !sections || !reportStatuses) {
+          // TODO: polymer2 - check if this condition is working properly for p2 observer (running with undefined agrs)
+          return;
         }
+        this.initFiltersDebouncer = Polymer.Debouncer.debounce(this.initFiltersDebouncer,
+            Polymer.Async.timeOut.after(10),
+            () => {
+              // init list filter options
+              // IMPORTANT!!!
+              // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+              // IMPORTANT!!!
+              this.initListFiltersData([
+                {
+                  filterName: 'Partner',
+                  type: 'esmm',
+                  optionValue: 'value',
+                  optionLabel: 'label',
+                  selectionOptions: partners,
+                  alreadySelected: [],
+                  path: 'queryParams.external_partner_id'
+                },
+                {
+                  filterName: 'CP Output',
+                  type: 'esmm',
+                  optionValue: 'id',
+                  optionLabel: 'name',
+                  selectionOptions: cpOutputs,
+                  alreadySelected: [],
+                  path: 'queryParams.cp_output'
+                },
+                {
+                  filterName: 'Section',
+                  type: 'esmm',
+                  optionValue: 'id',
+                  optionLabel: 'name',
+                  selectionOptions: sections,
+                  alreadySelected: [],
+                  path: 'queryParams.section'
+                },
+                {
+                  filterName: 'Report Status',
+                  type: 'esmm',
+                  optionValue: 'value',
+                  optionLabel: 'label',
+                  selectionOptions: reportStatuses,
+                  alreadySelected: [],
+                  path: 'queryParams.status'
+                }
+              ]);
+              this._updateSelectedFiltersValues();
+            });
+      }
 
       // update selected filters(prezent in URL) at page refresh
       _updateSelectedFiltersValues() {
@@ -274,11 +277,14 @@
         this._updateSelectedFiltersValues();
       }
 
-      _updateURL() {
-        let self = this;
-        let qs = self._buildQueryString();
+      _updateURL(queryParamsData, pageNr, pageSize) {
+        if (!queryParamsData || !pageNr || !pageSize) {
+          // TODO: polymer2 - check if this condition is working properly for p2 observer (running with undefined agrs)
+          return;
+        }
+        let qs = this._buildQueryString();
         // update URL
-        self.updateAppState('reports/list', qs, true);
+        this.updateAppState('reports/list', qs, true);
       }
 
       // Outputs the query string for the list

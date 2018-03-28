@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
@@ -39,16 +40,18 @@
 
   <script>
     'use strict';
+
     /**
-     * @customElement
      * @polymer
+     * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class ReportRejectDialog extends EtoolsPmpApp.Mixins.AjaxErrorsParser(
-          EtoolsPmpApp.Mixins.Endpoints(
-            EtoolsPmpApp.Mixins.EventHelper(Polymer.Element))) {
+    class ReportRejectDialog extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.EventHelper], Polymer.Element) {
 
       static get is() {
         return 'report-reject-dialog';

@@ -1,11 +1,11 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../bower_components/iron-icons/image-icons.html">
-<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-if.html">
 
 <dom-module id="report-status">
-  <template>
+  <template strip-whitespace>
     <style>
       :host {
         display: inline-block;
@@ -40,7 +40,7 @@
     </style>
 
     <template is="dom-if" if="[[!noIcon]]">
-        <iron-icon icon$="[[icon]]"></iron-icon>
+      <iron-icon icon$="[[icon]]"></iron-icon>
     </template>
     <template is="dom-if" if="[[!noLabel]]">
       <span>[[label]]</span>
@@ -51,8 +51,8 @@
   <script>
 
     /**
-     * @customElement
      * @polymer
+     * @customElement
      * @extends {Polymer.Element}
      */
     class ReportStatus extends Polymer.Element {

@@ -1,10 +1,10 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
-<link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../bower_components/polymer/lib/utils/debounce.html">
+<link rel="import" href="../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
@@ -20,7 +20,7 @@
 <link rel="import" href="report-status.html">
 
 <dom-module id="reports-display-list">
-  <template>
+  <template strip-whitespace>
     <style include="data-table-styles grid-layout-styles paper-material-styles">
       :host {
         @apply --layout-flex;
@@ -82,8 +82,8 @@
               <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
                 <span class="col-data col-2">
                   <a class="pd-ref truncate"
-                      href$="interventions/[[report.programme_document.external_id]]/details"
-                      title$="[[getDisplayValue(report.programme_document.reference_number)]]">
+                     href$="interventions/[[report.programme_document.external_id]]/details"
+                     title$="[[getDisplayValue(report.programme_document.reference_number)]]">
                     [[getDisplayValue(report.programme_document.reference_number)]]
                   </a>
                 </span>
@@ -105,8 +105,8 @@
               </span>
               <span class="col-data flex-c">
                 <a class="view-report"
-                    href$="reports/[[report.id]]/progress"
-                    hidden$="[[!_canViewReport(report.status)]]">
+                   href$="reports/[[report.id]]/progress"
+                   hidden$="[[!_canViewReport(report.status)]]">
                   View Report
                 </a>
               </span>
@@ -155,8 +155,8 @@
     ], Polymer.Element);
 
     /**
-     * @customElement
      * @polymer
+     * @customElement
      * @appliesMixin ReportsDisplayListMixins
      */
     class ReportsDisplayList extends ReportsDisplayListMixins {
@@ -202,7 +202,7 @@
       static get observers() {
         return [
           '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size,' +
-              ' paginator.page, queryParams.*)'
+          ' paginator.page, queryParams.*)'
         ];
       }
 

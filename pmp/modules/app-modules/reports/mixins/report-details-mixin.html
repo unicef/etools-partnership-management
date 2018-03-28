@@ -1,16 +1,16 @@
-<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-<link rel="import" href="../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../mixins/ajax-errors-parser-mixin.html">
-<link rel="import" href="../../../../mixins/event-helper-mixin.html">
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../redux/etools-data-redux-store.html">
 
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
   /**
-   *
    * @polymerMixin
    * @mixinFunction
    * @appliesMixin EtoolsLogsMixin
@@ -19,12 +19,12 @@
    * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
-  EtoolsPmpApp.Mixins.ReportDetails = (superclass) => class extends
-    EtoolsLogsMixin(
-      EtoolsPmpApp.Mixins.EventHelper(
-        EtoolsPmpApp.Mixins.Endpoints(
-          EtoolsPmpApp.Mixins.AjaxErrorsParser(
-            EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superclass))))) {
+  EtoolsPmpApp.Mixins.ReportDetails = (superclass) => class extends EtoolsMixinFactory.combineMixins([
+    EtoolsLogsMixin,
+    EtoolsPmpApp.Mixins.EventHelper,
+    EtoolsPmpApp.Mixins.Endpoints,
+    EtoolsPmpApp.Mixins.AjaxErrorsParser,
+    EtoolsPmpApp.Mixins.EtoolsDataReduxStore], superclass) {
 
     static get properties() {
       return {
