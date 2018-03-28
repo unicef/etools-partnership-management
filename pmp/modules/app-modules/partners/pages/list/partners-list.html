@@ -70,6 +70,7 @@
               label="Partner Type"
               disabled$="[[showOnlyGovernmentType]]"
               options="[[partnerTypes]]"
+              error-message=""
               selected-values="{{selectedPartnerTypes}}"
               hide-search></etools-dropdown-multi>
         </div>
@@ -78,6 +79,7 @@
           <etools-dropdown-multi
               label="CSO Type"
               options="[[csoTypes]]"
+              error-message=""
               selected-values="{{selectedCsoTypes}}"
               hide-search></etools-dropdown-multi>
         </div>
