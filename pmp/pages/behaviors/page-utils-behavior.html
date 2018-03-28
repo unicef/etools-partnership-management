@@ -40,10 +40,6 @@
     _setServerErrors: function(e) {
       this.set('serverErrors', e.detail);
     },
-    // this property might persist betweend categories so it must be reset manually
-    resetListQuery: function() {
-      this.set('preservedListQueryParams', {});
-    },
 
     _handleQueryParams: function(params) {
       if (params !== null && Object.keys(params).length) {

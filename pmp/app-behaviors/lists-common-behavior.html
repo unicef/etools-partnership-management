@@ -208,7 +208,7 @@
     _updateUrlAndDislayedData: function(currentPageUrlPath, lastUrlQueryStr, qs, filterData) {
       if (qs !== lastUrlQueryStr) {
         // update URL
-        this.updateAppState(currentPageUrlPath, qs, true);
+        this._updateAppStateSlowly(currentPageUrlPath, qs, true);
         // filter agreements
         if (this.requiredDataLoaded) {
           filterData();
@@ -217,7 +217,7 @@
         if (location.search === '') {
           // only update URL query string, without location change event being fired(no page refresh)
           // used to keep prev list filters values when navigating from details to list page
-          this.updateAppState(currentPageUrlPath, qs, false);
+          this._updateAppStateSlowly(currentPageUrlPath, qs, false);
         }
         if (this.forceDataRefresh && this.requiredDataLoaded) {
           // re-filter list data
@@ -226,6 +226,10 @@
           this.set('forceDataRefresh', false);
         }
       }
+    },
+
+    _updateAppStateSlowly: function(routePath, qs, dispatchLocationChange) {
+      this.debounce('update-app-state', this.updateAppState.bind(this, routePath, qs, dispatchLocationChange), 50);
     }
   };
 
