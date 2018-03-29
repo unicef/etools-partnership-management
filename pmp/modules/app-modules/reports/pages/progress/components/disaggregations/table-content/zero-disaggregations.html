@@ -45,7 +45,7 @@
       }
 
       _determineTotalRow(_, data) {
-        if (!data) {
+        if (typeof data === 'undefined') {
           return;
         }
         return {

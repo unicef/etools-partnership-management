@@ -127,6 +127,9 @@
       }
 
       _cloneData(data) {
+        if (!data) {
+          return;
+        }
         this.set('formattedData', JSON.parse(JSON.stringify(data)));
       }
 
@@ -174,7 +177,10 @@
         this._recordField(field);
       }
 
-      _computeWarning(data, _) { // jshint ignore:line
+      _computeWarning(data, _) {
+        if (typeof data === 'undefined') {
+          return;
+        }
         this.set('warning', this.reportedOn.length < data.num_disaggregation);
       }
 

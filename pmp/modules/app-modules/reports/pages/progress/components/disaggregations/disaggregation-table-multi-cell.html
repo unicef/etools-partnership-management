@@ -130,6 +130,9 @@
       }
 
       _bindValidation(coords) {
+        if (coords === undefined) {
+          return;
+        }
         let vName = 'v-' + coords;
 
         let validator = {

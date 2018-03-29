@@ -68,16 +68,14 @@
         loadingSource: loadingSource
       });
 
-      let self = this;
-
-      self.fireRequest('reportDetails', {reportId: id}).then(function(response) {
-        self.set('report', response);
-        self.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
-      }).catch(function(error) {
+      this.fireRequest('reportDetails', {reportId: id}).then((response) => {
+        this.set('report', response);
+        this.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
+      }).catch((error) => {
         let errMsg = 'Reports details data request failed!';
-        self.logError(errMsg, logMsgPrefix, error);
-        self.parseRequestErrorsAndShowAsToastMsgs(error, self, true);
-        self.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
+        this.logError(errMsg, logMsgPrefix, error);
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+        this.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
       });
     }
 

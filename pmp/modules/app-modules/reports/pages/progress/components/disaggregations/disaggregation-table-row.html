@@ -119,6 +119,9 @@
       }
 
       _setTotalEditable(coords, levelReported, editable) {
+        if (coords === undefined || levelReported === undefined || editable === undefined) {
+          return;
+        }
         this.set(
             'totalEditable',
             (coords === '()' && levelReported === 0) ? editable : 0

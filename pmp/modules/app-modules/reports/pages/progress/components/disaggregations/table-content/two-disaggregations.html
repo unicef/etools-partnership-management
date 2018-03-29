@@ -93,28 +93,28 @@
       }
 
       _getColumns(mapping) {
-        if (!mapping) {
+        if (typeof mapping === 'undefined') {
           return;
         }
         return (mapping[0] || []).choices;
       }
 
       _getRows(mapping) {
-        if (!mapping) {
+        if (typeof mapping === 'undefined') {
           return;
         }
         return (mapping[1] || []).choices;
       }
 
       _determineRowsForDisplay(columns, rows) {
-        if (!columns || !rows) {
+        if (typeof columns === 'undefined' || typeof rows === 'undefined') {
           return;
         }
         return this._determineRows(this, rows, columns);
       }
 
       _determineTotals(columns, data) {
-        if (!columns || !data) {
+        if (typeof columns === 'undefined' || typeof data === 'undefined') {
           return;
         }
         let columnData = columns.map(function(z) {

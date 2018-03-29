@@ -143,7 +143,7 @@
       }
 
       _resetFields(reportedOn) {
-        if (!reportedOn) {
+        if (reportedOn === undefined) {
           return;
         }
         this.set('fields', []);
@@ -154,6 +154,9 @@
       }
 
       _computeMapping(editableBool, formattedData, mapping) {
+        if (editableBool === undefined || formattedData === undefined || mapping === undefined) {
+          return;
+        }
         let reportedOn = formattedData.disaggregation_reported_on;
 
         return editableBool ? mapping.filter(function(disagg) {
@@ -162,10 +165,16 @@
       }
 
       _computeIndicatorType(data) {
+        if (data === undefined) {
+          return;
+        }
         return data.display_type;
       }
 
       _cloneData(data) {
+        if (data === undefined) {
+          return;
+        }
         this.set('formattedData', JSON.parse(JSON.stringify(data)));
       }
 

@@ -75,10 +75,16 @@
       }
 
       _getColumns(mapping) {
+        if (typeof mapping === 'undefined') {
+          return;
+        }
         return (mapping[0] || []).choices;
       }
 
       _determineTotalRow(data) {
+        if (typeof data === 'undefined') {
+          return;
+        }
         return {
           title: 'total',
           total: {
@@ -89,6 +95,9 @@
       }
 
       _determineRows(columns, data) {
+        if (typeof mapping === 'undefined' || typeof data === 'undefined') {
+          return;
+        }
         return columns.map(function(z) {
           let formatted = this._formatDisaggregationIds([z.id]);
 
