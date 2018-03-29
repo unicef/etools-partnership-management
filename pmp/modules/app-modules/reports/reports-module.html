@@ -238,14 +238,14 @@
       }
 
       _observeRouteDataId(reportId, listActive) {
-        if (listActive) {
+        if (listActive || !reportId) {
           return;
         }
         let id = parseInt(reportId, 10);
         if (this.report && this.report.id === id) {
           return;
         }
-        setTimeout(function() {
+        setTimeout(() => {
           if (isNaN(id)) {
             this.fireEvent('toast', {text: 'Invalid report ID!', showCloseBtn: true});
             this.set('report', null);
@@ -254,10 +254,10 @@
           this.loadingReportDataDebouncer = Polymer.Debouncer.debounce(this.loadingReportDataDebouncer,
           Polymer.Async.timeOut.after(50),
             () => {
-              this.requestReportDetails.bind(this, id);
+              this.requestReportDetails.bind(this, id)();
             }
           );
-        }.bind(this));
+        }, 0);
       }
 
       _accept() {

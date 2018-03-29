@@ -13,8 +13,9 @@
 
 <link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
 <link rel="import" href="../../../../mixins/list-filters-mixin.html">
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../config/app-constants.html">
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -99,6 +100,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const ReportsListRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.AppNavigationHelper,
       EtoolsPmpApp.Mixins.ListFilters,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
@@ -174,7 +176,7 @@
       static get observers() {
         return [
           '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
-          '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
+          '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, urlParams, _filtersInitialized, paginator)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
           'queryParams.cp_output, queryParams.section, queryParams.status)'
@@ -282,19 +284,18 @@
               this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
               this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
               this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
-              if (urlQueryParams.page) {
-                this.set('paginator.page', Number(urlQueryParams.page));
-              }
-              if (urlQueryParams.page_size) {
-                this.set('paginator.page_size', Number(urlQueryParams.page_size));
-              }
+
+              this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
+              this.set('paginator.page_size',
+                  urlQueryParams.page_size ? Number(urlQueryParams.page_size) : this.DEFAULT_LIST_SIZE);
+
               this._updateSelectedFiltersValues();
               this.set('_initComplete', true);
             });
       }
 
-      _updateURL(queryParamsData, pageNr, pageSize) {
-        if (!this._initComplete) {
+      _updateURL(queryParamsData, pageNr, pageSize, _initComplete) {
+        if (!_initComplete) {
           return;
         }
         if (!queryParamsData || !pageNr || !pageSize) {
