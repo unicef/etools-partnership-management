@@ -49,10 +49,11 @@
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
                 selected="[[filter.alreadySelected]]"
-                on-iron-select="filterValueChanged"
+                on-selected-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]">
             </etools-dropdown>
-            <paper-icon-button suffix class="remove-field remove" icon="cancel"
+            <paper-icon-button class="remove-field remove"
+                               icon="cancel"
                                on-tap="removeFilter"
                                data-filter-name$="[[filter.filterName]]"
                                data-reset-path$="[[filter.path]]">
@@ -158,6 +159,14 @@
           },
           paginator: {
             type: Object
+          },
+          _filtersInitialized: {
+            type: Boolean,
+            value: false
+          },
+          _initComplete: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -166,7 +175,7 @@
         return [
           '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
-          '_init(active, urlParams, paginator)',
+          '_init(active, urlParams, _filtersInitialized, paginator)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
           'queryParams.cp_output, queryParams.section, queryParams.status)'
         ];
@@ -186,8 +195,8 @@
           // TODO: polymer2 - check if this condition is working properly for p2 observer (running with undefined agrs)
           return;
         }
-        this.initFiltersDebouncer = Polymer.Debouncer.debounce(this.initFiltersDebouncer,
-            Polymer.Async.timeOut.after(10),
+        this._initFiltersDebouncer = Polymer.Debouncer.debounce(this._initFiltersDebouncer,
+            Polymer.Async.timeOut.after(0),
             () => {
               // init list filter options
               // IMPORTANT!!!
@@ -200,7 +209,7 @@
                   optionValue: 'value',
                   optionLabel: 'label',
                   selectionOptions: partners,
-                  alreadySelected: [],
+                  alreadySelected: null,
                   path: 'queryParams.external_partner_id'
                 },
                 {
@@ -209,7 +218,7 @@
                   optionValue: 'id',
                   optionLabel: 'name',
                   selectionOptions: cpOutputs,
-                  alreadySelected: [],
+                  alreadySelected: null,
                   path: 'queryParams.cp_output'
                 },
                 {
@@ -218,7 +227,7 @@
                   optionValue: 'id',
                   optionLabel: 'name',
                   selectionOptions: sections,
-                  alreadySelected: [],
+                  alreadySelected: null,
                   path: 'queryParams.section'
                 },
                 {
@@ -227,11 +236,12 @@
                   optionValue: 'value',
                   optionLabel: 'label',
                   selectionOptions: reportStatuses,
-                  alreadySelected: [],
+                  alreadySelected: null,
                   path: 'queryParams.status'
                 }
               ]);
               this._updateSelectedFiltersValues();
+              this.set('_filtersInitialized', true);
             });
       }
 
@@ -258,26 +268,35 @@
         this.updateShownFilters(filtersValues);
       }
 
-      _init(active, urlQueryParams) {
-        if (!active) {
+      _init(active, urlQueryParams, _filtersInitialized) {
+        this.set('_initComplete', false);
+        if (!active || !_filtersInitialized) {
           return;
         }
-        this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
-        this.set('queryParams.external_partner_id',
-            urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
-        this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
-        this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
-        this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
-        if (urlQueryParams.page) {
-          this.set('paginator.page', Number(urlQueryParams.page));
-        }
-        if (urlQueryParams.page_size) {
-          this.set('paginator.page_size', Number(urlQueryParams.page_size));
-        }
-        this._updateSelectedFiltersValues();
+        this._initSelectedFilters = Polymer.Debouncer.debounce(this._initSelectedFilters,
+            Polymer.Async.timeOut.after(20),
+            () => {
+              this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
+              this.set('queryParams.external_partner_id',
+                  urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
+              this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
+              this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
+              this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
+              if (urlQueryParams.page) {
+                this.set('paginator.page', Number(urlQueryParams.page));
+              }
+              if (urlQueryParams.page_size) {
+                this.set('paginator.page_size', Number(urlQueryParams.page_size));
+              }
+              this._updateSelectedFiltersValues();
+              this.set('_initComplete', true);
+            });
       }
 
       _updateURL(queryParamsData, pageNr, pageSize) {
+        if (!this._initComplete) {
+          return;
+        }
         if (!queryParamsData || !pageNr || !pageSize) {
           // TODO: polymer2 - check if this condition is working properly for p2 observer (running with undefined agrs)
           return;

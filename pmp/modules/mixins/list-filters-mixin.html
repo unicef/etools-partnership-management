@@ -136,6 +136,7 @@
     filterValueChanged(event) {
       let filterPath = event.target.getAttribute('data-filter-path');
       let filterVal = event.target.selected;
+      console.log(filterPath, filterVal);
       this.set(filterPath, filterVal);
     }
 
