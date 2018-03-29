@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import"
       href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
@@ -16,7 +15,7 @@
 
 <dom-module id="report-summary">
   <template>
-    <style include="page-common-styles grid-layout-styles shared-styles paper-material-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles">
     </style>
 
     <div class="content-section">
@@ -82,7 +81,8 @@
     class ReportSummary extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsMixins.EtoolsCurrency], Polymer.Element) {
+      EtoolsMixins.EtoolsCurrency
+    ], Polymer.Element) {
 
       static get is() {
         return 'report-summary';
@@ -90,9 +90,7 @@
 
       static get properties() {
         return {
-          report: {
-            type: Object
-          }
+          report: Object
         };
       }
 

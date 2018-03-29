@@ -210,42 +210,44 @@
         if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData) || _.isEmpty(prpCountries)) {
           return;
         }
-        let self = this;
-        this.debounce('load-reports-data', function() {
-          let params = self._prepareReqParamsObj(interventionId);
 
-          self.fireEvent('global-loading', {
-            message: 'Loading reports data...',
-            active: true,
-            loadingSource: 'reports-list'
-          });
+        this._loadReportsDataDebouncer = Polymer.Debouncer.debounce(this._loadReportsDataDebouncer,
+            Polymer.Async.timeOut.after(this.debounceInterval),
+            () => {
+              let params = this._prepareReqParamsObj(interventionId);
 
-          let activeReportsReq = self.getActiveRequestByKey(this._endpointName);
-          if (activeReportsReq) {
-            // abort previous req and then fire a new one with updated params
-            self.abortActiveRequest(activeReportsReq);
-          }
-
-          self.fireRequest('reports', {}, {params: params}, this._endpointName)
-              .then(function(response) {
-                if (response) {
-                  self.set('reports', response.results);
-                  self.updatePaginatorTotalResults(response);
-                }
-                self.fireEvent('global-loading', {active: false, loadingSource: 'reports-list'});
-              })
-              .catch(function(error) {
-                if (error.status === 0) {
-                  // req aborted
-                  return;
-                }
-                let errMsg = 'Reports list data request failed!';
-                self.logError(errMsg, 'reports-list', error);
-
-                self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-                self.fireEvent('global-loading', {active: false, loadingSource: 'reports-list'});
+              this.fireEvent('global-loading', {
+                message: 'Loading reports data...',
+                active: true,
+                loadingSource: 'reports-list'
               });
-        }, this.debounceInterval);
+
+              let activeReportsReq = this.getActiveRequestByKey(this._endpointName);
+              if (activeReportsReq) {
+                // abort previous req and then fire a new one with updated params
+                this.abortActiveRequest(activeReportsReq);
+              }
+
+              this.fireRequest('reports', {}, {params: params}, this._endpointName)
+                  .then((response) => {
+                    if (response) {
+                      this.set('reports', response.results);
+                      this.updatePaginatorTotalResults(response);
+                    }
+                    this.fireEvent('global-loading', {active: false, loadingSource: 'reports-list'});
+                  })
+                  .catch((error) => {
+                    if (error.status === 0) {
+                      // req aborted
+                      return;
+                    }
+                    let errMsg = 'Reports list data request failed!';
+                    this.logError(errMsg, 'reports-list', error);
+
+                    this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+                    this.fireEvent('global-loading', {active: false, loadingSource: 'reports-list'});
+                  });
+            });
       }
 
       _prepareReqParamsObj(interventionId) {
