@@ -71,7 +71,6 @@
           <etools-dropdown-multi
               label="Agreement Type"
               options="[[agreementTypes]]"
-              error-message=""
               selected-values="{{selectedAgTypes}}"
               hide-search></etools-dropdown-multi>
         </div>
@@ -80,7 +79,6 @@
           <etools-dropdown-multi
               label="Agreement Status"
               options="[[agreementStatuses]]"
-              error-message=""
               selected-values="{{selectedAgStatuses}}"
               hide-search></etools-dropdown-multi>
         </div>
@@ -94,7 +92,6 @@
                   options="[[filter.selectionOptions]]"
                   selected-values="[[filter.alreadySelected]]"
                   data-filter-path$="[[filter.path]]"
-                  error-message=""
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event>
               </etools-dropdown-multi>

@@ -31,7 +31,7 @@
                  readonly$="[[readonly]]"
                  required$="[[required]]"
                  invalid$="[[invalid]]"
-                 error-message="[[errorMessage]]">
+                 error-message="[[_getErrorMessage(errorMessage, invalid)]]">
       <span slot="prefix">
         <iron-icon icon="date-range" hidden$="[[!readonly]]"></iron-icon>
         <etools-datepicker-button id="datePickerButton"
@@ -197,6 +197,10 @@
         this.$.dateInput.set('invalid', false);
       }
 
+      // prevents the element from rendering an error message container when valid
+      _getErrorMessage(message, invalid) {
+        return invalid ? message: '';
+      }
     }
 
     window.customElements.define(EtoolsDateInput.is, EtoolsDateInput);
