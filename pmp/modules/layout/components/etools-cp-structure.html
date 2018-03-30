@@ -1,0 +1,318 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
+
+<link rel="import" href="etools-form-element-wrapper.html">
+
+<link rel="import" href="../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../scripts/lodash.html">
+
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/required-field-styles.html">
+
+<dom-module id="etools-cp-structure">
+  <template>
+    <style include="shared-styles">
+      :host {
+        @apply --layout-horizontal;
+      }
+
+      *[hidden] {
+        display: none !important;
+      }
+
+      #readonly-cp {
+        width: auto;
+      }
+
+      .edit-exp-cp {
+        @apply --layout-self-end;
+        color: var(--dark-icon-color);
+        margin-bottom: 4px;
+        margin-left: 16px;
+      }
+
+      .edit-exp-cp[icon="cancel"] {
+        color: var(--error-color);
+        margin-bottom: 0;
+      }
+
+      #cpStructure {
+        width: 100%;
+      }
+    </style>
+
+    <template is="dom-if" if="[[_showExpiredCp(_hasExpiredCp, _editExpiredCpActive)]]">
+      <etools-form-element-wrapper id="readonly-cp" label="CP Structure">
+        <span>[[_getExpiredCpName(selectedCp)]]</span>
+      </etools-form-element-wrapper>
+      <paper-icon-button class="edit-exp-cp"
+                         icon="create"
+                         on-tap="_enableExpCpEdit"
+                         hidden$="[[!editMode]]"
+                         title="Edit expired CP Structure"></paper-icon-button>
+    </template>
+    <template is="dom-if" if="[[!_showExpiredCp(_hasExpiredCp, _editExpiredCpActive)]]">
+      <!-- TODO: clean parameters -->
+      <etools-dropdown id="cpStructure"
+                       label="CP Structure"
+                       placeholder="&#8212;"
+                       options="[[cpStructureOptions]]"
+                       option-value="id"
+                       option-label="name"
+                       selected="{{selectedCp}}"
+                       dynamic-align
+                       hide-search
+                       readonly$="[[!editMode]]"
+                       required$="[[required]]"
+                       auto-validate
+                       error-message="Please select CP Structure">
+      </etools-dropdown>
+      <paper-icon-button class="edit-exp-cp"
+                         icon="cancel"
+                         on-tap="_cancelExpCpEdit"
+                         hidden$="[[!_editExpiredCpActive]]"
+                         title="Cancel expired CP Structure editing">
+      </paper-icon-button>
+    </template>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    const EtoolsCpStructureRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    ], Polymer.Element);
+
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsCpStructureRequiredMixin
+     */
+    class EtoolsCpStructure extends EtoolsCpStructureRequiredMixins {
+      static get is() {
+        return 'etools-cp-structure';
+      }
+
+      static get properties() {
+        return {
+          countryProgrammes: {
+            type: Array,
+            statePath: 'countryProgrammes'
+          },
+          selectedCp: {
+            type: Number,
+            notify: true
+          },
+          cpStructureOptions: {
+            type: Array,
+            value: []
+          },
+          /**
+           * appModuleItem could be agreement or intervention
+           */
+          appModuleItem: {
+            type: Object,
+            value: null
+          },
+          /**
+           * module will indicate the appmodule where cp selector is used;
+           * could be agreements or intervention
+           */
+          module: {
+            type: String
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          required: {
+            type: Boolean,
+            value: false
+          },
+          _hasExpiredCp: {
+            type: Boolean,
+            value: false
+          },
+          _editExpiredCpActive: {
+            type: Boolean,
+            value: false
+          },
+          _expiredCpId: {
+            type: Number
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_countryProgrammesChanged(countryProgrammes, appModuleItem)',
+        ];
+      }
+
+      /**
+       * Same filtering is applied to agreements and intervention.
+       */
+      _getAvailableCpOptions(countryProgrammes) {
+        return countryProgrammes.filter(cp => cp.active || cp.future);
+      }
+
+      _hasExpiredCpAssigned(cpId) {
+        if (cpId > 0 && !_.isEmpty(this.cpStructureOptions)) {
+          let cp = this.cpStructureOptions.find((cp) => {
+            return parseInt(cp.id, 10) === parseInt(cpId, 10);
+          });
+          if (!cp) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      _getExpiredCPWarning() {
+        let msg = '';
+        switch (this.module) {
+          case 'agreements':
+            msg = `Agreement ${this.appModuleItem.agreement_number}`;
+            break;
+          case 'interventions':
+            msg = `PD/SSFA ${this.appModuleItem.number}`;
+            break;
+        }
+        return msg + ' has an old/expired CP Structure!';
+      }
+
+      _getExpiredCPWarning() {
+        let msg = '';
+        switch (this.module) {
+          case 'agreements':
+            msg = `Agreement ${this.appModuleItem.agreement_number}`;
+            break;
+          case 'interventions':
+            msg = `PD/SSFA ${this.appModuleItem.number}`;
+            break;
+        }
+        return msg + ' has an old/expired CP Structure!';
+      }
+
+      _checkExpiredCp() {
+        if (this.appModuleItem) {
+          if (this.selectedCp) {
+            let cpStructureIsOld = this._hasExpiredCpAssigned(this.selectedCp);
+            if (cpStructureIsOld) {
+              this.logWarn(this._getExpiredCPWarning());
+              this.set('_hasExpiredCp', true);
+              this.set('_expiredCpId', this.selectedCp);
+            } else {
+              this.set('_hasExpiredCp', false);
+              this.set('_expiredCpId', null);
+            }
+          } else {
+            // on new item page, just reset this properties
+            this.set('_hasExpiredCp', false);
+            this.set('_expiredCpId', null);
+          }
+          this.set('_editExpiredCpActive', false);
+        }
+      }
+
+      _getCurrentCountryProgramme(cpOptions) {
+        let cp = null;
+        if (!_.isEmpty(cpOptions)) {
+          if (cpOptions.length === 1) {
+            // just one cp available
+            cp = cpOptions[0];
+          } else {
+            // more than 1 cp available, use first one found that is not special and not future
+            cp = cpOptions.find(cp => !cp.future && !cp.special);
+          }
+        }
+        return cp;
+      }
+
+      setDefaultSelectedCpStructure() {
+        if (!_.isEmpty(this.cpStructureOptions)) {
+          let currentCP;
+          if (this.cpStructureOptions.length === 1) {
+            currentCP = this.cpStructureOptions[0];
+          } else {
+            currentCP = this._getCurrentCountryProgramme(this.cpStructureOptions);
+          }
+          this.set('selectedCp', currentCP ? currentCP.id : null);
+        }
+      }
+
+      _countryProgrammesChanged(countryProgrammes, appModuleItem) {
+        this.debounce('initCP', () => {
+          let cpStructures = this._getAvailableCpOptions(countryProgrammes);
+          this.set('cpStructureOptions', cpStructures);
+          this._checkExpiredCp();
+          if (appModuleItem && !this.selectedCp) {
+            this.setDefaultSelectedCpStructure();
+          }
+        }, 10);
+      }
+
+      _showExpiredCp(hasExpiredCp, editExpiredCpActive) {
+        return hasExpiredCp && !editExpiredCpActive;
+      }
+
+      _getExpiredCpName(cpId) {
+        let cp = this.countryProgrammes.find(c => c.id === cpId);
+        return cp ? cp.name : '—';
+      }
+
+      _enableExpCpEdit() {
+        this.set('_editExpiredCpActive', true);
+        // set default CP
+        this.setDefaultSelectedCpStructure();
+      }
+
+      _cancelExpCpEdit() {
+        this.set('_editExpiredCpActive', false);
+        this.set('selectedCp', this._expiredCpId);
+      }
+
+      resetCpDropdownInvalidState() {
+        let cp = this._getCpStructureDropdown();
+        if (cp) {
+          cp.resetInvalidState();
+        }
+      }
+
+      validate() {
+        let cp = this._getCpStructureDropdown();
+        return cp ? cp.validate() : true;
+      }
+
+      _getCpStructureDropdown() {
+        return this.shadowRoot.querySelector('#cpStructure');
+      }
+
+    }
+
+    Polymer({
+
+
+
+
+
+    });
+  </script>
+</dom-module>
