@@ -148,27 +148,14 @@
         </template>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
           <div class="col col-6">
-            <!-- <etools-dropdown
-                id="cpStructure"
-                label="CP Structure"
-                placeholder="&#8212;"
-                options="[[cpStructureOptions]]"
-                option-value="id"
-                option-label="name"
-                hide-search
-                selected="{{agreement.country_programme}}"
-                readonly$="[[!agreement.permissions.edit.country_programme]]"
-                error-message="Please select CP Structure"
-                required$="[[agreement.permissions.required.country_programme]]">
-            </etools-dropdown> -->
-            <etools-dropdown
+            <etools-cp-structure
                 id="cpStructure"
                 module="agreements"
                 app-module-item="[[agreement]]"
                 selected-cp="{{agreement.country_programme}}"
                 edit-mode="[[agreement.permissions.edit.country_programme]]"
                 required$="[[agreement.permissions.required.country_programme]]">
-            </etools-dropdown>
+            </etools-cp-structure>
           </div>
         </template>
       </div>

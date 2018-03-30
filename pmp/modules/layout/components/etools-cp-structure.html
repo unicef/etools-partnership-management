@@ -259,14 +259,16 @@
       }
 
       _countryProgrammesChanged(countryProgrammes, appModuleItem) {
-        this.debounce('initCP', () => {
-          let cpStructures = this._getAvailableCpOptions(countryProgrammes);
-          this.set('cpStructureOptions', cpStructures);
-          this._checkExpiredCp();
-          if (appModuleItem && !this.selectedCp) {
-            this.setDefaultSelectedCpStructure();
-          }
-        }, 10);
+        this.cpInitDebouncer = Polymer.Debouncer.debounce(this.cpInitDebouncer,
+          Polymer.Async.timeOut.after(10),
+          () => {
+            let cpStructures = this._getAvailableCpOptions(countryProgrammes);
+            this.set('cpStructureOptions', cpStructures);
+            this._checkExpiredCp();
+            if (appModuleItem && !this.selectedCp) {
+              this.setDefaultSelectedCpStructure();
+            }
+          });
       }
 
       _showExpiredCp(hasExpiredCp, editExpiredCpActive) {
@@ -307,6 +309,6 @@
 
     }
 
-    window.customElements.define(EtoolsCpStructure, EtoolsCpStructure.is);
+    window.customElements.define(EtoolsCpStructure.is, EtoolsCpStructure);
   </script>
 </dom-module>
