@@ -217,7 +217,7 @@
       }
 
       _pageChanged(listActive, tabsActive, routeData) {
-        if (!listActive && !tabsActive || routeData === undefined) {
+        if (!listActive && !tabsActive || typeof routeData === 'undefined') {
           return;
         }
 

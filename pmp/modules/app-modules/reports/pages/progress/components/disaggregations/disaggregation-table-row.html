@@ -119,7 +119,9 @@
       }
 
       _setTotalEditable(coords, levelReported, editable) {
-        if (coords === undefined || levelReported === undefined || editable === undefined) {
+        if (typeof coords === 'undefined' ||
+            typeof levelReported === 'undefined' ||
+            typeof editable === 'undefined') {
           return;
         }
         this.set(

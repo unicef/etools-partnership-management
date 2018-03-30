@@ -61,7 +61,7 @@
       }
 
       _handleDialogClosed(closingReason) {
-        if (closingReason.detail.confirmed === undefined) {
+        if (typeof closingReason.detail.confirmed === 'undefined') {
           // filter out the on-close event fired by the containing dropdown
           return;
         }

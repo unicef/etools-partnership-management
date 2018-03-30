@@ -134,7 +134,7 @@
       }
 
       _actionsChanged(actions, actionsData) {
-        if (actions === undefined && actionsData === undefined) {
+        if (typeof actions === 'undefined' && typeof actionsData === 'undefined') {
           return;
         }
         this._actionsChangedDebouncer = Polymer.Debouncer.debounce(this._actionsChangedDebouncer,

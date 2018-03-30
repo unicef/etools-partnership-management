@@ -108,7 +108,7 @@
       }
 
       _fileChanged(intr) {
-        if (intr === undefined) {
+        if (typeof intr === 'undefined') {
           return;
         }
         if (this.internalFile) {
@@ -119,7 +119,7 @@
       }
 
       _attachmentChanged(filesLength) {
-        if (filesLength === undefined) {
+        if (typeof filesLength === 'undefined') {
           return;
         }
         if (filesLength > 0) {
@@ -136,7 +136,7 @@
       }
 
       _fileReplaced(data) {
-        if (data === undefined) {
+        if (typeof data === 'undefined') {
           return;
         }
         if ((data.path.indexOf('attachments.#') > -1)) {
@@ -156,7 +156,7 @@
       }
 
       _autoValidateFile(file) {
-        if (file === undefined) {
+        if (typeof file === 'undefined') {
           return;
         }
         // elemAttached condition is to prevent eager validation
@@ -166,14 +166,14 @@
       }
 
       _refreshStyles(readonly, required) {
-        if (readonly === undefined && required === undefined) {
+        if (typeof readonly === 'undefined' && typeof required === 'undefined') {
           return;
         }
         this.updateStyles();
       }
 
       _requiredChanged(req) {
-        if (req === undefined) {
+        if (typeof req === 'undefined') {
           return;
         }
         if (req === false) {

@@ -130,7 +130,7 @@
       }
 
       _bindValidation(coords) {
-        if (coords === undefined) {
+        if (typeof coords === 'undefined') {
           return;
         }
         let vName = 'v-' + coords;
