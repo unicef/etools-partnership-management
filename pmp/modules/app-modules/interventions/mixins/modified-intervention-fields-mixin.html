@@ -1,0 +1,127 @@
+<link rel="import" href="../../../scripts/lodash.html">
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * PD/SSFA fields prepare for save functionality
+   * @polymer
+   * @mixinFunction
+   */
+  EtoolsPmpApp.Mixins.ModifiedInterventionFields = Polymer.dedupingMixin((superClass) => class extends superClass {
+
+    _objectFieldIsModified(fieldName) {
+      // jscs:disable maximumLineLength
+      let isModified = JSON.stringify(this.originalIntervention[fieldName]) !==
+          JSON.stringify(this.intervention[fieldName]);
+      // jscs:enable maximumLineLength
+      let dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
+      if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
+        // Covers dropdown arrays which can have same content but with changed order
+        if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
+          isModified = false;
+        }
+      }
+      return isModified;
+    }
+
+    _arraysAreEqual(array1, array2) {
+      let differencesArray = [];
+      if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
+        return false;
+      }
+      if (array1.length > array2.length) {
+        differencesArray = _.difference(array1, array2);
+      } else {
+        differencesArray = _.difference(array2, array1);
+      }
+      return _.isEmpty(differencesArray);
+
+    }
+
+    _primitiveFieldIsModified(fieldName) {
+      return this.originalIntervention[fieldName] !== this.intervention[fieldName];
+    }
+
+    _getModifiedReviewAndSign() {
+      let updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
+        'prc_review_document', 'prc_review_document_file', 'partner_authorized_officer_signatory',
+        'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document',
+        'signed_pd_document_file', 'in_amendment'];
+
+      return this._buildModifiedInterventionObject(updatableFields, []);
+    }
+
+    _getModifiedInterventionDetails() {
+      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
+        'start', 'end', 'contingency_pd'];
+      let updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
+        'sections', 'flat_locations', 'planned_budget', 'planned_visits'];
+      let modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+
+      return Object.assign({}, modifiedDetails);
+    }
+
+    _buildModifiedInterventionObject(updatableFields, updatableObjectFields) {
+      let modifiedObject = {};
+
+      updatableFields.forEach((fieldName) => {
+        if (this._primitiveFieldIsModified(fieldName)) {
+          modifiedObject[fieldName] = this.intervention[fieldName];
+        }
+      });
+
+      updatableObjectFields.forEach((fieldName) => {
+        if (this._objectFieldIsModified(fieldName)) {
+          modifiedObject[fieldName] = this.intervention[fieldName];
+        }
+      });
+
+      return modifiedObject;
+    }
+
+    _prepareAttachments() {
+      if (_.isEmpty(this.intervention.attachments)) {
+        return [];
+      }
+      let modifAttachments = this.intervention.attachments
+          .filter(this._attachmentIsNewOrModified.bind(this))
+          .map((attachment) => {
+            let _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
+            if (!_sendAttachmentFile && attachment.id) {
+              return {
+                id: attachment.id,
+                type: attachment.type
+              };
+            } else {
+              return {
+                id: attachment.id,
+                intervention: attachment.intervention,
+                type: attachment.type,
+                attachment: attachment.raw
+              };
+            }
+          });
+      return modifAttachments;
+    }
+
+    _attachmentIsNewOrModified(attachment) {
+      if (_.isEmpty(this.originalIntervention.attachments)) {
+        return true;
+      }
+      if (!attachment.id) {
+        return true;
+      }
+      let originalAttachment = this.originalIntervention.attachments.find((att) => {
+        return att.id === attachment.id;
+      });
+      if (!originalAttachment) {
+        return true;
+      }
+      return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
+    }
+  });
+
+</script>

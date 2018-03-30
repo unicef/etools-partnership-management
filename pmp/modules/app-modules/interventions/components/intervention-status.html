@@ -1,0 +1,433 @@
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../layout/components/etools-status/etools-status.html">
+<link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+
+<dom-module id="intervention-status">
+  <template strip-whitespace>
+    <style>
+      :host {
+        width: 100%;
+        --status-top: auto;
+      }
+
+      etools-status {
+        top: var(--status-top);
+      }
+    </style>
+    <etools-status statuses="[[possibleStatuses]]"
+                   actions="[[possibleActions]]"
+                   on-intervention-draft-event="_setStatusDraft"
+                   on-intervention-suspend-event="_setStatusSuspended"
+                   on-intervention-terminate-event="_setStatusTerminated"
+                   on-intervention-unsuspend-event="_unsuspendIntervention"
+                   on-intervention-delete-event="_openDeleteConfirmation">
+    </etools-status>
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsStatusCommon
+     */
+    class InterventionStatus extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.EtoolsStatusCommon
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'intervention-status';
+      }
+
+      static get properties() {
+        return {
+          interventionId: {
+            type: Number
+          },
+          activeTab: {
+            type: String,
+            observer: '_activeTabChanged'
+          },
+          newIntervention: {
+            type: Boolean,
+            value: false
+          },
+          possibleStatuses: {
+            type: Array,
+            value: function() {
+              return [
+                {
+                  label: 'Draft',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Signed',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Active',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Suspended',
+                  icon: 'av:pause-circle-filled',
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Terminated',
+                  icon: 'report-problem',
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Ended',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Closed',
+                  hidden: false,
+                  completed: false
+                },
+              ];
+            }
+          },
+          possibleActions: {
+            type: Array,
+            value: [
+              {
+                label: 'Save',
+                hidden: true,
+                primary: true,
+                event: 'save-intervention'
+                // save-intervention event is handeled by the parnent
+              },
+              {
+                label: 'Change to draft',
+                hidden: true,
+                event: 'intervention-draft-event'
+              },
+              {
+                label: 'Suspend',
+                hidden: true,
+                event: 'intervention-suspend-event'
+              },
+              {
+                label: 'Unsuspend',
+                hidden: true,
+                event: 'intervention-unsuspend-event'
+              },
+              {
+                label: 'Terminate',
+                hidden: true,
+                event: 'intervention-terminate-event'
+              },
+              {
+                label: 'Delete',
+                hidden: true,
+                event: 'intervention-delete-event'
+              }
+            ]
+          },
+          deleteWarningMessage: {
+            type: String,
+            value: 'Are you sure you want to delete this PD/SSFA?'
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.set('sectionName', 'PD/SSFA');
+        this._handleStickyScroll();
+        this._createStatusChangeWarningDialog();
+        this._createDeleteConfirmationDialog();
+        this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm.bind(this));
+      }
+
+      _activeTabChanged(tab) {
+        if (typeof tab === 'undefined') {
+          return;
+        }
+        this._computeAvailableActions(this.status);
+      }
+
+      _computeAvailableActions(status) {
+        this._setAllActionsToHidden();
+        if (!this.editMode) {
+          return;
+        }
+        let availableOptions = [];
+
+        switch (status) {
+          case 'draft':
+            availableOptions.push('Save');
+            availableOptions.push('Delete');
+            break;
+
+          case 'signed':
+            availableOptions.push('Terminate');
+            availableOptions.push('Suspend');
+            availableOptions.push('Save');
+            break;
+
+          case 'active':
+            availableOptions.push('Terminate');
+            availableOptions.push('Suspend');
+            availableOptions.push('Save');
+            break;
+
+          case 'suspended':
+            availableOptions.push('Unsuspend');
+            break;
+
+          case 'terminated':
+            break;
+
+          case 'closed':
+            if (this.activeTab === 'attachments') {
+              availableOptions.push('Save');
+            }
+            break;
+
+          case 'ended':
+            if (this.activeTab === 'attachments') {
+              availableOptions.push('Save');
+            }
+            break;
+
+            // legacy version of 'ended'
+          case 'implemented':
+            if (this.activeTab === 'attachments') {
+              availableOptions.push('Save');
+            }
+            break;
+
+          default:
+            availableOptions.push('Save');
+            break;
+        }
+
+        for (let key in this.possibleActions) {
+          let actionName = this.possibleActions[key].label;
+
+          if (availableOptions.indexOf(actionName) > -1) {
+            this.set(['possibleActions', key, 'hidden'], false);
+          }
+        }
+      }
+
+      _computeAvailableStatuses(status) {
+        this._setAllStatusesToHidden();
+        let availableStatuses = [];
+        let completedFlag = false;
+        let activeStatus;
+
+        switch (status) {
+          case 'draft':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Draft';
+            break;
+
+          case 'signed':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Signed';
+            break;
+
+          case 'active':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Active';
+            break;
+
+          case 'suspended':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Suspended',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Suspended';
+            break;
+
+          case 'terminated':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Terminated',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Terminated';
+            break;
+
+          case 'closed':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Closed';
+            break;
+
+          case 'ended':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Ended';
+            break;
+
+            // legacy version of 'ended'
+          case 'implemented':
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = 'Ended';
+            break;
+
+          default:
+            availableStatuses = [
+              'Draft',
+              'Signed',
+              'Active',
+              'Ended',
+              'Closed',
+            ];
+            activeStatus = '';
+            break;
+        }
+
+        for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
+          let workingStatusLabel = this.possibleStatuses[key].label;
+          if (workingStatusLabel === activeStatus) {
+            completedFlag = true;
+          }
+          if (availableStatuses.indexOf(workingStatusLabel) > -1) {
+            this.set(['possibleStatuses', key, 'hidden'], false);
+          }
+          this.set(['possibleStatuses', key, 'completed'], completedFlag);
+        }
+      }
+
+      _statusChangeConfirmationCallback(event) {
+        if (event.detail.confirmed) {
+          this.fireEvent('update-intervention-status', {
+            interventionId: this.interventionId,
+            status: this.newStatus + ''
+          });
+          this.fireEvent('reload-list');
+        }
+        this.set('newStatus', '');
+      }
+
+      _statusChangeIsValid(newStatus) {
+        if (this.newIntervention) {
+          return false;
+        }
+
+        if (newStatus === 'draft' && this.status !== 'draft') {
+          // if agreement was not saved (is new) or the status is already changed
+          // from draft, stop status change
+          return false;
+        }
+
+        if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
+          // prevent changing status from suspended to active is the agreement status is suspended
+          return false;
+        }
+
+        if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
+          if (['active', 'signed'].indexOf(this.status) < 0) {
+            //prevent suspending or terminating anything other than signed or active intervention
+            return false;
+          }
+        }
+        return true;
+      }
+
+      _computeWarningMessage(newStatus) {
+        switch (newStatus) {
+          case 'terminated':
+            this.set('warningMessage', 'You are about to terminate this PD/SSFA. Do you want to continue?');
+            break;
+          case 'suspended':
+            this.set('warningMessage', 'You are about to suspend this PD/SSFA. Do you want to continue?');
+            break;
+          case 'signed':
+            this.set('warningMessage', 'You are about to unsuspend this PD/SSFA. Do you want to continue?');
+            break;
+          default:
+            this.set('warningMessage', this._getDefaultWarningMessage());
+            break;
+        }
+      }
+
+      _setStatusTerminated() {
+        this._updateStatus('terminated');
+      }
+
+      _setStatusDraft() {
+        this._updateStatus('draft');
+      }
+
+      _setStatusSuspended() {
+        this._updateStatus('suspended');
+      }
+
+      _unsuspendIntervention() {
+        this._updateStatus('signed');
+      }
+
+      _triggerInterventionDeleteOnConfirm(e) {
+        if (e.detail.confirmed) {
+          this.fireEvent('delete-intervention', {id: this.interventionId});
+        }
+      }
+
+    }
+
+    window.customElements.define(InterventionStatus.is, InterventionStatus);
+  </script>
+</dom-module>
