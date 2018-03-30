@@ -40,6 +40,15 @@
 
 <link rel="import" href="../../scripts/lodash.html">
 
+<!-- lazy imports -->
+<link rel="lazy-import" href="pages/list/interventions-list.html">
+<link rel="lazy-import" href="pages/overview/intervention-overview.html">
+<link rel="lazy-import" href="pages/details/intervention-details.html">
+<link rel="lazy-import" href="pages/review-and-sign/intervention-review-and-sign.html">
+<link rel="lazy-import" href="pages/attachments/intervention-attachments.html">
+<link rel="lazy-import" href="pages/reports/intervention-reports.html">
+<link rel="lazy-import" href="pages/progress/intervention-progress.html">
+
 <dom-module id="interventions-module">
   <template strip-whitespace>
     <style include="page-layout-styles shared-styles buttons-styles">
@@ -141,17 +150,15 @@
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-          the list...
-          <!--<interventions-list id="intList"-->
-                              <!--name="list"-->
-                              <!--active="[[listActive]]"-->
-                              <!--csv-download-qs="{{csvDownloadQs}}"-->
-                              <!--url-params="[[preservedListQueryParams]]">-->
-          <!--</interventions-list>-->
+          <interventions-list id="intList"
+                              name="list"
+                              active="[[listActive]]"
+                              csv-download-qs="{{csvDownloadQs}}"
+                              url-params="[[preservedListQueryParams]]">
+          </interventions-list>
         </template>
 
         <template is="dom-if" if="[[_visibleTabContent(activePage, 'overview', newInterventionActive)]]">
-          PD overview here...
           <!--<intervention-overview name="overview"-->
                                  <!--intervention="[[intervention]]"-->
                                  <!--intervention-agreement="[[agreement]]">-->
@@ -169,7 +176,6 @@
         </template>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'review-and-sign')]]">
-          Review and Sign here...
           <!--<intervention-review-and-sign id="interventionReviewAndSign"-->
                                         <!--name="review-and-sign"-->
                                         <!--intervention="{{intervention}}"-->
@@ -178,7 +184,6 @@
         </template>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'attachments')]]">
-          PD Attachments here...
           <!--<intervention-attachments id="intervAttachments"-->
                                     <!--name="attachments"-->
                                     <!--active="[[_isAttachementsTabActive(routeData.tab)]]"-->
@@ -190,7 +195,6 @@
         </template>
 
         <template is="dom-if" if="[[_visibleTabContent(activePage, 'reports', newInterventionActive)]]" restamp>
-          PD reports here...
           <!--<intervention-reports id="interventionReports"-->
                                 <!--name="reports"-->
                                 <!--intervention-id="[[intervention.id]]"-->
@@ -199,7 +203,6 @@
         </template>
 
         <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
-          PD progress here...
           <!--<intervention-progress name="progress"-->
                                  <!--intervention-id="[[intervention.id]]"></intervention-progress>-->
         </template>
