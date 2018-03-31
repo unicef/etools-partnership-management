@@ -159,52 +159,51 @@
         </template>
 
         <template is="dom-if" if="[[_visibleTabContent(activePage, 'overview', newInterventionActive)]]">
-          <!--<intervention-overview name="overview"-->
-                                 <!--intervention="[[intervention]]"-->
-                                 <!--intervention-agreement="[[agreement]]">-->
-          <!--</intervention-overview>-->
+          <intervention-overview name="overview"
+                                 intervention="[[intervention]]"
+                                 intervention-agreement="[[agreement]]">
+          </intervention-overview>
         </template>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-          PD details here...
-          <!--<intervention-details id="interventionDetails"-->
-                                <!--name="details"-->
-                                <!--intervention="{{intervention}}"-->
-                                <!--new-intervention="[[newInterventionActive]]"-->
-                                <!--original-intervention="[[originalIntervention]]">-->
-          <!--</intervention-details>-->
+          <intervention-details id="interventionDetails"
+                                name="details"
+                                intervention="{{intervention}}"
+                                new-intervention="[[newInterventionActive]]"
+                                original-intervention="[[originalIntervention]]">
+          </intervention-details>
         </template>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'review-and-sign')]]">
-          <!--<intervention-review-and-sign id="interventionReviewAndSign"-->
-                                        <!--name="review-and-sign"-->
-                                        <!--intervention="{{intervention}}"-->
-                                        <!--agreement="[[agreement]]">-->
-          <!--</intervention-review-and-sign>-->
+          <intervention-review-and-sign id="interventionReviewAndSign"
+                                        name="review-and-sign"
+                                        intervention="{{intervention}}"
+                                        agreement="[[agreement]]">
+          </intervention-review-and-sign>
         </template>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'attachments')]]">
-          <!--<intervention-attachments id="intervAttachments"-->
-                                    <!--name="attachments"-->
-                                    <!--active="[[_isAttachementsTabActive(routeData.tab)]]"-->
-                                    <!--intervention="[[intervention]]"-->
-                                    <!--file-model="[[_getAttachmentModel(intervention.id)]]"-->
-                                    <!--attachments="{{intervention.attachments}}"-->
-                                    <!--edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">-->
-          <!--</intervention-attachments>-->
+          <intervention-attachments id="intervAttachments"
+                                    name="attachments"
+                                    active="[[_isAttachementsTabActive(routeData.tab)]]"
+                                    intervention="[[intervention]]"
+                                    file-model="[[_getAttachmentModel(intervention.id)]]"
+                                    attachments="{{intervention.attachments}}"
+                                    edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
+          </intervention-attachments>
         </template>
 
         <template is="dom-if" if="[[_visibleTabContent(activePage, 'reports', newInterventionActive)]]" restamp>
-          <!--<intervention-reports id="interventionReports"-->
-                                <!--name="reports"-->
-                                <!--intervention-id="[[intervention.id]]"-->
-                                <!--active="[[_pageEquals(activePage, 'reports')]]"-->
-                                <!--prev-params="{{reportsPrevParams}}"></intervention-reports>-->
+          <intervention-reports id="interventionReports"
+                                name="reports"
+                                intervention-id="[[intervention.id]]"
+                                active="[[_pageEquals(activePage, 'reports')]]"
+                                prev-params="{{reportsPrevParams}}"></intervention-reports>
         </template>
 
         <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
-          <!--<intervention-progress name="progress"-->
-                                 <!--intervention-id="[[intervention.id]]"></intervention-progress>-->
+          <intervention-progress name="progress"
+                                 intervention-id="[[intervention.id]]"></intervention-progress>
         </template>
 
         <intervention-item-data id="interventionData"
