@@ -51,7 +51,7 @@
 
 <dom-module id="interventions-module">
   <template strip-whitespace>
-    <style include="page-layout-styles shared-styles buttons-styles">
+    <style include="page-layout-styles shared-styles buttons-styles page-content-header-slotted-styles">
       :host {
         display: block;
         min-height: calc(100vh - 120px);
@@ -115,11 +115,11 @@
 
         <div class="action" hidden$="[[!listActive]]">
           <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-            <paper-button class="dropdown-trigger">
+            <paper-button slot="dropdown-trigger">
               <iron-icon icon="file-download"></iron-icon>
               Export
             </paper-button>
-            <paper-listbox class="dropdown-content">
+            <paper-listbox slot="dropdown-content">
               <paper-item on-tap="_exportPdBudget">[[PdExportTypes.PdBudget]] Export</paper-item>
               <paper-item on-tap="_exportPdResult">[[PdExportTypes.PdResult]] Export</paper-item>
             </paper-listbox>

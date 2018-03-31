@@ -12,7 +12,6 @@
 
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
-<link rel="import" href="../../../../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import"
       href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
@@ -27,6 +26,8 @@
 <link rel="import" href="../../../../mixins/lists-common-mixin.html">
 <link rel="import" href="../../../../mixins/pagination-mixin.html">
 <link rel="import" href="../../../../mixins/fr-numbers-consistency-mixin.html">
+
+<link rel="import" href="../../../../layout/components/etools-date-input.html">
 
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -138,22 +139,15 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
-              <paper-input id$="datepicker_parent_[[filter.path]]"
-                           label="[[filter.filterName]]"
-                           value="[[prettyDate(filter.dateSelected)]]"
-                           on-down="openDatePicker"
-                           data-selector$="datepicker_[[filter.path]]">
-                <etools-datepicker-button prefix
-                                          id$="datepicker_[[filter.path]]"
-                                          date="[[prepareDate(filter.dateSelected)]]"
-                                          format="D MMM YYYY"
-                                          parent-id$="datepicker_parent_[[filter.path]]"
-                                          data-filter-path$="[[filter.path]]"
-                                          on-date-has-changed="_filterDateHasChanged"
-                                          no-init show-clear-btn fire-date-has-changed>
-                </etools-datepicker-button>
-              </paper-input>
-              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+              <etools-date-input id$="datepicker_[[filter.path]]"
+                                 label="[[filter.filterName]]"
+                                 value="[[filter.dateSelected]]"
+                                 format="D MMM YYYY"
+                                 on-date-has-changed="_filterDateHasChanged"
+                                 data-filter-path$="[[filter.path]]"
+                                 fire-date-has-changed no-init show-clear-btn>
+              </etools-date-input>
+              <paper-icon-button class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">
@@ -168,11 +162,11 @@
 
         <div class="filter-bar-action-wrapper menu-btn-wrapper">
           <paper-menu-button id="filterMenu" dynamic-align>
-            <paper-button class="button dropdown-trigger">
+            <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
               add filter
             </paper-button>
-            <paper-listbox class="dropdown-content">
+            <paper-listbox slot="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>
@@ -315,6 +309,7 @@
      * @polymer
      * @customElement
      * @appliesMixin EtoolsMixins.EtoolsCurrency
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
@@ -325,6 +320,7 @@
      */
     class InterventionsList extends EtoolsMixinFactory.combineMixins([
       EtoolsMixins.EtoolsCurrency,
+      EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ListFilters,
@@ -450,7 +446,7 @@
          * Disable loading message for main list elements load,
          * triggered by parent element on stamp
          */
-        this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+        this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
 
         this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...', 'pd-ssfa-list');
       }
@@ -699,7 +695,7 @@
       }
 
       _triggerInterventionLoadingMsg() {
-        this.fire('trigger-intervention-loading-msg');
+        this.fireEvent('trigger-intervention-loading-msg');
       }
 
     }

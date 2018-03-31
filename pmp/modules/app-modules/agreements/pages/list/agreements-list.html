@@ -108,14 +108,12 @@
               <etools-date-input id$="datepicker_[[filter.path]]"
                                  label="[[filter.filterName]]"
                                  value="{{filter.dateSelected}}"
-                                 readonly$="[[!agreement.permissions.edit.start]]"
                                  format="D MMM YYYY"
-                                 required$="[[agreement.permissions.required.start]]"
                                  on-date-has-changed="_filterDateHasChanged"
                                  data-filter-path$="[[filter.path]]"
                                  fire-date-has-changed no-init show-clear-btn>
               </etools-date-input>
-              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+              <paper-icon-button class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">
