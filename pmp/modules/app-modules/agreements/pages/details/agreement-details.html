@@ -565,7 +565,7 @@
             // this.set('agreement.start', null);
             // this.set('agreement.end', null);
           } else {
-            let cpField = this.$$('#cpStructure');
+            let cpField = this.shadowRoot.querySelector('#cpStructure');
             if (cpField) {
               cpField.setDefaultSelectedCpStructure();
             }
