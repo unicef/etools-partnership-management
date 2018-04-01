@@ -1,0 +1,24 @@
+<link rel="import" href="../../../../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * Results functionality
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+   */
+  EtoolsPmpApp.Mixins.Results = Polymer.dedupingMixin(
+      (superClass) => class extends EtoolsMixinFactory.combineMixins([
+        EtoolsLogsMixin,
+        EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      ], superClass) {
+        // add mixin methods here
+      });
+
+</script>
