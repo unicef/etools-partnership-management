@@ -457,7 +457,7 @@
         let params = {
           agreement_type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners[0].label : '',
+          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners.map(p => p.label) : '',
           start: this.startDate,
           end: this.endDate,
           search: this.q

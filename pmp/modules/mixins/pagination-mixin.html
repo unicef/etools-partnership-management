@@ -29,7 +29,8 @@
 
         static get observers() {
           return [
-            '_pageInsidePaginationRange(paginator.page, paginator.count)'
+            '_pageInsidePaginationRange(paginator.page, paginator.count)',
+            'resetPageNumber(paginator.page_size)'
           ];
         }
 
