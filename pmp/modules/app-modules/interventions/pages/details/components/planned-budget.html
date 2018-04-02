@@ -269,6 +269,9 @@
       }
 
       _initLocalCurrency(plannedBudget, countryData) {
+        if (typeof plannedBudget === 'undefined' || typeof countryData === 'undefined') {
+          return;
+        }
         if (!plannedBudget.currency && countryData && countryData.local_currency_code) {
           this.set('plannedBudget.currency', countryData.local_currency_code);
         }
@@ -392,10 +395,15 @@
       }
 
       _checkFrsAmountConsistency(frsTotalAmt, unicefCash, plannedBudgetCurrency,
-                                           frsDetails, iterventionStatus) {
+                                 frsDetails, interventionStatus) {
+        if (typeof frsTotalAmt === 'undefined' || typeof unicefCash === 'undefined' ||
+            typeof plannedBudgetCurrency === 'undefined' || typeof frsDetails === 'undefined' ||
+            typeof interventionStatus === 'undefined') {
+          return;
+        }
         // no frs added || status is closed ||
         // the currency of planned budget is different that frs currency => no warning
-        if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed' ||
+        if (this.emptyFrsList(this.intervention, 'interventionDetails') || interventionStatus === 'closed' ||
             !this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, plannedBudgetCurrency)) {
           this.set('_frsConsistencyWarning', '');
           return;
