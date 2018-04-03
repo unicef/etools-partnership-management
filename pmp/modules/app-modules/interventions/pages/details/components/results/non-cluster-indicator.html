@@ -227,7 +227,7 @@
         let elemIds = ['titleEl', 'locationsDropdw', 'targetElForNumericUnit', 'targetElForNonNumericUnit'];
         let i;
         for (i = 0; i < elemIds.length; i++) {
-          let elem = this.$$('#' + elemIds[i]);
+          let elem = this.shadowRoot.querySelector('#' + elemIds[i]);
           if (elem) {
             elem.invalid = false;
           }

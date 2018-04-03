@@ -118,10 +118,15 @@
             this.cpOutputRamIndicatorsEditElem.resetData();
 
             this.cpOutputRamIndicatorsEditElem.set('interventionId', this.interventionId);
-            this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
-            this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
+            if (expectedResultId) {
+              this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
+            }
+            if (!_.isEmpty(ramIndicatorsIds)) {
+              this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
+            }
 
             let availableCpOutputsOptions = this.availableCpOutputs.slice(0);
+            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', availableCpOutputsOptions);
             if (cpOutputId) {
               /**
                * cpOutputId is valid => edit operation, include curent cpOutput in the availableCpOutputsOptions
@@ -137,9 +142,8 @@
               // prevent ram indicators reset at first request, edit operation
               this.cpOutputRamIndicatorsEditElem.set('preventRamIndicatorReset', true);
               this.cpOutputRamIndicatorsEditElem.set('editIndex', editIndex);
+              this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
             }
-            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', availableCpOutputsOptions);
-            this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
 
             this.cpOutputRamIndicatorsEditElem.openDialog();
           }

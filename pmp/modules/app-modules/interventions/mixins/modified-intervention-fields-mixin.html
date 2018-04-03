@@ -13,10 +13,9 @@
   EtoolsPmpApp.Mixins.ModifiedInterventionFields = Polymer.dedupingMixin((superClass) => class extends superClass {
 
     _objectFieldIsModified(fieldName) {
-      // jscs:disable maximumLineLength
       let isModified = JSON.stringify(this.originalIntervention[fieldName]) !==
           JSON.stringify(this.intervention[fieldName]);
-      // jscs:enable maximumLineLength
+
       let dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
       if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
         // Covers dropdown arrays which can have same content but with changed order
@@ -38,7 +37,6 @@
         differencesArray = _.difference(array2, array1);
       }
       return _.isEmpty(differencesArray);
-
     }
 
     _primitiveFieldIsModified(fieldName) {

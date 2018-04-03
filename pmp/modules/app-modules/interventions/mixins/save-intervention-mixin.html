@@ -113,6 +113,23 @@
           return valid;
         }
 
+        // TODO: polymer 2 - find a better way to compare modified objects
+        // this method might not be needed in this case
+        // _preparePlannedVisitsData(interventionData) {
+        //   // prepare planned visits, we need integer values
+        //   return interventionData.planned_visits.map((v) => {
+        //     let visitObj = {};
+        //     for(let k in v) {
+        //       if (v[k]) {
+        //         visitObj[k] = parseInt(v[k], 10);
+        //       } else {
+        //         visitObj[k] = v[k]; // keep it as it is
+        //       }
+        //     }
+        //     return visitObj;
+        //   });
+        // }
+
         _primtiveFieldIsEmpty(fieldVal) {
           return fieldVal === null || fieldVal === undefined || fieldVal === '';
         }
@@ -125,11 +142,11 @@
           // frs_details are readonly, we do not have to send them to backend
           delete interventionData.frs_details;
 
-          //no need to send planned_budget.total to backend
+          // no need to send planned_budget.total to backend
           if (interventionData.planned_budget) {
             delete interventionData.planned_budget.total;
           }
-
+          
           // prepare attachments
           interventionData.attachments = this._prepareAttachments();
           if (_.isEmpty(interventionData.attachments)) {
