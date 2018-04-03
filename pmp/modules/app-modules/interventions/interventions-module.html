@@ -507,10 +507,6 @@
         }
       }
 
-      _addTabNameToFileImportBasePath(pageBaseUrl, tabName) {
-        return this._isPrpTab(tabName) ? (pageBaseUrl + tabName + '/') : pageBaseUrl;
-      }
-
       _resetRedirectToNewInterventionFlag() {
         if (this._redirectToNewIntervPageInProgress) {
           this.set('_redirectToNewIntervPageInProgress', false);
@@ -537,7 +533,7 @@
                 loadingMsgSource: 'interv-page'
               };
               this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
-                  this._addTabNameToFileImportBasePath, this._resetRedirectToNewInterventionFlag);
+                  null, this._resetRedirectToNewInterventionFlag);
               this._handleAmendmentMode();
             });
       }

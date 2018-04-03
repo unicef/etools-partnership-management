@@ -82,11 +82,13 @@
   </template>
   <script>
     'use strict';
+
     /**
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const InterventionAttachmentsMixins =  EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
