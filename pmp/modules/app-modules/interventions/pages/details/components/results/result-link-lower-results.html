@@ -70,10 +70,11 @@
       }
 
       .lower-result-row {
-        padding: 0 24px;
         @apply --layout-center;
-
+        padding: 0 24px;
         min-height: 49px; /* 1px for border */
+      }
+      .lower-result-row:not(:last-of-type) {
         border-bottom: 1px solid var(--list-divider-color);
       }
 
@@ -125,13 +126,12 @@
                                   edit-mode="[[editMode]]">
               </applied-indicators>
             </div>
-            <div class="add-btn-row flex-c">
+            <div class="add-btn-row flex-c" hidden$="[[!editMode]]">
               <paper-icon-button icon="add-box"
                                  title="Add Indicator"
                                  on-tap="_addNewIndicator"
                                  data-ll-result-id$="[[item.id]]"
-                                 disabled$="[[!editMode]]"
-                                 hidden$="[[!editMode]]">
+                                 disabled$="[[!editMode]]">
               </paper-icon-button>
             </div>
           </div>

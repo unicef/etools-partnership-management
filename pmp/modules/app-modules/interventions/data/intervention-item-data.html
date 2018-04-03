@@ -8,8 +8,7 @@
 <link rel="import" href="../../../mixins/ajax-server-errors-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../environment-flags/environment-flags-mixin.html">
-<link rel="import"
-      href="../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../redux/etools-data-redux-store.html">
 
 <dom-module id="intervention-item-data">
   <script>
@@ -121,7 +120,7 @@
 
       _handleErrorResponse(response, ajaxMethod) {
         this.handleErrorResponse(response, ajaxMethod, true);
-        if (this.intervention) {
+        if (this.intervention && this.originalIntervention) {
           this._restoreUnsuccessfullyDeletedFrs();
           this._restoreInAmmendmentFlag();
         }

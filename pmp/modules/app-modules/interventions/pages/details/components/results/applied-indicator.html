@@ -207,9 +207,9 @@
 
       _updateCollapsableIconBg(indicator) {
         if (indicator.cluster_indicator_id) {
-          this.updateStyle({'--collapse-icon-bg-color': 'var(--ternary-color)'});
+          this.updateStyles({'--collapse-icon-bg-color': 'var(--ternary-color)'});
         } else {
-          this.updateStyle({'--collapse-icon-bg-color': 'var(--primary-color)'});
+          this.updateStyles({'--collapse-icon-bg-color': 'var(--primary-color)'});
         }
       }
 
@@ -230,16 +230,16 @@
       }
 
       getSectionName(sectionId) {
-        if (!sectionId) {
-          return '—';
+        let sectionName = '—';
+        if (sectionId && !_.isEmpty(this.sections)) {
+          let section = this.sections.find(function(s) {
+            return parseInt(s.id) === parseInt(sectionId);
+          });
+          if (section) {
+            sectionName = section.name;
+          }
         }
-        let section = this.sections.find(function(s) {
-          return parseInt(s.id) === parseInt(sectionId);
-        });
-        if (!section) {
-          return '—';
-        }
-        return section.name;
+        return sectionName;
       }
 
       getClusterName(clusterName) {

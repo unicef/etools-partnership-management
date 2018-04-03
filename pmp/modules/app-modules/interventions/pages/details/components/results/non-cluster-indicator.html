@@ -152,7 +152,7 @@
      * @appliesMixin EtoolsLogsMixin,
      * @appliesMixin EtoolsPmpApp.Mixins.IndicatorsCommon
      */
-    class NonClusterIndicator extends EtoolsMixinFactory([
+    class NonClusterIndicator extends EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.IndicatorsCommon
     ], Polymer.Element) {
