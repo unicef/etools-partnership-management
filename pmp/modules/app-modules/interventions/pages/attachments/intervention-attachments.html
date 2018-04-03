@@ -222,6 +222,9 @@
       }
 
       _checkEmptyFileTypesData(fileTypes, active) {
+        if (typeof fileTypes === 'undefined') {
+          return;
+        }
         if (active && !fileTypes.length) {
           // there are no file types in the current workspace
           this.fireEvent('toast', {

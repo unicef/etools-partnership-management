@@ -485,6 +485,9 @@
       }
 
       _isAttachmentsTabReadonly(permissions, intervention) {
+        if (typeof permissions === 'undefined' || typeof intervention === 'undefined') {
+          return false;
+        }
         if (!this._hasEditPermissions(permissions, intervention)) {
           return true;
         }
