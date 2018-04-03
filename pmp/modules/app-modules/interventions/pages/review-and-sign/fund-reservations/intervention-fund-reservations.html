@@ -161,7 +161,7 @@
           '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash_local,' +
             ' intervention.start, intervention.end)',
         ];
-      },
+      }
 
       ready() {
         super.ready();
@@ -315,13 +315,12 @@
         }
         this.set('_lastFrsDetailsRequested', frNumbers);
 
-        let self = this;
         this.sendRequest({
           endpoint: {url: url}
         }).then((resp) => {
-          self._frsDetailsSuccessHandler(resp);
+          this._frsDetailsSuccessHandler(resp);
         }).catch((error) => {
-          self._frsDetailsErrorHandler(error.response);
+          this._frsDetailsErrorHandler(error.response);
         });
       }
 
@@ -349,7 +348,7 @@
       /**
         * frs details request failed
         */
-      _frsDetailsErrorHandle(responseErr) {
+      _frsDetailsErrorHandler(responseErr) {
         this._disableFrsCheckLoadingMsg();
         let frs = this._lastFrsDetailsRequested.map((fr) => {
           return {fr_number: fr};
@@ -389,6 +388,9 @@
       }
 
       _frsDetailsChanged(frsDetails) {
+        if (typeof frsDetails === 'undefined') {
+          return;
+        }
         this._frsDetailsDebouncer = Polymer.Debouncer.debounce(this._frsDetailsDebouncer,
           Polymer.Async.timeOut.after(10),
           () => {

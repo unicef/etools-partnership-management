@@ -27,7 +27,7 @@
 
 <link rel="import" href="../../../../validators/required-and-not-future-date-validator.html">
 <!-- <link rel="import" href="amendments/intervention-amendments.html"> -->
-<!-- <link rel="import" href="fr-numbers/intervention-fund-reservations.html"> -->
+<link rel="import" href="fund-reservations/intervention-fund-reservations.html">
 
 <dom-module id="intervention-review-and-sign">
   <template strip-whitespace>
@@ -202,20 +202,12 @@
                         placeholder="&#8212;" readonly>
             </paper-input>
           </template>
-        </div>         placeholder="&#8212;" readonly>
-            </paper-input>
-          </template>
-        </div>
-      </div>        placeholder="&#8212;" readonly>
-            </paper-input>
-          </template>
         </div>
       </div>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
-      <intervention-amendments  class="content-section"
-                                intervention-document-type="[[intervention.document_type]]"
+    <template is="dom-if" if="[[!_isDraft(intervention.status)]]" class="content-section">
+      <intervention-amendments  intervention-document-type="[[intervention.document_type]]"
                                 intervention-id="[[intervention.id]]"
                                 amend-action-in-progress="{{intervention.in_amendment}}"
                                 data-items="{{intervention.amendments}}"
@@ -450,9 +442,9 @@
           if (signedDocument instanceof File ||
               (_.isString(signedDocument) && !_.isEmpty(signedDocument))) {
             // new document selected
-            this.fire('signed-doc-change-for-draft', {docSelected: true});
+            this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
           } else {
-            this.fire('signed-doc-change-for-draft', {docSelected: false});
+            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
           }
         }
       }
