@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../../mixins/missing-dropdown-options-mixin.html">
+<link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../styles/required-field-styles.html">
 
@@ -74,11 +75,13 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixins EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixins EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixins EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixins EtoolsPmpApp.Mixins.MissingDropdownOptions
      */
     class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.AjaxErrorsParser,
       EtoolsPmpApp.Mixins.MissingDropdownOptions
@@ -105,7 +108,8 @@
             value: []
           },
           selectedRamIndicatorsIds: {
-            type: Array
+            type: Array,
+            value: []
           },
           autovalidateActive: {
             type: Boolean,
@@ -204,7 +208,6 @@
         this.set('availableCpOutputs', []);
         this.set('cpOutputRamIndicators', []);
         this.set('selectedRamIndicatorsIds', []);
-        this.set('selectedRamIndicatorsIds', undefined);
 
         this.$.cpOutput.set('invalid', false);
         this.$.indicators.set('invalid', false);
@@ -281,12 +284,12 @@
       }
 
       _newResultSuccessfullyAdded(response) {
-        this.fire('new-expected-result-added', {result: response});
+        this.fireEvent('new-expected-result-added', {result: response});
         this.closeDialog();
       }
 
       _resultSuccessfullyUpdated(response) {
-        this.fire('expected-result-updated', {index: this.editIndex, result: response});
+        this.fireEvent('expected-result-updated', {index: this.editIndex, result: response});
         this.closeDialog();
       }
 

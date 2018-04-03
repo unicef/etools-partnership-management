@@ -107,11 +107,11 @@
 
         validate() {
           let valid = true;
-          let sectionSelected = this.$$('#sectionDropdw').validate();
+          let sectionSelected = this.shadowRoot.querySelector('#sectionDropdw').validate();
           if (this.isCluster) {
-            valid = this.$$('#clusterIndicatorEl').validate() && sectionSelected;
+            valid = this.shadowRoot.querySelector('#clusterIndicatorEl').validate() && sectionSelected;
           } else {
-            valid = this.$$('#nonClusterIndicatorEl').validate() && sectionSelected;
+            valid = this.shadowRoot.querySelector('#nonClusterIndicatorEl').validate() && sectionSelected;
           }
           return valid;
         }

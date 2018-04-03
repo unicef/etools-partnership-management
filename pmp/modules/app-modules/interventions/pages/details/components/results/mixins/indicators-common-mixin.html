@@ -50,7 +50,7 @@
     validateComponents(elemIds) {
       let valid = true;
       elemIds.forEach(function(elemId) {
-        let elem = this.$$('#' + elemId);
+        let elem = this.shadowRoot.querySelector('#' + elemId);
         if (elem) {
           valid = elem.validate() && valid;
         } else {

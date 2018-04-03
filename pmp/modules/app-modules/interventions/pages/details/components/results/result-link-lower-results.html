@@ -88,7 +88,9 @@
         @apply --layout-horizontal;
         @apply --layout-center;
       }
-      .add-btn-row.border-b {
+
+      .lower-results-list:not([hidden]) + .add-btn-row {
+        border-top: 1px solid var(--list-divider-color);
         height: 49px;
       }
 
@@ -100,7 +102,7 @@
       </etools-data-table-header>
     </div>
 
-    <div hidden$="[[_emptyList(dataItems.length)]]">
+    <div class="lower-results-list" hidden$="[[_emptyList(dataItems.length)]]">
       <div class="header-container header-text border-b">
         <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
         <div class="col flex-c">
@@ -139,7 +141,7 @@
       </template>
     </div>
 
-    <div class="add-btn-row border-b" hidden$="[[!editMode]]">
+    <div class="add-btn-row border-t" hidden$="[[!editMode]]">
       <paper-icon-button icon="add-box"
                          on-tap="_addNewLowerResult"
                          title="Add PD or SSFA OUTPUT"
