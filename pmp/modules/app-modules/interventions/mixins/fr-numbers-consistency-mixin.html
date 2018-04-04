@@ -1,49 +1,52 @@
-<link rel="import" href="../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
+<link rel="import"
+      href="../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <script>
-    'use strict';
-    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
-    window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-    /*
-    * @polymer
-    * @mixinFunction
-    * @appliesMixin EtoolsMixins.EtoolsCurrency
-    */
-    EtoolsPmpApp.Mixins.FrNumbersConsistency = (superClass) => class extends EtoolsMixins.EtoolsCurrency(superClass) {
-      static get properties() {
-        return {
-          frsConsistencyWarnings: {
-            type: Object,
-            value: {
-              amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution cannot be compared.',
-              tooManyFrsCurencies: 'More than 1 FR currency is available.',
-              amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
-              currencyMismatch: 'FR currency does not match PD/SSFA currency.',
-              cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
-              addedFrsCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
-                'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
-                'as the FR.\n',
-              amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
-              dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
-              warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
-            }
-          },
-          frsValidationFields: {
-            type: Object,
-            value: {
-              start_date: 'Start Date',
-              end_date: 'End Date',
-              pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
-              fr_earliest_date: 'FR Start Date',
-              fr_latest_date: 'FR End Date',
-              fr_total_amount: 'Total FR amount'
-            }
-          }
-        };
-      }
+  'use strict';
 
-     /*
-     * frs currencies and planned budget currency check
-     */
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+  * @polymer
+  * @mixinFunction
+  * @appliesMixin EtoolsMixins.EtoolsCurrency
+  */
+  EtoolsPmpApp.Mixins.FrNumbersConsistency = (superClass) => class extends EtoolsMixins.EtoolsCurrency(superClass) {
+    static get properties() {
+      return {
+        frsConsistencyWarnings: {
+          type: Object,
+          value: {
+            amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution cannot be compared.',
+            tooManyFrsCurencies: 'More than 1 FR currency is available.',
+            amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
+            currencyMismatch: 'FR currency does not match PD/SSFA currency.',
+            cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
+            addedFrsCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
+            'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
+            'as the FR.\n',
+            amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
+            dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
+            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
+          }
+        },
+        frsValidationFields: {
+          type: Object,
+          value: {
+            start_date: 'Start Date',
+            end_date: 'End Date',
+            pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
+            fr_earliest_date: 'FR Start Date',
+            fr_latest_date: 'FR End Date',
+            fr_total_amount: 'Total FR amount'
+          }
+        }
+      };
+    }
+
+    /*
+    * frs currencies and planned budget currency check
+    */
     _frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency) {
       let differentFrCurrencies = frs.filter((fr) => fr.currency !== plannedBudgetCurrency);
       return differentFrCurrencies.length === 0;
@@ -102,18 +105,19 @@
     }
 
     checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, intervention,
-                                                      interventionIsFromWhere, returnMsg, skipEmptyListCheck) {
+                                            interventionIsFromWhere, returnMsg, skipEmptyListCheck) {
       if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere,
               skipEmptyListCheck)) {
         return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }
       return false;
     }
+
     /**
      * skipEmptyListCheck - skip required when in the process of adding a new FR number
      */
     validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention,
-                                             interventionIsFromWhere, skipEmptyListCheck) {
+                                   interventionIsFromWhere, skipEmptyListCheck) {
       if (intervention.status === 'closed'
           || (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere))) {
         return true;
@@ -132,6 +136,7 @@
       }
       return false;
     }
+
     validateFrsVsInterventionDates(intervDateStr, frsDateStr) {
       if (!frsDateStr || !intervDateStr) {
         // No Fr added or interv dates not set yet
@@ -139,20 +144,25 @@
       }
       return intervDateStr === frsDateStr;
     }
+
     _buildFrsWarningMsg(msgTemplate, searchStr, replacementStr) {
       return msgTemplate.replace(new RegExp(searchStr, 'g'), replacementStr);
     }
+
     getFrsTotalAmountInconsistencyMsg() {
       return this.frsConsistencyWarnings.amount;
     }
+
     getFrsStartDateValidationMsg() {
       return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
           '<<field_name>>', this.frsValidationFields.start_date);
     }
+
     getFrsEndDateValidationMsg() {
       return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
           '<<field_name>>', this.frsValidationFields.end_date);
     }
+
     frsConsistencyWarningIsActive(warnMsg) {
       return !!warnMsg;
     }

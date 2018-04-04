@@ -1,14 +1,14 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
-
 <link rel="import" href="../../../../../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
@@ -22,7 +22,7 @@
 
 <link rel="import" href="update-fr-numbers.html">
 
-<dom-module id="intervention-fund-reservations">
+<dom-module id="fund-reservations">
   <template strip-whitespace>
     <style include="fr-warnings-styles">
       [hidden] {
@@ -40,14 +40,17 @@
       #frs-container {
         padding: 16px 0;
       }
+
       .fr-number {
         padding: 8px 12px;
         font-size: 16px;
         box-sizing: border-box;
       }
+
       .warning {
         padding: 24px;
       }
+
       .warning,
       .fr-number {
         line-height: 24px;
@@ -90,7 +93,6 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
-     * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin Polymer.GestureEventListeners
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.ArrayHelper
@@ -100,7 +102,6 @@
      */
     const InterventionFundReservationsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
-      EtoolsAjaxRequestMixin,
       Polymer.GestureEventListeners,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.ArrayHelper,
@@ -114,9 +115,9 @@
      * @customElement
      * @appliesMixin InterventionFundReservationsMixins
      */
-    class InterventionFundReservations extends InterventionFundReservationsMixins {
+    class FundReservations extends InterventionFundReservationsMixins {
       static get is() {
-        return 'intervention-fund-reservations';
+        return 'fund-reservations';
       }
 
       static get properties() {
@@ -160,7 +161,7 @@
       static get observers() {
         return [
           '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash_local,' +
-            ' intervention.start, intervention.end)',
+          ' intervention.start, intervention.end)',
         ];
       }
 
@@ -264,9 +265,9 @@
       }
 
       /**
-        * After FR Numbers update the numbers list might be empty.
-        * This can happen is the user removed all the existing numbers or if there is no change made
-        */
+       * After FR Numbers update the numbers list might be empty.
+       * This can happen is the user removed all the existing numbers or if there is no change made
+       */
       _handleEmptyFrsAfterUpdate() {
         let currentInterventionFrs = this._getCurrentFrs();
         if (currentInterventionFrs.length === 0) {
@@ -280,8 +281,8 @@
       }
 
       /**
-        * Updates made and FR Numbers list is not empty
-        */
+       * Updates made and FR Numbers list is not empty
+       */
       _handleNotEmptyFrsAfterUpdate(frNumbers) {
         let diff = this.getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
         if (diff.length) {
@@ -307,8 +308,8 @@
       }
 
       /**
-        * Get FR Numbers details from server
-        */
+       * Get FR Numbers details from server
+       */
       _triggerFrsDetailsRequest(frNumbers) {
         let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
         if (this.intervention.id) {
@@ -347,8 +348,8 @@
       }
 
       /**
-        * frs details request failed
-        */
+       * frs details request failed
+       */
       _frsDetailsErrorHandler(responseErr) {
         this._disableFrsCheckLoadingMsg();
         let frs = this._lastFrsDetailsRequested.map((fr) => {
@@ -393,10 +394,10 @@
           return;
         }
         this._frsDetailsDebouncer = Polymer.Debouncer.debounce(this._frsDetailsDebouncer,
-          Polymer.Async.timeOut.after(10),
-          () => {
-            this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
-          });
+            Polymer.Async.timeOut.after(10),
+            () => {
+              this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
+            });
       }
 
       _disableFrsCheckLoadingMsg() {
@@ -405,6 +406,6 @@
 
     }
 
-    window.customElements.define(InterventionFundReservations.is, InterventionFundReservations);
+    window.customElements.define(FundReservations.is, FundReservations);
   </script>
 </dom-module>

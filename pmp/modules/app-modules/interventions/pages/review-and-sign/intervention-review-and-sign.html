@@ -26,8 +26,8 @@
 <link rel="import" href="../../../../mixins/date-mixin.html">
 
 <link rel="import" href="../../../../validators/required-and-not-future-date-validator.html">
-<link rel="import" href="components/amendments/intervention-amendments.html">
-<link rel="import" href="components/fund-reservations/intervention-fund-reservations.html">
+<link rel="import" href="components/amendments/pd-amendments.html">
+<link rel="import" href="components/fund-reservations/fund-reservations.html">
 
 <dom-module id="intervention-review-and-sign">
   <template strip-whitespace>
@@ -49,8 +49,8 @@
 
       paper-checkbox[disabled] {
         cursor: not-allowed;
-        --paper-checkbox-unchecked-color:black;
-        --paper-checkbox-label:{
+        --paper-checkbox-unchecked-color: black;
+        --paper-checkbox-label: {
           color: var(--primary-text-color);
           opacity: 1;
         };
@@ -62,19 +62,19 @@
         <div class="col col-3">
           <!-- Document Submission Date -->
           <etools-date-input id="submissionDateField"
-                              label="Document Submission Date"
-                              value="{{intervention.submission_date}}"
-                              readonly$="[[!intervention.permissions.edit.submission_date]]"
-                              no-init show-clear-btn>
+                             label="Document Submission Date"
+                             value="{{intervention.submission_date}}"
+                             readonly$="[[!intervention.permissions.edit.submission_date]]"
+                             no-init show-clear-btn>
           </etools-date-input>
         </div>
         <div class="col col-3">
           <!-- Submitted to PRC? -->
           <etools-form-element-wrapper>
             <paper-checkbox checked="{{intervention.submitted_to_prc}}"
-                                    disabled$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
-                                    hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
-                                    Submitted to PRC?
+                            disabled$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
+                            hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
+              Submitted to PRC?
             </paper-checkbox>
           </etools-form-element-wrapper>
         </div>
@@ -84,19 +84,19 @@
           <div class="col col-3">
             <!-- Submission Date to PRC -->
             <etools-date-input id="submissionDatePrcField"
-                                label="Submission Date to PRC"
-                                value="{{intervention.submission_date_prc}}"
-                                readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
-                                no-init show-clear-btn>
+                               label="Submission Date to PRC"
+                               value="{{intervention.submission_date_prc}}"
+                               readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
+                               no-init show-clear-btn>
             </etools-date-input>
           </div>
           <div class="col col-3">
             <!-- Review Date by PRC -->
             <etools-date-input id="reviewDatePrcField"
-                                label="Review Date by PRC"
-                                value="{{intervention.review_date_prc}}"
-                                readonly$="[[!intervention.permissions.edit.review_date_prc]]"
-                                no-init show-clear-btn>
+                               label="Review Date by PRC"
+                               value="{{intervention.review_date_prc}}"
+                               readonly$="[[!intervention.permissions.edit.review_date_prc]]"
+                               no-init show-clear-btn>
             </etools-date-input>
           </div>
           <div class="col col-6 file-container space-left">
@@ -127,21 +127,20 @@
           </etools-dropdown>
         </div>
         <div class="col col-3">
-
           <required-and-not-future-date-validator validator-name="partnerDateValidator"
                                                   required="[[intervention.permissions.required.signed_by_partner_date]]"
                                                   error-message="{{partnerDateValidatorErrorMessage}}">
           </required-and-not-future-date-validator>
           <!-- Signed by Partner Date -->
           <etools-date-input id="signedByPartnerDateField"
-                            label="Signed by Partner Date"
-                            value="{{intervention.signed_by_partner_date}}"
-                            readonly="[[!intervention.permissions.edit.signed_by_partner_date]]"
-                            required$="[[intervention.permissions.required.signed_by_partner_date]]"
-                            auto-validate
-                            validator="partnerDateValidator"
-                            error-message$="[[partnerDateValidatorErrorMessage]]"
-                            no-init show-clear-btn>
+                             label="Signed by Partner Date"
+                             value="{{intervention.signed_by_partner_date}}"
+                             readonly="[[!intervention.permissions.edit.signed_by_partner_date]]"
+                             required$="[[intervention.permissions.required.signed_by_partner_date]]"
+                             auto-validate
+                             validator="partnerDateValidator"
+                             error-message$="[[partnerDateValidatorErrorMessage]]"
+                             no-init show-clear-btn>
           </etools-date-input>
         </div>
       </div>
@@ -149,17 +148,17 @@
         <div class="col col-6">
           <!-- Signed by UNICEF -->
           <etools-dropdown id="signedByUnicef"
-                         label="Signed by UNICEF"
-                         placeholder="&#8212;"
-                         options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
-                         option-value="id"
-                         option-label="name"
-                         selected="{{intervention.unicef_signatory}}"
-                         dynamic-align
-                         readonly$="[[!intervention.permissions.edit.unicef_signatory]]"
-                         required$="[[intervention.permissions.required.unicef_signatory]]"
-                         auto-validate
-                         error-message="Please select UNICEF user">
+                           label="Signed by UNICEF"
+                           placeholder="&#8212;"
+                           options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
+                           option-value="id"
+                           option-label="name"
+                           selected="{{intervention.unicef_signatory}}"
+                           dynamic-align
+                           readonly$="[[!intervention.permissions.edit.unicef_signatory]]"
+                           required$="[[intervention.permissions.required.unicef_signatory]]"
+                           auto-validate
+                           error-message="Please select UNICEF user">
           </etools-dropdown>
         </div>
         <div class="col col-3">
@@ -169,14 +168,14 @@
           </required-and-not-future-date-validator>
           <!-- Signed by UNICEF Date -->
           <etools-date-input id="signedByUnicefDateField"
-                            label="Signed by UNICEF Date"
-                            value="{{intervention.signed_by_unicef_date}}"
-                            readonly="[[!intervention.permissions.edit.signed_by_unicef_date]]"
-                            required$="[[intervention.permissions.required.signed_by_unicef_date]]"
-                            auto-validate
-                            validator="unicefDateValidator"
-                            error-message$="[[unicefDateValidatorErrorMessage]]"
-                            no-init show-clear-btn>
+                             label="Signed by UNICEF Date"
+                             value="{{intervention.signed_by_unicef_date}}"
+                             readonly="[[!intervention.permissions.edit.signed_by_unicef_date]]"
+                             required$="[[intervention.permissions.required.signed_by_unicef_date]]"
+                             auto-validate
+                             validator="unicefDateValidator"
+                             error-message$="[[unicefDateValidatorErrorMessage]]"
+                             no-init show-clear-btn>
           </etools-date-input>
         </div>
       </div>
@@ -198,8 +197,8 @@
         <div class="col col-3">
           <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
             <paper-input label="Days from Submission to Signed"
-                        value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
-                        placeholder="&#8212;" readonly>
+                         value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
+                         placeholder="&#8212;" readonly>
             </paper-input>
           </template>
         </div>
@@ -207,19 +206,19 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!_isDraft(intervention.status)]]" class="content-section">
-      <intervention-amendments  intervention-document-type="[[intervention.document_type]]"
-                                intervention-id="[[intervention.id]]"
-                                amend-action-in-progress="{{intervention.in_amendment}}"
-                                data-items="{{intervention.amendments}}"
-                                edit-mode$="[[intervention.permissions.edit.amendments]]">
-      </intervention-amendments>
+      <pd-amendments intervention-document-type="[[intervention.document_type]]"
+                     intervention-id="[[intervention.id]]"
+                     amend-action-in-progress="{{intervention.in_amendment}}"
+                     data-items="{{intervention.amendments}}"
+                     edit-mode="[[intervention.permissions.edit.amendments]]">
+      </pd-amendments>
     </template>
 
-    <intervention-fund-reservations class="content-section"
-                                    intervention="[[intervention]]"
-                                    edit-mode="[[intervention.permissions.edit.frs]]"
-                                    on-frs-update="_handleFrsUpdate">
-    </intervention-fund-reservations>
+    <fund-reservations class="content-section"
+                       intervention="[[intervention]]"
+                       edit-mode="[[intervention.permissions.edit.frs]]"
+                       on-frs-update="_handleFrsUpdate">
+    </fund-reservations>
 
   </template>
   <script>
@@ -244,6 +243,7 @@
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
+
     /**
      * @polymer
      * @customElement
@@ -300,9 +300,9 @@
       connectedCallback() {
         super.connectedCallback();
         /**
-        * Disable loading message for review and sign tab elements load,
-        * triggered by parent element on stamp or by tap event on tabs
-        */
+         * Disable loading message for review and sign tab elements load,
+         * triggered by parent element on stamp or by tap event on tabs
+         */
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         this.fireEvent('tab-content-attached');
@@ -363,8 +363,8 @@
 
       getDaysFromSubmissionToSign(dateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
         if (typeof dateStr === 'string' && dateStr !== '' &&
-          (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
-          typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
+            (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
+                typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
 
           let maxSignedDateStr = this.getMaxDateStr(signedByPartnerDateStr, signedByUnicefDateStr);
           if (maxSignedDateStr !== null && new Date(dateStr).toString() !== 'Invalid Date') {
@@ -375,7 +375,7 @@
       }
 
       validate() {
-        let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByUnicef','#signedIntervFile',
+        let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByUnicef', '#signedIntervFile',
           '#signedByPartnerDateField', '#signedByUnicefDateField'];
         let valid = true;
 
@@ -434,9 +434,9 @@
       }
 
       /**
-      * If a signed document is selected then all fields required
-      * for the intervention to move in signed status are required; only for draft status.
-      */
+       * If a signed document is selected then all fields required
+       * for the intervention to move in signed status are required; only for draft status.
+       */
       _signedPdDocHasChanged(signedDocument) {
         if (this.intervention && this.intervention.status === 'draft') {
           if (signedDocument instanceof File ||

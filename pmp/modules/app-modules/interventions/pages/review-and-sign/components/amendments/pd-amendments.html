@@ -19,7 +19,7 @@
 
 <link rel="import" href="add-amendment-dialog.html">
 
-<dom-module id="intervention-amendments">
+<dom-module id="pd-amendments">
   <template strip-whitespace>
     <style include="shared-styles data-table-styles grid-layout-styles">
       [hidden] {
@@ -146,9 +146,9 @@
      * @customElement
      * @appliesMixin InterventionAmendmentsMixin
      */
-    class InterventionAmendments extends InterventionAmendmentsMixin {
+    class PdAmendments extends InterventionAmendmentsMixin {
       static get is() {
-        return 'intervention-amendments';
+        return 'pd-amendments';
       }
 
       static get properties() {
@@ -263,6 +263,6 @@
       }
     }
 
-    window.customElements.define(InterventionAmendments.is, InterventionAmendments);
+    window.customElements.define(PdAmendments.is, PdAmendments);
   </script>
 </dom-module>
