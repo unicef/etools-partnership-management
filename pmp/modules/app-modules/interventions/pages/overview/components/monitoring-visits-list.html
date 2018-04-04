@@ -1,9 +1,9 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
 <link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../../bower_components/etools-loading/etools-loading.html">
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
-<link rel="import" href="../../../../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
-<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../scripts/lodash.html">
@@ -21,9 +21,11 @@
       :host {
         @apply --layout-flex;
       }
+
       .monitoring-visits-container {
         position: relative;
       }
+
       etools-loading {
         margin-top: -10px;
         margin-bottom: -40px;
@@ -37,22 +39,22 @@
       <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
         <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
           <etools-data-table-column class="col-2" field="reference_number">
-              Reference #
+            Reference #
           </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="primary_traveler" >
-              Traveler
+          <etools-data-table-column class="col-2" field="primary_traveler">
+            Traveler
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="travel_type">
-              Travel Type
+            Travel Type
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="date">
-              When
+            When
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="locations">
-              Locations
+            Locations
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="status">
-              Status
+            Status
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -61,9 +63,9 @@
             <div slot="row-data">
               <span class="col-data col-2">
                 <a class="truncate"
-                  href$="/t2f/edit-travel/[[visit.trip_id]]"
-                  title="[[visit.reference_number]]"
-                  target="_blank">
+                   href$="/t2f/edit-travel/[[visit.trip_id]]"
+                   title="[[visit.reference_number]]"
+                   target="_blank">
                   [[visit.reference_number]]
                 </a>
               </span>
@@ -100,18 +102,17 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
-     * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      */
     const MonitoringVisitsListMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
-      EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.AjaxErrorsParser,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Common
     ], Polymer.Element);
+
     /**
      * @polymer
      * @customElement

@@ -1,6 +1,6 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../reports/components/reports-display-list.html">
 <link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
@@ -9,7 +9,7 @@
 <link rel="import" href="../../../../scripts/lodash.html">
 
 <dom-module id="intervention-reports">
-  <template strip-whitespace>
+  <template>
     <style>
       :host {
         @apply --layout-flex;
@@ -17,9 +17,9 @@
       }
     </style>
 
-  <reports-display-list intervention-id="[[interventionId]]"
-    paginator="{{paginator}}"
-    no-pd-ssfa-ref></reports-display-list>
+    <reports-display-list intervention-id="[[interventionId]]"
+                          paginator="{{paginator}}"
+                          no-pd-ssfa-ref></reports-display-list>
 
   </template>
   <script>
@@ -32,9 +32,9 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const InterventionReportsMixins = EtoolsMixinFactory.combineMixins([
-        EtoolsPmpApp.Mixins.AppNavigationHelper,
-        EtoolsPmpApp.Mixins.EventHelper
-      ], Polymer.Element);
+      EtoolsPmpApp.Mixins.AppNavigationHelper,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
      * @polymer
@@ -111,7 +111,7 @@
               let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
               this.updateAppState('interventions/' + interventionId + '/reports', qs);
               this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
-        });
+            });
       }
     }
 
