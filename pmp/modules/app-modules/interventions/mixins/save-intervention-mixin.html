@@ -84,7 +84,7 @@
             let modifiedReviewAndSign = this._getModifiedReviewAndSign();
             interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
           }
-          interventionData = this._prepareDataForSave(interventionData, interventionDetailsEl);
+          interventionData = this._prepareDataForSave(interventionData);
 
           this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
         }
@@ -134,7 +134,7 @@
           return fieldVal === null || fieldVal === undefined || fieldVal === '';
         }
 
-        _prepareDataForSave(interventionData, interventionDetailsEl) {
+        _prepareDataForSave(interventionData) {
           // prepare fr numbers
           if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
             interventionData.frs = this.intervention.frs;
