@@ -205,9 +205,10 @@
       </div>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[!_isDraft(intervention.status)]]" class="content-section">
+    <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
       <pd-amendments intervention-document-type="[[intervention.document_type]]"
                      intervention-id="[[intervention.id]]"
+                     class="content-section"
                      amend-action-in-progress="{{intervention.in_amendment}}"
                      data-items="{{intervention.amendments}}"
                      edit-mode="[[intervention.permissions.edit.amendments]]">
@@ -406,6 +407,10 @@
       }
 
       _interventionDocTypeChanged(interventionDocumentType) {
+        if (typeof interventionDocumentType === 'undefined') {
+          return;
+        }
+
         let submittedToPrc = this._submittedToPrcAvailable(interventionDocumentType);
         if (!submittedToPrc) {
           this.set('intervention.submitted_to_prc', false);
@@ -438,6 +443,9 @@
        * for the intervention to move in signed status are required; only for draft status.
        */
       _signedPdDocHasChanged(signedDocument) {
+        if (typeof signedDocument === 'undefined') {
+          return;
+        }
         if (this.intervention && this.intervention.status === 'draft') {
           if (signedDocument instanceof File ||
               (_.isString(signedDocument) && !_.isEmpty(signedDocument))) {

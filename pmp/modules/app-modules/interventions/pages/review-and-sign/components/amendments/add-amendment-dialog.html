@@ -126,7 +126,7 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.AjaxErrorsParser,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
     /**
@@ -213,6 +213,9 @@
       }
 
       _filterAmendmentTypes(amendmentTypes, interventionDocumentType) {
+        if (!amendmentTypes || !interventionDocumentType) {
+          return;
+        }
         if (interventionDocumentType === 'SSFA') {
           this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment) => {
             return ['Dates', 'Other'].indexOf(newAmendment.label) > -1;
@@ -230,7 +233,7 @@
       isValidAmendment() {
         let isValid1 = this._validateAmendmentTypes();
         let isValid2 = this._validateOtherInput();
-        let isValid3 = this._validateSignedDate(this.newAmendment);
+        let isValid3 = this._validateSignedDate();
         let isValid4 = this._validateFileUpload(this.newAmendment);
 
         return (isValid1 && isValid2 && isValid3 && isValid4);
@@ -266,7 +269,7 @@
         return valid;
       }
 
-      _validateSignedDate(amendment) {
+      _validateSignedDate() {
         let isValid = true;
 
         let signedDateEl = this.shadowRoot.querySelector('#signed-date');
