@@ -330,8 +330,8 @@
         this.parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
       }
 
-      resetValidationsAndStyle(isCluster) {
-        if (typeof isCluster === 'undefined') {
+      resetValidationsAndStyle(isCluster, skipUndefinedCheck) {
+        if (typeof isCluster === 'undefined' && !skipUndefinedCheck) {
           return;
         }
         let indicatorEl;

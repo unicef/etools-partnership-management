@@ -256,7 +256,7 @@
         this.indicatorDialog.resetFieldValues();
         this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
         this.indicatorDialog.openIndicatorDialog();
-        this.indicatorDialog.resetValidationsAndStyle();
+        this.indicatorDialog.resetValidationsAndStyle(undefined, true);
       }
 
       _updateInterventionLocAndClusters() {
