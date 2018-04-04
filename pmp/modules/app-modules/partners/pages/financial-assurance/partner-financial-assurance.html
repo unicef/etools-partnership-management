@@ -9,7 +9,6 @@
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import"
       href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/moment-element/moment-import.html">
@@ -35,7 +34,7 @@
 <link rel="import" href="components/assessments-items.html">
 
 <dom-module id="partner-financial-assurance">
-  <template>
+  <template strip-whitespace>
     <style include="page-common-styles grid-layout-styles shared-styles data-table-styles">
 
       :host {
@@ -425,11 +424,10 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsMixins.EtoolsCurrency,
-     * @appliesMixin EtoolsPmpApp.Mixins.Common,
-     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints,
-     * @appliesMixin EtoolsAjaxRequestMixin,
-     * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors,
+     * @appliesMixin EtoolsMixins.EtoolsCurrency
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
      * @appliesMixin EtoolsPmpApp.Mixins.Pagination
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
@@ -437,7 +435,6 @@
       EtoolsMixins.EtoolsCurrency,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
       EtoolsPmpApp.Mixins.Pagination,
       EtoolsPmpApp.Mixins.EventHelper
@@ -523,8 +520,8 @@
         return [
           '_paginate(paginator.page, paginator.page_size)',
           '_calculateFollowUpTotal(partner.planned_engagement.spot_check_follow_up_q1,' +
-            'partner.planned_engagement.spot_check_follow_up_q2, partner.planned_engagement.spot_check_follow_up_q3,' +
-            'partner.planned_engagement.spot_check_follow_up_q4)'
+          'partner.planned_engagement.spot_check_follow_up_q2, partner.planned_engagement.spot_check_follow_up_q3,' +
+          'partner.planned_engagement.spot_check_follow_up_q4)'
         ];
       }
 

@@ -13,10 +13,21 @@
     "pmp/modules/app-modules/agreements/pages/details/agreement-details.html",
 
     "pmp/modules/app-modules/interventions/interventions-module.html",
+    "pmp/modules/app-modules/interventions/pages/list/interventions-list.html",
+    "pmp/modules/app-modules/interventions/pages/overview/intervention-overview.html",
+    "pmp/modules/app-modules/interventions/pages/details/intervention-details.html",
+    "pmp/modules/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.html",
+    "pmp/modules/app-modules/interventions/pages/attachments/intervention-attachments.html",
+    "pmp/modules/app-modules/interventions/pages/reports/intervention-reports.html",
+    "pmp/modules/app-modules/interventions/pages/progress/intervention-progress.html",
 
     "pmp/modules/app-modules/reports/reports-module.html",
+    "pmp/modules/app-modules/reports/pages/list/reports-list.html",
+    "pmp/modules/app-modules/reports/pages/progress/report-progress.html",
+    "pmp/modules/app-modules/reports/pages/summary/report-summary.html",
 
-    "pmp/modules/app-modules/settings/settings-module.html"
+    "pmp/modules/app-modules/settings/settings-module.html",
+    "pmp/modules/app-modules/not-found/not-found.html"
   ],
   "sources": [
     "pmp/**/*",

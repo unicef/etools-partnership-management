@@ -485,6 +485,9 @@
       }
 
       _isAttachmentsTabReadonly(permissions, intervention) {
+        if (typeof permissions === 'undefined' || typeof intervention === 'undefined') {
+          return false;
+        }
         if (!this._hasEditPermissions(permissions, intervention)) {
           return true;
         }
@@ -502,10 +505,6 @@
           // not prp tab, allow access
           return true;
         }
-      }
-
-      _addTabNameToFileImportBasePath(pageBaseUrl, tabName) {
-        return this._isPrpTab(tabName) ? (pageBaseUrl + tabName + '/') : pageBaseUrl;
       }
 
       _resetRedirectToNewInterventionFlag() {
@@ -534,7 +533,7 @@
                 loadingMsgSource: 'interv-page'
               };
               this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
-                  this._addTabNameToFileImportBasePath, this._resetRedirectToNewInterventionFlag);
+                  null, this._resetRedirectToNewInterventionFlag);
               this._handleAmendmentMode();
             });
       }
