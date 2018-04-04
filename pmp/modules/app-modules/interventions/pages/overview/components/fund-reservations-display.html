@@ -1,23 +1,22 @@
-<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-if.html">
-<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../bower_components/iron-label/iron-label.html">
 <link rel="import"
-  href="../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
-<link rel="import" href="../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
-<link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
+      href="../../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
+<link rel="import" href="../../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
+<link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-<link rel="import" href="../../../mixins/date-mixin.html">
+<link rel="import" href="../../../../../mixins/date-mixin.html">
 <link rel="import" href="../../../mixins/fr-numbers-consistency-mixin.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../styles/fr-warnings-styles.html">
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../styles/fr-warnings-styles.html">
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
-
-    <style include="data-table-styles grid-layout-styles fr-warnings-styles">
+    <style  include="data-table-styles grid-layout-styles fr-warnings-styles">
       :host {
         --list-column-label: {
           margin-right: 0;
@@ -89,9 +88,9 @@
             <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
             <span class="col-data col-2 right-align">
               <etools-info-tooltip class="fr-nr-warn currency-mismatch"
-                                   icon-first
-                                   custom-icon
-                                   hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
+                                  icon-first
+                                  custom-icon
+                                  hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
                 <span slot="field">[[fr.currency]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">
@@ -112,22 +111,22 @@
           <span class="col-data col-2 right-align"><strong>TOTAL of FRs</strong></span>
           <span class="col-data col-2 right-align">
             <etools-info-tooltip class="fr-nr-warn currency-mismatch"
-                 icon-first
-                 custom-icon
-                 hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
+                icon-first
+                custom-icon
+                hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
               <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
                 [[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]
               </span>
               <iron-icon icon="[[getFrsCurrencyTooltipIcon(frsDetails.currencies_match)]]"
-                         slot="custom-icon"></iron-icon>
+                        slot="custom-icon"></iron-icon>
               <span slot="message">[[getFrsCurrencyTooltipMsg(frsDetails.currencies_match)]]</span>
             </etools-info-tooltip>
           </span>
           <span class="col-data col-2 right-align">
             <etools-info-tooltip class="fr-nr-warn"
-                 custom-icon
-                 icon-first
-                 hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
+                custom-icon
+                icon-first
+                hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
               <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
                 [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_frs_amt)]]
               </span>
@@ -164,27 +163,30 @@
     </div>
 
   </template>
+
   <script>
     'use strict';
+
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.Date
      * @appliesMixin EtoolsMixins.EtoolsCurrency
+     * @appliesMixin EtoolsPmpApp.Mixins.Date
      * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
      */
-    const FundReservationsDisplayMixin = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.Date,
+    const FundReservationsDisplayMixins = EtoolsMixinFactory.combineMixins([
       EtoolsMixins.EtoolsCurrency,
+      EtoolsPmpApp.Mixins.Date,
       EtoolsPmpApp.Mixins.FrNumbersConsistency
     ], Polymer.Element);
 
     /**
      * @polymer
      * @customElement
-     * @appliesMixin FundReservationsDisplayMixin
+     * @appliesMixin FundReservationsDisplayMixins
      */
-    class FundReservationsDisplay extends FundReservationsDisplayMixin {
+    class FundReservationsDisplay extends FundReservationsDisplayMixins {
+
       static get is() {
         return 'fund-reservations-display';
       }
@@ -199,20 +201,17 @@
             type: Object,
             value: null
           },
-          _frsTotalAmountWarning: {
-            type: String
-          }
+          _frsTotalAmountWarning: String
         };
       }
 
       static get observers() {
         return [
-          '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
+        '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
         ];
       }
-
       _noFrs(frsDetails) {
-        return !frsDetails || !frsDetails.frs || !frsDetails.frs.length;
+        return (!frsDetails || !frsDetails.frs || !frsDetails.frs.length);
       }
 
       _checkFrsAmountConsistency(intervention, frsDetails) {
