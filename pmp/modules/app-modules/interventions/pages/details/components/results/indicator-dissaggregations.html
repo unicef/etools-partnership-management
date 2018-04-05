@@ -126,30 +126,31 @@
       }
 
       _onDisaggregationSelected(event) {
-        if (!event.detail.item.item) {
+        console.log(this.dataItems);
+        if (this._weAreOnPage()) {
           return;
         }
-        let selectedDisagreg = event.detail.item.item;
-        let splitElId =  event.target.id.split('_');
+        if (!event.detail.item.getAttribute('item')) {
+          return;
+        }
+        let selectedDisagreg = JSON.parse(event.detail.item.getAttribute('item'));
+        let splitElId = event.target.id.split('_');
         let index = splitElId[splitElId.length - 1];
 
-        if (this._isAlreadySelected(selectedDisagreg)) {
-          event.model.set('item', null);
-          event.model.set('item', {id: null});
-          this.fireEvent('show-toast', {error: {response: 'Disaggregation already selected'}});
-          return;
-        }
+        // if (this._isAlreadySelected(selectedDisagreg)) {
+        //   event.model.set('item', null);
+        //   event.model.set('item', {id: null});
+        //   this.fireEvent('show-toast', {error: {response: 'Disaggregation already selected'}});
+        //   return;
+        // }
         this._displayDisaggregationGroups(selectedDisagreg, index);
 
       }
+      _weAreOnPage() {
+        return false;
+      }
 
       _isAlreadySelected(disagreg) {
-        let justSelectedOne = this.dataItems.filter(function(d) {
-          return !d.disaggregId;
-        }).length;
-        if (!justSelectedOne) {//we're on page load
-          return;
-        }
         let duplicateItems = this.dataItems.filter(function(item) {
           return parseInt(item.disaggregId) === parseInt(disagreg.id);
         });
