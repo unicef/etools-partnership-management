@@ -1,0 +1,65 @@
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * @polymer
+   * @mixinFunction
+   */
+  EtoolsPmpApp.Mixins.IndicatorsCommon = Polymer.dedupingMixin((superClass) => class extends superClass {
+
+    _baselineChanged(baseline) {
+      if (!this.indicator || this._isEmptyExcept0(baseline)) {
+        return;
+      }
+
+      if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
+        let val = this._getValidPercentageValue(baseline);
+        this.set('indicator.baseline', val);
+      }
+    }
+
+    _targetChanged(target) {
+      if (!this.indicator || this._isEmptyExcept0(target)) {
+        return;
+      }
+
+      if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
+        let val = this._getValidPercentageValue(target);
+        this.set('indicator.target', val);
+      }
+    }
+
+    _isEmptyExcept0(value) {
+      return value === null || value === undefined || value === '';
+    }
+
+    _getValidPercentageValue(val) {
+      val = parseInt(val, 10);
+      if (isNaN(val) || val < 0) {
+        val = 0;
+      }
+      if (val > 100) {
+        val = 100;
+      }
+      return val;
+    }
+
+    validateComponents(elemIds) {
+      let valid = true;
+      elemIds.forEach(function(elemId) {
+        let elem = this.shadowRoot.querySelector('#' + elemId);
+        if (elem) {
+          valid = elem.validate() && valid;
+        } else {
+          this.logWarn('Elem ' + elemId + ' not found');
+        }
+      }, this);
+      return valid;
+    }
+
+  });
+
+</script>

@@ -1,0 +1,31 @@
+<script>
+  'use strict';
+
+  window.EtoolsLogsLevel = 'INFO';
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+
+  EtoolsPmpApp.Config = {
+    baseSite: window.location.origin,
+    loginPath: window.location.origin + '/login/',
+    productionDomain: 'etools.unicef.org',
+    apBasePath: '/ap/',
+
+    endpointsDomainConfig: {
+      tokenEndpointsHost: {
+        prp: window.location.port === '8082' ? 'http://127.0.0.1:8080' : 'https://etools-test.unicef.org'
+      },
+      tokenStorageKeys: {
+        prp: 'etoolsPrpToken'
+      },
+      getTokenEndpoints: {
+        prp: 'prpToken'
+      }
+    },
+
+    isProductionServer: function() {
+      let location = window.location.href;
+      return location.indexOf(this.productionDomain) > -1;
+    }
+  };
+
+</script>

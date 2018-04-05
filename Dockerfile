@@ -4,7 +4,7 @@ RUN apk update
 RUN apk add --update bash
 
 RUN apk add git
-RUN npm install -g bower polymer-cli gulp-cli
+RUN npm install -g bower polymer-cli
 
 
 WORKDIR /tmp
@@ -19,6 +19,6 @@ ADD . /code/
 WORKDIR /code
 RUN cp -a /tmp/node_modules /code/node_modules
 RUN cp -a /tmp/bower_components /code/bower_components
-RUN gulp --max_old_space_size=2048
+RUN npm run build
 EXPOSE 8080
 CMD ["node", "express.js"]

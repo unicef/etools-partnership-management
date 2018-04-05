@@ -2,42 +2,55 @@
   "entrypoint": "index.html",
   "shell": "pmp/app-shell.html",
   "fragments": [
-    "pmp/pages/page-partners.html",
-    "pmp/app-elements/partners/partners-list.html",
-    "pmp/app-elements/partners/partner-overview.html",
-    "pmp/app-elements/partners/partner-details.html",
-    "pmp/app-elements/partners/partner-financial-assurance.html",
+    "pmp/modules/app-modules/partners/partners-module.html",
+    "pmp/modules/app-modules/partners/pages/list/partners-list.html",
+    "pmp/modules/app-modules/partners/pages/overview/partner-overview.html",
+    "pmp/modules/app-modules/partners/pages/details/partner-details.html",
+    "pmp/modules/app-modules/partners/pages/financial-assurance/partner-financial-assurance.html",
 
-    "pmp/pages/page-agreements.html",
-    "pmp/app-elements/agreements/agreements-list.html",
-    "pmp/app-elements/agreements/agreement-details.html",
+    "pmp/modules/app-modules/agreements/agreements-module.html",
+    "pmp/modules/app-modules/agreements/pages/list/agreements-list.html",
+    "pmp/modules/app-modules/agreements/pages/details/agreement-details.html",
 
-    "pmp/pages/page-interventions.html",
-    "pmp/app-elements/interventions/interventions-list.html",
-    "pmp/app-elements/interventions/intervention-overview.html",
-    "pmp/app-elements/interventions/intervention-details.html",
-    "pmp/app-elements/interventions/intervention-review-and-sign.html",
-    "pmp/app-elements/interventions/intervention-attachments.html",
-    "pmp/app-elements/interventions/reports/intervention-reports.html",
-    "pmp/app-elements/interventions/progress/intervention-progress.html",
+    "pmp/modules/app-modules/interventions/interventions-module.html",
+    "pmp/modules/app-modules/interventions/pages/list/interventions-list.html",
+    "pmp/modules/app-modules/interventions/pages/overview/intervention-overview.html",
+    "pmp/modules/app-modules/interventions/pages/details/intervention-details.html",
+    "pmp/modules/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.html",
+    "pmp/modules/app-modules/interventions/pages/attachments/intervention-attachments.html",
+    "pmp/modules/app-modules/interventions/pages/reports/intervention-reports.html",
+    "pmp/modules/app-modules/interventions/pages/progress/intervention-progress.html",
 
-    "pmp/pages/page-reports.html",
-    "pmp/app-elements/reports/reports-list.html",
-    "pmp/app-elements/reports/report-summary.html",
-    "pmp/app-elements/reports/report-progress.html",
+    "pmp/modules/app-modules/reports/reports-module.html",
+    "pmp/modules/app-modules/reports/pages/list/reports-list.html",
+    "pmp/modules/app-modules/reports/pages/progress/report-progress.html",
+    "pmp/modules/app-modules/reports/pages/summary/report-summary.html",
 
-    "pmp/pages/page-settings.html",
-    "pmp/pages/page-not-found.html"
+    "pmp/modules/app-modules/settings/settings-module.html",
+    "pmp/modules/app-modules/not-found/not-found.html"
   ],
-  "sourceGlobs": [
-   "pmp/**/*",
-   "images/**/*",
-   "styles/**/*",
-   "scripts/**/*",
-   "data/**/*",
-   "bower.json"
+  "sources": [
+    "pmp/**/*",
+    "images/**/*",
+    "bower.json"
   ],
-  "includeDependencies": [
-    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/*.js"
+  ],
+  "lint": {
+    "rules": ["polymer-2"],
+    "ignoreWarnings": []
+  },
+  "builds": [
+    {
+      "preset": "es6-bundled",
+      "name": "pmp/es6-bundled",
+      "browserCapabilities": ["es2015"]
+    },
+    {
+      "preset": "es5-bundled",
+      "name": "pmp/es5-bundled"
+    }
   ]
 }

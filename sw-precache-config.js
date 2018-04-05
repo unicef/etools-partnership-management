@@ -7,12 +7,25 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
+
+/* eslint-env node */
+
 module.exports = {
   staticFileGlobs: [
-    '/index.html',
-    '/manifest.json',
-    '/bower_components/webcomponentsjs/webcomponents-lite.min.js'
+    'bower_components/webcomponentsjs/webcomponents-loader.js',
+    'images/*',
+    'manifest.json',
+    'index.html'
   ],
-  navigateFallback: '/index.html',
-  cacheId: 'pmp'
+  runtimeCaching: [
+    {
+      urlPattern: /\/bower_components\/webcomponentsjs\/.*.js/,
+      handler: 'fastest',
+      options: {
+        cache: {
+          name: 'pmp-webcomponentsjs-polyfills-cache'
+        }
+      }
+    }
+  ]
 };
