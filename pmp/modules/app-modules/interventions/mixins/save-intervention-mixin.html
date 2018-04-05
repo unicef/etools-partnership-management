@@ -94,7 +94,7 @@
         }
 
         _validateInterventionPrimitiveFields(interventionFields) {
-          return this._validateInterventionFields(interventionFields, this._primtiveFieldIsEmpty);
+          return this._validateInterventionFields(interventionFields, this._primitiveFieldIsEmpty);
         }
 
         _validateInterventionFields(interventionFields, isEmptyPredicate) {
@@ -113,7 +113,7 @@
           return valid;
         }
 
-        _primtiveFieldIsEmpty(fieldVal) {
+        _primitiveFieldIsEmpty(fieldVal) {
           return fieldVal === null || fieldVal === undefined || fieldVal === '';
         }
 
