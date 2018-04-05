@@ -343,10 +343,7 @@
       }
 
       _hideDeleteBtn(status, fileUrl) {
-        if (this._isDraft(status) && fileUrl) {
-          return true;
-        }
-        return false;
+        return this._isDraft(status) && fileUrl;
       }
 
       _agreementChanged(agreement) {

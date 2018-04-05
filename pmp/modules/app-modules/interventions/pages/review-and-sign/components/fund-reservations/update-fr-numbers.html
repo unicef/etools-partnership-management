@@ -146,6 +146,9 @@
       }
 
       _delConfirmationDialogChange() {
+        if (!this.deleteDialog) {
+          return;
+        }
         // update delete confirmation dialog size
         this.deleteDialog.set('size', 'sm');
       }
@@ -215,7 +218,10 @@
         this.set('disableConfirmBtn', false);
       }
 
-      _itemsLengthChanged() {
+      _itemsLengthChanged(length) {
+        if (typeof length === 'undefined') {
+          return;
+        }
         this._rfNrValueChanged();
       }
 
