@@ -1,3 +1,5 @@
+<link rel="import" href="../../bower_components/promise-polyfill/promise-polyfill.html">
+
 <script>
 
   // EC6 Object.assign polyfil
@@ -26,7 +28,7 @@
     };
   }
 
-  // ES6 Array find polyfil
+  // ES6 Array find polyfill
   if (!Array.prototype.find) {
     Object.defineProperty(Array.prototype, 'find', {
       value: function(predicate) {
