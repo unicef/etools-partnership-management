@@ -113,23 +113,6 @@
           return valid;
         }
 
-        // TODO: polymer 2 - find a better way to compare modified objects
-        // this method might not be needed in this case
-        // _preparePlannedVisitsData(interventionData) {
-        //   // prepare planned visits, we need integer values
-        //   return interventionData.planned_visits.map((v) => {
-        //     let visitObj = {};
-        //     for(let k in v) {
-        //       if (v[k]) {
-        //         visitObj[k] = parseInt(v[k], 10);
-        //       } else {
-        //         visitObj[k] = v[k]; // keep it as it is
-        //       }
-        //     }
-        //     return visitObj;
-        //   });
-        // }
-
         _primtiveFieldIsEmpty(fieldVal) {
           return fieldVal === null || fieldVal === undefined || fieldVal === '';
         }

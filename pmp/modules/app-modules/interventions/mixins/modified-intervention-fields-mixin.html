@@ -13,8 +13,8 @@
   EtoolsPmpApp.Mixins.ModifiedInterventionFields = Polymer.dedupingMixin((superClass) => class extends superClass {
 
     _objectFieldIsModified(fieldName) {
-      let isModified = JSON.stringify(this.originalIntervention[fieldName]) !==
-          JSON.stringify(this.intervention[fieldName]);
+      let isModified = JSON.stringify(this.originalIntervention[fieldName], this.numbersToString) !==
+          JSON.stringify(this.intervention[fieldName], this.numbersToString);
 
       let dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
       if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
@@ -25,7 +25,17 @@
       }
       return isModified;
     }
-
+    /**
+     * Covers the case when the object from bk (this.originalIntervention)
+     * has numbers but this.interventions has strings,
+     * so we convert everything to string before comparing
+     */
+    numbersToString(key, value) {
+      if (typeof value === 'number') {
+        return value.toString();
+      }
+      return value;
+    }
     _arraysAreEqual(array1, array2) {
       let differencesArray = [];
       if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
