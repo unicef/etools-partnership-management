@@ -1,0 +1,78 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../../mixins/repeatable-data-sets-mixin.html">
+
+<link rel="import" href="applied-indicator.html">
+
+<dom-module id="applied-indicators">
+  <template strip-whitespace>
+    <style>
+      applied-indicator {
+        margin-right: -24px;
+      }
+    </style>
+    <template is="dom-repeat"
+              items="[[dataItems]]"
+              as="indicator" index-as="indicatorIndex">
+      <applied-indicator data-args$="[[indicatorIndex]]"
+                         on-edit-indicator="_editIndicator"
+                         on-delete-indicator="_openDeleteConfirmation"
+                         indicator="[[indicator]]"
+                         edit-mode="[[editMode]]"
+                         intervention-status="[[interventionStatus]]"></applied-indicator>
+    </template>
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    class AppliedIndicators extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.RepeatableDataSets,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'applied-indicators';
+      }
+
+      static get properties() {
+        return {
+          _deleteEpName: {
+            type: String,
+            value: 'getEditDeleteIndicator',
+            readOnly: true,
+          },
+          resultLinkIndex: Number,
+          editMode: Boolean,
+          interventionStatus: String,
+          cpOutputId: Number
+        };
+      }
+
+      _editIndicator(event) {
+        let indicatorIndex = parseInt(event.target.getAttribute('data-args'), 10);
+        let llResultIndex = parseInt(this.resultLinkIndex, 10);
+        let indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
+
+        let resultMap = {
+          cpOutputId: this.cpOutputId,
+          llResultIndex: llResultIndex,
+          llResultId: indicator.lower_result,
+          indicatorData: indicator,
+          appliedIndicatorsIndex: indicatorIndex
+        };
+        this.fireEvent('open-indicator-dialog', resultMap);
+      }
+
+    }
+
+    window.customElements.define(AppliedIndicators.is, AppliedIndicators);
+  </script>
+</dom-module>

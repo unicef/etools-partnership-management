@@ -1,0 +1,249 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../../styles/required-field-styles.html">
+
+<link rel="import" href="mixins/indicators-common-mixin.html">
+
+<dom-module id="non-cluster-indicator">
+  <template strip-whitespace>
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      .radioGroup {
+        width: 320px;
+      }
+
+      paper-input,
+      paper-textarea {
+        width: 100%;
+      }
+
+      .unknown {
+        padding-left: 24px;
+        padding-bottom: 16px;
+      }
+
+      .no-left-padding {
+        padding-left: 0px !important;
+      }
+
+    </style>
+
+    <div class="row-h flex-c">
+      <div class="layout-vertical">
+        <label class="paper-label">Type </label>
+        <div class="radioGroup">
+          <paper-radio-group selected="{{indicator.indicator.unit}}">
+            <paper-radio-button disabled$="[[readonly]]" class="no-left-padding" name="number">Quantity (#)
+            </paper-radio-button>
+            <paper-radio-button disabled$="[[readonly]]" name="percentage">Percent/Ratio</paper-radio-button>
+          </paper-radio-group>
+
+        </div>
+      </div>
+      <div class="layout-vertical" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
+        <label class="paper-label">Display Type </label>
+        <div class="radioGroup">
+          <paper-radio-group selected="{{indicator.indicator.display_type}}">
+            <paper-radio-button disabled="[[readonly]]" class="no-left-padding" name="percentage">Percentage
+            </paper-radio-button>
+            <paper-radio-button disabled="[[readonly]]" name="ratio">Ratio</paper-radio-button>
+          </paper-radio-group>
+        </div>
+      </div>
+    </div>
+    <div class="row-h flex-c">
+      <paper-input id="titleEl" required label="Indicator"
+                   value="{{indicator.indicator.title}}" placeholder="&#8212;"
+                   error-message="Please add a title" auto-validate
+                   readonly$="[[readonly]]">
+      </paper-input>
+    </div>
+
+    <!-- Baseline & Target -->
+    <div class="row-h flex-c">
+      <div class="col col-3">
+        <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
+          <paper-input label="Baseline"
+                       value="{{indicator.baseline}}"
+                       type="number"
+                       placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+          </paper-input>
+        </template>
+        <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
+          <paper-input label="Baseline"
+                       value="{{indicator.baseline}}"
+                       type="number"
+                       min="0"
+                       max="100"
+                       allowed-pattern="[0-9\.]"
+                       placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+          </paper-input>
+        </template>
+      </div>
+      <div class="col col-3">
+        <paper-input label="Target" id="targetElForNumericUnit"
+                     value="{{indicator.target}}"
+                     type="number"
+                     placeholder="&#8212;"
+                     required
+                     auto-validate
+                     error-message="Please add a valid target"
+                     hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
+        </paper-input>
+        <paper-input label="Target" id="targetElForNonNumericUnit"
+                     value="{{indicator.target}}"
+                     type="number"
+                     min="0"
+                     max="100"
+                     allowed-pattern="[0-9\.]"
+                     placeholder="&#8212;"
+                     required
+                     auto-validate
+                     error-message="Please add a valid target"
+                     hidden$=[[_unitIsNumeric(indicator.indicator.unit)]]>
+        </paper-input>
+      </div>
+    </div>
+    <div class="unknown">
+      <paper-checkbox checked="{{baselineIsUnknown}}">Unknown</paper-checkbox>
+    </div>
+    <!-- Baseline & Target -->
+    <div class="row-h flex-c">
+      <paper-textarea label="Means of Verification"
+                      value="{{indicator.means_of_verification}}"
+                      placeholder="&#8212;">
+      </paper-textarea>
+    </div>
+    <div class="row-h flex-c">
+      <etools-dropdown-multi id="locationsDropdw"
+                             label="Locations"
+                             placeholder="&#8212;"
+                             selected-values="{{indicator.locations}}"
+                             options="[[locationOptions]]"
+                             option-label="name"
+                             option-value="id"
+                             required
+                             auto-validate
+                             error-message="Please select locations"
+                             disable-on-focus-handling>
+      </etools-dropdown-multi>
+    </div>
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.IndicatorsCommon
+     */
+    class NonClusterIndicator extends EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.IndicatorsCommon
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'non-cluster-indicator';
+      }
+
+      static get properties() {
+        return {
+          indicator: {
+            type: Object,
+            observer: '_indicatorChanged'
+          },
+          readonly: {
+            type: Boolean,
+            value: false,
+            observer: '_readonlyChanged'
+          },
+          locationOptions: {
+            type: Array
+          },
+          baselineIsUnknown: {
+            type: Boolean
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_baselineChanged(indicator.baseline)',
+          '_targetChanged(indicator.target)',
+          '_baselineUnknownChanged(baselineIsUnknown)'
+        ];
+      }
+
+      _unitIsNumeric(unit) {
+        return unit === 'number';
+      }
+
+      _indicatorChanged(indicator) {
+        if (!indicator) {
+          return;
+        }
+        if (!this.indicator.id) {
+          this.baselineIsUnknown = false;
+          this.readonly = false;
+        } else {
+          this.baselineIsUnknown = !(indicator.baseline || parseInt(indicator.baseline) === 0);
+          this.readonly = true;
+        }
+      }
+
+      _readonlyChanged(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.updateStyles();
+        }
+      }
+
+      _baselineUnknownChanged(isUnknown) {
+        if (isUnknown) {
+          this.set('indicator.baseline', null);
+        }
+      }
+
+      validate() {
+        let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
+        return this.validateComponents(elemIds);
+      }
+
+      resetValidations() {
+        let elemIds = ['titleEl', 'locationsDropdw', 'targetElForNumericUnit', 'targetElForNonNumericUnit'];
+        let i;
+        for (i = 0; i < elemIds.length; i++) {
+          let elem = this.shadowRoot.querySelector('#' + elemIds[i]);
+          if (elem) {
+            elem.invalid = false;
+          }
+        }
+      }
+
+      _getIndicatorTargetElId() {
+        if (!this.indicator || !this.indicator.indicator) {
+          return 'targetElForNumericUnit';
+        }
+        return (this._unitIsNumeric(this.indicator.indicator.unit))
+            ? 'targetElForNumericUnit' : 'targetElForNonNumericUnit';
+      }
+
+    }
+
+    window.customElements.define(NonClusterIndicator.is, NonClusterIndicator);
+  </script>
+</dom-module>

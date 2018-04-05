@@ -1,0 +1,191 @@
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="modified-intervention-fields-mixin.html">
+<link rel="import" href="../../../mixins/array-helper-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../../../scripts/lodash.html">
+
+<script>
+  'use strict';
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * PD/SSFA save functionality
+   * @polymer
+   * @mixinFunction
+   * @mixinFunction
+   * @appliesMixin EtoolsPmpApp.Mixins.ArrayHelper
+   * @appliesMixin EtoolsPmpApp.Mixins.ModifiedInterventionFields
+   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+   */
+  EtoolsPmpApp.Mixins.SaveIntervention = Polymer.dedupingMixin(
+      (superClass) => class extends EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.EventHelper,
+        EtoolsPmpApp.Mixins.ArrayHelper,
+        EtoolsPmpApp.Mixins.ModifiedInterventionFields
+      ], superClass) {
+
+        _validateAndSaveIntervention(event) {
+          if (event) {
+            event.stopImmediatePropagation();
+          }
+          this.saved.justSaved = true;
+          this.fireEvent('clear-server-errors');
+          this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
+          if (!this._hasEditPermissions(this.permissions, this.intervention)) {
+            return;
+          }
+
+          let interventionDetailsEl = this.shadowRoot.querySelector('#interventionDetails');
+          let interventionDetailsAreValid = false;
+          if (interventionDetailsEl && typeof interventionDetailsEl.validate === 'function') {
+            interventionDetailsAreValid = interventionDetailsEl.validate();
+          } else {
+            // details element not stamped...
+            // validate current data that belongs to details tab against permissions
+            let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
+            let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sections', 'flat_locations', 'offices'];
+            if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
+              detailsPrimitiveFields.push('start', 'end');
+            }
+            interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
+                this._validateInterventionObjectFields(detailsObjFields);
+
+            this.set('_forceDetUiValidationOnAttach', true);
+          }
+
+          let reviewAndSignEl = this.shadowRoot.querySelector('#interventionReviewAndSign');
+          let reviewAndSignIsValid = false;
+          if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
+            reviewAndSignIsValid = reviewAndSignEl.validate();
+          } else {
+            // review and signed element not stamped...
+            // validate current data that belongs to this tab against permissions
+            let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
+              'unicef_signatory', 'signed_by_unicef_date'];
+            let reviewAndSignObjFields = ['signed_pd_document'];
+            reviewAndSignIsValid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
+                this._validateInterventionObjectFields(reviewAndSignObjFields);
+            this.set('_forceReviewUiValidationOnAttach', true);
+          }
+
+          if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
+            this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
+            return;
+          }
+
+          let interventionData;
+          if (this._isNewIntervention()) {
+            interventionData = Object.assign({}, this.intervention);
+            interventionData.status = 'draft';
+          } else {
+            let modifiedDetails = this._getModifiedInterventionDetails();
+            let modifiedReviewAndSign = this._getModifiedReviewAndSign();
+            interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
+          }
+          interventionData = this._prepareDataForSave(interventionData);
+
+          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+        }
+
+        _validateInterventionObjectFields(interventionFields) {
+          return this._validateInterventionFields(interventionFields, _.isEmpty);
+        }
+
+        _validateInterventionPrimitiveFields(interventionFields) {
+          return this._validateInterventionFields(interventionFields, this._primtiveFieldIsEmpty);
+        }
+
+        _validateInterventionFields(interventionFields, isEmptyPredicate) {
+          let valid = true;
+          let i;
+          let fieldRequired;
+          let fieldVal;
+          for (i = 0; i < interventionFields.length; i++) {
+            fieldRequired = this.intervention.permissions.required[interventionFields[i]];
+            fieldVal = this.intervention[interventionFields[i]];
+            if (fieldRequired && isEmptyPredicate(fieldVal)) {
+              valid = false;
+              break;
+            }
+          }
+          return valid;
+        }
+
+        // TODO: polymer 2 - find a better way to compare modified objects
+        // this method might not be needed in this case
+        // _preparePlannedVisitsData(interventionData) {
+        //   // prepare planned visits, we need integer values
+        //   return interventionData.planned_visits.map((v) => {
+        //     let visitObj = {};
+        //     for(let k in v) {
+        //       if (v[k]) {
+        //         visitObj[k] = parseInt(v[k], 10);
+        //       } else {
+        //         visitObj[k] = v[k]; // keep it as it is
+        //       }
+        //     }
+        //     return visitObj;
+        //   });
+        // }
+
+        _primtiveFieldIsEmpty(fieldVal) {
+          return fieldVal === null || fieldVal === undefined || fieldVal === '';
+        }
+
+        _prepareDataForSave(interventionData) {
+          // prepare fr numbers
+          if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
+            interventionData.frs = this.intervention.frs;
+          }
+          // frs_details are readonly, we do not have to send them to backend
+          delete interventionData.frs_details;
+
+          // no need to send planned_budget.total to backend
+          if (interventionData.planned_budget) {
+            delete interventionData.planned_budget.total;
+          }
+          
+          // prepare attachments
+          interventionData.attachments = this._prepareAttachments();
+          if (_.isEmpty(interventionData.attachments)) {
+            delete interventionData.attachments;
+          }
+
+          // if prc_review_document is null we need to delete the property otherwise the
+          // file gets deleted from the backend
+          if (this.intervention.hasOwnProperty('prc_review_document') &&
+              !(this.intervention.prc_review_document instanceof File)) {
+            delete interventionData.prc_review_document;
+          }
+          return interventionData;
+        }
+
+        _showErrorsWarning(validDetails, validReviewAndSign) {
+          let msg = '';
+          if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
+            msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
+                '(check DETAILS and REVIEW & SIGN tabs).';
+          } else {
+            msg = 'Please review invalid fields data';
+            let tabs = [];
+            if (validDetails === false) {
+              tabs.push('DETAILS');
+            }
+            if (validReviewAndSign === false) {
+              tabs.push('REVIEW & SIGN');
+            }
+            msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '.';
+          }
+
+          this.fireEvent('toast', {text: msg, showCloseBtn: true});
+        }
+
+        _needFrsUpdate(frs) {
+          let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
+          return diff.length > 0;
+        }
+      });
+
+</script>
