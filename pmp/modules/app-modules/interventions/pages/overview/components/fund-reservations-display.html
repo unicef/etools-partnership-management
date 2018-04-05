@@ -9,10 +9,10 @@
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../mixins/date-mixin.html">
-<link rel="import" href="../../../../../mixins/fr-numbers-consistency-mixin.html">
+<link rel="import" href="../../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../../styles/fr-warnings-styles.html">
+<link rel="import" href="../../../styles/fr-warnings-styles.html">
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
@@ -88,9 +88,9 @@
             <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
             <span class="col-data col-2 right-align">
               <etools-info-tooltip class="fr-nr-warn currency-mismatch"
-                                  icon-first
-                                  custom-icon
-                                  hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
+                                   icon-first
+                                   custom-icon
+                                   hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
                 <span slot="field">[[fr.currency]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">
@@ -111,22 +111,22 @@
           <span class="col-data col-2 right-align"><strong>TOTAL of FRs</strong></span>
           <span class="col-data col-2 right-align">
             <etools-info-tooltip class="fr-nr-warn currency-mismatch"
-                icon-first
-                custom-icon
-                hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
+                                 icon-first
+                                 custom-icon
+                                 hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
               <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
                 [[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]
               </span>
               <iron-icon icon="[[getFrsCurrencyTooltipIcon(frsDetails.currencies_match)]]"
-                        slot="custom-icon"></iron-icon>
+                         slot="custom-icon"></iron-icon>
               <span slot="message">[[getFrsCurrencyTooltipMsg(frsDetails.currencies_match)]]</span>
             </etools-info-tooltip>
           </span>
           <span class="col-data col-2 right-align">
             <etools-info-tooltip class="fr-nr-warn"
-                custom-icon
-                icon-first
-                hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
+                                 custom-icon
+                                 icon-first
+                                 hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
               <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
                 [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_frs_amt)]]
               </span>
@@ -207,7 +207,7 @@
 
       static get observers() {
         return [
-        '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
+          '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
         ];
       }
       _noFrs(frsDetails) {

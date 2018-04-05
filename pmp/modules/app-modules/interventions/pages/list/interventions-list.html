@@ -25,7 +25,7 @@
 <link rel="import" href="../../../../mixins/list-filters-mixin.html">
 <link rel="import" href="../../../../mixins/lists-common-mixin.html">
 <link rel="import" href="../../../../mixins/pagination-mixin.html">
-<link rel="import" href="../../../../mixins/fr-numbers-consistency-mixin.html">
+<link rel="import" href="../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 
@@ -34,7 +34,7 @@
 <link rel="import" href="../../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../../styles/app-mixins.html">
 
-<link rel="import" href="../../../../styles/fr-warnings-styles.html">
+<link rel="import" href="../../styles/fr-warnings-styles.html">
 
 <link rel="import" href="../../data/interventions-list-data.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
@@ -74,7 +74,7 @@
                      placeholder="Search"
                      autocomplete="off"
                      value="{{q}}">
-          <iron-icon icon="search" prefix></iron-icon>
+          <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
         <div class="filter esmm">
@@ -129,7 +129,7 @@
                   on-etools-selected-items-changed="esmmValueChanged"
                   data-filter-path$="[[filter.path]]">
               </etools-dropdown-multi>
-              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+              <paper-icon-button class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">

@@ -1,14 +1,225 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+
+<link rel="import" href="../../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
+
+<link rel="import" href="../../../../styles/page-common-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/file-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
+
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
+<link rel="import" href="../../../../mixins/date-mixin.html">
+
+<link rel="import" href="../../../../validators/required-and-not-future-date-validator.html">
+<link rel="import" href="components/amendments/pd-amendments.html">
+<link rel="import" href="components/fund-reservations/fund-reservations.html">
 
 <dom-module id="intervention-review-and-sign">
-  <template>
-    <style>
+  <template strip-whitespace>
+    <style include="page-common-styles grid-layout-styles shared-styles file-styles required-field-starred-styles">
       :host {
-        /* host CSS */
+        @apply --layout-vertical;
+        width: 100%;
+      }
+
+      paper-input {
+        width: 100%;
+      }
+
+      paper-checkbox {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        min-height: 24px;
+      }
+
+      paper-checkbox[disabled] {
+        cursor: not-allowed;
+        --paper-checkbox-unchecked-color: black;
+        --paper-checkbox-label: {
+          color: var(--primary-text-color);
+          opacity: 1;
+        };
       }
     </style>
 
-    list here
+    <etools-content-panel class="content-section" panel-title="Signatures & Dates">
+      <div class="row-h flex-c">
+        <div class="col col-3">
+          <!-- Document Submission Date -->
+          <etools-date-input id="submissionDateField"
+                             label="Document Submission Date"
+                             value="{{intervention.submission_date}}"
+                             readonly$="[[!intervention.permissions.edit.submission_date]]"
+                             no-init show-clear-btn>
+          </etools-date-input>
+        </div>
+        <div class="col col-3">
+          <!-- Submitted to PRC? -->
+          <etools-form-element-wrapper>
+            <paper-checkbox checked="{{intervention.submitted_to_prc}}"
+                            disabled$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
+                            hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
+              Submitted to PRC?
+            </paper-checkbox>
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]">
+        <div class="row-h flex-c row-second-bg">
+          <div class="col col-3">
+            <!-- Submission Date to PRC -->
+            <etools-date-input id="submissionDatePrcField"
+                               label="Submission Date to PRC"
+                               value="{{intervention.submission_date_prc}}"
+                               readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
+                               no-init show-clear-btn>
+            </etools-date-input>
+          </div>
+          <div class="col col-3">
+            <!-- Review Date by PRC -->
+            <etools-date-input id="reviewDatePrcField"
+                               label="Review Date by PRC"
+                               value="{{intervention.review_date_prc}}"
+                               readonly$="[[!intervention.permissions.edit.review_date_prc]]"
+                               no-init show-clear-btn>
+            </etools-date-input>
+          </div>
+          <div class="col col-6 file-container space-left">
+            <!-- PRC Review Document -->
+            <etools-single-file label="PRC Review Document"
+                                internal-file=[[intervention.prc_review_document_file]]
+                                file={{intervention.prc_review_document}}
+                                accept=".doc,.docx,.pdf,.jpg,.png"
+                                hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
+                                readonly$="[[!intervention.permissions.edit.prc_review_document]]">
+            </etools-single-file>
+          </div>
+        </div>
+      </template>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <!-- Signed By Partner Authorized Officer -->
+          <etools-dropdown id="signedByAuthorizedOfficer"
+                           label="Signed By Partner Authorized Officer"
+                           placeholder="&#8212;"
+                           options="[[agreementAuthorizedOfficers]]"
+                           selected="{{intervention.partner_authorized_officer_signatory}}"
+                           readonly$="[[!intervention.permissions.edit.partner_authorized_officer_signatory]]"
+                           required$="[[intervention.permissions.required.partner_authorized_officer_signatory]]"
+                           auto-validate
+                           dynamic-align
+                           error-message="Please select Partner Authorized Officer">
+          </etools-dropdown>
+        </div>
+        <div class="col col-3">
+          <required-and-not-future-date-validator validator-name="partnerDateValidator"
+                                                  required="[[intervention.permissions.required.signed_by_partner_date]]"
+                                                  error-message="{{partnerDateValidatorErrorMessage}}">
+          </required-and-not-future-date-validator>
+          <!-- Signed by Partner Date -->
+          <etools-date-input id="signedByPartnerDateField"
+                             label="Signed by Partner Date"
+                             value="{{intervention.signed_by_partner_date}}"
+                             readonly="[[!intervention.permissions.edit.signed_by_partner_date]]"
+                             required$="[[intervention.permissions.required.signed_by_partner_date]]"
+                             auto-validate
+                             validator="partnerDateValidator"
+                             error-message$="[[partnerDateValidatorErrorMessage]]"
+                             no-init show-clear-btn>
+          </etools-date-input>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <!-- Signed by UNICEF -->
+          <etools-dropdown id="signedByUnicef"
+                           label="Signed by UNICEF"
+                           placeholder="&#8212;"
+                           options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
+                           option-value="id"
+                           option-label="name"
+                           selected="{{intervention.unicef_signatory}}"
+                           dynamic-align
+                           readonly$="[[!intervention.permissions.edit.unicef_signatory]]"
+                           required$="[[intervention.permissions.required.unicef_signatory]]"
+                           auto-validate
+                           error-message="Please select UNICEF user">
+          </etools-dropdown>
+        </div>
+        <div class="col col-3">
+          <required-and-not-future-date-validator validator-name="unicefDateValidator"
+                                                  required="[[intervention.permissions.required.signed_by_unicef_date]]"
+                                                  error-message="{{unicefDateValidatorErrorMessage}}">
+          </required-and-not-future-date-validator>
+          <!-- Signed by UNICEF Date -->
+          <etools-date-input id="signedByUnicefDateField"
+                             label="Signed by UNICEF Date"
+                             value="{{intervention.signed_by_unicef_date}}"
+                             readonly="[[!intervention.permissions.edit.signed_by_unicef_date]]"
+                             required$="[[intervention.permissions.required.signed_by_unicef_date]]"
+                             auto-validate
+                             validator="unicefDateValidator"
+                             error-message$="[[unicefDateValidatorErrorMessage]]"
+                             no-init show-clear-btn>
+          </etools-date-input>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6 file-container space-left">
+          <!-- Signed PD/SSFA -->
+          <etools-single-file id="signedIntervFile"
+                              label="Signed PD/SSFA"
+                              internal-file=[[intervention.signed_pd_document_file]]
+                              file={{intervention.signed_pd_document}}
+                              accept=".doc,.docx,.pdf,.jpg,.png"
+                              hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.signed_pd_document_file)]]"
+                              readonly$="[[!intervention.permissions.edit.signed_pd_document]]"
+                              required$="[[intervention.permissions.required.signed_pd_document]]"
+                              auto-validate
+                              error-message="Please select Signed PD/SSFA document">
+          </etools-single-file>
+        </div>
+        <div class="col col-3">
+          <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
+            <paper-input label="Days from Submission to Signed"
+                         value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
+                         placeholder="&#8212;" readonly>
+            </paper-input>
+          </template>
+        </div>
+      </div>
+    </etools-content-panel>
+
+    <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
+      <pd-amendments intervention-document-type="[[intervention.document_type]]"
+                     intervention-id="[[intervention.id]]"
+                     class="content-section"
+                     amend-action-in-progress="{{intervention.in_amendment}}"
+                     data-items="{{intervention.amendments}}"
+                     edit-mode="[[intervention.permissions.edit.amendments]]">
+      </pd-amendments>
+    </template>
+
+    <fund-reservations class="content-section"
+                       intervention="[[intervention]]"
+                       edit-mode="[[intervention.permissions.edit.frs]]"
+                       on-frs-update="_handleFrsUpdate">
+    </fund-reservations>
 
   </template>
   <script>
@@ -16,32 +227,231 @@
 
     /**
      * @polymer
-     * @customElement
+     * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Date
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class InterventionReviewAndSign extends Polymer.Element {
+
+    const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.Date,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.MissingDropdownOptions,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin InterventionReviewAndSignMixin
+     */
+    class InterventionReviewAndSign extends InterventionReviewAndSignMixin {
 
       static get is() {
         return 'intervention-review-and-sign';
       }
 
       static get properties() {
-        return {};
+        return {
+          intervention: {
+            type: Object,
+            observer: '_interventionChanged',
+          },
+          signedByUnicefUsers: {
+            type: Array,
+            statePath: 'signedByUnicefUsers'
+          },
+          agreement: {
+            type: Object,
+            value: null,
+            observer: '_agreementChanged'
+          },
+          agreementAuthorizedOfficers: {
+            type: Array,
+            value: []
+          },
+          _lockSubmitToPrc: {
+            type: Boolean,
+            value: false
+          },
+          partnerDateValidatorErrorMessage: {
+            type: String,
+            value: ''
+          },
+          unicefDateValidatorErrorMessage: {
+            type: String,
+            value: ''
+          }
+        };
       }
 
-      constructor() {
-        super();
-      }
-
-      ready() {
-        super.ready();
+      static get observers() {
+        return [
+          '_interventionDocTypeChanged(intervention.document_type)',
+          '_signedPdDocHasChanged(intervention.signed_pd_document)',
+          '_updateStyles(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)'
+        ];
       }
 
       connectedCallback() {
         super.connectedCallback();
+        /**
+         * Disable loading message for review and sign tab elements load,
+         * triggered by parent element on stamp or by tap event on tabs
+         */
+        this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
+        this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
+        this.fireEvent('tab-content-attached');
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
+      }
+
+      _updateStyles() {
+        this.updateStyles();
+      }
+
+      _isDraft(status) {
+        return status === 'draft' || status === '';
+      }
+
+      _interventionChanged(intervention) {
+        // check if submitted to PRC was already saved
+        if (intervention && intervention.id && intervention.submitted_to_prc) {
+          this.set('_lockSubmitToPrc', true);
+        } else {
+          this.set('_lockSubmitToPrc', false);
+        }
+        this._refreshPrcDocumentField(intervention, '', {});
+      }
+
+      // TODO: is this still needed with etools-dropdown?
+      _refreshPrcDocumentField(intervention, path, file) {
+        // forces etools-single-file to redraw the element
+        if (!intervention.prc_review_document_file) {
+          this.set('intervention.prc_review_document_file', path);
+        }
+        if (!intervention.prc_review_document) {
+          this.set('intervention.prc_review_document', file);
+        }
+      }
+
+      _hideDeleteBtn(status, fileUrl) {
+        return this._isDraft(status) && fileUrl;
+      }
+
+      _agreementChanged(agreement) {
+        if (agreement && typeof agreement === 'object' && Object.keys(agreement).length > 0) {
+          let authorizedOfficerData = agreement.authorized_officers.map((officer) => {
+            return {
+              value: parseInt(officer.id, 10),
+              label: officer.first_name + ' ' + officer.last_name
+            };
+          });
+
+          this.set('agreementAuthorizedOfficers', authorizedOfficerData);
+        }
+      }
+
+      getDaysFromSubmissionToSign(dateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
+        if (typeof dateStr === 'string' && dateStr !== '' &&
+            (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
+                typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
+
+          let maxSignedDateStr = this.getMaxDateStr(signedByPartnerDateStr, signedByUnicefDateStr);
+          if (maxSignedDateStr !== null && new Date(dateStr).toString() !== 'Invalid Date') {
+            return this.dateDiff(dateStr, maxSignedDateStr);
+          }
+        }
+        return null;
+      }
+
+      validate() {
+        let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByUnicef', '#signedIntervFile',
+          '#signedByPartnerDateField', '#signedByUnicefDateField'];
+        let valid = true;
+
+        fieldsToValidateSelectors.forEach((selector) => {
+          let field = this.shadowRoot.querySelector(selector);
+          if (field && !field.validate()) {
+            valid = false;
+          }
+        });
+
+        return valid;
+      }
+
+      _showSubmittedToPrcFields(submittedToPrc) {
+        return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
+      }
+
+      _submittedToPrcAvailable(documentType) {
+        return documentType !== 'SSFA';
+      }
+
+      _showDaysToSignedFields(status) {
+        return !this._isDraft(status);
+      }
+
+      _isSubmittedToPrcCheckReadonly(isPrcDocEditable, lockSubmitToPrc) {
+        return !isPrcDocEditable || lockSubmitToPrc;
+      }
+
+      _interventionDocTypeChanged(interventionDocumentType) {
+        if (typeof interventionDocumentType === 'undefined') {
+          return;
+        }
+
+        let submittedToPrc = this._submittedToPrcAvailable(interventionDocumentType);
+        if (!submittedToPrc) {
+          this.set('intervention.submitted_to_prc', false);
+          this._resetPrcFields();
+        }
+      }
+
+      _resetPrcFields() {
+        this.set('intervention.intervention.submission_date_prc', null);
+        this.set('intervention.review_date_prc', null);
+        this.set('intervention.prc_review_document_file', null);
+        this.set('intervention.prc_review_document', null);
+      }
+
+      // update FR Number on intervention
+      _handleFrsUpdate(e) {
+        e.stopImmediatePropagation();
+        try {
+          this.set('intervention.frs_details', e.detail.frsDetails);
+          let frIds = e.detail.frsDetails.frs.map((fr) => fr.id);
+          this.set('intervention.frs', frIds);
+        } catch (err) {
+          this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
+        }
+        this.fireEvent('global-loading', {active: false});
+      }
+
+      /**
+       * If a signed document is selected then all fields required
+       * for the intervention to move in signed status are required; only for draft status.
+       */
+      _signedPdDocHasChanged(signedDocument) {
+        if (typeof signedDocument === 'undefined') {
+          return;
+        }
+        if (this.intervention && this.intervention.status === 'draft') {
+          if (signedDocument instanceof File ||
+              (_.isString(signedDocument) && !_.isEmpty(signedDocument))) {
+            // new document selected
+            this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
+          } else {
+            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
+          }
+        }
       }
 
     }
