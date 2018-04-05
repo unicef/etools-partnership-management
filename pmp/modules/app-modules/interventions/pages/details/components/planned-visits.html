@@ -338,20 +338,24 @@
         if (this._plannedVisitIsAlreadySaved(event)) {// Avoid executing logic on page load
           return;
         }
-        let yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
+        let yearSelected = event.detail.item.getAttribute('item') ? JSON.parse(event.detail.item.getAttribute('item')).value : null;
         let yearDropdown = this.shadowRoot.querySelector('#year_' + event.model.index);
 
         if (this._yearAlreadySelected(yearSelected, event.model.index)) {
           this.fireEvent('toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
+          this._clearSelectedYear(yearDropdown, event);
+        }
+      }
+      /**
+       * Timeout because yearDropdown.selected is set after the execution of this method
+       */
+      _clearSelectedYear(yearDropdown, event) {
+        setTimeout(() => {
           if (yearDropdown) {
             yearDropdown.selected = null;
           }
           this.set('dataItems.' + event.model.index + '.year', null);
-          event.preventDefault();
-        } else {
-          this.set('dataItems.' + event.model.index + '.year', yearSelected);
-          yearDropdown.invalid = false; // Needed because auto-validate has been removed to avoid eager validation
-        }
+        });
       }
 
       _plannedVisitIsAlreadySaved(event) {

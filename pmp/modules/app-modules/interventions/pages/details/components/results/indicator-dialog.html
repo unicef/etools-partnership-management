@@ -184,11 +184,14 @@
               },
               section: null,
               baseline: null,
-              target: undefined,
+              target: null,
               means_of_verification: null,
-              locations: undefined,
+              locations: [],
               disaggregation: [],
-              cluster_indicator_id: undefined
+              cluster_indicator_title: null,
+              cluster_indicator_id: null,
+              cluster_name: null,
+              response_plan_name: null
             }
           },
           actionParams: {
@@ -349,26 +352,7 @@
       }
 
       resetFieldValues() {
-        let resetModel = {
-          id: null,
-          indicator: {
-            id: null,
-            title: null,
-            unit: 'number',
-            display_type: 'percentage'
-          },
-          section: null,
-          baseline: null,
-          target: null,
-          means_of_verification: null,
-          locations: [],
-          disaggregation: [],
-          cluster_indicator_title: null,
-          cluster_indicator_id: null,
-          cluster_name: null,
-          response_plan_name: null
-        };
-        this.indicator = JSON.parse(JSON.stringify(resetModel));
+        this.indicator = JSON.parse(JSON.stringify(this.indicatorModel));
         this.disaggregations = [];
         this.prpDisaggregations = [];
         if (this.isCluster && this.shadowRoot.querySelector('#clusterIndicatorEl')) {
