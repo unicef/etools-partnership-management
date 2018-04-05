@@ -1,0 +1,111 @@
+<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import"
+      href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
+<link rel="import" href="../../../../layout/components/etools-single-file.html">
+
+<link rel="import" href="../../../../styles/page-common-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
+
+<dom-module id="report-summary">
+  <template>
+    <style include="page-common-styles grid-layout-styles shared-styles paper-material-styles">
+    </style>
+
+    <div class="content-section paper-material" elevation="1">
+      <div class="row-h">
+        <div class="col col-6">
+          <etools-form-element-wrapper label="Submitted by">
+            [[getDisplayValue(report.submitted_by)]]
+          </etools-form-element-wrapper>
+        </div>
+        <div class="col col-6">
+          <etools-form-element-wrapper label="Submission date">
+            [[getDateDisplayValue(report.submission_date)]]
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <div class="row-h">
+        <div class="col col-12">
+          <etools-form-element-wrapper label="Partner contribution to date">
+            [[getDisplayValue(report.partner_contribution_to_date)]]
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <div class="row-h">
+        <div class="col col-12">
+          <etools-form-element-wrapper label="Funds received to date">
+            [[displayCurrencyAmount(report.funds_received_to_date, '0')]] [[report.funds_received_to_date_currency]]
+            ([[getDisplayValue(report.funds_received_to_date_percentage)]]%)
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <div class="row-h">
+        <div class="col col-12">
+          <etools-form-element-wrapper label="Challneges/bottlenecks in the reporting period (latest)">
+            [[getDisplayValue(report.challenges_in_the_reporting_period)]]
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <div class="row-h">
+        <div class="col col-12">
+          <etools-form-element-wrapper label="Proposed way forward (latest)">
+            [[getDisplayValue(report.proposed_way_forward)]]
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <div class="row-h" hidden>
+        <div class="col col-12">
+          <etools-single-file label="Attachments"
+                              readonly>
+          </etools-single-file>
+        </div>
+      </div>
+    </div>
+
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     */
+    class ReportSummary extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsMixins.EtoolsCurrency
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'report-summary';
+      }
+
+      static get properties() {
+        return {
+          report: Object
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        /**
+         * Disable loading message for report summary tab elements load,
+         * triggered by parent element on stamp or by tap event on tabs
+         */
+        this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+      }
+
+    }
+
+    window.customElements.define(ReportSummary.is, ReportSummary);
+  </script>
+</dom-module>

@@ -95,7 +95,7 @@
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event>
               </etools-dropdown-multi>
-              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+              <paper-icon-button class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">
@@ -108,14 +108,12 @@
               <etools-date-input id$="datepicker_[[filter.path]]"
                                  label="[[filter.filterName]]"
                                  value="{{filter.dateSelected}}"
-                                 readonly$="[[!agreement.permissions.edit.start]]"
                                  format="D MMM YYYY"
-                                 required$="[[agreement.permissions.required.start]]"
                                  on-date-has-changed="_filterDateHasChanged"
                                  data-filter-path$="[[filter.path]]"
                                  fire-date-has-changed no-init show-clear-btn>
               </etools-date-input>
-              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+              <paper-icon-button class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">
@@ -459,7 +457,7 @@
         let params = {
           agreement_type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners[0].label : '',
+          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners.map(p => p.label) : '',
           start: this.startDate,
           end: this.endDate,
           search: this.q

@@ -1,0 +1,171 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../../../../styles/buttons-styles.html">
+
+<link rel="import" href="../../../../../../mixins/repeatable-data-sets-mixin.html">
+<link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../../redux/etools-data-redux-store.html">
+
+<dom-module id="indicator-dissaggregations">
+  <template strip-whitespace>
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      paper-input {
+        width: 100%;
+      }
+
+    </style>
+    <div hidden$="[[_emptyList(dataItems, dataItems.length)]]">
+      <template is="dom-repeat" items="{{dataItems}}">
+        <div class="row-h item-container no-h-margin">
+          <div class="item-actions-container">
+            <div class="actions">
+              <paper-icon-button class="action delete"
+                                 on-tap="_openDeleteConfirmation"
+                                 data-args$="[[index]]"
+                                 icon="cancel"></paper-icon-button>
+            </div>
+          </div>
+          <div class="item-content">
+            <div class="row-h">
+              <div class="col col-4">
+                <etools-dropdown id="disaggregate_by_[[index]]" label="Disaggregate By"
+                                 options="{{preDefinedDisaggregtions}}"
+                                 selected="{{item.disaggregId}}"
+                                 option-value="id"
+                                 option-label="name"
+                                 on-iron-select="_onDisaggregationSelected"
+                                 disable-on-focus-handling>
+                </etools-dropdown>
+              </div>
+              <div class="col col-8">
+                <paper-input id="disaggregationGroups_[[index]]" readonly label="Disaggregation Groups"
+                             placeholder="&#8212;"></paper-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+
+    <div class="row-padding-v" hidden$="[[!_emptyList(dataItems, dataItems.length)]]">
+      <p>There are no disaggregations added.</p>
+    </div>
+
+    <div class="row-padding-v">
+      <paper-button class="secondary-btn" on-tap="_addNewDisaggregation"
+                    title="Add Disaggregation">ADD DISAGGREGATION
+      </paper-button>
+    </div>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    class IndicatorDisaggregations extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.RepeatableDataSets,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'indicator-dissaggregations';
+      }
+
+      static get properties() {
+        return {
+          preDefinedDisaggregtions: {
+            type: Array,
+            statePath: 'disaggregations'
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.dataSetModel = {disaggregId: null};
+        this.editMode = true;
+      }
+
+      _emptyList(disaggregations, disaggregLength) {
+        return (!disaggregations || !disaggregLength);
+      }
+
+      _addNewDisaggregation() {
+        this._addElement();
+      }
+
+      _onDisaggregationSelected(event) {
+        if (!event.detail.item.item) {
+          return;
+        }
+        let selectedDisagreg = event.detail.item.item;
+        let splitElId =  event.target.id.split('_');
+        let index = splitElId[splitElId.length - 1];
+
+        if (this._isAlreadySelected(selectedDisagreg)) {
+          event.model.set('item', null);
+          event.model.set('item', {id: null});
+          this.fireEvent('show-toast', {error: {response: 'Disaggregation already selected'}});
+          return;
+        }
+        this._displayDisaggregationGroups(selectedDisagreg, index);
+
+      }
+
+      _isAlreadySelected(disagreg) {
+        let justSelectedOne = this.dataItems.filter(function(d) {
+          return !d.disaggregId;
+        }).length;
+        if (!justSelectedOne) {//we're on page load
+          return;
+        }
+        let duplicateItems = this.dataItems.filter(function(item) {
+          return parseInt(item.disaggregId) === parseInt(disagreg.id);
+        });
+        if (duplicateItems && duplicateItems.length) {
+          return true;
+        }
+        return false;
+      }
+
+      _displayDisaggregationGroups(selectedDisagreg, index) {
+        this.shadowRoot.querySelector('#disaggregationGroups_' +
+            index).value = selectedDisagreg.disaggregation_values.map((d) => d.value).join('; ');
+      }
+
+    }
+
+    window.customElements.define(IndicatorDisaggregations.is, IndicatorDisaggregations);
+  </script>
+</dom-module>

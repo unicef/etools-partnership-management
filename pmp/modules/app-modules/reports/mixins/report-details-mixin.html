@@ -1,0 +1,84 @@
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../redux/etools-data-redux-store.html">
+
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * @polymerMixin
+   * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+   * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+   * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+   */
+  EtoolsPmpApp.Mixins.ReportDetails = (superclass) => class extends EtoolsMixinFactory.combineMixins([
+    EtoolsLogsMixin,
+    EtoolsPmpApp.Mixins.EventHelper,
+    EtoolsPmpApp.Mixins.Endpoints,
+    EtoolsPmpApp.Mixins.AjaxErrorsParser,
+    EtoolsPmpApp.Mixins.EtoolsDataReduxStore], superclass) {
+
+    static get properties() {
+      return {
+        report: Object,
+        currentUser: {
+          type: Object,
+          statePath: 'currentUser'
+        },
+        reportActions: {
+          type: Array,
+          value: [
+            {
+              label: 'Accept',
+              primary: true,
+              event: 'accept-report'
+            },
+            {
+              label: 'Send back to partner',
+              event: 'send-back-to-partner'
+            },
+            {
+              label: 'Download',
+              event: 'download-report'
+            }
+          ]
+        }
+      };
+    }
+
+    requestReportDetails(id) {
+      let loadingSource = 'report-details';
+      let logMsgPrefix = 'report-details-behavior';
+      if (!this.currentUser) {
+        this.logWarn('Logged user data not init in Redux store.', logMsgPrefix);
+        return;
+      }
+
+      this.fireEvent('global-loading', {
+        message: 'Loading report details...',
+        active: true,
+        loadingSource: loadingSource
+      });
+
+      this.fireRequest('reportDetails', {reportId: id}).then((response) => {
+        this.set('report', response);
+        this.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
+      }).catch((error) => {
+        let errMsg = 'Reports details data request failed!';
+        this.logError(errMsg, logMsgPrefix, error);
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+        this.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
+      });
+    }
+
+  }
+
+</script>

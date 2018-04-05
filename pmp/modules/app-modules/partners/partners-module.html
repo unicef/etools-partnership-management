@@ -349,7 +349,7 @@
       }
 
       _observeRouteDataId(id) {
-        if (id === undefined) {
+        if (typeof id === 'undefined') {
           return;
         }
         if (this.route && this.route.prefix.indexOf('partners') > -1) {

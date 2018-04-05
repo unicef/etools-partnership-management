@@ -1,6 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/paper-progress/paper-progress.html">
 
 <dom-module id="etools-progress-bar">
   <template>
@@ -20,7 +20,7 @@
       }
 
       paper-progress {
-        @apply --etools-progress-bar;
+        width: var(--etools-progress-bar-width, 200px);
       }
     </style>
     <paper-progress value="[[progressValue]]"

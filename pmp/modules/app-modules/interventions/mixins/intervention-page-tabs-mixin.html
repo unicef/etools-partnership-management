@@ -61,7 +61,7 @@
         }
 
         _computeInterventionTabs(newInterventionActive, environmentFlags) {
-          if (newInterventionActive === undefined && environmentFlags === undefined) {
+          if (typeof newInterventionActive === 'undefined' && typeof environmentFlags === 'undefined') {
             return;
           }
           let showPrpTabs = this.showPrpReports();

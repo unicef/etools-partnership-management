@@ -215,7 +215,7 @@
         }
 
         _handleStatusChange(status) {
-          if (status === undefined) {
+          if (typeof status === 'undefined') {
             return;
           }
           this._resetStatusActionsDebouncer = Polymer.Debouncer.debounce(this._resetStatusActionsDebouncer,

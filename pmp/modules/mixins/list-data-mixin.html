@@ -100,7 +100,7 @@
     }
 
     _endpointChanged(newEndpoint) {
-      if (newEndpoint === undefined) {
+      if (typeof newEndpoint === 'undefined') {
         return;
       }
       if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {

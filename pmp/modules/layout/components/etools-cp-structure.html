@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
@@ -19,7 +20,7 @@
 
 <dom-module id="etools-cp-structure">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles required-field-starred-styles">
       :host {
         @apply --layout-horizontal;
       }
@@ -260,15 +261,15 @@
 
       _countryProgrammesChanged(countryProgrammes, appModuleItem) {
         this.cpInitDebouncer = Polymer.Debouncer.debounce(this.cpInitDebouncer,
-          Polymer.Async.timeOut.after(10),
-          () => {
-            let cpStructures = this._getAvailableCpOptions(countryProgrammes);
-            this.set('cpStructureOptions', cpStructures);
-            this._checkExpiredCp();
-            if (appModuleItem && !this.selectedCp) {
-              this.setDefaultSelectedCpStructure();
-            }
-          });
+            Polymer.Async.timeOut.after(10),
+            () => {
+              let cpStructures = this._getAvailableCpOptions(countryProgrammes);
+              this.set('cpStructureOptions', cpStructures);
+              this._checkExpiredCp();
+              if (appModuleItem && !this.selectedCp) {
+                this.setDefaultSelectedCpStructure();
+              }
+            });
       }
 
       _showExpiredCp(hasExpiredCp, editExpiredCpActive) {
