@@ -10,6 +10,13 @@
       app-drawer-layout[small-menu] {
         --app-drawer-width: 73px;
       }
+      /** This extra definition is required for IE*/
+      app-drawer:not([small-menu]) {
+        --app-drawer-width: 220px;
+      }
+      app-drawer[small-menu] {
+        --app-drawer-width: 73px;
+      }
       app-drawer {
         max-width: 220px;
         z-index: 100;

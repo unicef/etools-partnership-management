@@ -3,7 +3,7 @@
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
-  /*
+  /**
    * App menu functionality mixin
    * @polymer
    * @mixinFunction
@@ -64,6 +64,10 @@
     }
 
     _updateDrawerStyles() {
+      let drawerLayout = this.$.layout;
+      if (drawerLayout) {
+        drawerLayout.updateStyles();
+      }
       let drawer = this.$.drawer;
       if (drawer) {
         drawer.updateStyles();

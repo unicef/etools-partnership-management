@@ -99,6 +99,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // check express.js to see how service-worker.js file path is set
           navigator.serviceWorker.register('service-worker.js', {
             scope: Polymer.rootPath
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
           });
         });
       }

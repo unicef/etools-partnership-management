@@ -10,7 +10,7 @@
 <script>
   'use strict';
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
-  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Mixins || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
   /**
     * @polymer
@@ -68,8 +68,7 @@
         }
       };
     }
-    connectedCallback() {
-      super.connectedCallback();
+    requestUserData() {
       this.sendRequest({
         endpoint: this.getEndpoint(this.endpointName)
       }).then((res) => {
@@ -116,7 +115,7 @@
         cacheKey: 'currentCountry',
         data: country
       };
-      EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
+      EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.put(dataToCache);
     }
     _findGroup(groupName) {
       return _.find(this.userGroups, function(grp) {

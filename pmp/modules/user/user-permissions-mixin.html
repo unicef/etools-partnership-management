@@ -2,7 +2,7 @@
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
-  /*
+  /**
    * User permissions mixin
    * @polymer
    * @mixinFunction
@@ -45,6 +45,15 @@
           'ICT'
         ]
       };
+    }
+
+    userIsPme(user) {
+      if (!user || !Array.isArray(user.groups)) {
+        return false;
+      }
+      return !!_.find(user.groups, (grp) => {
+        return grp.name === 'PME';
+      });
     }
   });
 

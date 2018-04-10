@@ -1,23 +1,24 @@
-<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/shadycss/apply-shim.html">
+<link rel="import" href="../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
-<link rel="import" href="../../../../layout/components/etools-status/etools-status-common-mixin.html">
-<link rel="import" href="../../../../layout/components/etools-status/etools-status.html">
-<link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="../../../scripts/lodash.html">
+<link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
+<link rel="import" href="../../../layout/components/etools-status/etools-status.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <dom-module id="partner-status">
   <template>
     <style>
       :host {
         width: 100%;
-        --status-top: auto;
-        --etools-status-label-style: {
-          font-weight: normal;
-          max-width: 120px;
-        };
         --etools-status-container: {
           height: auto;
           min-height: 40px;
+        };
+        --etools-status-label-style: {
+          font-weight: normal;
+          width: 120px;
         };
       }
       /* HD res: 1360/1366 x 768 */
@@ -25,13 +26,11 @@
         :host {
           --etools-status-label-style: {
             font-weight: normal;
-            max-width: 100%;
+            width: 100%;
           };
         }
       }
-      etools-status {
-        top: var(--status-top);
-      }
+
     </style>
 
     <etools-status statuses="[[possibleStatuses]]"
@@ -71,47 +70,7 @@
           },
           possibleStatuses: {
             type: Array,
-            value: function() {
-              return [
-                {
-                  label: 'Not Synced',
-                  icon: 'info',
-                  iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' +
-                  this.getComputedStyleValue('--status-not-synced-color'),
-                  hidden: true,
-                  completed: false
-                },
-                {
-                  label: 'Synced from VISION',
-                  icon: 'autorenew',
-                  iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
-                  hidden: true,
-                  completed: false
-                },
-                {
-                  label: 'Blocked in VISION',
-                  icon: 'block',
-                  iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
-                  hidden: true,
-                  completed: false
-                },
-                {
-                  label: 'Marked For Deletion in VISION',
-                  icon: 'delete-forever',
-                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
-                  iconContainerStyles: 'background-color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  hidden: true,
-                  completed: false
-                }
-              ];
-            }
+            value: []
           },
           possibleActions: {
             type: Array,
@@ -135,7 +94,7 @@
 
       static get observers() {
         return [
-          '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked)',
+          '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked, possibleStatuses)',
           '_computeAvailableActions(partner.hidden, editMode)'
         ];
       }
@@ -150,10 +109,54 @@
         this.warningDialog.updateStyles({'--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'});
 
         this._handleStickyScroll();
+        setTimeout(this.setPossibleStatuses.bind(this), 0);
       }
 
-      _partnerStatusChanged(visionSynced, deletedFlag, blocked) {
-        if (visionSynced === undefined && deletedFlag === undefined && blocked === undefined) {
+      setPossibleStatuses() {
+        this.set('possibleStatuses', [
+          {
+            label: 'Not Synced',
+            icon: 'info',
+            iconStyles: 'width: 19px; height: 19px; color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            iconContainerStyles: 'background-color: ' +
+            this.getComputedStyleValue('--status-not-synced-color'),
+            hidden: true,
+            completed: false
+          },
+          {
+            label: 'Synced from VISION',
+            icon: 'autorenew',
+            iconStyles: 'width: 19px; height: 19px; color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
+            hidden: true,
+            completed: false
+          },
+          {
+            label: 'Blocked in VISION',
+            icon: 'block',
+            iconStyles: 'width: 19px; height: 19px; color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
+            hidden: true,
+            completed: false
+          },
+          {
+            label: 'Marked For Deletion in VISION',
+            icon: 'delete-forever',
+            iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+            iconContainerStyles: 'background-color: ' +
+            this.getComputedStyleValue('--primary-background-color'),
+            hidden: true,
+            completed: false
+          }
+        ]);
+      }
+
+      _partnerStatusChanged(visionSynced, deletedFlag, blocked, possibleStatuses) {
+        if (typeof visionSynced === 'undefined' && typeof deletedFlag === 'undefined'
+          && typeof blocked === 'undefined' && _.isEmpty(possibleStatuses)) {
           return;
         }
         this._computeAvailableStatuses();
@@ -186,9 +189,7 @@
           if (!this.editMode) {
             return;
           }
-          this.fire('delete-partner', {
-            id: this.partner.id
-          });
+          this.fireEvent('delete-partner', {id: this.partner.id});
         }
       }
 

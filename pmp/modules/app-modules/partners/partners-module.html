@@ -24,13 +24,14 @@
 <link rel="import" href="../../styles/buttons-styles.html">
 
 <link rel="import" href="data/partner-item-data.html">
-<link rel="import" href="components/new-partner/new-partner-dialog.html">
-<link rel="import" href="components/partner-status/partner-status.html">
+<link rel="import" href="components/new-partner-dialog.html">
+<link rel="import" href="components/partner-status.html">
 
 <!-- lazy import partner module pages -->
 <link rel="lazy-import" href="pages/list/partners-list.html">
 <link rel="lazy-import" href="pages/overview/partner-overview.html">
 <link rel="lazy-import" href="pages/details/partner-details.html">
+<link rel="lazy-import" href="pages/financial-assurance/partner-financial-assurance.html">
 
 <dom-module id="partners-module">
   <template>
@@ -122,6 +123,14 @@
                              edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
           </template>
 
+          <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
+            <partner-financial-assurance id="financialAssurance"
+                                         partner="[[partner]]"
+                                         edit-mode="[[_hasEditPermissions(permissions)]]"
+                                         name="financial-assurance">
+            </partner-financial-assurance>
+          </template>
+
         </iron-pages>
 
       </div> <!-- page content end -->
@@ -161,9 +170,11 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      */
     const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-          EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-          EtoolsPmpApp.Mixins.ModuleRouting, EtoolsPmpApp.Mixins.EventHelper
-        ], Polymer.Element);
+      EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl,
+      EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+      EtoolsPmpApp.Mixins.ModuleRouting,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
      * @polymer
@@ -190,8 +201,17 @@
                 tab: 'details',
                 tabLabel: 'Partner Details',
                 hidden: false
+              },
+              {
+                tab: 'financial-assurance',
+                tabLabel: 'Financial Assurance',
+                hidden: false
               }
             ]
+          },
+          moduleName: {
+            type: String,
+            value: 'partners'
           },
           csvDownloadUrl: {
             type: String
@@ -246,7 +266,6 @@
       _initListeners() {
         this.addEventListener('partner-save-error', this._partnerSaveError);
         this.addEventListener('create-partner', this._createPartner);
-        this.addEventListener('reload-list', this._reloadPartnersList);
         this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
       }
 
@@ -330,7 +349,7 @@
       }
 
       _observeRouteDataId(id) {
-        if (id === undefined) {
+        if (typeof id === 'undefined') {
           return;
         }
         if (this.route && this.route.prefix.indexOf('partners') > -1) {
@@ -389,16 +408,21 @@
         this.fireEvent('clear-server-errors');
       }
 
-      _reloadPartnersList(e) {
-        e.stopImmediatePropagation();
-        try {
-          let partners = this.shadowRoot.querySelector('#list');
-          if (partners && !partners.$.list.classList.contains('hidden')) {
-            partners._filterPartnersData(true);
+      /**
+       * All partners pages with editable fields should be validated on save
+       */
+      _partnerDataIsValid() {
+        let valid = true;
+        let partnersPages = [
+          this.shadowRoot.querySelector('#financialAssurance'),
+          this.shadowRoot.querySelector('#partnerDetails')
+        ];
+        partnersPages.forEach((pageEl) => {
+          if (pageEl && !pageEl._validatePageData()) {
+            valid = false;
           }
-        } catch (err) {
-          this.logWarn('List refresh error occurred', '[partners-page]', err);
-        }
+        });
+        return valid;
       }
 
       _validateAndTriggerPartnerSave(event) {
@@ -406,29 +430,31 @@
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        let partnerDetails = this.shadowRoot.querySelector('#partnerDetails');
-        if (partnerDetails && partnerDetails._validatePartner()) {
+        if (this._partnerDataIsValid()) {
+          // both partner details and financial assurance data is valid
           let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
         } else {
           this.fireEvent('toast', {
-              text: 'Please check assessments and partner contacts for ' +
-              'invalid fields or empty data rows!', showCloseBtn: true
+            text: 'Please check assessments and partner contacts for ' +
+            'invalid fields or empty data rows!', showCloseBtn: true
           });
         }
       }
 
       _cleanUpdateData(partner) {
-        let updateableFields = [
+        let updatableFields = [
           'alternate_name',
           'shared_with',
           'staff_members',
           'assessments',
-          'core_values_assessment'
+          'core_values_assessment',
+          'planned_engagement',
+          'basis_for_risk_rating'
         ];
         let changes = {};
-        updateableFields.forEach(function(fieldName) {
+        updatableFields.forEach(function(fieldName) {
           // TODO: improve this
           if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {

@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
+
 <dom-module id="countries-dropdown">
   <template strip-whitespace>
     <style>
@@ -35,20 +36,23 @@
           display: none;
         };
 
+        --paper-input-container-label: {
+          top: 4px;
+        };
+
         --paper-dropdown-menu-icon: {
           color: var(--countries-dropdown-color);
           align-self: flex-end;
         };
 
-        --paper-input-container-label: {
-          top: 4px;
-        };
-        --paper-input-container-input: {
-          color: var(--countries-dropdown-color);
+        --paper-input-container-shared-input-style_-_color: var(--countries-dropdown-color);
+
+        --paper-dropdown-menu-input: {
           cursor: pointer;
           min-height: 24px;
           text-align: right;
         };
+
         --paper-menu-button-dropdown: {
           max-height: 380px;
         }

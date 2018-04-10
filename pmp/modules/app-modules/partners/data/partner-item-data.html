@@ -19,15 +19,15 @@
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
-     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-          EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints,
-          EtoolsPmpApp.Mixins.AjaxServerErrors, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-          EtoolsPmpApp.Mixins.EventHelper
-        ], Polymer.Element);
+      EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxServerErrors, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
      * @polymer
@@ -240,8 +240,10 @@
               loadingSource: this.ajaxLoadingMsgSource
             });
             // fire in the hole
-            this._triggerPartnerRequest({method: 'PATCH', endpoint: endpoint, body: partner,
-              multiPart: withUpload, prepareMultipartData: withUpload});
+            this._triggerPartnerRequest({
+              method: 'PATCH', endpoint: endpoint, body: partner,
+              multiPart: withUpload, prepareMultipartData: withUpload
+            });
           } else {
             this.fireEvent('toast', {
               text: 'There is nothing to save. No change detected on this partner.',

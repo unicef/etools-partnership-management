@@ -33,9 +33,21 @@
         return 'environment-flags';
       }
 
+      static get properties() {
+        return {
+          envFlagsDefaultValue: {
+            type: Object,
+            value: {
+              prp_mode_off: true,
+              prp_server_on: false
+            }
+          }
+        };
+      }
+
       static get actions() {
         return {
-          setEnvFlags: function(envFlags) {
+          processAndSetEnvFlags: function(envFlags) {
             let flags = envFlags.active_flags;
             let flagObject = {
               prp_mode_off: false
@@ -45,10 +57,15 @@
               let flag = flags[key];
               flagObject[flag] = true;
             }
-
             return {
               type: 'SET_ENV_FLAGS',
               envFlags: flagObject
+            };
+          },
+          setEnvFlags: function(flagsObj) {
+            return {
+              type: 'SET_ENV_FLAGS',
+              envFlags: flagsObj
             };
           }
         };
@@ -62,10 +79,13 @@
 
         this.sendRequest(requestConfig).then((response) => {
           if (response) {
-            this.dispatch('setEnvFlags', response);
+            this.dispatch('processAndSetEnvFlags', response);
+          } else {
+            this.dispatch('setEnvFlags', this.envFlagsDefaultValue);
           }
         }).catch((error) => {
           this.logError('Env flags request failed', null, error);
+          this.dispatch('setEnvFlags', this.envFlagsDefaultValue);
         });
       }
 

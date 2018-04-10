@@ -121,6 +121,9 @@
       /* paper input readonly state */
       paper-input[readonly],
       paper-textarea[readonly],
+      etools-dropdown[readonly],
+      etools-dropdown-multi[readonly],
+      etools-currency-amount-input[readonly],
       .form-field-wrapper {
         --paper-input-container-underline: {
           display: none;
@@ -137,29 +140,18 @@
 
         width: 100%;
       }
+
       paper-input, paper-input-container {
         --paper-input-container-input: {
           min-height: 23px; /* IE11 fix - letter 'g' is cut off */
-          color: inherit; /* To display the text in red when elem is wrapped by etools-info-tooltip */
         }
       }
 
       etools-dropdown,
       etools-dropdown-multi {
-        --esmm-readonly-input-container-underline: {
-          display: none;
-        };
-      }
-      etools-currency-amount-input[readonly] {
-        --etools-currency-container-underline: {
-          display: none;
-        };
-        --etools-currency-container-underline-focus: {
-          display: none;
-        };
-        --etools-currency-container-underline-disabled: {
-          display: none;
-        };
+        --paper-input-container-input: {
+          text-overflow: ellipsis;
+        }
       }
 
       paper-input.right-to-left {
@@ -175,11 +167,11 @@
       }
 
       paper-checkbox {
-        --paper-checkbox-ink-size: 0px;
+        --paper-checkbox-ink-size: 0;
       }
 
       paper-radio-button {
-        --paper-radio-button-ink-size: 0px;
+        --paper-radio-button-ink-size: 0;
       }
 
       .capitalize {
@@ -197,6 +189,7 @@
         padding-top: 4px;
         min-width: 0;
       }
+
       .input-label[empty]::after {
         content: "—";
         color: var(--medium-primary-text-color);

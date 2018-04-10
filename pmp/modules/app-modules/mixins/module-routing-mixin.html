@@ -48,7 +48,7 @@
         }
 
         _activePageChanged(currentPage, previousPage) {
-          if (currentPage === undefined) {
+          if (typeof currentPage === 'undefined') {
             return;
           }
           this._clearRouteQueryParamsIfNeeded(previousPage);

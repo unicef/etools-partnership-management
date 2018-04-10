@@ -153,14 +153,14 @@
       }
 
       _singleSectionChanged() {
-        var allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
-        var anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
+        let allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
+        let anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
         this.set('allSelected', allSelected);
         this.set('anySelected', anySelected);
       }
 
-     _handleDialogClosed(closingReason) {
+      _handleDialogClosed(closingReason) {
         if (!closingReason.detail.confirmed) {
           return;
         }
@@ -173,25 +173,25 @@
         }
 
         // clear only data sets
-        var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
-        var restampLandingPage = this.page === afterDataRefreshLandingPage ||
+        let afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
+        let restampLandingPage = this.page === afterDataRefreshLandingPage ||
             (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
-        var self = this;
+        let self = this;
         EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
-            function() {
-          if (self.partnersSelected) {
-            EtoolsPmpApp.DexieDb.partners.clear();
-            EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
-          }
-          if (self.agreementsSelected) {
-            EtoolsPmpApp.DexieDb.agreements.clear();
-            EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
-          }
-          if (self.interventionsSelected) {
-            EtoolsPmpApp.DexieDb.interventions.clear();
-            EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
-          }
+          function() {
+            if (self.partnersSelected) {
+              EtoolsPmpApp.DexieDb.partners.clear();
+              EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
+            }
+            if (self.agreementsSelected) {
+              EtoolsPmpApp.DexieDb.agreements.clear();
+              EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
+            }
+            if (self.interventionsSelected) {
+              EtoolsPmpApp.DexieDb.interventions.clear();
+              EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+            }
         }).then(function(result) {
           // transaction succeeded
           self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
@@ -213,7 +213,7 @@
       }
 
       _triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage) {
-        var routePath = afterDataRefreshLandingPage + '/list';
+        let routePath = afterDataRefreshLandingPage + '/list';
         if (restampLandingPage) {
           this.set('page', null);
           setTimeout(function() {

@@ -1,7 +1,8 @@
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-  /*
+
+  /**
   * @polymer
   * @mixinFunction
   */
@@ -16,7 +17,7 @@
     }
 
     getRiskRatingClass(riskRating) {
-      var riskRatingClass = '';
+      let riskRatingClass = '';
       if (typeof riskRating === 'string' && riskRating !== '') {
         riskRatingClass = riskRating.toLowerCase();
       } else {

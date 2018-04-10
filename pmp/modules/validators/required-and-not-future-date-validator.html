@@ -3,7 +3,7 @@
 
 <dom-module id="required-and-not-future-date-validator">
   <script>
-
+    'use strict';
     /**
      * @polymer
      * @customElement
@@ -34,6 +34,12 @@
             value: 'Date cannot be in the future!'
           }
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        // set default message
+        this._setRequiredErrorMessage();
       }
 
       validate(dateValueStr) {

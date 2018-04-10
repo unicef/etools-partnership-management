@@ -26,7 +26,8 @@
                    readonly$="[[readonly]]"
                    invalid$="[[invalid]]"
                    error-message=[[errorMessage]]
-                   hide-delete-btn="[[hideDeleteBtn]]">
+                   hide-delete-btn="[[hideDeleteBtn]]"
+                   on-blur="_fileInputFocused">
       </etools-file>
     </div>
   </template>
@@ -74,6 +75,10 @@
             type: Object,
             observer: '_fileChanged'
           },
+          elemAttached: {
+            type: Boolean,
+            value: false
+          },
           invalid: {
             type: Boolean,
             value: false
@@ -97,8 +102,13 @@
         ];
       }
 
+      connectedCallback() {
+        super.connectedCallback();
+        this.elemAttached = true;
+      }
+
       _fileChanged(intr) {
-        if (intr === undefined) {
+        if (typeof intr === 'undefined') {
           return;
         }
         if (this.internalFile) {
@@ -109,7 +119,7 @@
       }
 
       _attachmentChanged(filesLength) {
-        if (filesLength === undefined) {
+        if (typeof filesLength === 'undefined') {
           return;
         }
         if (filesLength > 0) {
@@ -126,7 +136,7 @@
       }
 
       _fileReplaced(data) {
-        if (data === undefined) {
+        if (typeof data === 'undefined') {
           return;
         }
         if ((data.path.indexOf('attachments.#') > -1)) {
@@ -146,28 +156,34 @@
       }
 
       _autoValidateFile(file) {
-        if (file === undefined) {
+        if (typeof file === 'undefined') {
           return;
         }
-        if (this.autoValidate) {
+        // elemAttached condition is to prevent eager validation
+        if (this.autoValidate && this.elemAttached) {
           this.validate();
         }
       }
 
       _refreshStyles(readonly, required) {
-        if (readonly === undefined && required === undefined) {
+        if (typeof readonly === 'undefined' && typeof required === 'undefined') {
           return;
         }
         this.updateStyles();
       }
 
       _requiredChanged(req) {
-        if (req === undefined) {
+        if (typeof req === 'undefined') {
           return;
         }
         if (req === false) {
           this.validate();
         }
+      }
+
+      // covers the case when the users cancels file upload
+      _fileInputFocused() {
+        this._autoValidateFile(this.file);
       }
 
     }

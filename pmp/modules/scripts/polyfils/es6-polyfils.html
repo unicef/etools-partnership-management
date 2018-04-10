@@ -1,3 +1,5 @@
+<link rel="import" href="../../../../bower_components/promise-polyfill/promise-polyfill.html">
+
 <script>
 
   // EC6 Object.assign polyfil
@@ -26,7 +28,7 @@
     };
   }
 
-  // ES6 Array find polyfil
+  // ES6 Array find polyfill
   if (!Array.prototype.find) {
     Object.defineProperty(Array.prototype, 'find', {
       value: function(predicate) {
@@ -204,5 +206,31 @@
       return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
     };
   }
+
+  if (!Array.prototype.some) {
+  Array.prototype.some = function(fun/*, thisArg*/) {
+    'use strict';
+
+    if (this == null) {
+      throw new TypeError('Array.prototype.some called on null or undefined');
+    }
+
+    if (typeof fun !== 'function') {
+      throw new TypeError();
+    }
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+
+    var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+    for (var i = 0; i < len; i++) {
+      if (i in t && fun.call(thisArg, t[i], i, t)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+}
 
 </script>

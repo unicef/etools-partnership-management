@@ -24,6 +24,7 @@
     "moment": true,
     "Promise": true,
     "Polymer": true,
+    "PolymerRedux": true,
     "Dexie": true,
     "EtoolsMixinFactory": true,
     "EtoolsPmpApp": true,
@@ -31,6 +32,7 @@
     "EtoolsAjaxRequestMixin": true,
     "EtoolsMixins": true,
     "EtoolsLogsMixin": true,
-    "_": true
+    "_": true,
+    "ShadyCSS": true
   }
 }

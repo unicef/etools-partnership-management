@@ -11,7 +11,7 @@
    * Common functionality for etools status element
    * @polymer
    * @mixinFunction
-   * @appliesMixin DynamicDialogMixin
+   * @appliesMixin EtoolsMixins.DynamicDialogMixin
    * @appliesMixin EtoolsLogsMixin
    * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
    */
@@ -48,7 +48,9 @@
             possibleStatuses: Array,
             possibleActions: Array,
             warningDialog: Object,
-            statusChangeWarningDialogContent: Object
+            statusChangeWarningDialogContent: Object,
+            deleteConfirmDialog: Object,
+            deleteWarningMessage: String
           };
         }
 
@@ -63,6 +65,9 @@
           super.disconnectedCallback();
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
+          }
+          if (this.deleteConfirmDialog) {
+            this.removeDialog(this.deleteConfirmDialog);
           }
           this._resetScrollHandler();
           this._resetResizeHandler();
@@ -89,8 +94,7 @@
 
         _setResizeHandler() {
           window.onresize = function() {
-            // TODO: polymer2 - Polymer.updateSTyles should not be used unless there is no other way
-            Polymer.updateStyles();
+            this.updateStyles();
             this._resetScrollHandler();
             this._setScrollHandler();
           }.bind(this);
@@ -120,13 +124,13 @@
         }
 
         _isStatusHorizontal() {
-          // the styling to make it horizontal at this resolution is in page-layout-styles
           // HD res: 1360/1366 x 768
           return window.innerWidth < 1360;
         }
 
         _setNotStickyStyles() {
-          this.updateStyles({'--status-top': 'auto'});
+          let statusElem = this.shadowRoot.querySelector('etools-status');
+          statusElem.classList.remove('sticky-status');
         }
 
         _resetScrollHandler() {
@@ -136,15 +140,32 @@
         }
 
         _scrollChangedHandler() {
-          let containerDistanceFromViewportTop = this.getBoundingClientRect().top;
-
-          if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-            // if the status element is about to go under the title bar, start moving in down
-            let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
-            this.updateStyles({'--status-top': newOffset + 'px'});
-          } else {
-            this.updateStyles({'--status-top': 'auto'});
-          }
+          this._waitForBoundingClientRectToBeSet()
+             .then((containerDistanceFromViewportTop) => {
+                let statusElem = this.shadowRoot.querySelector('etools-status');
+                if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+                  statusElem.classList.add('sticky-status');
+                } else {
+                  statusElem.classList.remove('sticky-status');
+                }
+             });
+        }
+        _waitForBoundingClientRectToBeSet() {
+          return new Promise((resolve, reject) => {
+            let top = this.getBoundingClientRect().top;
+            if (top === 0) {
+              let bcrInterval = setInterval(() => {
+                top = this.getBoundingClientRect().top;
+                if (top !== 0) {
+                  clearInterval(bcrInterval);
+                  resolve(top);
+                }
+              }, 0);
+            } else {
+              // no need to run the interval, resolve immediately
+              resolve(top);
+            }
+          });
         }
 
         _createStatusChangeWarningDialog() {
@@ -194,7 +215,7 @@
         }
 
         _handleStatusChange(status) {
-          if (status === undefined) {
+          if (typeof status === 'undefined') {
             return;
           }
           this._resetStatusActionsDebouncer = Polymer.Debouncer.debounce(this._resetStatusActionsDebouncer,
@@ -230,6 +251,24 @@
         _getDefaultWarningMessage() {
           return 'You are changing the status from <strong>\''
               + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+        }
+
+        getComputedStyleValue(varName) {
+          if (ShadyCSS) {
+            return ShadyCSS.getComputedStyleValue(this, varName);
+          } else {
+            return getComputedStyle(this).getPropertyValue(varName);
+          }
+        }
+
+        _createDeleteConfirmationDialog() {
+          let warnDeleteContent = document.createElement('div');
+          warnDeleteContent.innerHTML = this.deleteWarningMessage;
+          this.deleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteContent);
+        }
+
+        _openDeleteConfirmation() {
+          this.deleteConfirmDialog.opened = true;
         }
 
       });

@@ -6,7 +6,7 @@
 
 <dom-module id="not-found">
   <template>
-    <style>
+    <style include="shared-styles paper-material-styles">
       :host {
         display: block;
         width: 100%;
@@ -17,7 +17,6 @@
       }
 
       div[elevation="1"] {
-        @apply --paper-material-elevation-1;
         @apply --layout-vertical;
         @apply --layout-flex;
       }
@@ -32,7 +31,7 @@
       }
     </style>
 
-    <div elevation="1">
+    <div class="paper-material" elevation="1">
       <h1>404 - Page not found!</h1>
       <a href$="[[rootPath]]partners/list">Head back home.</a>
     </div>
