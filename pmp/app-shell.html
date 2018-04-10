@@ -64,6 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/amendment-mode-mixin.html">
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
+<link rel="import" href="modules/mixins/ie11-mixin.html">
 
 <!-- import static data elements -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
@@ -254,6 +255,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.IE11
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.AppMenu,
@@ -263,7 +265,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsPmpApp.Mixins.ScrollControl,
       EtoolsPmpApp.Mixins.AmendmentMode,
       EtoolsPmpApp.Mixins.UserData,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.IE11
     ], Polymer.Element);
 
     /**
@@ -325,8 +328,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       constructor() {
         super();
-        // TODO: -polymer2 - integrate IE11 old behavior
-//        this.checkIE11Browser();
+        this.checkIE11Browser();
       }
 
       ready() {
@@ -335,8 +337,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.requestUserData();
         window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
 
-        // TODO: -polymer2 - integrate IE11 old behavior
-        // this.addIE11StyleTweaks();
+        this.addIE11StyleTweaks();
 
         if (this.module !== 'not-found') {
           /*
