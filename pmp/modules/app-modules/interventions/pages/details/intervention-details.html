@@ -91,6 +91,14 @@
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
       }
+      paper-toggle-button#showInactive {
+        --paper-toggle-button-label-color: white;
+        --paper-toggle-button-checked-bar-color: white;
+        padding-right: 10px;
+      }
+      div[slot="panel-btns"]#add-show-inactive-btns {
+        @apply --layout-horizontal;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -315,20 +323,24 @@
                             panel-title="PD Output or SSFA Expected Results ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
-            <div slot="panel-btns" id="edit-btns">
-              <paper-icon-button icon="add-box"
-                                 title="Add"
-                                 on-tap="openCpOutputAndRamIndicatorsDialog">
-              </paper-icon-button>
+              <div slot="panel-btns" id="add-show-inactive-btns">
+                <paper-toggle-button id="showInactive" hidden$="[[!thereAreInactiveIndicators]]" checked="[[showInactiveIndicators]]">
+                  Show Inactive
+                </paper-toggle-button>
+                <paper-icon-button icon="add-box"
+                                   title="Add"
+                                   on-tap="openCpOutputAndRamIndicatorsDialog">
+                </paper-icon-button>
             </div>
           </template>
           <expected-results id="expectedResults"
                             data-items="{{intervention.result_links}}"
                             selected-cp-structure="[[intervention.country_programme]]"
                             intervention-id="[[intervention.id]]"
-                            intervention-status="[[intervention.status]]"
+                            intervention="[[intervention]]"
                             indicator-location-options="[[originalIntervention.flat_locations]]"
                             indicator-section-options="[[originalIntervention.sections]]"
+                            show-inactive-indicators="[[showInactiveIndicators]]"
                             edit-mode="[[intervention.permissions.edit.result_links]]"
                             on-indicators-changed="_updateInteventionLocClustersSections">
           </expected-results>
@@ -471,6 +483,14 @@
           noOfPdOutputs: {
             type: String,
             value: '0'
+          },
+          thereAreInactiveIndicators: {
+            type: Boolean,
+            value: false
+          },
+          showInactiveIndicators: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -519,6 +539,17 @@
         this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
           return rl.ll_results.length;
         }).reduce((a, b) => a + b, 0);
+
+        if (!this.noOfPdOutputs) {
+          this.thereAreInactiveIndicators = false;
+        } else {
+          let noOfInactiveIndicators = this.intervention.result_links.forEach((rl) => {
+            return rl.ll_results.map(llr => {
+                    return llr.applied_indicators.filter(i => !i.active).lenth;
+                  }).reduce((a,b) => a + b, 0);
+          });
+          this.thereAreInactiveIndicators = !!noOfInactiveIndicators;
+        }
       }
 
       openCpOutputAndRamIndicatorsDialog() {

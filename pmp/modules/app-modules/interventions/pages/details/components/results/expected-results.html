@@ -86,7 +86,7 @@
                                        edit-mode$="[[editMode]]"
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
-                                       intervention-status="[[interventionStatus]]"
+                                       intervention="[[intervention]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
           </div>
@@ -143,7 +143,8 @@
             type: Boolean,
             value: true
           },
-          interventionStatus: String
+          intervention: String,
+          showInactiveIndicators: Boolean
         };
       }
 
@@ -181,6 +182,14 @@
         }
         this.removeCpOutputRamIndicatorsDialog();
         this.removeLowerResultNameDialog();
+        this.removeDeactivateIndicatorDialog();
+      }
+
+      removeDeactivateIndicatorDialog() {
+        let body = document.querySelector('body');
+        let dialogs = body.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
+        console.log('dialogs', dialogs);
+        dialogs.forEach(d => body.removeChild(d));
       }
 
       _dataItemsChanged(dataItemsLength) {
