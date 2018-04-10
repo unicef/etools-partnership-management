@@ -64,7 +64,7 @@
         padding-top: 0;
       }
 
-      .padd-left-with-items {
+      .padd-left-when-items {
         margin-left: 46px;
       }
 
@@ -92,7 +92,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index, editMode)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
                                  icon="cancel">
               </paper-icon-button>
             </div>
@@ -242,7 +242,7 @@
         if (!itemsLength) {
           return '';
         }
-        return 'padd-left-with-items';
+        return 'padd-left-when-items';
       }
 
       _getTotal(q1, q2, q3, q4) {
@@ -323,15 +323,6 @@
           return false;
         }
         return true;
-      }
-
-      _getSelectedYear(year) {
-        if (year && this.years.length) {
-          return this.years.filter(function(y) {
-            return y.value === parseInt(year, 10);
-          });
-        }
-        return [];
       }
 
       _yearChanged(event) {
