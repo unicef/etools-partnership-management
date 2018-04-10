@@ -24,8 +24,6 @@
 
       paper-dropdown-menu {
         width: 160px;
-        --paper-input-container-color: var(--countries-dropdown-color);
-        --paper-input-container-focus-color: var(--countries-dropdown-color);
         --paper-input-container-underline: {
           display: none;
         };
@@ -45,9 +43,8 @@
           align-self: flex-end;
         };
 
-        --paper-input-container-shared-input-style_-_color: var(--countries-dropdown-color);
-
-        --paper-dropdown-menu-input: {
+        --paper-input-container-input: {
+          color: var(--countries-dropdown-color);
           cursor: pointer;
           min-height: 24px;
           text-align: right;
