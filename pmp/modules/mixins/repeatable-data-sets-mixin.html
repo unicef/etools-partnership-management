@@ -78,6 +78,18 @@
         // remove delete confirmation dialog when the element is detached
         this.removeDialog(this.deleteDialog);
       }
+      /**
+       * selValue - the just selected value or id
+       * selIndex - the index of the selected data item
+       * itemValueName - the name of property to compare selValue against
+       */
+      isAlreadySelected(selValue, selIndex, itemValueName) {
+        let duplicateItems = this.dataItems.filter(function(item, index) {
+          return parseInt(item[itemValueName]) === parseInt(selValue)
+                  && parseInt(index) !== parseInt(selIndex);
+        });
+        return (duplicateItems && duplicateItems.length);
+      }
 
       _emptyList(listLength) {
         return listLength === 0;

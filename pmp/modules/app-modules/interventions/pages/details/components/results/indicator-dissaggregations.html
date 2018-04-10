@@ -126,16 +126,21 @@
       }
 
       _onDisaggregationSelected(event) {
-        if (!event.detail.item.item) {
+        let selectedDisagreg = JSON.parse(event.detail.item.getAttribute('item'));
+        if (!selectedDisagreg) {
           return;
         }
-        let selectedDisagreg = event.detail.item.item;
+
         let splitElId =  event.target.id.split('_');
         let index = splitElId[splitElId.length - 1];
 
-        if (this._isAlreadySelected(selectedDisagreg)) {
-          event.model.set('item', null);
-          event.model.set('item', {id: null});
+        if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
+          if (event.model.item.disaggregId === null) {
+            // an extra reset
+            event.model.set('item.disaggregId', 0);
+          }
+          event.model.set('item.disaggregId', null);
+          this._clearDisagregGroups(index);
           this.fireEvent('show-toast', {error: {response: 'Disaggregation already selected'}});
           return;
         }
@@ -143,25 +148,15 @@
 
       }
 
-      _isAlreadySelected(disagreg) {
-        let justSelectedOne = this.dataItems.filter(function(d) {
-          return !d.disaggregId;
-        }).length;
-        if (!justSelectedOne) {//we're on page load
-          return;
-        }
-        let duplicateItems = this.dataItems.filter(function(item) {
-          return parseInt(item.disaggregId) === parseInt(disagreg.id);
-        });
-        if (duplicateItems && duplicateItems.length) {
-          return true;
-        }
-        return false;
-      }
-
       _displayDisaggregationGroups(selectedDisagreg, index) {
-        this.shadowRoot.querySelector('#disaggregationGroups_' +
-            index).value = selectedDisagreg.disaggregation_values.map((d) => d.value).join('; ');
+        this._getDisagregGroupElem(index).value =
+            selectedDisagreg.disaggregation_values.map((d) => d.value).join('; ');
+      }
+      _clearDisagregGroups(index) {
+        this._getDisagregGroupElem(index).value = '';
+      }
+      _getDisagregGroupElem(index) {
+        return this.shadowRoot.querySelector('#disaggregationGroups_' + index);
       }
 
     }
