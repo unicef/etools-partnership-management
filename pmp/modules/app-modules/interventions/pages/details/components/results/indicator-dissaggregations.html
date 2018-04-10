@@ -134,7 +134,7 @@
         let splitElId =  event.target.id.split('_');
         let index = splitElId[splitElId.length - 1];
 
-        if (this._isAlreadySelected(selectedDisagreg, index)) {
+        if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
           if (event.model.item.disaggregId === null) {
             event.model.set('item.disaggregId', 0);//an extra reset
           }
@@ -145,16 +145,6 @@
         }
         this._displayDisaggregationGroups(selectedDisagreg, index);
 
-      }
-      _isAlreadySelected(disagreg, selIndex) {
-        let duplicateItems = this.dataItems.filter(function(item, index) {
-          return parseInt(item.disaggregId) === parseInt(disagreg.id)
-                  && parseInt(index) !== parseInt(selIndex);
-        });
-        if (duplicateItems && duplicateItems.length) {
-          return true;
-        }
-        return false;
       }
 
       _displayDisaggregationGroups(selectedDisagreg, index) {

@@ -109,7 +109,8 @@
                                  required
                                  error-message="Required"
                                  on-iron-select="_yearChanged"
-                                 readonly$="[[!editMode]]">
+                                 readonly$="[[!editMode]]"
+                                 auto-validate>
                 </etools-dropdown>
               </div>
               <div class="col col-1">
@@ -184,7 +185,7 @@
       </template>
     </div>
 
-    <div class="row-h no-top-padd" hidden$="[[!_emptyList(dataItems.length)]]">
+    <div class$="row-h [[_getNoPVMsgPadding(dataItems.length)]]" hidden$="[[!_emptyList(dataItems.length)]]">
       <p>There are no planned visits added.</p>
     </div>
 
@@ -243,6 +244,12 @@
           return '';
         }
         return 'padd-left-when-items';
+      }
+      _getNoPVMsgPadding(itemsLength) {
+        if (!itemsLength && this.editMode) {
+          return 'no-top-padd';
+        }
+        return '';
       }
 
       _getTotal(q1, q2, q3, q4) {
@@ -326,19 +333,16 @@
       }
 
       _yearChanged(event) {
-        if (this._plannedVisitIsAlreadySaved(event)) {// Avoid executing logic on page load
-          return;
-        }
         let yearSelected = event.detail.item.getAttribute('item') ? JSON.parse(event.detail.item.getAttribute('item')).value : null;
         let yearDropdown = this.shadowRoot.querySelector('#year_' + event.model.index);
 
-        if (this._yearAlreadySelected(yearSelected, event.model.index)) {
+        if (this.isAlreadySelected(yearSelected, event.model.index, 'year')) {
           this.fireEvent('toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
           this._clearSelectedYear(yearDropdown, event);
         }
       }
       /**
-       * Timeout because yearDropdown.selected is set after the execution of this method
+       * Timeout because yearDropdown.selected is set after the execution of _yearChanged method
        */
       _clearSelectedYear(yearDropdown, event) {
         setTimeout(() => {
@@ -347,26 +351,6 @@
           }
           this.set('dataItems.' + event.model.index + '.year', null);
         });
-      }
-
-      _plannedVisitIsAlreadySaved(event) {
-        return event.model.item && event.model.item.id;
-      }
-
-      _yearAlreadySelected(year, dropdownIdx) {
-        let dropdowns = this.shadowRoot.querySelectorAll('.year');
-        if (!dropdowns || !dropdowns.length) {
-          return false;
-        }
-        for (let i = 0; i < dropdowns.length; i++) {
-          if (dropdowns[i].selected) {
-            if (dropdownIdx !== i && dropdowns[i].selected === year) {
-              // already selected sector
-              return true;
-            }
-          }
-        }
-        return false;
       }
 
       /**
