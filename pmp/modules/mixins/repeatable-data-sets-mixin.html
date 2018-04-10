@@ -88,10 +88,7 @@
           return parseInt(item[itemValueName]) === parseInt(selValue)
                   && parseInt(index) !== parseInt(selIndex);
         });
-        if (duplicateItems && duplicateItems.length) {
-          return true;
-        }
-        return false;
+        return (duplicateItems && duplicateItems.length);
       }
 
       _emptyList(listLength) {

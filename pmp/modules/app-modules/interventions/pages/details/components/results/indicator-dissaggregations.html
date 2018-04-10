@@ -136,7 +136,8 @@
 
         if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
           if (event.model.item.disaggregId === null) {
-            event.model.set('item.disaggregId', 0);//an extra reset
+            // an extra reset
+            event.model.set('item.disaggregId', 0);
           }
           event.model.set('item.disaggregId', null);
           this._clearDisagregGroups(index);
