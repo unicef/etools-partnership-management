@@ -117,8 +117,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 12px 12px 12px 65px;
         position: fixed;
         bottom: 0;
-        width: calc(100% - var(--app-drawer-width, 0)); /* paper-buttons have a z-index of 51 */
-        z-index: 52;
+        width: calc(100% - var(--app-drawer-width, 0px)); /* 0px is an IE requirement */
+        z-index: 52; /* paper-buttons have a z-index of 51 */
       }
 
       /* TODO: polymer2 - make amendment mode as a new module with mixin file and style file */
