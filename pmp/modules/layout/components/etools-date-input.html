@@ -25,9 +25,10 @@
                  value="[[prettyDate(value)]]"
                  placeholder="[[placeholder]]"
                  on-down="openDatePicker"
+                 on-keypress="openDatePicker"
                  data-selector="datePickerButton"
                  disabled$="[[disabled]]"
-                 readonly$="[[readonly]]"
+                 readonly="[[true]]"
                  required$="[[required]]"
                  invalid$="[[invalid]]"
                  error-message="[[_getErrorMessage(errorMessage, invalid)]]">
@@ -135,6 +136,10 @@
             type: Boolean,
             value: false
           },
+          true: {
+            type: Boolean,
+            value: true
+          },
           validator: String
         };
       }
@@ -143,7 +148,6 @@
         super.connectedCallback();
         this.elemAttached = true;
         // makes the input not be editable while keeping the way it looks
-        this.$.dateInput.set('readonly', true);
       }
 
       _readonlyStateChange(newValue, oldValue) {
