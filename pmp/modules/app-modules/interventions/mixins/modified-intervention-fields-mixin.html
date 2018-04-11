@@ -28,7 +28,7 @@
     /**
      * Covers the case when the object from bk (this.originalIntervention)
      * has numbers but this.interventions has strings,
-     * so we convert everything to string before comparing
+     * so we convert numbers to string before comparing
      */
     numbersToString(key, value) {
       if (typeof value === 'number') {
