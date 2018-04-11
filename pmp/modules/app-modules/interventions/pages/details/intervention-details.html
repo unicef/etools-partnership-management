@@ -621,6 +621,7 @@
       _setYears(interventionStart, interventionEnd) {
         if (typeof interventionStart === 'string' && interventionStart !== ''
             && typeof interventionEnd === 'string' && interventionEnd !== '') {
+
           let start = parseInt(interventionStart.substr(0, 4), 10);
           let end = parseInt(interventionEnd.substr(0, 4), 10);
           let years = [];
@@ -632,6 +633,8 @@
             start++;
           }
           this.set('years', years);
+        } else {
+          this.set('years', []);
         }
       }
 
