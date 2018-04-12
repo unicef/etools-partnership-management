@@ -454,6 +454,7 @@
 
       _initFiltersMenuList(cpOutputs, unicefUsersData) {
         if (!cpOutputs || !unicefUsersData) {
+          // this is just to be safe, the method should only get triggered once when redux data is loaded
           return;
         }
 
