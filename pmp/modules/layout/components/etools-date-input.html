@@ -23,7 +23,7 @@
 
     <paper-input id="dateInput"
                  label="[[label]]"
-                 value="[[prettyDate(value)]]"
+                 value="[[readableDate(value)]]"
                  placeholder="[[placeholder]]"
                  on-down="openDatePicker"
                  data-selector="datePickerButton"
@@ -200,6 +200,13 @@
       // prevents the element from rendering an error message container when valid
       _getErrorMessage(message, invalid) {
         return invalid ? message: '';
+      }
+
+      readableDate(dateString, format) {
+        if (typeof dateString === 'string' && dateString !== '') {
+          return moment(this.prepareDate(dateString)).format(format ? format : 'D MMM YYYY');
+        }
+        return '';
       }
     }
 
