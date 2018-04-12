@@ -13,18 +13,18 @@
 
     prettyDate(dateString, format) {
       let date = this._convertDate(dateString);
-      return (!date)? '' : moment(date).format(format? format : 'D MMM YYYY');
+      return (!date) ? '' : moment(date).format(format ? format : 'D MMM YYYY');
     }
 
     utcPrettyDate(dateString, format) {
       let date = this._convertDate(dateString);
-      return (!date)? '' : moment.utc(date).format(format? format : 'D MMM YYYY');
+      return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
     }
 
     _convertDate(dateString) {
       if (typeof dateString === 'string' && dateString !== '') {
         let date = new Date(dateString);
-        return this.isValidDate(date)? date : null;
+        return this.isValidDate(date) ? date : null;
       }
       return null;
     }
