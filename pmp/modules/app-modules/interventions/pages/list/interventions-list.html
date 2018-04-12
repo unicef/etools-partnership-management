@@ -453,47 +453,47 @@
       }
 
       _initFiltersMenuList(cpOutputs, unicefUsersData) {
-        this._initFiltersDebouncer = Polymer.Debouncer.debounce(this._initFiltersDebouncer,
-            Polymer.Async.timeOut.after(50),
-            () => {
-              // init list filter options
-              // IMPORTANT!!!
-              // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
-              // IMPORTANT!!!
-              this.initListFiltersData([
-                {
-                  filterName: 'Country Programme Output',
-                  type: 'esmm', // etools-multi-selection-menu
-                  optionValue: 'id',
-                  optionLabel: 'name',
-                  selectionOptions: cpOutputs,
-                  alreadySelected: [],
-                  path: 'selectedCpOutputs'
-                },
-                {
-                  filterName: 'UNICEF focal point',
-                  type: 'esmm', // etools-multi-selection-menu
-                  optionValue: 'id',
-                  optionLabel: 'name',
-                  selectionOptions: unicefUsersData,
-                  alreadySelected: [],
-                  path: 'selectedUnicefFocalPoints'
-                },
-                {
-                  filterName: 'Starts After',
-                  type: 'datepicker', // etools-datepicker
-                  path: 'startDate',
-                  dateSelected: ''
-                },
-                {
-                  filterName: 'Ends Before',
-                  type: 'datepicker', // etools-datepicker
-                  path: 'endDate',
-                  dateSelected: ''
-                }
-              ]);
-              this._updateSelectedFiltersValues();
-            });
+        if (!cpOutputs || !unicefUsersData) {
+          return;
+        }
+
+        // init list filter options
+        // IMPORTANT!!!
+        // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+        // IMPORTANT!!!
+        this.initListFiltersData([
+          {
+            filterName: 'Country Programme Output',
+            type: 'esmm', // etools-multi-selection-menu
+            optionValue: 'id',
+            optionLabel: 'name',
+            selectionOptions: cpOutputs,
+            alreadySelected: [],
+            path: 'selectedCpOutputs'
+          },
+          {
+            filterName: 'UNICEF focal point',
+            type: 'esmm', // etools-multi-selection-menu
+            optionValue: 'id',
+            optionLabel: 'name',
+            selectionOptions: unicefUsersData,
+            alreadySelected: [],
+            path: 'selectedUnicefFocalPoints'
+          },
+          {
+            filterName: 'Starts After',
+            type: 'datepicker', // etools-datepicker
+            path: 'startDate',
+            dateSelected: ''
+          },
+          {
+            filterName: 'Ends Before',
+            type: 'datepicker', // etools-datepicker
+            path: 'endDate',
+            dateSelected: ''
+          }
+        ]);
+        this._updateSelectedFiltersValues();
       }
 
       // Input: URL query params
