@@ -98,7 +98,7 @@
         <div class="col col-4">
           <paper-input label="Core Values Last Assessment Date"
                        name="core_values_assessment_date"
-                       value="[[prettyDate(partner.core_values_assessment_date)]]"
+                       value="[[utcPrettyDate(partner.core_values_assessment_date)]]"
                        placeholder="&#8212;"
                        readonly>
             <div slot="prefix">
@@ -166,7 +166,7 @@
         <div class="col col-4">
           <!--Date last assessed-->
           <paper-input label="Date of Report"
-                       value="[[prettyDate(partner.last_assessment_date)]]"
+                       value="[[utcPrettyDate(partner.last_assessment_date)]]"
                        placeholder="&#8212;"
                        readonly>
             <div slot="prefix">

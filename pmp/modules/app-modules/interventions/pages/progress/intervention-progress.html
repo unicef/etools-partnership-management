@@ -382,7 +382,7 @@
         let resultStatusDateStr = '';
         let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
         if (latestIndReport) {
-          resultStatusDateStr = '(' + this.prettyDate(latestIndReport.submission_date) + ')';
+          resultStatusDateStr = '(' + this.utcPrettyDate(latestIndReport.submission_date) + ')';
         }
         return resultStatusDateStr;
       }
@@ -417,7 +417,7 @@
       }
 
       _getOverallPdStatusDate(date) {
-        return date ? ('(' + this.prettyDate(date) + ')') : '';
+        return date ? ('(' + this.utcPrettyDate(date) + ')') : '';
       }
 
     }

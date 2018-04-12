@@ -12,32 +12,29 @@
   EtoolsPmpApp.Mixins.Date = Polymer.dedupingMixin((baseClass) => class extends baseClass {
 
     prettyDate(dateString, format) {
-      if (!format) {
-        format = 'D MMM YYYY';
-      }
+      let date = this._convertDate(dateString);
+      return (!date)? '' : moment(date).format(format? format : 'D MMM YYYY');
+    }
+
+    utcPrettyDate(dateString, format) {
+      let date = this._convertDate(dateString);
+      return (!date)? '' : moment.utc(date).format(format? format : 'D MMM YYYY');
+    }
+
+    _convertDate(dateString) {
       if (typeof dateString === 'string' && dateString !== '') {
         let date = new Date(dateString);
-        if (this.isValidDate(date)) {
-          // using moment.utc() ensures that the date will not be changed no matter timezone the user has set
-          return moment.utc(date).format(format);
-        }
+        return this.isValidDate(date)? date : null;
       }
-      return '';
+      return null;
     }
 
     /*
      * Prepare date from string
      */
     prepareDate(dateString) {
-      if (typeof dateString === 'string' && dateString !== '') {
-        let date = new Date(dateString);
-        if (!this.isValidDate(date)) {
-          date = new Date();
-        }
-        return date;
-      } else {
-        return new Date();
-      }
+      let date = this._convertDate(dateString);
+      return date || new Date();
     }
 
     /*
