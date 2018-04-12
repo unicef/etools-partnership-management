@@ -141,6 +141,7 @@
           if (this.intervention.hasOwnProperty('prc_review_document') &&
               !(this.intervention.prc_review_document instanceof File)) {
             delete interventionData.prc_review_document;
+            delete interventionData.prc_review_document_file;
           }
           return interventionData;
         }

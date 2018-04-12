@@ -178,7 +178,8 @@
           <intervention-review-and-sign id="interventionReviewAndSign"
                                         name="review-and-sign"
                                         intervention="{{intervention}}"
-                                        agreement="[[agreement]]">
+                                        agreement="[[agreement]]"
+                                        can-edit-amendments="[[intervention.permissions.edit.amendments]]">
           </intervention-review-and-sign>
         </template>
 
@@ -576,9 +577,16 @@
 
       _refreshInterventionPermissions(e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.refreshPermissions().then(() => {
-          this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
-        });
+        this.$.interventionData.refreshPermissions()
+            .then((resp) => {
+              if (!_.isEmpty(resp.permissions)) {
+                this.set('intervention.permissions', resp.permissions);
+                this.set('originalIntervention.in_amendment', resp.in_amendment);
+              }
+            })
+            .then(() => {
+              this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
+            });
       }
 
       _updateInterventionStatus(e) {
