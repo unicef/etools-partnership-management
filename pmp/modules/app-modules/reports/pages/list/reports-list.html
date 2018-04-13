@@ -89,8 +89,6 @@
   <script>
     'use strict';
 
-    let _reportsLastNavigated = null;
-
     /**
      * @polymer
      * @mixinFunction
@@ -169,13 +167,21 @@
           _initComplete: {
             type: Boolean,
             value: false
+          },
+          filtersInitTimeoutInterval: {
+            type: Number,
+            value: 2400 // miliseconds
+          },
+          filtersInitTimeIsUp: {
+            type: Boolean,
+            value: false
           }
         };
       }
 
       static get observers() {
         return [
-          '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
+          '_initListFilters(partners, cpOutputs, sections, reportStatuses, filtersInitTimeIsUp)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, urlParams, _filtersInitialized, paginator)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
@@ -190,61 +196,64 @@
          * triggered by parent element on stamp
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+        window.setTimeout(() => {
+          this.set('filtersInitTimeIsUp', true);
+        }, this.filtersInitTimeoutInterval);
       }
 
-      _initListFilters(partners, cpOutputs, sections, reportStatuses) {
+      _initListFilters(partners, cpOutputs, sections, reportStatuses, timeIsUp) {
         if (!partners || !cpOutputs || !sections || !reportStatuses) {
-          // TODO: polymer2 - check if this condition is working properly for p2 observer (running with undefined agrs)
           return;
         }
-        this._initFiltersDebouncer = Polymer.Debouncer.debounce(this._initFiltersDebouncer,
-            Polymer.Async.timeOut.after(0),
-            () => {
-              // init list filter options
-              // IMPORTANT!!!
-              // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
-              // IMPORTANT!!!
-              this.initListFiltersData([
-                {
-                  filterName: 'Partner',
-                  type: 'esmm',
-                  optionValue: 'value',
-                  optionLabel: 'label',
-                  selectionOptions: partners,
-                  alreadySelected: null,
-                  path: 'queryParams.external_partner_id'
-                },
-                {
-                  filterName: 'CP Output',
-                  type: 'esmm',
-                  optionValue: 'id',
-                  optionLabel: 'name',
-                  selectionOptions: cpOutputs,
-                  alreadySelected: null,
-                  path: 'queryParams.cp_output'
-                },
-                {
-                  filterName: 'Section',
-                  type: 'esmm',
-                  optionValue: 'id',
-                  optionLabel: 'name',
-                  selectionOptions: sections,
-                  alreadySelected: null,
-                  path: 'queryParams.section'
-                },
-                {
-                  filterName: 'Report Status',
-                  type: 'esmm',
-                  optionValue: 'value',
-                  optionLabel: 'label',
-                  selectionOptions: reportStatuses,
-                  alreadySelected: null,
-                  path: 'queryParams.status'
-                }
-              ]);
-              this._updateSelectedFiltersValues();
-              this.set('_filtersInitialized', true);
-            });
+        let allDataLoaded = partners.length && cpOutputs.length && sections.length && reportStatuses.length;
+
+        if (!allDataLoaded && !timeIsUp) {
+          return;
+        }
+        // init list filter options
+        // IMPORTANT!!!
+        // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+        // IMPORTANT!!!
+        this.initListFiltersData([
+          {
+            filterName: 'Partner',
+            type: 'esmm',
+            optionValue: 'value',
+            optionLabel: 'label',
+            selectionOptions: partners,
+            alreadySelected: null,
+            path: 'queryParams.external_partner_id'
+          },
+          {
+            filterName: 'CP Output',
+            type: 'esmm',
+            optionValue: 'id',
+            optionLabel: 'name',
+            selectionOptions: cpOutputs,
+            alreadySelected: null,
+            path: 'queryParams.cp_output'
+          },
+          {
+            filterName: 'Section',
+            type: 'esmm',
+            optionValue: 'id',
+            optionLabel: 'name',
+            selectionOptions: sections,
+            alreadySelected: null,
+            path: 'queryParams.section'
+          },
+          {
+            filterName: 'Report Status',
+            type: 'esmm',
+            optionValue: 'value',
+            optionLabel: 'label',
+            selectionOptions: reportStatuses,
+            alreadySelected: null,
+            path: 'queryParams.status'
+          }
+        ]);
+        this._updateSelectedFiltersValues();
+        this.set('_filtersInitialized', true);
       }
 
       // update selected filters(prezent in URL) at page refresh
