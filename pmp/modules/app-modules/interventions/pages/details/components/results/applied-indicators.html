@@ -71,7 +71,6 @@
         let deactivateDialog = document.querySelector('body')
                                 .querySelector('etools-dialog#deactivateIndicatorDialog');
         if (deactivateDialog) {
-          console.log('deactivateConfirmDialog', this.deactivateConfirmDialog, deactivateDialog);
           this.deactivateConfirmDialog = deactivateDialog;
         } else {
           this._createDeactivateConfirmDialog();
@@ -79,7 +78,7 @@
       }
 
       _isInactive(indicator, showInactiveIndicators) {
-        if (indicator.active) {
+        if (indicator.is_active) {
           return false;
         }
         return showInactiveIndicators;
@@ -94,8 +93,7 @@
           cancelBtnText: 'Cancel',
           size: 'md',
           content: dialogContent,
-          id: 'deactivateIndicatorDialog',
-          closeCallback: this._onDeactivateConfirmation.bind(this)
+          id: 'deactivateIndicatorDialog'
         });
         document.querySelector('body').appendChild( this.deactivateConfirmDialog);
         console.log('added deactivate dialog');
@@ -117,25 +115,33 @@
       }
 
       _openDeactivateConfirmation(event) {
-         this.indicToDeactivateIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
-         this.deactivateConfirmDialog.opened = true;
-       },
+        this.indicToDeactivateIndex = parseInt(event.target.getAttribute('data-args'), 10);
+        this.onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
+        this.deactivateConfirmDialog.addEventListener('close', this.onDeactivateHandler);
+        this.deactivateConfirmDialog.opened = true;
+      }
 
       _onDeactivateConfirmation(event) {
+        this.deactivateConfirmDialog.removeEventListener('close', this.onDeactivateHandler);
+
         if (!event.detail.confirmed) {
           this.indicToDeactivateIndex = -1;
           return;
         }
-        let indicatorId = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex].id : null;
+        let indicator = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex] : {};
+        let indicatorId = indicator.id;
         if (!indicatorId) {
           return;
         }
         let self = this;
-        let endpoint = this.getEndpoint('deactivateIndicator', {id: indicatorId});
+        let endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
         this.sendRequest({
           method: 'PATCH',
           endpoint: endpoint,
-          body: {}
+          body: {
+            section: indicator.section, // TODO - has to be fixed on bk so that I don't have to send section also
+            is_active: false
+          }
         }).then(function(resp) {
           self._handleDeactivateResponse(resp);
         }).catch(function(error) {
@@ -145,14 +151,14 @@
 
       _handleDeactivateResponse(resp) {
         console.log('deactivate response', resp);
-         this.dataItems[this.indicToDeactivateIndex].active = false;
-         this.indicToDeactivateIndex = -1;
-       }
+        this.set(['dataItems', this.indicToDeactivateIndex], resp);
+        this.indicToDeactivateIndex = -1;
+      }
 
        _handleDeactivateError(err) {
-         console.log('deactivate err', err);
-         this.indicToDeactivateIndex = -1;
-       }
+        console.log('deactivate err', err);
+        this.indicToDeactivateIndex = -1;
+      }
     }
 
     window.customElements.define(AppliedIndicators.is, AppliedIndicators);

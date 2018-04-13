@@ -68,7 +68,7 @@
           },
           showDeactivate: {
             tye: Boolean,
-            value: true
+            value: false
           }
         };
       }
@@ -82,7 +82,7 @@
       }
 
       _onDeactivate() {
-        this.fire('deactivate');
+        this.fireEvent('deactivate');
       }
 
     }

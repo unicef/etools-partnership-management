@@ -85,7 +85,7 @@
         <div class="col-2 right-align">
           [[_displayIndicatorValue(indicator.target)]]
         </div>
-        <edit-delete-actions hidden$="[[!editMode]]" show-deactivate="[[intervention.in_amendment]]"
+        <edit-delete-actions hidden$="[[!editMode]]" show-deactivate="[[_showDeactivate(intervention.in_amendment, indicator.is_active)]]"
                              show-delete="[[_showDelete(intervention.status)]]">
         </edit-delete-actions>
       </div>
@@ -182,6 +182,9 @@
         this.addEventListener('delete', this._deleteIndicator.bind(this));
         this.addEventListener('deactivate', this._deactivateIndicator);
       }
+      _showDeactivate(inAmendment, indicIsActive) {
+        return (inAmendment && indicIsActive);
+      }
 
       _showDelete(interventionStatus) {
         return (!interventionStatus || interventionStatus === 'draft');
@@ -210,7 +213,7 @@
 
       _deactivateIndicator(e) {
         e.stopPropagation();
-        this.fire('deactivate-indicator');
+        this.fireEvent('deactivate-indicator');
       }
 
       _updateCollapsableIconBg(indicator) {
@@ -315,7 +318,7 @@
       }
 
       _addInactivePrefix(indicator) {
-        if (!indicator || indicator.active) {
+        if (!indicator || indicator.is_active) {
           return '';
         }
         return '(inactive)';

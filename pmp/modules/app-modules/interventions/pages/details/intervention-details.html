@@ -532,8 +532,10 @@
       }
 
       _updateNoOfPdOutputs() {
+        console.log('_updateNoOfPdOutputs');
         if (!this.intervention.result_links) {
           this.noOfPdOutputs = 0;
+          this.thereAreInactiveIndicators = false;
           return;
         }
         this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
@@ -545,7 +547,7 @@
         } else {
           let noOfInactiveIndicators = this.intervention.result_links.forEach((rl) => {
             return rl.ll_results.map(llr => {
-                    return llr.applied_indicators.filter(i => !i.active).lenth;
+                    return llr.applied_indicators.filter(i => !i.is_active).lenth;
                   }).reduce((a,b) => a + b, 0);
           });
           this.thereAreInactiveIndicators = !!noOfInactiveIndicators;
