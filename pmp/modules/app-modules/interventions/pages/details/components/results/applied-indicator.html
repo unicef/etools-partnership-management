@@ -76,7 +76,7 @@
       <div slot="row-data" class="p-relative">
         <div class="col-8">
             [[_getIndicatorType(indicator.indicator.unit)]]
-            <b>[[_addInactivePrefix(indicator)]]</b>
+            <strong>[[_addInactivePrefix(indicator)]]</strong>
             [[_getIndicatorTitle(indicator)]]
         </div>
         <div class="col-2 right-align">
@@ -318,10 +318,7 @@
       }
 
       _addInactivePrefix(indicator) {
-        if (!indicator || indicator.is_active) {
-          return '';
-        }
-        return '(inactive)';
+        return (!indicator || indicator.is_active) ? '' : '(inactive)';
       }
 
       _lengthIs0(length) {
