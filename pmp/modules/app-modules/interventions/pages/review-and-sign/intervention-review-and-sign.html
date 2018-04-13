@@ -206,12 +206,12 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
-      <pd-amendments intervention-document-type="[[intervention.document_type]]"
+      <pd-amendments class="content-section"
+                     intervention-document-type="[[intervention.document_type]]"
                      intervention-id="[[intervention.id]]"
-                     class="content-section"
                      amend-action-in-progress="{{intervention.in_amendment}}"
-                     data-items="{{intervention.amendments}}"
-                     edit-mode="[[intervention.permissions.edit.amendments]]">
+                     amendments="{{intervention.amendments}}"
+                     edit-mode="[[canEditAmendments]]">
       </pd-amendments>
     </template>
 
@@ -286,6 +286,10 @@
           unicefDateValidatorErrorMessage: {
             type: String,
             value: ''
+          },
+          canEditAmendments: {
+            type: Boolean,
+            value: false
           }
         };
       }

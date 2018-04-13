@@ -67,7 +67,7 @@
         <etools-data-table-header id="listHeader"
                                   no-collapse
                                   no-title
-                                  hidden$="[[_emptyList(dataItems.length)]]">
+                                  hidden$="[[_emptyList(amendments.length)]]">
           <etools-data-table-column class="col-1">
             Ref #
           </etools-data-table-column>
@@ -85,7 +85,7 @@
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template is="dom-repeat" items="[[dataItems]]">
+        <template is="dom-repeat" items="[[amendments]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
               <span class="col-data col-1">
@@ -114,7 +114,7 @@
             </div>
           </etools-data-table-row>
         </template>
-        <template is="dom-if" if="[[_emptyList(dataItems.length)]]">
+        <template is="dom-if" if="[[_emptyList(amendments.length)]]">
           <div class="row-h">
             <p>There are no amendments added.</p>
           </div>
@@ -153,6 +153,11 @@
 
       static get properties() {
         return {
+          amendments: {
+            type: Array,
+            value: [],
+            notify: true
+          },
           filteredAmendmentTypes: Object,
           amendmentTypes: {
             type: Object,
@@ -170,7 +175,7 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            reflectToAttribute: true
           },
           interventionId: {
             type: Number
@@ -180,7 +185,7 @@
 
       static get observers() {
         return [
-          '_dataHasChanged(dataItems)'
+          '_dataHasChanged(amendments)'
         ];
       }
 
@@ -232,14 +237,14 @@
         event.stopImmediatePropagation();
         let data = event.detail;
         this._unlockInterventionDetailsFields();
-        this.push('dataItems', data);
+        this.push('amendments', data);
         this.set('amendActionInProgress', true);
         this.fireEvent('new-amendment-added');
       }
 
-      _dataHasChanged(dataItems) {
-        if (dataItems instanceof Array === false) {
-          this.set('dataItems', []);
+      _dataHasChanged(amendments) {
+        if (amendments instanceof Array === false) {
+          this.set('amendments', []);
         }
       }
 

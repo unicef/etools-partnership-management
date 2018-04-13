@@ -51,7 +51,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!-- import toast notifications elements -->
 <link rel="import" href="modules/toast-notifications/toast-notifications-mixin.html">
-<link rel="import" href="modules/toast-notifications/toast-notifications-style.html">
 
 <!-- import user data mixin -->
 <link rel="import" href="modules/user/user-data-mixin.html">
@@ -81,7 +80,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="app-shell">
   <template>
-    <style include="app-drawer-styles page-layout-styles shared-styles toast-notifications-style buttons-styles">
+    <style include="app-drawer-styles page-layout-styles shared-styles buttons-styles">
       :host {
         display: block;
       }
@@ -117,8 +116,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 12px 12px 12px 65px;
         position: fixed;
         bottom: 0;
-        width: calc(100% - var(--app-drawer-width, 0)); /* paper-buttons have a z-index of 51 */
-        z-index: 52;
+        width: calc(100% - var(--app-drawer-width, 0px)); /* 0px instead of 0 is an IE requirement */
+        z-index: 52; /* paper-buttons have a z-index of 51 */
       }
 
       /* TODO: polymer2 - make amendment mode as a new module with mixin file and style file */

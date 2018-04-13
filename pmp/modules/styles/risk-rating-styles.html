@@ -5,16 +5,16 @@
 <dom-module id="risk-rating-styles">
   <template>
     <style>
-
       :host {
         --risk-rating-field: {
           width: 100%;
-          height: 19px;
+          height: 24px;
           text-align: center;
           padding: 0 5px;
           background-color: var(--risk-rating-significant-color);
           color: var(--light-primary-text-color);
-          text-transform: uppercase;
+          /* TODO: capitalize might not be applied, iron-input bug */
+          text-transform: capitalize;
           box-sizing: border-box;
         };
 
@@ -39,21 +39,19 @@
           background-color: var(--risk-rating-significant-color);
         };
 
-        /* TODO - style below might not even be applied because of the missing ':' */
-        --risk-rating-unavailable {
+        --risk-rating-unavailable: {
           @apply --risk-rating-field;
           background-color: var(--risk-rating-default-color);
-          color: var(--primary-text-color);
           text-align: left;
-          text-transform: capitalize;
           padding-left: 0;
         };
-        --risk-rating-not-assessed {
+        --risk-rating-not-assessed: {
           @apply --risk-rating-field;
           background-color: var(--risk-rating-not-assesed-color);
           color: var(--dark-secondary-text-color);
         };
       }
+
       .risk-rating-field {
         width: auto;
       }
@@ -61,6 +59,7 @@
       span.risk-rating-field.low {
         @apply --risk-rating-low;
       }
+
       .risk-rating-field.low {
         --paper-input-container-input: {
           @apply --risk-rating-low;
@@ -70,6 +69,7 @@
       span.risk-rating-field.moderate {
         @apply --risk-rating-moderate;
       }
+
       .risk-rating-field.moderate {
         --paper-input-container-input: {
           @apply --risk-rating-moderate;
@@ -79,6 +79,7 @@
       span.risk-rating-field.high {
         @apply --risk-rating-high;
       }
+
       .risk-rating-field.high {
         --paper-input-container-input: {
           @apply --risk-rating-high;
@@ -88,6 +89,7 @@
       span.risk-rating-field.significant {
         @apply --risk-rating-significant;
       }
+
       .risk-rating-field.significant {
         --paper-input-container-input: {
           @apply --risk-rating-significant;
@@ -97,6 +99,7 @@
       span.risk-rating-field.unavailable {
         @apply --risk-rating-unavailable;
       }
+
       .risk-rating-field.unavailable {
         --paper-input-container-input: {
           @apply --risk-rating-unavailable;
@@ -104,8 +107,9 @@
       }
 
       span.risk-rating-field.non-assessed {
-          @apply --risk-rating-not-assessed;
+        @apply --risk-rating-not-assessed;
       }
+
       .risk-rating-field.non-assessed {
         --paper-input-container-input: {
           @apply --risk-rating-not-assessed;
