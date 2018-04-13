@@ -324,7 +324,7 @@
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
               <div slot="panel-btns" id="add-show-inactive-btns">
-                <paper-toggle-button id="showInactive" hidden$="[[!thereAreInactiveIndicators]]" checked="[[showInactiveIndicators]]">
+                <paper-toggle-button id="showInactive" hidden$="[[!thereAreInactiveIndicators]]" checked="{{showInactiveIndicators}}">
                   Show Inactive
                 </paper-toggle-button>
                 <paper-icon-button icon="add-box"

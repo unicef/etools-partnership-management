@@ -10,6 +10,9 @@
 <dom-module id="applied-indicators">
   <template strip-whitespace>
     <style>
+      [hidden] {
+        display: none !important;
+      }
       applied-indicator {
         margin-right: -24px;
       }
@@ -17,7 +20,7 @@
     <template is="dom-repeat"
               items="[[dataItems]]"
               as="indicator" index-as="indicatorIndex">
-      <applied-indicator hidden$="[[_isInactive(indicator, showInactiveIndicators)]]"
+      <applied-indicator hidden$="[[_hideIndicator(indicator, showInactiveIndicators)]]"
                          data-args$="[[indicatorIndex]]"
                          on-edit-indicator="_editIndicator"
                          on-delete-indicator="_openDeleteConfirmation"
@@ -77,11 +80,11 @@
         }
       }
 
-      _isInactive(indicator, showInactiveIndicators) {
-        if (indicator.is_active) {
-          return false;
+      _hideIndicator(indicator, showInactiveIndicators) {
+        if (!indicator.is_active) {
+          return !showInactiveIndicators;
         }
-        return showInactiveIndicators;
+        return false;
       }
 
       _createDeactivateConfirmDialog() {

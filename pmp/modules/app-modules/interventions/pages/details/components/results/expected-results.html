@@ -87,6 +87,7 @@
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
                                        intervention="[[intervention]]"
+                                       show-inactive-indicators="[[showInactiveIndicators]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
           </div>
@@ -144,7 +145,10 @@
             value: true
           },
           intervention: String,
-          showInactiveIndicators: Boolean
+          showInactiveIndicators: {
+            type: Boolean,
+            value: false
+          }
         };
       }
 
