@@ -31,6 +31,10 @@
      * so we convert numbers to string before comparing
      */
     numbersToString(key, value) {
+      if (value === '0.00') {
+        // cover the case where API received values (ex: planned budget) can be strings like this `0.00`
+        return '0';
+      }
       if (typeof value === 'number') {
         return value.toString();
       }
