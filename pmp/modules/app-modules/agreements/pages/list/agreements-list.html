@@ -318,6 +318,10 @@
       }
 
       _initFiltersMenuList(partnersDropdownData) {
+        if (!partnersDropdownData) {
+          // this is just to be safe, the method should only get triggered once when redux data is loaded
+          return;
+        }
         // init list filter options
         this.initListFiltersData([
           {
