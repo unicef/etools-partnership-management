@@ -65,18 +65,16 @@
             return;
           }
           let showPrpTabs = this.showPrpReports();
-          this.interventionTabs.forEach((t, index) => {
+          let tabs = JSON.parse(JSON.stringify(this.interventionTabs));
+          tabs.forEach((t) => {
             if (t.tab === 'overview') {
-              this._updateTabProperty(index, 'hidden', newInterventionActive);
+              t.hidden = newInterventionActive;
             }
             if (['reports', 'progress'].indexOf(t.tab) > -1) {
-              this._updateTabProperty(index, 'hidden', !showPrpTabs || newInterventionActive);
+              t.hidden = !showPrpTabs || newInterventionActive;
             }
           });
-        }
-
-        _updateTabProperty(tabIndex, property, value) {
-          this.set(['interventionTabs', tabIndex, property], value);
+          this.set('interventionTabs', tabs);
         }
 
       });
