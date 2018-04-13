@@ -1,12 +1,12 @@
-<link rel="import" href="../../../bower_components/polymer/lib/utils/render-status.html">
-
 <script>
+  'use strict';
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
- /**
-  * @polymer
-  * @mixinFunction
-  */
+  /**
+   * @polymer
+   * @mixinFunction
+   */
   EtoolsPmpApp.Mixins.AmendmentMode = (baseClass) => class extends baseClass {
 
     static get properties() {
@@ -17,6 +17,7 @@
         }
       };
     }
+
     connectedCallback() {
       super.connectedCallback();
       this.addEventListener('set-amendment-mode', this._updateAmendmentMode);
