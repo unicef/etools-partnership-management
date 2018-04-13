@@ -99,7 +99,6 @@
           id: 'deactivateIndicatorDialog'
         });
         document.querySelector('body').appendChild( this.deactivateConfirmDialog);
-        console.log('added deactivate dialog');
       }
 
       _editIndicator(event) {
@@ -153,13 +152,11 @@
       }
 
       _handleDeactivateResponse(resp) {
-        console.log('deactivate response', resp);
         this.set(['dataItems', this.indicToDeactivateIndex], resp);
         this.indicToDeactivateIndex = -1;
       }
 
        _handleDeactivateError(err) {
-        console.log('deactivate err', err);
         this.indicToDeactivateIndex = -1;
       }
     }

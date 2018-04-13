@@ -192,7 +192,6 @@
       removeDeactivateIndicatorDialog() {
         let body = document.querySelector('body');
         let dialogs = body.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
-        console.log('dialogs', dialogs);
         dialogs.forEach(d => body.removeChild(d));
       }
 
