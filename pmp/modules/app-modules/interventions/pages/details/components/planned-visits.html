@@ -240,16 +240,10 @@
       }
 
       _getAddBtnPadding(itemsLength) {
-        if (!itemsLength) {
-          return '';
-        }
-        return 'padd-left-when-items';
+        return !itemsLength ? '' : 'padd-left-when-items';
       }
       _getNoPVMsgPadding(itemsLength) {
-        if (!itemsLength && this.editMode) {
-          return 'no-top-padd';
-        }
-        return '';
+        return (!itemsLength && this.editMode) ? 'no-top-padd' : '';
       }
 
       _getTotal(q1, q2, q3, q4) {
@@ -323,13 +317,9 @@
         if (!editMode || !this.dataItems || !this.dataItems.length) {
           return false;
         }
-        var plannedVisit = this.dataItems[index];
-        var plannedVisitId = parseInt(plannedVisit.id, 10);
-        if (plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0) {
-          // planned visit already saved (has an id assigned)
-          return false;
-        }
-        return true;
+        let plannedVisit = this.dataItems[index];
+        let plannedVisitId = parseInt(plannedVisit.id, 10);
+        return !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0);
       }
 
       _yearChanged(event) {
