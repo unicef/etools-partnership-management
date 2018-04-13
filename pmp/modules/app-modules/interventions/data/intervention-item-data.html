@@ -92,7 +92,7 @@
         });
       }
 
-      refreshPermissions() {
+      _reqInterventionDataWithoutRespHandling() {
         let self = this;
         let options = {
           endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})

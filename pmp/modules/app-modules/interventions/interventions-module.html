@@ -577,7 +577,7 @@
 
       _refreshInterventionPermissions(e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.refreshPermissions()
+        this.$.interventionData._reqInterventionDataWithoutRespHandling()
             .then((resp) => {
               if (!_.isEmpty(resp.permissions)) {
                 this.set('intervention.permissions', resp.permissions);
