@@ -15,11 +15,11 @@
       let date = this._convertDate(dateString);
       return (!date) ? '' : moment(date).format(format ? format : 'D MMM YYYY');
     }
-
-    utcPrettyDate(dateString, format) {
-      let date = this._convertDate(dateString);
-      return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
-    }
+    // Comented because it's not yet clear wether we should convert dates or not
+    // utcPrettyDate(dateString, format) {
+    //   let date = this._convertDate(dateString);
+    //   return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
+    // }
 
     _convertDate(dateString) {
       if (typeof dateString === 'string' && dateString !== '') {

@@ -388,7 +388,7 @@
       <template is="dom-repeat" items="[[engagements]]">
         <div class="assessment-row panel-table-row layout-horizontal">
           <div class="col-3">[[_displayType(item.engagement_type)]]</div>
-          <div class="col-2">[[utcPrettyDate(item.status_date)]]</div>
+          <div class="col-2">[[prettyDate(item.status_date)]]</div>
           <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
           <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
           <a class="report col" target="_blank"
@@ -580,8 +580,8 @@
         this.set('basisOptions', [
           ...this.basisOptions,
           ...this.partner.assessments.map((a) => ({
-            label: `${a.type} - ${this.utcPrettyDate(a.completed_date)}`,
-            value: `${a.type} - ${this.utcPrettyDate(a.completed_date)}`
+            label: `${a.type} - ${this.prettyDate(a.completed_date)}`,
+            value: `${a.type} - ${this.prettyDate(a.completed_date)}`
           }))
         ]);
       }
@@ -590,8 +590,8 @@
         this.set('basisOptions', [
           ...this.basisOptions,
           ...engagements.map((e) => ({
-            label: `${this.TYPES[e.engagement_type]} - ${this.utcPrettyDate(e.status_date)}`,
-            value: `${this.TYPES[e.engagement_type]} - ${this.utcPrettyDate(e.status_date)}`
+            label: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`,
+            value: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`
           }))
         ]);
       }

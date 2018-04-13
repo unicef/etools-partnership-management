@@ -16,7 +16,7 @@
     getDisplayValue(value, isDate, separator, skipSpaces) {// TODO - apply single responsability
       if (typeof value === 'string' && value !== '') {
         if (isDate) {
-          return this.utcPrettyDate(value);
+          return this.prettyDate(value);
         } else {
           return value;
         }
