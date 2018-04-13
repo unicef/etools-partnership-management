@@ -545,13 +545,15 @@
         if (!this.noOfPdOutputs) {
           this.thereAreInactiveIndicators = false;
         } else {
-          let noOfInactiveIndicators = this.intervention.result_links.forEach((rl) => {
-            return rl.ll_results.map(llr => {
-                    return llr.applied_indicators.filter(i => !i.is_active).lenth;
-                  }).reduce((a,b) => a + b, 0);
-          });
-          this.thereAreInactiveIndicators = !!noOfInactiveIndicators;
+          this.thereAreInactiveIndicators = !!this._getNoOFInactiveIndicators();
         }
+      }
+      _getNoOFInactiveIndicators() {
+        return this.intervention.result_links.map((rl) => {
+            return rl.ll_results.map(llr => {
+                    return llr.applied_indicators.filter(i => !i.is_active).length;
+                  }).reduce((a,b) => a + b, 0);
+          }).reduce((a,b) => a + b, 0);
       }
 
       openCpOutputAndRamIndicatorsDialog() {
