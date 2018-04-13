@@ -92,15 +92,12 @@
         });
       }
 
-      refreshPermissions() {
+      _reqInterventionDataWithoutRespHandling() {
         let self = this;
         let options = {
           endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
         };
-        return this.sendRequest(options).then(function(resp) {
-          self.set('intervention.permissions', resp.permissions);
-          self.set('originalIntervention.in_amendment', resp.in_amendment);
-        }).catch(function(error) {
+        return this.sendRequest(options).catch(function(error) {
           self._handleErrorResponse(error, 'GET');
         });
       }
