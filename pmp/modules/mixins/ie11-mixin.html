@@ -42,7 +42,7 @@
       let appHeaderLayout = this.$.appHeadLayout;
       appHeaderLayout.removeAttribute('fullbleed');
       appHeaderLayout.set('hasScrollingRegion', false);
-      appHeaderLayout.style.minHeight = '100%';
+      appHeaderLayout.style.height = '100%';
       let contentContainer = appHeaderLayout.shadowRoot.querySelector('#contentContainer');
       if (!contentContainer) {// TODO: polymer2 -remove after test
         console.warn('contentContainer not found !!!');
