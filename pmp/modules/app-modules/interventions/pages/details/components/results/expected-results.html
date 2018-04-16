@@ -16,7 +16,7 @@
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../layout/components/etools-form-element-wrapper.html">
-<link rel="import" href="../../../../../../layout/components/edit-delete-actions.html">
+<link rel="import" href="../../../../../../layout/components/icons-actions.html">
 
 <link rel="import" href="mixins/results-mixin.html">
 <link rel="import" href="mixins/lower-results-mixin.html">
@@ -49,11 +49,11 @@
         width: 100%;
       }
 
-      edit-delete-actions {
+      icons-actions {
         visibility: hidden;
       }
 
-      etools-data-table-row div[slot="row-data"]:hover edit-delete-actions {
+      etools-data-table-row div[slot="row-data"]:hover icons-actions {
         visibility: visible;
       }
 
@@ -74,11 +74,11 @@
               <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
                 <span class="ram-indicator-name">[[ramIndicatorName]]</span>
               </template>
-              <edit-delete-actions hidden$="[[!editMode]]"
+              <icons-actions hidden$="[[!editMode]]"
                                    data-args$="[[index]]"
                                    on-edit="_editCpOutputAndRamIndicators"
                                    on-delete="_openDeleteConfirmation">
-              </edit-delete-actions>
+              </icons-actions>
             </div>
           </div>
           <div slot="row-data-details">

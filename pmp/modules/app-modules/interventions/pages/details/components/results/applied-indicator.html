@@ -11,7 +11,7 @@
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
 
-<link rel="import" href="../../../../../../layout/components/edit-delete-actions.html">
+<link rel="import" href="../../../../../../layout/components/icons-actions.html">
 
 <dom-module id="applied-indicator">
   <template strip-whitespace>
@@ -26,7 +26,7 @@
         --list-bg-color: #eeeeee !important;
         --list-second-bg-color: #dfdfdf !important;
         --list-icon-color: white !important;
-        --edit-delete-actions: {
+        --icons-actions: {
           background-color: #dfdfdf !important;
           margin-right: -8px;
         };
@@ -58,11 +58,11 @@
         padding-left: 16px;
       }
 
-      edit-delete-actions {
+      icons-actions {
         visibility: hidden;
       }
 
-      etools-data-table-row div[slot="row-data"]:hover edit-delete-actions {
+      etools-data-table-row div[slot="row-data"]:hover icons-actions {
         visibility: visible;
       }
 
@@ -84,10 +84,11 @@
         <div class="col-2 right-align">
           [[_displayIndicatorValue(indicator.target)]]
         </div>
-        <edit-delete-actions hidden$="[[!editMode]]"
+        <icons-actions hidden$="[[!editMode]]"
+                             show-edit="[[indicator.is_active]]"
                              show-deactivate="[[_showDeactivate(intervention.in_amendment, indicator.is_active)]]"
                              show-delete="[[_showDelete(intervention.status)]]">
-        </edit-delete-actions>
+        </icons-actions>
       </div>
 
       <div slot="row-data-details">
