@@ -16,7 +16,6 @@
     * @polymer
     * @mixinFunction
     * @appliesMixin EtoolsPageRefreshMixin
-    * @appliesMixin EtoolsAjaxRequestMixin
     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
@@ -24,7 +23,6 @@
     */
   EtoolsPmpApp.Mixins.UserData = (baseClass) => class extends EtoolsMixinFactory.combineMixins([
     EtoolsPageRefreshMixin,
-    EtoolsAjaxRequestMixin,
     EtoolsPmpApp.Mixins.Endpoints,
     EtoolsPmpApp.Mixins.EventHelper,
     EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
