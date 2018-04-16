@@ -96,7 +96,7 @@
         _reloadListData(e) {
           e.stopImmediatePropagation();
           try {
-            let listElem = this.$.list;
+            let listElem = this.shadowRoot.querySelector('#list');
             if (listElem && !listElem.classList.contains('hidden')) {
               listElem._filterListData(true);
             }
