@@ -216,7 +216,9 @@
           this.thereAreIndicators = false;
           return;
         }
+
         this.forceVisibilityRecalc = true;
+
         for (let i in this.dataItems) {
           if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
             this.thereAreIndicators = true;
