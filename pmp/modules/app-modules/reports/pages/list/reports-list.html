@@ -190,7 +190,7 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
       }
 
-      _initListFilters(partners, cpOutputs, sections, reportStatuses, timeIsUp) {
+      _initListFilters(partners, cpOutputs, sections, reportStatuses) {
         if (!partners || !cpOutputs || !sections || !reportStatuses) {
           return;
         }
