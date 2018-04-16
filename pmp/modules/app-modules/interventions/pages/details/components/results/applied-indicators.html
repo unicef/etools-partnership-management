@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
@@ -13,6 +14,7 @@
       [hidden] {
         display: none !important;
       }
+
       applied-indicator {
         margin-right: -24px;
       }
@@ -37,13 +39,15 @@
     /**
      * @polymer
      * @customElement
-     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     class AppliedIndicators extends EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.RepeatableDataSets,
+      EtoolsLogsMixin,
       EtoolsMixins.DynamicDialogMixin,
+      EtoolsPmpApp.Mixins.RepeatableDataSets,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element) {
 
@@ -72,7 +76,7 @@
         super.ready();
 
         let deactivateDialog = document.querySelector('body')
-                                .querySelector('etools-dialog#deactivateIndicatorDialog');
+            .querySelector('etools-dialog#deactivateIndicatorDialog');
         if (deactivateDialog) {
           this.deactivateConfirmDialog = deactivateDialog;
         } else {
@@ -98,7 +102,7 @@
           content: dialogContent,
           id: 'deactivateIndicatorDialog'
         });
-        document.querySelector('body').appendChild( this.deactivateConfirmDialog);
+        document.querySelector('body').appendChild(this.deactivateConfirmDialog);
       }
 
       _editIndicator(event) {
@@ -156,7 +160,9 @@
         this.indicToDeactivateIndex = -1;
       }
 
-       _handleDeactivateError(err) {
+      _handleDeactivateError(err) {
+        // TODO: maybe we should add a toast message here to notify the user that indicator deactivation failed... ?
+        this.logError('Deactivate indicator error occurred.', 'applies-indicators', err);
         this.indicToDeactivateIndex = -1;
       }
     }
