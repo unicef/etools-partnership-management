@@ -322,17 +322,17 @@
       <etools-content-panel class="content-section"
                             panel-title="PD Output or SSFA Expected Results ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
-          <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
-              <div slot="panel-btns" id="add-show-inactive-btns">
-                <paper-toggle-button id="showInactive" hidden$="[[!thereAreInactiveIndicators]]" checked="{{showInactiveIndicators}}">
-                  Show Inactive
-                </paper-toggle-button>
-                <paper-icon-button icon="add-box"
-                                   title="Add"
-                                   on-tap="openCpOutputAndRamIndicatorsDialog">
-                </paper-icon-button>
-            </div>
-          </template>
+          <div slot="panel-btns" id="add-show-inactive-btns">
+            <paper-toggle-button id="showInactive" hidden$="[[!thereAreInactiveIndicators]]" checked="{{showInactiveIndicators}}">
+              Show Inactive
+            </paper-toggle-button>
+            <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
+              <paper-icon-button icon="add-box"
+                                title="Add"
+                                on-tap="openCpOutputAndRamIndicatorsDialog">
+              </paper-icon-button>
+            </template>
+          </div>
           <expected-results id="expectedResults"
                             data-items="{{intervention.result_links}}"
                             selected-cp-structure="[[intervention.country_programme]]"
