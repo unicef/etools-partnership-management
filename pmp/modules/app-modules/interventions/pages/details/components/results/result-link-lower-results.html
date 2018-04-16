@@ -222,7 +222,7 @@
         }
       }
       allIndicatorsAreInactive(indicators) {
-        if (indicators && indicators.every(i => !i.is_active)) {
+        if (indicators && indicators.length && indicators.every(i => !i.is_active)) {
           return !this.showInactiveIndicators;
         }
         return false;
