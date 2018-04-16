@@ -134,8 +134,7 @@
           this.indicToDeactivateIndex = -1;
           return;
         }
-        let indicator = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex] : {};
-        let indicatorId = indicator.id;
+        let indicatorId = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex].id : null;
         if (!indicatorId) {
           return;
         }
