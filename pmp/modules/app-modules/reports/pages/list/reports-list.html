@@ -167,21 +167,13 @@
           _initComplete: {
             type: Boolean,
             value: false
-          },
-          filtersInitTimeoutInterval: {
-            type: Number,
-            value: 2400 // miliseconds
-          },
-          filtersInitTimeIsUp: {
-            type: Boolean,
-            value: false
           }
         };
       }
 
       static get observers() {
         return [
-          '_initListFilters(partners, cpOutputs, sections, reportStatuses, filtersInitTimeIsUp)',
+          '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, urlParams, _filtersInitialized, paginator)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
@@ -196,18 +188,10 @@
          * triggered by parent element on stamp
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
-        window.setTimeout(() => {
-          this.set('filtersInitTimeIsUp', true);
-        }, this.filtersInitTimeoutInterval);
       }
 
       _initListFilters(partners, cpOutputs, sections, reportStatuses, timeIsUp) {
         if (!partners || !cpOutputs || !sections || !reportStatuses) {
-          return;
-        }
-        let allDataLoaded = partners.length && cpOutputs.length && sections.length && reportStatuses.length;
-
-        if (!allDataLoaded && !timeIsUp) {
           return;
         }
         // init list filter options
