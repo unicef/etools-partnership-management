@@ -160,7 +160,7 @@
       }
 
       _handleDeactivateError(err) {
-        // TODO: maybe we should add a toast message here to notify the user that indicator deactivation failed... ?
+        this.fireEvent('toast', {text: 'Deactivate indicator error occurred', showCloseBtn: true});
         this.logError('Deactivate indicator error occurred.', 'applies-indicators', err);
         this.indicToDeactivateIndex = -1;
       }

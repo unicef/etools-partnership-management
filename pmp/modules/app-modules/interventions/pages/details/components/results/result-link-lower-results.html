@@ -113,7 +113,7 @@
       </div>
 
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="layout-horizontal lower-result-row">
+        <div class="layout-horizontal lower-result-row" hidden$="[[allIndicatorsAreInactive(indicators)]]">
           <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
             <icons-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
                                  on-delete="_openDeleteConfirmation"></icons-actions>
@@ -220,6 +220,12 @@
             break;
           }
         }
+      }
+      allIndicatorsAreInactive(indicators) {
+        if (indicators && indicators.every(i => !i.is_active)) {
+          return !this.showInactiveIndicators;
+        }
+        return false;
       }
 
       getColumnLength(column, thereAreIndicators) {
