@@ -20,7 +20,7 @@
       }
     </style>
     <template is="dom-repeat"
-              items="[[dataItems]]"
+              items="{{dataItems}}"
               as="indicator" index-as="indicatorIndex">
       <applied-indicator hidden$="[[_hideIndicator(indicator, showInactiveIndicators)]]"
                          data-args$="[[indicatorIndex]]"
