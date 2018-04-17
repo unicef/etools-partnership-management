@@ -116,7 +116,7 @@
               <div class="col col-4">
                 <!-- Signed Date -->
                 <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"
-                                                        error-message="{{item.errorMessage}}">
+                                                        field-selector="#signedDate_[[index]]">
                 </required-and-not-future-date-validator>
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed Date"
@@ -125,8 +125,7 @@
                                    no-init show-clear-btn
                                    readonly$="[[_showReadonlyDetails(item.id)]]"
                                    validator="signedDate_[[index]]_validator"
-                                   auto-validate$="[[!_showReadonlyDetails(item.id)]]"
-                                   error-message$="[[item.errorMessage]]">
+                                   auto-validate$="[[!_showReadonlyDetails(item.id)]]">
                 </etools-date-input>
               </div>
               <div class="col col-8 file-container">
