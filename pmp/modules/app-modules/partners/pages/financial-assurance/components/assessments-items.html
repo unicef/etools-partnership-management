@@ -9,7 +9,6 @@
 
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../layout/components/etools-single-file.html">
-<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
@@ -99,23 +98,19 @@
                                  readonly="[[!editMode]]"
                                  error-message="Please select Assessment Type"
                                  hide-search></etools-dropdown>
-
-                <!--<etools-form-element-wrapper label="Assessment Type">-->
-                  <!--[[item.type]]-->
-                <!--</etools-form-element-wrapper>-->
               </div>
               <div class="col col-4">
                 <required-and-not-future-date-validator validator-name="dateSubmitted_[[index]]_validator"
                                                         required
-                                                        error-message="{{item.dateErrorMessage}}">
+                                                        field-selector="#dateSubmitted_[[index]]">
                 </required-and-not-future-date-validator>
                 <!-- Date submitted -->
                 <etools-date-input id$="dateSubmitted_[[index]]"
                                    label="Date of Assessment"
                                    value="{{item.completed_date}}"
                                    readonly="[[!editMode]]"
+                                   auto-validate
                                    validator="dateSubmitted_[[index]]_validator"
-                                   error-message="[[item.dateErrorMessage]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -330,6 +325,10 @@
 
       _getAddBtnAdditionalClass(shownAssessmentsNumber) {
         return shownAssessmentsNumber ? 'add-btn-lm' : '';
+      }
+
+      _updateDateInputErrorMsg(e) {
+       console.log(e);
       }
 
     }
