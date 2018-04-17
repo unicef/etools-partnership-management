@@ -29,6 +29,7 @@
     "EtoolsMixinFactory": true,
     "EtoolsPmpApp": true,
     "EtoolsRequestCacheDb": true,
+    "EtoolsPageRefreshMixin": true,
     "EtoolsAjaxRequestMixin": true,
     "EtoolsMixins": true,
     "EtoolsLogsMixin": true,
