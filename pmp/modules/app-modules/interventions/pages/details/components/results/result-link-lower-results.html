@@ -35,9 +35,11 @@
           background-color: var(--list-second-bg-color);
         };
       }
+
       .lborder {
         border-left: 1px solid var(--list-divider-color);
       }
+
       paper-icon-button {
         color: var(--dark-icon-color, #6f6f70);
       }
@@ -56,11 +58,13 @@
       icons-actions {
         visibility: hidden;
       }
+
       .result-statement {
         padding-top: 12px;
         padding-bottom: 12px;
         padding-right: 12px;
       }
+
       div.result-statement:hover icons-actions {
         visibility: visible;
       }
@@ -74,6 +78,7 @@
         padding: 0 24px;
         min-height: 49px; /* 1px for border */
       }
+
       .lower-result-row:not(:last-of-type) {
         border-bottom: 1px solid var(--list-divider-color);
       }
@@ -82,6 +87,7 @@
         @apply --layout-center;
         @apply --layout-self-stretch;
       }
+
       .add-btn-row {
         height: 48px;
         padding-left: 16px;
@@ -113,10 +119,11 @@
       </div>
 
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="layout-horizontal lower-result-row" hidden$="[[allIndicatorsAreInactive(item.applied_indicators, showInactiveIndicators, forceVisibilityRecalc)]]">
+        <div class="layout-horizontal lower-result-row"
+             hidden$="[[allIndicatorsAreInactive(item.applied_indicators, showInactiveIndicators, forceVisibilityRecalc)]]">
           <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
             <icons-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
-                                 on-delete="_openDeleteConfirmation"></icons-actions>
+                           on-delete="_openDeleteConfirmation"></icons-actions>
             <span>[[item.name]]</span>
           </div>
           <div class="flex-c lborder indicators-container">
@@ -226,6 +233,7 @@
           }
         }
       }
+
       allIndicatorsAreInactive(indicators) {
         this.forceVisibilityRecalc = false;
         if (indicators && indicators.length && indicators.every(i => !i.is_active)) {
