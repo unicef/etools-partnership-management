@@ -16,25 +16,19 @@
     * @polymer
     * @mixinFunction
     * @appliesMixin EtoolsPageRefreshMixin
-    * @appliesMixin EtoolsAjaxRequestMixin
     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
     */
-  EtoolsPmpApp.Mixins.UserData = (baseClass) =>
-    class extends EtoolsPageRefreshMixin(
-        EtoolsAjaxRequestMixin(
-          EtoolsPmpApp.Mixins.Endpoints(
-            EtoolsPmpApp.Mixins.EtoolsDataReduxStore(
-              EtoolsPmpApp.Mixins.UserPermissions(
-                EtoolsPmpApp.Mixins.EventHelper(baseClass)
-              )
-            )
-          )
-        )
-      ) {
-    // TODO: find a way to clean up the above syntax
+  EtoolsPmpApp.Mixins.UserData = (baseClass) => class extends EtoolsMixinFactory.combineMixins([
+    EtoolsPageRefreshMixin,
+    EtoolsPmpApp.Mixins.Endpoints,
+    EtoolsPmpApp.Mixins.EventHelper,
+    EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+    EtoolsPmpApp.Mixins.UserPermissions
+  ], baseClass) {
+
 
     static get properties() {
       return {
@@ -123,8 +117,8 @@
       });
     }
     _resetUserAndPermissions() {
-      this._setUser(null);
-      this._setPermissions(null);
+      this._setUser(undefined);
+      this._setPermissions(undefined);
     }
     _setUserData(data) {
       let _user = data;
