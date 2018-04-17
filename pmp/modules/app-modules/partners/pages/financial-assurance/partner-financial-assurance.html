@@ -234,7 +234,7 @@
           <etools-dropdown label="Basis For Risk Rating"
                            options="[[basisOptions]]"
                            selected="{{partner.basis_for_risk_rating}}"
-                           disabled="[[!editMode]]">
+                           disabled="[[_disableBasisForRiskRating(editMode, partner.type_of_assessment, partner.rating)]]">
           </etools-dropdown>
         </div>
       </div>
@@ -663,6 +663,12 @@
       _getMinReqAudits(plannedEngagement) {
         return !plannedEngagement ? 0
             : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+      }
+
+      _disableBasisForRiskRating(editMode, typeOfAssessment, rating) {
+        return !editMode ||
+            (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
+            ['Low Risk Assumed', 'High Risk Assumed'].indexOf(rating) > -1;
       }
     }
 
