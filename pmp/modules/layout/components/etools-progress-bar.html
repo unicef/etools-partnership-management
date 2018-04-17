@@ -51,6 +51,10 @@
             type: Number,
             readOnly: true,
             computed: '_getProgress(value)'
+          },
+          noDecimals: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -76,7 +80,7 @@
       }
 
       _prepareDisplayedValue(value) {
-        return parseFloat(value).toFixed(2);
+        return parseFloat(value).toFixed(this.noDecimals ? 0 : 2);
       }
 
     }
