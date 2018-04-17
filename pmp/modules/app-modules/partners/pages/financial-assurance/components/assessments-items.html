@@ -2,24 +2,16 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../../../../bower_components/paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../../../../../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
-<link rel="import" href="../../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../layout/components/etools-single-file.html">
-<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
 
+<link rel="import" href="../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
-<link rel="import" href="../../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
@@ -98,23 +90,26 @@
             <div class="row-h">
               <div class="col col-4">
                 <!-- Assessment type -->
-                <etools-form-element-wrapper label="Assessment Type">
-                  [[item.type]]
-                </etools-form-element-wrapper>
+                <etools-dropdown id$="assessmentType_[[index]]"
+                                 label="Assessment Type"
+                                 placeholder="&#8212;"
+                                 options="[[assessmentTypes]]"
+                                 selected="{{item.type}}"
+                                 readonly="[[!editMode]]"
+                                 error-message="Please select Assessment Type"
+                                 hide-search></etools-dropdown>
               </div>
               <div class="col col-4">
                 <required-and-not-future-date-validator validator-name="dateSubmitted_[[index]]_validator"
-                                                        required
-                                                        error-message="{{item.dateErrorMessage}}">
+                                                        field-selector="#dateSubmitted_[[index]]">
                 </required-and-not-future-date-validator>
                 <!-- Date submitted -->
                 <etools-date-input id$="dateSubmitted_[[index]]"
                                    label="Date of Assessment"
                                    value="{{item.completed_date}}"
-                                   readonly$="[[!editMode]]"
+                                   readonly="[[!editMode]]"
                                    auto-validate
                                    validator="dateSubmitted_[[index]]_validator"
-                                   error-message="[[item.dateErrorMessage]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -123,9 +118,9 @@
               <!-- Report file -->
               <etools-single-file
                   id$="report_[[index]]"
+                  label="Report"
                   file="{{item.report}}"
                   internal-file="{{item.report_file}}"
-                  label="Report"
                   hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
                   readonly="[[!editMode]]"
                   accept=".doc,.docx,.pdf,.jpg,.png"
@@ -147,12 +142,13 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.RepeatableDataSets,
-      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
@@ -185,6 +181,10 @@
             type: Boolean,
             reflectToAttribute: true,
             observer: '_editModeChanged'
+          },
+          assessmentTypes: {
+            type: Array,
+            statePath: 'assessmentTypes'
           }
         };
       }
@@ -200,8 +200,8 @@
         super.ready();
 
         this.dataSetModel = {
-          type: this.AssessmentDefaultType,
-          completed_date: undefined,
+          type: null,
+          completed_date: null,
           current: false,
           report: null,
           report_file: ''
@@ -218,27 +218,34 @@
 
       _assessmentPropertyChanged(dataPath) {
         if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
-            dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
+            dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1 &&
+            dataPath.path.indexOf('dateErrorMessage') === -1) {
           let dataPathPieces = dataPath.path.split('.');
-          let path = dataPathPieces[0] + '.' + dataPathPieces[1];
-          if (path.indexOf('#') > -1) {
-            let item = this.get(path);
+          let propertyValChangeDetected = !isNaN(parseInt(dataPathPieces[1], 10));
+          if (propertyValChangeDetected) {
+            let itemPath = dataPathPieces[0] + '.' + dataPathPieces[1];
+            let item = this.get(itemPath);
             let index = this.dataItems.indexOf(item);
             this._validateAssessment(index);
           }
         }
       }
 
-      _isValid(field, completedDate, reportFile, reportFileLength) {
+      _isValid(field, type, completedDate, reportFile, reportFileLength) {
         let valid = true;
         switch (field) {
+          case 'assessmentType':
+            if (_.isEmpty(type) && (!_.isEmpty(completedDate) || this._hasReport(reportFile, reportFileLength))) {
+              valid = false;
+            }
+            break;
           case 'dateSubmitted':
-            if (_.isEmpty(completedDate) && this._hasReport(reportFile, reportFileLength)) {
+            if (_.isEmpty(completedDate) && (!_.isEmpty(type) || this._hasReport(reportFile, reportFileLength))) {
               valid = false;
             }
             break;
           case 'report':
-            if (!this._hasReport(reportFile, reportFileLength) && !_.isEmpty(completedDate)) {
+            if (!this._hasReport(reportFile, reportFileLength) && (!_.isEmpty(type) || !_.isEmpty(completedDate))) {
               valid = false;
             }
             break;
@@ -276,7 +283,7 @@
 
       _validateAssessment(index) {
         let valid = true;
-        let fields = ['#dateSubmitted_' + index, '#report_' + index];
+        let fields = ['#assessmentType_' + index, '#dateSubmitted_' + index, '#report_' + index];
         fields.forEach((fieldSelector) => {
           let fieldEl = this.shadowRoot.querySelector(fieldSelector);
           let reportFileLength = 0;
@@ -286,7 +293,9 @@
           }
           if (fieldEl) {
             let fieldName = this._getFieldNameFromSelector(fieldSelector);
-            let validField = this._isValid(fieldName, this.dataItems[index].completed_date,
+            let validField = this._isValid(fieldName,
+                this.dataItems[index].type,
+                this.dataItems[index].completed_date,
                 this.dataItems[index].report,
                 reportFileLength, fieldEl);
             fieldEl.invalid = !validField;
@@ -300,7 +309,7 @@
       }
 
       _emptyAssessment(assessment) {
-        return assessment &&
+        return assessment && !assessment.type &&
             assessment.completed_date === null &&
             assessment.report_file.length === 0 &&
             assessment.report instanceof File === false;

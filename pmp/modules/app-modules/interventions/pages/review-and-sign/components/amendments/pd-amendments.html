@@ -166,7 +166,7 @@
           interventionDocumentType: {
             type: String
           },
-          amendActionInProgress: {
+          inAmendment: {
             type: Boolean,
             notify: true
           },
@@ -238,7 +238,7 @@
         let data = event.detail;
         this._unlockInterventionDetailsFields();
         this.push('amendments', data);
-        this.set('amendActionInProgress', true);
+        this.set('inAmendment', true);
         this.fireEvent('new-amendment-added');
       }
 
@@ -249,7 +249,7 @@
       }
 
       _unlockInterventionDetailsFields() {
-        if (!this.amendActionInProgress) {
+        if (!this.inAmendment) {
           // we need the new permissions for ammendment mode;
           // after the permissions are updated, the fields will automatically unlock
           this.fireEvent('refresh-intervention-permissions');

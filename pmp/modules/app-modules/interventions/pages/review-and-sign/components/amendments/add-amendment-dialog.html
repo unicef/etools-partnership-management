@@ -50,8 +50,7 @@
 
       <div class="row-h flex-c">
         <required-and-not-future-date-validator validator-name="signedDate_validator"
-                                                required
-                                                error-message="{{newAmendment.errorMessage}}">
+                                                field-selector="#signed-date">
         </required-and-not-future-date-validator>
         <!-- Signed Date -->
         <etools-date-input id="signed-date"
@@ -60,9 +59,7 @@
                            required
                            open="{{datePickerOpen}}"
                            validator="signedDate_validator"
-                           error-message="Please select signed date"
                            auto-validate
-                           error-message$="[[newAmendment.errorMessage]]"
                            no-init show-clear-btn>
         </etools-date-input>
       </div>

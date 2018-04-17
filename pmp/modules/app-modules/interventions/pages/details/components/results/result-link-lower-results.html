@@ -11,7 +11,7 @@
 
 <link rel="import" href="../../../../../../mixins/repeatable-data-sets-mixin.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
-<link rel="import" href="../../../../../../layout/components/edit-delete-actions.html">
+<link rel="import" href="../../../../../../layout/components/icons-actions.html">
 
 <link rel="import" href="pd-lower-result-name.html">
 <link rel="import" href="applied-indicators.html">
@@ -31,13 +31,15 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         --list-bg-color: #eeeeee;
-        --edit-delete-actions: {
+        --icons-actions: {
           background-color: var(--list-second-bg-color);
         };
       }
+
       .lborder {
         border-left: 1px solid var(--list-divider-color);
       }
+
       paper-icon-button {
         color: var(--dark-icon-color, #6f6f70);
       }
@@ -53,15 +55,17 @@
         border-bottom: 1px solid var(--list-divider-color);
       }
 
-      edit-delete-actions {
+      icons-actions {
         visibility: hidden;
       }
+
       .result-statement {
         padding-top: 12px;
         padding-bottom: 12px;
         padding-right: 12px;
       }
-      div.result-statement:hover edit-delete-actions {
+
+      div.result-statement:hover icons-actions {
         visibility: visible;
       }
 
@@ -74,6 +78,7 @@
         padding: 0 24px;
         min-height: 49px; /* 1px for border */
       }
+
       .lower-result-row:not(:last-of-type) {
         border-bottom: 1px solid var(--list-divider-color);
       }
@@ -82,6 +87,7 @@
         @apply --layout-center;
         @apply --layout-self-stretch;
       }
+
       .add-btn-row {
         height: 48px;
         padding-left: 16px;
@@ -113,18 +119,20 @@
       </div>
 
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="layout-horizontal lower-result-row">
+        <div class="layout-horizontal lower-result-row"
+             hidden$="[[allIndicatorsAreInactive(item.applied_indicators, showInactiveIndicators, forceVisibilityRecalc)]]">
           <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
-            <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
-                                 on-delete="_openDeleteConfirmation"></edit-delete-actions>
+            <icons-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
+                           on-delete="_openDeleteConfirmation"></icons-actions>
             <span>[[item.name]]</span>
           </div>
           <div class="flex-c lborder indicators-container">
             <div hidden="[[!item.applied_indicators.length]]">
-              <applied-indicators data-items="[[item.applied_indicators]]"
+              <applied-indicators data-items="{{item.applied_indicators}}"
                                   result-link-index="[[index]]"
                                   cp-output-id="[[cpOutputId]]"
-                                  intervention-status="[[interventionStatus]]"
+                                  intervention="{{intervention}}"
+                                  show-inactive-indicators="[[showInactiveIndicators]]"
                                   edit-mode="[[editMode]]">
               </applied-indicators>
             </div>
@@ -188,13 +196,15 @@
             type: Boolean,
             value: false
           },
-          interventionStatus: String
+          intervention: Object,
+          showInactiveIndicators: Boolean,
+          forceVisibilityRecalc: Boolean
         };
       }
 
       static get observers() {
         return [
-          '_seeIfThereAreIndicators(dataItems.*)',
+          '_dataItemsChanged(dataItems.*)',
           '_makeSureDataItemsAreValid(dataItems)'
         ];
       }
@@ -204,22 +214,32 @@
         this.addEventListener('delete-confirm', this._updateInterventionLocAndClusters.bind(this));
       }
 
-      _seeIfThereAreIndicators(dataItemsMutation) {
+      _dataItemsChanged(dataItemsMutation) {
         if (typeof dataItemsMutation === 'undefined') {
           return;
         }
+
         if (!this.dataItems) {
           this.thereAreIndicators = false;
           return;
         }
-        let foundSomeIndicators = false;
+
+        this.forceVisibilityRecalc = true;
+
         for (let i in this.dataItems) {
           if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
-            foundSomeIndicators = true;
+            this.thereAreIndicators = true;
             break;
           }
         }
-        this.thereAreIndicators = foundSomeIndicators;
+      }
+
+      allIndicatorsAreInactive(indicators) {
+        this.forceVisibilityRecalc = false;
+        if (indicators && indicators.length && indicators.every(i => !i.is_active)) {
+          return !this.showInactiveIndicators;
+        }
+        return false;
       }
 
       getColumnLength(column, thereAreIndicators) {
@@ -230,11 +250,11 @@
             return thereAreIndicators ? 'col-8' : 'col-4';
         }
       }
-      
+
       _updateInterventionLocAndClusters() {
         this.fireEvent('indicators-changed');
       }
-      
+
       _addNewLowerResult() {
         this.fireEvent('add-new-lower-result', {expectedResultId: this.expectedResultId});
       }

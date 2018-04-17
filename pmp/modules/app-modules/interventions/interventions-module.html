@@ -581,6 +581,9 @@
             .then((resp) => {
               if (!_.isEmpty(resp.permissions)) {
                 this.set('intervention.permissions', resp.permissions);
+                // NOTE*-resetting the whole intervention because observers that depend on
+                // intervention.in_amendment are not firing
+                this.set('intervention', JSON.parse(JSON.stringify(this.intervention)));
                 this.set('originalIntervention.in_amendment', resp.in_amendment);
               }
             })
