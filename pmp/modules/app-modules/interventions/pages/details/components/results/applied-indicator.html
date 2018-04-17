@@ -11,7 +11,7 @@
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
 
-<link rel="import" href="../../../../../../layout/components/edit-delete-actions.html">
+<link rel="import" href="../../../../../../layout/components/icons-actions.html">
 
 <dom-module id="applied-indicator">
   <template strip-whitespace>
@@ -26,12 +26,11 @@
         --list-bg-color: #eeeeee !important;
         --list-second-bg-color: #dfdfdf !important;
         --list-icon-color: white !important;
-        --edit-delete-actions: {
+        --icons-actions: {
           background-color: #dfdfdf !important;
           margin-right: -8px;
         };
         --list-row-wrapper-padding: 0 24px 0 0 !important;
-
 
         --list-row-collapse-wrapper: {
           padding: 16px 24px 16px 24px !important;
@@ -59,11 +58,11 @@
         padding-left: 16px;
       }
 
-      edit-delete-actions {
+      icons-actions {
         visibility: hidden;
       }
 
-      etools-data-table-row div[slot="row-data"]:hover edit-delete-actions {
+      etools-data-table-row div[slot="row-data"]:hover icons-actions {
         visibility: visible;
       }
 
@@ -75,7 +74,9 @@
     <etools-data-table-row>
       <div slot="row-data" class="p-relative">
         <div class="col-8">
-          [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
+          [[_getIndicatorType(indicator.indicator.unit)]]
+          <strong>[[_addInactivePrefix(indicator)]]</strong>
+          [[_getIndicatorTitle(indicator)]]
         </div>
         <div class="col-2 right-align">
           [[_displayIndicatorValue(indicator.baseline)]]
@@ -83,8 +84,11 @@
         <div class="col-2 right-align">
           [[_displayIndicatorValue(indicator.target)]]
         </div>
-        <edit-delete-actions hidden$="[[!editMode]]"
-                             show-delete="[[_showDelete(interventionStatus)]]"></edit-delete-actions>
+        <icons-actions hidden$="[[!editMode]]"
+                       show-edit="[[indicator.is_active]]"
+                       show-deactivate="[[_showDeactivate(intervention.in_amendment, indicator.is_active)]]"
+                       show-delete="[[_showDelete(intervention.status)]]">
+        </icons-actions>
       </div>
 
       <div slot="row-data-details">
@@ -159,7 +163,7 @@
           editMode: {
             type: Boolean
           },
-          interventionStatus: String
+          intervention: Object
         };
       }
 
@@ -177,6 +181,11 @@
       _initAppliedIndicatorListeners() {
         this.addEventListener('edit', this._editIndicator.bind(this));
         this.addEventListener('delete', this._deleteIndicator.bind(this));
+        this.addEventListener('deactivate', this._deactivateIndicator);
+      }
+
+      _showDeactivate(inAmendment, indicIsActive) {
+        return (inAmendment && indicIsActive);
       }
 
       _showDelete(interventionStatus) {
@@ -202,6 +211,11 @@
       _deleteIndicator(e) {
         e.stopPropagation();
         this.fireEvent('delete-indicator');
+      }
+
+      _deactivateIndicator(e) {
+        e.stopPropagation();
+        this.fireEvent('deactivate-indicator');
       }
 
       _updateCollapsableIconBg(indicator) {
@@ -242,10 +256,7 @@
       }
 
       getClusterName(clusterName) {
-        if (!clusterName) {
-          return '—';
-        }
-        return clusterName;
+        return !clusterName ? '—' : clusterName;
       }
 
       _setDisaggregationNames() {
@@ -298,11 +309,11 @@
 
       _displayIndicatorValue(value) {
         value = (value || parseInt(value) === 0) ? value.toString() : '';
-        if (value) {
-          return value;
-        } else {
-          return '—';
-        }
+        return value ? value : '—';
+      }
+
+      _addInactivePrefix(indicator) {
+        return (!indicator || indicator.is_active) ? '' : '(inactive)';
       }
 
       _lengthIs0(length) {

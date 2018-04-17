@@ -8,6 +8,7 @@
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
@@ -100,6 +101,7 @@
                      type="number"
                      placeholder="&#8212;"
                      required
+                     allowed-pattern="[0-9\.]"
                      auto-validate
                      error-message="Please add a valid target"
                      hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
@@ -116,6 +118,11 @@
                      error-message="Please add a valid target"
                      hidden$=[[_unitIsNumeric(indicator.indicator.unit)]]>
         </paper-input>
+      </div>
+      <div class="col col-6">
+        <paper-toggle-button checked="{{indicator.is_high_frequency}}">
+          High Frequency Humanitarian Indicator
+        </paper-toggle-button>
       </div>
     </div>
     <div class="unknown">
