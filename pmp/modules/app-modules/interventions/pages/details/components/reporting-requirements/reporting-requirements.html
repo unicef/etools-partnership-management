@@ -19,11 +19,6 @@
   <template strip-whitespace>
 
     <style include="shared-styles data-table-styles grid-layout-styles">
-      :host {
-        /*--list-row-no-collapse: {*/
-          /*padding: 16px;*/
-        /*};*/
-      }
 
       .list-container {
         position: relative;
@@ -92,7 +87,7 @@
                     [[item.due_date]]
                 </span>
                 <span class="col-data col-1 actions-button-container">
-                  <!-- TODO: polymer 2 - use edit-delete-actions element fir edit/delete actions -->
+                  <!-- TODO: polymer 2 - use icons-actions element for edit/delete actions -->
                   <paper-icon-button icon="create"
                                      role="button"
                                      hidden$="[[!editMode]]"
