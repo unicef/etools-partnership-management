@@ -1,0 +1,187 @@
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+   */
+  EtoolsPmpApp.Mixins.SaveIndicator = Polymer.dedupingMixin(
+      (superClass) => class extends EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.Endpoints,
+        EtoolsPmpApp.Mixins.AjaxErrorsParser,
+        EtoolsPmpApp.Mixins.EventHelper
+      ], superClass) {
+
+        static get properties() {
+          return {
+            nonClusterIndicatorCreateModel: {
+              type: Object,
+              value: {
+                indicator: {
+                  title: null,
+                  unit: 'number',
+                  display_type: 'percentage'
+                },
+                section: null,
+                baseline: null,
+                target: null,
+                means_of_verification: null,
+                locations: [],
+                disaggregation: [],
+                is_high_frequency: false
+              }
+            },
+            nonClusterIndicatorEditModel: {
+              type: Object,
+              value: {
+                id: null,
+                section: null,
+                baseline: null,
+                target: null,
+                means_of_verification: null,
+                locations: [],
+                disaggregation: [],
+                is_high_frequency: false
+              }
+            },
+            clusterIndicatorCreateModel: {
+              type: Object,
+              value: {
+                indicator: null,
+                section: null,
+                baseline: null,
+                target: null,
+                locations: [],
+                cluster_indicator_id: null,
+                cluster_indicator_title: null,
+                cluster_name: null,
+                response_plan_name: null
+              }
+            },
+            clusterIndicatorEditModel: {
+              type: Object,
+              value: {
+                id: null,
+                section: null,
+                baseline: null,
+                target: null,
+                locations: [],
+              }
+            }
+          };
+        }
+
+        _validateAndSaveIndicator(event) {
+          if (!this.validate()) {
+            this.activeTab = 'details';
+            this._centerDialog();
+            return;
+          }
+
+          this._startSpinner();
+          this.disableConfirmBtn = true;
+
+          let endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
+          let method = this.indicator.id ? 'PATCH' : 'POST';
+          let body = this._getIndicatorBody();
+          let self = this;
+
+          this.sendRequest({
+            endpoint: endpoint,
+            method: method,
+            body: body
+          }).then(function(resp) {
+            self._handleSaveIndicatorResponse(resp);
+          }).catch(function(error) {
+            self._handleSaveIndicatorError(error);
+          });
+        }
+
+        validate() {
+          let valid = true;
+          let sectionSelected = this.shadowRoot.querySelector('#sectionDropdw').validate();
+          if (this.isCluster) {
+            valid = this.shadowRoot.querySelector('#clusterIndicatorEl').validate() && sectionSelected;
+          } else {
+            valid = this.shadowRoot.querySelector('#nonClusterIndicatorEl').validate() && sectionSelected;
+          }
+          return valid;
+        }
+
+        _getIdForEndpoint() {
+          return this.indicator.id ? this.indicator.id : this.actionParams.llResultId;
+        }
+
+        _getEndpointName() {
+          return this.indicator.id ? 'getEditDeleteIndicator' : 'createIndicator';
+        }
+
+        _handleSaveIndicatorResponse(response) {
+          this._stopSpinner();
+
+          this.fireEvent('indicator-dialog-close', {
+            indicatorData: response,
+            actionParams: this.actionParams
+          });
+          this.$.indicatorDialog.opened = false;
+        }
+
+        _handleSaveIndicatorError(error) {
+          this._stopSpinner();
+          this.disableConfirmBtn = false;
+
+          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        }
+
+        _getIndicatorBody() {
+          let body = this._getIndicatorModelForSave();
+          if (this.indicator.target === '' || this.indicator.target === undefined) {
+            this.indicator.target = null; // Avoid empty string or undefined being sent to backend
+          }
+          if (this.indicator.baseline === '' || this.indicator.baseline === undefined) {
+            this.indicator.baseline = null;
+          }
+          Object.assign(body, _.pick(this.indicator, _.keys(body)));
+          if (body.hasOwnProperty('disaggregation')) {
+            body.disaggregation = this._prepareDisaggregations(body);
+          }
+          if (this.isCluster && !body.id) {
+            body.indicator = null;
+            // TODO for when we can create cluster indic->
+            // see if indicator prop should rather be removed
+            // from clusterIndicatorCreateModel than from here
+          }
+          return body;
+        }
+
+        _prepareDisaggregations(body) {
+          if (!this.disaggregations || !this.disaggregations.length) {
+            return [];
+          }
+          this.disaggregations = this.disaggregations.filter(function(d) {
+            return !!d.disaggregId;
+          });
+          return this.disaggregations.map(function(item) {
+            return item.disaggregId;
+          });
+        }
+
+        _getIndicatorModelForSave() {
+          let modelName = this.isCluster ? 'clusterIndicator' : 'nonClusterIndicator';
+          modelName += this.indicator.id ? 'EditModel' : 'CreateModel';
+          return JSON.parse(JSON.stringify(this[modelName]));
+        }
+
+      });
+
+</script>

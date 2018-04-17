@@ -7,58 +7,80 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/app-route/app-location.html">
-<link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/shadycss/apply-shim.html">
 
-<link rel="import" href="../scripts/polyfils/es6-polyfils.html">
-<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
-<link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="modules/scripts/polyfils/es6-polyfils.html">
 
-<link rel="import" href="app-config/app-dexie-db-config.html">
-<link rel="import" href="app-config/app-config.html">
-<link rel="import" href="app-elements/environment-flags/environment-flags-behavior.html">
+<link rel="import" href="../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
+<!-- TODO: polymer2 - piwiki element - console errors fixes needed -->
+<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 
-<link rel="import" href="app-behaviors/ie11-behavior.html">
-<link rel="import" href="app-behaviors/amendment-mode-behavior.html">
-<link rel="import" href="app-menu/app-sidebar-menu.html">
-<link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
-<link rel="import" href="app-menu/styles/app-drawer-styles.html">
+<!-- import global config and dexie db config -->
+<link rel="import" href="modules/config/config.html">
+<link rel="import" href="modules/config/dexie-db-config.html">
 
-<link rel="import" href="app-elements/environment-flags/environment-flags.html">
-<link rel="import" href="app-elements/users-data/user-data.html">
-<link rel="import" href="app-elements/page-header/page-header.html">
-<link rel="import" href="app-elements/page-footer/page-footer.html">
-<link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
+<!-- import main menu files -->
+<link rel="import" href="modules/layout/menu/styles/app-drawer-styles.html">
+<link rel="import" href="modules/layout/menu/app-sidebar-menu.html">
+<link rel="import" href="modules/layout/menu/mixins/app-menu-mixin.html">
+<link rel="import" href="modules/layout/components/data-refresh-dialog.html">
 
-<link rel="import" href="app-elements/notification-toasts/notification-toasts-behavior.html">
-<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
+<!--import header and footer elements-->
+<link rel="import" href="modules/layout/page-header.html">
+<link rel="import" href="modules/layout/page-footer.html">
 
-<link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
-<link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
+<!-- import app shell main styles -->
+<link rel="import" href="modules/styles/shared-styles.html">
+<link rel="import" href="modules/styles/page-layout-styles.html">
+<link rel="import" href="modules/styles/app-theme.html">
+<link rel="import" href="modules/styles/buttons-styles.html">
 
-<link rel="import" href="app-elements/static-common-data/static-common-data.html">
-<link rel="import" href="app-behaviors/scroll-control-behavior.html">
-<link rel="import" href="../styles/shared-styles.html">
-<link rel="import" href="../styles/page-layout-styles.html">
-<link rel="import" href="../styles/app-theme.html">
-<link rel="import" href="../styles/buttons-styles.html">
+<!-- import toast notifications elements -->
+<link rel="import" href="modules/toast-notifications/toast-notifications-mixin.html">
+
+<!-- import user data mixin -->
+<link rel="import" href="modules/user/user-data-mixin.html">
+
+<!-- import environment flags -->
+<link rel="import" href="modules/environment-flags/environment-flags-mixin.html">
+<link rel="import" href="modules/environment-flags/environment-flags.html">
+
+<!-- other required mixins -->
+<link rel="import" href="modules/mixins/scroll-control-mixin.html">
+<link rel="import" href="modules/mixins/amendment-mode-mixin.html">
+<link rel="import" href="modules/mixins/event-helper-mixin.html">
+<link rel="import" href="modules/mixins/ie11-mixin.html">
+
+<!-- import static data elements -->
+<link rel="import" href="modules/static-common-data/static-common-data.html">
+<link rel="import" href="modules/app-modules/partners/data/partners-list-data.html">
+<link rel="import" href="modules/app-modules/agreements/data/agreements-list-data.html">
+
+<!-- lazy imports -->
+<link rel="lazy-import" href="modules/app-modules/not-found/not-found.html">
+<link rel="lazy-import" href="modules/app-modules/partners/partners-module.html">
+<link rel="lazy-import" href="modules/app-modules/agreements/agreements-module.html">
+<link rel="lazy-import" href="modules/app-modules/interventions/interventions-module.html">
+<link rel="lazy-import" href="modules/app-modules/reports/reports-module.html">
+<link rel="lazy-import" href="modules/app-modules/settings/settings-module.html">
 
 <dom-module id="app-shell">
-
-  <template strip-whitespace>
-
-    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style buttons-styles">
-
+  <template>
+    <style include="app-drawer-styles page-layout-styles shared-styles buttons-styles">
       :host {
         display: block;
       }
@@ -90,14 +112,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #floating-footer {
         background-color: var(--amendment-mode-color);
         color: var(--light-primary-text-color);
+        box-sizing: border-box;
         padding: 12px 12px 12px 65px;
         position: fixed;
-        top: auto;
         bottom: 0;
-        width: 100%; /* paper-buttons have a z-index of 51 */
-        z-index: 52;
+        width: calc(100% - var(--app-drawer-width, 0px)); /* 0px instead of 0 is an IE requirement */
+        z-index: 52; /* paper-buttons have a z-index of 51 */
       }
 
+      /* TODO: polymer2 - make amendment mode as a new module with mixin file and style file */
       #page-container.in-amendment {
         border-top: 12px solid var(--amendment-mode-color);
         border-left: 12px solid var(--amendment-mode-color);
@@ -115,79 +138,86 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <environment-flags></environment-flags>
 
-    <etools-piwik-analytics page="[[subroute.path]]"
-                            user="[[user]]"
-                            toast="[[currentToastMessage]]"></etools-piwik-analytics>
+    <etools-piwik-analytics
+        page="[[subroute.prefix]]"
+        user="[[user]]"
+        toast="[[currentToastMessage]]">
+    </etools-piwik-analytics>
 
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
-
-    <app-location route="{{route}}"></app-location>
+    <app-location
+        route="{{route}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
 
     <app-route
         route="{{route}}"
-        pattern="[[baseUrl]]:page"
+        pattern="[[rootPath]]:module"
         data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+        tail="{{subroute}}">
+    </app-route>
 
-    <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
-
+    <app-drawer-layout id="layout" responsive-width="850px"
+                       fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
       <!-- Drawer content -->
-      <app-drawer id="drawer" transition-duration="350" small-menu$="[[smallMenu]]">
+      <app-drawer id="drawer" slot="drawer" transition-duration="350"
+                  swipe-open="[[narrow]]" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
-        <app-sidebar-menu base-url="[[baseUrl]]"
-                          page="[[page]]"
+        <app-sidebar-menu root-path="[[rootPath]]"
+                          module="[[module]]"
                           small-menu$="[[smallMenu]]"></app-sidebar-menu>
       </app-drawer>
 
       <!-- Main content -->
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
 
-        <app-header fixed shadow>
-          <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
+        <app-header slot="header" fixed shadow>
+          <page-header id="pageheader" title="eTools"></page-header>
         </app-header>
 
         <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
 
-          <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
-            <page-partners id="partners" class="main-page"
-                           show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
-                           current-page="[[_lastActivePartnerPage]]"
-                           route="{{subroute}}"
-                           permissions="[[permissions]]">
-            </page-partners>
-          </template>
-
-          <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
-            <page-agreements id="agreements" class="main-page"
+          <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
+            <partners-module id="partners" class="main-page"
+                             show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+                             current-page="[[_lastActivePartnersModule]]"
                              route="{{subroute}}"
                              permissions="[[permissions]]">
-            </page-agreements>
+            </partners-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
-            <page-interventions id="interventions" class="main-page"
-                                route="{{subroute}}"
-                                permissions="[[permissions]]">
-            </page-interventions>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
+            <agreements-module id="agreements" class="main-page"
+                               route="{{subroute}}"
+                               permissions="[[permissions]]">
+            </agreements-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
-            <page-reports id="reports" class="main-page"
-                          route="{{subroute}}"
-                          permissions="[[permissions]]">
-            </page-reports>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
+            <interventions-module id="interventions" class="main-page"
+                                  route="{{subroute}}"
+                                  permissions="[[permissions]]">
+            </interventions-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
-            <page-not-found class="main-page"></page-not-found>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
+            <reports-module id="reports" class="main-page"
+                            route="{{subroute}}"
+                            permissions="[[permissions]]">
+            </reports-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
-            <page-settings id="settings" class="main-page"></page-settings>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
+            <not-found class="main-page"></not-found>
+          </template>
+
+          <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
+            <settings-module id="settings" class="main-page"></settings-module>
           </template>
 
         </div>
+
         <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
+
         <div id="floating-footer"
              hidden$="[[!amendmentModeActive]]">
           <strong> AMENDMENT MODE </strong>
@@ -198,198 +228,182 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       </app-header-layout>
     </app-drawer-layout>
-    <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
 
-    <!-- get static data -->
-    <partners-list-data></partners-list-data>
-    <agreement-list-data></agreement-list-data>
+    <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
+
+    <!-- TODO: polymer2 - static data load here -->
     <static-common-data></static-common-data>
-
+    <partners-list-data></partners-list-data>
+    <agreements-list-data></agreements-list-data>
   </template>
 
   <script>
+    'use strict';
 
-    Polymer({
+    /**
+     * TODO: polymer2 - integrate IE11
+     */
 
-      is: 'app-shell',
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.AppMenu
+     * @appliesMixin EtoolsPmpApp.Mixins.ToastNotifications
+     * @appliesMixin EtoolsMixins.LoadingMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
+     * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
+     * @appliesMixin EtoolsPmpApp.Mixins.UserData
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.IE11
+     */
+    const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.AppMenu,
+      EtoolsPmpApp.Mixins.ToastNotifications,
+      EtoolsMixins.LoadingMixin,
+      EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.ScrollControl,
+      EtoolsPmpApp.Mixins.AmendmentMode,
+      EtoolsPmpApp.Mixins.UserData,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.IE11
+    ], Polymer.Element);
 
-      behaviors: [
-        EtoolsPmpApp.Behaviors.EnvironmentFlags,
-        EtoolsPmpApp.Behaviors.IE11,
-        EtoolsPmpApp.Behaviors.AppMenu,
-        EtoolsPmpApp.Behaviors.NotificationToasts,
-        etoolsBehaviors.LoadingBehavior,
-        EtoolsPmpApp.Behaviors.ScrollControl,
-        EtoolsPmpApp.Behaviors.AmendmentMode
-      ],
+    /**
+     * PMP main element used to configure and display all app modules
+     * @polymer
+     * @customElement
+     * @appliesMixin AppShellRequiredMixins
+     */
+    class AppShell extends AppShellRequiredMixins {
+      static get is() {
+        return 'app-shell';
+      }
 
-      properties: {
-        page: {
-          type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
-        },
-        route: {
-          type: Object,
-          observer: '_routeChanged'
-        },
-        narrow: {
-          type: Boolean,
-          reflectToAttribute: true
-        },
-        baseUrl: String,
-        permissions: {
-          type: Object,
-          value: null
-        },
-        subroute: {
-          type: Object
-        },
-        routeData: {
-          type: Object
-        },
-        _lastActivePartnerPage: String,
-        prpPages: {
-          type: Array,
-          value: ['reports', 'settings']
-        }
-      },
+      static get properties() {
+        return {
+          /**
+           * `module` property represents the current displayed module of the PMP app.
+           * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
+           * Main modules will have other pages and routing (prefixed by app-shell route).
+           */
+          module: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_moduleChanged'
+          },
+          route: Object,
+          routeData: Object,
+          subroute: Object,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+          narrow: {
+            type: Boolean,
+            reflectToAttribute: true
+          },
+          user: Object,
+          permissions: {
+            type: Object,
+            value: null
+          },
+          _lastActivePartnersModule: String,
+          _prpModules: {
+            type: Array,
+            value: ['reports', 'settings']
+          },
+          _appModuleMainElUrlTmpl: {
+            type: String,
+            value: 'modules/app-modules/##module##/##main-el-name##-module.html'
+          }
+        };
+      }
 
-      observers: [
-        '_routePageChanged(routeData.page)'
-      ],
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.module)',
+          '_scrollToTopOnPageChange(module)'
+        ];
+      }
 
-      listeners: {
-        'drawer': 'toggleDrawer',
-        'update-main-path': '_updateMainPath',
-        'update-route-query-params': '_updateQueryParams',
-        'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog',
-        '404': '_pageNotFound'
-      },
-
-      _onForbidden: function() {
-        window.location.href = EtoolsPmpApp.Config.loginPath;
-      },
-
-      created: function() {
+      constructor() {
+        super();
         this.checkIE11Browser();
-      },
+      }
 
-      _routeChanged: function() {
-        this.scrollToTop();
-      },
-
-      ready: function() {
-        window.EtoolsEsmmFitIntoEl = Polymer.dom(document.querySelector('app-shell').root)
-            .querySelector('#appHeadLayout').$$('#contentContainer');
-        // for some reason the "$=" will make basePath undefined, we need to use a local property
-        this.baseUrl = EtoolsPmpApp.Config.basePath;
+      ready() {
+        super.ready();
+        this._initListeners();
+        this.requestUserData();
+        window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
 
         this.addIE11StyleTweaks();
 
-        if (this.page !== 'not-found') {
+        if (this.module !== 'not-found') {
           /*
            * Activate the global loading with default message.
            * This will be triggered once at page load or, after page load, on menu option tap event.
-           * The loading message is disabled by page-* elements ready callback (in both cases)
+           * The loading message is disabled by *-module.html elements ready callback (in both cases)
            */
-          this.fire('global-loading', {
+          this.fireEvent('global-loading', {
             active: true,
             loadingSource: 'main-page'
           });
         }
-      },
+      }
 
-      _openDataRefreshDialog: function() {
-        this.$.dataRefreshDialog.open();
-      },
+      _initListeners() {
+        /**
+         * TODO: polymer2 - make sure called methods exist
+         */
+        this.addEventListener('404', this._pageNotFound);
+        this.addEventListener('update-main-path', this._updateMainPath);
+        this.addEventListener('update-route-query-params', this._updateQueryParams);
+        this.addEventListener('forbidden', this._onForbidden);
+        this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+      }
 
-      toggleDrawer: function() {
-        this.$.drawer.toggle();
-      },
-
-      _updateMainPath: function(e) {
-        if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
-          // set route.path only if received path is different
-          this._updatePath(e.detail.path);
-          this.scrollToTop();
-        }
-        e.stopImmediatePropagation();
-      },
-      _updateQueryParams: function(e) {
-        this.set('route.__queryParams', e.detail);
-      },
-      _updatePath: function(path) {
-        this.set('route.__queryParams', null);
-        this.set('route.path', this.baseUrl + path);
-      },
-
-      _pageChanged: function(page) {
-        // set last partners active page... needed to make a difference between partners and government-partners
-        this._updateLastPartnersActivePage(page);
-        // clear loading messages queue
-        this.fire('clear-loading-messages', {});
-        this._setAmendMode(false);
-      },
-
-      _routePageChanged: function(routePage) {
-        this.debounce('routePageChanges', () => {
-          if (!routePage) {
-            this._updatePath('partners/list');
-            return;
-          }
-
-          this._canAccessPage(routePage).then((accessGranted) => {
-            if (!accessGranted) {
-              this._pageNotFound();
-            } else {
-              this._importMainPage(routePage);
-              this.set('page', routePage);
-            }
-          });
-        }, 10);
-      },
-
-      _importMainPage: function(page) {
-        if (!page) {
+      _scrollToTopOnPageChange(module) {
+        // TODO: polymer2 - check if this observer is correct. Do we realy need it?
+        if (!module) {
           return;
         }
-        let mainPageName = this._getMainPageName(page);
-        let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
-        // import main page if needed
-        let pageEl = this._getPageElement(mainPageName);
-        if (!Polymer.isInstance(pageEl)) {
-          // pageEl is null => make the import
-          this.importHref(resolvedPageUrl, this._successfulImportCallback.bind(this, mainPageName),
-              this._pageNotFound, false);
+        this.scrollToTop();
+      }
+
+      _onForbidden() {
+        window.location.href = EtoolsPmpApp.Config.loginPath;
+      }
+
+      _updateMainPath(e) {
+        if (e.detail.path !== this.route.path.replace(this.rootPath, '')) {
+          // set route.path only if received path is different
+          this._updatePath(e.detail.path);
         }
-      },
+        e.stopImmediatePropagation();
+      }
 
-      // main page import success callback
-      _successfulImportCallback: function(currentLoadingPage) {
-        // pageEl will be available only after import successfully completes
-        let pageEl = this._getPageElement(currentLoadingPage);
-        // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(pageEl, this._redirectToProperListPage.bind(this));
-      },
+      _updateQueryParams(e) {
+        this.set('route.__queryParams', e.detail);
+      }
 
-      _getMainPageName: function(page) {
-        return page === 'government-partners' ? 'partners' : page;
-      },
+      _updatePath(path) {
+        this.set('route.__queryParams', null);
+        this.set('route.path', this.rootPath + path);
+      }
 
-      _pageNotFound: function() {
+      _pageNotFound() {
         this._updatePath('not-found');
-        // the _pageChanged method will trigger and clear loading messages so no need to do that here
-        this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
-      },
+        // the _moduleChanged method will trigger and clear loading messages so no need to do that here
+        this.fireEvent('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
+      }
 
-      _getPageElement: function(pageId) {
-        return this.$$('#' + pageId);
-      },
+      _openDataRefreshDialog() {
+        this.$.dataRefreshDialog.open();
+      }
 
-      _canAccessPage: function(page) {
-        // TODO: (future task) use defer method from utils behavior
+      _canAccessPage(module) {
+        // TODO: (future task) use defer method from utils mixin
         // (NOTE: not all utils behavior functionality is needed)
         let defer = {};
         defer.promise = new Promise(function(resolve, reject) {
@@ -397,35 +411,126 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           defer.reject = reject;
         });
 
-        let isPrpPage = this.prpPages.indexOf(page) > -1;
+        let isPrpModule = this._prpModules.indexOf(module) > -1;
 
-        if (!isPrpPage) {
+        if (!isPrpModule) {
           defer.resolve(true);
         } else {
-          // only prp pages can have access restricted
+          // only prp modules can have access restricted
           this._waitForEnvFlagsToLoad().then(() => {
             defer.resolve(this.showPrpReports());
           });
         }
 
         return defer.promise;
-      },
+      }
 
-      _activePageIs: function(activePage, expectedPages) {
-        let pagesToMatch = expectedPages.split('|');
-        return pagesToMatch.indexOf(activePage) > -1;
-      },
-      _redirectToProperListPage: function() {
+      /**
+       * Set active module using route module param
+       * @param routePage
+       */
+      _routePageChanged(routePage) {
+        // If no routePage was found in the route data, routePage will be an empty string.
+        // Default to 'partners/list' in that case.
+        if (!routePage) {
+          this._updatePath('partners/list');
+          return;
+        }
+
+        this._canAccessPage(routePage).then((accessGranted) => {
+          if (!accessGranted) {
+            this._pageNotFound();
+          } else {
+            this.set('module', routePage);
+          }
+        });
+
+        // Close a non-persistent drawer when the module & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _moduleChanged(module) {
+        // Load module import on demand. Show 404 page if fails
+        this._importAppModuleMainEl(module);
+        // set last partners active page... needed to make a difference between partners and government-partners
+        this._updateLastPartnersModuleActivePage(module);
+        // clear loading messages queue
+        this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+        this._setAmendMode(false);
+      }
+
+      _getModuleMainElUrl(elementName) {
+        let url = this._appModuleMainElUrlTmpl.replace('##module##', elementName);
+        if (elementName === 'not-found') {
+          url = url.replace('-module.', '.');
+        }
+        return url.replace('##main-el-name##', elementName);
+      }
+
+      /**
+       * Import app module main element.
+       * This element will have it's own routing based on app-shell subroute
+       * @param module
+       * @private
+       */
+      _importAppModuleMainEl(module) {
+        if (!module) {
+          return;
+        }
+        // resolve element import url
+        let appModuleMainElId = this._getAppModuleMainElId(module);
+        let resolvedPageUrl = this.resolveUrl(this._getModuleMainElUrl(appModuleMainElId));
+
+        // import main module element if needed
+        let moduleMainEl = this._getModuleMainElement(appModuleMainElId);
+        let isPolymerElement = moduleMainEl instanceof Polymer.Element;
+        if (!isPolymerElement) {
+          // moduleMainEl is null => make the import
+          Polymer.importHref(
+              resolvedPageUrl,
+              this._successfulImportCallback.bind(this, appModuleMainElId),
+              this._pageNotFound.bind(this),
+              true);
+        }
+      }
+
+      _getAppModuleMainElId(module) {
+        return module === 'government-partners' ? 'partners' : module;
+      }
+
+      _getModuleMainElement(moduleId) {
+        return this.shadowRoot.querySelector('#' + moduleId);
+      }
+
+      /**
+       * Module main element import success callback
+       * @param currentLoadingPage
+       */
+      _successfulImportCallback(moduleId) {
+        // moduleMainEl will be available only after import successfully completes
+        let moduleMainEl = this._getModuleMainElement(moduleId);
+        // make sure to redirect to list page if necessary
+        Polymer.RenderStatus.afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
+      }
+
+      _activeModuleIs(activeModule, expectedModule) {
+        let pagesToMatch = expectedModule.split('|');
+        return pagesToMatch.indexOf(activeModule) > -1;
+      }
+
+      _redirectToProperListPage() {
         if (this.route.path.indexOf('not-found') > -1) {
           return;
         }
-        if (this.route.path === this.baseUrl || this.route.path === '/') {
+        if (this.route.path === this.rootPath || this.route.path === '/') {
           // setting the default path when user enters the app
           // redirect from /pmp/ to /pmp/partners/list
-          this.set('route.path', this.baseUrl + 'partners/list');
+          this.set('route.path', this.rootPath + 'partners/list');
           return;
         }
-        // redirect from /pmp/<page> to /pmp/<page>/list
+        // redirect from /pmp/<module> to /pmp/<module>/list
         let currentPath = this.route.path;
         if (currentPath.indexOf('settings') > -1) {
           return;
@@ -433,22 +538,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (currentPath.substr(-1) === '/') {
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
-        if (currentPath === this.baseUrl + this.routeData.page) {
-          this.set('route.path', this.baseUrl + this.routeData.page + '/list');
-        }
-      },
-
-      _showOnlyGovernmentPartners: function(page) {
-        return page === 'government-partners';
-      },
-
-      _updateLastPartnersActivePage: function(page) {
-        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
-          this.set('_lastActivePartnerPage', page);
+        if (currentPath === this.rootPath + this.routeData.module) {
+          this.set('route.path', this.rootPath + this.routeData.module + '/list');
         }
       }
 
-    });
+      _showOnlyGovernmentPartners(module) {
+        return module === 'government-partners';
+      }
 
+      _updateLastPartnersModuleActivePage(module) {
+        if (module && ['partners', 'government-partners'].indexOf(module) > -1) {
+          this.set('_lastActivePartnersModule', module);
+        }
+      }
+
+    }
+
+    window.customElements.define(AppShell.is, AppShell);
   </script>
 </dom-module>

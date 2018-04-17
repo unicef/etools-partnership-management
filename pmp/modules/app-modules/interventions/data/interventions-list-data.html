@@ -1,0 +1,196 @@
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../config/dexie-db-config.html">
+<link rel="import" href="../../../mixins/list-data-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
+
+<dom-module id="interventions-list-data">
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.ListData
+     */
+    class InterventionsListData extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.ListData
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'interventions-list-data';
+      }
+
+      static get properties() {
+        return {
+          endpointName: {
+            type: String,
+            value: 'interventions'
+          },
+
+          dataLoadedEventName: {
+            type: String,
+            value: 'interventions-loaded'
+          },
+
+          filteredInterventions: {
+            type: Array,
+            readOnly: true,
+            notify: true
+          },
+
+          totalResults: {
+            type: Number,
+            readOnly: true,
+            notify: true
+          },
+
+          currentQuery: {
+            type: Object,
+            value: null
+          }
+        };
+      }
+
+      query(field, order, searchString, documentTypes, cpOutputs,
+                      interventionStatuses, sections, unicefFocalPoints, offices, startDate,
+                      endDate, pageNumber, pageSize, showQueryLoading) {
+
+        // If an active query transaction exists, abort it and start
+        // a new one
+        if (this.currentQuery) {
+          this.currentQuery.abort();
+        }
+
+        let self = this;
+
+        if (showQueryLoading) {
+          this.fireEvent('global-loading', {
+            message: 'Loading PD/SSFA list data...',
+            active: true,
+            loadingSource: 'pd-ssfa-list'
+          });
+        }
+
+        let interventionsDexieTable = EtoolsPmpApp.DexieDb.interventions;
+        EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function() {
+          self.currentQuery = Dexie.currentTransaction;
+
+          let queryResult = interventionsDexieTable;
+          if (field) {
+            // note: null values don't appear in result set of sort
+            queryResult = queryResult.orderBy(field);
+          }
+          if (order === 'desc') {
+            queryResult = queryResult.reverse();
+          }
+
+          queryResult = queryResult.filter(function(intervention) {
+
+            if (documentTypes.length) {
+              let matchType = documentTypes.filter(function(selectedType) {
+                return selectedType === intervention.document_type;
+              })[0];
+
+              if (!matchType) {
+                return false;
+              }
+            }
+
+            if (cpOutputs.length) {
+              let matchCpOut = intervention.cp_outputs.filter(function(cpOut) {
+                return cpOutputs.indexOf(cpOut + '') > -1;
+              });
+              if (matchCpOut && matchCpOut.length === 0) {
+                return false;
+              }
+            }
+
+            if (interventionStatuses.length) {
+              let matchStatus = interventionStatuses.filter(function(selectedStatus) {
+                return selectedStatus === intervention.status;
+              })[0];
+
+              if (!matchStatus) {
+                return false;
+              }
+            }
+
+            if (sections.length) {
+              let matchSections = intervention.sections.filter(function(section) {
+                return sections.indexOf(section + '') > -1;
+              });
+              if (matchSections && matchSections.length === 0) {
+                return false;
+              }
+            }
+            if (unicefFocalPoints.length) {
+              let matchUnicefFocalPoints = intervention.unicef_focal_points.filter(function(fPt) {
+                return unicefFocalPoints.indexOf(fPt + '') > -1;
+              });
+              if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
+                return false;
+              }
+            }
+
+            if (offices.length) {
+              let matchOffices = intervention.offices.filter(function(officeId) {
+                return offices.indexOf(officeId + '') > -1;
+              });
+              if (matchOffices && matchOffices.length === 0) {
+                return false;
+              }
+            }
+
+            if (startDate && startDate.length &&
+                (!intervention.start || !moment.utc(intervention.start).isAfter(moment.utc(startDate)))) {
+              return false;
+            }
+
+            if (endDate && endDate.length &&
+                (!intervention.end || !moment.utc(intervention.end).isBefore(moment.utc(endDate)))) {
+              return false;
+            }
+
+            if (searchString && searchString.length &&
+                intervention.title.toLowerCase().indexOf(searchString) < 0 &&
+                intervention.partner_name.toLowerCase().indexOf(searchString) < 0 &&
+                intervention.number.toLowerCase().indexOf(searchString) < 0) {
+              return false;
+            }
+
+            return true;
+          });
+
+          // This special Dexie function allows the work of counting
+          // the number of query results to be done in a parallel process,
+          // instead of blocking the main query
+          Dexie.ignoreTransaction(function() {
+            queryResult.count(function(count) {
+              self._setTotalResults(count);
+            });
+          });
+
+          return queryResult
+              .offset((pageNumber - 1) * pageSize)
+              .limit(pageSize)
+              .toArray();
+
+        }).then(function(result) {
+          self._setFilteredInterventions(result);
+          self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+        }).catch(function(error) {
+          console.error('Error querying interventions: ' + error);
+          self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+        });
+      }
+
+    }
+
+    window.customElements.define(InterventionsListData.is, InterventionsListData);
+  </script>
+</dom-module>

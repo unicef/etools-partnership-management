@@ -1,0 +1,47 @@
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+  /**
+   * @polymer
+   * @mixinFunction
+   */
+  EtoolsPmpApp.Mixins.AmendmentMode = (baseClass) => class extends baseClass {
+
+    static get properties() {
+      return {
+        amendmentModeActive: {
+          type: Boolean,
+          value: false
+        }
+      };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      this.addEventListener('set-amendment-mode', this._updateAmendmentMode);
+    }
+
+    _updateAmendmentMode(event) {
+      let detail = event.detail || {};
+      this._setAmendMode(detail.active);
+    }
+
+    _getPageContainerClass(amendmentModeActive) {
+      return amendmentModeActive ? 'in-amendment' : '';
+    }
+
+    _setAmendMode(newVal) {
+      this.set('amendmentModeActive', !!newVal);
+    }
+
+    _closeAmendment() {
+      let intervElem = this.shadowRoot.querySelector('#interventions');
+      if (intervElem) {
+        intervElem._showFinalizeAmendmentDialog();
+      }
+    }
+
+  };
+</script>

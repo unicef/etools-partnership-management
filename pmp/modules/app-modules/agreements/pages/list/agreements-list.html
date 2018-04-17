@@ -1,0 +1,506 @@
+<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/utils/debounce.html">
+
+<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../layout/components/etools-date-input.html">
+
+<link rel="import" href="../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../mixins/list-filters-mixin.html">
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../../mixins/pagination-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+
+<link rel="import" href="../../data/agreements-list-data.html">
+
+<dom-module id="agreements-list">
+  <template strip-whitespace>
+
+    <style
+        include="shared-styles data-table-styles list-filter-styles paper-material-styles grid-layout-styles">
+
+      .ag-ref {
+        @apply --text-btn-style;
+        text-transform: none;
+      }
+
+    </style>
+
+    <template is="dom-if" if="[[stampListData]]">
+      <agreements-list-data id="agreements"
+                            filtered-agreements="{{filteredAgreements}}"
+                            total-results="{{paginator.count}}"
+                            list-data-path="filteredAgreements"
+                            on-agreements-loaded="_requiredDataHasBeenLoaded"
+                            fire-data-loaded>
+      </agreements-list-data>
+    </template>
+
+    <div id="listControls" class="paper-material" elevation="1">
+
+      <div class="wrap-controls">
+
+        <paper-input id="query"
+                     type="search"
+                     placeholder="Search"
+                     autocomplete="off"
+                     value="{{q}}">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </paper-input>
+
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="Agreement Type"
+              options="[[agreementTypes]]"
+              selected-values="{{selectedAgTypes}}"
+              hide-search></etools-dropdown-multi>
+        </div>
+
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="Agreement Status"
+              options="[[agreementStatuses]]"
+              selected-values="{{selectedAgStatuses}}"
+              hide-search></etools-dropdown-multi>
+        </div>
+
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <div class="filter esmm">
+              <etools-dropdown-multi
+                  label="[[filter.filterName]]"
+                  disabled$="[[!filter.selectionOptions.length]"
+                  options="[[filter.selectionOptions]]"
+                  selected-values="[[filter.alreadySelected]]"
+                  data-filter-path$="[[filter.path]]"
+                  on-etools-selected-items-changed="esmmValueChanged"
+                  trigger-value-change-event>
+              </etools-dropdown-multi>
+              <paper-icon-button class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+            <div class="filter">
+              <etools-date-input id$="datepicker_[[filter.path]]"
+                                 label="[[filter.filterName]]"
+                                 placeholder="&#8212;"
+                                 value="{{filter.dateSelected}}"
+                                 format="D MMM YYYY"
+                                 on-date-has-changed="_filterDateHasChanged"
+                                 data-filter-path$="[[filter.path]]"
+                                 fire-date-has-changed no-init show-clear-btn>
+              </etools-date-input>
+              <paper-icon-button class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+        </template>
+
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filter-bar-action-wrapper menu-btn-wrapper">
+          <paper-menu-button id="filterMenu">
+            <paper-button class="button" slot="dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              Add filter
+            </paper-button>
+            <paper-listbox slot="dropdown-content">
+              <template is="dom-repeat" items="[[availableListFilterOptions]]">
+                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="list" class="paper-material hidden" elevation="1">
+
+      <etools-data-table-header
+          id="listHeader"
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
+        <etools-data-table-column class="col-2" field="agreement_number" sortable>
+          Reference Number #
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4" field="partner_name" sortable>
+          Partner Full Name
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_type">
+          Type
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_status">
+          Status
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="start" sortable>
+          Start Date
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="end" sortable>
+          End Date
+        </etools-data-table-column>
+      </etools-data-table-header>
+
+      <template id="rows" is="dom-repeat"
+                items="[[filteredAgreements]]" as="agreement"
+                initial-count="10" on-dom-change="_listDataChanged">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
+          <div slot="row-data">
+            <span class="col-data col-2 ">
+              <a class="ag-ref truncate"
+                 href="agreements/[[agreement.id]]/details"
+                 title="[[getDisplayValue(agreement.agreement_number)]]"
+                 on-tap="_triggerAgreementLoadingMsg">
+                [[getDisplayValue(agreement.agreement_number)]]
+              </a>
+            </span>
+            <span class="col-data col-4" title="[[getDisplayValue(agreement.partner_name)]]">
+              <span class="truncate"> [[getDisplayValue(agreement.partner_name)]] </span>
+            </span>
+            <span class="col-data col-2">
+                [[getDisplayValue(agreement.agreement_type)]]
+            </span>
+            <span class="col-data col-2 capitalize">
+                [[getDisplayValue(agreement.status)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.start)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.end)]]
+            </span>
+
+          </div>
+          <div slot="row-data-details">
+
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By Partner Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_partner_date)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By UNICEF Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_unicef_date)]]</span>
+            </div>
+
+          </div>
+        </etools-data-table-row>
+      </template>
+
+      <etools-data-table-footer
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}">
+      </etools-data-table-footer>
+
+    </div>
+
+  </template>
+
+  <script>
+    'use strict';
+    let _agreementsLastNavigated = null;
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
+     * @appliesMixin EtoolsPmpApp.Mixins.ListsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.Pagination
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    const AgreementsListRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.ListFilters,
+      EtoolsPmpApp.Mixins.ListsCommon,
+      EtoolsPmpApp.Mixins.Pagination,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    ], Polymer.Element);
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AgreementsListRequiredMixins
+     */
+    class AgreementsList extends AgreementsListRequiredMixins {
+      static get is() {
+        return 'agreements-list';
+      }
+
+      static get properties() {
+        return {
+          filteredAgreements: {
+            type: Array,
+            notify: true,
+            observer: '_listChanged'
+          },
+          selectedAgTypes: {
+            type: Array,
+            value: []
+          },
+          selectedAgStatuses: {
+            type: Array,
+            value: []
+          },
+          selectedPartners: {
+            type: Array,
+            observer: 'resetPageNumber'
+          },
+          startDate: {
+            type: String,
+            observer: 'resetPageNumber'
+          },
+          endDate: {
+            type: String,
+            observer: 'resetPageNumber'
+          },
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
+          agreementTypes: {
+            type: Array,
+            statePath: 'agreementTypes'
+          },
+          agreementStatuses: {
+            type: Array,
+            statePath: 'agreementStatuses'
+          },
+          _sortableFieldNames: {
+            type: Array,
+            value: ['agreement_number', 'partner_name', 'start', 'end']
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
+          '_initFiltersMenuList(partnersDropdownData)',
+          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
+          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+          '_init(active)'
+        ];
+      }
+
+      _initFiltersMenuList(partnersDropdownData) {
+        if (!partnersDropdownData) {
+          // this is just to be safe, the method should only get triggered once when redux data is loaded
+          return;
+        }
+        // init list filter options
+        this.initListFiltersData([
+          {
+            filterName: 'Partner',
+            type: 'esmm', // etools-multi-selection-menu
+            multiple: true,
+            selectionOptions: partnersDropdownData,
+            alreadySelected: [],
+            path: 'selectedPartners'
+          },
+          {
+            filterName: 'Starts After',
+            type: 'datepicker', // etools-datepicker
+            dateSelected: '',
+            path: 'startDate'
+          },
+          {
+            filterName: 'Ends Before',
+            type: 'datepicker', // etools-datepicker
+            dateSelected: '',
+            path: 'endDate'
+          }
+        ]);
+        this._updateSelectedFiltersValues();
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        /**
+         * Disable loading message for main list elements load,
+         * triggered by parent element on stamp
+         */
+        this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
+        this.listAttachedCallback(this.active, 'Loading agreements list data...', 'ag-list');
+      }
+
+      // Input: URL query params
+      // Initializes the properties of the list at page load
+      // to the params interpretted from the URL string.
+      _init(active) {
+        let urlQueryParams = this.urlParams;
+        if (!active || !urlQueryParams) {
+          return;
+        }
+        this.set('initComplete', false);
+        this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+        this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
+        this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
+        this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
+        this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
+        this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+
+        this.setPaginationDataFromUrlParams(urlQueryParams);
+
+        // format of sort param is sort=field.order ex: sort=name.asc
+        let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
+        this.set('sortOrder', result);
+        this.set('initComplete', true);
+        this._updateSelectedFiltersValues();
+      }
+
+      _updateSelectedFiltersValues() {
+        this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
+            Polymer.Async.timeOut.after(20),
+            () => {
+              let filtersValues = [
+                {
+                  filterName: 'Partner',
+                  selectedValue: _.map(this.selectedPartners, 'value')
+                },
+                {
+                  filterName: 'Starts After',
+                  selectedValue: this.startDate
+                },
+                {
+                  filterName: 'Ends Before',
+                  selectedValue: this.endDate
+                }
+              ];
+              this.updateShownFilters(filtersValues);
+            });
+      }
+
+      // Updates URL state with new query string, and launches query
+      _updateUrlAndData() {
+        if (this._canFilterData()) {
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+          let qs = this._buildQueryString();
+          this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs,
+              this._filterListData.bind(this));
+          _agreementsLastNavigated = qs || _agreementsLastNavigated;
+        }
+      }
+
+      _filterListData(forceNoLoading) {
+        // Query is debounced with a debounce time
+        // set depending on what action the user takes
+        this.queryDebouncer = Polymer.Debouncer.debounce(this.queryDebouncer,
+            Polymer.Async.timeOut.after(this.debounceTime),
+            () => {
+              let agreements = this.shadowRoot.querySelector('#agreements');
+              if (!agreements) {
+                return;
+              }
+              agreements.query(
+                  this.sortOrder.field,
+                  this.sortOrder.direction,
+                  this.q.trim().toLowerCase(),
+                  this.selectedAgTypes,
+                  this.selectedAgStatuses,
+                  _.map(this.selectedPartners, 'label'),
+                  this.startDate,
+                  this.endDate,
+                  this.paginator.page,
+                  this.paginator.page_size,
+                  forceNoLoading ? false : this.showQueryLoading
+              );
+            });
+      }
+
+      // Outputs the query string for the list
+      _buildQueryString() {
+        return this._buildUrlQueryString({
+          page: this.paginator.page,
+          size: this.paginator.page_size,
+          q: this.q,
+          type: this.selectedAgTypes,
+          status: this.selectedAgStatuses,
+          partners: _.map(this.selectedPartners, 'value'),
+          start: this.startDate,
+          end: this.endDate,
+          sort: this.sortOrder
+        });
+      }
+
+      _buildCsvDownloadUrl() {
+        let endpointUrl = this.getEndpoint('agreements').url;
+        let params = {
+          agreement_type: this.selectedAgTypes,
+          status: this.selectedAgStatuses,
+          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners.map(p => p.label) : '',
+          start: this.startDate,
+          end: this.endDate,
+          search: this.q
+        };
+        return this._buildCsvExportUrl(params, endpointUrl);
+      }
+
+      // Convert ids from URL into array of ids
+      _getPartners(urlIds) {
+        let urlIdsArr = urlIds.split('|');
+        if (urlIdsArr.length) {
+          return this._getPartnersByIds(urlIdsArr);
+        }
+        return [];
+      }
+
+      // get partners by ids
+      _getPartnersByIds(partnerIds) {
+        if (partnerIds instanceof Array && partnerIds.length &&
+            this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
+          let _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+            return partnerIds.indexOf(partner.value + '') > -1;
+          });
+          return _selectedPartners;
+        }
+        return [];
+      }
+
+      // verify date and prettify or not
+      _checkAndShowAgreementDate(dateString) {
+        return this.getDisplayValue(dateString, true);
+      }
+
+      _triggerAgreementLoadingMsg() {
+        this.fireEvent('trigger-agreement-loading-msg');
+      }
+    }
+
+    window.customElements.define(AgreementsList.is, AgreementsList);
+  </script>
+</dom-module>

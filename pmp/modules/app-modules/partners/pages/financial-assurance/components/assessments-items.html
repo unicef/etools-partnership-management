@@ -1,0 +1,335 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../../../layout/components/etools-single-file.html">
+
+<link rel="import" href="../../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
+
+<link rel="import" href="../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../../../styles/file-styles.html">
+<link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
+
+<dom-module id="assessments-items">
+  <template strip-whitespace>
+    <style
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles buttons-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      .assessments {
+        padding-bottom: 24px;
+        @apply --layout-vertical-reverse;
+      }
+
+      .add-btn-wrapper {
+        padding-top: 24px;
+      }
+
+      .add-btn-lm {
+        margin-left: 46px;
+      }
+
+      etools-single-file {
+        width: 100%;
+      }
+
+      .row-h.file-container {
+        padding-bottom: 15px;
+      }
+
+      .no-assessments-warning {
+        padding-top: 0;
+      }
+
+    </style>
+
+    <div class="row-h add-btn-wrapper">
+      <paper-button hidden$="[[!editMode]]"
+                    on-tap="_addNewAssessment"
+                    class$="secondary-btn [[_getAddBtnAdditionalClass(dataItems.length)]]">
+        ADD OTHER ASSESSMENT
+      </paper-button>
+    </div>
+
+    <div class="assessments"
+         hidden$="[[_emptyList(dataItems.length)]]">
+      <template is="dom-repeat" items="{{dataItems}}">
+        <div class="row-h item-container">
+          <div class="item-actions-container">
+
+            <div class="actions">
+              <paper-icon-button class="action delete"
+                                 on-tap="_openDeleteConfirmation"
+                                 data-args$="[[index]]"
+                                 disabled$="[[!editMode]]"
+                                 icon="cancel">
+              </paper-icon-button>
+            </div>
+          </div>
+          <div class="item-content">
+            <div class="row-h">
+              <div class="col col-4">
+                <!-- Assessment type -->
+                <etools-dropdown id$="assessmentType_[[index]]"
+                                 label="Assessment Type"
+                                 placeholder="&#8212;"
+                                 options="[[assessmentTypes]]"
+                                 selected="{{item.type}}"
+                                 readonly="[[!editMode]]"
+                                 error-message="Please select Assessment Type"
+                                 hide-search></etools-dropdown>
+              </div>
+              <div class="col col-4">
+                <required-and-not-future-date-validator validator-name="dateSubmitted_[[index]]_validator"
+                                                        field-selector="#dateSubmitted_[[index]]">
+                </required-and-not-future-date-validator>
+                <!-- Date submitted -->
+                <etools-date-input id$="dateSubmitted_[[index]]"
+                                   label="Date of Assessment"
+                                   value="{{item.completed_date}}"
+                                   readonly="[[!editMode]]"
+                                   auto-validate
+                                   validator="dateSubmitted_[[index]]_validator"
+                                   no-init show-clear-btn>
+                </etools-date-input>
+              </div>
+            </div>
+            <div class="row-h file-container">
+              <!-- Report file -->
+              <etools-single-file
+                  id$="report_[[index]]"
+                  label="Report"
+                  file="{{item.report}}"
+                  internal-file="{{item.report_file}}"
+                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
+                  readonly="[[!editMode]]"
+                  accept=".doc,.docx,.pdf,.jpg,.png"
+                  error-message="Please select the report file"></etools-single-file>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="row-h no-assessments-warning" hidden$="[[!_emptyList(dataItems.length)]]">
+      <p>There are no assessments added.</p>
+    </div>
+
+  </template>
+
+  <script>
+    'use strict';
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.RepeatableDataSets,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
+
+    /**
+     *
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     * @appliesMixin AssessmentsItemsRequiredMixins
+     */
+    class AssessmentsItems extends AssessmentsItemsRequiredMixins {
+
+      static get is() {
+        return 'assessments-items';
+      }
+
+      static get properties() {
+        return {
+          _deleteEpName: {
+            type: String,
+            value: 'partnerAssessmentDelete',
+            readOnly: true,
+          },
+          open: {
+            type: Boolean,
+            value: true,
+            reflectToAttribute: true
+          },
+          editMode: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_editModeChanged'
+          },
+          assessmentTypes: {
+            type: Array,
+            statePath: 'assessmentTypes'
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_makeSureDataItemsAreValid(dataItems)',
+          '_assessmentPropertyChanged(dataItems.*)'
+        ];
+      }
+
+      ready() {
+        super.ready();
+
+        this.dataSetModel = {
+          type: null,
+          completed_date: null,
+          current: false,
+          report: null,
+          report_file: ''
+        };
+      }
+
+      _editModeChanged() {
+        this.updateStyles();
+      }
+
+      _hideDeleteBtn(itemReportFile) {
+        return !!itemReportFile;
+      }
+
+      _assessmentPropertyChanged(dataPath) {
+        if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
+            dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1 &&
+            dataPath.path.indexOf('dateErrorMessage') === -1) {
+          let dataPathPieces = dataPath.path.split('.');
+          let propertyValChangeDetected = !isNaN(parseInt(dataPathPieces[1], 10));
+          if (propertyValChangeDetected) {
+            let itemPath = dataPathPieces[0] + '.' + dataPathPieces[1];
+            let item = this.get(itemPath);
+            let index = this.dataItems.indexOf(item);
+            this._validateAssessment(index);
+          }
+        }
+      }
+
+      _isValid(field, type, completedDate, reportFile, reportFileLength) {
+        let valid = true;
+        switch (field) {
+          case 'assessmentType':
+            if (_.isEmpty(type) && (!_.isEmpty(completedDate) || this._hasReport(reportFile, reportFileLength))) {
+              valid = false;
+            }
+            break;
+          case 'dateSubmitted':
+            if (_.isEmpty(completedDate) && (!_.isEmpty(type) || this._hasReport(reportFile, reportFileLength))) {
+              valid = false;
+            }
+            break;
+          case 'report':
+            if (!this._hasReport(reportFile, reportFileLength) && (!_.isEmpty(type) || !_.isEmpty(completedDate))) {
+              valid = false;
+            }
+            break;
+        }
+        return valid;
+      }
+
+      _hasReport(report, reportFileLength) {
+        return report instanceof File || reportFileLength > 0;
+      }
+
+      _addNewAssessment() {
+        if (this.editMode) {
+          let lastAssessmentAdded = this._getLastDataItem();
+          if (this._emptyAssessment(lastAssessmentAdded)) {
+            this.fireEvent('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
+          } else {
+            this._addElement();
+          }
+        }
+      }
+
+      validate() {
+        let valid = true;
+        if (this.dataItems instanceof Array && this.dataItems.length > 0) {
+          this.dataItems.forEach((item, index) => {
+            if (this._emptyAssessment(item) ||
+                (!this._emptyAssessment(item) && !this._validateAssessment(index))) {
+              valid = false;
+            }
+          });
+        }
+        return valid;
+      }
+
+      _validateAssessment(index) {
+        let valid = true;
+        let fields = ['#assessmentType_' + index, '#dateSubmitted_' + index, '#report_' + index];
+        fields.forEach((fieldSelector) => {
+          let fieldEl = this.shadowRoot.querySelector(fieldSelector);
+          let reportFileLength = 0;
+
+          if (typeof this.dataItems[index].report_file === 'string') {
+            reportFileLength = this.dataItems[index].report_file.length;
+          }
+          if (fieldEl) {
+            let fieldName = this._getFieldNameFromSelector(fieldSelector);
+            let validField = this._isValid(fieldName,
+                this.dataItems[index].type,
+                this.dataItems[index].completed_date,
+                this.dataItems[index].report,
+                reportFileLength, fieldEl);
+            fieldEl.invalid = !validField;
+            if (!validField) {
+              valid = false;
+            }
+          }
+        });
+
+        return valid;
+      }
+
+      _emptyAssessment(assessment) {
+        return assessment && !assessment.type &&
+            assessment.completed_date === null &&
+            assessment.report_file.length === 0 &&
+            assessment.report instanceof File === false;
+      }
+
+      _getFieldNameFromSelector(fieldSelector) {
+        if (typeof fieldSelector === 'string' && fieldSelector !== '') {
+          return fieldSelector.slice(1).slice(0, fieldSelector.indexOf('_') - 1);
+        }
+        return '';
+      }
+
+      _getAddBtnAdditionalClass(shownAssessmentsNumber) {
+        return shownAssessmentsNumber ? 'add-btn-lm' : '';
+      }
+
+    }
+
+    window.customElements.define(AssessmentsItems.is, AssessmentsItems);
+  </script>
+</dom-module>
+
+
