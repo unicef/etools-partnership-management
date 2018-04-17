@@ -61,7 +61,7 @@
           return false;
         }
         // date ca not be in the future
-        this._setNoFutureDateErrorMessageErrorMessage();
+        this._setNoFutureDateErrorMessage();
         return (!this.required && !dateValueStr) || d <= Date.now();
       }
 
@@ -69,7 +69,7 @@
         this.set('errorMessage', this.requiredErrorMessage);
       }
 
-      _setNoFutureDateErrorMessageErrorMessage() {
+      _setNoFutureDateErrorMessage() {
         this.set('errorMessage', this.noFutureDateErrorMessage);
       }
 
