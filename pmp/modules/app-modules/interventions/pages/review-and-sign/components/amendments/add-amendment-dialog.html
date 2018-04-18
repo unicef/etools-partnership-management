@@ -10,6 +10,7 @@
 <link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../../../layout/components/etools-date-input.html">
@@ -118,12 +119,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AddAmendmentDialogMixin = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.AjaxErrorsParser,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element);
 
     /**
@@ -215,7 +218,8 @@
         }
         if (interventionDocumentType === this.CONSTANTS.DOCUMENT_TYPES.SSFA) {
           this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment) => {
-            return ['Dates', 'Other'].indexOf(newAmendment.label) > -1;
+            return [this.CONSTANTS.PD_AMENDMENT_TYPES.Dates,
+                    this.CONSTANTS.PD_AMENDMENT_TYPES.Other].indexOf(newAmendment.label) > -1;
           });
         } else {
           this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));

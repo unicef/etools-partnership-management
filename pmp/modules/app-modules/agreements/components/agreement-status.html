@@ -3,6 +3,8 @@
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../config/app-constants.html">
+
 <link rel="import" href="../../../layout/components/etools-status/etools-status.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
 
@@ -30,10 +32,12 @@
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsStatusCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementStatusRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.EtoolsStatusCommon
+      EtoolsPmpApp.Mixins.EtoolsStatusCommon,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element);
 
 
@@ -119,31 +123,31 @@
       setPossibleStatuses() {
         this.set('possibleStatuses', [
           {
-            label: 'Draft',
+            label: this.CONSTANTS.STATUSES.Draft,
             hidden: false,
             completed: false
           },
           {
-            label: 'Signed',
+            label: this.CONSTANTS.STATUSES.Signed,
             hidden: false,
             completed: false
           },
           {
-            label: 'Suspended',
+            label: this.CONSTANTS.STATUSES.Suspended,
             icon: 'av:pause-circle-filled',
             iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
             hidden: false,
             completed: false
           },
           {
-            label: 'Terminated',
+            label: this.CONSTANTS.STATUSES.Terminated,
             icon: 'report-problem',
             iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
             hidden: false,
             completed: false
           },
           {
-            label: 'Ended',
+            label: this.CONSTANTS.STATUSES.Ended,
             hidden: false,
             completed: false
           }
@@ -205,57 +209,57 @@
         let activeStatus;
 
         switch (status) {
-          case 'draft':
+          case this.CONSTANTS.STATUSES.draft:
             availableStatuses = [
-              'Draft',
-              'Signed',
-              'Ended'
+              this.CONSTANTS.STATUSES.Draft,
+              this.CONSTANTS.STATUSES.Signed,
+              this.CONSTANTS.STATUSES.Ended
             ];
-            activeStatus = 'Draft';
+            activeStatus = this.CONSTANTS.STATUSES.Draft;
             break;
 
-          case 'signed':
+          case this.CONSTANTS.STATUSES.signed:
             availableStatuses = [
-              'Draft',
-              'Signed',
-              'Ended'
+              this.CONSTANTS.STATUSES.Draft,
+              this.CONSTANTS.STATUSES.Signed,
+              this.CONSTANTS.STATUSES.Ended
             ];
-            activeStatus = 'Signed';
+            activeStatus = this.CONSTANTS.STATUSES.Signed;
             break;
 
-          case 'suspended':
+          case this.CONSTANTS.STATUSES.suspended:
             availableStatuses = [
-              'Draft',
-              'Signed',
-              'Suspended',
-              'Ended'
+              this.CONSTANTS.STATUSES.Draft,
+              this.CONSTANTS.STATUSES.Signed,
+              this.CONSTANTS.STATUSES.Suspended,
+              this.CONSTANTS.STATUSES.Ended
             ];
-            activeStatus = 'Suspended';
+            activeStatus = this.CONSTANTS.STATUSES.Suspended;
             break;
 
-          case 'terminated':
+          case this.CONSTANTS.STATUSES.terminated:
             availableStatuses = [
-              'Draft',
-              'Signed',
-              'Terminated',
-              'Ended'
+              this.CONSTANTS.STATUSES.Draft,
+              this.CONSTANTS.STATUSES.Signed,
+              this.CONSTANTS.STATUSES.Terminated,
+              this.CONSTANTS.STATUSES.Ended
             ];
-            activeStatus = 'Terminated';
+            activeStatus = this.CONSTANTS.STATUSES.Terminated;
             break;
 
-          case 'ended':
+          case this.CONSTANTS.STATUSES.ended:
             availableStatuses = [
-              'Draft',
-              'Signed',
-              'Ended'
+              this.CONSTANTS.STATUSES.Draft,
+              this.CONSTANTS.STATUSES.Signed,
+              this.CONSTANTS.STATUSES.Ended
             ];
-            activeStatus = 'Ended';
+            activeStatus = this.CONSTANTS.STATUSES.Ended;
             break;
           default:
             availableStatuses = [
-              'Draft',
-              'Signed',
-              'Ended'
+              this.CONSTANTS.STATUSES.Draft,
+              this.CONSTANTS.STATUSES.Signed,
+              this.CONSTANTS.STATUSES.Ended
             ];
             activeStatus = '';
             break;
@@ -289,15 +293,16 @@
           return false;
         }
 
-        if (newStatus === 'draft') { // TODO Is this check necessary?
+        if (newStatus === this.CONSTANTS.STATUSES.draft) {
           // if agreement was not saved (is new) or the status is already changed
           // from draft, stop status change
-          if (this.status !== 'draft') {
+          if (this.status !== this.CONSTANTS.STATUSES.draft) {
             return false;
           }
         }
-        if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
-          if (this.status !== 'signed') {
+        if ([this.CONSTANTS.STATUSES.suspended,
+             this.CONSTANTS.STATUSES.terminated].indexOf(newStatus) > -1) {
+          if (this.status !== this.CONSTANTS.STATUSES.signed) {
             // prevent suspending or terminating anything other than signed agreement
             return false;
           }
@@ -307,13 +312,13 @@
 
       _computeWarningMessage(newStatus) {
         switch (newStatus) {
-          case 'terminated':
+          case this.CONSTANTS.STATUSES.terminated:
             this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?');
             break;
-          case 'suspended':
+          case this.CONSTANTS.STATUSES.suspended:
             this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?');
             break;
-          case 'signed':
+          case this.CONSTANTS.STATUSES.signed:
             this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?');
             break;
           default:
@@ -323,15 +328,15 @@
       }
 
       _setStatusTerminated() {
-        this._updateStatus('terminated');
+        this._updateStatus(this.CONSTANTS.STATUSES.terminated);
       }
 
       _setStatusSuspended() {
-        this._updateStatus('suspended');
+        this._updateStatus(this.CONSTANTS.STATUSES.suspended);
       }
 
       _unsuspendAgreement() {
-        this._updateStatus('signed');
+        this._updateStatus(this.CONSTANTS.STATUSES.signed);
       }
 
       _triggerAgDeleteOnConfirm(e) {
