@@ -210,10 +210,26 @@
                     </span>
                 </etools-info-tooltip>
               </div>
-              <div
-                  class$="col col-2 right-align [[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
-                [[partnership.fr_currency]] [[getFrsTotal(partnership.fr_currencies_are_consistent,
-                partnership.actual_amount)]]
+              <div class="col col-2 right-align">
+                  <etools-info-tooltip
+                    class="fr-nr-warn currency-mismatch"
+                    icon-first
+                    custom-icon
+                    hide-tooltip="[[!showMultiCurrErr(partnership.multi_curr_flag)]]">
+                    <span slot="field">
+                      <template is="dom-if" if="[[!showMultiCurrErr(partnership.multi_curr_flag)]]">
+                        <span class="amount-currency">[[partnership.fr_currency]]</span>
+                        <span>[[getFrsTotalMultiCurr(partnership.actual_amount)]]</span>
+                      </template>
+                      <span class="amount-currency" hidden$="[[!showMultiCurrErr(partnership.multi_curr_flag)]]"> - </span>
+                    </span>
+                  <iron-icon
+                      icon="pmp-custom-icons:not-equal"
+                      slot="custom-icon"></iron-icon>
+                  <span slot="message">
+                      <span>[[getFrsCurrencyTooltipMsg()]]</span>
+                    </span>
+                </etools-info-tooltip>
               </div>
               <div class="col center-align overflow-hidden">
                 <span class="partnership-status">[[partnership.status]]</span>

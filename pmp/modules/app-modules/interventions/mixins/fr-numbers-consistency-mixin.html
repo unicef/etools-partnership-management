@@ -27,7 +27,8 @@
             'as the FR.\n',
             amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
             dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
-            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
+            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
+            FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
           }
         },
         frsValidationFields: {
@@ -185,6 +186,9 @@
     getFrsTotal(frsCurrencyMatch, totalAmt) {
       return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
     }
+    getFrsTotalMultiCurr(totalAmt) {
+      return this.displayCurrencyAmount(totalAmt, '0.00');
+    }
 
     allCurrenciesMatch(frsCurrencyMatch, frs, plannedBudgetCurrency) {
       return frsCurrencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
@@ -204,6 +208,10 @@
         return 'pmp-custom-icons:1+';
       }
       return 'pmp-custom-icons:not-equal';
+    }
+
+    showMultiCurrErr(multiCurrFlag) {
+      return !!multiCurrFlag;
     }
 
     getFrsTotalNotAvailableClass(frsCurrencyMatch) {
@@ -252,6 +260,9 @@
           ? this.frsConsistencyWarnings.tooManyFrsCurencies
           : this.frsConsistencyWarnings.currencyMismatch;
       return msg + '\n' + this.frsConsistencyWarnings.amountsCannotBeCompared;
+    }
+    getFrsCurrencyTooltipMsg(){
+      return this.frsConsistencyWarnings.FCmultiCurrFlagErrorMsg;
     }
 
   }
