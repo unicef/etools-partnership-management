@@ -560,7 +560,7 @@
         }
 
         if (agreementProperty && agreementProperty.path === 'agreement.agreement_type') {
-          if (agreementProperty.value !== CONSTANTS.AGREEMENT_TYPES.PCA) {
+          if (agreementProperty.value !== this.CONSTANTS.AGREEMENT_TYPES.PCA) {
             // reset country_programme as it's available only for PCA type
             this.set('agreement.country_programme', null);
             // reset start and end date

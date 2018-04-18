@@ -257,7 +257,8 @@
       }
 
       _getAmendmentTypes(agreementType, _amendmentTypes) {
-        if ([this.CONSTANTS.AGREEMENT_TYPES.PCA, this.CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
+        if ([this.CONSTANTS.AGREEMENT_TYPES.PCA,
+             this.CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
             !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
           return [];
         }
