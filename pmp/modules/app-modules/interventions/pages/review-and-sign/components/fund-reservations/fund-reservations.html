@@ -1,7 +1,6 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../../bower_components/polymer/lib/utils/debounce.html">
-<link rel="import" href="../../../../../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -60,7 +59,7 @@
     <etools-content-panel panel-title="Fund Reservations">
       <paper-icon-button slot="panel-btns"
                          icon="add-box"
-                         on-tap="_openFrsUpdateDialog"
+                         on-click="_openFrsUpdateDialog"
                          hidden$="[[!editMode]]"
                          disabled$="[[!editMode]]"></paper-icon-button>
       <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
@@ -93,20 +92,18 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
-     * @appliesMixin Polymer.GestureEventListeners
+     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.ArrayHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
      */
     const InterventionFundReservationsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
-      Polymer.GestureEventListeners,
+      EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.ArrayHelper,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.FrNumbersConsistency
     ], Polymer.Element);
 

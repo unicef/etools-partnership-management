@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -41,11 +40,9 @@
     /**
      * @polymer
      * @customElement
-     * @appliesMixin Polymer.GestureEventListeners
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     class IconsActions extends EtoolsMixinFactory.combineMixins([
-      Polymer.GestureEventListeners,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element) {
 
