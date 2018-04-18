@@ -10,7 +10,8 @@
    * @appliesMixin EtoolsLogsMixin
    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
    */
-  EtoolsPmpApp.Mixins.MissingDropdownOptions = (baseClass) => class extends EtoolsPmpApp.Mixins.Endpoints(EtoolsLogsMixin(baseClass)) {
+  EtoolsPmpApp.Mixins.MissingDropdownOptions =
+      baseClass => class extends EtoolsPmpApp.Mixins.Endpoints(EtoolsLogsMixin(baseClass)) {
 
     setDropdownMissingOptionsAjaxDetails(dropdownEl, endpointName, params) {
       let self = this;

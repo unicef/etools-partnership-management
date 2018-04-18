@@ -16,7 +16,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
    */
   EtoolsPmpApp.Mixins.EtoolsStatusCommon = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsPmpApp.Mixins.ScrollControl(
+      superClass => class extends EtoolsPmpApp.Mixins.ScrollControl(
           EtoolsMixins.DynamicDialogMixin(EtoolsLogsMixin(superClass))) {
 
         static get properties() {

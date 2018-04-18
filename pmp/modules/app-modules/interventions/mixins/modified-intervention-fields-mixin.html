@@ -5,13 +5,15 @@
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
+  /* eslint-disable arrow-parens */
+
   /**
    * PD/SSFA fields prepare for save functionality
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.ModifiedInterventionFields = Polymer.dedupingMixin((superClass) => class extends superClass {
-
+  EtoolsPmpApp.Mixins.ModifiedInterventionFields = Polymer.dedupingMixin(superClass => class extends superClass {
+    /* eslint-enable arrow-parens */
     _objectFieldIsModified(fieldName) {
       let isModified = JSON.stringify(this.originalIntervention[fieldName], this.numbersToString) !==
           JSON.stringify(this.intervention[fieldName], this.numbersToString);

@@ -86,27 +86,27 @@
 
           warning: {
             type: Boolean,
-            value: true,
+            value: true
           },
 
           reportedOn: {
             type: Array,
-            value: [],
+            value: []
           },
 
           formattedData: {
             type: Object,
-            notify: true,
+            notify: true
           },
 
           data: {
             type: Object,
-            observer: '_cloneData',
+            observer: '_cloneData'
           },
 
           editableBool: {
             type: Boolean,
-            computed: '_computeEditableBool(editable)',
+            computed: '_computeEditableBool(editable)'
           }
         };
       }
@@ -167,7 +167,7 @@
         this.set('formattedData', Object.assign({}, this.formattedData, {
           disaggregation: {},
           level_reported: this.reportedOn.length,
-          disaggregation_reported_on: this.reportedOn,
+          disaggregation_reported_on: this.reportedOn
         }));
       }
 

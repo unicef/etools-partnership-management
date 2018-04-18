@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
@@ -96,11 +97,13 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.EventHelper
@@ -229,7 +232,8 @@
             }
           }
         } catch (err) {
-          console.error('An error occurred on deleting attachment no: #' + (event.detail.index + 1), err);
+          this.logError('An error occurred on deleting attachment no: #' + (event.detail.index + 1),
+              'intervention-attachments', err);
         }
       }
 

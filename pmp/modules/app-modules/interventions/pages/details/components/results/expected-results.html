@@ -126,7 +126,7 @@
           _deleteEpName: {
             type: String,
             value: 'interventionResultLinkDelete',
-            readOnly: true,
+            readOnly: true
           },
           editMode: {
             type: Boolean
@@ -232,7 +232,7 @@
           let indicator = data.indicatorData;
           let i;
           for (i = 0; i < this.dataItems.length; i++) {
-            //search expected result item by output id
+            // search expected result item by output id
             if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
 
               if (actionParams.appliedIndicatorsIndex !== null) {

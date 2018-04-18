@@ -8,7 +8,7 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.IndicatorsCommon = Polymer.dedupingMixin((superClass) => class extends superClass {
+  EtoolsPmpApp.Mixins.IndicatorsCommon = Polymer.dedupingMixin(superClass => class extends superClass {
 
     _baselineChanged(baseline) {
       if (!this.indicator || this._isEmptyExcept0(baseline)) {

@@ -1,6 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
@@ -116,7 +115,7 @@
             <div class="indicator">
               <div class="layout-horizontal">
                 <div class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]">
-                  <paper-icon-button on-tap="_toggle"
+                  <paper-icon-button on-click="_toggle"
                                      toggles-ind-details$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
                                      icon$="[[_computeIcon(indicatorReport.expanded)]]">
                   </paper-icon-button>
@@ -177,10 +176,10 @@
      * @polymer
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Utils
      */
     class ReportProgress extends EtoolsMixinFactory.combineMixins([
-      Polymer.GestureEventListeners,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Utils

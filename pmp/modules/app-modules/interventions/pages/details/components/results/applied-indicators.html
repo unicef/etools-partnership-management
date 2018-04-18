@@ -60,7 +60,7 @@
           _deleteEpName: {
             type: String,
             value: 'getEditDeleteIndicator',
-            readOnly: true,
+            readOnly: true
           },
           resultLinkIndex: Number,
           editMode: Boolean,
@@ -134,7 +134,9 @@
           this.indicToDeactivateIndex = -1;
           return;
         }
-        let indicatorId = this.dataItems[this.indicToDeactivateIndex] ? this.dataItems[this.indicToDeactivateIndex].id : null;
+        let indicatorId = this.dataItems[this.indicToDeactivateIndex]
+            ? this.dataItems[this.indicToDeactivateIndex].id
+            : null;
         if (!indicatorId) {
           return;
         }

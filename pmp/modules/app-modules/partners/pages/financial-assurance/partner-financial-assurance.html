@@ -568,8 +568,8 @@
         }
         let requestOptions = this._getEngagementsRequestOptions(partner.id);
         this.sendRequest(requestOptions)
-            .then((results) => this._init(results))
-            .catch((err) => this.handleErrorResponse(err));
+            .then(results => this._init(results))
+            .catch(err => this.handleErrorResponse(err));
 
         this.set('basisOptions', []);
         this._addBasisFromPartner();
@@ -579,7 +579,7 @@
       _addBasisFromPartner() {
         this.set('basisOptions', [
           ...this.basisOptions,
-          ...this.partner.assessments.map((a) => ({
+          ...this.partner.assessments.map(a => ({
             label: `${a.type} - ${this.prettyDate(a.completed_date)}`,
             value: `${a.type} - ${this.prettyDate(a.completed_date)}`
           }))
@@ -589,7 +589,7 @@
       _addBasisFromEngagements(engagements) {
         this.set('basisOptions', [
           ...this.basisOptions,
-          ...engagements.map((e) => ({
+          ...engagements.map(e => ({
             label: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`,
             value: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`
           }))

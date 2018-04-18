@@ -511,11 +511,6 @@
         });
       }
 
-      _updateAgreementStatus(e) {
-        e.stopImmediatePropagation();
-        this.$.agreementData.updateAgreementStatus(e.detail);
-      }
-
       _deleteAgreement(e) {
         this.$.agreementData.deleteAgreement(e.detail.id);
       }

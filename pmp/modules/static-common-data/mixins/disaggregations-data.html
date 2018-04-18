@@ -11,7 +11,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     EtoolsPmpApp.Mixins.DisaggregationsData =
-        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+        baseClass => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
           static get actions() {
             return {
               setDisaggregationsData: function(disaggregs) {

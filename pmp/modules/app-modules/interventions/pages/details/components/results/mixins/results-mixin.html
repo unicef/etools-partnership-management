@@ -20,7 +20,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
   EtoolsPmpApp.Mixins.Results = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsMixinFactory.combineMixins([
+      superClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsLogsMixin,
         EtoolsPmpApp.Mixins.EtoolsDataReduxStore
       ], superClass) {
