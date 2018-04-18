@@ -75,7 +75,7 @@
 
         setPaginationDataFromUrlParams(urlParams) {
           this.setPageNumber(urlParams.page ? parseInt(urlParams.page) : 1);
-          this.setPageSize(urlParams.size ? parseInt(urlParams.size) : this.DEFAULT_LIST_SIZE);
+          this.setPageSize(urlParams.size ? parseInt(urlParams.size) : this.CONSTANTS.DEFAULT_LIST_SIZE);
         }
 
         _pageInsidePaginationRange(page, totalResults) {

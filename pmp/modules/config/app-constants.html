@@ -10,17 +10,27 @@
 
       static get properties() {
         return {
-          PdExportTypes: {
+          CONSTANTS: {
             type: Object,
             value: {
-                PdResult: 'PD Result',
-                PdBudget: 'PD Budget'
-            },
-            readOnly: true
-          },
-          DEFAULT_LIST_SIZE: {
-            type: Number,
-            value: 10
+              PdExportTypes: {
+                  PdResult: 'PD Result',
+                  PdBudget: 'PD Budget'
+              },
+              DEFAULT_LIST_SIZE: 10,
+              DOCUMENT_TYPES: {
+                PD: 'PD',
+                SSFA: 'SSFA',
+                SHPD: 'SHPD',
+                ProgrammeDocument: 'Programme Document',
+                SimplifiedHumanitarianProgrammeDocument: 'Simplified Humanitarian Programme Document'
+              },
+              AGREEMENT_TYPES: {
+                PCA: 'PCA',
+                SSFA: 'SSFA',
+                MOU: 'MOU'
+              }
+            }
           }
         };
       }
