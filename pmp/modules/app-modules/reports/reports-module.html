@@ -39,109 +39,113 @@
       :host {
         display: block;
       }
+
       h1[main-title] sup {
         font-size: 14px;
       }
+
       etools-action-button {
         min-width: 160px;
       }
     </style>
 
     <app-route
-      route="{{route}}"
-      pattern="/list"
-      query-params="{{listPageQueryParams}}"
-      active="{{listActive}}"></app-route>
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"></app-route>
 
     <app-route
-      route="{{route}}"
-      pattern="/:id/:tab"
-      active="{{tabsActive}}"
-      data="{{routeData}}"></app-route>
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
 
     <page-content-header with-tabs-visible="[[tabsActive]]">
-        <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            Partner Reports
-          </template>
-          <template is="dom-if" if="[[tabsActive]]">
-            <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
-            <sup><report-status status="[[report.status]]"></report-status></sup>
-          </template>
-        </div>
-
-        <div slot="title-row-actions" class="content-header-actions">
-          <div class="action" hidden$="[[!tabsActive]]">
-            <etools-action-button actions="[[reportActions]]"
-                                  on-accept-report="_accept"
-                                  on-send-back-to-partner="_sendBackToPartner"
-                                  on-download-report="_download"></etools-action-button>
-          </div>
-        </div>
-
-        <template is="dom-if" if="[[tabsActive]]">
-          <etools-tabs slot="tabs"
-                        tabs="[[reportTabs]]"
-                        active-tab="{{routeData.tab}}"
-                        on-iron-select="_handleTabSelectAction"></etools-tabs>
+      <div slot="page-title">
+        <template is="dom-if" if="[[listActive]]">
+          Partner Reports
         </template>
-      </page-content-header>
+        <template is="dom-if" if="[[tabsActive]]">
+          <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
+          <sup>
+            <report-status status="[[report.status]]"></report-status>
+          </sup>
+        </template>
+      </div>
 
-      <div id="main">
-        <div id="pageContent">
-          <iron-pages id="reportsPages"
-                      selected="{{activePage}}"
-                      attr-for-selected="name"
-                      role="main">
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!tabsActive]]">
+          <etools-action-button actions="[[reportActions]]"
+                                on-accept-report="_accept"
+                                on-send-back-to-partner="_sendBackToPartner"
+                                on-download-report="_download"></etools-action-button>
+        </div>
+      </div>
 
-            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-              <reports-list id="list"
-                            name="list"
-                            active="[[listActive]]"
-                            url-params="[[preservedListQueryParams]]"></reports-list>
-            </template>
+      <template is="dom-if" if="[[tabsActive]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[reportTabs]]"
+                     active-tab="{{routeData.tab}}"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
+    </page-content-header>
 
-            <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
-              <report-summary name="summary" report="[[report]]"></report-summary>
-            </template>
+    <div id="main">
+      <div id="pageContent">
+        <iron-pages id="reportsPages"
+                    selected="{{activePage}}"
+                    attr-for-selected="name"
+                    role="main">
 
-            <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
-              <report-progress id="reportDetails"
-                                name="progress"
-                                report="[[report]]"></report-progress>
-            </template>
-          </iron-pages>
+          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+            <reports-list id="list"
+                          name="list"
+                          active="[[listActive]]"
+                          url-params="[[preservedListQueryParams]]"></reports-list>
+          </template>
 
-        </div> <!-- page content end -->
-        <!-- No sidebar here -->
-      </div> <!-- main container end -->
+          <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
+            <report-summary name="summary" report="[[report]]"></report-summary>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
+            <report-progress id="reportDetails"
+                             name="progress"
+                             report="[[report]]"></report-progress>
+          </template>
+        </iron-pages>
+
+      </div> <!-- page content end -->
+      <!-- No sidebar here -->
+    </div> <!-- main container end -->
 
   </template>
   <script>
     'use strict';
 
     /**
-    * @polymer
-    * @mixinFunction
-    * @appliesMixin EtoolsLogsMixin
-    * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
-    * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
-    * @appliesMixin EtoolsPmpApp.Mixins.ReportDetails
-    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
-    * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
-    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-    */
-    const ReportsModuleRequiredMixins =  EtoolsMixinFactory.combineMixins([
-        EtoolsLogsMixin,
-        EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-        EtoolsPmpApp.Mixins.ModuleRouting,
-        EtoolsPmpApp.Mixins.ReportDetails,
-        EtoolsPmpApp.Mixins.Endpoints,
-        EtoolsPmpApp.Mixins.ScrollControl,
-        EtoolsPmpApp.Mixins.EventHelper
-      ], Polymer.Element);
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
+     * @appliesMixin EtoolsPmpApp.Mixins.ReportDetails
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    const ReportsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+      EtoolsPmpApp.Mixins.ModuleRouting,
+      EtoolsPmpApp.Mixins.ReportDetails,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.ScrollControl,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
-     /**
+    /**
      * @polymer
      * @customElement
      * @appliesMixin ReportsModuleRequiredMixins
@@ -190,11 +194,11 @@
         super.ready();
 
         this.mockupListLoadedDebouncer = Polymer.Debouncer.debounce(this.mockupListLoadedDebouncer,
-          Polymer.Async.timeOut.after(500),
+            Polymer.Async.timeOut.after(500),
             () => {
-                this.fireEvent('global-loading', {active: false});
+              this.fireEvent('global-loading', {active: false});
             }
-          );
+        );
       }
 
       connectedCallback() {
@@ -252,10 +256,10 @@
             return;
           }
           this.loadingReportDataDebouncer = Polymer.Debouncer.debounce(this.loadingReportDataDebouncer,
-          Polymer.Async.timeOut.after(50),
-            () => {
-              this.requestReportDetails.bind(this, id)();
-            }
+              Polymer.Async.timeOut.after(50),
+              () => {
+                this.requestReportDetails.bind(this, id)();
+              }
           );
         }, 0);
       }

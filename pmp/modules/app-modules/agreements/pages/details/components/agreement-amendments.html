@@ -261,8 +261,9 @@
             !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
           return [];
         }
-        if (agreementType === CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          return _amendmentTypes.filter((type) => type.value === 'Change authorized officer');
+
+        if (agreementType === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
+          return _amendmentTypes.filter(type => type.value === 'Change authorized officer');
         }
         return _amendmentTypes;
       }
@@ -361,7 +362,7 @@
 
       _newAmendmentsHaveChangeAuthOfficersSelected() {
         let changeAuthOfficersTypeSelected = this.dataItems.find(
-            (amendment) => !amendment.id && this._changeAuthorizedOfficersTypeSelected(amendment.types)
+            amendment => !amendment.id && this._changeAuthorizedOfficersTypeSelected(amendment.types)
         );
         return !!changeAuthOfficersTypeSelected;
       }
@@ -390,11 +391,11 @@
           let amTypesFiltered = [];
 
           // search for item amendments types
-          let amTypes = this._amendmentTypes.filter((t) => types.indexOf(t.value) > -1);
+          let amTypes = this._amendmentTypes.filter(t => types.indexOf(t.value) > -1);
 
           if (amTypes.length) {
             // map to get the labels
-            amTypesFiltered = amTypes.map((t) => t.label);
+            amTypesFiltered = amTypes.map(t => t.label);
           }
 
           for (let key in this.legacyAmendmentTypes) {

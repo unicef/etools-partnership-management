@@ -10,7 +10,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
   EtoolsPmpApp.Mixins.EnvironmentFlags = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass) {
+      superClass => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass) {
 
         static get properties() {
           return {

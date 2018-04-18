@@ -1,11 +1,15 @@
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <script>
+  'use strict';
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
   /**
-  * @polymer
-  * @mixinFunction
-  */
-  EtoolsPmpApp.Mixins.IE11 = (baseClass) => class extends baseClass {
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
+   */
+  EtoolsPmpApp.Mixins.IE11 = baseClass => class extends EtoolsLogsMixin(baseClass) {
 
     static get properties() {
       return {
@@ -44,6 +48,9 @@
       appHeaderLayout.set('hasScrollingRegion', false);
       appHeaderLayout.style.height = '100%';
       let contentContainer = appHeaderLayout.shadowRoot.querySelector('#contentContainer');
+      if (!contentContainer) {
+        this.logWarn('contentContainer not found !!!', 'ie11-mixin');
+      }
       if (contentContainer) {
         contentContainer.style.minHeight = '100vh';
         contentContainer.style.boxSizing = 'border-box';

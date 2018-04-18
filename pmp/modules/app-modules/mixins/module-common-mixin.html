@@ -10,7 +10,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    */
   EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsPmpApp.Mixins.EventHelper(superClass) {
+      superClass => class extends EtoolsPmpApp.Mixins.EventHelper(superClass) {
         static get properties() {
           return {
             /* Gets updated by app-route */

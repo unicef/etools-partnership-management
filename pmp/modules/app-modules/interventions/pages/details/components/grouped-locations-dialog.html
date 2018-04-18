@@ -104,10 +104,10 @@
 
       static get properties() {
         return {
-          adminLevels: {//location types
+          adminLevels: { // location types
             type: Array,
             statePath: 'locationTypes',
-            observer: 'adminLevelsChanged',
+            observer: 'adminLevelsChanged'
           },
           adminLevel: {
             type: String,
@@ -119,7 +119,7 @@
             statePath: 'locations'
           },
           interventionLocations: {
-            type: Array,
+            type: Array
           },
           interventionLocationIds: {
             type: Array,

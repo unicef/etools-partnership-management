@@ -92,11 +92,13 @@
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
       }
+
       paper-toggle-button#showInactive {
         --paper-toggle-button-label-color: white;
         --paper-toggle-button-checked-bar-color: white;
         padding-right: 10px;
       }
+
       div[slot="panel-btns"]#add-show-inactive-btns {
         @apply --layout-horizontal;
       }
@@ -331,8 +333,8 @@
             </paper-toggle-button>
             <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
               <paper-icon-button icon="add-box"
-                                title="Add"
-                                on-click="openCpOutputAndRamIndicatorsDialog">
+                                 title="Add"
+                                 on-click="openCpOutputAndRamIndicatorsDialog">
               </paper-icon-button>
             </template>
           </div>
@@ -552,12 +554,13 @@
           this.thereAreInactiveIndicators = !!this._getNoOFInactiveIndicators();
         }
       }
+
       _getNoOFInactiveIndicators() {
         return this.intervention.result_links.map((rl) => {
-            return rl.ll_results.map(llr => {
-                    return llr.applied_indicators.filter(i => !i.is_active).length;
-                  }).reduce((a,b) => a + b, 0);
-          }).reduce((a,b) => a + b, 0);
+          return rl.ll_results.map((llr) => {
+            return llr.applied_indicators.filter(i => !i.is_active).length;
+          }).reduce((a, b) => a + b, 0);
+        }).reduce((a, b) => a + b, 0);
       }
 
       openCpOutputAndRamIndicatorsDialog() {
@@ -681,14 +684,14 @@
         if (typeof oldId === 'number'
             && id !== oldId
             && !this.agreement) {
-          //Prevent reset on changes caused by initialization of the fields
+          // Prevent reset on changes caused by initialization of the fields
           this._resetDropdowns();
         }
         this.getPartnerStaffMembers(id);
       }
 
       _resetDropdowns() {
-        //Test case - go to existing intervention , then go to New intervention
+        // Test case - go to existing intervention , then go to New intervention
 
         // reset partner focal points options and value
         this.set('intervention.partner_focal_points', []);

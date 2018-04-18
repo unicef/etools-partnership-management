@@ -100,7 +100,7 @@
                   label: 'Closed',
                   hidden: false,
                   completed: false
-                },
+                }
               ];
             }
           },
@@ -221,10 +221,12 @@
         }
 
         for (let key in this.possibleActions) {
-          let actionName = this.possibleActions[key].label;
+          if (this.possibleActions[key]) {
+            let actionName = this.possibleActions[key].label;
 
-          if (availableOptions.indexOf(actionName) > -1) {
-            this.set(['possibleActions', key, 'hidden'], false);
+            if (availableOptions.indexOf(actionName) > -1) {
+              this.set(['possibleActions', key, 'hidden'], false);
+            }
           }
         }
       }
@@ -242,7 +244,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Draft;
             break;
@@ -253,7 +255,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Signed;
             break;
@@ -264,7 +266,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Active;
             break;
@@ -275,7 +277,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Suspended,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Suspended;
             break;
@@ -286,7 +288,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Terminated,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Terminated;
             break;
@@ -297,7 +299,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Closed;
             break;
@@ -308,7 +310,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Ended;
             break;
@@ -320,7 +322,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = this.CONSTANTS.STATUSES.Ended;
             break;
@@ -331,7 +333,7 @@
               this.CONSTANTS.STATUSES.Signed,
               this.CONSTANTS.STATUSES.Active,
               this.CONSTANTS.STATUSES.Ended,
-              this.CONSTANTS.STATUSES.Closed,
+              this.CONSTANTS.STATUSES.Closed
             ];
             activeStatus = '';
             break;

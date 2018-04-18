@@ -25,7 +25,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
    */
   EtoolsPmpApp.Mixins.StaffMembersData = Polymer.dedupingMixin(
-      (baseClass) => class extends EtoolsMixinFactory.combineMixins(StaffMembersDataRequiredMixinsList, baseClass) {
+      baseClass => class extends EtoolsMixinFactory.combineMixins(StaffMembersDataRequiredMixinsList, baseClass) {
 
     static get properties() {
       return {

@@ -9,7 +9,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.Constants
    */
   EtoolsPmpApp.Mixins.Pagination = Polymer.dedupingMixin(
-      (baseClass) => class extends EtoolsPmpApp.Mixins.Constants(baseClass) {
+      baseClass => class extends EtoolsPmpApp.Mixins.Constants(baseClass) {
         static get properties() {
           return {
             paginator: {

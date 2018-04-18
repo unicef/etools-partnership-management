@@ -214,6 +214,7 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = Polymer.dedupingMixin(PolymerRedux(dataReduxStore)) || {};
+  EtoolsPmpApp.Mixins.EtoolsDataReduxStore =
+      Polymer.dedupingMixin(PolymerRedux(dataReduxStore)) || {}; // eslint-disable-line
   // the || {} at the end is there to make the linting script happy
 </script>

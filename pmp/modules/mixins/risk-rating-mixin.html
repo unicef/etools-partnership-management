@@ -6,7 +6,7 @@
   * @polymer
   * @mixinFunction
   */
-  EtoolsPmpApp.Mixins.RiskRating = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.RiskRating = baseClass => class extends baseClass {
 
     getRiskRatingValue(riskRating) {
       if (typeof riskRating === 'string' && riskRating !== '') {

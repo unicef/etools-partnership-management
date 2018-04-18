@@ -163,10 +163,10 @@
             type: Object
           },
           interventionAgreement: {
-            type: Object,
+            type: Object
           },
           monitoringVisit: {
-            type: Array,
+            type: Array
           },
           cpOutputs: {
             type: Array,
@@ -221,7 +221,9 @@
 
         let id;
         for (id in ids) {
-          uniqueIds.push(parseInt(id));
+          if (id) {
+            uniqueIds.push(parseInt(id));
+          }
         }
         if (Array.isArray(this.cpOutputs) && this.cpOutputs.length > 0) {
           this.cpOutputs.forEach(function(cpo) {

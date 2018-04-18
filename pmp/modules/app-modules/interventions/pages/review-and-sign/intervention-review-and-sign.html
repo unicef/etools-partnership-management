@@ -262,7 +262,7 @@
         return {
           intervention: {
             type: Object,
-            observer: '_interventionChanged',
+            observer: '_interventionChanged'
           },
           signedByUnicefUsers: {
             type: Array,
@@ -288,7 +288,7 @@
           unicefDateValidatorErrorMessage: {
             type: String,
             value: ''
-          },
+          }
         };
       }
 
@@ -429,7 +429,7 @@
         e.stopImmediatePropagation();
         try {
           this.set('intervention.frs_details', e.detail.frsDetails);
-          let frIds = e.detail.frsDetails.frs.map((fr) => fr.id);
+          let frIds = e.detail.frsDetails.frs.map(fr => fr.id);
           this.set('intervention.frs', frIds);
         } catch (err) {
           this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);

@@ -163,7 +163,7 @@
 
       static get observers() {
         return [
-          '_countryProgrammesChanged(countryProgrammes, appModuleItem)',
+          '_countryProgrammesChanged(countryProgrammes, appModuleItem)'
         ];
       }
 
@@ -184,19 +184,6 @@
           }
         }
         return false;
-      }
-
-      _getExpiredCPWarning() {
-        let msg = '';
-        switch (this.module) {
-          case 'agreements':
-            msg = `Agreement ${this.appModuleItem.agreement_number}`;
-            break;
-          case 'interventions':
-            msg = `PD/SSFA ${this.appModuleItem.number}`;
-            break;
-        }
-        return msg + ' has an old/expired CP Structure!';
       }
 
       _getExpiredCPWarning() {
