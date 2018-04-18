@@ -211,7 +211,7 @@
                      intervention-id="[[intervention.id]]"
                      in-amendment="{{intervention.in_amendment}}"
                      amendments="{{intervention.amendments}}"
-                     edit-mode="[[canEditAmendments]]">
+                     edit-mode="[[intervention.permissions.edit.amendments]]">
       </pd-amendments>
     </template>
 
@@ -287,10 +287,6 @@
             type: String,
             value: ''
           },
-          canEditAmendments: {
-            type: Boolean,
-            value: false
-          }
         };
       }
 
