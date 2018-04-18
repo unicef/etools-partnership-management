@@ -392,7 +392,7 @@
       }
 
       _submittedToPrcAvailable(documentType) {
-        return documentType !== 'SSFA';
+        return documentType !== this.CONSTANTS.DOCUMENT_TYPES.SSFA;
       }
 
       _showDaysToSignedFields(status) {

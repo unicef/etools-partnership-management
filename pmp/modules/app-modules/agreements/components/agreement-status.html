@@ -164,14 +164,14 @@
             break;
           case 'signed':
             availableOptions.push('Save');
-            if (this.agreementType !== 'SSFA') {
+            if (this.agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
               availableOptions.push('Suspend');
               availableOptions.push('Terminate');
             }
             break;
 
           case 'suspended':
-            if (this.agreementType !== 'SSFA') {
+            if (this.agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
               availableOptions.push('Unsuspend');
             }
             break;

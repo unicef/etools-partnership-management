@@ -213,7 +213,7 @@
         if (!amendmentTypes || !interventionDocumentType) {
           return;
         }
-        if (interventionDocumentType === 'SSFA') {
+        if (interventionDocumentType === this.CONSTANTS.DOCUMENT_TYPES.SSFA) {
           this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment) => {
             return ['Dates', 'Other'].indexOf(newAmendment.label) > -1;
           });

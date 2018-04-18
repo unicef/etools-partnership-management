@@ -44,9 +44,6 @@
       appHeaderLayout.set('hasScrollingRegion', false);
       appHeaderLayout.style.height = '100%';
       let contentContainer = appHeaderLayout.shadowRoot.querySelector('#contentContainer');
-      if (!contentContainer) {// TODO: polymer2 -remove after test
-        console.warn('contentContainer not found !!!');
-      }
       if (contentContainer) {
         contentContainer.style.minHeight = '100vh';
         contentContainer.style.boxSizing = 'border-box';
