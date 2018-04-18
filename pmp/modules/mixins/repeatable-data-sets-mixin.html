@@ -21,7 +21,7 @@
   * @appliesMixin EtoolsAjaxRequestMixin
   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   */
-  EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends EtoolsMixinFactory.combineMixins([
+  EtoolsPmpApp.Mixins.RepeatableDataSets = baseClass => class extends EtoolsMixinFactory.combineMixins([
     EtoolsLogsMixin,
     EtoolsMixins.DynamicDialogMixin,
     EtoolsPmpApp.Mixins.Endpoints,

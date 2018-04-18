@@ -7,6 +7,7 @@
 
 <script>
   'use strict';
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
@@ -20,7 +21,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    */
   EtoolsPmpApp.Mixins.SaveIntervention = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsMixinFactory.combineMixins([
+      superClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.EventHelper,
         EtoolsPmpApp.Mixins.ArrayHelper,
         EtoolsPmpApp.Mixins.ModifiedInterventionFields
@@ -45,7 +46,8 @@
             // details element not stamped...
             // validate current data that belongs to details tab against permissions
             let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
-            let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sections', 'flat_locations', 'offices'];
+            let detailsObjFields = ['unicef_focal_points', 'partner_focal_points',
+              'sections', 'flat_locations', 'offices'];
             if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
               detailsPrimitiveFields.push('start', 'end');
             }
@@ -129,7 +131,7 @@
           if (interventionData.planned_budget) {
             delete interventionData.planned_budget.total;
           }
-          
+
           // prepare attachments
           interventionData.attachments = this._prepareAttachments();
           if (_.isEmpty(interventionData.attachments)) {

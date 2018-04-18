@@ -131,7 +131,7 @@
           return;
         }
 
-        let splitElId =  event.target.id.split('_');
+        let splitElId = event.target.id.split('_');
         let index = splitElId[splitElId.length - 1];
 
         if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
@@ -150,11 +150,13 @@
 
       _displayDisaggregationGroups(selectedDisagreg, index) {
         this._getDisagregGroupElem(index).value =
-            selectedDisagreg.disaggregation_values.map((d) => d.value).join('; ');
+            selectedDisagreg.disaggregation_values.map(d => d.value).join('; ');
       }
+
       _clearDisagregGroups(index) {
         this._getDisagregGroupElem(index).value = '';
       }
+
       _getDisagregGroupElem(index) {
         return this.shadowRoot.querySelector('#disaggregationGroups_' + index);
       }

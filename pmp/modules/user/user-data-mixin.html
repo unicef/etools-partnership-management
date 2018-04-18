@@ -21,7 +21,7 @@
     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
     */
-  EtoolsPmpApp.Mixins.UserData = (baseClass) => class extends EtoolsMixinFactory.combineMixins([
+  EtoolsPmpApp.Mixins.UserData = baseClass => class extends EtoolsMixinFactory.combineMixins([
     EtoolsPageRefreshMixin,
     EtoolsPmpApp.Mixins.Endpoints,
     EtoolsPmpApp.Mixins.EventHelper,

@@ -1,24 +1,24 @@
-var express = require('express');
-var browserCapabilities = require('browser-capabilities');
+var express = require('express'); // eslint-disable-line
+var browserCapabilities = require('browser-capabilities'); // eslint-disable-line
 
-var app = express();
-var basedir = __dirname + '/build/pmp/';
+const app = express();
+const basedir = __dirname + '/build/pmp/'; // eslint-disable-line
 
-function getSourcesPath (request){
+function getSourcesPath(request) {
   let clientCapabilities = browserCapabilities.browserCapabilities(
-    request.headers['user-agent']);
+      request.headers['user-agent']);
 
-  clientCapabilities = new Set(clientCapabilities);
+  clientCapabilities = new Set(clientCapabilities); // eslint-disable-line
 
-  if (clientCapabilities.has("es2015")) {
-    return basedir + 'es6-bundled/'
+  if (clientCapabilities.has('es2015')) {
+    return basedir + 'es6-bundled/';
   } else {
-    return basedir + 'es5-bundled/'
+    return basedir + 'es5-bundled/';
   }
-};
+}
 
 app.use('/pmp/', (req, res, next) => {
-  express.static(getSourcesPath(req))(req, res, next)
+  express.static(getSourcesPath(req))(req, res, next);
 });
 
 app.get(/.*service-worker\.js/, function(req, res) {
@@ -27,7 +27,7 @@ app.get(/.*service-worker\.js/, function(req, res) {
 
 // TODO: check if this holds true in Polymer 2
 app.use(function(req, res) {
-  // static file requrests that end up here are missing so they should return 404
+  // static file requests that end up here are missing so they should return 404
   if (req.originalUrl.startsWith('/pmp/pmp/')) {
     res.status(404).send('Not found');
   } else {

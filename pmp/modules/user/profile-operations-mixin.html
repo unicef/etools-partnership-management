@@ -13,7 +13,7 @@
     * @appliesMixin EtoolsPmpApp.Mixins.UserData
     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
     */
-  EtoolsPmpApp.Mixins.ProfileOperations = (baseClass) =>
+  EtoolsPmpApp.Mixins.ProfileOperations = baseClass =>
     class extends EtoolsPmpApp.Mixins.UserData(
         EtoolsPmpApp.Mixins.AjaxErrorsParser(baseClass)
       ) {

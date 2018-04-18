@@ -97,7 +97,7 @@
                   label: 'Closed',
                   hidden: false,
                   completed: false
-                },
+                }
               ];
             }
           },
@@ -218,10 +218,12 @@
         }
 
         for (let key in this.possibleActions) {
-          let actionName = this.possibleActions[key].label;
+          if (this.possibleActions[key]) {
+            let actionName = this.possibleActions[key].label;
 
-          if (availableOptions.indexOf(actionName) > -1) {
-            this.set(['possibleActions', key, 'hidden'], false);
+            if (availableOptions.indexOf(actionName) > -1) {
+              this.set(['possibleActions', key, 'hidden'], false);
+            }
           }
         }
       }
@@ -239,7 +241,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Draft';
             break;
@@ -250,7 +252,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Signed';
             break;
@@ -261,7 +263,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Active';
             break;
@@ -272,7 +274,7 @@
               'Signed',
               'Suspended',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Suspended';
             break;
@@ -283,7 +285,7 @@
               'Signed',
               'Terminated',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Terminated';
             break;
@@ -294,7 +296,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Closed';
             break;
@@ -305,7 +307,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Ended';
             break;
@@ -317,7 +319,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = 'Ended';
             break;
@@ -328,7 +330,7 @@
               'Signed',
               'Active',
               'Ended',
-              'Closed',
+              'Closed'
             ];
             activeStatus = '';
             break;
@@ -375,7 +377,7 @@
 
         if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
           if (['active', 'signed'].indexOf(this.status) < 0) {
-            //prevent suspending or terminating anything other than signed or active intervention
+            // prevent suspending or terminating anything other than signed or active intervention
             return false;
           }
         }

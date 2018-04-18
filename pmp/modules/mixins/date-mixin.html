@@ -9,7 +9,7 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.Date = Polymer.dedupingMixin((baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.Date = Polymer.dedupingMixin(baseClass => class extends baseClass {
 
     prettyDate(dateString, format) {
       let date = this._convertDate(dateString);
