@@ -12,7 +12,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     EtoolsPmpApp.Mixins.UnicefUsersData =
-        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+        baseClass => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
           static get actions() {
             return {

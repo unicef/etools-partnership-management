@@ -104,7 +104,7 @@
            */
           editable: {
             type: Number,
-            value: 0,
+            value: 0
           },
 
           data: {
@@ -118,17 +118,17 @@
 
           formattedMapping: {
             type: Array,
-            computed: '_computeMapping(editableBool, formattedData, mapping)',
+            computed: '_computeMapping(editableBool, formattedData, mapping)'
           },
 
           editableBool: {
             type: Boolean,
-            computed: '_computeEditableBool(editable)',
+            computed: '_computeEditableBool(editable)'
           },
 
           indicatorType: {
             type: String,
-            computed: '_computeIndicatorType(data)',
+            computed: '_computeIndicatorType(data)'
           },
 
           fields: Array,
@@ -138,7 +138,7 @@
 
       static get observers() {
         return [
-          '_resetFields(formattedData.disaggregation_reported_on)',
+          '_resetFields(formattedData.disaggregation_reported_on)'
         ];
       }
 

@@ -279,7 +279,7 @@
       setIndicatorData(data, actionParams) {
         this.set('actionParams', actionParams);
 
-        if (!data) { //new indicator
+        if (!data) { // new indicator
           this.isCluster = false;
           this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
           return;
@@ -370,7 +370,7 @@
         let options = [];
         if (!_.isEmpty(optionsIds) && !_.isEmpty(allOptions)) {
           // filter options
-          optionsIds = optionsIds.map((id) => parseInt(id, 10));
+          optionsIds = optionsIds.map(id => parseInt(id, 10));
           options = allOptions.filter((opt) => {
             return optionsIds.indexOf(parseInt(opt.id, 10)) > -1;
           });

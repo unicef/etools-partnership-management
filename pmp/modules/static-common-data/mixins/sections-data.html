@@ -13,7 +13,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     EtoolsPmpApp.Mixins.SectionsData =
-        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+        baseClass => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
           static get actions() {
             return {

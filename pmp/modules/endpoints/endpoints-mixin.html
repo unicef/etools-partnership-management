@@ -18,7 +18,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
   EtoolsPmpApp.Mixins.Endpoints = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsAjaxRequestMixin(EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass)) {
+      superClass => class extends EtoolsAjaxRequestMixin(EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass)) {
         static get properties() {
           return {
             prpCountries: {

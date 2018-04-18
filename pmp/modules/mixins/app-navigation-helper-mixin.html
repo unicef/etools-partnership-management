@@ -5,7 +5,7 @@
   * @polymer
   * @mixinFunction
   */
-  EtoolsPmpApp.Mixins.AppNavigationHelper = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.AppNavigationHelper = baseClass => class extends baseClass {
     static get properties() {
       return {
         disableLoadingAfterAppStateChanged: Boolean

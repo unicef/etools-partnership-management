@@ -101,14 +101,14 @@
 
           rows: {
             type: Array,
-            computed: '_getRows(mapping)',
+            computed: '_getRows(mapping)'
           },
 
           bottomRows: Array,
 
           middleRows: {
             type: Array,
-            computed: '_getMiddleRows(mapping)',
+            computed: '_getMiddleRows(mapping)'
           },
 
           outerRowsForDisplay: {
@@ -163,7 +163,7 @@
 
             return {
               key: formatted,
-              data: data.disaggregation[formatted],
+              data: data.disaggregation[formatted]
             };
           }, this);
 
@@ -175,8 +175,8 @@
             id: y.id,
             total: {
               key: formatted,
-              data: data.disaggregation[formatted],
-            },
+              data: data.disaggregation[formatted]
+            }
           };
         }, this);
       }
@@ -190,7 +190,7 @@
 
           return {
             key: formatted,
-            data: data.disaggregation[formatted],
+            data: data.disaggregation[formatted]
           };
         }, this);
 
@@ -199,8 +199,8 @@
           data: columnData,
           total: {
             key: '', // unused
-            data: data.disaggregation['()'],
-          },
+            data: data.disaggregation['()']
+          }
         };
 
         this.set('columnTotalRow', columnTotalRow);

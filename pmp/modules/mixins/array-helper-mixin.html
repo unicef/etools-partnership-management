@@ -1,11 +1,16 @@
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <script>
+  'use strict';
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
   /**
-  * @polymer
-  * @mixinFunction
-  */
-  EtoolsPmpApp.Mixins.ArrayHelper = (baseClass) => class extends baseClass {
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
+   */
+  EtoolsPmpApp.Mixins.ArrayHelper = baseClass => class extends EtoolsLogsMixin(baseClass) {
     /**
      * Compare arrays.
      * base array can be an array of values or an array of objects (if objects use basePropertyToVerify for matches)
@@ -45,9 +50,10 @@
 
         return diffVals;
       } catch (err) {
-        console.error('EtoolsPmpApp.Mixins.ArrayHelper.compareArrays error occurred', err);
+        this.logError('EtoolsPmpApp.Mixins.ArrayHelper.compareArrays error occurred', 'array-helper-mixin', err);
       }
     }
+
     /**
      * get an array of objects and return an array a property values
      */

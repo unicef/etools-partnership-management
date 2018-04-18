@@ -8,7 +8,7 @@
   * @mixinFunction
   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   */
-  EtoolsPmpApp.Mixins.AjaxErrorsParser = (baseClass) => class extends EtoolsPmpApp.Mixins.EventHelper(baseClass) {
+  EtoolsPmpApp.Mixins.AjaxErrorsParser = baseClass => class extends EtoolsPmpApp.Mixins.EventHelper(baseClass) {
     static get properties() {
       return {
         globalMessage: {
@@ -79,7 +79,7 @@
 
       if (typeof errors === 'object' && Object.keys(errors).length > 0) {
         let errField;
-        for (errField in errors) {
+        for (errField in errors) { // eslint-disable-line
 
           if (typeof errors[errField] === 'string') {
             errorsArray.push('Field ' + errField + ' - ' + errors[errField]);
@@ -103,7 +103,9 @@
           if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
             let errF;
             for (errF in errors[errField]) {
-              errorsArray.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
+              if (errors[errField][errF]) {
+                errorsArray.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
+              }
             }
           }
 
@@ -114,7 +116,7 @@
     }
 
     _markNestedErrors(errs) {
-      return errs.map((er) => ' ' + er);
+      return errs.map(er => ' ' + er);
     }
 
     _isArrayOfStrings(arr) {

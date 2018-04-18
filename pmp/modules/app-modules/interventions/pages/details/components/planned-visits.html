@@ -235,7 +235,7 @@
           programmatic_q1: 0,
           programmatic_q2: 0,
           programmatic_q3: 0,
-          programmatic_q4: 0,
+          programmatic_q4: 0
         };
       }
 
@@ -323,7 +323,9 @@
       }
 
       _yearChanged(event) {
-        let yearSelected = event.detail.item.getAttribute('item') ? JSON.parse(event.detail.item.getAttribute('item')).value : null;
+        let yearSelected = event.detail.item.getAttribute('item')
+            ? JSON.parse(event.detail.item.getAttribute('item')).value
+            : null;
         let yearDropdown = this.shadowRoot.querySelector('#year_' + event.model.index);
 
         if (this.isAlreadySelected(yearSelected, event.model.index, 'year')) {
