@@ -192,8 +192,7 @@
       _updateScroll() {
         let d = this._getPaperDialog();
         if (d) {
-          // TODO: polymer2 - Test this on IE - tested => dialogScrollable in null on both chrome and IE
-          let dialogScrollable = d.shadowRoot.querySelector('paper-dialog-scrollable');
+          let dialogScrollable = d.querySelector('paper-dialog-scrollable');
           if (dialogScrollable) {
             let scrollTarget = dialogScrollable.scrollTarget;
             scrollTarget.scrollTop = scrollTarget.scrollHeight;
