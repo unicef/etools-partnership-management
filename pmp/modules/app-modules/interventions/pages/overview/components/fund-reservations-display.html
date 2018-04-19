@@ -16,7 +16,7 @@
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
-    <style  include="data-table-styles grid-layout-styles fr-warnings-styles">
+    <style include="data-table-styles grid-layout-styles fr-warnings-styles">
       :host {
         --list-column-label: {
           margin-right: 0;
@@ -43,6 +43,7 @@
         @apply --layout-vertical;
         @apply --layout-end;
       }
+
       .unicef-cash-col iron-label {
         font-size: 12px;
         color: var(--secondary-text-color);
@@ -100,23 +101,18 @@
             </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.total_amt_local, '0.00')]] </span>
             <span class="col-data col-2 right-align">
-                <etools-info-tooltip
-                    class="fr-nr-warn currency-mismatch"
-                    icon-first
-                    custom-icon
-                    hide-tooltip="[[!showMultiCurrErr(fr.multi_curr_flag)]]">
-                    <span slot="field">
-                      <template is="dom-if" if="[[!showMultiCurrErr(fr.multi_curr_flag)]]">
-                        <span>[[displayCurrencyAmount(fr.actual_amt_local, '0.00')]]</span>
-                      </template>
-                      <span class="amount-currency" hidden$="[[!showMultiCurrErr(fr.multi_curr_flag)]]"> - </span>
-                    </span>
-                  <iron-icon
-                      icon="pmp-custom-icons:not-equal"
-                      slot="custom-icon"></iron-icon>
+                <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                                     icon-first
+                                     custom-icon
+                                     hide-tooltip="[[!frsConsistencyWarningIsActive(fr.multi_curr_flag)]]">
+                  <span slot="field" class$="[[getFrsValueNAClass(fr.multi_curr_flag, 'true')]]">
+                    [[getFrsTotal(fr.multi_curr_flag, fr.actual_amt_local, 'true')]]
+                  </span>
+                  <iron-icon icon="pmp-custom-icons:not-equal"
+                             slot="custom-icon"></iron-icon>
                   <span slot="message">
-                      <span>[[getFrsCurrencyTooltipMsg()]]</span>
-                    </span>
+                    <span>[[getFrsMultiCurrFlagErrTooltipMsg()]]</span>
+                  </span>
                 </etools-info-tooltip>
             </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt_local, '0.00')]]</span>
@@ -133,7 +129,7 @@
                                  icon-first
                                  custom-icon
                                  hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
-              <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
+              <span slot="field" class$="[[getFrsValueNAClass(frsDetails.currencies_match)]]">
                 [[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]
               </span>
               <iron-icon icon="[[getFrsCurrencyTooltipIcon(frsDetails.currencies_match)]]"
@@ -146,7 +142,7 @@
                                  custom-icon
                                  icon-first
                                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
-              <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
+              <span slot="field" class$="[[getFrsValueNAClass(frsDetails.currencies_match)]]">
                 [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_frs_amt)]]
               </span>
               <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
@@ -154,26 +150,22 @@
             </etools-info-tooltip>
           </span>
           <span class="col-data col-2 right-align">
-              <etools-info-tooltip
-                    class="fr-nr-warn currency-mismatch"
-                    icon-first
-                    custom-icon
-                    hide-tooltip="[[!showMultiCurrErr(frsDetails.multi_curr_flag)]]">
-                    <span slot="field">
-                      <template is="dom-if" if="[[!showMultiCurrErr(frsDetails.multi_curr_flag)]]">
-                        <span>[[getFrsTotalMultiCurr(frsDetails.total_actual_amt)]]</span>
-                      </template>
-                      <span class="amount-currency" hidden$="[[!showMultiCurrErr(frsDetails.multi_curr_flag)]]"> - </span>
-                    </span>
-                  <iron-icon
-                      icon="pmp-custom-icons:not-equal"
-                      slot="custom-icon"></iron-icon>
-                  <span slot="message">
-                      <span>[[getFrsCurrencyTooltipMsg()]]</span>
-                    </span>
-                </etools-info-tooltip>
+            <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                                 icon-first
+                                 custom-icon
+                                 hide-tooltip="[[!frsConsistencyWarningIsActive(frsDetails.multi_curr_flag)]]">
+              <span slot="field" class$="[[getFrsValueNAClass(frsDetails.multi_curr_flag, 'true')]]">
+                [[getFrsTotal(frsDetails.multi_curr_flag, frsDetails.total_actual_amt, 'true')]]
+              </span>
+              <iron-icon
+                  icon="pmp-custom-icons:not-equal"
+                  slot="custom-icon"></iron-icon>
+              <span slot="message">
+                  <span>[[getFrsMultiCurrFlagErrTooltipMsg()]]</span>
+              </span>
+            </etools-info-tooltip>
           </span>
-          <span class$="col-data col-2 right-align [[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
+          <span class$="col-data col-2 right-align [[getFrsValueNAClass(frsDetails.currencies_match)]]">
             [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_outstanding_amt)]]
           </span>
         </div>
@@ -246,6 +238,7 @@
           '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
         ];
       }
+
       _noFrs(frsDetails) {
         return (!frsDetails || !frsDetails.frs || !frsDetails.frs.length);
       }

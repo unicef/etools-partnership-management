@@ -197,38 +197,34 @@
                     icon-first
                     custom-icon
                     hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
-                    <span slot="field"
-                          class$="[[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
-                      <span class="amount-currency">[[partnership.fr_currency]]</span>
-                      <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
-                    </span>
+                  <span slot="field"
+                        class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">
+                    <span class="amount-currency">[[partnership.fr_currency]]</span>
+                    <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
+                  </span>
                   <iron-icon
                       icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
                       slot="custom-icon"></iron-icon>
                   <span slot="message">
-                      <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
-                    </span>
+                    <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
+                  </span>
                 </etools-info-tooltip>
               </div>
               <div class="col col-2 right-align">
-                  <etools-info-tooltip
-                    class="fr-nr-warn currency-mismatch"
-                    icon-first
-                    custom-icon
-                    hide-tooltip="[[!showMultiCurrErr(partnership.multi_curr_flag)]]">
-                    <span slot="field">
-                      <template is="dom-if" if="[[!showMultiCurrErr(partnership.multi_curr_flag)]]">
-                        <span class="amount-currency">[[partnership.fr_currency]]</span>
-                        <span>[[getFrsTotalMultiCurr(partnership.actual_amount)]]</span>
-                      </template>
-                      <span class="amount-currency" hidden$="[[!showMultiCurrErr(partnership.multi_curr_flag)]]"> - </span>
-                    </span>
+                <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                                     icon-first
+                                     custom-icon
+                                     hide-tooltip="[[!frsConsistencyWarningIsActive(partnership.multi_curr_flag)]]">
+                  <span slot="field" class$="[[getFrsValueNAClass(partnership.multi_curr_flag, 'true')]]">
+                    <span class="amount-currency">[[partnership.fr_currency]]</span>
+                    <span>[[getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, 'true')]]</span>
+                  </span>
                   <iron-icon
                       icon="pmp-custom-icons:not-equal"
                       slot="custom-icon"></iron-icon>
                   <span slot="message">
-                      <span>[[getFrsCurrencyTooltipMsg()]]</span>
-                    </span>
+                    <span>[[getFrsMultiCurrFlagErrTooltipMsg()]]</span>
+                  </span>
                 </etools-info-tooltip>
               </div>
               <div class="col center-align overflow-hidden">
@@ -315,7 +311,7 @@
 
       _getMinReqAudits(plannedEngagement) {
         return !plannedEngagement ? 0
-          : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+            : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
       }
     }
 

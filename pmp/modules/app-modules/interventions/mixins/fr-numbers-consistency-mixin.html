@@ -164,8 +164,8 @@
           '<<field_name>>', this.frsValidationFields.end_date);
     }
 
-    frsConsistencyWarningIsActive(warnMsg) {
-      return !!warnMsg;
+    frsConsistencyWarningIsActive(active) {
+      return !!active;
     }
 
     emptyFrsList(intervention, interventionIsFromWhere) {
@@ -183,11 +183,9 @@
       return frsCurrencyMatch ? frs[0].currency : 'N/A';
     }
 
-    getFrsTotal(frsCurrencyMatch, totalAmt) {
+    getFrsTotal(frsCurrencyMatch, totalAmt, negateCurrencyMatchFlagFirst) {
+      frsCurrencyMatch = negateCurrencyMatchFlagFirst ? !frsCurrencyMatch : frsCurrencyMatch;
       return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
-    }
-    getFrsTotalMultiCurr(totalAmt) {
-      return this.displayCurrencyAmount(totalAmt, '0.00');
     }
 
     allCurrenciesMatch(frsCurrencyMatch, frs, plannedBudgetCurrency) {
@@ -210,12 +208,9 @@
       return 'pmp-custom-icons:not-equal';
     }
 
-    showMultiCurrErr(multiCurrFlag) {
-      return !!multiCurrFlag;
-    }
-
-    getFrsTotalNotAvailableClass(frsCurrencyMatch) {
-      return frsCurrencyMatch ? '' : 'fr-val-not-available';
+    getFrsValueNAClass(valIsAvailable, negateFlagValFirst) {
+      let isAvailable = negateFlagValFirst ? !valIsAvailable : valIsAvailable;
+      return isAvailable ? '' : 'fr-val-not-available';
     }
 
     getFrsCurrencyTooltipMsg(frsCurrencyMatch) {
@@ -261,7 +256,8 @@
           : this.frsConsistencyWarnings.currencyMismatch;
       return msg + '\n' + this.frsConsistencyWarnings.amountsCannotBeCompared;
     }
-    getFrsCurrencyTooltipMsg(){
+
+    getFrsMultiCurrFlagErrTooltipMsg() {
       return this.frsConsistencyWarnings.FCmultiCurrFlagErrorMsg;
     }
 
