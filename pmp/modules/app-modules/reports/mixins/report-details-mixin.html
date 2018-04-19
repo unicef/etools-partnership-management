@@ -19,7 +19,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
-  EtoolsPmpApp.Mixins.ReportDetails = (superclass) => class extends EtoolsMixinFactory.combineMixins([
+  EtoolsPmpApp.Mixins.ReportDetails = superclass => class extends EtoolsMixinFactory.combineMixins([
     EtoolsLogsMixin,
     EtoolsPmpApp.Mixins.EventHelper,
     EtoolsPmpApp.Mixins.Endpoints,
@@ -79,6 +79,6 @@
       });
     }
 
-  }
+  };
 
 </script>

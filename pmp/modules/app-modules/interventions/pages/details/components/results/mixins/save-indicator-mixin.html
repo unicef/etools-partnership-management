@@ -16,7 +16,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    */
   EtoolsPmpApp.Mixins.SaveIndicator = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsMixinFactory.combineMixins([
+      superClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.Endpoints,
         EtoolsPmpApp.Mixins.AjaxErrorsParser,
         EtoolsPmpApp.Mixins.EventHelper
@@ -75,7 +75,7 @@
                 section: null,
                 baseline: null,
                 target: null,
-                locations: [],
+                locations: []
               }
             }
           };

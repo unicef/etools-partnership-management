@@ -8,7 +8,7 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.DisaggregationField = Polymer.dedupingMixin((superClass) => class extends superClass {
+  EtoolsPmpApp.Mixins.DisaggregationField = Polymer.dedupingMixin(superClass => class extends superClass {
     _toNumericValues(obj) {
       return Object.keys(obj).reduce(function(prev, curr) {
         prev[curr] = Number(obj[curr]);

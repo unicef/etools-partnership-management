@@ -15,7 +15,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    */
   EtoolsPmpApp.Mixins.ModuleRouting = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsLogsMixin(EtoolsPmpApp.Mixins.EventHelper(superClass)) {
+      superClass => class extends EtoolsLogsMixin(EtoolsPmpApp.Mixins.EventHelper(superClass)) {
         static get properties() {
           return {
             listActive: Boolean,

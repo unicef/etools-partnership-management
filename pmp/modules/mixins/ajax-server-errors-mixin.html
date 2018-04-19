@@ -10,7 +10,7 @@
   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
   */
-  EtoolsPmpApp.Mixins.AjaxServerErrors = (baseClass) => class extends
+  EtoolsPmpApp.Mixins.AjaxServerErrors = baseClass => class extends
       EtoolsPmpApp.Mixins.AjaxErrorsParser(
         EtoolsPmpApp.Mixins.EventHelper(baseClass)
       ) {

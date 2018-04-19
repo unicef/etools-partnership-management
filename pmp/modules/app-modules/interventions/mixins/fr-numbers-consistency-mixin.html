@@ -7,11 +7,11 @@
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
   /**
-  * @polymer
-  * @mixinFunction
-  * @appliesMixin EtoolsMixins.EtoolsCurrency
-  */
-  EtoolsPmpApp.Mixins.FrNumbersConsistency = (superClass) => class extends EtoolsMixins.EtoolsCurrency(superClass) {
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsMixins.EtoolsCurrency
+   */
+  EtoolsPmpApp.Mixins.FrNumbersConsistency = superClass => class extends EtoolsMixins.EtoolsCurrency(superClass) {
     static get properties() {
       return {
         frsConsistencyWarnings: {
@@ -27,7 +27,8 @@
             'as the FR.\n',
             amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
             dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
-            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
+            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
+            FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
           }
         },
         frsValidationFields: {
@@ -48,7 +49,7 @@
     * frs currencies and planned budget currency check
     */
     _frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency) {
-      let differentFrCurrencies = frs.filter((fr) => fr.currency !== plannedBudgetCurrency);
+      let differentFrCurrencies = frs.filter(fr => fr.currency !== plannedBudgetCurrency);
       return differentFrCurrencies.length === 0;
     }
 
@@ -57,7 +58,7 @@
      */
     _frsCurrenciesMatch(frs) {
       let firstFrCurrency = frs[0].currency;
-      let diff = frs.filter((fr) => fr.currency !== firstFrCurrency);
+      let diff = frs.filter(fr => fr.currency !== firstFrCurrency);
       return diff.length === 0;
     }
 
@@ -163,8 +164,8 @@
           '<<field_name>>', this.frsValidationFields.end_date);
     }
 
-    frsConsistencyWarningIsActive(warnMsg) {
-      return !!warnMsg;
+    frsConsistencyWarningIsActive(active) {
+      return !!active;
     }
 
     emptyFrsList(intervention, interventionIsFromWhere) {
@@ -182,7 +183,8 @@
       return frsCurrencyMatch ? frs[0].currency : 'N/A';
     }
 
-    getFrsTotal(frsCurrencyMatch, totalAmt) {
+    getFrsTotal(frsCurrencyMatch, totalAmt, negateCurrencyMatchFlagFirst) {
+      frsCurrencyMatch = negateCurrencyMatchFlagFirst ? !frsCurrencyMatch : frsCurrencyMatch;
       return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
     }
 
@@ -206,8 +208,9 @@
       return 'pmp-custom-icons:not-equal';
     }
 
-    getFrsTotalNotAvailableClass(frsCurrencyMatch) {
-      return frsCurrencyMatch ? '' : 'fr-val-not-available';
+    getFrsValueNAClass(valIsAvailable, negateFlagValFirst) {
+      let isAvailable = negateFlagValFirst ? !valIsAvailable : valIsAvailable;
+      return isAvailable ? '' : 'fr-val-not-available';
     }
 
     getFrsCurrencyTooltipMsg(frsCurrencyMatch) {
@@ -254,5 +257,10 @@
       return msg + '\n' + this.frsConsistencyWarnings.amountsCannotBeCompared;
     }
 
-  }
+    getFrsMultiCurrFlagErrTooltipMsg() {
+      return this.frsConsistencyWarnings.FCmultiCurrFlagErrorMsg;
+    }
+
+  };
+
 </script>

@@ -10,9 +10,9 @@
    * @mixinFunction
    */
   EtoolsPmpApp.Mixins.Disaggregations = Polymer.dedupingMixin(
-      (superClass) => class extends superClass {
-        //Used to display rows for two and three disaggregations.
-        //It will NOT work for one and zero disaggregations.
+      superClass => class extends superClass {
+        // Used to display rows for two and three disaggregations.
+        // It will NOT work for one and zero disaggregations.
         _determineRows(self, rows, columns) {
           let rowsForDisplay = [];
 
@@ -24,7 +24,7 @@
 
               return {
                 key: formatted,
-                data: self.data.disaggregation[formatted],
+                data: self.data.disaggregation[formatted]
               };
             });
 
@@ -36,8 +36,8 @@
               id: x.id,
               total: {
                 key: formatted,
-                data: self.data.disaggregation[formatted],
-              },
+                data: self.data.disaggregation[formatted]
+              }
             });
           });
 

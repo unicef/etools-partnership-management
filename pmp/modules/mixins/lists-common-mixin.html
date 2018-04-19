@@ -13,7 +13,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.AppNavigationHelper
    */
   EtoolsPmpApp.Mixins.ListsCommon = Polymer.dedupingMixin(
-      (baseClass) => class extends EtoolsMixinFactory.combineMixins([
+      baseClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.AppNavigationHelper, EtoolsPmpApp.Mixins.EventHelper], baseClass) {
 
     static get properties() {

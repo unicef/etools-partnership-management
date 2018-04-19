@@ -77,12 +77,12 @@
 
           rows: {
             type: Array,
-            computed: '_getRows(mapping)',
+            computed: '_getRows(mapping)'
           },
 
           totalsForDisplay: {
             type: Object,
-            computed: '_determineTotals(columns, data)',
+            computed: '_determineTotals(columns, data)'
           },
 
           rowsForDisplay: {
@@ -122,7 +122,7 @@
 
           return {
             key: formatted,
-            data: data.disaggregation[formatted],
+            data: data.disaggregation[formatted]
           };
         }, this);
 
@@ -131,8 +131,8 @@
           data: columnData,
           total: {
             key: '', // unused,
-            data: data.disaggregation['()'],
-          },
+            data: data.disaggregation['()']
+          }
         };
       }
 

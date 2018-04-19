@@ -54,8 +54,10 @@
             };
 
             for (let key in flags) {
-              let flag = flags[key];
-              flagObject[flag] = true;
+              if (flags[key]) {
+                let flag = flags[key];
+                flagObject[flag] = true;
+              }
             }
             return {
               type: 'SET_ENV_FLAGS',
