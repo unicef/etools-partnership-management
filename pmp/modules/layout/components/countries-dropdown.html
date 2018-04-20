@@ -81,7 +81,7 @@
                        selected="[[currentCountry.id]]"
                        on-iron-select="_countrySelected">
           <template id="repeat" is="dom-repeat" items="[[countries]]">
-            <paper-item country-id="[[item.id]]">
+            <paper-item country-id$="[[item.id]]">
               [[item.name]]
             </paper-item>
           </template>
@@ -134,9 +134,12 @@
       }
 
       _countrySelected(e) {
-        if (e.detail.item.countryId !== this.currentCountry.id) {
+        if (!e.detail.item) {
+          return;
+        }
+        let selectedCountryId = parseInt(e.detail.item.getAttribute('country-id'), 10);
+        if (selectedCountryId !== this.currentCountry.id) {
           // send post request to change_coutry endpoint
-          let selectedCountryId = e.detail.item.countryId;
           this._triggerCountryChangeRequest(selectedCountryId);
         }
       }

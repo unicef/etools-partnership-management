@@ -124,6 +124,10 @@
 
       static get properties() {
         return {
+          // This shouldn't be neccessary, but the polymer lint isn't picking up
+          // Polymer.Element#importPath
+          importPath: String,
+
           countries: {
             type: Array
           },
