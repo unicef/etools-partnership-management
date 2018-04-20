@@ -236,10 +236,9 @@
 
       allIndicatorsAreInactive(indicators) {
         this.forceVisibilityRecalc = false;
-        if (indicators && indicators.length && indicators.every(i => !i.is_active)) {
-          return !this.showInactiveIndicators;
-        }
-        return false;
+        let allIndicatorsAreDeactivated = indicators instanceof Array && indicators.length > 0 &&
+            indicators.every(i => !i.is_active);
+        return allIndicatorsAreDeactivated ? !this.showInactiveIndicators : false;
       }
 
       getColumnLength(column, thereAreIndicators) {
