@@ -134,10 +134,6 @@
           _frsDetailsRequestEndpoint: {
             type: Object
           },
-          // _lastFrsDetailsRequested: {
-          //   type: Array,
-          //   value: []
-          // },
           _lastFrsDetailsReceived: {
             type: Object
           },
@@ -205,7 +201,7 @@
             this._frsInconsistenciesConfirmationHandler.bind(this), this._frsConfirmationsDialogMessage);
       }
 
-      _updateFrsInconsistencyMessage(warning) {
+      _updateFrsInconsistenciesDialogMessage(warning) {
         if (!this.frsConfirmationsDialog) {
           return;
         }
@@ -216,30 +212,24 @@
         }
       }
 
-      _openFrsDialog(frNumbersList) {//TODO remove frNumbersList if not needed anymore
+      _openFrsDialog() {
         if (!this.editMode) {
           return;
         }
         if (this.frsDialogEl) {
           // populate dialog with current frs numbers deep copy
           let currentFrs = this._getCurrentFrs();
-          let frs = frNumbersList instanceof Array
-              ? frNumbersList
-              : currentFrs.map((fr) => {
+          let frs = currentFrs.map((fr) => {
                 return {fr_number: fr.fr_number};
               });
-          this.frsDialogEl.set('dataItems', frs);
-          //TODO -refactor //deactivate save button until any valid change is made
-          // enableConfirmBtn = typeof enableConfirmBtn === 'boolean' ? enableConfirmBtn : true;
-          // this.frsDialogEl.set('disableConfirmBtn', enableConfirmBtn);
 
+          this.frsDialogEl.set('dataItems', frs);
           this.frsDialogEl.set('interventionStatus', this.intervention.status);
-          // open dialog
           this.frsDialogEl.openDialog();
         }
       }
 
-      // get current intervention frs numbers
+      // get original/initial intervention frs numbers
       _getCurrentFrs() {
         return (this.intervention.frs_details &&
                 this.intervention.frs_details.frs instanceof Array)
@@ -249,11 +239,6 @@
       frNumbersUpdateHandler(e) {
         e.stopImmediatePropagation();
         let frNumbers = e.detail.frs;
-        // this.fireEvent('global-loading', {
-        //   message: 'Checking FR Numbers updates...',
-        //   active: true,
-        //   loadingSource: this._frsNrsLoadingMsgSource
-        // });
         if (frNumbers.length === 0) {
           this._handleEmptyFrsAfterUpdate();
           return;
@@ -267,15 +252,11 @@
        * This can happen if the user removed all the existing numbers or if there is no change made
        */
       _handleEmptyFrsAfterUpdate() {
-        let currentInterventionFrs = this._getCurrentFrs();
-        if (currentInterventionFrs.length === 0) {
-          // there is no change on FR Numbers
-          this._stopFrsCheckLoadingMsg();
-          return;
+        let frsBeforeUpdate = this._getCurrentFrs();
+        if (frsBeforeUpdate.length !== 0) {
+          // all FR Numbers have been deleted
+          this._triggerPdFrsUpdate({frs: []});
         }
-        // all FR Numbers have been deleted
-        this._triggerPdFrsUpdate({frs: []});
-        this._stopFrsCheckLoadingMsg();
       }
 
       /**
@@ -283,12 +264,13 @@
        */
       _handleNotEmptyFrsAfterUpdate(frNumbers) {
         let diff = this.getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
-        if (diff.length) {
+        if (!diff.length) {
+          // no changes have been made to FR Numbers
+          this.frsDialogEl.closeDialog();
+        } else {
           // request FR Numbers details from server
           this._triggerFrsDetailsRequest(frNumbers);
-          return;
-        } // else no changes have been made to FR Numbers
-        this._stopFrsCheckLoadingMsg();
+        }
       }
 
       // handle frs validations warning confirmation
@@ -311,11 +293,11 @@
        */
       _triggerFrsDetailsRequest(frNumbers) {
         this.frsDialogEl.startSpinner();
+
         let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
         if (this.intervention.id) {
           url += '&intervention=' + this.intervention.id;
         }
-        //this.set('_lastFrsDetailsRequested', frNumbers);
 
         this.sendRequest({
           endpoint: {url: url}
@@ -330,34 +312,29 @@
       * Frs details received, check frs consistency
       */
       _frsDetailsSuccessHandler(frsDetails) {
-        // check added frs currencies mismatch
+
         frsDetails.currencies_match = this._frsCurrenciesMatch(frsDetails.frs);
-        let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
-        this.set('_frsConsistencyWarning', warning);
-        if (warning) {
-          this._updateFrsInconsistencyMessage(warning);
-          this._stopFrsCheckLoadingMsg();
-          // show warning
+
+        let inconsistencyMsg = this.checkFrsConsistency(frsDetails, this.intervention, true);
+        this.set('_frsConsistencyWarning', inconsistencyMsg);
+
+        if (inconsistencyMsg) { // there are inconsistencies
           this.set('_lastFrsDetailsReceived', frsDetails);
-          this._openAmountsValidationWarning();
-          return;
+
+          this._updateFrsInconsistenciesDialogMessage(inconsistencyMsg);
+          this._openFrsInconsistenciesDialog();
+        } else {
+          // append FR numbers to intervention
+          this._triggerPdFrsUpdate(frsDetails);
         }
-        // append FR numbers to intervention
-        this._stopFrsCheckLoadingMsg();
-        this._triggerPdFrsUpdate(frsDetails);
       }
 
       /**
        * frs details request failed
        */
       _frsDetailsErrorHandler(responseErr) {
-        this._stopFrsCheckLoadingMsg();
-        // let frs = this._lastFrsDetailsRequested.map((fr) => {
-        //   return {fr_number: fr};
-        // });
-        // // open FR Numbers modal with the same state as before details request
-        // this._openFrsDialog(frs, false);
-       // this.set('_lastFrsDetailsRequested', []);
+        this.frsDialogEl.stopSpinner();
+
         // show the invalid frs warning
         this.fireEvent('toast', {
           text: responseErr.error,
@@ -365,8 +342,9 @@
         });
       }
 
-      // trigger new FR Numbers update on main intervention
+      // trigger FR Numbers update on main intervention
       _triggerPdFrsUpdate(newFrsDetails) {
+        this.frsDialogEl.closeDialog();
         this.fireEvent('frs-update', {frsDetails: newFrsDetails});
       }
 
@@ -375,7 +353,7 @@
         return !!frs.length;
       }
 
-      _openAmountsValidationWarning() {
+      _openFrsInconsistenciesDialog() {
         if (this.frsConfirmationsDialog) {
           this.frsConfirmationsDialog.opened = true;
           this.frsDialogEl.closeDialog();
@@ -399,10 +377,6 @@
             () => {
               this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
             });
-      }
-
-      _stopFrsCheckLoadingMsg() {
-        this.frsDialogEl.stopSpinner();
       }
 
     }
