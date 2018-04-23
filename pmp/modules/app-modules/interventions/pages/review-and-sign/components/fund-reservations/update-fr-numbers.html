@@ -49,7 +49,6 @@
                    dialog-title="Add/Update FR Numbers"
                    ok-btn-text="Add/Update"
                    disable-confirm-btn="[[disableConfirmBtn]]"
-                   hidden$="[[hideFrsDialog]]"
                    on-confirm-btn-clicked="_checkFrNumbers"
                    no-padding keep-dialog-open
                    spinner-text="Checking FR Numbers updates...">
@@ -130,10 +129,6 @@
           },
           interventionStatus: {
             type: String
-          },
-          hideFrsDialog: {
-            type: Boolean,
-            value: false
           }
         };
       }
@@ -196,12 +191,12 @@
       }
 
       _addNewFundReservation() {
+        this.set('disableConfirmBtn', true);//Why the logic with disable btn , why not validate when clicking on Save
+
         if (!this.validate()) {
-          this.set('disableConfirmBtn', true);
           return;
         }
         this._addElement();
-       /// this.set('disableConfirmBtn', true); Creates bugs smt because of timing
         setTimeout(this._centerDialog.bind(this), 0);
         setTimeout(this._updateScroll.bind(this), 100);
       }
@@ -250,11 +245,11 @@
       }
 
       _checkFrNumbers(e) {
-        // resend rf number changes back to main fund reservations element
+        // resend fr number changes back to main fund reservations element
         this.fireEvent('update-frs-dialog-close', {frs: this._getUpdatedFrsNumbers()});
       }
 
-      // prepare the rf numbers list, used to verify them using API endpoint (/api/v2/funds/frs)
+      // prepare the fr numbers list, used to verify them using API endpoint (/api/v2/funds/frs)
       _getUpdatedFrsNumbers() {
         if (this.dataItems instanceof Array && this.dataItems.length > 0) {
           return this.dataItems.map((item) => {
