@@ -34,9 +34,8 @@
       static get properties() {
         return {
           editable: Number,
-
           data: Object,
-
+          mapping: Array,
           totalRow: {
             type: Array,
             computed: '_determineTotalRow(mapping, data)'
