@@ -238,7 +238,7 @@
         let activeStatus;
 
         switch (status) {
-          case this.CONSTANTS.STATUSES.draft:
+          case this.CONSTANTS.STATUSES.Draft.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -249,7 +249,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Draft;
             break;
 
-          case this.CONSTANTS.STATUSES.signed:
+          case this.CONSTANTS.STATUSES.Signed.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -260,7 +260,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Signed;
             break;
 
-          case this.CONSTANTS.STATUSES.active:
+          case this.CONSTANTS.STATUSES.Active.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -271,7 +271,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Active;
             break;
 
-          case this.CONSTANTS.STATUSES.suspended:
+          case this.CONSTANTS.STATUSES.Suspended.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -282,7 +282,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Suspended;
             break;
 
-          case this.CONSTANTS.STATUSES.terminated:
+          case this.CONSTANTS.STATUSES.Terminated.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -293,7 +293,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Terminated;
             break;
 
-          case this.CONSTANTS.STATUSES.closed:
+          case this.CONSTANTS.STATUSES.Closed.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -304,7 +304,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Closed;
             break;
 
-          case this.CONSTANTS.STATUSES.ended:
+          case this.CONSTANTS.STATUSES.Ended.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -367,22 +367,22 @@
           return false;
         }
 
-        if (newStatus === this.CONSTANTS.STATUSES.draft &&
-            this.status !== this.CONSTANTS.STATUSES.draft) {
+        if (newStatus === this.CONSTANTS.STATUSES.Draft.toLowerCase() &&
+            this.status !== this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
           // if agreement was not saved (is new) or the status is already changed
           // from draft, stop status change
           return false;
         }
 
-        if (newStatus === this.CONSTANTS.STATUSES.active && this.interventionAgreementStatus === this.CONSTANTS.STATUSES.suspended) {
+        if (newStatus === this.CONSTANTS.STATUSES.Active.toLowerCase() && this.interventionAgreementStatus === this.CONSTANTS.STATUSES.Suspended.toLowerCase()) {
           // prevent changing status from suspended to active is the agreement status is suspended
           return false;
         }
 
-        if ([this.CONSTANTS.STATUSES.suspended,
-             this.CONSTANTS.STATUSES.terminated].indexOf(newStatus) > -1) {
-          if ([this.CONSTANTS.STATUSES.active,
-               this.CONSTANTS.STATUSES.signed].indexOf(this.status) < 0) {
+        if ([this.CONSTANTS.STATUSES.Suspended.toLowerCase(),
+             this.CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+          if ([this.CONSTANTS.STATUSES.Active.toLowerCase(),
+               this.CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
             //prevent suspending or terminating anything other than signed or active intervention
             return false;
           }
@@ -392,13 +392,13 @@
 
       _computeWarningMessage(newStatus) {
         switch (newStatus) {
-          case this.CONSTANTS.STATUSES.terminated:
+          case this.CONSTANTS.STATUSES.Terminated.toLowerCase():
             this.set('warningMessage', 'You are about to terminate this PD/SSFA. Do you want to continue?');
             break;
-          case this.CONSTANTS.STATUSES.suspended:
+          case this.CONSTANTS.STATUSES.Suspended.toLowerCase():
             this.set('warningMessage', 'You are about to suspend this PD/SSFA. Do you want to continue?');
             break;
-          case this.CONSTANTS.STATUSES.signed:
+          case this.CONSTANTS.STATUSES.Signed.toLowerCase():
             this.set('warningMessage', 'You are about to unsuspend this PD/SSFA. Do you want to continue?');
             break;
           default:
@@ -408,19 +408,19 @@
       }
 
       _setStatusTerminated() {
-        this._updateStatus(this.CONSTANTS.STATUSES.terminated);
+        this._updateStatus(this.CONSTANTS.STATUSES.Terminated.toLowerCase());
       }
 
       _setStatusDraft() {
-        this._updateStatus(this.CONSTANTS.STATUSES.draft);
+        this._updateStatus(this.CONSTANTS.STATUSES.Draft.toLowerCase());
       }
 
       _setStatusSuspended() {
-        this._updateStatus(this.CONSTANTS.STATUSES.suspended);
+        this._updateStatus(this.CONSTANTS.STATUSES.Suspended.toLowerCase());
       }
 
       _unsuspendIntervention() {
-        this._updateStatus(this.CONSTANTS.STATUSES.signed);
+        this._updateStatus(this.CONSTANTS.STATUSES.Signed.toLowerCase());
       }
 
       _triggerInterventionDeleteOnConfirm(e) {

@@ -209,7 +209,7 @@
         let activeStatus;
 
         switch (status) {
-          case this.CONSTANTS.STATUSES.draft:
+          case this.CONSTANTS.STATUSES.Draft.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -218,7 +218,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Draft;
             break;
 
-          case this.CONSTANTS.STATUSES.signed:
+          case this.CONSTANTS.STATUSES.Signed.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -227,7 +227,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Signed;
             break;
 
-          case this.CONSTANTS.STATUSES.suspended:
+          case this.CONSTANTS.STATUSES.Suspended.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -237,7 +237,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Suspended;
             break;
 
-          case this.CONSTANTS.STATUSES.terminated:
+          case this.CONSTANTS.STATUSES.Terminated.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -247,7 +247,7 @@
             activeStatus = this.CONSTANTS.STATUSES.Terminated;
             break;
 
-          case this.CONSTANTS.STATUSES.ended:
+          case this.CONSTANTS.STATUSES.Ended.toLowerCase():
             availableStatuses = [
               this.CONSTANTS.STATUSES.Draft,
               this.CONSTANTS.STATUSES.Signed,
@@ -293,16 +293,16 @@
           return false;
         }
 
-        if (newStatus === this.CONSTANTS.STATUSES.draft) {
+        if (newStatus === this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
           // if agreement was not saved (is new) or the status is already changed
           // from draft, stop status change
-          if (this.status !== this.CONSTANTS.STATUSES.draft) {
+          if (this.status !== this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
             return false;
           }
         }
-        if ([this.CONSTANTS.STATUSES.suspended,
-             this.CONSTANTS.STATUSES.terminated].indexOf(newStatus) > -1) {
-          if (this.status !== this.CONSTANTS.STATUSES.signed) {
+        if ([this.CONSTANTS.STATUSES.Suspended.toLowerCase(),
+             this.CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+          if (this.status !== this.CONSTANTS.STATUSES.Signed.toLowerCase()) {
             // prevent suspending or terminating anything other than signed agreement
             return false;
           }
@@ -312,13 +312,13 @@
 
       _computeWarningMessage(newStatus) {
         switch (newStatus) {
-          case this.CONSTANTS.STATUSES.terminated:
+          case this.CONSTANTS.STATUSES.Terminated.toLowerCase():
             this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?');
             break;
-          case this.CONSTANTS.STATUSES.suspended:
+          case this.CONSTANTS.STATUSES.Suspended.toLowerCase():
             this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?');
             break;
-          case this.CONSTANTS.STATUSES.signed:
+          case this.CONSTANTS.STATUSES.Signed.toLowerCase():
             this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?');
             break;
           default:
@@ -328,15 +328,15 @@
       }
 
       _setStatusTerminated() {
-        this._updateStatus(this.CONSTANTS.STATUSES.terminated);
+        this._updateStatus(this.CONSTANTS.STATUSES.Terminated.toLowerCase());
       }
 
       _setStatusSuspended() {
-        this._updateStatus(this.CONSTANTS.STATUSES.suspended);
+        this._updateStatus(this.CONSTANTS.STATUSES.Suspended.toLowerCase());
       }
 
       _unsuspendAgreement() {
-        this._updateStatus(this.CONSTANTS.STATUSES.signed);
+        this._updateStatus(this.CONSTANTS.STATUSES.Signed.toLowerCase());
       }
 
       _triggerAgDeleteOnConfirm(e) {
