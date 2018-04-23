@@ -48,9 +48,11 @@
                    size="md"
                    dialog-title="Add/Update FR Numbers"
                    ok-btn-text="Add/Update"
-                   on-close="_checkFrNumbers"
                    disable-confirm-btn="[[disableConfirmBtn]]"
-                   no-padding>
+                   hidden$="[[hideFrsDialog]]"
+                   on-confirm-btn-clicked="_checkFrNumbers"
+                   no-padding keep-dialog-open
+                   spinner-text="Checking FR Numbers updates...">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
           <div class="item-actions-container">
@@ -74,7 +76,7 @@
                            required
                            auto-validate
                            error-message="Please fill FR Number or remove the field"
-                           on-value-changed="_rfNrValueChanged">
+                           on-value-changed="_frNrValueChanged">
               </paper-input>
             </div>
           </div>
@@ -128,6 +130,10 @@
           },
           interventionStatus: {
             type: String
+          },
+          hideFrsDialog: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -157,6 +163,24 @@
         this.$.frsDialog.opened = true;
       }
 
+      stopSpinner(e) {
+        if (e) {
+          e.stopImmediatePropagation();
+        }
+        this.$.frsDialog.stopSpinner();
+      }
+
+      startSpinner(e) {
+        if (e) {
+          e.stopImmediatePropagation();
+        }
+        this.$.frsDialog.startSpinner();
+      }
+
+      closeDialog() {
+        this.$.frsDialog.opened = false;
+      }
+
       validate() {
         let valid = true;
         if (this.dataItems instanceof Array && this.dataItems.length > 0) {
@@ -177,7 +201,7 @@
           return;
         }
         this._addElement();
-        this.set('disableConfirmBtn', true);
+       /// this.set('disableConfirmBtn', true); Creates bugs smt because of timing
         setTimeout(this._centerDialog.bind(this), 0);
         setTimeout(this._updateScroll.bind(this), 100);
       }
@@ -210,7 +234,7 @@
         return length === 0;
       }
 
-      _rfNrValueChanged() {
+      _frNrValueChanged() {
         if (!this.validate()) {
           this.set('disableConfirmBtn', true);
           return;
@@ -222,14 +246,12 @@
         if (typeof length === 'undefined') {
           return;
         }
-        this._rfNrValueChanged();
+        this._frNrValueChanged();
       }
 
       _checkFrNumbers(e) {
-        if (e.detail.confirmed) {
-          // resend rf number changes back to main fund reservations element
-          this.fireEvent('update-frs-dialog-close', {frs: this._getUpdatedFrsNumbers()});
-        }
+        // resend rf number changes back to main fund reservations element
+        this.fireEvent('update-frs-dialog-close', {frs: this._getUpdatedFrsNumbers()});
       }
 
       // prepare the rf numbers list, used to verify them using API endpoint (/api/v2/funds/frs)
