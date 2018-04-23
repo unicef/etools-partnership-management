@@ -604,7 +604,8 @@
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
             if (!(permissions.partnershipManager || permissions.PME) &&
-                (!intervention.status || intervention.status !== 'draft')) {
+                (!intervention.status ||
+                 intervention.status !== this.CONSTANTS.STATUSES.Draft.toLowerCase())) {
               // other users than partnershipManager or PME will be able to edit only if intervention status is draft
               return false;
             }

@@ -320,7 +320,8 @@
       }
 
       _isDraft(status) {
-        return status === 'draft' || status === '';
+        return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+               status === '';
       }
 
       _interventionChanged(intervention) {
@@ -445,7 +446,8 @@
         if (typeof signedDocument === 'undefined') {
           return;
         }
-        if (this.intervention && this.intervention.status === 'draft') {
+        if (this.intervention &&
+            this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
           if (signedDocument instanceof File ||
               (_.isString(signedDocument) && !_.isEmpty(signedDocument))) {
             // new document selected

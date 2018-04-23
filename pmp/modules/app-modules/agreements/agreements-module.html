@@ -319,7 +319,7 @@
       _saveAgreement(agreementData) {
         // let agreementData = event.detail;
         if (!agreementData.id) {
-          agreementData.status = 'draft';
+          agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
         }
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
       }
