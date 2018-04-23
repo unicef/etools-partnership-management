@@ -27,7 +27,8 @@
             'as the FR.\n',
             amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
             dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
-            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
+            warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
+            FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
           }
         },
         frsValidationFields: {
@@ -163,8 +164,8 @@
           '<<field_name>>', this.frsValidationFields.end_date);
     }
 
-    frsConsistencyWarningIsActive(warnMsg) {
-      return !!warnMsg;
+    frsConsistencyWarningIsActive(active) {
+      return !!active;
     }
 
     emptyFrsList(intervention, interventionIsFromWhere) {
@@ -182,7 +183,8 @@
       return frsCurrencyMatch ? frs[0].currency : 'N/A';
     }
 
-    getFrsTotal(frsCurrencyMatch, totalAmt) {
+    getFrsTotal(frsCurrencyMatch, totalAmt, negateCurrencyMatchFlagFirst) {
+      frsCurrencyMatch = negateCurrencyMatchFlagFirst ? !frsCurrencyMatch : frsCurrencyMatch;
       return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
     }
 
@@ -206,8 +208,9 @@
       return 'pmp-custom-icons:not-equal';
     }
 
-    getFrsTotalNotAvailableClass(frsCurrencyMatch) {
-      return frsCurrencyMatch ? '' : 'fr-val-not-available';
+    getFrsValueNAClass(valIsAvailable, negateFlagValFirst) {
+      let isAvailable = negateFlagValFirst ? !valIsAvailable : valIsAvailable;
+      return isAvailable ? '' : 'fr-val-not-available';
     }
 
     getFrsCurrencyTooltipMsg(frsCurrencyMatch) {
@@ -252,6 +255,10 @@
           ? this.frsConsistencyWarnings.tooManyFrsCurencies
           : this.frsConsistencyWarnings.currencyMismatch;
       return msg + '\n' + this.frsConsistencyWarnings.amountsCannotBeCompared;
+    }
+
+    getFrsMultiCurrFlagErrTooltipMsg() {
+      return this.frsConsistencyWarnings.FCmultiCurrFlagErrorMsg;
     }
 
   };
