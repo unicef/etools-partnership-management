@@ -162,11 +162,11 @@
         let availableOptions = [];
 
         switch (status) {
-          case 'draft':
+          case this.CONSTANTS.STATUSES.Draft.toLowerCase():
             availableOptions.push('Save');
             availableOptions.push('Delete');
             break;
-          case 'signed':
+          case this.CONSTANTS.STATUSES.Signed.toLowerCase():
             availableOptions.push('Save');
             if (this.agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
               availableOptions.push('Suspend');
@@ -174,16 +174,16 @@
             }
             break;
 
-          case 'suspended':
+          case this.CONSTANTS.STATUSES.Suspended.toLowerCase():
             if (this.agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
               availableOptions.push('Unsuspend');
             }
             break;
 
-          case 'terminated':
+          case this.CONSTANTS.STATUSES.Terminated.toLowerCase():
             break;
 
-          case 'ended':
+          case this.CONSTANTS.STATUSES.Ended.toLowerCase():
             break;
 
           default:

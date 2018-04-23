@@ -586,10 +586,12 @@
       }
 
       _contingencyPDChanged(newValue) {
-        if (newValue && this.intervention.status === 'signed') {
+        if (newValue &&
+            this.intervention.status === this.CONSTANTS.STATUSES.Signed.toLowerCase()) {
           this._updateDatesRequiredState(false);
         } else {
-          if (['signed', 'active'].indexOf(this.intervention.status) > -1) {
+          if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
+               this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
             this._updateDatesRequiredState(true);
           }
         }

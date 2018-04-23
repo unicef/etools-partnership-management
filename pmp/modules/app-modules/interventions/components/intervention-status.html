@@ -63,41 +63,41 @@
             value: function() {
               return [
                 {
-                  label: 'Draft',
+                  label: this.CONSTANTS.STATUSES.Draft,
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Signed',
+                  label: this.CONSTANTS.STATUSES.Signed,
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Active',
+                  label: this.CONSTANTS.STATUSES.Active,
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Suspended',
+                  label: this.CONSTANTS.STATUSES.Suspended,
                   icon: 'av:pause-circle-filled',
                   iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Terminated',
+                  label: this.CONSTANTS.STATUSES.Terminated,
                   icon: 'report-problem',
                   iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Ended',
+                  label: this.CONSTANTS.STATUSES.Ended,
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Closed',
+                  label: this.CONSTANTS.STATUSES.Closed,
                   hidden: false,
                   completed: false
                 }
@@ -172,37 +172,37 @@
         let availableOptions = [];
 
         switch (status) {
-          case 'draft':
+          case this.CONSTANTS.STATUSES.Draft.toLowerCase():
             availableOptions.push('Save');
             availableOptions.push('Delete');
             break;
 
-          case 'signed':
+          case this.CONSTANTS.STATUSES.Signed.toLowerCase():
             availableOptions.push('Terminate');
             availableOptions.push('Suspend');
             availableOptions.push('Save');
             break;
 
-          case 'active':
+          case this.CONSTANTS.STATUSES.Active.toLowerCase():
             availableOptions.push('Terminate');
             availableOptions.push('Suspend');
             availableOptions.push('Save');
             break;
 
-          case 'suspended':
+          case this.CONSTANTS.STATUSES.Suspended.toLowerCase():
             availableOptions.push('Unsuspend');
             break;
 
-          case 'terminated':
+          case this.CONSTANTS.STATUSES.Terminated.toLowerCase():
             break;
 
-          case 'closed':
+          case this.CONSTANTS.STATUSES.Closed.toLowerCase():
             if (this.activeTab === 'attachments') {
               availableOptions.push('Save');
             }
             break;
 
-          case 'ended':
+          case this.CONSTANTS.STATUSES.Ended.toLowerCase():
             if (this.activeTab === 'attachments') {
               availableOptions.push('Save');
             }

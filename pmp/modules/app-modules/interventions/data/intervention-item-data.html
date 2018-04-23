@@ -181,8 +181,9 @@
             self.fireEvent('reload-list');
           });
 
-          if (response.document_type && response.document_type === this.CONSTANTS.DOCUMENT_TYPES.SSFA &&
-              response.status !== 'draft') {
+          if (response.document_type &&
+              response.document_type === this.CONSTANTS.DOCUMENT_TYPES.SSFA &&
+              response.status !== this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
             this.sendRequest({
               endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {id: response.agreement})
             }).then(function(resp) {
@@ -249,7 +250,9 @@
         if (!data.interventionId) {
           this.fireEvent('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
         } else {
-          if (['signed', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+          if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
+               this.CONSTANTS.STATUSES.Suspended.toLowerCase(),
+               this.CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
             // status change is allowed
             // set additional callback if any
             if (callback) {
