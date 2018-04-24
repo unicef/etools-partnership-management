@@ -4,6 +4,7 @@
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
+<link rel="import" href="../../../config/app-constants.html">
 
 <script>
   'use strict';
@@ -19,12 +20,14 @@
    * @appliesMixin EtoolsPmpApp.Mixins.ArrayHelper
    * @appliesMixin EtoolsPmpApp.Mixins.ModifiedInterventionFields
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+   * @appliesMixin EtoolsPmpApp.Mixins.Constants
    */
   EtoolsPmpApp.Mixins.SaveIntervention = Polymer.dedupingMixin(
       superClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.EventHelper,
         EtoolsPmpApp.Mixins.ArrayHelper,
-        EtoolsPmpApp.Mixins.ModifiedInterventionFields
+        EtoolsPmpApp.Mixins.ModifiedInterventionFields,
+        EtoolsPmpApp.Mixins.Constants
       ], superClass) {
 
         _validateAndSaveIntervention(event) {
@@ -80,7 +83,7 @@
           let interventionData;
           if (this._isNewIntervention()) {
             interventionData = Object.assign({}, this.intervention);
-            interventionData.status = 'draft';
+            interventionData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
           } else {
             let modifiedDetails = this._getModifiedInterventionDetails();
             let modifiedReviewAndSign = this._getModifiedReviewAndSign();
@@ -150,7 +153,8 @@
 
         _showErrorsWarning(validDetails, validReviewAndSign) {
           let msg = '';
-          if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
+          if (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() &&
+              this.intervention.signed_pd_document instanceof File) {
             msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
                 '(check DETAILS and REVIEW & SIGN tabs).';
           } else {

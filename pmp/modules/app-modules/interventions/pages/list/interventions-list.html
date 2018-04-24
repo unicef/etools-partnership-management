@@ -689,7 +689,8 @@
       }
 
       _canShowListDatesFrsWarnings(status) {
-        return (status !== 'draft' && status !== 'closed');
+        return (status !== this.CONSTANTS.STATUSES.Draft.toLowerCase() &&
+                status !== this.CONSTANTS.STATUSES.Closed.toLowerCase());
       }
 
       _hideDateFrsWarningTooltip(pdDate, frsDate, status) {
