@@ -192,8 +192,7 @@
       _updateScroll() {
         let d = this._getPaperDialog();
         if (d) {
-          // TODO: polymer2 - Test this on IE
-          let dialogScrollable = d.shadowRoot.querySelector('paper-dialog-scrollable');
+          let dialogScrollable = d.querySelector('paper-dialog-scrollable');
           if (dialogScrollable) {
             let scrollTarget = dialogScrollable.scrollTarget;
             scrollTarget.scrollTop = scrollTarget.scrollHeight;
@@ -202,7 +201,6 @@
       }
 
       _getPaperDialog() {
-        // TODO: polymer2 - Test this on IE
         return this.$.frsDialog.shadowRoot.querySelector('paper-dialog');
       }
 

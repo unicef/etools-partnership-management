@@ -16,6 +16,7 @@
 <link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
@@ -195,11 +196,13 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementAmendmentsRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.RepeatableDataSets,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element);
 
     /**
@@ -254,11 +257,13 @@
       }
 
       _getAmendmentTypes(agreementType, _amendmentTypes) {
-        if (['PCA', 'SSFA'].indexOf(agreementType) === -1 ||
+        if ([this.CONSTANTS.AGREEMENT_TYPES.PCA,
+             this.CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
             !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
           return [];
         }
-        if (agreementType === 'SSFA') {
+
+        if (agreementType === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
           return _amendmentTypes.filter(type => type.value === 'Change authorized officer');
         }
         return _amendmentTypes;

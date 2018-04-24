@@ -120,8 +120,8 @@
               Export
             </paper-button>
             <paper-listbox slot="dropdown-content">
-              <paper-item on-tap="_exportPdBudget">[[PdExportTypes.PdBudget]] Export</paper-item>
-              <paper-item on-tap="_exportPdResult">[[PdExportTypes.PdResult]] Export</paper-item>
+              <paper-item on-tap="_exportPdBudget">[[CONSTANTS.PD_EXPORT_TYPES.PdBudget]] Export</paper-item>
+              <paper-item on-tap="_exportPdResult">[[CONSTANTS.PD_EXPORT_TYPES.PdResult]] Export</paper-item>
             </paper-listbox>
           </paper-menu-button>
         </div>
@@ -604,7 +604,8 @@
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
             if (!(permissions.partnershipManager || permissions.PME) &&
-                (!intervention.status || intervention.status !== 'draft')) {
+                (!intervention.status ||
+                 intervention.status !== this.CONSTANTS.STATUSES.Draft.toLowerCase())) {
               // other users than partnershipManager or PME will be able to edit only if intervention status is draft
               return false;
             }
