@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
+<link rel="import" href="../../../config/app-constants.html">
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../config/dexie-db-config.html">
 <link rel="import" href="../../../mixins/ajax-server-errors-mixin.html">
@@ -23,6 +24,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     class InterventionItemData extends EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
@@ -30,7 +32,8 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-      EtoolsPmpApp.Mixins.EnvironmentFlags
+      EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element) {
 
       static get is() {
@@ -178,8 +181,9 @@
             self.fireEvent('reload-list');
           });
 
-          if (response.document_type && response.document_type === 'SSFA' &&
-              response.status !== 'draft') {
+          if (response.document_type &&
+              response.document_type === this.CONSTANTS.DOCUMENT_TYPES.SSFA &&
+              response.status !== this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
             this.sendRequest({
               endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {id: response.agreement})
             }).then(function(resp) {
@@ -246,7 +250,9 @@
         if (!data.interventionId) {
           this.fireEvent('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
         } else {
-          if (['signed', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+          if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
+               this.CONSTANTS.STATUSES.Suspended.toLowerCase(),
+               this.CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
             // status change is allowed
             // set additional callback if any
             if (callback) {
