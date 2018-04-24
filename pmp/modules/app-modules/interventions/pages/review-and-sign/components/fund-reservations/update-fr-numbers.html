@@ -192,8 +192,6 @@
       }
 
       _addNewFundReservation() {
-        this.set('disableConfirmBtn', true);//Why the logic with disable btn , why not validate when clicking on Save
-
         if (!this.validate()) {
           return;
         }
@@ -246,6 +244,9 @@
       }
 
       _checkFrNumbers(e) {
+        if (!this.validate()) {
+          return;
+        }
         // resend fr number changes back to main fund reservations element
         this.fireEvent('update-frs-dialog-close', {frs: this._getUpdatedFrsNumbers()});
       }
