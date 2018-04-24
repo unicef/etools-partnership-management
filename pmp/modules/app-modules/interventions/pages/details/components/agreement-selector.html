@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../scripts/lodash.html">
+<link rel="import" href="../../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
@@ -83,11 +84,13 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     class AgreementSelector extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element) {
 
       static get is() {
@@ -194,19 +197,19 @@
         }
 
         // set filtered agreements based on this
-        let agreements = _.filter(this.agreements, function(agreement) {
+        let agreements = _.filter(this.agreements, (agreement) => {
           if (this.intervention) {
             // existing intervention
             return agreement.partner === partnerId
-                && agreement.agreement_type !== 'MOU';
+                && agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU;
           } else {
             // new intervention
             return agreement.partner === partnerId &&
                 ['suspended', 'terminated'].indexOf(agreement.status) === -1
-                && agreement.agreement_type !== 'MOU';
+                && agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU;
           }
 
-        }.bind(this));
+        });
         this.set('filteredAgreements', agreements);
       }
 

@@ -18,13 +18,15 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliedMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementItemDataRequiredMixin = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element);
 
     /**
@@ -157,7 +159,9 @@
         if (!data.agreementId) {
           this.fireEvent('toast', {text: 'Invalid agreement ID', showCloseBtn: true});
         } else {
-          if (['signed', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+          if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
+               this.CONSTANTS.STATUSES.Suspended.toLowerCase(),
+               this.CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
             // status change is allowed
             // set additional callback if any
             if (callback) {
