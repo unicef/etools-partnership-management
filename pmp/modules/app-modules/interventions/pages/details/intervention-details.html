@@ -39,7 +39,7 @@
 <link rel="import" href="components/planned-budget.html">
 <link rel="import" href="components/results/expected-results.html">
 <link rel="import" href="components/planned-visits.html">
-<link rel="import" href="components/reporting-requirements/reporting-requirements.html">
+<link rel="import" href="components/reporting-requirements/partner-reporting-requirements.html">
 <link rel="import" href="components/grouped-locations-dialog.html">
 
 <dom-module id="intervention-details">
@@ -375,15 +375,15 @@
       </planned-visits>
     </etools-content-panel>
 
-    <template is="dom-if"
-              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
-              restamp>
-      <reporting-requirements class="content-section"
+    <!-- <template is="dom-if"
+              if="1"
+              restamp> -->
+      <partner-reporting-requirements class="content-section"
                               is-new-intervention="[[newIntervention]]"
                               edit-mode="[[intervention.permissions.edit.reporting_periods]]"
                               intervention-id="[[intervention.id]]">
-      </reporting-requirements>
-    </template>
+      </partner-reporting-requirements>
+    <!-- </template> -->
   </template>
   <script>
     'use strict';

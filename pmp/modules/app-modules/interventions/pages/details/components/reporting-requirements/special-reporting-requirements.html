@@ -1,0 +1,52 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="special-reporting-requirements">
+  <template>
+    <style>
+      :host {
+        display: block
+      }
+    </style>
+
+
+    There are no special reporting requirements set.
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SpecialReportingRequirements extends Polymer.Element {
+      static get is() {
+        return 'special-reporting-requirements';
+      }
+
+      static get properties() {
+        return {
+
+        };
+      }
+
+      /**
+       * Instance of the element is created/upgraded. Use: initializing state,
+       * set up event listeners, create shadow dom.
+       * @constructor
+       */
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+
+        Polymer.RenderStatus.afterNextRender(this, function() {
+
+        });
+      }
+
+    }
+
+    window.customElements.define(SpecialReportingRequirements.is, SpecialReportingRequirements);
+  </script>
+</dom-module>

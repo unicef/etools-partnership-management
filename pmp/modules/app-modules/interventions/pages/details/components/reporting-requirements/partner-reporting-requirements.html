@@ -1,0 +1,137 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../../../../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../../../../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+
+<link rel="import" href="quarterly-reporting-requirements.html">
+<link rel="import" href="humanitarian-reporting-req-unicef.html">
+<link rel="import" href="humanitarian-reporting-req-cluster.html">
+<link rel="import" href="special-reporting-requirements.html">
+
+<dom-module id="partner-reporting-requirements">
+  <template>
+    <style include="grid-layout-styles">
+       :host {
+        display: block;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+
+      }
+      .nav-menu {
+        @apply --layout-vertical;
+        background: var(--primary-background-color);
+        padding: 8px 0 8px 0;
+      }
+      .nav-menu-item {
+        padding-left: 24px;
+        padding-right: 34px;
+        width: auto;
+        font-size: 14px;
+        position: relative;
+        height: 48px;
+        cursor: pointer;
+        text-decoration: none;
+        text-transform: capitalize;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+      .nav-menu-item.iron-selected {
+        color: var(--primary-color);
+      }
+      .nav-menu-item {
+        color: var(--secondary-text-color);
+      }
+      .nav-menu-item.iron-selected {
+        background-color: var(--medium-theme-background-color);
+      }
+
+      .nav-menu-item.iron-selected:active {
+        background-color: var(--dark-divider-color);
+      }
+      /* ------------------------------- */
+
+      .reports-menu {
+        width: 290px;
+        font-weight: 700;
+      }
+      .lborder {
+        border-left: 2px solid var(--list-divider-color);
+      }
+    </style>
+
+  <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
+    <div class="flex-c layout-horizontal">
+      <div class="reports-menu nav-menu">
+        <iron-selector selected="{{selectedReportType}}"
+                       attr-for-selected="name"
+                       selectable="div">
+          <div name="qtyProgress" class="nav-menu-item">Quarterly Progress Reports (0)</div>
+          <div name="humanitarianUnicef" class="nav-menu-item">Humanitarian Reports - UNICEF (3)</div>
+          <div name="humanitarianCluster" class="nav-menu-item">Humanitarian Reports - Cluster (0)</div>
+          <div name="special" class="nav-menu-item">Special Report (0)</div>
+        </iron-selector>
+      </div>
+      <div class="flex-c lborder">
+        <iron-pages id="reportingPages"
+                    selected="[[selectedReportType]]"
+                    attr-for-selected="name"
+                    fallback-selection="qtyProgress">
+          <div name="qtyProgress">
+            <quarterly-reporting-requirements></quarterly-reporting-requirements>
+          </div>
+          <div name="humanitarianUnicef">
+            <humanitarian-reporting-req-unicef></humanitarian-reporting-req-unicef>
+          </div>
+          <div name="humanitarianCluster">
+            <humanitarian-reporting-req-cluster></humanitarian-reporting-req-cluster>
+          </div>
+          <div name="special">
+            <special-reporting-requirements></special-reporting-requirements>
+          </div>
+        </iron-pages>
+      </div>
+    </div>
+  </etools-content-panel>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PartnerReportingRequirements extends Polymer.Element {
+      static get is() {
+        return 'partner-reporting-requirements';
+      }
+
+      static get properties() {
+        return {
+          selectedReportType: {
+            type: String,
+            value: 'qtyProgress'
+          }
+        };
+      }
+
+      /**
+       * Use for one-time configuration of your component after local DOM is initialized.
+       */
+      ready() {
+        super.ready();
+
+        Polymer.RenderStatus.afterNextRender(this, function() {
+
+        });
+      }
+
+    }
+
+    window.customElements.define(PartnerReportingRequirements.is, PartnerReportingRequirements);
+  </script>
+</dom-module>
