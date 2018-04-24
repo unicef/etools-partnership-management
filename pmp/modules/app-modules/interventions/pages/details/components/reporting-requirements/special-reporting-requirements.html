@@ -1,15 +1,26 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 
 <dom-module id="special-reporting-requirements">
   <template>
-    <style>
+    <style include="buttons-styles grid-layout-styles">
       :host {
         display: block
       }
     </style>
 
-
-    There are no special reporting requirements set.
+    <div class="row-h">
+      There are no special reporting requirements set.
+    </div>
+    <div class="row-h">
+      <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
+        ADD REQUIREMENTS
+      </paper-button>
+    </div>
   </template>
 
   <script>
@@ -28,21 +39,16 @@
         };
       }
 
-      /**
-       * Instance of the element is created/upgraded. Use: initializing state,
-       * set up event listeners, create shadow dom.
-       * @constructor
-       */
-      constructor() {
-        super();
-      }
-
       ready() {
         super.ready();
 
         Polymer.RenderStatus.afterNextRender(this, function() {
 
         });
+      }
+
+      _openSpecialRepRequirementsDialog() {
+
       }
 
     }

@@ -1,15 +1,28 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 
 <dom-module id="humanitarian-reporting-req-unicef">
   <template>
-    <style>
+    <style include="buttons-styles grid-layout-styles">
       :host {
         display: block
       }
     </style>
 
+    <div class="row-h">
+      There are no humanitarian report requirements set.
+    </div>
+    <div class="row-h">
+      <paper-button class="secondary-btn" on-tap="_openUnicefHumanitarianRepReqsDialog">
+        ADD REQUIREMENTS
+      </paper-button>
+    </div>
 
-    There are no humanitarian report requirements set.
+
   </template>
 
   <script>
@@ -45,6 +58,9 @@
         });
       }
 
+      _openUnicefHumanitarianRepReqsDialog() {
+
+      }
     }
 
     window.customElements.define(HumanitarianReportingReqUnicef.is, HumanitarianReportingReqUnicef);
