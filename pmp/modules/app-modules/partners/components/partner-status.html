@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
+<link rel="import" href="../../../config/app-constants.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status.html">
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -47,9 +48,11 @@
      * @customElement
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsStatusCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     class PartnerStatus extends
-        EtoolsMixins.DynamicDialogMixin(EtoolsPmpApp.Mixins.EtoolsStatusCommon(Polymer.Element)) {
+        EtoolsMixins.DynamicDialogMixin(
+          EtoolsPmpApp.Mixins.EtoolsStatusCommon(EtoolsPmpApp.Mixins.Constants(Polymer.Element))) {
 
       static get is() {
         return 'partner-status';
@@ -115,7 +118,7 @@
       setPossibleStatuses() {
         this.set('possibleStatuses', [
           {
-            label: 'Not Synced',
+            label: this.CONSTANTS.PARTNER_STATUSES.NotSynced,
             icon: 'info',
             iconStyles: 'width: 19px; height: 19px; color: ' +
             this.getComputedStyleValue('--primary-background-color'),
@@ -125,7 +128,7 @@
             completed: false
           },
           {
-            label: 'Synced from VISION',
+            label: this.CONSTANTS.PARTNER_STATUSES.SyncedFromVISION,
             icon: 'autorenew',
             iconStyles: 'width: 19px; height: 19px; color: ' +
             this.getComputedStyleValue('--primary-background-color'),
@@ -134,7 +137,7 @@
             completed: false
           },
           {
-            label: 'Blocked in VISION',
+            label: this.CONSTANTS.PARTNER_STATUSES.BlockedInVISION,
             icon: 'block',
             iconStyles: 'width: 19px; height: 19px; color: ' +
             this.getComputedStyleValue('--primary-background-color'),
@@ -143,7 +146,7 @@
             completed: false
           },
           {
-            label: 'Marked For Deletion in VISION',
+            label: this.CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION,
             icon: 'delete-forever',
             iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
             iconContainerStyles: 'background-color: ' +
@@ -218,16 +221,16 @@
         }
         switch (true) {
           case this._showNotSyncedStatus():
-            activeStatus = 'Not Synced';
+            activeStatus = this.CONSTANTS.PARTNER_STATUSES.NotSynced;
             break;
           case this._showSyncedStatus():
-            activeStatus = 'Synced from VISION';
+            activeStatus = this.CONSTANTS.PARTNER_STATUSES.SyncedFromVISION;
             break;
           case this._showBlockedStatus():
-            activeStatus = 'Blocked in VISION';
+            activeStatus = this.CONSTANTS.PARTNER_STATUSES.BlockedInVISION;
             break;
           case this._showMakedForDeletionStatus():
-            activeStatus = 'Marked For Deletion in VISION';
+            activeStatus = this.CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION;
             break;
         }
 

@@ -12,6 +12,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
+<link rel="import" href="../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -398,6 +399,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     class InterventionDetails extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
@@ -406,7 +408,8 @@
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
-      EtoolsPmpApp.Mixins.FrNumbersConsistency
+      EtoolsPmpApp.Mixins.FrNumbersConsistency,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element) {
 
       static get is() {
@@ -583,10 +586,12 @@
       }
 
       _contingencyPDChanged(newValue) {
-        if (newValue && this.intervention.status === 'signed') {
+        if (newValue &&
+            this.intervention.status === this.CONSTANTS.STATUSES.Signed.toLowerCase()) {
           this._updateDatesRequiredState(false);
         } else {
-          if (['signed', 'active'].indexOf(this.intervention.status) > -1) {
+          if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
+               this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
             this._updateDatesRequiredState(true);
           }
         }
@@ -600,7 +605,7 @@
       }
 
       _showContingencyPd(agreement) {
-        return agreement && 'PCA' === agreement.agreement_type;
+        return agreement && this.CONSTANTS.AGREEMENT_TYPES.PCA === agreement.agreement_type;
       }
 
       _initDocTypes(documentTypes) {
@@ -609,11 +614,11 @@
         }
         let pcaTypes = [];
         let ssfaTypes = [];
-        documentTypes.forEach(function(type) {
-          if (type.value !== 'SSFA') {
+        documentTypes.forEach((type) => {
+          if (type.value !== this.CONSTANTS.DOCUMENT_TYPES.SSFA) {
             pcaTypes.push(type);
           }
-          if (type.value === 'SSFA') {
+          if (type.value === this.CONSTANTS.DOCUMENT_TYPES.SSFA) {
             ssfaTypes.push(type);
           }
         });
@@ -708,10 +713,10 @@
         let options = documentTypes;
         if (agreement && agreement.agreement_type) {
           switch (agreement.agreement_type) {
-            case 'PCA':
+            case this.CONSTANTS.AGREEMENT_TYPES.PCA:
               options = this.pcaDocTypes;
               break;
-            case 'SSFA':
+            case this.CONSTANTS.AGREEMENT_TYPES.SSFA:
               options = this.ssfaDocTypes;
               break;
             default:

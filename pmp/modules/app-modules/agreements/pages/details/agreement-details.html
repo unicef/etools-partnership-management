@@ -22,6 +22,7 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../modules/mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
@@ -96,7 +97,7 @@
                        readonly>
           </paper-input>
         </div>
-        <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
+        <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
           <div class="col col-3">
             <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
               <span>[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]</span>
@@ -126,7 +127,7 @@
             <span>[[agreement.partner_name]]</span>
           </etools-form-element-wrapper>
         </div>
-        <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
+        <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]" restamp>
           <div class="col col-3">
             <etools-date-input id="startDateField"
                                label="Start date"
@@ -146,7 +147,7 @@
             </etools-date-input>
           </div>
         </template>
-        <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
+        <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]" restamp>
           <div class="col col-6">
             <etools-cp-structure
                 id="cpStructure"
@@ -160,7 +161,7 @@
         </template>
       </div>
 
-      <div hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+      <div hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By Partner -->
@@ -232,7 +233,7 @@
         </div>
       </div>
 
-      <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
+      <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]">
         <!-- Partner Authorized Officers (partner staff members) -->
         <etools-dropdown-multi id="officers"
                                label="Authorized Officers"
@@ -272,7 +273,7 @@
              hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
           <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
         </div>
-        <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+        <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
           <etools-single-file
               file="{{agreement.attached_agreement}}"
               internal-file="[[agreement.attached_agreement_file]]"
@@ -309,12 +310,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.StaffMembersData
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.StaffMembersData,
-      EtoolsPmpApp.Mixins.Common
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element);
 
     /**
@@ -423,7 +426,7 @@
       }
 
       _getTBorderClassIfApplicable(agreementType) {
-        return agreementType !== 'SSFA'? 't-border' : '';
+        return agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA ? 't-border' : '';
       }
 
       // Editing Agreement Type is allowed only if Agreement is new/unsaved
@@ -454,7 +457,7 @@
       }
 
       _showAmendments(type, status) {
-        return type === 'PCA' && !this._isDraft();
+        return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && !this._isDraft();
       }
 
       // When agreement data is changed we need to check and prepare attached agreement file and
@@ -523,11 +526,11 @@
       }
 
       _showGeneratePcaBtn(type, isNewAgreement) {
-        return type === 'PCA' && this._isDraft() && !isNewAgreement;
+        return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && this._isDraft() && !isNewAgreement;
       }
 
       _showGeneratePcaWarning(type, isNewAgreement) {
-        return type === 'PCA' && isNewAgreement;
+        return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && isNewAgreement;
       }
 
       _partnerChanged(currentPartnerId) {
@@ -557,7 +560,7 @@
         }
 
         if (agreementProperty && agreementProperty.path === 'agreement.agreement_type') {
-          if (agreementProperty.value !== 'PCA') {
+          if (agreementProperty.value !== this.CONSTANTS.AGREEMENT_TYPES.PCA) {
             // reset country_programme as it's available only for PCA type
             this.set('agreement.country_programme', null);
             // reset start and end date
@@ -681,11 +684,11 @@
       _validateAgreement() {
         let valid = true;
         let reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
-        if (this.agreement.agreement_type === 'PCA') {
+        if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           reqFieldsSelectors.push('#cpStructure');
           reqFieldsSelectors.push('#agreementAmendments');
         }
-        if (this.agreement.agreement_type !== 'SSFA') {
+        if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
           if (!this._validateSignedByFields()) {
             valid = false;
           }
