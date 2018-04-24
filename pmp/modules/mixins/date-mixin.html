@@ -23,6 +23,7 @@
 
     _convertDate(dateString) {
       if (typeof dateString === 'string' && dateString !== '') {
+        dateString = dateString.indexOf('T') === -1 ? dateString + 'T00:00:00' :  dateString;
         let date = new Date(dateString);
         return this.isValidDate(date) ? date : null;
       }
