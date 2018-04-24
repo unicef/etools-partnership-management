@@ -280,7 +280,7 @@
 
               this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
               this.set('paginator.page_size',
-                  urlQueryParams.page_size ? Number(urlQueryParams.page_size) : this.DEFAULT_LIST_SIZE);
+                  urlQueryParams.page_size ? Number(urlQueryParams.page_size) : this.CONSTANTS.DEFAULT_LIST_SIZE);
 
               this._updateSelectedFiltersValues();
               this.set('_initComplete', true);

@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
+<link rel="import" href="../../config/app-constants.html">
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
@@ -150,13 +151,15 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.ScrollControl,
       EtoolsPmpApp.Mixins.ModuleRouting,
-      EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+      EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element);
 
     /**
@@ -317,7 +320,7 @@
       _saveAgreement(agreementData) {
         // let agreementData = event.detail;
         if (!agreementData.id) {
-          agreementData.status = 'draft';
+          agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
         }
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
       }
@@ -401,7 +404,7 @@
           partner: agreement.partner,
           authorized_officers: this.authorizedOfficers
         };
-        if (agreement.agreement_type === 'SSFA') {
+        if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
           return newAgreement;
         }
 
@@ -412,12 +415,12 @@
           partner_manager: agreement.partner_manager,
           attached_agreement: agreement.attached_agreement
         });
-        if (agreement.agreement_type === 'MOU') {
+        if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           newAgreement.start = agreement.start;
           newAgreement.end = agreement.end;
           delete newAgreement.authorized_officers;
         }
-        if (agreement.agreement_type === 'PCA') {
+        if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           newAgreement.country_programme = agreement.country_programme;
         }
         return newAgreement;
@@ -434,12 +437,12 @@
         if (this._primitiveFieldIsModified('partner')) {
           changes.partner = this.agreement.partner;
         }
-        if (this.agreement.agreement_type !== 'MOU') {
+        if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           if (this._authorizedOfficersChanged()) {
             changes.authorized_officers = this.authorizedOfficers;
           }
         }
-        if (this.agreement.agreement_type !== 'SSFA') {
+        if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
           if ((this.agreement.hasOwnProperty('attached_agreement')) &&
               (this.agreement.attached_agreement instanceof File)) {
             changes.attached_agreement = this.agreement.attached_agreement;
@@ -453,7 +456,7 @@
           }.bind(this));
         }
 
-        if (this.agreement.agreement_type === 'MOU') {
+        if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           ['start', 'end'].forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
@@ -461,7 +464,7 @@
           }.bind(this));
         }
 
-        if (this.agreement.agreement_type === 'PCA') {
+        if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           if (this._primitiveFieldIsModified('country_programme')) {
             changes.country_programme = this.agreement.country_programme;
           }

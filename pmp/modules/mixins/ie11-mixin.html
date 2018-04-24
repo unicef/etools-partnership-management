@@ -48,7 +48,7 @@
       appHeaderLayout.set('hasScrollingRegion', false);
       appHeaderLayout.style.height = '100%';
       let contentContainer = appHeaderLayout.shadowRoot.querySelector('#contentContainer');
-      if (!contentContainer) {// TODO: polymer2 -remove after test
+      if (!contentContainer) {
         this.logWarn('contentContainer not found !!!', 'ie11-mixin');
       }
       if (contentContainer) {
