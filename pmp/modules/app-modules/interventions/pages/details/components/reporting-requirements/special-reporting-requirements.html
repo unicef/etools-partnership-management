@@ -2,67 +2,85 @@
 <link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../mixins/common-mixin.html">
 
 <link rel="import" href="../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 
+<link rel="import" href="mixins/reporting-requirements-common-mixin.html">
+
 <dom-module id="special-reporting-requirements">
   <template>
-    <style include="buttons-styles grid-layout-styles">
-      :host {
-        display: block
-      }
+    <style include="buttons-styles grid-layout-styles data-table-styles">
+
+
     </style>
 
-    <div class="row-h">
-      There are no special reporting requirements set.
-    </div>
-    <div class="row-h">
-      <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
-        ADD REQUIREMENTS
-      </paper-button>
+
+    <div hidden$="[[reportingRequirements.length]]"></div>
+      <div class="row-h">
+        There are no special reporting requirements set.
+      </div>
+      <div class="row-h">
+        <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
+          ADD REQUIREMENTS
+        </paper-button>
+      </div>
     </div>
   </template>
 
   <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+     */
+    const SpecialReportingRequirementsMixins =  EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+    ], Polymer.Element);
     /**
      * @customElement
      * @polymer
+     * @appliesMixin SpecialReportingRequirementsMixins
      */
-    class SpecialReportingRequirements extends Polymer.Element {
+    class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
       static get is() {
         return 'special-reporting-requirements';
       }
 
       static get properties() {
         return {
-          interventionId: {
-            type: Number,
-            observer: '_interventionIdChanged'
-          },
-          requirementsCount: {
-            type: Number,
-            value: 0,
-            notify: true
-          },
         };
       }
 
       ready() {
         super.ready();
+      }
 
-        Polymer.RenderStatus.afterNextRender(this, function() {
 
+      _sortRequirementsAsc() {
+        this.reportingRequirements.sort((a, b) => {
+          return new Date(a.due_date) - new Date(b.due_date);
         });
       }
 
-      _interventionIdChanged(newId) {
-
+      _getReportType() {
+        return this.CONSTANTS.REPORT_TYPE.SPECIAL;
       }
+
 
       _openSpecialRepRequirementsDialog() {
 

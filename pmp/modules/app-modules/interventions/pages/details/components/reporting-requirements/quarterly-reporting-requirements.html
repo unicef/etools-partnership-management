@@ -13,33 +13,30 @@
 <link rel="import" href="../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 
+<link rel="import" href="mixins/reporting-requirements-common-mixin.html">
+
 
 <dom-module id="quarterly-reporting-requirements">
   <template>
     <style include="buttons-styles grid-layout-styles data-table-styles">
-      :host {
-        display: block
-      }
       [hidden] {
         display: none !important;
       }
-      .w100 {
-        width: 100%;
-      }
+
     </style>
     <div class="flex-c">
       <etools-data-table-header no-collapse
-                                no-title class="w100">
+                                no-title>
         <etools-data-table-column class="col-1 right-align"> ID</etools-data-table-column>
         <etools-data-table-column class="col-05"></etools-data-table-column>
         <etools-data-table-column class="col-3"> Start Date</etools-data-table-column>
         <etools-data-table-column class="col-3"> End Date</etools-data-table-column>
         <etools-data-table-column class="flex-c"> Due Date</etools-data-table-column>
       </etools-data-table-header>
-      <template is="dom-repeat" items="{{qprReports}}">
+      <template is="dom-repeat" items="{{reportingRequirements}}">
         <etools-data-table-row no-collapse>
           <div slot="row-data">
-            <span class="col-data col-1 right-align">[[_getIndex(index, qprReports)]]</span>
+            <span class="col-data col-1 right-align">[[_getIndex(index, reportingRequirements)]]</span>
             <span class="col-data col-05"></span>
             <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
             <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
@@ -48,7 +45,7 @@
         </etools-data-table-row>
       </template>
     </div>
-    <div hidden$="[[qprReports.length]]">
+    <div hidden$="[[reportingRequirements.length]]">
       <div class="row-h">
         There are no quarterly reporting requirements set.
       </div>
@@ -63,24 +60,27 @@
   <script>
     'use strict';
 
-     /**
+    /**
      * @polymer
      * @customElement
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      */
     const QuarterlyReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
-      EtoolsPmpApp.Mixins.Common
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon
     ], Polymer.Element);
 
     /**
      * @customElement
      * @polymer
+     * @appliesMixin QuarterlyReportingRequirementsMixins
      */
     class QuarterlyReportingRequirements extends QuarterlyReportingRequirementsMixins {
       static get is() {
@@ -89,49 +89,19 @@
 
       static get properties() {
         return {
-          qprReports: {
-            type: Object,
-            value: []
-          },
-          requirementsCount: {
-            type: Number,
-            value: 0,
-            notify: true
-          },
-          interventionId: {
-            type: Number,
-            observer: '_interventionIdChanged'
-          },
+
         };
       }
 
       static get observers() {
         return [
-          'qprReportsChanged(qprReports, qprReports.length)'
+
         ];
       }
 
       ready() {
         super.ready();
 
-      }
-
-      _interventionIdChanged(newId) {
-        let endpoint = this.getEndpoint('reportingRequirements', {
-          intervId: newId,
-          reportType: this.CONSTANTS.REPORT_TYPE.QPR
-        });
-        this.sendRequest({method: 'GET', endpoint: endpoint})
-              .then((response) => {
-                this.set('qprReports', response.reporting_requirements);
-              });
-      }
-
-      qprReportsChanged(qprReports, length) {
-        this.qprReports.sort((a, b) => {
-          return new Date(a.start_date) - new Date(b.start_date);
-        });
-        this.set('requirementsCount', length);
       }
 
       _openQuarterlyRepRequirementsDialog() {
@@ -142,6 +112,16 @@
           return 'FINAL';
         }
         return index + 1;
+      }
+
+      _sortRequirementsAsc() {
+        this.reportingRequirements.sort((a, b) => {
+          return new Date(a.start_date) - new Date(b.start_date);
+        });
+      }
+
+      _getReportType() {
+        return this.CONSTANTS.REPORT_TYPE.QPR;
       }
 
     }
