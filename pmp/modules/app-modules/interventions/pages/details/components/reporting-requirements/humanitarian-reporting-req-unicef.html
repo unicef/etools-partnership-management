@@ -22,7 +22,7 @@
         display: block
       }
     </style>
-    <div class="flex-c">
+    <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
       <etools-data-table-header no-collapse
                                 no-title class="w100">
         <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
@@ -59,7 +59,7 @@
 
     /**
      * @polymer
-     * @customElement
+     * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
@@ -71,7 +71,6 @@
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon
     ], Polymer.Element);
-
 
     /**
      * @customElement

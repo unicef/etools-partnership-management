@@ -24,7 +24,7 @@
       }
 
     </style>
-    <div class="flex-c">
+    <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
       <etools-data-table-header no-collapse
                                 no-title>
         <etools-data-table-column class="col-1 right-align"> ID</etools-data-table-column>
@@ -62,7 +62,7 @@
 
     /**
      * @polymer
-     * @customElement
+     * @mixinFunction
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
