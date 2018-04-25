@@ -17,12 +17,32 @@
 <dom-module id="special-reporting-requirements">
   <template>
     <style include="buttons-styles grid-layout-styles data-table-styles">
-
+       [hidden] {
+        display: none !important;
+      }
 
     </style>
 
-
-    <div hidden$="[[reportingRequirements.length]]"></div>
+    <div class="flex-c">
+      <etools-data-table-header no-collapse
+                                no-title>
+        <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
+        <etools-data-table-column class="col-05"></etools-data-table-column>
+        <etools-data-table-column class="col-3"> Due Date</etools-data-table-column>
+        <etools-data-table-column class="flex-c"> Reporting Requirements</etools-data-table-column>
+      </etools-data-table-header>
+      <template is="dom-repeat" items="{{reportingRequirements}}">
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-1 right-align">[[_getIndex(index, reportingRequirements)]]</span>
+            <span class="col-data col-05"></span>
+            <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
+            <span class="col-data flex-c">[[item.description]]</span>
+          </div>
+        </etools-data-table-row>
+      </template>
+    </div>
+    <div hidden$="[[reportingRequirements.length]]">
       <div class="row-h">
         There are no special reporting requirements set.
       </div>

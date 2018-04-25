@@ -72,8 +72,8 @@
                        selectable="div">
           <div name="qtyProgress" class="nav-menu-item">Quarterly Progress Reports ([[qprRequirementsCount]])</div>
           <div name="humanitarianUnicef" class="nav-menu-item">Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])</div>
-          <div name="humanitarianCluster" class="nav-menu-item">Humanitarian Reports - Cluster (0)</div>
-          <div name="special" class="nav-menu-item">Special Report (0)</div>
+          <div name="humanitarianCluster" class="nav-menu-item">Humanitarian Reports - Cluster ([[hrClusterRequirementsCount]])</div>
+          <div name="special" class="nav-menu-item">Special Report ([[specialRequirementsCount]])</div>
         </iron-selector>
       </div>
       <div class="flex-c lborder">
@@ -93,12 +93,14 @@
             </humanitarian-reporting-req-unicef>
           </div>
           <div name="humanitarianCluster">
-            <humanitarian-reporting-req-cluster>
+            <humanitarian-reporting-req-cluster intervention-id="[[interventionId]]"
+                                                requirements-count="{{hrClusterRequirementsCount}}">
 
             </humanitarian-reporting-req-cluster>
           </div>
           <div name="special">
-            <special-reporting-requirements>
+            <special-reporting-requirements intervention-id="[[interventionId]]"
+                                            requirements-count="{{specialRequirementsCount}}">
 
             </special-reporting-requirements>
           </div>
@@ -125,6 +127,9 @@
             type: String,
             value: 'qtyProgress'
           },
+          editMode: {
+            type: Boolean
+          },
           interventionId: {
             type: String
           },
@@ -133,6 +138,14 @@
             value: 0
           },
           hrUnicefRequirementsCount: {
+            type: Number,
+            value: 0
+          },
+          hrClusterRequirementsCount: {
+            type: Number,
+            value: 0
+          },
+          specialRequirementsCount: {
             type: Number,
             value: 0
           }
