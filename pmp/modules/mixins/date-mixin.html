@@ -13,29 +13,44 @@
 
     prettyDate(dateString, format) {
       let date = this._convertDate(dateString);
-      return (!date) ? '' : moment(date).format(format ? format : 'D MMM YYYY');
+      return (!date) ? '' : this._utcDate(date, format);
     }
-    // Comented because it's not yet clear wether we should convert dates or not
-    // utcPrettyDate(dateString, format) {
-    //   let date = this._convertDate(dateString);
-    //   return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
-    // }
 
-    _convertDate(dateString) {
+    _utcDate(date, format) {
+      return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
+    }
+
+    _convertDate(dateString, noZTimezoneOffset) {
       if (typeof dateString === 'string' && dateString !== '') {
-        dateString = dateString.indexOf('T') === -1 ? dateString + 'T00:00:00' :  dateString;
+        dateString = (dateString.indexOf('T') === -1) ? (dateString + 'T00:00:00') : dateString;
+        /**
+         * `Z` (zero time offset) will prevent moment to apply a timezone to the selected/displayed date
+         * and will have the same result in all timezones
+         * @type {string}
+         */
+        dateString += noZTimezoneOffset ? '' : 'Z';
         let date = new Date(dateString);
         return this.isValidDate(date) ? date : null;
       }
       return null;
     }
 
-    /*
-     * Prepare date from string
+    _getDateWithoutTimezoneOffset(date) {
+      let userTimezoneOffset = date.getTimezoneOffset() * 60000;
+      return new Date(date.getTime() + userTimezoneOffset);
+    }
+
+    /**
+     * Prepare date from string, adding back the timezone offset.
+     * This will make sure datepicker displayed date will be the same with the selected date
+     * (eliminates the issue when the selected date was displayed +-1 day)
      */
-    prepareDate(dateString) {
+    prepareDatepickerDate(dateString) {
       let date = this._convertDate(dateString);
-      return date || new Date();
+      if (!date) {
+        return new Date();
+      }
+      return this._getDateWithoutTimezoneOffset(date);
     }
 
     /*
