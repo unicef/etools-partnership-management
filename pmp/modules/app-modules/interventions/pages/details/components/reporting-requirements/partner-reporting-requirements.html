@@ -70,8 +70,8 @@
         <iron-selector selected="{{selectedReportType}}"
                        attr-for-selected="name"
                        selectable="div">
-          <div name="qtyProgress" class="nav-menu-item">Quarterly Progress Reports (0)</div>
-          <div name="humanitarianUnicef" class="nav-menu-item">Humanitarian Reports - UNICEF (3)</div>
+          <div name="qtyProgress" class="nav-menu-item">Quarterly Progress Reports ([[qprRequirementsCount]])</div>
+          <div name="humanitarianUnicef" class="nav-menu-item">Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])</div>
           <div name="humanitarianCluster" class="nav-menu-item">Humanitarian Reports - Cluster (0)</div>
           <div name="special" class="nav-menu-item">Special Report (0)</div>
         </iron-selector>
@@ -82,16 +82,25 @@
                     attr-for-selected="name"
                     fallback-selection="qtyProgress">
           <div name="qtyProgress">
-            <quarterly-reporting-requirements></quarterly-reporting-requirements>
+            <quarterly-reporting-requirements intervention-id="[[interventionId]]"
+                                              requirements-count="{{qprRequirementsCount}}">
+
+            </quarterly-reporting-requirements>
           </div>
           <div name="humanitarianUnicef">
-            <humanitarian-reporting-req-unicef></humanitarian-reporting-req-unicef>
+            <humanitarian-reporting-req-unicef intervention-id="[[interventionId]]"
+                                               requirements-count="{{hrUnicefRequirementsCount}}">
+            </humanitarian-reporting-req-unicef>
           </div>
           <div name="humanitarianCluster">
-            <humanitarian-reporting-req-cluster></humanitarian-reporting-req-cluster>
+            <humanitarian-reporting-req-cluster>
+
+            </humanitarian-reporting-req-cluster>
           </div>
           <div name="special">
-            <special-reporting-requirements></special-reporting-requirements>
+            <special-reporting-requirements>
+
+            </special-reporting-requirements>
           </div>
         </iron-pages>
       </div>
@@ -115,7 +124,19 @@
           selectedReportType: {
             type: String,
             value: 'qtyProgress'
+          },
+          interventionId: {
+            type: String
+          },
+          qprRequirementsCount: {
+            type: Number,
+            value: 0
+          },
+          hrUnicefRequirementsCount: {
+            type: Number,
+            value: 0
           }
+
         };
       }
 

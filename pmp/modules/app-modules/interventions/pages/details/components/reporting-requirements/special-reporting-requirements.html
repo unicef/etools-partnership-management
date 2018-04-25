@@ -1,5 +1,10 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../styles/buttons-styles.html">
@@ -35,7 +40,15 @@
 
       static get properties() {
         return {
-
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
+          },
+          requirementsCount: {
+            type: Number,
+            value: 0,
+            notify: true
+          },
         };
       }
 
@@ -45,6 +58,10 @@
         Polymer.RenderStatus.afterNextRender(this, function() {
 
         });
+      }
+
+      _interventionIdChanged(newId) {
+
       }
 
       _openSpecialRepRequirementsDialog() {
