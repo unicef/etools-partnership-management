@@ -24,8 +24,12 @@
       if (typeof dateString === 'string' && dateString !== '') {
         dateString = (dateString.indexOf('T') === -1) ? (dateString + 'T00:00:00') : dateString;
         /**
-         * `Z` (zero time offset) will prevent moment to apply a timezone to the selected/displayed date
-         * and will have the same result in all timezones
+         * `Z` (zero time offset) will ensure `new Date` will create the date in UTC and then it will apply local timezone
+         * and will have the same result in all timezones (for the UTC date).
+         * Example:
+         *  d = new Date('2018-04-25T00:00:00Z');
+         *  d.toString() == "Wed Apr 25 2018 03:00:00 GMT+0300 (EEST)"
+         *  d.toGMTString() == "Wed, 25 Apr 2018 00:00:00 GMT"
          * @type {string}
          */
         dateString += noZTimezoneOffset ? '' : 'Z';
