@@ -23,7 +23,16 @@
 
     </style>
 
-    <div class="flex-c">
+    <div class="flex-c col-data">
+      <div class="row-h" hidden$="[[reportingRequirements.length]]">
+        There are no special reporting requirements set.
+      </div>
+      <div class="row-h">
+        <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
+          ADD REQUIREMENTS
+        </paper-button>
+      </div>
+
       <etools-data-table-header no-collapse
                                 no-title>
         <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
@@ -42,16 +51,7 @@
         </etools-data-table-row>
       </template>
     </div>
-    <div hidden$="[[reportingRequirements.length]]">
-      <div class="row-h">
-        There are no special reporting requirements set.
-      </div>
-      <div class="row-h">
-        <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
-          ADD REQUIREMENTS
-        </paper-button>
-      </div>
-    </div>
+
   </template>
 
   <script>
