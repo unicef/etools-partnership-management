@@ -1,12 +1,11 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 
 <link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
 <link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
@@ -139,10 +138,11 @@
   </template>
 
   <script>
+    'use strict';
+
     /**
-     * @customElement
      * @polymer
-     * @extends {Polymer.Element}
+     * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
      */
     class StaffMembers extends EtoolsPmpApp.Mixins.RepeatableDataSets(Polymer.Element) {

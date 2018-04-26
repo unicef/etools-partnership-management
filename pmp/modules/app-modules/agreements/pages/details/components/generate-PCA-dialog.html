@@ -15,9 +15,11 @@
     <etools-dialog id="etoolsDialog" size="md" ok-btn-text="Download" dialog-title="Generate PCA"
                    on-close="_handleDialogClosed">
       <paper-dropdown-menu label="Choose Template">
-        <paper-listbox attr-for-selected="item-value" slot="dropdown-content" selected="{{selectedTemplate}}">
+        <paper-listbox slot="dropdown-content"
+                       attr-for-selected="item-value"
+                       selected="{{selectedTemplate}}">
           <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
-            <paper-item item-value="[[item.value]]">[[item.label]]</paper-item>
+            <paper-item item-value$="[[item.value]]">[[item.label]]</paper-item>
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
