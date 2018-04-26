@@ -80,7 +80,7 @@
     </style>
 
     <template is="dom-if" if="[[countrySelectorVisible]]">
-      <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
+      <paper-dropdown-menu id="menu" label="Country" noink no-label-float allow-outside-scroll>
         <paper-listbox slot="dropdown-content"
                        id="countriesListbox"
                        attr-for-selected="country-id"
