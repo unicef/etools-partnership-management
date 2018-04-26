@@ -58,6 +58,7 @@
             type: Boolean,
             value: false
           },
+          interventionAgreementStatus: String,
           possibleStatuses: {
             type: Array,
             value: function() {
@@ -374,7 +375,8 @@
           return false;
         }
 
-        if (newStatus === this.CONSTANTS.STATUSES.Active.toLowerCase() && this.interventionAgreementStatus === this.CONSTANTS.STATUSES.Suspended.toLowerCase()) {
+        if (newStatus === this.CONSTANTS.STATUSES.Active.toLowerCase() &&
+            this.interventionAgreementStatus === this.CONSTANTS.STATUSES.Suspended.toLowerCase()) {
           // prevent changing status from suspended to active is the agreement status is suspended
           return false;
         }
@@ -383,7 +385,7 @@
              this.CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
           if ([this.CONSTANTS.STATUSES.Active.toLowerCase(),
                this.CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
-            //prevent suspending or terminating anything other than signed or active intervention
+            // prevent suspending or terminating anything other than signed or active intervention
             return false;
           }
         }
