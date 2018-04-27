@@ -1,18 +1,18 @@
-<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
-<link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../../config/app-constants.html">
-<link rel="import" href="../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../mixins/common-mixin.html">
 
-<link rel="import" href="../../../../../../styles/app-mixins.html">
-<link rel="import" href="../../../../../../styles/buttons-styles.html">
-<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
-<link rel="import" href="mixins/reporting-requirements-common-mixin.html">
+<link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 
 <dom-module id="special-reporting-requirements">
   <template>
@@ -24,28 +24,30 @@
         box-sizing: border-box;
 
       }
-       [hidden] {
+
+      [hidden] {
         display: none !important;
       }
 
     </style>
 
-    <div class="flex-c col-data">
-      <div class="row-h" hidden$="[[reportingRequirements.length]]">
-        There are no special reporting requirements set.
-      </div>
-      <div class="row-h">
-        <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
-          ADD REQUIREMENTS
-        </paper-button>
-      </div>
+    <div class="row-h" hidden$="[[!_empty(reportingRequirements)]]">
+      There are no special reporting requirements set.
+    </div>
 
+    <div class="row-h">
+      <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
+        ADD REQUIREMENTS
+      </paper-button>
+    </div>
+
+    <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
       <etools-data-table-header no-collapse
                                 no-title>
         <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
         <etools-data-table-column class="col-05"></etools-data-table-column>
-        <etools-data-table-column class="col-3"> Due Date</etools-data-table-column>
-        <etools-data-table-column class="flex-c"> Reporting Requirements</etools-data-table-column>
+        <etools-data-table-column class="col-3">Due Date</etools-data-table-column>
+        <etools-data-table-column class="flex-c">Reporting Requirements</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{reportingRequirements}}">
         <etools-data-table-row no-collapse>
@@ -72,7 +74,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      */
-    const SpecialReportingRequirementsMixins =  EtoolsMixinFactory.combineMixins([
+    const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
@@ -90,8 +92,7 @@
       }
 
       static get properties() {
-        return {
-        };
+        return {};
       }
 
       ready() {

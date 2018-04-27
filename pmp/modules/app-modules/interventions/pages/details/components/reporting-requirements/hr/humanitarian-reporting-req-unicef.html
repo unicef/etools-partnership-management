@@ -1,19 +1,19 @@
-<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
-<link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../../config/app-constants.html">
-<link rel="import" href="../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../mixins/common-mixin.html">
 
 
-<link rel="import" href="../../../../../../styles/app-mixins.html">
-<link rel="import" href="../../../../../../styles/buttons-styles.html">
-<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
-<link rel="import" href="mixins/reporting-requirements-common-mixin.html">
+<link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 
 <dom-module id="humanitarian-reporting-req-unicef">
   <template>
@@ -22,7 +22,8 @@
         display: block
       }
     </style>
-    <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
+
+    <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
       <etools-data-table-header no-collapse
                                 no-title class="w100">
         <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
@@ -40,7 +41,7 @@
       </template>
     </div>
 
-    <div hidden$="[[reportingRequirements.length]]">
+    <div hidden$="[[!_empty(reportingRequirements)]]">
       <div class="row-h">
         There are no humanitarian report requirements set.
       </div>
@@ -83,9 +84,7 @@
       }
 
       static get properties() {
-        return {
-
-        };
+        return {};
       }
 
       ready() {

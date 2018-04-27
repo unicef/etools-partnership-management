@@ -1,20 +1,19 @@
-<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
-<link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../../config/app-constants.html">
-<link rel="import" href="../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../mixins/common-mixin.html">
 
-<link rel="import" href="../../../../../../styles/app-mixins.html">
-<link rel="import" href="../../../../../../styles/buttons-styles.html">
-<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
-<link rel="import" href="mixins/reporting-requirements-common-mixin.html">
-
+<link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 
 <dom-module id="quarterly-reporting-requirements">
   <template>
@@ -24,15 +23,17 @@
       }
 
     </style>
-    <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
+
+    <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
       <etools-data-table-header no-collapse
                                 no-title>
-        <etools-data-table-column class="col-1 right-align"> ID</etools-data-table-column>
+        <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
         <etools-data-table-column class="col-05"></etools-data-table-column>
-        <etools-data-table-column class="col-3"> Start Date</etools-data-table-column>
-        <etools-data-table-column class="col-3"> End Date</etools-data-table-column>
-        <etools-data-table-column class="flex-c"> Due Date</etools-data-table-column>
+        <etools-data-table-column class="col-3">Start Date</etools-data-table-column>
+        <etools-data-table-column class="col-3">End Date</etools-data-table-column>
+        <etools-data-table-column class="flex-c">Due Date</etools-data-table-column>
       </etools-data-table-header>
+
       <template is="dom-repeat" items="{{reportingRequirements}}">
         <etools-data-table-row no-collapse>
           <div slot="row-data">
@@ -45,7 +46,8 @@
         </etools-data-table-row>
       </template>
     </div>
-    <div hidden$="[[reportingRequirements.length]]">
+
+    <div hidden$="[[!_empty(reportingRequirements)]]">
       <div class="row-h">
         There are no quarterly reporting requirements set.
       </div>
@@ -78,8 +80,8 @@
     ], Polymer.Element);
 
     /**
-     * @customElement
      * @polymer
+     * @customElement
      * @appliesMixin QuarterlyReportingRequirementsMixins
      */
     class QuarterlyReportingRequirements extends QuarterlyReportingRequirementsMixins {
@@ -88,15 +90,11 @@
       }
 
       static get properties() {
-        return {
-
-        };
+        return {};
       }
 
       static get observers() {
-        return [
-
-        ];
+        return [];
       }
 
       ready() {
@@ -107,6 +105,7 @@
       _openQuarterlyRepRequirementsDialog() {
 
       }
+
       _getIndex(index, dataItems) {
         if (index + 1 === dataItems.length) {
           return 'FINAL';

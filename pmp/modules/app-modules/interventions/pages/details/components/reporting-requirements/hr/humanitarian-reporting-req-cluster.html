@@ -1,12 +1,12 @@
-<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
-<link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../mixins/common-mixin.html">
 
-<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
 <dom-module id="humanitarian-reporting-req-cluster">
   <template>
@@ -15,6 +15,7 @@
         display: block
       }
     </style>
+
     <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
       <etools-data-table-header no-collapse
                                 no-title class="w100">
@@ -30,8 +31,9 @@
         </etools-data-table-row>
       </template>
     </div>
+
     <div class="row-h" hidden$="[[reportingRequirements.length]]">
-      There are no humanitarian report requirements set.
+      There are no cluster humanitarian report requirements set.
     </div>
   </template>
 
@@ -47,11 +49,12 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Common
     ], Polymer.Element);
+
     /**
      * @customElement
      * @polymer
      */
-    class HumanitarianReportingReqCluster extends Polymer.Element {
+    class HumanitarianReportingReqCluster extends HumanitarianReportingReqClusterMixins {
       static get is() {
         return 'humanitarian-reporting-req-cluster';
       }

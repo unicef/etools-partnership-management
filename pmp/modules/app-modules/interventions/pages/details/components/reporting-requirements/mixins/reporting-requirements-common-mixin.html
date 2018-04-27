@@ -1,12 +1,16 @@
+<link rel="import" href="../../../../../../../scripts/lodash.html">
 <script>
+  'use strict';
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
   /**
    *
-   * @polymerMixin
+   * @polymer
    * @mixinFunction
    */
-   EtoolsPmpApp.Mixins.ReportingRequirementsCommon = baseClass => class extends baseClass {
+  EtoolsPmpApp.Mixins.ReportingRequirementsCommon = baseClass => class extends baseClass {
 
     static get properties() {
       return {
@@ -38,9 +42,9 @@
         reportType: this._getReportType()
       });
       this.sendRequest({method: 'GET', endpoint: endpoint})
-            .then((response) => {
-              this.set('reportingRequirements', response.reporting_requirements);
-            });
+          .then((response) => {
+            this.set('reportingRequirements', response.reporting_requirements);
+          });
     }
 
     reportingRequirementsChanged(reportingRequirements, length) {
@@ -52,7 +56,10 @@
       return index + 1;
     }
 
+    _empty(list) {
+      return _.isEmpty(list);
+    }
 
-  }
+  };
 
 </script>

@@ -1,20 +1,21 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 
-<link rel="import" href="quarterly-reporting-requirements.html">
-<link rel="import" href="humanitarian-reporting-req-unicef.html">
-<link rel="import" href="humanitarian-reporting-req-cluster.html">
-<link rel="import" href="special-reporting-requirements.html">
+<link rel="import" href="qpr/quarterly-reporting-requirements.html">
+<link rel="import" href="hr/humanitarian-reporting-req-unicef.html">
+<link rel="import" href="hr/humanitarian-reporting-req-cluster.html">
+<link rel="import" href="srr/special-reporting-requirements.html">
 
 <dom-module id="partner-reporting-requirements">
   <template>
     <style include="grid-layout-styles">
-       :host {
+      :host {
         display: block;
         width: 100%;
         -webkit-box-sizing: border-box;
@@ -22,99 +23,110 @@
         box-sizing: border-box;
 
       }
+
+      /* ------------------------------- */
+
       .nav-menu {
         @apply --layout-vertical;
         background: var(--primary-background-color);
         padding: 8px 0 8px 0;
+        min-width: 290px;
       }
+
       .nav-menu-item {
         padding-left: 24px;
-        padding-right: 34px;
-        width: auto;
+        padding-right: 24px;
         font-size: 14px;
-        position: relative;
-        height: 48px;
-        cursor: pointer;
-        text-decoration: none;
+        font-weight: bold;
         text-transform: capitalize;
-        @apply --layout-horizontal;
-        @apply --layout-center;
+
+        --paper-item-focused-before: {
+          opacity: 0;
+        };
       }
+
       .nav-menu-item.iron-selected {
         color: var(--primary-color);
       }
+
       .nav-menu-item {
         color: var(--secondary-text-color);
       }
+
       .nav-menu-item.iron-selected {
         background-color: var(--medium-theme-background-color);
       }
 
-      .nav-menu-item.iron-selected:active {
-        background-color: var(--dark-divider-color);
-      }
       /* ------------------------------- */
 
-      .reports-menu {
-        min-width: 290px;
-        font-weight: 700;
-      }
-      .lborder {
-        border-left: 2px solid var(--list-divider-color);
+      .reporting-req-data {
+        border-left: 1px solid var(--darker-divider-color);
       }
     </style>
 
-  <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
-    <div class="flex-c layout-horizontal">
-      <div class="reports-menu nav-menu">
-        <iron-selector selected="{{selectedReportType}}"
-                       attr-for-selected="name"
-                       selectable="div">
-          <div name="qtyProgress" class="nav-menu-item">Quarterly Progress Reports ([[qprRequirementsCount]])</div>
-          <div name="humanitarianUnicef" class="nav-menu-item">Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])</div>
-          <div name="humanitarianCluster" class="nav-menu-item">Humanitarian Reports - Cluster ([[hrClusterRequirementsCount]])</div>
-          <div name="special" class="nav-menu-item">Special Report ([[specialRequirementsCount]])</div>
-        </iron-selector>
-      </div>
-      <div class="flex-c lborder">
-        <iron-pages id="reportingPages"
-                    selected="[[selectedReportType]]"
-                    attr-for-selected="name"
-                    fallback-selection="qtyProgress">
-          <div name="qtyProgress">
-            <quarterly-reporting-requirements intervention-id="[[interventionId]]"
-                                              requirements-count="{{qprRequirementsCount}}">
+    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
+      <div class="flex-c layout-horizontal">
+        <div class="reports-menu nav-menu">
+          <iron-selector selected="{{selectedReportType}}"
+                         attr-for-selected="name"
+                         selectable="paper-item">
+            <paper-item name="qtyProgress"
+                        class="nav-menu-item">
+              Quarterly Progress Reports ([[qprRequirementsCount]])
+            </paper-item>
+            <paper-item name="humanitarianUnicef"
+                        class="nav-menu-item">
+              Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])
+            </paper-item>
+            <paper-item name="humanitarianCluster"
+                        class="nav-menu-item">
+              Humanitarian Reports - Cluster ([[hrClusterRequirementsCount]])
+            </paper-item>
+            <paper-item name="special"
+                        class="nav-menu-item">
+              Special Report ([[specialRequirementsCount]])
+            </paper-item>
+          </iron-selector>
+        </div>
+        <div class="flex-c reporting-req-data">
+          <iron-pages id="reportingPages"
+                      selected="[[selectedReportType]]"
+                      attr-for-selected="name"
+                      fallback-selection="qtyProgress">
 
+            <quarterly-reporting-requirements name="qtyProgress"
+                                              intervention-id="[[interventionId]]"
+                                              requirements-count="{{qprRequirementsCount}}">
             </quarterly-reporting-requirements>
-          </div>
-          <div name="humanitarianUnicef">
-            <humanitarian-reporting-req-unicef intervention-id="[[interventionId]]"
+
+            <humanitarian-reporting-req-unicef name="humanitarianUnicef"
+                                               intervention-id="[[interventionId]]"
                                                requirements-count="{{hrUnicefRequirementsCount}}">
             </humanitarian-reporting-req-unicef>
-          </div>
-          <div name="humanitarianCluster">
-            <humanitarian-reporting-req-cluster intervention-id="[[interventionId]]"
+
+            <humanitarian-reporting-req-cluster name="humanitarianCluster"
+                                                intervention-id="[[interventionId]]"
                                                 requirements-count="{{hrClusterRequirementsCount}}">
-
             </humanitarian-reporting-req-cluster>
-          </div>
-          <div name="special">
-            <special-reporting-requirements intervention-id="[[interventionId]]"
-                                            requirements-count="{{specialRequirementsCount}}">
 
+            <special-reporting-requirements name="special"
+                                            intervention-id="[[interventionId]]"
+                                            requirements-count="{{specialRequirementsCount}}">
             </special-reporting-requirements>
-          </div>
-        </iron-pages>
+
+          </iron-pages>
+        </div>
       </div>
-    </div>
-  </etools-content-panel>
+    </etools-content-panel>
 
   </template>
 
   <script>
+    'use strict';
+
     /**
-     * @customElement
      * @polymer
+     * @customElement
      */
     class PartnerReportingRequirements extends Polymer.Element {
       static get is() {
@@ -133,6 +145,7 @@
           interventionId: {
             type: String
           },
+          // count properties
           qprRequirementsCount: {
             type: Number,
             value: 0
@@ -149,16 +162,12 @@
             type: Number,
             value: 0
           }
-
         };
       }
 
       ready() {
         super.ready();
 
-        Polymer.RenderStatus.afterNextRender(this, function() {
-
-        });
       }
 
     }

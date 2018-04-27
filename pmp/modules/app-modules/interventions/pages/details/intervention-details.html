@@ -379,11 +379,11 @@
     <!-- <template is="dom-if"
               if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
               restamp> -->
-      <partner-reporting-requirements class="content-section"
-                              is-new-intervention="[[newIntervention]]"
-                              edit-mode="[[intervention.permissions.edit.reporting_periods]]"
-                              intervention-id="[[intervention.id]]">
-      </partner-reporting-requirements>
+    <partner-reporting-requirements class="content-section"
+                                    is-new-intervention="[[newIntervention]]"
+                                    edit-mode="[[intervention.permissions.edit.reporting_periods]]"
+                                    intervention-id="[[intervention.id]]">
+    </partner-reporting-requirements>
     <!-- </template> -->
   </template>
   <script>
@@ -591,7 +591,7 @@
           this._updateDatesRequiredState(false);
         } else {
           if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
-               this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
+            this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
             this._updateDatesRequiredState(true);
           }
         }
