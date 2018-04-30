@@ -660,7 +660,7 @@
       _disableBasisForRiskRating(editMode, typeOfAssessment, rating) {
         return !editMode ||
             (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
-            ['Low Risk Assumed', 'High Risk Assumed'].indexOf(rating) > -1;
+            ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1;
       }
     }
 
