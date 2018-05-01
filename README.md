@@ -25,23 +25,36 @@ $ npm install
 $ bower install
 ```
 
-Build Application
------------------
-TODO: Improve this doc section.
-
-To build the distribution version:
+or run:
 
 ```bash
-$ polymer build
+$ ./dev-reinstall.sh
+```
+
+Build Application
+-----------------
+Lint your code:
+```bash
+$ npm run lint
+```
+and fix all ESLint and `polymer lint` errors.
+
+For `polymer lint` there are some exception:
+* `The element app-shell is not defined` - caused by file import being made in js code.
+* `data-* attributes must be accessed as attributes. i.e. you must write:  data-items$="{{...}}` - `dataItems` property 
+exists, escape or rename in future updates.
+
+To build the app, just run (**the build will fail if there are eslint errors**):
+
+```bash
+$ npm run build
 ```
 
 We will be using a bundled build since we don't support
 HHTP/2 and server push.
 
-Before the build is created the CSS and images are minified,
-Javascript is uglifyed, also there are javascript and html hints.
-If any of these tasks fail, the entire build process fails.
-So correct your code and try again :)
+2 builds are generated: ES5 and ES6 and the server will know which build to serve 
+by browser capabilities.
 
 Run Application
 ---------------
