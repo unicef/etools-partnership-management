@@ -146,7 +146,7 @@
                      maxlength="256"
                      readonly$="[[!intervention.permissions.edit.title]]"
                      required$="[[intervention.permissions.required.title]]"
-                     auto-validate
+                     on-focus="_activateAutoValidation"
                      error-message="Please add a title"></paper-input>
       </div>
       <div class="row-h flex-c">
@@ -649,17 +649,43 @@
         this.$.plannedBudget.resetValidations();
         this.$.cpStructure.resetCpDropdownInvalidState();
 
-        let fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+        let fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
           'partnerFocalPts', 'intStart', 'intEnd'];
-        fields.forEach(function(field) {
+        if (!this._isIE()) {
+          fields.push('title');
+        }
+        fields.forEach((field) => {
           this.fieldValidationReset('#' + field);
-        }.bind(this));
+        });
+
+        this._resetIETitleFieldValidation();
 
         let plannedVisitsEl = this.shadowRoot.querySelector('#plannedVisits');
         if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
           plannedVisitsEl.resetValidations();
         }
         this.set('fieldsResetted', true);
+      }
+
+      _isIE() {
+        let appShell = document.querySelector('app-shell');
+        return appShell.classList.contains('ie');
+      }
+
+      _resetIETitleFieldValidation() {
+        let isIE = this._isIE();
+        let title = this.shadowRoot.querySelector('#title');
+        if (title && isIE) {
+          // IE11 #title style force update
+          setTimeout(() => {
+            title.set('invalid', false);
+            title.updateStyles();
+          }, 50);
+        }
+      }
+
+      _activateAutoValidation(e) {
+        e.target.set('autoValidate', true);
       }
 
       _setYears(interventionStart, interventionEnd) {
