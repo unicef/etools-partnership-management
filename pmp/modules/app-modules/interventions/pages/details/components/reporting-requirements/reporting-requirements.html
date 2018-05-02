@@ -1,0 +1,308 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../styles/shared-styles.html">
+<link rel="import" href="reporting-requirements-dialog.html">
+
+<dom-module id="reporting-requirements">
+  <template strip-whitespace>
+
+    <style include="shared-styles data-table-styles grid-layout-styles">
+
+      .list-container {
+        position: relative;
+      }
+
+      .actions-button-container {
+        color: var(--primary-text-color);
+        @apply --layout-end-justified;
+        margin-top: -8px;
+        margin-bottom: -8px;
+      }
+
+      .actions-button-container paper-icon-button {
+        display: none;
+      }
+
+      etools-data-table-row:hover .actions-button-container paper-icon-button {
+        opacity: 0.5;
+        display: flex;
+      }
+
+      etools-data-table-row .actions-button-container paper-icon-button:hover {
+        opacity: 1;
+      }
+    </style>
+
+    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
+      <template is="dom-if" if="[[_showAddRequirementButton(editMode, isNewIntervention)]]">
+        <div slot="panel-btns" id="edit-btns">
+          <paper-icon-button icon="add-box"
+                             title="Add Reporting Requirement"
+                             on-tap="openNewRequirementDialog">
+          </paper-icon-button>
+        </div>
+      </template>
+
+      <template is="dom-if" if="[[!isNewIntervention]]">
+        <div class="list-container">
+          <etools-data-table-header id="listHeader"
+                                    no-collapse
+                                    no-title
+                                    hidden$="[[!reportingRequirements.length]]">
+            <etools-data-table-column class="col-4">
+              Reporting Period Start Date
+            </etools-data-table-column>
+            <etools-data-table-column class="col-4">
+              Reporting Period End Date
+            </etools-data-table-column>
+            <etools-data-table-column class="col-3">
+              Report Due Date
+            </etools-data-table-column>
+            <etools-data-table-column class="col-1">
+              <!-- Actions -->
+            </etools-data-table-column>
+          </etools-data-table-header>
+          <template is="dom-repeat" items="[[reportingRequirements]]">
+            <etools-data-table-row no-collapse secondary-bg-on-hover>
+              <div slot="row-data">
+                <span class="col-data col-4">
+                  [[item.start_date]]
+                </span>
+                <span class="col-data col-4">
+                    [[item.end_date]]
+                </span>
+                <span class="col-data col-3">
+                    [[item.due_date]]
+                </span>
+                <span class="col-data col-1 actions-button-container">
+                  <!-- TODO: polymer 2 - use icons-actions element for edit/delete actions -->
+                  <paper-icon-button icon="create"
+                                     role="button"
+                                     hidden$="[[!editMode]]"
+                                     on-tap="_handleRequirementEdit">
+                  </paper-icon-button>
+                  <paper-icon-button icon="delete"
+                                     role="button"
+                                     hidden$="[[!editMode]]"
+                                     on-tap="_handleRequirementDelete">
+                  </paper-icon-button>
+                </span>
+              </div>
+            </etools-data-table-row>
+          </template>
+          <template is="dom-if" if="[[!reportingRequirements.length]]">
+            <div class="row-h">
+              <p>There are no reporting requirements.</p>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template is="dom-if" if="[[isNewIntervention]]">
+        <div class="row-h">
+          <p>You must save this PD/SSFA before you can add reporting requirements.</p>
+        </div>
+      </template>
+    </etools-content-panel>
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsMixins.DynamicDialogMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    class ReportingRequirements extends EtoolsMixinFactory.combineMixins([
+      EtoolsMixins.DynamicDialogMixin,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'reporting-requirements';
+      }
+
+      static get properties() {
+        return {
+          requirementsDialog: Object,
+          deletedItem: Object,
+          deleteDialog: Object,
+          reportingRequirements: {
+            type: Array,
+            value: []
+          },
+          endpoints: {
+            type: Object,
+            value: {
+              LIST: 'reportRequirementsList',
+              ITEM: 'reportRequirementsItem'
+            }
+          },
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
+          },
+          deleteConfirmationMessage: {
+            type: String,
+            value: 'Are you sure you want to remove this reporting requirement?'
+          },
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'reporting-requirements'
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          isNewIntervention: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        this._createRequirementsDialog();
+        this._createDeleteConfirmationDialog();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeDialog(this.deleteDialog);
+        this.removeDialog(this.requirementsDialog);
+      }
+
+      _showAddRequirementButton(editMode, isNewIntervention) {
+        return editMode && !isNewIntervention;
+      }
+
+      _createRequirementsDialog() {
+        this.requirementsDialog = document.createElement('reporting-requirements-dialog');
+        this.requirementsDialog.setAttribute('id', 'requirementsDialog');
+        this.requirementsDialog.set('endpoints', this.endpoints);
+        this.requirementsDialog.set('toastEventSource', this);
+
+        this.requirementsDialog.addEventListener('add-reporting-requirement',
+            this.addReportingRequirement.bind(this));
+        this.requirementsDialog.addEventListener('update-reporting-requirement',
+            this.updateReportingRequirement.bind(this));
+
+        document.querySelector('body').appendChild(this.requirementsDialog);
+      }
+
+      _createDeleteConfirmationDialog() {
+        let deleteConfirmationContent = document.createElement('div');
+        deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
+        this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
+            'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
+      }
+
+      openNewRequirementDialog() {
+        this.requirementsDialog.set('interventionId', this.interventionId);
+        this.requirementsDialog.set('requirement', {});
+        this.requirementsDialog.open();
+      }
+
+      _handleRequirementEdit(event) {
+        this.requirementsDialog.set('interventionId', this.interventionId);
+        this.requirementsDialog.set('requirement', event.model.item);
+        this.requirementsDialog.open();
+      }
+
+      _handleRequirementDelete(event) {
+        this.deletedItem = event.model.item;
+        this.deleteDialog.set('opened', true);
+      }
+
+      _onDeleteConfirmation(event) {
+        let self = this;
+
+        if (!event.detail.confirmed) {
+          return;
+        }
+
+        self.fireEvent('global-loading', {
+          message: 'Removing reporting requirement',
+          active: true,
+          loadingSource: self.ajaxLoadingMsgSource
+        });
+
+        this.deleteRequirement(this.deletedItem)
+            .then(function() {
+              self.reportingRequirements.forEach(function(elem, index) {
+                if (elem.id === self.deletedItem.id) {
+                  self.splice('reportingRequirements', index, 1);
+                }
+              });
+
+              self.fireEvent('global-loading', {
+                active: false,
+                loadingSource: self.ajaxLoadingMsgSource
+              });
+
+              self.fireEvent('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
+            }).catch(function(error) {
+          self._handleErrorResponse(error);
+        });
+      }
+
+      _handleErrorResponse(error) {
+        this.fireEvent('global-loading', {
+          active: false,
+          loadingSource: this.ajaxLoadingMsgSource
+        });
+        this.parseRequestErrorsAndShowAsToastMsgs(error);
+      }
+
+      deleteRequirement(requirement) {
+        let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
+        return this.sendRequest({method: 'DELETE', endpoint: endpoint});
+      }
+
+      _interventionIdChanged(newId) {
+        let self = this;
+
+        if (newId) {
+          let endpoint = this.getEndpoint(this.endpoints.LIST, {intervId: newId});
+          this.sendRequest({method: 'GET', endpoint: endpoint})
+              .then(function(response) {
+                self.set('reportingRequirements', response);
+              });
+        }
+      }
+
+      addReportingRequirement(event) {
+        this.push('reportingRequirements', event.detail);
+      }
+
+      updateReportingRequirement(event) {
+        let self = this;
+        this.reportingRequirements.forEach(function(elem, index) {
+          if (elem.id === event.detail.id) {
+            self.set(['reportingRequirements', index], event.detail);
+          }
+        });
+      }
+
+    }
+
+    window.customElements.define(ReportingRequirements.is, ReportingRequirements);
+  </script>
+</dom-module>
