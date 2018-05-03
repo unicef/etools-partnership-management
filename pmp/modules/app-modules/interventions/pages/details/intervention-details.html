@@ -352,7 +352,7 @@
         </template>
         <template is="dom-if" if="[[newIntervention]]">
           <div class="row-h">
-            <p> You must save this PD/SSFA before you can add expected results. </p>
+            <p>You must save this PD/SSFA before you can add expected results.</p>
           </div>
         </template>
       </etools-content-panel>
@@ -382,7 +382,9 @@
     <partner-reporting-requirements class="content-section"
                                     is-new-intervention="[[newIntervention]]"
                                     edit-mode="[[intervention.permissions.edit.reporting_periods]]"
-                                    intervention-id="[[intervention.id]]">
+                                    intervention-id="[[intervention.id]]"
+                                    intervention-start="[[intervention.start]]"
+                                    intervention-end="[[intervention.end]]">
     </partner-reporting-requirements>
     <!-- </template> -->
   </template>

@@ -96,6 +96,8 @@
 
             <quarterly-reporting-requirements name="qtyProgress"
                                               intervention-id="[[interventionId]]"
+                                              intervention-start="[[interventionStart]]"
+                                              intervention-end="[[interventionEnd]]"
                                               requirements-count="{{qprRequirementsCount}}">
             </quarterly-reporting-requirements>
 
@@ -142,9 +144,10 @@
           editMode: {
             type: Boolean
           },
-          interventionId: {
-            type: String
-          },
+          interventionId: Number,
+          interventionStart: String,
+          interventionEnd: String,
+
           // count properties
           qprRequirementsCount: {
             type: Number,
@@ -167,7 +170,6 @@
 
       ready() {
         super.ready();
-
       }
 
     }

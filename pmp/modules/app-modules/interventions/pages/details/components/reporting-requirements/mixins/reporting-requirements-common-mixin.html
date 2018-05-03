@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../../scripts/lodash.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <script>
   'use strict';
 
@@ -6,11 +7,12 @@
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
   /**
-   *
    * @polymer
    * @mixinFunction
+   * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
    */
-  EtoolsPmpApp.Mixins.ReportingRequirementsCommon = baseClass => class extends baseClass {
+  EtoolsPmpApp.Mixins.ReportingRequirementsCommon =
+      baseClass => class extends EtoolsPmpApp.Mixins.Endpoints(baseClass) {
 
     static get properties() {
       return {
@@ -32,7 +34,7 @@
 
     static get observers() {
       return [
-        'reportingRequirementsChanged(reportingRequirements, reportingRequirements.length)'
+        '_countReportingReq(reportingRequirements.length)'
       ];
     }
 
@@ -47,9 +49,9 @@
           });
     }
 
-    reportingRequirementsChanged(reportingRequirements, length) {
-      this._sortRequirementsAsc();
-      this.set('requirementsCount', length);
+    _countReportingReq(length) {
+      let l = (typeof length === 'number') ? length : 0;
+      this.set('requirementsCount', l);
     }
 
     _getIndex(index) {

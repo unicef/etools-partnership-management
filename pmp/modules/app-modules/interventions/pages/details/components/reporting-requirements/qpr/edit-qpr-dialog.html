@@ -1,0 +1,98 @@
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../styles/buttons-styles.html">
+<link rel="import" href="qpr-list.html">
+
+<dom-module id="edit-qpr-dialog">
+  <template strip-whitespace>
+    <style include="grid-layout-styles buttons-styles">
+      #qpr-edit-info {
+        margin-right: 24px;
+      }
+
+      qpr-list {
+        margin-top: 24px;
+      }
+    </style>
+
+    <etools-dialog id="editQprDialog"
+                   size="lg"
+                   dialog-title="Edit Quarterly Progress Reporting Requirements"
+                   hidden$="[[addOrModifyQprDialogOpened]]"
+                   on-confirm-btn-clicked="_saveModifiedQprData"
+                   ok-btn-text="Save"
+                   keep-dialog-open
+                   spinner-text="[[spinnerText]]">
+
+      <div class="layout-horizontal">
+        <span id="qpr-edit-info">All dates in the future can be edited before saving. | Or</span>
+        <paper-button class="secondary-btn" on-click="_addNewQpr">
+          Add Requirement
+        </paper-button>
+      </div>
+
+      <qpr-list qpr-data="[[qprData]]" edit-mode></qpr-list>
+
+    </etools-dialog>
+
+    <!-- add or edit a QPR row -->
+    <etools-dialog id="addOrModifyQprDialog"
+                   size="lg"
+                   dialog-title="Edit Standard Quarterly Report Requirements"
+                   opened="{{addOrModifyQprDialogOpened}}"
+                   no-padding
+                   on-confirm-btn-clicked="_saveModifiedQprData"
+                   ok-btn-text="Save"
+                   keep-dialog-open
+                   spinner-text="[[spinnerText]]">
+
+
+    </etools-dialog>
+
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     */
+    class EditQprDialog extends Polymer.Element {
+
+      static get is() {
+        return 'edit-qpr-dialog';
+      }
+
+      static get properties() {
+        return {
+          qprData: {
+            type: Array,
+            value: []
+          },
+          addOrModifyQprDialogOpened: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      openQprDialog() {
+        this.$.editQprDialog.opened = true;
+      }
+
+      _addNewQpr() {
+        this.set('addOrModifyQprDialogOpened', true);
+      }
+
+      _saveModifiedQprData() {
+
+      }
+
+    }
+
+    window.customElements.define(EditQprDialog.is, EditQprDialog);
+  </script>
+</dom-module>

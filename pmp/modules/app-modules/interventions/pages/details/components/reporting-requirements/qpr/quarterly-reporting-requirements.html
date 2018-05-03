@@ -1,49 +1,29 @@
 <link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
-<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
 <link rel="import" href="../../../../../../../config/app-constants.html">
-<link rel="import" href="../../../../../../../mixins/common-mixin.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
+<link rel="import" href="../mixins/generate-quarterly-reporting-requirements-mixin.html">
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
+<link rel="import" href="edit-qpr-dialog.html">
+<link rel="import" href="qpr-list.html">
 
 <dom-module id="quarterly-reporting-requirements">
   <template>
-    <style include="buttons-styles grid-layout-styles data-table-styles">
+    <style include="buttons-styles grid-layout-styles">
       [hidden] {
         display: none !important;
       }
     </style>
 
     <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
-      <etools-data-table-header no-collapse
-                                no-title>
-        <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
-        <etools-data-table-column class="col-05"></etools-data-table-column>
-        <etools-data-table-column class="col-3">Start Date</etools-data-table-column>
-        <etools-data-table-column class="col-3">End Date</etools-data-table-column>
-        <etools-data-table-column class="flex-c">Due Date</etools-data-table-column>
-      </etools-data-table-header>
-
-      <template is="dom-repeat" items="{{reportingRequirements}}">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-1 right-align">[[_getIndex(index, reportingRequirements)]]</span>
-            <span class="col-data col-05"></span>
-            <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
-            <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
-            <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
-          </div>
-        </etools-data-table-row>
-      </template>
+      <qpr-list qpr-data="[[reportingRequirements]]"></qpr-list>
     </div>
 
     <div hidden$="[[!_empty(reportingRequirements)]]">
@@ -52,7 +32,7 @@
       </div>
       <div class="row-h">
         <paper-button class="secondary-btn" on-tap="_openQuarterlyRepRequirementsDialog">
-          ADD REQUIREMENTS
+          Add Requirements
         </paper-button>
       </div>
     </div>
@@ -69,13 +49,12 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements
      */
     const QuarterlyReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsMixins.DynamicDialogMixin,
-      EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
-      EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
+      EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements
     ], Polymer.Element);
 
     /**
@@ -89,33 +68,45 @@
       }
 
       static get properties() {
-        return {};
+        return {
+          interventionStart: String,
+          interventionEnd: String,
+          editQprDialog: Object
+        };
       }
 
       static get observers() {
-        return [];
+        return [
+
+        ];
       }
 
       ready() {
         super.ready();
+        this._createEditQprDialog();
+      }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.editQprDialog) {
+          document.querySelector('body').removeChild(this.editQprDialog);
+        }
+      }
+
+      _createEditQprDialog() {
+        this.editQprDialog = document.createElement('edit-qpr-dialog');
+        document.querySelector('body').appendChild(this.editQprDialog);
       }
 
       _openQuarterlyRepRequirementsDialog() {
-
-      }
-
-      _getIndex(index, dataItems) {
-        if (index + 1 === dataItems.length) {
-          return 'FINAL';
+        let qprData = [];
+        if (this.requirementsCount === 0) {
+          qprData = this.generateQPRData(this.interventionStart, this.interventionEnd);
+        } else {
+          qprData = JSON.parse(JSON.stringify(this.reportingRequirements));
         }
-        return index + 1;
-      }
-
-      _sortRequirementsAsc() {
-        this.reportingRequirements.sort((a, b) => {
-          return new Date(a.start_date) - new Date(b.start_date);
-        });
+        this.editQprDialog.set('qprData', qprData);
+        this.editQprDialog.openQprDialog();
       }
 
       _getReportType() {
