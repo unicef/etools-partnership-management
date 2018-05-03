@@ -356,9 +356,12 @@
       }
 
       _observeRouteDataId(id) {
-        id = Number(id);
-        if (isNaN(id)) {
+        if (typeof id === 'undefined') {
           return;
+        }
+        id = parseInt(id, 10);
+        if (isNaN(id)) {
+          id = null;
         }
         this.set('selectedAgreementId', id);
       }

@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../config/app-constants.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status.html">
@@ -50,9 +51,12 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsStatusCommon
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
-    class PartnerStatus extends
-        EtoolsMixins.DynamicDialogMixin(
-          EtoolsPmpApp.Mixins.EtoolsStatusCommon(EtoolsPmpApp.Mixins.Constants(Polymer.Element))) {
+    class PartnerStatus extends EtoolsMixinFactory.combineMixins([
+      EtoolsMixins.DynamicDialogMixin,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.EtoolsStatusCommon,
+      EtoolsPmpApp.Mixins.Constants
+    ], Polymer.Element) {
 
       static get is() {
         return 'partner-status';
