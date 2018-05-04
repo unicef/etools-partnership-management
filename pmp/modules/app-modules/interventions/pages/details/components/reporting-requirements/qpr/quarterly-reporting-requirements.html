@@ -4,6 +4,7 @@
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
@@ -31,7 +32,7 @@
         There are no quarterly reporting requirements set.
       </div>
       <div class="row-h">
-        <paper-button class="secondary-btn" on-tap="_openQuarterlyRepRequirementsDialog">
+        <paper-button class="secondary-btn" on-click="openQuarterlyRepRequirementsDialog">
           Add Requirements
         </paper-button>
       </div>
@@ -44,14 +45,13 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsMixins.DynamicDialogMixin
-     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
-     * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      * @appliesMixin EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements
      */
     const QuarterlyReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
       EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements
@@ -75,12 +75,6 @@
         };
       }
 
-      static get observers() {
-        return [
-
-        ];
-      }
-
       ready() {
         super.ready();
         this._createEditQprDialog();
@@ -95,10 +89,17 @@
 
       _createEditQprDialog() {
         this.editQprDialog = document.createElement('edit-qpr-dialog');
+        this.editQprDialog.set('toastMsgLoadingSource', this);
+        this.editQprDialog.addEventListener('reporting-requirements-saved',
+            this._onReportingRequirementsSaved.bind(this));
         document.querySelector('body').appendChild(this.editQprDialog);
       }
 
-      _openQuarterlyRepRequirementsDialog() {
+      openQuarterlyRepRequirementsDialog() {
+        if (!this.interventionStart || !this.interventionEnd) {
+          this.fireEvent('toast', {text: 'You have to fill PD Start Date and End Date first!', showCloseBtn: true});
+          return;
+        }
         let qprData = [];
         if (this.requirementsCount === 0) {
           qprData = this.generateQPRData(this.interventionStart, this.interventionEnd);
@@ -106,11 +107,16 @@
           qprData = JSON.parse(JSON.stringify(this.reportingRequirements));
         }
         this.editQprDialog.set('qprData', qprData);
+        this.editQprDialog.set('interventionId', this.interventionId);
         this.editQprDialog.openQprDialog();
       }
 
       _getReportType() {
         return this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR;
+      }
+
+      _onReportingRequirementsSaved(e) {
+        this.set('reportingRequirements', e.detail);
       }
 
     }

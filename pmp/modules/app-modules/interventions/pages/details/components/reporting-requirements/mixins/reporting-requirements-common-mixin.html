@@ -1,5 +1,9 @@
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+
 <link rel="import" href="../../../../../../../scripts/lodash.html">
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
 <script>
   'use strict';
 
@@ -9,10 +13,16 @@
   /**
    * @polymer
    * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
    */
   EtoolsPmpApp.Mixins.ReportingRequirementsCommon =
-      baseClass => class extends EtoolsPmpApp.Mixins.Endpoints(baseClass) {
+      baseClass => class extends EtoolsMixinFactory.combineMixins([
+        EtoolsLogsMixin,
+        EtoolsPmpApp.Mixins.Endpoints,
+        EtoolsPmpApp.Mixins.AjaxErrorsParser
+      ], baseClass) {
 
     static get properties() {
       return {
@@ -46,6 +56,10 @@
       this.sendRequest({method: 'GET', endpoint: endpoint})
           .then((response) => {
             this.set('reportingRequirements', response.reporting_requirements);
+          })
+          .catch((error) => {
+            this.logError('Failed to get qpr data from API!', 'reporting-requirements-common-mixin', error);
+            this.parseRequestErrorsAndShowAsToastMsgs(error, this);
           });
     }
 

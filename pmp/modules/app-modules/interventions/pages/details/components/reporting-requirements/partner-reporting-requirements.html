@@ -1,8 +1,10 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
@@ -62,6 +64,16 @@
       .reporting-req-data {
         border-left: 1px solid var(--darker-divider-color);
       }
+
+      #edit-qpr-req {
+        color: var(--medium-icon-color);
+        margin-left: 16px;
+      }
+
+      .nav-menu-item.qpr {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
@@ -71,8 +83,12 @@
                          attr-for-selected="name"
                          selectable="paper-item">
             <paper-item name="qtyProgress"
-                        class="nav-menu-item">
-              Quarterly Progress Reports ([[qprRequirementsCount]])
+                        class="nav-menu-item qpr">
+              <span>Quarterly Progress Reports ([[qprRequirementsCount]])</span>
+              <paper-icon-button id="edit-qpr-req"
+                                 icon="create"
+                                 on-click="_openQprEditDialog"
+                                 hidden$="[[_hideQprEditBtn(qprRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianUnicef"
                         class="nav-menu-item">
@@ -94,7 +110,8 @@
                       attr-for-selected="name"
                       fallback-selection="qtyProgress">
 
-            <quarterly-reporting-requirements name="qtyProgress"
+            <quarterly-reporting-requirements id="qpr"
+                                              name="qtyProgress"
                                               intervention-id="[[interventionId]]"
                                               intervention-start="[[interventionStart]]"
                                               intervention-end="[[interventionEnd]]"
@@ -168,8 +185,12 @@
         };
       }
 
-      ready() {
-        super.ready();
+      _openQprEditDialog() {
+        this.$.qpr.openQuarterlyRepRequirementsDialog();
+      }
+
+      _hideQprEditBtn(qprCount) {
+        return qprCount === 0;
       }
 
     }
