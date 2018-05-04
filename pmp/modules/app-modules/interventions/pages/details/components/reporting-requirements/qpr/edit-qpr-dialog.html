@@ -1,6 +1,8 @@
 <link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-datepicker/etools-simple-datepicker.html">
 
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
@@ -15,6 +17,10 @@
 
       qpr-list {
         margin-top: 24px;
+      }
+
+      iron-label {
+        margin-bottom: 24px;
       }
     </style>
 
@@ -49,6 +55,32 @@
                    keep-dialog-open
                    spinner-text="[[spinnerText]]">
 
+      <div class="row-h">
+        <div class="col layout-vertical col-4">
+          <iron-label for="startDate">
+            Start Date
+          </iron-label>
+          <etools-simple-datepicker id="startDate"
+                                    pretty-date="{{editedQprDatesSet.start_date}}"
+                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+        </div>
+        <div class="col layout-vertical col-4">
+          <iron-label for="endDate">
+            End Date
+          </iron-label>
+          <etools-simple-datepicker id="endDate"
+                                    pretty-date="{{editedQprDatesSet.end_date}}"
+                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+        </div>
+        <div class="col layout-vertical col-4">
+          <iron-label for="dueDate">
+            Due Date
+          </iron-label>
+          <etools-simple-datepicker id="dueDate"
+                                    pretty-date="{{editedQprDatesSet.due_date}}"
+                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+        </div>
+      </div>
 
     </etools-dialog>
 
@@ -75,6 +107,14 @@
           addOrModifyQprDialogOpened: {
             type: Boolean,
             value: false
+          },
+          editedQprDatesSet: {
+            type: Object,
+            value: {
+              start_date: null,
+              end_date: null,
+              due_date: null
+            }
           }
         };
       }
