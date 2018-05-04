@@ -1,9 +1,11 @@
 <link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../../../scripts/lodash.html">
 <link rel="import" href="../../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
 <link rel="import" href="../../../../../../../layout/components/icons-actions.html">
@@ -47,10 +49,10 @@
       <etools-data-table-column class="flex-c"></etools-data-table-column>
     </etools-data-table-header>
 
-    <template is="dom-repeat" items="{{qprData}}">
+    <template is="dom-repeat" items="[[qprData]]">
       <etools-data-table-row no-collapse secondary-bg-on-hover$="[[editMode]]">
         <div slot="row-data">
-          <span class="col-data col-1 right-align index-col">[[_getIndex(index, qprData)]]</span>
+          <span class="col-data col-1 right-align index-col">[[_getIndex(index, qprData.length)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
@@ -73,8 +75,10 @@
      * @polymer
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class QprList extends EtoolsPmpApp.Mixins.Common(Polymer.Element) {
+    class QprList extends EtoolsMixinFactory.combineMixins(
+        [EtoolsPmpApp.Mixins.Common, EtoolsPmpApp.Mixins.EventHelper], Polymer.Element) {
 
       static get is() {
         return 'qpr-list';
@@ -99,8 +103,8 @@
         ];
       }
 
-      _getIndex(index, dataItems) {
-        if (index + 1 === dataItems.length) {
+      _getIndex(index, dataItemsLength) {
+        if (index + 1 === dataItemsLength) {
           return 'FINAL';
         }
         return index + 1;
@@ -118,12 +122,12 @@
         });
       }
 
-      _editQprReq() {
-
+      _editQprReq(e) {
+        this.fireEvent('edit-qpr', {index: e.target.getAttribute('data-args')});
       }
 
-      _deleteQprReq() {
-
+      _deleteQprReq(e) {
+        this.fireEvent('delete-qpr', {index: e.target.getAttribute('data-args')});
       }
 
     }
