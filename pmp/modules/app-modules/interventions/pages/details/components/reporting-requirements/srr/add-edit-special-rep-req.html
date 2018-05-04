@@ -1,0 +1,127 @@
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-datepicker/etools-simple-datepicker.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+
+<dom-module id="add-edit-special-rep-req">
+  <template>
+    <style include="grid-layout-styles">
+      :host {
+        display: block
+      }
+      paper-input {
+        width: 100%;
+      }
+
+    </style>
+
+    <etools-dialog id="editQprDialog"
+                   size="lg"
+                   opened="{{opened}}"
+                   dialog-title="Add/Edit Special Reporting Requirements"
+                   on-confirm-btn-clicked="_save"
+                   ok-btn-text="Save"
+                   keep-dialog-open>
+      <div class="row-h">
+        <div class="col layout-vertical col-4">
+          <iron-label for="startDate">
+            Report Due Date
+          </iron-label>
+          <etools-simple-datepicker id="startDate"
+                                    pretty-date="{{item.due_date}}"
+                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+        </div>
+      </div>
+      <div class="row-h">
+        <paper-input label="Reporting Requirement"
+                     placeholder="&#8212;"
+                     value="{{item.description}}">
+        </paper-input>
+      </div>
+    </etools-dialog>
+
+
+  </template>
+
+  <script>
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+     const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
+
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AddEditSpecialRepReqMixins
+     */
+    class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
+
+      static get is() {
+        return 'add-edit-special-rep-req';
+      }
+
+
+      static get properties() {
+        return {
+          opened: {
+            type: Boolean
+          },
+          interventionId: {
+            type: Number
+          },
+          item: {
+            type: Object
+          }
+        };
+      }
+
+      _save() {
+        let endpoint = this.getEndpoint('reportingRequirements', {
+          intervId: this.interventionId,
+          reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL
+        });
+        this.sendRequest(
+          {
+            method: 'POST',
+            endpoint: endpoint,
+            body: this._getBody()
+          })
+          .then((response) => {
+            this.fireEvent('save-special-rep-req', response.reporting_requirements);
+            this.opened = false;
+          });
+      }
+
+      _getBody() {
+        let modifItem = {
+          due_date: this.item.due_date,
+          description: this.item.description
+        }
+        if (this.item.id) {
+          modifItem.id = this.item.id;
+        }
+        return {reporting_requirements: [modifItem]};
+      }
+
+    }
+
+    window.customElements.define(AddEditSpecialRepReq.is, AddEditSpecialRepReq);
+  </script>
+</dom-module>
