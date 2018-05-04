@@ -32,7 +32,7 @@
         There are no quarterly reporting requirements set.
       </div>
       <div class="row-h">
-        <paper-button class="secondary-btn" on-tap="_openQuarterlyRepRequirementsDialog">
+        <paper-button class="secondary-btn" on-click="openQuarterlyRepRequirementsDialog">
           Add Requirements
         </paper-button>
       </div>
@@ -95,7 +95,7 @@
         document.querySelector('body').appendChild(this.editQprDialog);
       }
 
-      _openQuarterlyRepRequirementsDialog() {
+      openQuarterlyRepRequirementsDialog() {
         if (!this.interventionStart || !this.interventionEnd) {
           this.fireEvent('toast', {text: 'You have to fill PD Start Date and End Date first!', showCloseBtn: true});
           return;
