@@ -27,9 +27,6 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-        --icons-actions: {
-          background-color: white;
-        }
       }
 
       [hidden] {
@@ -68,7 +65,7 @@
         <etools-data-table-column class="flex-c">Reporting Requirements</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{reportingRequirements}}">
-        <etools-data-table-row no-collapse>
+        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[editMode]]">
           <div slot="row-data" class="p-relative">
             <span class="col-data col-1 right-align">[[_getIndex(index, reportingRequirements)]]</span>
             <span class="col-data col-05"></span>
@@ -119,7 +116,8 @@
       static get properties() {
         return {
           editMode: {
-            type: Boolean
+            type: Boolean,
+            value: true//TODO
           },
           interventionId: {
             type: Number
@@ -168,7 +166,6 @@
 
       onSaveSpecialRepReq(e) {
         this.reportingRequirements = e.detail;
-        this._sortRequirementsAsc();
       }
 
       _openAddDialog() {

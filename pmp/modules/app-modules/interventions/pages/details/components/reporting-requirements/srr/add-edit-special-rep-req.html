@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../../../mixins/date-mixin.html">
 
 <dom-module id="add-edit-special-rep-req">
   <template>
@@ -35,6 +36,7 @@
             Report Due Date
           </iron-label>
           <etools-simple-datepicker id="startDate"
+                                    date="[[prepareDatepickerDate(item.due_date)]]"
                                     pretty-date="{{item.due_date}}"
                                     format="YYYY-MM-DD"></etools-simple-datepicker>
         </div>
@@ -58,11 +60,13 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.Date
      */
      const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.Date
     ], Polymer.Element);
 
 
