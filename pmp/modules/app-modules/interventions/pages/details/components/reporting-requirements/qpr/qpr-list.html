@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
 <link rel="import" href="../../../../../../../layout/components/icons-actions.html">
+<link rel="import" href="../mixins/reporting-req-past-dates-check.html">
 
 <dom-module id="qpr-list">
   <template>
@@ -38,6 +39,7 @@
       etools-data-table-row:hover icons-actions {
         visibility: visible;
       }
+
     </style>
 
     <etools-data-table-header no-collapse
@@ -50,14 +52,15 @@
     </etools-data-table-header>
 
     <template is="dom-repeat" items="[[qprData]]">
-      <etools-data-table-row no-collapse secondary-bg-on-hover$="[[editMode]]">
-        <div slot="row-data">
+      <etools-data-table-row no-collapse
+                             secondary-bg-on-hover$="[[_activateHoverBg(editMode, inAmendment, item.due_date)]]">
+        <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date)]]">
           <span class="col-data col-1 right-align index-col">[[_getIndex(index, qprData.length)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
           <span class="col-data flex-c actions">
-            <icons-actions hidden$="[[!editMode]]"
+            <icons-actions hidden$="[[_hideActions(editMode, inAmendment, item.due_date)]]"
                            data-args$="[[index]]"
                            on-edit="_editQprReq"
                            on-delete="_deleteQprReq">
@@ -76,9 +79,13 @@
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
      */
-    class QprList extends EtoolsMixinFactory.combineMixins(
-        [EtoolsPmpApp.Mixins.Common, EtoolsPmpApp.Mixins.EventHelper], Polymer.Element) {
+    class QprList extends EtoolsMixinFactory.combineMixins([
+          EtoolsPmpApp.Mixins.Common,
+          EtoolsPmpApp.Mixins.EventHelper,
+          EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck],
+        Polymer.Element) {
 
       static get is() {
         return 'qpr-list';
@@ -89,10 +96,6 @@
           qprData: {
             type: Array,
             value: []
-          },
-          editMode: {
-            type: Boolean,
-            value: false
           },
           preventPastDateEdit: {
             type: Boolean,

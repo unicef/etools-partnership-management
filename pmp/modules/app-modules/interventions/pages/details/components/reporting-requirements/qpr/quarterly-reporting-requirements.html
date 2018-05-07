@@ -71,7 +71,8 @@
         return {
           interventionStart: String,
           interventionEnd: String,
-          editQprDialog: Object
+          editQprDialog: Object,
+          inAmendment: Boolean
         };
       }
 
@@ -108,6 +109,7 @@
         }
         this.editQprDialog.set('qprData', qprData);
         this.editQprDialog.set('interventionId', this.interventionId);
+        this.editQprDialog.set('inAmendment', this.inAmendment);
         this.editQprDialog.openQprDialog();
       }
 

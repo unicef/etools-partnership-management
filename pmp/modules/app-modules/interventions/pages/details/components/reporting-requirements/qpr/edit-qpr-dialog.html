@@ -54,6 +54,7 @@
 
       <qpr-list qpr-data="[[qprData]]"
                 edit-mode
+                in-amendment="[[inAmendment]]"
                 on-edit-qpr="_editQprDatesSet"
                 on-delete-qpr="_deleteQprDatesSet"></qpr-list>
 
@@ -131,6 +132,7 @@
       static get properties() {
         return {
           interventionId: Number,
+          inAmendment: Boolean,
           qprData: {
             type: Array,
             value: []
