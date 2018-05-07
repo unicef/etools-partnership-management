@@ -30,15 +30,22 @@
         <etools-data-table-column class="col-05"></etools-data-table-column>
         <etools-data-table-column class="flex-c">Report Due Date</etools-data-table-column>
       </etools-data-table-header>
-      <template is="dom-repeat" items="{{reportingRequirements}}">
+      <template is="dom-repeat" items="{{dataItems}}">
         <etools-data-table-row no-collapse>
           <div slot="row-data">
-            <span class="col-data col-1 right-align">[[_getIndex(index)]]</span>
+            <span class="col-data col-1 right-align">[[_getIndex(index, dataItems)]]</span>
             <span class="col-data col-05"></span>
             <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
           </div>
         </etools-data-table-row>
       </template>
+      <etools-data-table-footer
+          page-size="[[pagination.pageSize]]"
+          page-number="[[pagination.pageNumber]]"
+          total-results="[[pagination.totalResults]]"
+          on-page-size-changed="_pageSizeChanged"
+          on-page-number-changed="_pageNumberChanged">
+      </etools-data-table-footer>
     </div>
 
     <div hidden$="[[!_empty(reportingRequirements)]]">
@@ -84,15 +91,65 @@
       }
 
       static get properties() {
-        return {};
+        return {
+          dataItems: {
+            type: Array
+          },
+          pagination: {
+            type: Object,
+            value: {
+              pageSize: 10,
+              pageNumber: 1,
+              totalResults: null
+            }
+          }
+        };
+      }
+      static get observers() {
+        return [
+          'setTotalResults(interventionId, reportingRequirements)',
+          '_paginationChanged(pagination.pageNumber, pagination.pageSize, reportingRequirements)',
+        ];
       }
 
       ready() {
         super.ready();
+      }
+      setTotalResults(interventionId, reportingRequirements) {
+        if (typeof interventionId === 'undefined' ||
+            typeof reportingRequirements === 'undefined') {
+          return;
+        }
+        this.set('pagination.totalResults', reportingRequirements.length);
+      }
 
-        Polymer.RenderStatus.afterNextRender(this, function() {
+      _pageSizeChanged(ev) {
+        this.set('pagination.pageNumber', 1);
+        this.set('pagination.pageSize', parseInt(ev.detail.value));
+      }
 
-        });
+      _pageNumberChanged(ev) {
+        this.set('pagination.pageNumber', parseInt(ev.detail.value));
+      }
+
+      _paginationChanged(pageNumber, pageSize, reportingRequirements) {
+        if (this._anyUndefined([pageNumber, pageSize, reportingRequirements])) {
+          return;
+        }
+        pageNumber = parseInt(pageNumber);
+        pageSize = parseInt(pageSize);
+        let startingIndex = (pageNumber - 1) * pageSize;
+        this.dataItems = this.reportingRequirements.slice(startingIndex, startingIndex + pageSize);
+      }
+      _getIndex(index) {
+        return ((index + 1) + (this.pagination.pageSize * (this.pagination.pageNumber - 1)));
+      }
+      _anyUndefined(items) {
+        return items.some(this._isUndefined);
+      }
+
+      _isUndefined(item) {
+        return typeof item === 'undefined';
       }
 
       _sortRequirementsAsc() {
