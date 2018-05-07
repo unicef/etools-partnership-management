@@ -23,7 +23,7 @@
 
     </style>
 
-    <etools-dialog id="editQprDialog"
+    <etools-dialog id="addEditDialog"
                    size="lg"
                    opened="{{opened}}"
                    dialog-title="Add/Edit Special Reporting Requirements"
@@ -92,7 +92,8 @@
           },
           item: {
             type: Object
-          }
+          },
+          toastMsgLoadingSource: Object
         };
       }
 
@@ -101,6 +102,8 @@
           intervId: this.interventionId,
           reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL
         });
+        let dialog = this.$.addEditDialog;
+        dialog.startSpinner();
         this.sendRequest(
           {
             method: 'POST',
@@ -109,7 +112,13 @@
           })
           .then((response) => {
             this.fireEvent('save-special-rep-req', response.reporting_requirements);
+            dialog.stopSpinner();
             this.opened = false;
+          })
+          .catch((error) => {
+            dialog.stopSpinner();
+            this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
+            this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
           });
       }
 
