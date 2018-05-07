@@ -12,7 +12,12 @@
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
+<link rel="import" href="../../../../../../../layout/components/icons-actions.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
+<link rel="import" href="add-edit-special-rep-req.html">
+
 
 <dom-module id="special-reporting-requirements">
   <template>
@@ -22,11 +27,21 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
       }
 
       [hidden] {
         display: none !important;
+      }
+      .p-relative {
+        position: relative;
+      }
+      icons-actions {
+        background-color: transparent;
+        visibility: hidden;
+      }
+
+      etools-data-table-row:hover icons-actions {
+        visibility: visible;
       }
 
     </style>
@@ -36,7 +51,7 @@
     </div>
 
     <div class="row-h">
-      <paper-button class="secondary-btn" on-tap="_openSpecialRepRequirementsDialog">
+      <paper-button class="secondary-btn" on-tap="_openAddDialog">
         ADD REQUIREMENTS
       </paper-button>
     </div>
@@ -50,12 +65,17 @@
         <etools-data-table-column class="flex-c">Reporting Requirements</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{reportingRequirements}}">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
+        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[editMode]]">
+          <div slot="row-data" class="p-relative">
             <span class="col-data col-1 right-align">[[_getIndex(index, reportingRequirements)]]</span>
             <span class="col-data col-05"></span>
             <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
             <span class="col-data flex-c">[[item.description]]</span>
+            <icons-actions hidden$="[[!editMode]]"
+                           item$="[[item]]"
+                           on-edit="_onEdit"
+                           on-delete="_onDelete">
+            </icons-actions>
           </div>
         </etools-data-table-row>
       </template>
@@ -73,12 +93,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
+      EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
     /**
@@ -92,13 +114,66 @@
       }
 
       static get properties() {
-        return {};
+        return {
+          editMode: {
+            type: Boolean,
+            value: true // TODO
+          },
+          interventionId: {
+            type: Number
+          }
+        };
       }
 
       ready() {
         super.ready();
+        this._createAddEditDialog();
+        this._addEventListeners();
       }
 
+      _addEventListeners() {
+        this.addEventListener('edit', this._onEdit);
+        this.addEventListener('delete', this._onDelete);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.addEditDialog) {
+          document.querySelector('body').removeChild(this.addEditDialog);
+        }
+      }
+
+      _onEdit(e) {
+        e.stopPropagation();
+        this._setDialogData(e);
+        this.addEditDialog.opened = true;
+      }
+      _setDialogData(e) {
+        this.addEditDialog.interventionId = this.interventionId;
+        this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+      }
+
+      _onDelete(e) {
+        e.stopPropagation();
+      }
+
+      _createAddEditDialog() {
+        this.addEditDialog = document.createElement('add-edit-special-rep-req');
+        this.addEditDialog.addEventListener('save-special-rep-req', this.onSaveSpecialRepReq.bind(this));
+
+        document.querySelector('body').appendChild(this.addEditDialog);
+      }
+
+      onSaveSpecialRepReq(e) {
+        this.reportingRequirements = e.detail;
+      }
+
+      _openAddDialog() {
+        this.addEditDialog.item = {};
+        this.addEditDialog.interventionId = this.interventionId;
+
+        this.addEditDialog.opened = true;
+      }
 
       _sortRequirementsAsc() {
         this.reportingRequirements.sort((a, b) => {
@@ -107,12 +182,7 @@
       }
 
       _getReportType() {
-        return this.CONSTANTS.REQUIREMENTS_REPORT__TYPE.SPECIAL;
-      }
-
-
-      _openSpecialRepRequirementsDialog() {
-
+        return this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL;
       }
 
     }

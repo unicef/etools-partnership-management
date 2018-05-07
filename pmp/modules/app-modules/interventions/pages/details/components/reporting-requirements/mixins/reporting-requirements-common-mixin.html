@@ -66,6 +66,10 @@
     _countReportingReq(length) {
       let l = (typeof length === 'number') ? length : 0;
       this.set('requirementsCount', l);
+
+      if (typeof this._sortRequirementsAsc === 'function') {
+        this._sortRequirementsAsc();
+      }
     }
 
     _getIndex(index) {
