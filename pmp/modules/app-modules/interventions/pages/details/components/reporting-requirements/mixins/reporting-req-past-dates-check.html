@@ -1,6 +1,6 @@
 <script>
   'use strict';
-  
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
@@ -35,12 +35,8 @@
       return dueD < now;
     }
 
-    _activateHoverBg(editMode, inAmendment, dueDate) {
+    _canEdit(editMode, inAmendment, dueDate) {
       return editMode && !(inAmendment && this._pastDueDate(dueDate));
-    }
-
-    _hideActions(editMode, inAmendment, dueDate) {
-      return !editMode || (inAmendment && this._pastDueDate(dueDate));
     }
 
   });
