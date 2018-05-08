@@ -1,28 +1,30 @@
 <link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../../../../../config/app-constants.html">
-<link rel="import" href="../../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../mixins/frontend-pagination-mixin.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../../../../mixins/frontend-pagination-mixin.html">
 
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 <link rel="import" href="edit-hru-dialog.html">
+<link rel="import" href="hru-list.html">
 
 <dom-module id="humanitarian-reporting-req-unicef">
   <template>
-    <style include="buttons-styles grid-layout-styles data-table-styles">
+    <style include="buttons-styles grid-layout-styles">
       :host {
         display: block;
       }
       [hidden] {
         display: none !important;
+      }
+      hru-list {
+        max-height: none;
+        overflow: hidden;
       }
     </style>
 
@@ -41,21 +43,12 @@
     </div>
 
     <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
-      <etools-data-table-header no-collapse
-                                no-title>
-        <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
-        <etools-data-table-column class="col-05"></etools-data-table-column>
-        <etools-data-table-column class="flex-c">Report Due Date</etools-data-table-column>
-      </etools-data-table-header>
-      <template is="dom-repeat" items="{{dataItems}}">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-1 right-align">[[_getIndex(index, dataItems)]]</span>
-            <span class="col-data col-05"></span>
-            <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
-          </div>
-        </etools-data-table-row>
-      </template>
+      <hru-list id="hruList"
+                class="flex-c"
+                hru-data="[[dataItems]]"
+                disable-sorting
+                use-pagination-index>
+      </hru-list>
       <etools-data-table-footer
           page-size="[[pagination.pageSize]]"
           page-number="[[pagination.pageNumber]]"
@@ -73,15 +66,12 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
-     * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
      */
     const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Constants,
-      EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
       EtoolsPmpApp.Mixins.FrontendPagination
     ], Polymer.Element);
@@ -112,6 +102,7 @@
       ready() {
         super.ready();
         this._createEditHruDialog();
+        this.$.hruList.set('hruMainEl', this);
       }
 
       disconnectedCallback() {

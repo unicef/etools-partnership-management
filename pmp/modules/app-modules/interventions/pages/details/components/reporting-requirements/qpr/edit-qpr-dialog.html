@@ -169,10 +169,17 @@
         this.set('addOrModifyQprDialogOpened', true);
       }
 
+      _duplicateDueDate(dueDate) {
+        return !!this.qprData.find(d => d.due_date === dueDate);
+      }
+
       _updateQprData(e) {
         if (e.detail.confirmed) {
-          // TODO: check due_date and prevent adding duplicates
-
+          if (this._duplicateDueDate(this._editedQprDatesSet.due_date)) {
+            this.toastMsgLoadingSource.fireEvent('toast',
+                {text: 'Requirement dates not added, elected Due Date is already in the list.', showCloseBtn: true});
+            return;
+          }
           if (this._qprDatesSetEditedIndex < 0) {
             // add
             this.push('qprData', this._editedQprDatesSet);

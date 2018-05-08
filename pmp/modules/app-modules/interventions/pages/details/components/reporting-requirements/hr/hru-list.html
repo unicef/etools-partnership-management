@@ -20,14 +20,14 @@
 
     <etools-data-table-header no-collapse
                               no-title>
-      <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
+      <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
       <etools-data-table-column class="flex-c">Report Due Date</etools-data-table-column>
       <etools-data-table-column class="col-1"></etools-data-table-column>
     </etools-data-table-header>
     <template is="dom-repeat" items="[[hruData]]">
       <etools-data-table-row no-collapse>
         <div slot="row-data">
-          <span class="col-data col-1 right-align">[[_getIndex(index)]]</span>
+          <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
           <span class="col-data flex-c actions">
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date)]]"
@@ -70,6 +70,15 @@
           _listItemEditable: {
             type: Boolean,
             value: false
+          },
+          hruMainEl: Object,
+          usePaginationIndex: {
+            type: Boolean,
+            value: false
+          },
+          disableSorting: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -81,6 +90,9 @@
       }
 
       _sortReportingReq(data) {
+        if (this.disableSorting) {
+          return;
+        }
         if (!_.isEmpty(data)) {
           this._sortRequirementsAsc();
         }
@@ -93,6 +105,9 @@
       }
 
       _getIndex(index) {
+        if (this.usePaginationIndex) {
+          return this.hruMainEl._getIndex(index);
+        }
         return parseInt(index, 10) + 1;
       }
 
