@@ -12,6 +12,7 @@
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../mixins/frontend-pagination-mixin.html">
 
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 
@@ -72,12 +73,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
      */
     const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
+      EtoolsPmpApp.Mixins.FrontendPagination
     ], Polymer.Element);
 
     /**
@@ -92,17 +95,7 @@
 
       static get properties() {
         return {
-          dataItems: {
-            type: Array
-          },
-          pagination: {
-            type: Object,
-            value: {
-              pageSize: 10,
-              pageNumber: 1,
-              totalResults: null
-            }
-          }
+
         };
       }
       static get observers() {
@@ -115,6 +108,7 @@
       ready() {
         super.ready();
       }
+
       setTotalResults(interventionId, reportingRequirements) {
         if (typeof interventionId === 'undefined' ||
             typeof reportingRequirements === 'undefined') {
@@ -123,33 +117,8 @@
         this.set('pagination.totalResults', reportingRequirements.length);
       }
 
-      _pageSizeChanged(ev) {
-        this.set('pagination.pageNumber', 1);
-        this.set('pagination.pageSize', parseInt(ev.detail.value));
-      }
-
-      _pageNumberChanged(ev) {
-        this.set('pagination.pageNumber', parseInt(ev.detail.value));
-      }
-
-      _paginationChanged(pageNumber, pageSize, reportingRequirements) {
-        if (this._anyUndefined([pageNumber, pageSize, reportingRequirements])) {
-          return;
-        }
-        pageNumber = parseInt(pageNumber);
-        pageSize = parseInt(pageSize);
-        let startingIndex = (pageNumber - 1) * pageSize;
-        this.dataItems = this.reportingRequirements.slice(startingIndex, startingIndex + pageSize);
-      }
       _getIndex(index) {
         return ((index + 1) + (this.pagination.pageSize * (this.pagination.pageNumber - 1)));
-      }
-      _anyUndefined(items) {
-        return items.some(this._isUndefined);
-      }
-
-      _isUndefined(item) {
-        return typeof item === 'undefined';
       }
 
       _sortRequirementsAsc() {
