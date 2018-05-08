@@ -488,7 +488,7 @@
       _showPartnersPageLoadingMessage() {
         let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
         this.fireEvent('global-loading', {
-          message: 'Loading ' + appSection + ' elements...',
+          message: 'Loading...',
           active: true,
           loadingSource: 'partners-page'
         });
