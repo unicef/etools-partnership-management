@@ -486,7 +486,6 @@
        * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
        */
       _showPartnersPageLoadingMessage() {
-        let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
         this.fireEvent('global-loading', {
           message: 'Loading...',
           active: true,

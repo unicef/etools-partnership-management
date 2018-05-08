@@ -383,7 +383,8 @@
           return;
         }
         if (!agreementDetailsEl._validateAgreement()) {
-          this.fireEvent('toast', {text: 'Document can not be saved because of missing data in Details tab', showCloseBtn: true});
+          this.fireEvent('toast', {text: 'Document can not be saved' + 
+              'because of missing data in Details tab', showCloseBtn: true});
           return;
         }
         if (this.newAgreementActive) {
@@ -510,7 +511,6 @@
 
       // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
       _showAgreementsPageLoadingMessage() {
-        let appSection = this.listActive ? 'agreements list' : 'agreement details page';
         this.fireEvent('global-loading', {
           message: 'Loading...',
           active: true,
