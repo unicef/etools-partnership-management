@@ -1,0 +1,33 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+  * @polymer
+  * @mixinFunction
+  */
+  EtoolsPmpApp.Mixins.RiskRating = baseClass => class extends baseClass {
+
+    getRiskRatingValue(riskRating) {
+      if (typeof riskRating === 'string' && riskRating !== '') {
+        return riskRating;
+      } else {
+        return 'Not Available';
+      }
+    }
+
+    getRiskRatingClass(riskRating) {
+      let riskRatingClass = '';
+      if (typeof riskRating === 'string' && riskRating !== '') {
+        riskRatingClass = riskRating.toLowerCase();
+      } else {
+        riskRatingClass = 'unavailable';
+      }
+      setTimeout(() => {
+        this.updateStyles();
+      }, 0);
+      return riskRatingClass;
+    }
+
+  };
+</script>

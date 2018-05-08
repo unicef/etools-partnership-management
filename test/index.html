@@ -1,32 +1,31 @@
-<!doctype html>
 <!--
 @license
 Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
-The complete set of authors may be found at http://polymer.github.io/AUTHORS
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>Tests</title>
-  <script src="../bower_components/web-component-tester/browser.js"></script>
-</head>
-<body>
-  <script>
-    WCT.loadSuites([
-        // test files
-        // partner pages tests
-        'partners-page-test.html?dom=shady',
-        'partners-page-test.html?dom=shadow',
 
-        // agreements pages tests
-        'agreements-pages-test.html?dom=shady',
-        'agreements-pages-test.html?dom=shadow'
-    ]);
-  </script>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Tests</title>
+
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+  </head>
+  <body>
+    <script>
+      WCT.loadSuites([
+        // Load 'app-shell.html' test suite, using native shadow dom
+        'app-shell.html?dom=shadow',
+        // Load 'app-shell.html' test suite, using shadydom
+        'app-shell.html?wc-shadydom=true'
+      ]);
+    </script>
+  </body>
 </html>

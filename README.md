@@ -25,89 +25,42 @@ $ npm install
 $ bower install
 ```
 
-Update app shell from [etools-frontend-template](https://github.com/unicef-polymer/etools-frontend-template/tree/develop)
--------------------------------------------------------------------------------------------------------------------------
-Check your local project remote repository for etools-frontend-template:
-```bash
-$ git remote -v
-etools-frontend-template  https://github.com/unicef-polymer/etools-frontend-template.git (fetch)
-etools-frontend-template  https://github.com/unicef-polymer/etools-frontend-template.git (push)
-origin  https://github.com/unicef/etools-partnership-management.git (fetch)
-origin  https://github.com/unicef/etools-partnership-management.git (push)
-```
-
-If etools-frontend-template is not listed run:
-
-```bach
-$ git remote add etools-frontend-template https://github.com/unicef-polymer/etools-frontend-template.git
-```
-
-Update your project frontend app shell:
+or run:
 
 ```bash
-$ git checkout develop
-
-$ git fetch etools-frontend-template
-From https://github.com/unicef-polymer/etools-frontend-template
- * [new branch]      develop    -> etools-frontend-template/develop
-
-$ git merge --no-ff etools-frontend-template/develop
+$ ./dev-reinstall.sh
 ```
-
-**IMPORTANT!!!** Be careful with frontend app shell template update. It might contain new features you do not have
-in your app or you might have made significant changes to fit your app requirements. You may have conflicts at merge.
 
 Build Application
 -----------------
+Lint your code:
+```bash
+$ npm run lint
+```
+and fix all ESLint and `polymer lint` errors.
 
-To build the distribution version:
+For `polymer lint` there are some exception:
+* `The element app-shell is not defined` - caused by file import being made in js code.
+* `data-* attributes must be accessed as attributes. i.e. you must write:  data-items$="{{...}}` - `dataItems` property 
+exists, escape or rename in future updates.
+
+To build the app, just run (**the build will fail if there are eslint errors**):
 
 ```bash
-$ gulp
+$ npm run build
 ```
 
 We will be using a bundled build since we don't support
 HHTP/2 and server push.
 
-Before the build is created the CSS and images are minified,
-Javascript is uglifyed, also there are javascript and html hints.
-If any of these tasks fail, the entire build process fails.
-So correct your code and try again :)
+2 builds are generated: ES5 and ES6 and the server will know which build to serve 
+by browser capabilities.
 
 Run Application
 ---------------
 
-To run the application you can use:
+This application is part of [etools-infra](https://github.com/unicef/etools-infra) 
+and runs under a customized setup of etools apps. After `etools-infra` is installed the PMP ap can be accessed 
+for devs at `http://localhost:8082/pmp`
 
-```bash
-$ polymer serve
-View your app at http://localhost:8080
-```
-This command will start the server and serve your files directly from app sources.
-At this point you do not need to build anything, the files will not be served from build folder.
 
-```bash
-$ polymer serve build/bundled
-View your app at http://localhost:8080
-```
-This command will start the server and use the bundled build (build/bundled folder) to serve the files from.
-Before you can serve the bundled build you have to generate the build files.
-Service worker only works in the built app, so test service worker functionality here.
-
-Check the code
----------------------------------
-
-Run the lint task to check for issues with the code. Please do this before finishing a pull request
-
-```bash
-$ gulp lint
-```
-
-Additional options for gulp tasks
----------------------------------
-
-Set -l parameter for any gulp task to activate polymer logs during build process
-
-```bash
-$ gulp -l
-```
