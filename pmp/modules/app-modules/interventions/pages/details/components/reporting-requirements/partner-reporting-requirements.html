@@ -126,7 +126,8 @@
             <humanitarian-reporting-req-unicef id="hru"
                                                name="humanitarianUnicef"
                                                intervention-id="[[interventionId]]"
-                                               requirements-count="{{hrUnicefRequirementsCount}}">
+                                               requirements-count="{{hrUnicefRequirementsCount}}"
+                                               expected-results="[[expectedResults]]">
             </humanitarian-reporting-req-unicef>
 
             <humanitarian-reporting-req-cluster name="humanitarianCluster"
@@ -172,6 +173,7 @@
           interventionStart: String,
           interventionEnd: String,
           inAmendment: Boolean,
+          expectedResults: Array,
 
           // count properties
           qprRequirementsCount: {

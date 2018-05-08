@@ -21,16 +21,22 @@
       :host {
         display: block;
       }
+      [hidden] {
+        display: none !important;
+      }
     </style>
 
     <div hidden$="[[!_empty(reportingRequirements)]]">
       <div class="row-h">
         There are no humanitarian report requirements set.
       </div>
-      <div class="row-h">
+      <div class="row-h" hidden$="[[!_thereAreHFIndicators(expectedResults)]]">
         <paper-button class="secondary-btn" on-click="openUnicefHumanitarianRepReqDialog">
           ADD REQUIREMENTS
         </paper-button>
+      </div>
+      <div class="row-h" hidden$="[[_thereAreHFIndicators(expectedResults)]]">
+        Can be modified only if there High Frequency Humanitarian Indicators defined.
       </div>
     </div>
 
@@ -92,7 +98,8 @@
 
       static get properties() {
         return {
-          editHruDialog: Object
+          editHruDialog: Object,
+          expectedResults: Array
         };
       }
       static get observers() {
@@ -156,6 +163,20 @@
 
       _getIndex(index) {
         return ((index + 1) + (this.pagination.pageSize * (this.pagination.pageNumber - 1)));
+      }
+
+      _thereAreHFIndicators(expectedResults) {
+        if (!expectedResults) {
+          return false;
+        }
+        let hfIndicator = expectedResults.find(r => {
+          return r.ll_results.find(llr => {
+            return llr.applied_indicators.find(i => {
+              return i.is_active && i.is_high_frequency;
+            });
+          });
+        });
+        return hfIndicator ? true :  false;
       }
     }
 

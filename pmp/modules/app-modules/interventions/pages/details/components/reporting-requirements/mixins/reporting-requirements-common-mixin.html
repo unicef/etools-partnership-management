@@ -49,6 +49,9 @@
     }
 
     _interventionIdChanged(newId) {
+      if (!newId) {
+        return;
+      }
       let endpoint = this.getEndpoint('reportingRequirements', {
         intervId: newId,
         reportType: this._getReportType()

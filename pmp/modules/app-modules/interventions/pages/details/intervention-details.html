@@ -385,7 +385,8 @@
                                     intervention-id="[[intervention.id]]"
                                     intervention-start="[[intervention.start]]"
                                     intervention-end="[[intervention.end]]"
-                                    in-amendment="[[intervention.in_amendment]]">
+                                    in-amendment="[[intervention.in_amendment]]"
+                                    expected-results="[[intervention.result_links]]">
     </partner-reporting-requirements>
     <!-- </template> -->
   </template>
@@ -554,11 +555,11 @@
         if (!this.noOfPdOutputs) {
           this.thereAreInactiveIndicators = false;
         } else {
-          this.thereAreInactiveIndicators = !!this._getNoOFInactiveIndicators();
+          this.thereAreInactiveIndicators = !!this._getNoOfInactiveIndicators();
         }
       }
 
-      _getNoOFInactiveIndicators() {
+      _getNoOfInactiveIndicators() {
         return this.intervention.result_links.map((rl) => {
           return rl.ll_results.map((llr) => {
             return llr.applied_indicators.filter(i => !i.is_active).length;
