@@ -32,7 +32,8 @@
           <span class="col-data flex-c actions">
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date)]]"
                            data-args$="[[index]]"
-                           on-delete="_deleteHruReq">
+                           on-delete="_deleteHruReq"
+                           show-edit="[[_listItemEditable]]">
             </icons-actions>
           </span>
         </div>
@@ -65,6 +66,10 @@
           hruData: {
             type: Array,
             value: []
+          },
+          _listItemEditable: {
+            type: Boolean,
+            value: false
           }
         };
       }

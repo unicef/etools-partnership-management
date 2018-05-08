@@ -9,6 +9,8 @@
 
       :host {
         display: block;
+        max-height: 351px;
+        overflow-y: auto;
       }
 
       .col-data.index-col,
@@ -21,7 +23,9 @@
       }
 
       icons-actions {
-        background-color: transparent;
+        --icons-actions: {
+          background-color: transparent;
+        };
         visibility: hidden;
       }
 

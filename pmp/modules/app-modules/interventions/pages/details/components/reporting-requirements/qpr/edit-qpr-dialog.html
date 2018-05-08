@@ -27,8 +27,6 @@
 
       qpr-list {
         margin-top: 24px;
-        max-height: 351px;
-        overflow-y: auto;
       }
 
       iron-label {
@@ -173,6 +171,8 @@
 
       _updateQprData(e) {
         if (e.detail.confirmed) {
+          // TODO: check due_date and prevent adding duplicates
+
           if (this._qprDatesSetEditedIndex < 0) {
             // add
             this.push('qprData', this._editedQprDatesSet);
