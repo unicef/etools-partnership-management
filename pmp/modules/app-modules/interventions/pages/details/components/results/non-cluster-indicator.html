@@ -19,8 +19,12 @@
 <dom-module id="non-cluster-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
-      [hidden] {
+      *[hidden] {
         display: none !important;
+      }
+
+      :host {
+        display: block;
       }
 
       .radioGroup {
@@ -30,6 +34,12 @@
       paper-input,
       paper-textarea {
         width: 100%;
+      }
+
+      paper-textarea {
+        --paper-input-container-input: {
+          display: block;
+        }
       }
 
       .unknown {
