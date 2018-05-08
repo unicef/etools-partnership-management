@@ -17,33 +17,12 @@
 
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 <link rel="import" href="../mixins/reporting-req-past-dates-check.html">
+<link rel="import" href="../styles/reporting-requirements-lists-styles.html">
 <link rel="import" href="add-edit-special-rep-req.html">
 
 <dom-module id="special-reporting-requirements">
   <template>
-    <style include="buttons-styles grid-layout-styles data-table-styles">
-      :host {
-        display: block;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-      }
-
-      [hidden] {
-        display: none !important;
-      }
-      .p-relative {
-        position: relative;
-      }
-      icons-actions {
-        background-color: transparent;
-        visibility: hidden;
-      }
-
-      etools-data-table-row:hover icons-actions {
-        visibility: visible;
-      }
-
+    <style include="buttons-styles grid-layout-styles data-table-styles reporting-requirements-lists-styles">
     </style>
 
     <div class="row-h" hidden$="[[!_empty(reportingRequirements)]]">
@@ -59,16 +38,14 @@
     <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
       <etools-data-table-header no-collapse
                                 no-title>
-        <etools-data-table-column class="col-1 right-align">ID</etools-data-table-column>
-        <etools-data-table-column class="col-05"></etools-data-table-column>
+        <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
         <etools-data-table-column class="col-3">Due Date</etools-data-table-column>
         <etools-data-table-column class="flex-c">Reporting Requirements</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{reportingRequirements}}">
         <etools-data-table-row no-collapse secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date)]]">
-          <div slot="row-data" class="p-relative">
-            <span class="col-data col-1 right-align">[[_getIndex(index, reportingRequirements)]]</span>
-            <span class="col-data col-05"></span>
+          <div slot="row-data" class="actions">
+            <span class="col-data col-1 right-align index-col">[[_getIndex(index, reportingRequirements)]]</span>
             <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
             <span class="col-data flex-c">[[item.description]]</span>
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date)]]"
