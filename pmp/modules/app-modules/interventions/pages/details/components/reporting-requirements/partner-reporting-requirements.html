@@ -65,7 +65,7 @@
         border-left: 1px solid var(--darker-divider-color);
       }
 
-      #edit-qpr-req {
+      .edit-rep-req {
         color: var(--medium-icon-color);
         margin-left: 16px;
       }
@@ -85,14 +85,18 @@
             <paper-item name="qtyProgress"
                         class="nav-menu-item qpr">
               <span>Quarterly Progress Reports ([[qprRequirementsCount]])</span>
-              <paper-icon-button id="edit-qpr-req"
+              <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openQprEditDialog"
-                                 hidden$="[[_hideQprEditBtn(qprRequirementsCount)]]"></paper-icon-button>
+                                 hidden$="[[_hideRepReqEditBtn(qprRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianUnicef"
                         class="nav-menu-item">
-              Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])
+              <span>Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])</span>
+              <paper-icon-button class="edit-rep-req"
+                                 icon="create"
+                                 on-click="_openHruEditDialog"
+                                 hidden$="[[_hideRepReqEditBtn(hrUnicefRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianCluster"
                         class="nav-menu-item">
@@ -119,7 +123,8 @@
                                               requirements-count="{{qprRequirementsCount}}">
             </quarterly-reporting-requirements>
 
-            <humanitarian-reporting-req-unicef name="humanitarianUnicef"
+            <humanitarian-reporting-req-unicef id="hru"
+                                               name="humanitarianUnicef"
                                                intervention-id="[[interventionId]]"
                                                requirements-count="{{hrUnicefRequirementsCount}}">
             </humanitarian-reporting-req-unicef>
@@ -192,7 +197,11 @@
         this.$.qpr.openQuarterlyRepRequirementsDialog();
       }
 
-      _hideQprEditBtn(qprCount) {
+      _openHruEditDialog() {
+        this.$.hru.openUnicefHumanitarianRepReqDialog();
+      }
+
+      _hideRepReqEditBtn(qprCount) {
         return qprCount === 0;
       }
 

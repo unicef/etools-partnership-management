@@ -1,0 +1,172 @@
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-datepicker/etools-simple-datepicker.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../../../../../../scripts/lodash.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../../../mixins/date-mixin.html">
+<link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../styles/buttons-styles.html">
+
+<link rel="import" href="hru-list.html">
+
+<dom-module id="edit-hru-dialog">
+  <template strip-whitespace>
+    <style include="grid-layout-styles buttons-styles data-table-styles">
+      *[hidden] {
+        display: none !important;
+      }
+
+      #add-selected-date {
+        display: inline-block;
+        width: auto;
+        margin-top: 24px;
+        padding-right: 0;
+      }
+    </style>
+
+    <etools-dialog id="editHruDialog"
+                   size="lg"
+                   dialog-title="Add/Edit Dates for Humanitarian Reportr - UNICEF"
+                   on-confirm-btn-clicked="_saveHurData"
+                   ok-btn-text="Save"
+                   keep-dialog-open
+                   spinner-text="Saving...">
+
+      <div class="layout-horizontal">
+        Use the date picker to select due dates of humanitarian report requirements.
+      </div>
+
+      <div class="layout-horizontal row-padding-v">
+        <div class="col layout-vertical col-6">
+          <etools-simple-datepicker id="datepicker"
+                                    date="[[prepareDatepickerDate(selectedDate)]]"
+                                    pretty-date="{{selectedDate}}"
+                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+
+          <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
+            Add Selected Date to List
+          </paper-button>
+        </div>
+        <div class="col col-6">
+          <div class="row-h" hidden$="[[!_empty(hruData.length)]]">
+            <p>No dates added.</p>
+          </div>
+          <hru-list class="flex-c"
+                    hru-data="[[hruData]]"
+                    hidden$="[[_empty(hruData.length)]]"
+                    edit-mode
+                    on-delete-qpr="_deleteHruDate">
+          </hru-list>
+        </div>
+      </div>
+
+    </etools-dialog>
+
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.Date
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     */
+    class EditHruDialog extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.Date,
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
+    ], Polymer.Element) {
+
+      static get is() {
+        return 'edit-hru-dialog';
+      }
+
+      static get properties() {
+        return {
+          interventionId: Number,
+          selectedDate: String,
+          hruData: {
+            type: Array,
+            value: []
+          },
+          toastMsgLoadingSource: Object,
+          _hruEditedIndex: {
+            type: Number,
+            value: -1
+          }
+        };
+      }
+
+      openDialog() {
+        this.$.editHruDialog.opened = true;
+      }
+
+      closeDialog() {
+        this.$.editHruDialog.opened = false;
+      }
+
+      _empty(listLength) {
+        return listLength === 0 || !listLength;
+      }
+
+      _addToList() {
+        let alreadySelected = this.hruData.find(d => d.due_date === this.selectedDate);
+        if (alreadySelected) {
+          this.fireEvent('toast', {text: 'This date is already added to the list.', showCloseBtn: true});
+          return;
+        }
+        this.push('hruData', {due_date: this.selectedDate});
+      }
+
+      _deleteHruDate(e) {
+        this.splice('hruData', e.detail.index, 1);
+      }
+
+      _hideEditedIndexInfo(index) {
+        return index === -1;
+      }
+
+      _getEditedQprDatesSetId(index) {
+        return (index >= 0) ? (index + 1) : '';
+      }
+
+      _saveHurData() {
+        // let endpoint = this.getEndpoint('reportingRequirements', {
+        //   intervId: this.interventionId,
+        //   reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.HRU
+        // });
+        // let dialog = this.$.editHruDialog;
+        // dialog.startSpinner();
+        // this.sendRequest({
+        //   method: 'POST',
+        //   endpoint: endpoint,
+        //   body: {reporting_requirements: this.hruData}
+        // }).then((response) => {
+        //   this.fireEvent('reporting-requirements-saved', response.reporting_requirements);
+        //   dialog.stopSpinner();
+        // }).catch((error) => {
+        //   this.logError('Failed to save/update qpr data!', 'edit-hru-dialog', error);
+        //   this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+        //   dialog.stopSpinner();
+        // });
+      }
+
+    }
+
+    window.customElements.define(EditHruDialog.is, EditHruDialog);
+  </script>
+</dom-module>

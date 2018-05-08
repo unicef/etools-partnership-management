@@ -1,13 +1,11 @@
 <link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
-<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../mixins/common-mixin.html">
-
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
@@ -15,14 +13,26 @@
 <link rel="import" href="../../../../../../../mixins/frontend-pagination-mixin.html">
 
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
+<link rel="import" href="edit-hru-dialog.html">
 
 <dom-module id="humanitarian-reporting-req-unicef">
   <template>
     <style include="buttons-styles grid-layout-styles data-table-styles">
       :host {
-        display: block
+        display: block;
       }
     </style>
+
+    <div hidden$="[[!_empty(reportingRequirements)]]">
+      <div class="row-h">
+        There are no humanitarian report requirements set.
+      </div>
+      <div class="row-h">
+        <paper-button class="secondary-btn" on-click="openUnicefHumanitarianRepReqDialog">
+          ADD REQUIREMENTS
+        </paper-button>
+      </div>
+    </div>
 
     <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
       <etools-data-table-header no-collapse
@@ -49,18 +59,6 @@
       </etools-data-table-footer>
     </div>
 
-    <div hidden$="[[!_empty(reportingRequirements)]]">
-      <div class="row-h">
-        There are no humanitarian report requirements set.
-      </div>
-      <div class="row-h">
-        <paper-button class="secondary-btn" on-tap="_openUnicefHumanitarianRepReqsDialog">
-          ADD REQUIREMENTS
-        </paper-button>
-      </div>
-    </div>
-
-
   </template>
 
   <script>
@@ -76,7 +74,6 @@
      * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
      */
     const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
@@ -95,7 +92,7 @@
 
       static get properties() {
         return {
-
+          editHruDialog: Object
         };
       }
       static get observers() {
@@ -107,18 +104,26 @@
 
       ready() {
         super.ready();
+        this._createEditHruDialog();
       }
 
-      setTotalResults(interventionId, reportingRequirements) {
-        if (typeof interventionId === 'undefined' ||
-            typeof reportingRequirements === 'undefined') {
-          return;
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.editHruDialog) {
+          document.querySelector('body').removeChild(this.editHruDialog);
         }
-        this.set('pagination.totalResults', reportingRequirements.length);
       }
 
-      _getIndex(index) {
-        return ((index + 1) + (this.pagination.pageSize * (this.pagination.pageNumber - 1)));
+      _createEditHruDialog() {
+        this.editHruDialog = document.createElement('edit-hru-dialog');
+        this.editHruDialog.set('toastMsgLoadingSource', this);
+        this.editHruDialog.addEventListener('reporting-requirements-saved',
+            this._onReportingRequirementsSaved.bind(this));
+        document.querySelector('body').appendChild(this.editHruDialog);
+      }
+
+      _onReportingRequirementsSaved(e) {
+        this.set('reportingRequirements', e.detail);
       }
 
       _sortRequirementsAsc() {
@@ -131,8 +136,26 @@
         return this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.HR;
       }
 
-      _openUnicefHumanitarianRepReqsDialog() {
+      openUnicefHumanitarianRepReqDialog() {
+        let hruData = [];
+        if (this.requirementsCount > 0) {
+          hruData = JSON.parse(JSON.stringify(this.reportingRequirements));
+        }
+        this.editHruDialog.set('hruData', hruData);
+        this.editHruDialog.set('interventionId', this.interventionId);
+        this.editHruDialog.openDialog();
+      }
 
+      setTotalResults(interventionId, reportingRequirements) {
+        if (typeof interventionId === 'undefined' ||
+            typeof reportingRequirements === 'undefined') {
+          return;
+        }
+        this.set('pagination.totalResults', reportingRequirements.length);
+      }
+
+      _getIndex(index) {
+        return ((index + 1) + (this.pagination.pageSize * (this.pagination.pageNumber - 1)));
       }
     }
 
