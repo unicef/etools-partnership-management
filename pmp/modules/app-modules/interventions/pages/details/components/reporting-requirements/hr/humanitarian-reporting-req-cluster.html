@@ -5,14 +5,18 @@
 
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../scripts/lodash.html">
 
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 
 <dom-module id="humanitarian-reporting-req-cluster">
   <template>
-    <style include="grid-layout-styles">
+    <style include="grid-layout-styles data-table-styles">
       :host {
         display: block
+      }
+      [hidden] {
+        display: none !important;
       }
     </style>
 
@@ -25,14 +29,14 @@
       <template is="dom-repeat" items="{{reportingRequirements}}">
         <etools-data-table-row no-collapse>
           <div slot="row-data">
-            <span class="col-data col-1 right-align">[[item.frequency]]</span>
+            <span class="col-data col-2">[[item.frequency]]</span>
             <span class="col-data flex-c">[[getDatesForDisplay(item.dates)]]</span>
           </div>
         </etools-data-table-row>
       </template>
     </div>
 
-    <div class="row-h" hidden$="[[reportingRequirements.length]]">
+    <div class="row-h" hidden$="[[!_empty(reportingRequirements)]]">
       There are no cluster humanitarian report requirements set.
     </div>
   </template>
@@ -63,10 +67,24 @@
         return {
           reportingRequirements: {
             type: Array,
-            value: []
+            value: [
+            {
+              frequency: 'Weekly',
+              dates: ['2018-05-09']
+            },
+            {
+              frequency: 'Monthly',
+              dates: ['2018-05-09']
+            },
+            {
+              frequency: 'Custom',
+              dates: ['2018-05-01', '2018-05-09', '2018-06-20']
+            }],
+            observer: 'reportingRequirementsChanged'
           },
           interventionId: {
-            type: String
+            type: String,
+            observer: 'interventionIdChanged'
           },
           requirementsCount: {
             type: Number,
@@ -80,6 +98,14 @@
         super.ready();
       }
 
+      interventionIdChanged() {
+        // TODO load data
+      }
+
+      reportingRequirementsChanged(repReq) {
+        this.set('requirementsCount', _.isEmpty(repReq) ? 0 : repReq.length);
+      }
+
       getDatesForDisplay(dates) {
         if (!dates) {
           return '';
@@ -89,10 +115,14 @@
             return '';
           }
           let formatedDates = dates.map(d => this.getDateDisplayValue(d));
-          return formatedDates.join();
+          return formatedDates.join(', ');
         } else {
           return this.getDateDisplayValue(dates);
         }
+      }
+
+      _empty(list) {
+        return _.isEmpty(list);
       }
 
     }
