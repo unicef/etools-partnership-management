@@ -169,14 +169,14 @@
         if (!expectedResults) {
           return false;
         }
-        let hfIndicator = expectedResults.find(r => {
-          return r.ll_results.find(llr => {
-            return llr.applied_indicators.find(i => {
+        let hfIndicator = expectedResults.find((r) => {
+          return r.ll_results.find((llr) => {
+            return llr.applied_indicators.find((i) => {
               return i.is_active && i.is_high_frequency;
             });
           });
         });
-        return hfIndicator ? true :  false;
+        return hfIndicator ? true : false;
       }
     }
 
