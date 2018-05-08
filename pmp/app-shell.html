@@ -388,7 +388,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageNotFound() {
         this._updatePath('not-found');
         // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-        this.fireEvent('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
+        this.fireEvent('toast', {text: 'An error occurred.', showCloseBtn: true});
       }
 
       _openDataRefreshDialog() {

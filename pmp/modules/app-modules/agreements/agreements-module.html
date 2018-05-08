@@ -383,7 +383,7 @@
           return;
         }
         if (!agreementDetailsEl._validateAgreement()) {
-          this.fireEvent('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          this.fireEvent('toast', {text: 'Document can not be saved because of missing data in Details tab', showCloseBtn: true});
           return;
         }
         if (this.newAgreementActive) {
@@ -512,7 +512,7 @@
       _showAgreementsPageLoadingMessage() {
         let appSection = this.listActive ? 'agreements list' : 'agreement details page';
         this.fireEvent('global-loading', {
-          message: 'Loading ' + appSection + ' elements...',
+          message: 'Loading...',
           active: true,
           loadingSource: 'ag-page'
         });

@@ -103,16 +103,16 @@
           id="listHeader"
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
         <etools-data-table-column class="flex" field="vendor_number" sortable>
-          Vendor #
+          Vendor No.
         </etools-data-table-column>
         <etools-data-table-column class="flex-3" field="name" sortable>
-          Name(short - full)
+          Name (Short/Full)
         </etools-data-table-column>
         <etools-data-table-column class="flex-2" field="partner_type">
-          Type
+          Partner Type
         </etools-data-table-column>
         <etools-data-table-column class="flex" field="rating">
-          Risk
+          Risk Rating
         </etools-data-table-column>
       </etools-data-table-header>
 
@@ -285,7 +285,7 @@
           active: false,
           loadingSource: 'partners-page'
         });
-        this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
+        this.listAttachedCallback(this.active, 'Loading...', 'partners-list');
       }
 
       _getSelectedPartnerTypes(selectedPartnerTypes) {

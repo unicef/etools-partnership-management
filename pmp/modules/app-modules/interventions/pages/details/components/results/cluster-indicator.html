@@ -237,7 +237,7 @@
       }
 
       _getPrpClusterIndicator(clusterIndicId) {
-        this.fireEvent('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
+        this.fireEvent('start-spinner', {spinnerText: 'Loading...'});
         let self = this;
         this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
             .then(function(response) {
@@ -284,7 +284,7 @@
         if (!clusterId) {
           return;
         }
-        this.fireEvent('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});
+        this.fireEvent('start-spinner', {spinnerText: 'Loading...'});
         let self = this;
         this.fireRequest('getPrpClusterIndicators', {id: clusterId})
             .then(function(response) {
