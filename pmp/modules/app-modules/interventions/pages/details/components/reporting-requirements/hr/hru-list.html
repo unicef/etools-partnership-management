@@ -25,8 +25,9 @@
       <etools-data-table-column class="col-1"></etools-data-table-column>
     </etools-data-table-header>
     <template is="dom-repeat" items="[[hruData]]">
-      <etools-data-table-row no-collapse>
-        <div slot="row-data">
+      <etools-data-table-row no-collapse
+                             secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date)]]">
+        <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date)]]">
           <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
           <span class="col-data flex-c actions">

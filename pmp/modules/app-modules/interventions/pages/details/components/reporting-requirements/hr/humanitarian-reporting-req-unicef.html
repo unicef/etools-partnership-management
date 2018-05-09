@@ -132,7 +132,9 @@
           hruData = JSON.parse(JSON.stringify(this.reportingRequirements));
         }
         this.editHruDialog.set('hruData', hruData);
+        this.editHruDialog.set('selectedDate', null);
         this.editHruDialog.set('interventionId', this.interventionId);
+        this.editHruDialog.set('inAmendment', this.inAmendment);
         this.editHruDialog.openDialog();
       }
 
