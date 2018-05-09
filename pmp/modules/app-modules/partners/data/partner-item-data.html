@@ -129,10 +129,6 @@
         if (ajaxMethod === 'DELETE') {
           this.dispatch('deletePartner', this.deletedPartnerId);
           this._deletePartnerFromDexie(this.deletedPartnerId);
-
-          // EtoolsPmpApp.DexieDb.table('partners').delete(this.deletedPartnerId).then(() => {
-          //   this.fireEvent('reload-list');
-          // });
         }
       }
 
