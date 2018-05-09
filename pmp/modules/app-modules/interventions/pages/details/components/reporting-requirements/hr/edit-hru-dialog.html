@@ -63,6 +63,7 @@
                     hru-data="[[hruData]]"
                     hidden$="[[_empty(hruData.length)]]"
                     edit-mode
+                    in-amendment="[[inAmendment]]"
                     on-delete-hru="_deleteHruDate">
           </hru-list>
         </div>
@@ -97,6 +98,7 @@
       static get properties() {
         return {
           interventionId: Number,
+          inAmendment: Boolean,
           selectedDate: String,
           hruData: {
             type: Array,
