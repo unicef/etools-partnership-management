@@ -312,8 +312,8 @@
         }
       }
 
-      _deletePartner(event) {
-        event.stopImmediatePropagation();
+      _deletePartner(e) {
+        e.stopImmediatePropagation();
         this.fireEvent('global-loading', {
           active: true,
           message: 'Deleting partner...',
@@ -322,8 +322,7 @@
 
         let partnerData = this.shadowRoot.querySelector('#partnerData');
         if (partnerData) {
-          partnerData.deletePartner(this.partner,
-              this._handlePartnerDeleted.bind(this), this._handlePartnerNotDeleted);
+          partnerData.deletePartner(this.partner);
         }
       }
 
@@ -338,13 +337,6 @@
         });
         this.fireEvent('update-main-path', {
           path: 'partners/list'
-        });
-      }
-
-      _handlePartnerNotDeleted() {
-        this.fireEvent('global-loading', {
-          active: false,
-          loadingSource: 'partner-data'
         });
       }
 
