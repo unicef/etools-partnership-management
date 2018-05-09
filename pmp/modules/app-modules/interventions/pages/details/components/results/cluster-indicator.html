@@ -17,10 +17,12 @@
 <dom-module id="cluster-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
+      :host {
+        display: block;
+      }
       paper-input {
         width: 100%;
       }
-
     </style>
     <template is="dom-if" if="[[!isNewIndicator]]">
       <div class="row-h flex-c">
