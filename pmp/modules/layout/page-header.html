@@ -241,7 +241,7 @@
       }
 
       _saveProfile(e) {
-        let modifiedFields = this._getModifiedFields(this.originalProfile, this.profile);
+        let modifiedFields = this._getModifiedFields(this.originalProfile, e.detail.profile);
         this.saveProfile(modifiedFields);
       }
 
