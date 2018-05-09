@@ -59,6 +59,7 @@
         <div class="col col-6">
           <div class="row-h" hidden$="[[!_empty(hruData.length)]]">No dates added.</div>
           <hru-list class="flex-c"
+                    with-scroll
                     hru-data="[[hruData]]"
                     hidden$="[[_empty(hruData.length)]]"
                     edit-mode

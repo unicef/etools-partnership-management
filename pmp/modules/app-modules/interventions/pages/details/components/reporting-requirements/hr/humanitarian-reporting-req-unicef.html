@@ -19,12 +19,8 @@
       :host {
         display: block;
       }
-      [hidden] {
+      *[hidden] {
         display: none !important;
-      }
-      hru-list {
-        max-height: none;
-        overflow: hidden;
       }
     </style>
 
@@ -118,10 +114,6 @@
         this.editHruDialog.addEventListener('reporting-requirements-saved',
             this._onReportingRequirementsSaved.bind(this));
         document.querySelector('body').appendChild(this.editHruDialog);
-      }
-
-      _onReportingRequirementsSaved(e) {
-        this.set('reportingRequirements', e.detail);
       }
 
       _sortRequirementsAsc() {
