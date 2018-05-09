@@ -815,7 +815,7 @@
         // Override intervention cluster names to cover delete and edit indicators also, besides create
         this.set('intervention.cluster_names', this._extractClusterNamesFromIndicators());
 
-        //Reset intervention, to trigger observers in other components
+        // Reset intervention, to trigger observers in other components
         this.set('intervention', JSON.parse(JSON.stringify(this.intervention)));
       }
 
