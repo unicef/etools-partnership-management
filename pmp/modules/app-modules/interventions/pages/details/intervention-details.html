@@ -347,7 +347,7 @@
                             indicator-section-options="[[originalIntervention.sections]]"
                             show-inactive-indicators="[[showInactiveIndicators]]"
                             edit-mode="[[intervention.permissions.edit.result_links]]"
-                            on-indicators-changed="_updateInteventionLocClustersSections">
+                            on-indicators-changed="_onIndicatorsChanged">
           </expected-results>
         </template>
         <template is="dom-if" if="[[newIntervention]]">
@@ -808,12 +808,15 @@
         this.$.intEnd.updateStyles();
       }
 
-      _updateInteventionLocClustersSections() {
+      _onIndicatorsChanged() {
         if (!this.intervention) {
           return;
         }
-        // Override intervention cluster names to cover delete and edit indicators also, beside create
+        // Override intervention cluster names to cover delete and edit indicators also, besides create
         this.set('intervention.cluster_names', this._extractClusterNamesFromIndicators());
+
+        //Reset intervention, to trigger observers in other components
+        this.set('intervention', JSON.parse(JSON.stringify(this.intervention)));
       }
 
       _extractClusterNamesFromIndicators() {

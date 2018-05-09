@@ -6,6 +6,8 @@
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../../scripts/lodash.html">
+<link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
@@ -61,12 +63,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Date
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
      const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.Date
+      EtoolsPmpApp.Mixins.Date,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
     ], Polymer.Element);
 
 
@@ -93,17 +97,28 @@
           item: {
             type: Object
           },
+          existingDataItems: {
+            type: Array
+          },
           toastMsgLoadingSource: Object
         };
       }
 
       _save() {
+        let dialog = this.$.addEditDialog;
+        dialog.startSpinner();
+
+        if (!this.validate()) {
+          dialog.stopSpinner();
+          this.opened = false;
+          this.showErrorAsToastMsg('Selected Due Date is already in the list', this.toastMsgLoadingSource);
+          return;
+        }
+
         let endpoint = this.getEndpoint('reportingRequirements', {
           intervId: this.interventionId,
           reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL
         });
-        let dialog = this.$.addEditDialog;
-        dialog.startSpinner();
         this.sendRequest(
           {
             method: 'POST',
@@ -120,6 +135,16 @@
             this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
             this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
           });
+      }
+
+      validate() {
+        if (_.isEmpty(this.existingDataItems)) {
+          return true;
+        }
+        if (this.existingDataItems.find(i => this.item.due_date === i.due_date)) {
+          return false;
+        }
+        return true;
       }
 
       _getBody() {
