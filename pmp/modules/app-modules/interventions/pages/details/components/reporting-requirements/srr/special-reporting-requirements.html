@@ -140,13 +140,10 @@
       _createAddEditDialog() {
         this.addEditDialog = document.createElement('add-edit-special-rep-req');
         this.addEditDialog.set('toastMsgLoadingSource', this);
-        this.addEditDialog.addEventListener('save-special-rep-req', this.onSaveSpecialRepReq.bind(this));
+        this.addEditDialog.addEventListener('reporting-requirements-saved',
+            this._onReportingRequirementsSaved.bind(this));
 
         document.querySelector('body').appendChild(this.addEditDialog);
-      }
-
-      onSaveSpecialRepReq(e) {
-        this.reportingRequirements = e.detail;
       }
 
       _openAddDialog() {

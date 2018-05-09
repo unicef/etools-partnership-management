@@ -18,12 +18,8 @@
 <dom-module id="quarterly-reporting-requirements">
   <template>
     <style include="buttons-styles grid-layout-styles">
-      [hidden] {
+      *[hidden] {
         display: none !important;
-      }
-      qpr-list {
-        max-height: none;
-        overflow: hidden;
       }
     </style>
 
@@ -119,10 +115,6 @@
 
       _getReportType() {
         return this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR;
-      }
-
-      _onReportingRequirementsSaved(e) {
-        this.set('reportingRequirements', e.detail);
       }
 
     }

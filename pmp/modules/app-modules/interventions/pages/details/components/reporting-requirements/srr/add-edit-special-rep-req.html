@@ -111,7 +111,7 @@
             body: this._getBody()
           })
           .then((response) => {
-            this.fireEvent('save-special-rep-req', response.reporting_requirements);
+            this.fireEvent('reporting-requirements-saved', response.reporting_requirements);
             dialog.stopSpinner();
             this.opened = false;
           })
