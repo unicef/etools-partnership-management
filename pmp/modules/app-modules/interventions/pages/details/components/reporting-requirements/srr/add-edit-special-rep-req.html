@@ -141,7 +141,7 @@
         if (_.isEmpty(this.existingDataItems)) {
           return true;
         }
-        if (this.existingDataItems.find(i => this.item.due_date == i.due_date)) {
+        if (this.existingDataItems.find(i => this.item.due_date === i.due_date)) {
           return false;
         }
         return true;
