@@ -77,7 +77,7 @@
         <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
           <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
             <iron-icon icon="add"></iron-icon>
-            Add New Partner
+            Import Partner
           </paper-button>
         </div>
       </div>
@@ -486,9 +486,8 @@
        * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
        */
       _showPartnersPageLoadingMessage() {
-        let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
         this.fireEvent('global-loading', {
-          message: 'Loading ' + appSection + ' elements...',
+          message: 'Loading...',
           active: true,
           loadingSource: 'partners-page'
         });
