@@ -74,7 +74,7 @@
             </paper-button>
           </a>
         </div>
-        <div class="action" hidden$="[[_showNewPartnerBtn(listActive, permissions)]]">
+        <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
           <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
             <iron-icon icon="add"></iron-icon>
             Import Partner
