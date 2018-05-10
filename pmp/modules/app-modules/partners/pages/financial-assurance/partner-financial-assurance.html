@@ -195,10 +195,10 @@
           Cash Transfers (USD)<br> (Jan-Dec)
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
-          SPOT CHECKS <br> Done / MR
+          SPOT CHECKS <br> Required / Completed
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
-          AUDIT <br> Done / MR
+          AUDIT <br> Required / Completed
         </etools-data-table-column>
       </div>
 
@@ -217,14 +217,14 @@
 
         <div class="col col-2 center-align hact-values">
           <strong>
-            <span class="green">[[partner.hact_values.spot_checks.completed.total]] </span>
-            / [[partner.hact_min_requirements.spot_checks]]
+            <span class="green">[[partner.hact_min_requirements.spot_checks]] </span>
+            / [[partner.hact_values.spot_checks.completed.total]]
           </strong>
         </div>
         <div class="col-2 col center-align hact-values">
           <strong>
-            <span class="green">[[partner.hact_values.audits.completed]] </span>
-            / [[_getMinReqAudits(partner.planned_engagement)]]
+            <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
+            / [[partner.hact_values.audits.completed]]
           </strong>
         </div>
       </div>
