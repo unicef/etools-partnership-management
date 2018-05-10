@@ -724,8 +724,7 @@
        */
       _showInterventionPageLoadingMessage() {
         this.fireEvent('global-loading', {
-          message: 'Loading ' + (this.listActive ? 'PD/SSFA list' :
-              (this._removeStrDash(this.routeData.tab) + ' page')) + ' elements...',
+          message: 'Loading...',
           active: true,
           loadingSource: 'interv-page'
         });
