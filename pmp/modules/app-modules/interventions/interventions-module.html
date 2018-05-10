@@ -85,6 +85,10 @@
           opacity: 0;
         }
       }
+
+      #go-to-partner-link {
+        color: var(--primary-color);
+      }
     </style>
 
     <app-route
@@ -105,8 +109,15 @@
           PD/SSFAs
         </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <span class$="[[_getNoCapitalizeTitleClass(newInterventionActive)]]">
-            [[_getInterventionDetailsTitle(intervention, newInterventionActive)]]
+          <span class="no-capitalization]]" hidden$="[[!newInterventionActive]]">
+            Add Programme Document or SSFA
+          </span>
+          <span hidden$="[[newInterventionActive]]">
+            <a id="go-to-partner-link"
+               href$="[[rootPath]]partners/[[intervention.partner_id]]/overview"
+               target="_blank">[[intervention.partner]]</a>
+            <span hidden$="[[!intervention.partner]]">:</span>
+            [[intervention.number]]
           </span>
         </template>
       </div>
@@ -650,29 +661,6 @@
        */
       _newInterventionSaved(intervention) {
         this.fireEvent('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
-      }
-
-      /**
-       * Get intervention details page title: 'partner name: intervention number'
-       */
-      _getInterventionDetailsTitle(intervention, newInterventionActive) {
-        let title = '';
-        if (newInterventionActive) {
-          return 'Add Programme Document or SSFA';
-        }
-        if (intervention) {
-          if (intervention.partner) {
-            title += intervention.partner + ': ';
-          }
-          if (intervention.number) {
-            title += intervention.number;
-          }
-        }
-        return title;
-      }
-
-      _getNoCapitalizeTitleClass(newInterventionActive) {
-        return newInterventionActive ? 'no-capitalization' : '';
       }
 
       _showAddNewIntervBtn(listActive, permissions) {
