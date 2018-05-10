@@ -93,7 +93,7 @@
           this._setPartner({});
           // set the new endpoint
           this.fireEvent('global-loading', {
-            message: 'Loading partner data...',
+            message: 'Loading...',
             active: true,
             loadingSource: this.ajaxLoadingMsgSource
           });
@@ -199,7 +199,7 @@
           return;
         }
         this.fireEvent('global-loading', {
-          message: 'Creating new partner...',
+          message: 'Importing partner information...',
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
