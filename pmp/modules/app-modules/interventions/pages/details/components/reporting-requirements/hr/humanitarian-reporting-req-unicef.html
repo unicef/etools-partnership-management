@@ -112,8 +112,14 @@
         this.editHruDialog = document.createElement('edit-hru-dialog');
         this.editHruDialog.set('toastMsgLoadingSource', this);
         this.editHruDialog.addEventListener('reporting-requirements-saved',
-            this._onReportingRequirementsSaved.bind(this));
+            this._reportingRequirementsSaved.bind(this));
         document.querySelector('body').appendChild(this.editHruDialog);
+      }
+
+      _reportingRequirementsSaved(e) {
+        this._onReportingRequirementsSaved(e);
+        // reset page number
+        this.set('pagination.pageNumber', 1);
       }
 
       _sortRequirementsAsc() {
