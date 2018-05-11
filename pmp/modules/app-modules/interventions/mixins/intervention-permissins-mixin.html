@@ -98,10 +98,7 @@
         }
 
         _getDraftToSignedRequiredFields(intervention) {
-
-          let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
-            'partner_authorized_officer_signatory', 'signed_by_partner_date', 'unicef_signatory',
-            'signed_by_unicef_date', 'signed_pd_document'];
+          let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections', 'signed_pd_document'];
           if (!intervention.contingency_pd) {
             fields.push('start', 'end');
           }
@@ -134,6 +131,7 @@
         }
 
         _setPermissions(perm) {
+          // TODO: !!!IMPORTANT!!! fix data bindings(permissions) not updating on UI
           this.set('intervention.permissions', perm);
           this._updateRelatedPermStyles();
         }
@@ -266,6 +264,7 @@
           if (e.detail.docSelected) {
             this.setInterventionPermissions(false,
                 this.getDraftToSignedTransitionPermissions(this.intervention));
+            console.log('update permissions...', this.intervention.permissions);
           } else {
             if (!this._canRestoreOriginalPermissions()) {
               return;
