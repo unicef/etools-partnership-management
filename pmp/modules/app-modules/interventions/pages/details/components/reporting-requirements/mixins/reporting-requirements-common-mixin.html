@@ -50,6 +50,7 @@
 
     _interventionIdChanged(newId) {
       if (!newId) {
+        this.reportingRequirements = [];
         return;
       }
       let endpoint = this.getEndpoint('reportingRequirements', {
