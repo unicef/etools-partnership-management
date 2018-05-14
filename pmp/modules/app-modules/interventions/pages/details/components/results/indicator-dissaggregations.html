@@ -123,6 +123,7 @@
 
       _addNewDisaggregation() {
         this._addElement();
+        this.fireEvent('add-new-disaggreg');
       }
 
       _onDisaggregationSelected(event) {

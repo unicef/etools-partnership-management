@@ -130,7 +130,8 @@
             pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
           </div>
           <template is="dom-if" if="[[!isCluster]]" restamp>
-            <indicator-dissaggregations data-items="{{disaggregations}}">
+            <indicator-dissaggregations data-items="{{disaggregations}}"
+                                        on-add-new-disaggreg="_updateScroll">
             </indicator-dissaggregations>
           </template>
           <template is="dom-if" if="[[isCluster]]" restamp>
@@ -251,6 +252,23 @@
       ready() {
         super.ready();
         this._initIndicatorDialogListeners();
+      }
+
+      _updateScroll() {
+        setTimeout(() => {
+          let d = this._getPaperDialog();
+        if (d) {
+          let dialogScrollable = d.querySelector('paper-dialog-scrollable');
+          if (dialogScrollable) {
+            let scrollTarget = dialogScrollable.scrollTarget;
+            scrollTarget.scrollTop = scrollTarget.scrollHeight;
+          }
+        }
+        }, 100);
+      }
+
+      _getPaperDialog() {
+        return this.$.indicatorDialog.shadowRoot.querySelector('paper-dialog');
       }
 
       _initIndicatorDialogListeners() {
