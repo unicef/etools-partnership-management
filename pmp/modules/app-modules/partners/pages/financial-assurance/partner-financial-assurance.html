@@ -189,11 +189,14 @@
         <etools-data-table-column class="col col-2">
           Risk Rating
         </etools-data-table-column>
-        <etools-data-table-column class="col col-4">
+        <etools-data-table-column class="col col-2">
           Type of Assessment - Date of Assessment
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
           Cash Transfers (USD)<br> (Jan-Dec)
+        </etools-data-table-column>
+        <etools-data-table-column class="col col-2 center-align">
+          PROG. VISIT<br> Planned / MR / Done
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
           SPOT CHECKS <br> Required / Completed
@@ -204,18 +207,22 @@
       </div>
 
       <div class="row-h overview-row">
-        <div class="col col-8 vision">
+        <div class="col col-6 vision">
           <div class="from-vision">from VISION</div>
-          <div class="layout-horizontal col-3">
+          <div class="layout-horizontal col-4">
             <div class="risk-rating"></div>
             [[partner.rating]]
           </div>
-          <div class="col col-6">[[partner.type_of_assessment]]</div>
-          <div class="col col-3 center-align">
+          <div class="col col-4">[[partner.type_of_assessment]]</div>
+          <div class="col col-4 center-align">
             $ [[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]]
           </div>
         </div>
-
+        <div class="col col-2 center-align hact-values">
+          [[partner.hact_values.programmatic_visits.planned.total]] /
+          [[partner.hact_min_requirements.programme_visits]] /
+          <span class="green"> [[partner.hact_values.programmatic_visits.completed.total]]</span>
+        </div>
         <div class="col col-2 center-align hact-values">
           <strong>
             <span class="green">[[partner.hact_min_requirements.spot_checks]] </span>
