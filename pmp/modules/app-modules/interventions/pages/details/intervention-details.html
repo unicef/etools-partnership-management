@@ -40,7 +40,7 @@
 <link rel="import" href="components/planned-budget.html">
 <link rel="import" href="components/results/expected-results.html">
 <link rel="import" href="components/planned-visits.html">
-<link rel="import" href="components/reporting-requirements/reporting-requirements.html">
+<link rel="import" href="components/reporting-requirements/partner-reporting-requirements.html">
 <link rel="import" href="components/grouped-locations-dialog.html">
 
 <dom-module id="intervention-details">
@@ -347,12 +347,12 @@
                             indicator-section-options="[[originalIntervention.sections]]"
                             show-inactive-indicators="[[showInactiveIndicators]]"
                             edit-mode="[[intervention.permissions.edit.result_links]]"
-                            on-indicators-changed="_updateInteventionLocClustersSections">
+                            on-indicators-changed="_onIndicatorsChanged">
           </expected-results>
         </template>
         <template is="dom-if" if="[[newIntervention]]">
           <div class="row-h">
-            <p> You must save this PD/SSFA before you can add expected results. </p>
+            <p>You must save this PD/SSFA before you can add expected results.</p>
           </div>
         </template>
       </etools-content-panel>
@@ -379,11 +379,14 @@
     <template is="dom-if"
               if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
               restamp>
-      <reporting-requirements class="content-section"
-                              is-new-intervention="[[newIntervention]]"
-                              edit-mode="[[intervention.permissions.edit.reporting_periods]]"
-                              intervention-id="[[intervention.id]]">
-      </reporting-requirements>
+      <partner-reporting-requirements class="content-section"
+                                      edit-mode="[[intervention.permissions.edit.reporting_periods]]"
+                                      intervention-id="[[intervention.id]]"
+                                      intervention-start="[[intervention.start]]"
+                                      intervention-end="[[intervention.end]]"
+                                      in-amendment="[[intervention.in_amendment]]"
+                                      expected-results="[[intervention.result_links]]">
+      </partner-reporting-requirements>
     </template>
   </template>
   <script>
@@ -551,11 +554,11 @@
         if (!this.noOfPdOutputs) {
           this.thereAreInactiveIndicators = false;
         } else {
-          this.thereAreInactiveIndicators = !!this._getNoOFInactiveIndicators();
+          this.thereAreInactiveIndicators = !!this._getNoOfInactiveIndicators();
         }
       }
 
-      _getNoOFInactiveIndicators() {
+      _getNoOfInactiveIndicators() {
         return this.intervention.result_links.map((rl) => {
           return rl.ll_results.map((llr) => {
             return llr.applied_indicators.filter(i => !i.is_active).length;
@@ -591,7 +594,7 @@
           this._updateDatesRequiredState(false);
         } else {
           if ([this.CONSTANTS.STATUSES.Signed.toLowerCase(),
-               this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
+            this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
             this._updateDatesRequiredState(true);
           }
         }
@@ -804,12 +807,15 @@
         this.$.intEnd.updateStyles();
       }
 
-      _updateInteventionLocClustersSections() {
+      _onIndicatorsChanged() {
         if (!this.intervention) {
           return;
         }
-        // Override intervention cluster names to cover delete and edit indicators also, beside create
+        // Override intervention cluster names to cover delete and edit indicators also, besides create
         this.set('intervention.cluster_names', this._extractClusterNamesFromIndicators());
+
+        // Reset intervention, to trigger observers in other components
+        this.set('intervention', JSON.parse(JSON.stringify(this.intervention)));
       }
 
       _extractClusterNamesFromIndicators() {
