@@ -257,8 +257,8 @@
      * @polymer
      * @customElement
      * @appliesMixin EtoolsLogsMixin
-     * @appliesMixin EtoolsMixins.ReduxInAmendmentStateMixin
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
@@ -388,7 +388,10 @@
           moduleName: {
             type: String,
             value: 'interventions'
-          }
+          },
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String
         };
       }
 

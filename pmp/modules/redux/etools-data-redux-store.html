@@ -60,6 +60,8 @@
     let csoPartnerCopy;
     let indexP;
     let index;
+    let pageDataWithPermsUpdated;
+    let pageDataInAmendment;
 
     switch (action.type) {
       case 'SET_FILE_TYPES':
@@ -195,11 +197,11 @@
         return Object.assign({}, state, {envFlags: action.envFlags});
 
       case 'SET_PAGE_DATA_PERMISSIONS':
-        let pageDataWithPermsUpdated = Object.assign({}, state.pageData, {permissions: action.permissions});
+        pageDataWithPermsUpdated = Object.assign({}, state.pageData, {permissions: action.permissions});
         return Object.assign({}, state, {pageData: pageDataWithPermsUpdated});
 
       case 'SET_IN_AMENDMENT_MODE_STATE':
-        let pageDataInAmendment = Object.assign({}, state.pageData, {in_amendment: action.in_amendment});
+        pageDataInAmendment = Object.assign({}, state.pageData, {in_amendment: action.in_amendment});
         return Object.assign({}, state, {pageData: pageDataInAmendment});
 
       default:
