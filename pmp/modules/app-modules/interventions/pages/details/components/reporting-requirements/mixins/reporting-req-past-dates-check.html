@@ -1,0 +1,44 @@
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * Common reporting requirements past dates check used for UI
+   * @polymer
+   * @mixinFunction
+   */
+  EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck = Polymer.dedupingMixin(superClass => class extends superClass {
+
+    static get properties() {
+      return {
+        inAmendment: Boolean,
+        editMode: {
+          type: Boolean,
+          value: false
+        }
+      };
+    }
+
+    _uneditableStyles(inAmendment, dueDate) {
+      return (inAmendment && this._pastDueDate(dueDate)) ? this._getUneditableStyles() : '';
+    }
+
+    _getUneditableStyles() {
+      return 'color: var(--secondary-text-color)';
+    }
+
+    _pastDueDate(dueDate) {
+      let dueD = new Date(dueDate);
+      let now = new Date();
+      return dueD < now;
+    }
+
+    _canEdit(editMode, inAmendment, dueDate) {
+      return editMode && !(inAmendment && this._pastDueDate(dueDate));
+    }
+
+  });
+
+</script>

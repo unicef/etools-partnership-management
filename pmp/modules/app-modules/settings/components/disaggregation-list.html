@@ -11,6 +11,7 @@
 <link rel="import" href="../../../user/user-permissions-mixin.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../mixins/frontend-pagination-mixin.html">
 <link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
@@ -76,6 +77,7 @@
      * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
      */
     const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
@@ -83,13 +85,13 @@
       EtoolsPmpApp.Mixins.UserPermissions,
       EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.FrontendPagination
     ], Polymer.Element);
 
     /**
      * @polymer
      * @customElement
-     * @extends {Polymer.Element}
      * @appliesMixin DisagregationListRequiredMixins
      */
     class DisaggregationList extends DisagregationListRequiredMixins {
@@ -103,26 +105,15 @@
             type: Array,
             statePath: 'disaggregations'
           },
-          dataItems: {
-            type: Array
-          },
           disaggregationModal: {
             type: Object
-          },
-          pagination: {
-            type: Object,
-            value: {
-              pageSize: 10,
-              pageNumber: 1,
-              totalResults: null
-            }
           }
         };
       }
 
       static get observers() {
         return [
-          'paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)',
+          '_paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)',
           '_disagregationsChanged(disaggregations, environmentFlags)'
         ];
       }
@@ -153,33 +144,6 @@
           return;
         }
         this.set('pagination.totalResults', this.disaggregations.length);
-      }
-
-      _pageSizeChanged(ev) {
-        this.set('pagination.pageNumber', 1);
-        this.set('pagination.pageSize', parseInt(ev.detail.value));
-      }
-
-      _pageNumberChanged(ev) {
-        this.set('pagination.pageNumber', parseInt(ev.detail.value));
-      }
-
-      paginationChanged(pageNumber, pageSize, disaggregations) {
-        if (this._anyUndefined([pageNumber, pageSize, disaggregations])) {
-          return;
-        }
-        pageNumber = parseInt(pageNumber);
-        pageSize = parseInt(pageSize);
-        let startingIndex = (pageNumber - 1) * pageSize;
-        this.dataItems = this.disaggregations.slice(startingIndex, startingIndex + pageSize);
-      }
-
-      _anyUndefined(items) {
-        return items.some(this._isUndefined);
-      }
-
-      _isUndefined(item) {
-        return typeof item === 'undefined';
       }
 
       _openModal() {
