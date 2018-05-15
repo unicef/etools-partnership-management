@@ -10,6 +10,7 @@
 <link rel="import" href="../../../../../../../scripts/lodash.html">
 <link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../../../mixins/date-mixin.html">
 <link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
@@ -78,12 +79,14 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Date
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
     class EditHruDialog extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Date,
       EtoolsPmpApp.Mixins.Constants,
@@ -98,7 +101,10 @@
       static get properties() {
         return {
           interventionId: Number,
-          inAmendment: Boolean,
+          inAmendment: {
+            type: Boolean,
+            statePath: 'pageData.in_amendment'
+          },
           selectedDate: String,
           hruData: {
             type: Array,
