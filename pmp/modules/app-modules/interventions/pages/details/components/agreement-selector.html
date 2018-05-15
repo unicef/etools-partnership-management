@@ -26,7 +26,7 @@
       }
     </style>
     <div id="agreement-selector-content" class="row-h flex-c">
-      <template is="dom-if" if="[[!intervention.permissions.edit.agreement]]">
+      <template is="dom-if" if="[[!permissions.edit.agreement]]">
         <div class="col col-6">
           <etools-form-element-wrapper label="Partner Organization" required>
             <span class="placeholder" hidden$="[[intervention.partner]]">&#8212;</span>
@@ -41,7 +41,7 @@
         </div>
       </template>
 
-      <template is="dom-if" if="[[intervention.permissions.edit.agreement]]">
+      <template is="dom-if" if="[[permissions.edit.agreement]]">
         <div class="col col-6 no-left-padding">
           <etools-dropdown id="partner"
                            label="Partner Organization"
@@ -51,7 +51,7 @@
                            option-label="name"
                            selected="{{partnerId}}"
                            dynamic-align
-                           required$="[[intervention.permissions.required.agreement]]"
+                           required$="[[permissions.required.agreement]]"
                            auto-validate
                            error-message="Partner is required">
           </etools-dropdown>
@@ -66,7 +66,7 @@
                            option-label="agreement_number"
                            selected="{{agreementId}}"
                            dynamic-align
-                           required$="[[intervention.permissions.required.agreement]]"
+                           required$="[[permissions.required.agreement]]"
                            auto-validate
                            error-message="Agreement required">
           </etools-dropdown>
@@ -129,7 +129,11 @@
             value: null,
             notify: true
           },
-          intervention: Object
+          intervention: Object,
+          permissions: {
+            type: Object,
+            statePath: 'pageData.permissions'
+          }
         };
       }
 
@@ -157,7 +161,7 @@
         });
         this.set('selectedAgreement', agreement);
 
-        if (this.intervention && this.intervention.permissions && !this.intervention.permissions.edit.agreement) {
+        if (this.intervention && this.permissions && !this.permissions.edit.agreement) {
           // in case agreement selector is in readonly mode we need to set partner id to trigger staff members request
           this.set('partnerId', agreement.partner);
         }

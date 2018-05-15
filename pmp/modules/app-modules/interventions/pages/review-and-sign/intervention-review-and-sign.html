@@ -64,7 +64,7 @@
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!intervention.permissions.edit.submission_date]]"
+                             readonly$="[[!permissions.edit.submission_date]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -72,7 +72,7 @@
           <!-- Submitted to PRC? -->
           <etools-form-element-wrapper>
             <paper-checkbox checked="{{intervention.submitted_to_prc}}"
-                            disabled$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
+                            disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
                             hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
               Submitted to PRC?
             </paper-checkbox>
@@ -86,7 +86,7 @@
             <etools-date-input id="submissionDatePrcField"
                                label="Submission Date to PRC"
                                value="{{intervention.submission_date_prc}}"
-                               readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
+                               readonly$="[[!permissions.edit.submission_date_prc]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -95,7 +95,7 @@
             <etools-date-input id="reviewDatePrcField"
                                label="Review Date by PRC"
                                value="{{intervention.review_date_prc}}"
-                               readonly$="[[!intervention.permissions.edit.review_date_prc]]"
+                               readonly$="[[!permissions.edit.review_date_prc]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -106,7 +106,7 @@
                                 file={{intervention.prc_review_document}}
                                 accept=".doc,.docx,.pdf,.jpg,.png"
                                 hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
-                                readonly$="[[!intervention.permissions.edit.prc_review_document]]">
+                                readonly$="[[!permissions.edit.prc_review_document]]">
             </etools-single-file>
           </div>
         </div>
@@ -119,7 +119,10 @@
                            placeholder="&#8212;"
                            options="[[agreementAuthorizedOfficers]]"
                            selected="{{intervention.partner_authorized_officer_signatory}}"
-                           readonly$="[[!intervention.permissions.edit.partner_authorized_officer_signatory]]"
+                           readonly$="[[!permissions.edit.partner_authorized_officer_signatory]]"
+                           required$="[[permissions.required.partner_authorized_officer_signatory]]"
+                           auto-validate
+                           error-message="Please select Partner Authorized Officer"
                            dynamic-align>
           </etools-dropdown>
         </div>
@@ -128,7 +131,10 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly="[[!intervention.permissions.edit.signed_by_partner_date]]"
+                             readonly="[[!permissions.edit.signed_by_partner_date]]"
+                             required$="[[permissions.required.signed_by_partner_date]]"
+                             auto-validate
+                             error-message="Date is required"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -144,7 +150,10 @@
                            option-label="name"
                            selected="{{intervention.unicef_signatory}}"
                            dynamic-align
-                           readonly$="[[!intervention.permissions.edit.unicef_signatory]]">
+                           readonly$="[[!permissions.edit.unicef_signatory]]"
+                           required$="[[permissions.required.unicef_signatory]]"
+                           auto-validate
+                           error-message="Please select UNICEF user">
           </etools-dropdown>
         </div>
         <div class="col col-3">
@@ -152,7 +161,10 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly="[[!intervention.permissions.edit.signed_by_unicef_date]]"
+                             readonly="[[!permissions.edit.signed_by_unicef_date]]"
+                             required$="[[permissions.required.signed_by_unicef_date]]"
+                             auto-validate
+                             error-message="Date is required"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -166,8 +178,8 @@
                               file={{intervention.signed_pd_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
                               hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.signed_pd_document_file)]]"
-                              readonly$="[[!intervention.permissions.edit.signed_pd_document]]"
-                              required$="[[intervention.permissions.required.signed_pd_document]]"
+                              readonly$="[[!permissions.edit.signed_pd_document]]"
+                              required$="[[permissions.required.signed_pd_document]]"
                               auto-validate
                               error-message="Please select Signed PD/SSFA document">
           </etools-single-file>
@@ -187,15 +199,14 @@
       <pd-amendments class="content-section"
                      intervention-document-type="[[intervention.document_type]]"
                      intervention-id="[[intervention.id]]"
-                     in-amendment="{{intervention.in_amendment}}"
                      amendments="{{intervention.amendments}}"
-                     edit-mode="[[intervention.permissions.edit.amendments]]">
+                     edit-mode="[[permissions.edit.amendments]]">
       </pd-amendments>
     </template>
 
     <fund-reservations class="content-section"
                        intervention="[[intervention]]"
-                       edit-mode="[[intervention.permissions.edit.frs]]"
+                       edit-mode="[[permissions.edit.frs]]"
                        on-frs-update="_handleFrsUpdate">
     </fund-reservations>
 
@@ -239,7 +250,12 @@
         return {
           intervention: {
             type: Object,
+            notify: true,
             observer: '_interventionChanged'
+          },
+          permissions: {
+            type: Object,
+            statePath: 'pageData.permissions'
           },
           signedByUnicefUsers: {
             type: Array,
@@ -273,7 +289,7 @@
         return [
           '_interventionDocTypeChanged(intervention.document_type)',
           '_signedPdDocHasChanged(intervention.signed_pd_document)',
-          '_updateStyles(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)'
+          '_updateStyles(permissions.edit.prc_review_document, _lockSubmitToPrc)'
         ];
       }
 

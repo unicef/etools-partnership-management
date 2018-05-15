@@ -1,6 +1,9 @@
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../scripts/lodash.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../config/app-constants.html">
+<link rel="import" href="../../../redux/redux-permissions-updater-mixin.html">
+
 <script>
   'use strict';
 
@@ -66,9 +69,14 @@
    * @mixinFunction
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    * @appliesMixin EtoolsPmpApp.Mixins.Constants
+   * @appliesMixin EtoolsPmpApp.Mixins.ReduxPermissionsUpdaterMixin
    */
   EtoolsPmpApp.Mixins.InterventionPermissions = Polymer.dedupingMixin(
-      superClass => class extends EtoolsPmpApp.Mixins.EventHelper(EtoolsPmpApp.Mixins.Constants(superClass)) {
+      superClass => class extends EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.EventHelper,
+        EtoolsPmpApp.Mixins.Constants,
+        EtoolsPmpApp.Mixins.ReduxPermissionsUpdaterMixin
+      ], superClass) {
         /* eslint-enable arrow-parens */
         static get properties() {
           return {
@@ -98,7 +106,9 @@
         }
 
         _getDraftToSignedRequiredFields(intervention) {
-          let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections', 'signed_pd_document'];
+          let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
+            'partner_authorized_officer_signatory', 'signed_by_partner_date', 'unicef_signatory',
+            'signed_by_unicef_date', 'signed_pd_document'];
           if (!intervention.contingency_pd) {
             fields.push('start', 'end');
           }
@@ -131,8 +141,8 @@
         }
 
         _setPermissions(perm) {
-          // TODO: !!IMPORTANT!! fix data bindings(permissions) not updating on UI
           this.set('intervention.permissions', perm);
+          this.updateReduxPermissionsData(perm);
           this._updateRelatedPermStyles();
         }
 
@@ -203,7 +213,7 @@
             this.set('intervention.permissions.edit.planned_budget_unicef_cash',
                 this.get('intervention.permissions.edit.planned_budget'));
           }
-
+          this.updateReduxPermissionsData(this.get('intervention.permissions'));
           this._updateRelatedPermStyles(true);
         }
 
@@ -264,7 +274,6 @@
           if (e.detail.docSelected) {
             this.setInterventionPermissions(false,
                 this.getDraftToSignedTransitionPermissions(this.intervention));
-            console.log('update permissions...', this.intervention.permissions);
           } else {
             if (!this._canRestoreOriginalPermissions()) {
               return;

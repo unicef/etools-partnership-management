@@ -22,7 +22,7 @@
 <link rel="import" href="../../../../styles/buttons-styles.html">
 <link rel="import" href="../../styles/fr-warnings-styles.html">
 
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../redux/redux-permissions-updater-mixin.html">
 <link rel="import" href="../../../../environment-flags/environment-flags-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
@@ -121,8 +121,8 @@
                            selected="{{intervention.document_type}}"
                            hide-search
                            dynamic-align
-                           readonly$="[[!intervention.permissions.edit.document_type]]"
-                           required$="[[intervention.permissions.required.document_type]]"
+                           readonly$="[[!permissions.edit.document_type]]"
+                           required$="[[permissions.required.document_type]]"
                            auto-validate
                            error-message="Document type is required">
           </etools-dropdown>
@@ -144,8 +144,8 @@
                      placeholder="&#8212;"
                      char-counter
                      maxlength="256"
-                     readonly$="[[!intervention.permissions.edit.title]]"
-                     required$="[[intervention.permissions.required.title]]"
+                     readonly$="[[!permissions.edit.title]]"
+                     required$="[[permissions.required.title]]"
                      on-focus="_activateAutoValidation"
                      error-message="Please add a title"></paper-input>
       </div>
@@ -159,8 +159,8 @@
                                  option-value="id"
                                  selected-values="{{intervention.offices}}"
                                  dynamic-align
-                                 readonly$="[[!intervention.permissions.edit.offices]]"
-                                 required$="[[intervention.permissions.required.offices]]"
+                                 readonly$="[[!permissions.edit.offices]]"
+                                 required$="[[permissions.required.offices]]"
                                  auto-validate
                                  error-message="Please select intervention's office(s)"
                                  avoid-header-overlapping-dropdown>
@@ -175,8 +175,8 @@
                                  option-value="id"
                                  selected-values="{{intervention.unicef_focal_points}}"
                                  dynamic-align
-                                 readonly$="[[!intervention.permissions.edit.unicef_focal_points]]"
-                                 required$="[[intervention.permissions.required.unicef_focal_points]]"
+                                 readonly$="[[!permissions.edit.unicef_focal_points]]"
+                                 required$="[[permissions.required.unicef_focal_points]]"
                                  auto-validate
                                  error-message="Please select UNICEF focal points"
                                  avoid-header-overlapping-dropdown>
@@ -193,8 +193,8 @@
                                  option-label="name"
                                  selected-values="{{intervention.partner_focal_points}}"
                                  dynamic-align
-                                 readonly$="[[!intervention.permissions.edit.partner_focal_points]]"
-                                 required$="[[intervention.permissions.required.partner_focal_points]]"
+                                 readonly$="[[!permissions.edit.partner_focal_points]]"
+                                 required$="[[permissions.required.partner_focal_points]]"
                                  auto-validate
                                  error-message="Please select partner focal points"
                                  avoid-header-overlapping-dropdown>
@@ -207,7 +207,7 @@
       <div class="row-h flex-c row-second-bg">
         <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
           <paper-toggle-button checked="{{intervention.contingency_pd}}"
-                               disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD
+                               disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
           </paper-toggle-button>
         </div>
         <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
@@ -222,8 +222,8 @@
                                id="intStart"
                                label="Start date"
                                value="{{intervention.start}}"
-                               readonly$="[[!intervention.permissions.edit.start]]"
-                               required$="[[intervention.permissions.required.start]]"
+                               readonly$="[[!permissions.edit.start]]"
+                               required$="[[permissions.required.start]]"
                                error-message="Please select start date"
                                auto-validate
                                no-init show-clear-btn>
@@ -244,8 +244,8 @@
                                id="intEnd"
                                label="End date"
                                value="{{intervention.end}}"
-                               readonly$="[[!intervention.permissions.edit.end]]"
-                               required$="[[intervention.permissions.required.end]]"
+                               readonly$="[[!permissions.edit.end]]"
+                               required$="[[permissions.required.end]]"
                                error-message="Please select end date"
                                auto-validate
                                no-init show-clear-btn>
@@ -266,8 +266,8 @@
                              module="interventions"
                              app-module-item="[[intervention]]"
                              selected-cp="{{intervention.country_programme}}"
-                             edit-mode="[[intervention.permissions.edit.country_programme]]"
-                             required="[[intervention.permissions.required.country_programme]]">
+                             edit-mode="[[permissions.edit.country_programme]]"
+                             required="[[permissions.required.country_programme]]">
         </etools-cp-structure>
       </div>
 
@@ -279,8 +279,8 @@
                                options="[[sections]]"
                                option-label="name"
                                option-value="id"
-                               readonly$="[[!intervention.permissions.edit.sections]]"
-                               required$="[[intervention.permissions.required.sections]]"
+                               readonly$="[[!permissions.edit.sections]]"
+                               required$="[[permissions.required.sections]]"
                                auto-validate
                                error-message="Please select a section">
         </etools-dropdown-multi>
@@ -305,8 +305,8 @@
                                options="[[locations]]"
                                option-label="name"
                                option-value="id"
-                               readonly$="[[!intervention.permissions.edit.flat_locations]]"
-                               required$="[[intervention.permissions.required.flat_locations]]"
+                               readonly$="[[!permissions.edit.flat_locations]]"
+                               required$="[[permissions.required.flat_locations]]"
                                error-message="Please select locations"
                                disable-on-focus-handling>
         </etools-dropdown-multi>
@@ -331,7 +331,7 @@
                                  checked="{{showInactiveIndicators}}">
               Show Inactive
             </paper-toggle-button>
-            <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
+            <template is="dom-if" if="[[permissions.edit.result_links]]">
               <paper-icon-button icon="add-box"
                                  title="Add"
                                  on-click="openCpOutputAndRamIndicatorsDialog">
@@ -342,11 +342,11 @@
                             data-items="{{intervention.result_links}}"
                             selected-cp-structure="[[intervention.country_programme]]"
                             intervention-id="[[intervention.id]]"
-                            intervention="[[intervention]]"
+                            intervention-status="[[intervention.status]]"
                             indicator-location-options="[[originalIntervention.flat_locations]]"
                             indicator-section-options="[[originalIntervention.sections]]"
                             show-inactive-indicators="[[showInactiveIndicators]]"
-                            edit-mode="[[intervention.permissions.edit.result_links]]"
+                            edit-mode="[[permissions.edit.result_links]]"
                             on-indicators-changed="_updateInteventionLocClustersSections">
           </expected-results>
         </template>
@@ -362,26 +362,23 @@
                     class="content-section"
                     planned-budget="{{intervention.planned_budget}}"
                     intervention-id="[[intervention.id]]"
-                    intervention="[[intervention]]"
-                    edit-mode="[[intervention.permissions.edit.planned_budget]]"
-                    unicef-cash-edit-mode="[[intervention.permissions.edit.planned_budget_unicef_cash]]"
-                    required="[[intervention.permissions.required.planned_budget]]">
+                    intervention="[[intervention]]">
     </planned-budget>
 
     <etools-content-panel class="content-section" panel-title="Planned Visits">
       <planned-visits id="plannedVisits"
                       data-items="{{intervention.planned_visits}}"
-                      edit-mode="[[intervention.permissions.edit.planned_visits]]"
+                      edit-mode="[[permissions.edit.planned_visits]]"
                       years="[[years]]">
       </planned-visits>
     </etools-content-panel>
 
     <template is="dom-if"
-              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
+              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, permissions.view.reporting_periods)]]"
               restamp>
       <reporting-requirements class="content-section"
                               is-new-intervention="[[newIntervention]]"
-                              edit-mode="[[intervention.permissions.edit.reporting_periods]]"
+                              edit-mode="[[permissions.edit.reporting_periods]]"
                               intervention-id="[[intervention.id]]">
       </reporting-requirements>
     </template>
@@ -394,7 +391,7 @@
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Common
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxPermissionsUpdaterMixin
      * @appliesMixin EtoolsPmpApp.Mixins.StaffMembersData
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
@@ -404,7 +401,7 @@
     class InterventionDetails extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.ReduxPermissionsUpdaterMixin,
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
@@ -424,7 +421,8 @@
             notify: true
           },
           permissions: {
-            type: Object
+            type: Object,
+            statePath: 'pageData.permissions'
           },
           selectedPartnerId: {
             type: Number,
@@ -602,6 +600,7 @@
       _updateDatesRequiredState(isRequired) {
         this.set('intervention.permissions.required.start', isRequired);
         this.set('intervention.permissions.required.end', isRequired);
+        this.updateReduxPermissionsData(this.get('intervention.permissions'));
       }
 
       _showContingencyPd(agreement) {

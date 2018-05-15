@@ -12,7 +12,7 @@
 <link rel="import" href="../../../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 
-<link rel="import" href="../../../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../../../amendment-mode/redux-in-amendment-state-mixin.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
@@ -129,13 +129,13 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      */
     const InterventionAmendmentsMixin = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin,
       EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Common
@@ -168,7 +168,7 @@
           },
           inAmendment: {
             type: Boolean,
-            notify: true
+            statePath: 'pageData.in_amendment'
           },
           addAmendmentDialog: {
             type: Object
@@ -238,7 +238,7 @@
         let data = event.detail;
         this._unlockInterventionDetailsFields();
         this.push('amendments', data);
-        this.set('inAmendment', true);
+        this.updateReduxInAmendmentModeState(true);
         this.fireEvent('new-amendment-added');
       }
 
