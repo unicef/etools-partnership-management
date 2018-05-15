@@ -26,7 +26,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
-<!-- TODO: polymer2 - piwiki element - console errors fixes needed -->
 <link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 
 <!-- import global config and dexie db config -->
@@ -359,7 +358,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _scrollToTopOnPageChange(module) {
-        // TODO: polymer2 - check if this observer is correct. Do we realy need it?
+        // TODO: polymer2 - check if this observer is correct. Do we really need it?
         // Tested- seems to work the same without it..
         if (!module) {
           return;
