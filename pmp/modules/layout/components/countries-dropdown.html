@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
+<link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 
@@ -21,25 +22,25 @@
       :host(:hover) {
         cursor: pointer;
       }
-      paper-dropdown-menu {
+
+      etools-dropdown {
         width: 160px;
+
+        --esmm-icons: {
+          color: var(--countries-dropdown-color);
+          cursor: pointer;
+        };
+
         --paper-input-container-underline: {
           display: none;
         };
+
         --paper-input-container-underline-focus: {
           display: none;
         };
+
         --paper-input-container-underline-disabled: {
           display: none;
-        };
-
-        --paper-input-container-label: {
-          top: 4px;
-        };
-
-        --paper-dropdown-menu-icon: {
-          color: var(--countries-dropdown-color);
-          align-self: flex-end;
         };
 
         --paper-input-container-input: {
@@ -53,47 +54,20 @@
           max-height: 380px;
         }
       }
-
-      paper-item {
-        font-size: 15px;
-        white-space: nowrap;
-        cursor: pointer;
-        height: 48px;
-      }
-
-      iron-icon {
-        bottom: 2px;
-        min-width: 24px;
-        min-height: 20px;
-        margin-right: 8px;
-      }
-
-      paper-item iron-icon {
-        margin-right: 16px;
-      }
-
-      paper-listbox {
-        max-height: 360px;
-        overflow-x: hidden;
-        overflow-y: auto;
-      }
     </style>
 
     <template is="dom-if" if="[[countrySelectorVisible]]">
-      <paper-dropdown-menu id="menu" label="Country" noink no-label-float allow-outside-scroll>
-        <paper-listbox slot="dropdown-content"
-                       id="countriesListbox"
-                       attr-for-selected="country-id"
-                       selected="[[currentCountry.id]]"
-                       on-iron-select="_countrySelected">
-          <template id="repeat" is="dom-repeat" items="[[countries]]">
-            <paper-item country-id$="[[item.id]]">
-              [[item.name]]
-            </paper-item>
-          </template>
-        </paper-listbox>
-
-      </paper-dropdown-menu>
+      <etools-dropdown id="menu"
+                       label="Country"
+                       selected="{{currentCountry.id}}"
+                       placeholder="&#8212;"
+                       no-label-float
+                       options="[[countries]]"
+                       option-label="name"
+                       option-value="id"
+                       on-iron-select="_countrySelected"
+                       dynamic-align
+                       hide-search></etools-dropdown>
     </template>
   </template>
 
@@ -110,9 +84,9 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
-        EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
-        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper
-      ], Polymer.Element);
+      EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
+      EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
     *
@@ -123,7 +97,7 @@
     class CountriesDropdown extends CountriesDropdownMixin {
 
       static get is() {
-          return 'countries-dropdown';
+        return 'countries-dropdown';
       }
 
       static get properties() {
@@ -140,10 +114,10 @@
       }
 
       _countrySelected(e) {
-        if (!e.detail.item) {
+        if (!e.detail.item || !e.detail.item.item) {
           return;
         }
-        let selectedCountryId = parseInt(e.detail.item.getAttribute('country-id'), 10);
+        let selectedCountryId = parseInt(e.detail.item.item.id, 10);
         if (selectedCountryId !== this.currentCountry.id) {
           // send post request to change_coutry endpoint
           this._triggerCountryChangeRequest(selectedCountryId);
