@@ -119,8 +119,7 @@
               hidden$="[[!agreement.permissions.edit.partner]]"
               auto-validate
               error-message="Please select a partner"
-              required
-              avoid-header-overlapping-dropdown>
+              required>
           </etools-dropdown>
           <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
                                        hidden$="[[agreement.permissions.edit.partner]]">
@@ -174,11 +173,9 @@
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
                 dynamic-align
-                hidden$="[[!agreement.permissions.edit.partner_manager]]"
-                avoid-header-overlapping-dropdown>
+                hidden$="[[!agreement.permissions.edit.partner_manager]]">
             </etools-dropdown>
-            <etools-form-element-wrapper label="Partner Name"
-                                         required$="[[agreement.permissions.required.partner_manager]]"
+            <etools-form-element-wrapper label="Signed By Partner"
                                          hidden$="[[agreement.permissions.edit.partner_manager]]">
               <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
             </etools-form-element-wrapper>
@@ -188,8 +185,8 @@
             <etools-date-input id="signedByPartnerDateField"
                                label="Signed By Partner Date"
                                value="{{agreement.signed_by_partner_date}}"
-                               no-init show-clear-btn
-                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]">
+                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
+                               no-init show-clear-btn disable-future-dates>
             </etools-date-input>
           </div>
         </div>
@@ -205,8 +202,7 @@
                 option-label="name"
                 selected="{{agreement.signed_by}}"
                 dynamic-align
-                readonly$="[[!agreement.permissions.edit.signed_by]]"
-                avoid-header-overlapping-dropdown>
+                readonly$="[[!agreement.permissions.edit.signed_by]]">
             </etools-dropdown>
           </div>
 
@@ -216,7 +212,7 @@
                                label="Signed By UNICEF Date"
                                value="{{agreement.signed_by_unicef_date}}"
                                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                               no-init show-clear-btn>
+                               no-init show-clear-btn disable-future-dates>
             </etools-date-input>
           </div>
         </div>
