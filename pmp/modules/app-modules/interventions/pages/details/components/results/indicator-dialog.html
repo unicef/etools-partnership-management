@@ -255,16 +255,7 @@
       }
 
       _updateScroll() {
-        setTimeout(() => {
-          let d = this._getPaperDialog();
-        if (d) {
-          let dialogScrollable = d.querySelector('paper-dialog-scrollable');
-          if (dialogScrollable) {
-            let scrollTarget = dialogScrollable.scrollTarget;
-            scrollTarget.scrollTop = scrollTarget.scrollHeight;
-          }
-        }
-        }, 100);
+       this.$.indicatorDialog.scrollDown();
       }
 
       _getPaperDialog() {
