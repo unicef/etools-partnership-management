@@ -258,10 +258,6 @@
        this.$.indicatorDialog.scrollDown();
       }
 
-      _getPaperDialog() {
-        return this.$.indicatorDialog.shadowRoot.querySelector('paper-dialog');
-      }
-
       _initIndicatorDialogListeners() {
         this.addEventListener('start-spinner', this._startSpinner.bind(this));
         this.addEventListener('stop-spinner', this._stopSpinner.bind(this));
