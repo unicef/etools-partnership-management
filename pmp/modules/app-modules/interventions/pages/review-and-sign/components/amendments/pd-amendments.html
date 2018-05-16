@@ -238,7 +238,6 @@
         let data = event.detail;
         this._unlockInterventionDetailsFields();
         this.push('amendments', data);
-        console.log('new amendment added');
         this.updateReduxInAmendment(true);
         this.fireEvent('new-amendment-added');
       }
