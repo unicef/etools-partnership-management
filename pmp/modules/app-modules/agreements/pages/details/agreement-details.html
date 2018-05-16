@@ -188,8 +188,8 @@
             <etools-date-input id="signedByPartnerDateField"
                                label="Signed By Partner Date"
                                value="{{agreement.signed_by_partner_date}}"
-                               no-init show-clear-btn
-                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]">
+                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
+                               no-init show-clear-btn disable-future-dates>
             </etools-date-input>
           </div>
         </div>
@@ -216,7 +216,7 @@
                                label="Signed By UNICEF Date"
                                value="{{agreement.signed_by_unicef_date}}"
                                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                               no-init show-clear-btn>
+                               no-init show-clear-btn disable-future-dates>
             </etools-date-input>
           </div>
         </div>
