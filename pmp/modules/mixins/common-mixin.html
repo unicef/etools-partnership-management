@@ -37,7 +37,8 @@
      * Prepare date string and return it in a user readable format
     */
     getDateDisplayValue(dateString) {
-      return this.getDisplayValue(dateString, true);
+      let formatedDate = this.prettyDate(dateString);
+      return formatedDate ? formatedDate : '-';
     }
 
     prepareEtoolsFileDataFromUrl(fileUrl) {
