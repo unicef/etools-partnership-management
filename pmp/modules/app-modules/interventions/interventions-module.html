@@ -17,7 +17,7 @@
 <link rel="import" href="mixins/save-intervention-mixin.html">
 <link rel="import" href="mixins/intervention-page-tabs-mixin.html">
 
-<link rel="import" href="../../amendment-mode/redux-in-amendment-state-mixin.html">
+<link rel="import" href="../../amendment-mode/redux-in-amendment-mixin.html">
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../environment-flags/environment-flags-mixin.html">
@@ -258,7 +258,7 @@
      * @customElement
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
-     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
@@ -273,7 +273,7 @@
     class InterventionsModule extends EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsMixins.DynamicDialogMixin,
-      EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin,
+      EtoolsPmpApp.Mixins.ReduxInAmendmentMixin,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.Endpoints,
@@ -400,7 +400,7 @@
           '_pageChanged(listActive, tabsActive, routeData)',
           '_observeRouteDataId(routeData.id)',
           '_interventionChanged(intervention, permissions)',
-          '_amendmentModeChanged(intervention.in_amendment, tabAttached)'
+          '_amendmentModeChanged(intervention.in_amendment, tabAttached, listActive)'
         ];
       }
 
@@ -448,14 +448,17 @@
         }
       }
 
-      _amendmentModeChanged(amendmentModeActive) {
-        if (typeof amendmentModeActive === 'undefined' || !this.intervention) {
+      _amendmentModeChanged(amendmentModeActive, tabAttached, listActive) {
+        if (typeof amendmentModeActive === 'undefined' || !this.intervention || (!tabAttached && !listActive)) {
           return;
         }
-        if (!this.tabAttached || this.listActive) {
+        if (listActive) {
+          this.updateReduxInAmendment(false);
           return;
         }
-        this.updateReduxInAmendmentModeState(amendmentModeActive);
+        if (this.selectedInterventionId === this.intervention.id) {
+          this.updateReduxInAmendment(amendmentModeActive);
+        }
       }
 
       _amendmentAddedHandler(event) {
@@ -553,7 +556,6 @@
               };
               this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
                   null, this._resetRedirectToNewInterventionFlag);
-              this._handleAmendmentMode();
             });
       }
 
@@ -566,20 +568,11 @@
           if (isNaN(id)) {
             id = null;
           }
-          this.set('selectedInterventionId', id);
-          this._handleAmendmentMode();
+          if (this.selectedInterventionId !== id) {
+            this.set('selectedInterventionId', id);
+            this.updateReduxInAmendment(false);
+          }
         }, 0);
-      }
-
-      _handleAmendmentMode() {
-        if (this.listActive) {
-          this.updateReduxInAmendmentModeState(false);
-          return;
-        }
-        if (this.tabsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
-          // handles the case when the user goes from an intervention to the list and back to the same intervention
-          this.updateReduxInAmendmentModeState(this.intervention.in_amendment);
-        }
       }
 
       _finalizeAmendmentConfirmationCallback() {

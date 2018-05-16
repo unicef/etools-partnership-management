@@ -59,7 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/environment-flags/environment-flags.html">
 
 <!-- other required mixins -->
-<link rel="import" href="modules/amendment-mode/redux-in-amendment-state-mixin.html">
+<link rel="import" href="modules/amendment-mode/redux-in-amendment-mixin.html">
 <link rel="import" href="modules/amendment-mode/amendment-mode-UI-mixin.html">
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
@@ -247,7 +247,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsMixins.LoadingMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
-     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentMixin
      * @appliesMixin EtoolsPmpApp.Mixins.AmendmentModeUIMixin
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
@@ -259,7 +259,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsMixins.LoadingMixin,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.ScrollControl,
-      EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin,
+      EtoolsPmpApp.Mixins.ReduxInAmendmentMixin,
       EtoolsPmpApp.Mixins.AmendmentModeUIMixin,
       EtoolsPmpApp.Mixins.UserData,
       EtoolsPmpApp.Mixins.EventHelper,
@@ -453,7 +453,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._updateLastPartnersModuleActivePage(module);
         // clear loading messages queue
         this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-        this.updateReduxInAmendmentModeState(false);
+        console.log('disable on module changed...', module);
+        this.updateReduxInAmendment(false);
       }
 
       _getModuleMainElUrl(elementName) {

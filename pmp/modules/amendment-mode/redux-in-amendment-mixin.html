@@ -12,12 +12,12 @@
    * @mixinFunction
    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
-  EtoolsPmpApp.Mixins.ReduxInAmendmentStateMixin = Polymer.dedupingMixin(
+  EtoolsPmpApp.Mixins.ReduxInAmendmentMixin = Polymer.dedupingMixin(
       superClass => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass) {
 
         static get actions() {
           return {
-            setInAmendmentModeState: function(inAmendment) {
+            setInAmendment: function(inAmendment) {
               return {
                 type: 'SET_IN_AMENDMENT_MODE_STATE',
                 in_amendment: inAmendment
@@ -26,8 +26,8 @@
           };
         }
 
-        updateReduxInAmendmentModeState(inAmendment) {
-          this.dispatch('setInAmendmentModeState', inAmendment);
+        updateReduxInAmendment(inAmendment) {
+          this.dispatch('setInAmendment', inAmendment);
         }
 
       });
