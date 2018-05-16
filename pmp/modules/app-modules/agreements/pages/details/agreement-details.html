@@ -178,7 +178,6 @@
                 avoid-header-overlapping-dropdown>
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"
-                                         required$="[[agreement.permissions.required.partner_manager]]"
                                          hidden$="[[agreement.permissions.edit.partner_manager]]">
               <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
             </etools-form-element-wrapper>
