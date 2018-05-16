@@ -119,8 +119,7 @@
               hidden$="[[!agreement.permissions.edit.partner]]"
               auto-validate
               error-message="Please select a partner"
-              required
-              avoid-header-overlapping-dropdown>
+              required>
           </etools-dropdown>
           <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
                                        hidden$="[[agreement.permissions.edit.partner]]">
@@ -174,8 +173,7 @@
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
                 dynamic-align
-                hidden$="[[!agreement.permissions.edit.partner_manager]]"
-                avoid-header-overlapping-dropdown>
+                hidden$="[[!agreement.permissions.edit.partner_manager]]">
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"
                                          hidden$="[[agreement.permissions.edit.partner_manager]]">
@@ -204,8 +202,7 @@
                 option-label="name"
                 selected="{{agreement.signed_by}}"
                 dynamic-align
-                readonly$="[[!agreement.permissions.edit.signed_by]]"
-                avoid-header-overlapping-dropdown>
+                readonly$="[[!agreement.permissions.edit.signed_by]]">
             </etools-dropdown>
           </div>
 
