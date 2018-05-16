@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
@@ -72,6 +73,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin  EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
@@ -80,6 +82,7 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
@@ -104,7 +107,10 @@
           interventionId: {
             type: Number
           },
-          inAmendment: Boolean
+          inAmendment: {
+            type: Boolean,
+            statePath: 'pageData.in_amendment'
+          }
         };
       }
 

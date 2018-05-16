@@ -129,9 +129,9 @@
           <div class="flex-c lborder indicators-container">
             <div hidden="[[!item.applied_indicators.length]]">
               <applied-indicators data-items="{{item.applied_indicators}}"
+                                  intervention-status="[[interventionStatus]]"
                                   result-link-index="[[index]]"
                                   cp-output-id="[[cpOutputId]]"
-                                  intervention="{{intervention}}"
                                   show-inactive-indicators="[[showInactiveIndicators]]"
                                   edit-mode="[[editMode]]">
               </applied-indicators>
@@ -184,6 +184,7 @@
             value: 'lowerResultsDelete',
             readOnly: true
           },
+          interventionStatus: String,
           cpOutputId: {
             type: Number
           },
@@ -196,7 +197,6 @@
             type: Boolean,
             value: false
           },
-          intervention: Object,
           showInactiveIndicators: Boolean,
           forceVisibilityRecalc: Boolean
         };

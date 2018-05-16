@@ -174,10 +174,7 @@
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
                 dynamic-align
-                auto-validate
-                error-message="Please select Signed By Partner"
                 hidden$="[[!agreement.permissions.edit.partner_manager]]"
-                required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]"
                 avoid-header-overlapping-dropdown>
             </etools-dropdown>
             <etools-form-element-wrapper label="Partner Name"
@@ -192,10 +189,7 @@
                                label="Signed By Partner Date"
                                value="{{agreement.signed_by_partner_date}}"
                                no-init show-clear-btn
-                               auto-validate
-                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                               error-message="Please select Signed By Partner Date"
-                               required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager, agreement)]]">
+                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]">
             </etools-date-input>
           </div>
         </div>
@@ -211,10 +205,7 @@
                 option-label="name"
                 selected="{{agreement.signed_by}}"
                 dynamic-align
-                error-message="Please select Signed By UNICEF"
                 readonly$="[[!agreement.permissions.edit.signed_by]]"
-                auto-validate
-                required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]"
                 avoid-header-overlapping-dropdown>
             </etools-dropdown>
           </div>
@@ -225,9 +216,7 @@
                                label="Signed By UNICEF Date"
                                value="{{agreement.signed_by_unicef_date}}"
                                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                               no-init show-clear-btn auto-validate
-                               error-message="Please select Signed By UNICEF Date"
-                               required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_unicef_date, agreement.signed_by, agreement)]]">
+                               no-init show-clear-btn>
             </etools-date-input>
           </div>
         </div>
@@ -419,10 +408,6 @@
         if (this.generatePCADialog) {
           document.querySelector('body').removeChild(this.generatePCADialog);
         }
-      }
-
-      _isSignedByFieldRequired(permission, relatedSignedByField) {
-        return (permission || !!relatedSignedByField);
       }
 
       _getTBorderClassIfApplicable(agreementType) {
@@ -688,11 +673,6 @@
           reqFieldsSelectors.push('#cpStructure');
           reqFieldsSelectors.push('#agreementAmendments');
         }
-        if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          if (!this._validateSignedByFields()) {
-            valid = false;
-          }
-        }
         reqFieldsSelectors.forEach(function(fSelector) {
           let field = this.shadowRoot.querySelector(fSelector);
           if (field && !field.validate()) {
@@ -702,18 +682,6 @@
         return valid;
       }
 
-      _validateSignedByFields() {
-        let valid = true;
-        let signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
-          '#signedByUnicef', '#signedByUnicefDateField'];
-        signedByFields.forEach(function(selector) {
-          let field = this.shadowRoot.querySelector(selector);
-          if (field && !field.validate()) {
-            valid = false;
-          }
-        }.bind(this));
-        return valid;
-      }
     }
 
     window.customElements.define(AgreementDetails.is, AgreementDetails);

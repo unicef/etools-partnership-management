@@ -119,14 +119,12 @@
                                               intervention-id="[[interventionId]]"
                                               intervention-start="[[interventionStart]]"
                                               intervention-end="[[interventionEnd]]"
-                                              in-amendment="[[inAmendment]]"
                                               requirements-count="{{qprRequirementsCount}}">
             </quarterly-reporting-requirements>
 
             <humanitarian-reporting-req-unicef id="hru"
                                                name="humanitarianUnicef"
                                                intervention-id="[[interventionId]]"
-                                               in-amendment="[[inAmendment]]"
                                                requirements-count="{{hrUnicefRequirementsCount}}"
                                                expected-results="[[expectedResults]]">
             </humanitarian-reporting-req-unicef>
@@ -138,7 +136,6 @@
 
             <special-reporting-requirements name="special"
                                             intervention-id="[[interventionId]]"
-                                            in-amendment="[[inAmendment]]"
                                             requirements-count="{{specialRequirementsCount}}">
             </special-reporting-requirements>
 
@@ -173,7 +170,6 @@
           interventionId: Number,
           interventionStart: String,
           interventionEnd: String,
-          inAmendment: Boolean,
           expectedResults: Array,
 
           // count properties

@@ -13,10 +13,11 @@
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
-<link rel="import" href="mixins/intervention-permissins-mixin.html">
+<link rel="import" href="mixins/intervention-permissions-mixin.html">
 <link rel="import" href="mixins/save-intervention-mixin.html">
 <link rel="import" href="mixins/intervention-page-tabs-mixin.html">
 
+<link rel="import" href="../../amendment-mode/redux-in-amendment-mixin.html">
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../environment-flags/environment-flags-mixin.html">
@@ -257,6 +258,7 @@
      * @customElement
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
@@ -271,6 +273,7 @@
     class InterventionsModule extends EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsMixins.DynamicDialogMixin,
+      EtoolsPmpApp.Mixins.ReduxInAmendmentMixin,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.Endpoints,
@@ -289,6 +292,10 @@
 
       static get properties() {
         return {
+          /**
+           * User permissions at this level
+           * TODO: rename to userPermissions
+           */
           permissions: {
             type: Object
           },
@@ -381,7 +388,10 @@
           moduleName: {
             type: String,
             value: 'interventions'
-          }
+          },
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String
         };
       }
 
@@ -390,7 +400,7 @@
           '_pageChanged(listActive, tabsActive, routeData)',
           '_observeRouteDataId(routeData.id)',
           '_interventionChanged(intervention, permissions)',
-          '_amendmentModeChanged(intervention.in_amendment, tabAttached)'
+          '_amendmentModeChanged(intervention.in_amendment, tabAttached, listActive)'
         ];
       }
 
@@ -438,17 +448,17 @@
         }
       }
 
-      _amendmentModeChanged(amendmentModeActive) {
-        if (typeof amendmentModeActive === 'undefined' || !this.intervention) {
+      _amendmentModeChanged(amendmentModeActive, tabAttached, listActive) {
+        if (typeof amendmentModeActive === 'undefined' || !this.intervention || (!tabAttached && !listActive)) {
           return;
         }
-        if (!this.tabAttached || this.listActive) {
+        if (listActive) {
+          this.updateReduxInAmendment(false);
           return;
         }
-        if (typeof amendmentModeActive === 'undefined') {
-          return;
+        if (this.selectedInterventionId === this.intervention.id) {
+          this.updateReduxInAmendment(amendmentModeActive);
         }
-        this.fireEvent('set-amendment-mode', {active: amendmentModeActive});
       }
 
       _amendmentAddedHandler(event) {
@@ -465,7 +475,7 @@
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
-        if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+        if (!_.isEmpty(intervention)) {
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
           this.checkAndUpdateInterventionPermissions(intervention,
@@ -546,7 +556,6 @@
               };
               this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
                   null, this._resetRedirectToNewInterventionFlag);
-              this._handleAmendmentMode();
             });
       }
 
@@ -559,20 +568,11 @@
           if (isNaN(id)) {
             id = null;
           }
-          this.set('selectedInterventionId', id);
-          this._handleAmendmentMode();
+          if (this.selectedInterventionId !== id) {
+            this.set('selectedInterventionId', id);
+            this.updateReduxInAmendment(false);
+          }
         }, 0);
-      }
-
-      _handleAmendmentMode() {
-        if (this.listActive) {
-          this.fireEvent('set-amendment-mode', {active: false});
-          return;
-        }
-        if (this.tabsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
-          // handles the case when the user goes from an intervention to the list and back to the same intervention
-          this.fireEvent('set-amendment-mode', {active: this.intervention.in_amendment});
-        }
       }
 
       _finalizeAmendmentConfirmationCallback() {
@@ -592,10 +592,9 @@
             .then((resp) => {
               if (!_.isEmpty(resp.permissions)) {
                 this.set('intervention.permissions', resp.permissions);
-                // NOTE*-resetting the whole intervention because observers that depend on
-                // intervention.in_amendment are not firing
-                this.set('intervention', JSON.parse(JSON.stringify(this.intervention)));
+                this.set('intervention.in_amendment', resp.in_amendment);
                 this.set('originalIntervention.in_amendment', resp.in_amendment);
+                this.updateReduxPermissionsData(resp.permissions);
               }
             })
             .then(() => {
