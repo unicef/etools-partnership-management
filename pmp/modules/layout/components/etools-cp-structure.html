@@ -53,7 +53,7 @@
     <etools-dropdown id="cpStructure"
                       label="CP Structure"
                       placeholder="&#8212;"
-                      options="[[countryProgrammes]]"
+                      options="[[sortedCountryProgrammes]]"
                       option-value="id"
                       option-label="name"
                       selected="{{selectedCp}}"
@@ -96,6 +96,9 @@
           countryProgrammes: {
             type: Array,
             statePath: 'countryProgrammes'
+          },
+          sortedCountryProgrammes: {
+            type: Array
           },
           selectedCp: {
             type: Number,
@@ -154,11 +157,11 @@
       }
 
       setDefaultSelectedCpStructure() {
-        if (_.isEmpty(this.countryProgrammes)) {
+        if (_.isEmpty(this.sortedCountryProgrammes)) {
           return;
         }
 
-        let currentCP = this._getCurrentCountryProgramme(this.countryProgrammes);
+        let currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
 
         this.set('selectedCp', currentCP ? currentCP.id : null);
       }
@@ -168,7 +171,7 @@
             Polymer.Async.timeOut.after(10),
             () => {
               if (appModuleItem) {
-                this._sortCPs();
+                this._prepareCpsForDisplay();
 
                 if (!this.selectedCp) {
                   this.setDefaultSelectedCpStructure();
@@ -181,13 +184,25 @@
             });
       }
 
-      _sortCPs() {
-        console.log('sorting');
-        let sorted = _.orderBy(this.countryProgrammes, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
-        let i;
-        for (i = 0; i < sorted.length; i++) {
-          this.countryProgrammes[i] = JSON.parse(JSON.stringify(sorted[i]));
+      _prepareCpsForDisplay() {
+        let displayableCps = _.orderBy(this.countryProgrammes,
+                                       ['future', 'active', 'special'],
+                                       ['desc', 'desc', 'asc']);
+
+        if (!this.appModuleItem || !this.appModuleItem.id) {
+          // On new intervention or agreement
+          this._markExpiredCpsAsDisabled(displayableCps);
         }
+
+        this.sortedCountryProgrammes = displayableCps;
+      }
+
+      _markExpiredCpsAsDisabled(sortedCps) {
+        sortedCps.forEach(element => {
+          if (element.expired) {
+            element.disableSelection = true;
+          }
+        });
       }
 
       _hasExpiredCpAssigned(cpId) {
