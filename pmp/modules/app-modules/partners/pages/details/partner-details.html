@@ -253,10 +253,7 @@
       }
 
       _hideDeleteBtn() {
-        if (!this.partner || !this.partner.core_values_assessment_file) {
-          return false;
-        }
-        return true;
+        return !(!this.partner || !this.partner.core_values_assessment_file);
       }
 
       _partnerChanged(partner) {
@@ -264,7 +261,17 @@
           // decide if we should show core values assessment attachment
           this.set('showCoreValuesAssessmentAttachment',
               this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
+          this._displayCoreValuesAssessmentNotification(partner);
+          this._displayMicroAssessmentNotification(partner);
         }
+      }
+
+      _displayCoreValuesAssessmentNotification(partner) {
+        // ch1889
+      }
+
+      _displayMicroAssessmentNotification(partner) {
+        // ch1889
       }
 
       _getPartnerType(partnerType, csoType) {
@@ -279,11 +286,8 @@
        * and cso_type is 'National'
        */
       _showCoreValueAssessment(partnerType, csoType) {
-        if (partnerType === 'Civil Society Organization' &&
-            (['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1)) {
-          return true;
-        }
-        return false;
+        return partnerType === 'Civil Society Organization' &&
+            (['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1);
       }
 
       _validatePageData() {
