@@ -19,6 +19,7 @@
       :host {
         display: block
       }
+
       paper-input {
         width: 100%;
       }
@@ -51,7 +52,6 @@
       </div>
     </etools-dialog>
 
-
   </template>
 
   <script>
@@ -65,7 +65,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Date
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
-     const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
+    const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.EventHelper,
@@ -120,31 +120,28 @@
           reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL
         });
         this.sendRequest(
-          {
-            method: 'POST',
-            endpoint: endpoint,
-            body: this._getBody()
-          })
-          .then((response) => {
-            this.fireEvent('reporting-requirements-saved', response.reporting_requirements);
-            dialog.stopSpinner();
-            this.opened = false;
-          })
-          .catch((error) => {
-            dialog.stopSpinner();
-            this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
-            this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
-          });
+            {
+              method: 'POST',
+              endpoint: endpoint,
+              body: this._getBody()
+            })
+            .then((response) => {
+              this.fireEvent('reporting-requirements-saved', response.reporting_requirements);
+              dialog.stopSpinner();
+              this.opened = false;
+            })
+            .catch((error) => {
+              dialog.stopSpinner();
+              this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
+              this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+            });
       }
 
       validate() {
         if (_.isEmpty(this.existingDataItems)) {
           return true;
         }
-        if (this.existingDataItems.find(i => this.item.due_date === i.due_date)) {
-          return false;
-        }
-        return true;
+        return !this.existingDataItems.find(i => this.item.due_date === i.due_date);
       }
 
       _getBody() {

@@ -17,7 +17,6 @@
 <link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
-<link rel="import" href="../mixins/reporting-req-past-dates-check.html">
 <link rel="import" href="../styles/reporting-requirements-lists-styles.html">
 <link rel="import" href="add-edit-special-rep-req.html">
 
@@ -30,8 +29,8 @@
       There are no special reporting requirements set.
     </div>
 
-    <div class="row-h">
-      <paper-button class="secondary-btn" on-tap="_openAddDialog">
+    <div class="row-h" hidden$="[[!editMode]]">
+      <paper-button class="secondary-btn" on-click="_openAddDialog">
         ADD REQUIREMENTS
       </paper-button>
     </div>
@@ -44,14 +43,14 @@
         <etools-data-table-column class="flex-6">Reporting Requirements</etools-data-table-column>
         <etools-data-table-column class="flex-c"></etools-data-table-column>
       </etools-data-table-header>
-      <template is="dom-repeat" items="{{reportingRequirements}}">
-        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date)]]">
-          <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date)]]">
+      <template is="dom-repeat" items="[[reportingRequirements]]">
+        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[editMode]]">
+          <div slot="row-data">
             <span class="col-data col-1 right-align index-col">[[_getIndex(index, reportingRequirements)]]</span>
             <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
             <span class="col-data col-6">[[item.description]]</span>
             <span class="col-data flex-c actions">
-              <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date)]]"
+              <icons-actions hidden$="[[!editMode]]"
                              item$="[[item]]"
                              on-edit="_onEdit"
                              on-delete="_onDelete">
@@ -70,22 +69,18 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
-     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @appliesMixin  EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
      */
     const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-      EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
-      EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon
     ], Polymer.Element);
 
     /**
@@ -100,16 +95,9 @@
 
       static get properties() {
         return {
-          editMode: {
-            type: Boolean,
-            value: true // TODO
-          },
+          editMode: Boolean,
           interventionId: {
             type: Number
-          },
-          inAmendment: {
-            type: Boolean,
-            statePath: 'pageData.in_amendment'
           }
         };
       }
