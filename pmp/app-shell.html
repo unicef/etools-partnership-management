@@ -138,12 +138,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <environment-flags></environment-flags>
 
-    <etools-piwik-analytics
-        page="[[subroute.prefix]]"
-        user="[[user]]"
-        toast="[[currentToastMessage]]">
-    </etools-piwik-analytics>
-
     <app-location
         route="{{route}}"
         url-space-regex="^[[rootPath]]">
@@ -235,6 +229,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <static-common-data></static-common-data>
     <partners-list-data></partners-list-data>
     <agreements-list-data></agreements-list-data>
+
+    <etools-piwik-analytics
+        page="[[subroute.prefix]]"
+        user="[[user]]"
+        toast="[[currentToastMessage]]">
+    </etools-piwik-analytics>
+
   </template>
 
   <script>
