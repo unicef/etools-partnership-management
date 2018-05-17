@@ -55,13 +55,14 @@
     <template is="dom-if" if="[[countrySelectorVisible]]">
       <etools-dropdown id="menu"
                        label="Country"
-                       selected="{{currentCountry.id}}"
+                       selected="[[currentCountry.id]]"
                        placeholder="&#8212;"
                        no-label-float
                        options="[[countries]]"
                        option-label="name"
                        option-value="id"
-                       on-iron-select="_countrySelected"
+                       trigger-value-change-event
+                       on-etools-selected-item-changed="_countrySelected"
                        hide-search></etools-dropdown>
     </template>
   </template>
@@ -109,10 +110,10 @@
       }
 
       _countrySelected(e) {
-        if (!e.detail.item || !e.detail.item.item) {
+        if (!e.detail.selectedItem) {
           return;
         }
-        let selectedCountryId = parseInt(e.detail.item.item.id, 10);
+        let selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
         if (selectedCountryId !== this.currentCountry.id) {
           // send post request to change_coutry endpoint
           this._triggerCountryChangeRequest(selectedCountryId);
