@@ -186,8 +186,8 @@
 
       _prepareCpsForDisplay() {
         let displayableCps = _.orderBy(this.countryProgrammes,
-                                       ['future', 'active', 'special'],
-                                       ['desc', 'desc', 'asc']);
+                                      ['future', 'active', 'special'],
+                                      ['desc', 'desc', 'asc']);
 
         if (!this.appModuleItem || !this.appModuleItem.id) {
           // On new intervention or agreement
@@ -198,7 +198,7 @@
       }
 
       _markExpiredCpsAsDisabled(sortedCps) {
-        sortedCps.forEach(element => {
+        sortedCps.forEach((element) => {
           if (element.expired) {
             element.disableSelection = true;
           }
