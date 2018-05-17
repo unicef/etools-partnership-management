@@ -30,7 +30,14 @@
       #totalsRow {
         --list-row-no-collapse: {
           background-color: var(--light-theme-background-color);
-        }
+          padding-left: 56px;
+        };
+      }
+
+      #plannedUnicefCash {
+        --list-row-no-collapse: {
+          padding-left: 56px;
+        };
       }
 
       #plannedUnicefCash .unicef-cash-col {
@@ -49,6 +56,7 @@
         color: var(--secondary-text-color);
         font-weight: bold;
       }
+
     </style>
 
     <template is="dom-if" if="[[!frsDetails.frs.length]]">
@@ -59,7 +67,6 @@
 
     <div class="list-container" hidden$="[[_noFrs(frsDetails)]]">
       <etools-data-table-header id="listHeader"
-                                no-collapse
                                 no-title
                                 hidden$="[[!frsDetails.frs.length]]">
         <etools-data-table-column class="col-2">
@@ -83,7 +90,7 @@
       </etools-data-table-header>
 
       <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
-        <etools-data-table-row no-collapse>
+        <etools-data-table-row>
           <div slot="row-data">
             <span class="col-data col-2">[[fr.fr_number]]</span>
             <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
@@ -116,6 +123,20 @@
                 </etools-info-tooltip>
             </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt_local, '0.00')]]</span>
+          </div>
+          <div slot="row-data-details">
+            <div class="row-details-content col-2">
+              <span class="rdc-title">FR Line Item</span>
+              <span></span>
+            </div>
+            <div class="row-details-content col-2 right-align">
+              <span class="rdc-title">Donor</span>
+              <span></span>
+            </div>
+            <div class="row-details-content col-2 right-align">
+                <span class="rdc-title">Grant</span>
+                <span></span>
+              </div>
           </div>
         </etools-data-table-row>
       </template>
