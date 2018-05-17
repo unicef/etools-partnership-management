@@ -192,15 +192,25 @@
         if (!this.appModuleItem || !this.appModuleItem.id) {
           // On new intervention or agreement
           this._markExpiredCpsAsDisabled(displayableCps);
+        } else {
+          this._resetExpiredCpsMarkedAsDisabled(displayableCps);
         }
 
         this.sortedCountryProgrammes = displayableCps;
       }
 
       _markExpiredCpsAsDisabled(sortedCps) {
+        this._markExpiredCps(sortedCps, true);
+      }
+
+      _resetExpiredCpsMarkedAsDisabled(sortedCps) {
+        this._markExpiredCps(sortedCps, false);
+      }
+
+      _markExpiredCps(sortedCps, disabled) {
         sortedCps.forEach((element) => {
           if (element.expired) {
-            element.disableSelection = true;
+            element.disableSelection = disabled;
           }
         });
       }
