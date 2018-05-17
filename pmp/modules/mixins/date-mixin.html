@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <script>
   'use strict';
 
@@ -8,8 +9,9 @@
   /**
    * @polymer
    * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
    */
-  EtoolsPmpApp.Mixins.Date = Polymer.dedupingMixin(baseClass => class extends baseClass {
+  EtoolsPmpApp.Mixins.Date = Polymer.dedupingMixin(baseClass => class extends EtoolsLogsMixin(baseClass) {
 
     prettyDate(dateString, format) {
       let date = this._convertDate(dateString);
@@ -32,9 +34,13 @@
          *  d.toGMTString() == "Wed, 25 Apr 2018 00:00:00 GMT"
          * @type {string}
          */
-        dateString += noZTimezoneOffset ? '' : 'Z';
+        dateString += (noZTimezoneOffset || dateString.indexOf('Z') >= 0) ? '' : 'Z';
         let date = new Date(dateString);
-        return this.isValidDate(date) ? date : null;
+        let isValid = this.isValidDate(date);
+        if (!isValid) {
+          this.logWarn('Date conversion unsuccessful: ' + dateString);
+        }
+        return isValid ? date : null;
       }
       return null;
     }
