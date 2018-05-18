@@ -57,6 +57,14 @@
         font-weight: bold;
       }
 
+      div[simple-header]>span,
+      div[simple-row]>span{
+        padding-right: 25px;
+      }
+      div[simple-header] {
+        color: var(--list-secondary-text-color, #757575);
+      }
+
     </style>
 
     <template is="dom-if" if="[[!frsDetails.frs.length]]">
@@ -125,18 +133,26 @@
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt_local, '0.00')]]</span>
           </div>
           <div slot="row-data-details">
-            <div class="row-details-content col-2">
-              <span class="rdc-title">FR Line Item</span>
-              <span></span>
-            </div>
-            <div class="row-details-content col-2 right-align">
-              <span class="rdc-title">Donor</span>
-              <span></span>
-            </div>
-            <div class="row-details-content col-2 right-align">
-                <span class="rdc-title">Grant</span>
-                <span></span>
+            <div class="flex-c">
+              <div simple-header class="layout-horizontal">
+                <span class="col-2">FR Line Item</span>
+                <span class="col-2">Donor</span>
+                <span class="col-2">Grant</span>
               </div>
+              <template is="dom-repeat" items="[[fr.line_item_details]]" as="frInfo">
+                <div simple-row class="layout-horizontal">
+                  <span class="col-2">
+                    <span>[[fr.fr_number]]-[[frInfo.line_item]]</span>
+                  </span>
+                  <span class="col-2">
+                    <span>[[getValueOrNA(frInfo.donor)]]</span>
+                  </span>
+                  <span class="col-2">
+                    <span>[[getValueOrNA(frInfo.grant_number)]]</span>
+                  </span>
+                </div>
+              </template>
+            </div>
           </div>
         </etools-data-table-row>
       </template>
@@ -272,6 +288,10 @@
         let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
             frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
         this.set('_frsTotalAmountWarning', warn);
+      }
+
+      getValueOrNA(value) {
+        return value ? value : 'N/A';
       }
     }
 
