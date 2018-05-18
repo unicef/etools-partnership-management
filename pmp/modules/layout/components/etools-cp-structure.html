@@ -209,14 +209,6 @@
         });
       }
 
-      _resetExpiredCpsMarkedAsDisabled(sortedCps) {
-        sortedCps.forEach((element) => {
-          if (element.expired) {
-            element.disableSelection = false;
-          }
-        });
-      }
-
       _hasExpiredCpAssigned(cpId) {
         if (cpId || !_.isEmpty(this.countryProgrammes)) {
           return false;
