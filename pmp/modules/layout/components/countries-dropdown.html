@@ -52,19 +52,18 @@
       }
     </style>
 
-    <template is="dom-if" if="[[countrySelectorVisible]]">
-      <etools-dropdown id="menu"
-                       label="Country"
-                       selected="[[currentCountry.id]]"
-                       placeholder="&#8212;"
-                       no-label-float
-                       options="[[countries]]"
-                       option-label="name"
-                       option-value="id"
-                       trigger-value-change-event
-                       on-etools-selected-item-changed="_countrySelected"
-                       hide-search></etools-dropdown>
-    </template>
+    <etools-dropdown id="menu"
+                     hidden$="[[!countrySelectorVisible]]"
+                     label="Country"
+                     selected="[[currentCountry.id]]"
+                     placeholder="&#8212;"
+                     no-label-float
+                     options="[[countries]]"
+                     option-label="name"
+                     option-value="id"
+                     trigger-value-change-event
+                     on-etools-selected-item-changed="_countrySelected"
+                     hide-search></etools-dropdown>
   </template>
 
   <script>
@@ -107,6 +106,14 @@
           },
           countrySelectorVisible: Boolean
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        setTimeout( () => {
+          let fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
+          this.$.menu.set('fitInto', fitInto);
+        }, 0);
       }
 
       _countrySelected(e) {
