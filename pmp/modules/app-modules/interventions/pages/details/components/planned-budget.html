@@ -224,16 +224,16 @@
           },
           required: {
             type: Boolean,
-            value: true
+            statePath: 'pageData.permissions.required.planned_budget'
           },
           editMode: {
             type: Boolean,
-            value: false,
+            statePath: 'pageData.permissions.edit.planned_budget',
             observer: '_editModeChanged'
           },
           unicefCashEditMode: {
             type: Boolean,
-            value: false,
+            statePath: 'pageData.permissions.edit.planned_budget_unicef_cash',
             observer: '_editModeChanged'
           },
           editablePlannedBudget: {

@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../bower_components/moment-element/moment-import.html">
 
 <link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../../bower_components/etools-loading/etools-loading.html">
@@ -33,7 +34,7 @@
     </style>
 
     <div class="monitoring-visits-container">
-      <etools-loading loading-text="Loading monitoring visits"
+      <etools-loading loading-text="Loading..."
                       active$="[[showLoading]]"></etools-loading>
 
       <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
@@ -126,6 +127,7 @@
 
       static get properties() {
         return {
+          endpointName: String,
           initComplete: {
             type: Boolean,
             value: false
@@ -137,20 +139,22 @@
           monitoringVisits: {
             type: Array
           },
-          interventionId: {
+          interventionOrPartnerId: {
             type: Number,
-            observer: '_interventionIdChanged'
+            observer: '_interventionOrPartnerIdChanged'
           }
         };
       }
 
-      _interventionIdChanged(newId) {
+      _interventionOrPartnerIdChanged(newId) {
         if (!newId) {
           return;
         }
 
         this.set('showLoading', true);
-        let monitoringVisitsEndpoint = this.getEndpoint('monitoringVisits', {id: newId});
+        let monitoringVisitsEndpoint = this.getEndpoint(this.endpointName, {
+          id: newId, year: moment().year()
+        });
         let self = this;
         this.sendRequest({
           endpoint: monitoringVisitsEndpoint

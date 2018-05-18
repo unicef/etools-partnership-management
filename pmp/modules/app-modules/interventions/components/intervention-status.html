@@ -61,49 +61,7 @@
           interventionAgreementStatus: String,
           possibleStatuses: {
             type: Array,
-            value: function() {
-              return [
-                {
-                  label: this.CONSTANTS.STATUSES.Draft,
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: this.CONSTANTS.STATUSES.Signed,
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: this.CONSTANTS.STATUSES.Active,
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: this.CONSTANTS.STATUSES.Suspended,
-                  icon: 'av:pause-circle-filled',
-                  iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: this.CONSTANTS.STATUSES.Terminated,
-                  icon: 'report-problem',
-                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: this.CONSTANTS.STATUSES.Ended,
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: this.CONSTANTS.STATUSES.Closed,
-                  hidden: false,
-                  completed: false
-                }
-              ];
-            }
+            value: []
           },
           possibleActions: {
             type: Array,
@@ -156,8 +114,56 @@
         this._createStatusChangeWarningDialog();
         this._createDeleteConfirmationDialog();
         this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm.bind(this));
+
+        // has to be run async for shadycss to load
+        setTimeout(this.setPossibleStatuses.bind(this), 0);
       }
 
+      setPossibleStatuses() {
+        this.set('possibleStatuses', [
+          {
+            label: this.CONSTANTS.STATUSES.Draft,
+            hidden: false,
+            completed: false
+          },
+          {
+            label: this.CONSTANTS.STATUSES.Signed,
+            hidden: false,
+            completed: false
+          },
+          {
+            label: this.CONSTANTS.STATUSES.Active,
+            hidden: false,
+            completed: false
+          },
+          {
+            label: this.CONSTANTS.STATUSES.Suspended,
+            icon: 'av:pause-circle-filled',
+            iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+            hidden: false,
+            completed: false
+          },
+          {
+            label: this.CONSTANTS.STATUSES.Terminated,
+            icon: 'report-problem',
+            iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+            hidden: false,
+            completed: false
+          },
+          {
+            label: this.CONSTANTS.STATUSES.Ended,
+            hidden: false,
+            completed: false
+          },
+          {
+            label: this.CONSTANTS.STATUSES.Closed,
+            hidden: false,
+            completed: false
+          }
+        ]);
+
+        this._computeAvailableStatuses(this.status);
+      }
       _activeTabChanged(tab) {
         if (typeof tab === 'undefined') {
           return;

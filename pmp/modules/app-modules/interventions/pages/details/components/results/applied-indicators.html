@@ -28,8 +28,8 @@
                          on-delete-indicator="_openDeleteConfirmation"
                          on-deactivate-indicator="_openDeactivateConfirmation"
                          indicator="[[indicator]]"
-                         edit-mode="[[editMode]]"
-                         intervention="[[intervention]]">
+                         intervention-status="[[interventionStatus]]"
+                         edit-mode="[[editMode]]">
       </applied-indicator>
     </template>
   </template>
@@ -64,7 +64,7 @@
           },
           resultLinkIndex: Number,
           editMode: Boolean,
-          intervention: Object,
+          interventionStatus: String,
           cpOutputId: Number,
           deactivateConfirmDialog: Object,
           indicToDeactivateIndex: String,

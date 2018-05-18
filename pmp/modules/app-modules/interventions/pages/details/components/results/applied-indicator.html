@@ -87,8 +87,8 @@
         </div>
         <icons-actions hidden$="[[!editMode]]"
                        show-edit="[[indicator.is_active]]"
-                       show-deactivate="[[_showDeactivate(intervention.in_amendment, indicator.is_active)]]"
-                       show-delete="[[_showDelete(intervention.status)]]">
+                       show-deactivate="[[_showDeactivate(inAmendment, indicator.is_active)]]"
+                       show-delete="[[_showDelete(interventionStatus)]]">
         </icons-actions>
       </div>
 
@@ -139,6 +139,10 @@
           indicator: {
             type: Object
           },
+          inAmendment: {
+            type: Boolean,
+            statePath: 'pageData.in_amendment'
+          },
           locations: {
             type: Array,
             statePath: 'locations'
@@ -166,7 +170,7 @@
           editMode: {
             type: Boolean
           },
-          intervention: Object
+          interventionStatus: String
         };
       }
 

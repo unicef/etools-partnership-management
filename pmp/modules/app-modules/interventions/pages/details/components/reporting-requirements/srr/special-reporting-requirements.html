@@ -1,0 +1,181 @@
+<link rel="import" href="../../../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
+<link rel="import" href="../../../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../../../redux/etools-data-redux-store.html">
+
+<link rel="import" href="../../../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
+
+<link rel="import" href="../../../../../../../layout/components/icons-actions.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
+<link rel="import" href="../mixins/reporting-req-past-dates-check.html">
+<link rel="import" href="../styles/reporting-requirements-lists-styles.html">
+<link rel="import" href="add-edit-special-rep-req.html">
+
+<dom-module id="special-reporting-requirements">
+  <template>
+    <style include="buttons-styles grid-layout-styles data-table-styles reporting-requirements-lists-styles">
+    </style>
+
+    <div class="row-h" hidden$="[[!_empty(reportingRequirements)]]">
+      There are no special reporting requirements set.
+    </div>
+
+    <div class="row-h">
+      <paper-button class="secondary-btn" on-tap="_openAddDialog">
+        ADD REQUIREMENTS
+      </paper-button>
+    </div>
+
+    <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
+      <etools-data-table-header no-collapse
+                                no-title>
+        <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
+        <etools-data-table-column class="col-3">Due Date</etools-data-table-column>
+        <etools-data-table-column class="flex-6">Reporting Requirements</etools-data-table-column>
+        <etools-data-table-column class="flex-c"></etools-data-table-column>
+      </etools-data-table-header>
+      <template is="dom-repeat" items="{{reportingRequirements}}">
+        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date)]]">
+          <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date)]]">
+            <span class="col-data col-1 right-align index-col">[[_getIndex(index, reportingRequirements)]]</span>
+            <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
+            <span class="col-data col-6">[[item.description]]</span>
+            <span class="col-data flex-c actions">
+              <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date)]]"
+                             item$="[[item]]"
+                             on-edit="_onEdit"
+                             on-delete="_onDelete">
+              </icons-actions>
+            </span>
+          </div>
+        </etools-data-table-row>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin  EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
+     */
+    const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.ReportingReqPastDatesCheck
+    ], Polymer.Element);
+
+    /**
+     * @customElement
+     * @polymer
+     * @appliesMixin SpecialReportingRequirementsMixins
+     */
+    class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
+      static get is() {
+        return 'special-reporting-requirements';
+      }
+
+      static get properties() {
+        return {
+          editMode: {
+            type: Boolean,
+            value: true // TODO
+          },
+          interventionId: {
+            type: Number
+          },
+          inAmendment: {
+            type: Boolean,
+            statePath: 'pageData.in_amendment'
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        this._createAddEditDialog();
+        this._addEventListeners();
+      }
+
+      _addEventListeners() {
+        this.addEventListener('edit', this._onEdit);
+        this.addEventListener('delete', this._onDelete);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.addEditDialog) {
+          document.querySelector('body').removeChild(this.addEditDialog);
+        }
+      }
+
+      _onEdit(e) {
+        e.stopPropagation();
+        this._setDialogData(e);
+        this.addEditDialog.opened = true;
+      }
+      _setDialogData(e) {
+        this.addEditDialog.interventionId = this.interventionId;
+        this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+      }
+
+      _onDelete(e) {
+        e.stopPropagation();
+        this.fireEvent('toast', {text: 'Feature not implemented yet!', showCloseBtn: true});
+      }
+
+      _createAddEditDialog() {
+        this.addEditDialog = document.createElement('add-edit-special-rep-req');
+        this.addEditDialog.set('toastMsgLoadingSource', this);
+        this.addEditDialog.addEventListener('reporting-requirements-saved',
+            this._onReportingRequirementsSaved.bind(this));
+
+        document.querySelector('body').appendChild(this.addEditDialog);
+      }
+
+      _openAddDialog() {
+        this.addEditDialog.item = {};
+        this.addEditDialog.interventionId = this.interventionId;
+        this.addEditDialog.existingDataItems = this.reportingRequirements;
+
+        this.addEditDialog.opened = true;
+      }
+
+      _sortRequirementsAsc() {
+        this.reportingRequirements.sort((a, b) => {
+          return new Date(a.due_date) - new Date(b.due_date);
+        });
+      }
+
+      _getReportType() {
+        return this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL;
+      }
+
+    }
+
+    window.customElements.define(SpecialReportingRequirements.is, SpecialReportingRequirements);
+  </script>
+</dom-module>
