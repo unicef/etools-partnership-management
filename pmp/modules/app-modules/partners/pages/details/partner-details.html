@@ -261,13 +261,41 @@
           // decide if we should show core values assessment attachment
           this.set('showCoreValuesAssessmentAttachment',
               this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
-          this._displayCoreValuesAssessmentNotification(partner);
+
+          if (this.showCoreValuesAssessmentAttachment) {
+            this._displayCoreValuesAssessmentNotification(partner);
+          }
           this._displayMicroAssessmentNotification(partner);
         }
       }
 
       _displayCoreValuesAssessmentNotification(partner) {
         // ch1889
+        if (partner.core_values_assessment_file) {
+          let datesFormat = 'YYYY-MM-DD';
+          let now = moment.utc();
+          let coreValsAssessmentDate = this._convertDate(partner.core_values_assessment_date);
+          let coreValsAssessmentExpDate = moment(coreValsAssessmentDate).add(60, 'months');
+
+          let daysUntilExpire = coreValsAssessmentExpDate.diff(now, 'days');
+
+          let notifMessage = '';
+          if (daysUntilExpire < 0) {
+            notifMessage = 'The Core Values Assessment is expired (' +
+                coreValsAssessmentExpDate.format(datesFormat) + ')';
+          } else {
+            let notifStartDateStr = moment(coreValsAssessmentDate).add(57, 'months').format(datesFormat);
+            let today = now.format(datesFormat);
+            if (moment(notifStartDateStr).isSame(today) || moment(notifStartDateStr).isBefore(today)) {
+              notifMessage = 'The Core Values Assessment will expire in ' + daysUntilExpire + ' days';
+            }
+          }
+          if (notifMessage) {
+            setTimeout(() => {
+              this.fireEvent('toast', {text: notifMessage, showCloseBtn: true});
+            }, 0);
+          }
+        }
       }
 
       _displayMicroAssessmentNotification(partner) {
@@ -275,10 +303,7 @@
       }
 
       _getPartnerType(partnerType, csoType) {
-        if (csoType !== null) {
-          partnerType = partnerType + '/' + csoType;
-        }
-        return partnerType;
+        return (csoType !== null) ? (partnerType + '/' + csoType) : partnerType;
       }
 
       /**
