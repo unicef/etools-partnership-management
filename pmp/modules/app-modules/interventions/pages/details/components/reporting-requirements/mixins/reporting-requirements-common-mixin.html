@@ -2,8 +2,10 @@
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
 <link rel="import" href="../../../../../../../scripts/lodash.html">
+<link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
+
 <script>
   'use strict';
 
@@ -14,12 +16,14 @@
    * @polymer
    * @mixinFunction
    * @appliesMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.Constants
    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
    * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
    */
   EtoolsPmpApp.Mixins.ReportingRequirementsCommon =
       baseClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsLogsMixin,
+        EtoolsPmpApp.Mixins.Constants,
         EtoolsPmpApp.Mixins.Endpoints,
         EtoolsPmpApp.Mixins.AjaxErrorsParser
       ], baseClass) {
@@ -48,15 +52,25 @@
       ];
     }
 
+    _getEndpointObj(id) {
+      let type = this._getReportType();
+
+      if (type === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL) {
+        return this.getEndpoint('specialReportingRequirements', {intervId: id});
+      }
+
+      return this.getEndpoint('reportingRequirements', {
+        intervId: id,
+        reportType: type
+      });
+    }
+
     _interventionIdChanged(newId) {
       if (!newId) {
         this.reportingRequirements = [];
         return;
       }
-      let endpoint = this.getEndpoint('reportingRequirements', {
-        intervId: newId,
-        reportType: this._getReportType()
-      });
+      let endpoint = this._getEndpointObj(newId);
       this.sendRequest({method: 'GET', endpoint: endpoint})
           .then((response) => {
             this.set('reportingRequirements', response.reporting_requirements);

@@ -5,7 +5,6 @@
 <link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../../../../redux/etools-data-redux-store.html">
 
@@ -71,14 +70,12 @@
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
-     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      */
     const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon
     ], Polymer.Element);
@@ -95,10 +92,7 @@
 
       static get properties() {
         return {
-          editMode: Boolean,
-          interventionId: {
-            type: Number
-          }
+          editMode: Boolean
         };
       }
 
