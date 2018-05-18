@@ -192,6 +192,8 @@
         if (!this.appModuleItem || !this.appModuleItem.id) {
           // On new intervention or agreement
           this._markExpiredCpsAsDisabled(displayableCps);
+        } else {
+          this._resetExpiredCpsMarkedAsDisabled(displayableCps);
         }
 
         this.sortedCountryProgrammes = displayableCps;
@@ -201,6 +203,14 @@
         sortedCps.forEach((element) => {
           if (element.expired) {
             element.disableSelection = true;
+          }
+        });
+      }
+
+      _resetExpiredCpsMarkedAsDisabled(sortedCps) {
+        sortedCps.forEach((element) => {
+          if (element.expired) {
+            element.disableSelection = false;
           }
         });
       }
