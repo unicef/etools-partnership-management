@@ -1,16 +1,10 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 
-<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
-
-<link rel="import" href="etools-form-element-wrapper.html">
 
 <link rel="import" href="../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../scripts/lodash.html">
@@ -200,9 +194,17 @@
       }
 
       _markExpiredCpsAsDisabled(sortedCps) {
+        this._markExpiredCps(sortedCps, true);
+      }
+
+      _resetExpiredCpsMarkedAsDisabled(sortedCps) {
+        this._markExpiredCps(sortedCps, false);
+      }
+
+      _markExpiredCps(sortedCps, disabled) {
         sortedCps.forEach((element) => {
           if (element.expired) {
-            element.disableSelection = true;
+            element.disableSelection = disabled;
           }
         });
       }
