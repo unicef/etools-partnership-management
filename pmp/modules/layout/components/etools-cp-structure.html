@@ -50,39 +50,19 @@
       }
     </style>
 
-    <template is="dom-if" if="[[_showExpiredCp(_hasExpiredCp, _editExpiredCpActive)]]">
-      <etools-form-element-wrapper id="readonly-cp" label="CP Structure">
-        <span>[[_getExpiredCpName(selectedCp)]]</span>
-      </etools-form-element-wrapper>
-      <paper-icon-button class="edit-exp-cp"
-                         icon="create"
-                         on-tap="_enableExpCpEdit"
-                         hidden$="[[!editMode]]"
-                         title="Edit expired CP Structure"></paper-icon-button>
-    </template>
-    <template is="dom-if" if="[[!_showExpiredCp(_hasExpiredCp, _editExpiredCpActive)]]">
-      <!-- TODO: clean parameters -->
-      <etools-dropdown id="cpStructure"
-                       label="CP Structure"
-                       placeholder="&#8212;"
-                       options="[[cpStructureOptions]]"
-                       option-value="id"
-                       option-label="name"
-                       selected="{{selectedCp}}"
-                       dynamic-align
-                       hide-search
-                       readonly$="[[!editMode]]"
-                       required$="[[required]]"
-                       auto-validate
-                       error-message="Please select CP Structure">
-      </etools-dropdown>
-      <paper-icon-button class="edit-exp-cp"
-                         icon="cancel"
-                         on-tap="_cancelExpCpEdit"
-                         hidden$="[[!_editExpiredCpActive]]"
-                         title="Cancel expired CP Structure editing">
-      </paper-icon-button>
-    </template>
+    <etools-dropdown id="cpStructure"
+                      label="CP Structure"
+                      placeholder="&#8212;"
+                      options="[[sortedCountryProgrammes]]"
+                      option-value="id"
+                      option-label="name"
+                      selected="{{selectedCp}}"
+                      hide-search
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="Please select CP Structure">
+    </etools-dropdown>
 
   </template>
 
@@ -117,13 +97,12 @@
             type: Array,
             statePath: 'countryProgrammes'
           },
+          sortedCountryProgrammes: {
+            type: Array
+          },
           selectedCp: {
             type: Number,
             notify: true
-          },
-          cpStructureOptions: {
-            type: Array,
-            value: []
           },
           /**
            * appModuleItem could be agreement or intervention
@@ -146,17 +125,6 @@
           required: {
             type: Boolean,
             value: false
-          },
-          _hasExpiredCp: {
-            type: Boolean,
-            value: false
-          },
-          _editExpiredCpActive: {
-            type: Boolean,
-            value: false
-          },
-          _expiredCpId: {
-            type: Number
           }
         };
       }
@@ -174,16 +142,78 @@
         return countryProgrammes.filter(cp => cp.active || cp.future);
       }
 
-      _hasExpiredCpAssigned(cpId) {
-        if (cpId > 0 && !_.isEmpty(this.cpStructureOptions)) {
-          let cp = this.cpStructureOptions.find((cp) => {
-            return parseInt(cp.id, 10) === parseInt(cpId, 10);
-          });
-          if (!cp) {
-            return true;
-          }
+      _getCurrentCountryProgramme(cpOptions) {
+        if (_.isEmpty(cpOptions)) {
+          return null;
         }
-        return false;
+
+        if (cpOptions.length === 1) {
+          // just one cp available
+          return cpOptions[0];
+        } else {
+          // more than 1 cp available, use first one found that is active, not special and not future
+          return cpOptions.find(cp => cp.active && !cp.future && !cp.special);
+        }
+      }
+
+      setDefaultSelectedCpStructure() {
+        if (_.isEmpty(this.sortedCountryProgrammes)) {
+          return;
+        }
+
+        let currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
+
+        this.set('selectedCp', currentCP ? currentCP.id : null);
+      }
+
+      _countryProgrammesChanged(countryProgrammes, appModuleItem) {
+        this.cpInitDebouncer = Polymer.Debouncer.debounce(this.cpInitDebouncer,
+            Polymer.Async.timeOut.after(10),
+            () => {
+              if (appModuleItem) {
+                this._prepareCpsForDisplay();
+
+                if (!this.selectedCp) {
+                  this.setDefaultSelectedCpStructure();
+                } else {
+                  if (this._hasExpiredCpAssigned(this.selectedCp)) {
+                    this.logWarn(this._getExpiredCPWarning());
+                  }
+                }
+              }
+            });
+      }
+
+      _prepareCpsForDisplay() {
+        let displayableCps = _.orderBy(this.countryProgrammes,
+                                      ['future', 'active', 'special'],
+                                      ['desc', 'desc', 'asc']);
+
+        if (!this.appModuleItem || !this.appModuleItem.id) {
+          // On new intervention or agreement
+          this._markExpiredCpsAsDisabled(displayableCps);
+        }
+
+        this.sortedCountryProgrammes = displayableCps;
+      }
+
+      _markExpiredCpsAsDisabled(sortedCps) {
+        sortedCps.forEach((element) => {
+          if (element.expired) {
+            element.disableSelection = true;
+          }
+        });
+      }
+
+      _hasExpiredCpAssigned(cpId) {
+        if (cpId || !_.isEmpty(this.countryProgrammes)) {
+          return false;
+        }
+
+        return this.countryProgrammes.some((cp) => {
+          return parseInt(cp.id, 10) === parseInt(cpId, 10) && cp.expired;
+        });
+
       }
 
       _getExpiredCPWarning() {
@@ -197,86 +227,6 @@
             break;
         }
         return msg + ' has an old/expired CP Structure!';
-      }
-
-      _checkExpiredCp() {
-        if (this.appModuleItem) {
-          if (this.selectedCp) {
-            let cpStructureIsOld = this._hasExpiredCpAssigned(this.selectedCp);
-            if (cpStructureIsOld) {
-              this.logWarn(this._getExpiredCPWarning());
-              this.set('_hasExpiredCp', true);
-              this.set('_expiredCpId', this.selectedCp);
-            } else {
-              this.set('_hasExpiredCp', false);
-              this.set('_expiredCpId', null);
-            }
-          } else {
-            // on new item page, just reset this properties
-            this.set('_hasExpiredCp', false);
-            this.set('_expiredCpId', null);
-          }
-          this.set('_editExpiredCpActive', false);
-        }
-      }
-
-      _getCurrentCountryProgramme(cpOptions) {
-        let cp = null;
-        if (!_.isEmpty(cpOptions)) {
-          if (cpOptions.length === 1) {
-            // just one cp available
-            cp = cpOptions[0];
-          } else {
-            // more than 1 cp available, use first one found that is not special and not future
-            cp = cpOptions.find(cp => !cp.future && !cp.special);
-          }
-        }
-        return cp;
-      }
-
-      setDefaultSelectedCpStructure() {
-        if (!_.isEmpty(this.cpStructureOptions)) {
-          let currentCP;
-          if (this.cpStructureOptions.length === 1) {
-            currentCP = this.cpStructureOptions[0];
-          } else {
-            currentCP = this._getCurrentCountryProgramme(this.cpStructureOptions);
-          }
-          this.set('selectedCp', currentCP ? currentCP.id : null);
-        }
-      }
-
-      _countryProgrammesChanged(countryProgrammes, appModuleItem) {
-        this.cpInitDebouncer = Polymer.Debouncer.debounce(this.cpInitDebouncer,
-            Polymer.Async.timeOut.after(10),
-            () => {
-              let cpStructures = this._getAvailableCpOptions(countryProgrammes);
-              this.set('cpStructureOptions', cpStructures);
-              this._checkExpiredCp();
-              if (appModuleItem && !this.selectedCp) {
-                this.setDefaultSelectedCpStructure();
-              }
-            });
-      }
-
-      _showExpiredCp(hasExpiredCp, editExpiredCpActive) {
-        return hasExpiredCp && !editExpiredCpActive;
-      }
-
-      _getExpiredCpName(cpId) {
-        let cp = this.countryProgrammes.find(c => c.id === cpId);
-        return cp ? cp.name : '—';
-      }
-
-      _enableExpCpEdit() {
-        this.set('_editExpiredCpActive', true);
-        // set default CP
-        this.setDefaultSelectedCpStructure();
-      }
-
-      _cancelExpCpEdit() {
-        this.set('_editExpiredCpActive', false);
-        this.set('selectedCp', this._expiredCpId);
       }
 
       resetCpDropdownInvalidState() {

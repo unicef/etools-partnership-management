@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../../bower_components/moment-element/moment-import.html">
 
 <link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../../bower_components/etools-loading/etools-loading.html">
@@ -151,7 +152,9 @@
         }
 
         this.set('showLoading', true);
-        let monitoringVisitsEndpoint = this.getEndpoint(this.endpointName, {id: newId});
+        let monitoringVisitsEndpoint = this.getEndpoint(this.endpointName, {
+          id: newId, year: moment().year()
+        });
         let self = this;
         this.sendRequest({
           endpoint: monitoringVisitsEndpoint
