@@ -250,7 +250,7 @@
             statePath: 'partnerTypes'
           },
           riskRatings: {
-            type:Array
+            type: Array
           },
           selectedPartnerTypes: {
             type: Array,
@@ -302,10 +302,12 @@
       _getRiskRatingOptions() {
         let riskRatingOptions = [];
         for (let prop in this.CONSTANTS.PARTNER_RISK_RATINGS) {
-          riskRatingOptions.push({
-            value: this.CONSTANTS.PARTNER_RISK_RATINGS[prop],
-            label: this.CONSTANTS.PARTNER_RISK_RATINGS[prop]
-          });
+          if (this.CONSTANTS.PARTNER_RISK_RATINGS.hasOwnProperty(prop)) {
+            riskRatingOptions.push({
+              value: this.CONSTANTS.PARTNER_RISK_RATINGS[prop],
+              label: this.CONSTANTS.PARTNER_RISK_RATINGS[prop]
+            });
+          }
         }
         return riskRatingOptions;
       }
