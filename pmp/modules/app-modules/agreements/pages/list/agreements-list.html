@@ -277,14 +277,16 @@
           },
           selectedPartners: {
             type: Array,
-            observer: 'resetPageNumber'
+            observer: '_arrayFilterChanged'
           },
           startDate: {
             type: String,
+            value: '',
             observer: 'resetPageNumber'
           },
           endDate: {
             type: String,
+            value: '',
             observer: 'resetPageNumber'
           },
           partnersDropdownData: {
@@ -471,25 +473,10 @@
         return this._buildCsvExportUrl(params, endpointUrl);
       }
 
-      // Convert ids from URL into array of ids
-      _getPartners(urlIds) {
-        let urlIdsArr = urlIds.split('|');
-        if (urlIdsArr.length) {
-          return this._getPartnersByIds(urlIdsArr);
+      _arrayFilterChanged(filterVal, oldFilterVals) {
+        if (typeof oldFilterVals !== 'undefined' && filterVal.length !== oldFilterVals.length) {
+          this.resetPageNumber();
         }
-        return [];
-      }
-
-      // get partners by ids
-      _getPartnersByIds(partnerIds) {
-        if (partnerIds instanceof Array && partnerIds.length &&
-            this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
-          let _selectedPartners = this.partnersDropdownData.filter(function(partner) {
-            return partnerIds.indexOf(partner.value + '') > -1;
-          });
-          return _selectedPartners;
-        }
-        return [];
       }
 
       // verify date and prettify or not

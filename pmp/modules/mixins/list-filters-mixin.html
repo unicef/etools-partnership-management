@@ -123,7 +123,7 @@
         // remove filter
         this.splice('selectedFilters', filterIndex, 1);
         this._updateAvailableFilterOptions();
-        this.set(path, filterType === 'esmm' ? [] : null);
+        this.set(path, filterType === 'esmm' ? [] : (filterType === 'datepicker' ? '' : null));
       }
     }
 
