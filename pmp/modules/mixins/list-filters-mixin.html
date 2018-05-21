@@ -107,28 +107,23 @@
       if (!(this.selectedFilters instanceof Array && this.selectedFilters.length)) {
         return;
       }
-      let selectedFilterIndex = -1;
-      for (let i = 0; i < this.selectedFilters.length; i++) {
-        if (this.selectedFilters[i].filterName === filterName) {
-          selectedFilterIndex = i;
-          if (this.selectedFilters[i].hasOwnProperty('alreadySelected')) {
-            this.selectedFilters[i].alreadySelected = null;
-          }
-          if (this.selectedFilters[i].hasOwnProperty('dateSelected')) {
-            this.selectedFilters[i].dateSelected = '';
-          }
-          if (this.selectedFilters[i].hasOwnProperty('disabled')) {
-            this.selectedFilters[i].disabled = false;
-          }
-          break;
-        }
-      }
 
-      if (selectedFilterIndex > -1) {
+      let filterIndex = this.selectedFilters.findIndex(f => f.filterName === filterName);
+      if (filterIndex >= 0) {
+        if (this.selectedFilters[filterIndex].hasOwnProperty('alreadySelected')) {
+          this.selectedFilters[filterIndex].alreadySelected = [];
+        }
+        if (this.selectedFilters[filterIndex].hasOwnProperty('dateSelected')) {
+          this.selectedFilters[filterIndex].dateSelected = '';
+        }
+        if (this.selectedFilters[filterIndex].hasOwnProperty('disabled')) {
+          this.selectedFilters[filterIndex].disabled = false;
+        }
+        let filterType = this.selectedFilters[filterIndex].type;
         // remove filter
-        this.splice('selectedFilters', selectedFilterIndex, 1);
+        this.splice('selectedFilters', filterIndex, 1);
         this._updateAvailableFilterOptions();
-        this.set(path, null);
+        this.set(path, filterType === 'esmm' ? [] : null);
       }
     }
 
@@ -150,9 +145,9 @@
     }
 
     // 'esmm' (etools-dropdown-multi) filter value changed
-    esmmValueChanged(event) {
-      let filterPath = event.target.getAttribute('data-filter-path');
-      let filterVal = event.detail.selectedItems;
+    esmmValueChanged(e) {
+      let filterPath = e.target.getAttribute('data-filter-path');
+      let filterVal = e.detail.selectedItems.map(v => v[e.target.optionValue]);
       this.set(filterPath, filterVal);
     }
 
@@ -236,6 +231,16 @@
       if (filterUpdateData.hasOwnProperty('disabled') && filterPath !== '') {
         this.set(filterPath + '.disabled', filterUpdateData.disabled);
       }
+    }
+
+    getFilterPropValuesBySelectedIds(filterOptions, prop, selected, selectedProp) {
+      let selectedValues = (selected instanceof Array)
+          ? selected.map(s => parseInt(s, 10))
+          : [];
+      selectedProp = selectedProp || 'id';
+      return (!_.isEmpty(filterOptions) && !_.isEmpty(selectedValues))
+          ? filterOptions.filter(opt => selectedValues.indexOf(opt[selectedProp]) > -1).map(opt => opt[prop])
+          : [];
     }
 
   };

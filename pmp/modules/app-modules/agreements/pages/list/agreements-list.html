@@ -369,7 +369,7 @@
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
         this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
         this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
-        this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
+        this.set('selectedPartners', this._getFilterUrlValuesAsArray(urlQueryParams.partners));
         this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
         this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
 
@@ -389,7 +389,7 @@
               let filtersValues = [
                 {
                   filterName: 'Partner',
-                  selectedValue: _.map(this.selectedPartners, 'value')
+                  selectedValue: this.selectedPartners
                 },
                 {
                   filterName: 'Starts After',
@@ -431,7 +431,8 @@
                   this.q.trim().toLowerCase(),
                   this.selectedAgTypes,
                   this.selectedAgStatuses,
-                  _.map(this.selectedPartners, 'label'),
+                  this.getFilterPropValuesBySelectedIds(this.partnersDropdownData,
+                      'label', this.selectedPartners, 'value'),
                   this.startDate,
                   this.endDate,
                   this.paginator.page,
@@ -449,7 +450,7 @@
           q: this.q,
           type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partners: _.map(this.selectedPartners, 'value'),
+          partners: this.selectedPartners,
           start: this.startDate,
           end: this.endDate,
           sort: this.sortOrder
@@ -461,7 +462,8 @@
         let params = {
           agreement_type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners.map(p => p.label) : '',
+          partner_name: this.getFilterPropValuesBySelectedIds(this.partnersDropdownData,
+              'label', this.selectedPartners, 'value'),
           start: this.startDate,
           end: this.endDate,
           search: this.q
