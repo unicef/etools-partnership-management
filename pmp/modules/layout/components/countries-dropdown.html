@@ -55,7 +55,7 @@
         }
       }
     </style>
-
+    <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
     <etools-dropdown id="countrySelector"
                      hidden$="[[!countrySelectorVisible]]"
                      label="Country"
@@ -68,7 +68,7 @@
                      option-value="id"
                      trigger-value-change-event
                      on-etools-selected-item-changed="_countrySelected"
-                     shown-options-limit="[[countries.length]]"
+                     shown-options-limit="250"
                      hide-search></etools-dropdown>
   </template>
 
@@ -166,7 +166,7 @@
       _handleError(error) {
         this.logError('Country change failed!', 'countries-dropdown', error);
         // TODO: this should be a larger alert.
-        this.$.countriesListbox.selected = this.currentCountry;
+        this.$.countrySelector.set('selected', this.currentCountry.id);
         this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
         this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});
       }
