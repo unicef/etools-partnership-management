@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../mixins/date-mixin.html">
+<link rel="import" href="../../../../../scripts/lodash.html">
 <link rel="import" href="../../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
@@ -30,7 +31,12 @@
       #totalsRow {
         --list-row-no-collapse: {
           background-color: var(--light-theme-background-color);
-        }
+        };
+        --list-row-wrapper-padding: 0 24px 0 56px;
+      }
+
+      #plannedUnicefCash {
+        --list-row-wrapper-padding: 0 24px 0 56px;
       }
 
       #plannedUnicefCash .unicef-cash-col {
@@ -49,6 +55,16 @@
         color: var(--secondary-text-color);
         font-weight: bold;
       }
+
+      div[simple-header] > span,
+      div[simple-row] > span {
+        padding-right: 24px;
+      }
+
+      div[simple-header] {
+        color: var(--list-secondary-text-color, #757575);
+      }
+
     </style>
 
     <template is="dom-if" if="[[!frsDetails.frs.length]]">
@@ -59,7 +75,6 @@
 
     <div class="list-container" hidden$="[[_noFrs(frsDetails)]]">
       <etools-data-table-header id="listHeader"
-                                no-collapse
                                 no-title
                                 hidden$="[[!frsDetails.frs.length]]">
         <etools-data-table-column class="col-2">
@@ -83,7 +98,7 @@
       </etools-data-table-header>
 
       <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
-        <etools-data-table-row no-collapse>
+        <etools-data-table-row>
           <div slot="row-data">
             <span class="col-data col-2">[[fr.fr_number]]</span>
             <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
@@ -116,6 +131,31 @@
                 </etools-info-tooltip>
             </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt_local, '0.00')]]</span>
+          </div>
+          <div slot="row-data-details">
+            <div class="flex-c" hidden$="[[_isEmpty(fr.line_item_details)]]">
+              <div simple-header class="layout-horizontal">
+                <span class="col-2">FR Line Item</span>
+                <span class="col-2">Donor</span>
+                <span class="col-2">Grant</span>
+              </div>
+              <template is="dom-repeat" items="[[fr.line_item_details]]" as="frInfo">
+                <div simple-row class="layout-horizontal">
+                  <span class="col-2">
+                    <span>[[fr.fr_number]]-[[frInfo.line_item]]</span>
+                  </span>
+                  <span class$="col-2 [[_getOtherStyleIfNA(frInfo.donor)]]">
+                    <span>[[getValueOrNA(frInfo.donor)]]</span>
+                  </span>
+                  <span class$="col-2 [[_getOtherStyleIfNA(frInfo.grant_number)]]">
+                    <span>[[getValueOrNA(frInfo.grant_number)]]</span>
+                  </span>
+                </div>
+              </template>
+            </div>
+            <div class="flex-c" hidden$="[[!_isEmpty(fr.line_item_details)]]">
+              There are no details to display.
+            </div>
           </div>
         </etools-data-table-row>
       </template>
@@ -251,6 +291,18 @@
         let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
             frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
         this.set('_frsTotalAmountWarning', warn);
+      }
+
+      getValueOrNA(value) {
+        return value ? value : 'N/A';
+      }
+
+      _getOtherStyleIfNA(value) {
+        return value ? '' : 'fr-val-not-available';
+      }
+
+      _isEmpty(value) {
+        return _.isEmpty(value);
       }
     }
 
