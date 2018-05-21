@@ -24,7 +24,7 @@
 
         --paper-listbox: {
           max-height: 600px;
-        }
+        };
 
         --esmm-icons: {
           color: var(--countries-dropdown-color);
@@ -56,18 +56,19 @@
       }
     </style>
 
-    <etools-dropdown id="menu"
+    <etools-dropdown id="countrySelector"
                      hidden$="[[!countrySelectorVisible]]"
                      label="Country"
                      selected="[[currentCountry.id]]"
                      placeholder="&#8212;"
+                     allow-outside-scroll
                      no-label-float
                      options="[[countries]]"
                      option-label="name"
                      option-value="id"
                      trigger-value-change-event
                      on-etools-selected-item-changed="_countrySelected"
-                     shown-options-limit="900"
+                     shown-options-limit="200"
                      hide-search></etools-dropdown>
   </template>
 
@@ -117,7 +118,7 @@
         super.connectedCallback();
         setTimeout( () => {
           let fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
-          this.$.menu.set('fitInto', fitInto);
+          this.$.countrySelector.set('fitInto', fitInto);
         }, 0);
       }
 
