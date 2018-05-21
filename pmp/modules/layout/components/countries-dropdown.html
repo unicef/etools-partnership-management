@@ -22,6 +22,10 @@
       etools-dropdown {
         width: 160px;
 
+        --paper-listbox: {
+          max-height: 600px;
+        }
+
         --esmm-icons: {
           color: var(--countries-dropdown-color);
           cursor: pointer;
@@ -63,6 +67,7 @@
                      option-value="id"
                      trigger-value-change-event
                      on-etools-selected-item-changed="_countrySelected"
+                     shown-options-limit="900"
                      hide-search></etools-dropdown>
   </template>
 
