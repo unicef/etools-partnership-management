@@ -12,7 +12,8 @@ jobs:
       - run:
           name: Exporting revision number
           command: |
-            echo ${CIRCLE_SHA1} >> revision.txt
+            REVNO=${CIRCLE_SHA1}
+            sed -i 's/revNo/$REVNO/g' bower.json
       - run:
           name: Install npm wee
           command: npm install
