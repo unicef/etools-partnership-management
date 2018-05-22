@@ -13,6 +13,8 @@ jobs:
           name: Exporting revision number
           command: |
             sed -i 's/revNo/${CIRCLE_SHA1}/g' bower.json
+      - store_artifacts:
+          path: bower.json
       - run:
           name: Install npm wee
           command: npm install
@@ -36,8 +38,6 @@ jobs:
           name: Run Tests
           command: |
             xvfb-run polymer test --skip-selenium-install
-      - store_artifacts:
-          path: bower.json
 
   build_and_deploy:
     working_directory: ~/code
