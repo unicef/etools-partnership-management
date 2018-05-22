@@ -48,6 +48,7 @@
     locationTypes: [],
     grants: [],
     donors: [],
+    partnerRiskRatings: [],
     pageData: {
       permissions: null,
       in_amendment: false
@@ -197,6 +198,9 @@
 
       case 'SET_GRANTS':
         return Object.assign({}, state, {grants: action.grants});
+
+      case 'SET_PARTNER_RISK_RATINGS':
+        return Object.assign({}, state, {partnerRiskRatings: action.partnerRiskRatings});
 
       case 'SET_PRP_COUNTRY_DATA':
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
