@@ -82,6 +82,14 @@
               hide-search></etools-dropdown-multi>
         </div>
 
+        <div class="filter esmm">
+            <etools-dropdown-multi
+                label="Risk Rating"
+                options="[[riskRatings]]"
+                selected-values="{{selectedRiskRatings}}"
+                hide-search></etools-dropdown-multi>
+          </div>
+
       </div>
 
       <div class="fixed-controls">
@@ -238,12 +246,20 @@
             type: Array,
             statePath: 'partnerTypes'
           },
+          riskRatings: {
+            type: Array,
+            statePath: 'partnerRiskRatings'
+          },
           selectedPartnerTypes: {
             type: Array,
             value: []
           },
           selectedCsoTypes: {
-            type: String,
+            type: Array,
+            value: []
+          },
+          selectedRiskRatings: {
+            type: Array,
             value: []
           },
           showHidden: {
@@ -268,9 +284,9 @@
 
       static get observers() {
         return [
-          'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, showHidden)',
-          '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, paginator.page, ' +
-          'paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
+          'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, showHidden)',
+          '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
+          'paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
       }
@@ -306,6 +322,7 @@
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
         this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
         this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
+        this.set('selectedRiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings));
         this.set('showHidden', urlQueryParams.hidden ? true : false);
 
         this.setPaginationDataFromUrlParams(urlQueryParams);
@@ -321,8 +338,12 @@
         if (this._canFilterData()) {
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           let qs = this._buildQueryString();
+
           this._updateUrlAndDislayedData(this.currentPage + '/list',
-              _partnersLastNavigated, qs, this._filterListData.bind(this));
+              _partnersLastNavigated,
+               qs,
+               this._filterListData.bind(this));
+
           _partnersLastNavigated = qs || _partnersLastNavigated;
         }
       }
@@ -348,6 +369,7 @@
             this.q.toLowerCase(),
             this.selectedPartnerTypes,
             this.selectedCsoTypes,
+            this.selectedRiskRatings,
             this.paginator.page,
             this.paginator.page_size,
             this.showHidden,
@@ -363,6 +385,7 @@
           q: this.q,
           partner_types: this.selectedPartnerTypes,
           cso_types: this.selectedCsoTypes,
+          risk_ratings: this.selectedRiskRatings,
           hidden: this.showHidden ? 'true' : '',
           sort: this.sortOrder
         });
@@ -374,6 +397,7 @@
           search: this.q,
           partner_type: this.selectedPartnerTypes,
           cso_type: this.selectedCsoTypes,
+          rating: this.selectedRiskRatings,
           hidden: this.showHidden ? 'true' : 'false'
         };
         return this._buildCsvExportUrl(params, endpointUrl);
