@@ -87,6 +87,12 @@
                   type: 'SET_LOCATION_TYPES',
                   locationTypes: locTypes
                 };
+              },
+              setPartnerRiskRatings: function(ratings) {
+                return {
+                  type: 'SET_PARTNER_RISK_RATINGS',
+                  partnerRiskRatings: ratings
+                };
               }
             };
           }
@@ -140,6 +146,10 @@
               // set admin level/location types
               if (!_.isEmpty(response.location_types)) {
                 this.dispatch('setLocationTypes', response.location_types);
+              }
+
+              if (!_.isEmpty(response.partner_risk_rating)) {
+                this.dispatch('setPartnerRiskRatings', response.partner_risk_rating);
               }
             }
           }

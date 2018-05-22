@@ -378,7 +378,8 @@
           },
           selectedCpOutputs: {
             type: Array,
-            observer: '_filtersChanged'
+            value: [],
+            observer: '_arrayFilterChanged'
           },
 
           sections: {
@@ -398,7 +399,8 @@
 
           selectedUnicefFocalPoints: {
             type: Array,
-            observer: '_filtersChanged'
+            value: [],
+            observer: '_arrayFilterChanged'
           },
 
           offices: {
@@ -409,6 +411,28 @@
           selectedOffices: {
             type: Array,
             value: []
+          },
+
+          donors: {
+            type: Array,
+            statePath: 'donors'
+          },
+
+          selectedDonors: {
+            type: Array,
+            value: [],
+            observer: '_arrayFilterChanged'
+          },
+
+          grants: {
+            type: Array,
+            statePath: 'grants'
+          },
+
+          selectedGrants: {
+            type: Array,
+            value: [],
+            observer: '_arrayFilterChanged'
           },
 
           csvDownloadQs: {
@@ -426,11 +450,12 @@
       static get observers() {
         return [
           '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-          'selectedSections.length, selectedOffices.length)', // used for non removable filters
-          '_initFiltersMenuList(cpOutputs, unicefUsersData)',
-          '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs, selectedStatuses.length, ' +
-          'selectedSections.length, selectedUnicefFocalPoints, selectedOffices.length, startDate, endDate, ' +
-          'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+              'selectedSections.length, selectedOffices.length)', // used for non removable filters
+          '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants)',
+          '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
+              'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
+              'selectedDonors.length, selectedGrants.length, startDate, endDate, ' +
+              'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
       }
@@ -451,8 +476,8 @@
         this.listAttachedCallback(this.active, 'Loading...', 'pd-ssfa-list');
       }
 
-      _initFiltersMenuList(cpOutputs, unicefUsersData) {
-        if (!cpOutputs || !unicefUsersData) {
+      _initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants) {
+        if (!cpOutputs || !unicefUsersData || !donors || !grants) {
           // this is just to be safe, the method should only get triggered once when redux data is loaded
           return;
         }
@@ -464,7 +489,7 @@
         this.initListFiltersData([
           {
             filterName: 'Country Programme Output',
-            type: 'esmm', // etools-multi-selection-menu
+            type: 'esmm', // etools-dropdown-multi
             optionValue: 'id',
             optionLabel: 'name',
             selectionOptions: cpOutputs,
@@ -472,8 +497,26 @@
             path: 'selectedCpOutputs'
           },
           {
+            filterName: 'Donors',
+            type: 'esmm', // etools-dropdown-multi
+            optionValue: 'id',
+            optionLabel: 'name',
+            selectionOptions: donors,
+            alreadySelected: [],
+            path: 'selectedDonors'
+          },
+          {
+            filterName: 'Grants',
+            type: 'esmm', // etools-dropdown-multi
+            optionValue: 'id',
+            optionLabel: 'name',
+            selectionOptions: grants,
+            alreadySelected: [],
+            path: 'selectedGrants'
+          },
+          {
             filterName: 'UNICEF focal point',
-            type: 'esmm', // etools-multi-selection-menu
+            type: 'esmm', // etools-dropdown-multi
             optionValue: 'id',
             optionLabel: 'name',
             selectionOptions: unicefUsersData,
@@ -508,13 +551,11 @@
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
         this.set('selectedDocumentTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
         this.set('selectedStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
-        this.set('selectedCpOutputs',
-            urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
+        this.set('selectedCpOutputs', this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs));
         this.set('selectedSections', this._getFilterUrlValuesAsArray(urlQueryParams.section));
-        this.set('selectedUnicefFocalPoints',
-            urlQueryParams.unicef_focal_points
-                ? this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points)
-                : []);
+        this.set('selectedDonors', this._getFilterUrlValuesAsArray(urlQueryParams.donors));
+        this.set('selectedGrants', this._getFilterUrlValuesAsArray(urlQueryParams.grants));
+        this.set('selectedUnicefFocalPoints', this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points));
         this.set('selectedOffices', this._getFilterUrlValuesAsArray(urlQueryParams.offices));
         this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
         this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
@@ -529,7 +570,7 @@
         this._updateSelectedFiltersValues();
       }
 
-      // update selected filters(przent in URL) at page refresh
+      // update selected filters(present in URL) at page refresh
       _updateSelectedFiltersValues() {
         this._updateFiltersValsDebouncer = Polymer.Debouncer.debounce(this._updateFiltersValsDebouncer,
             Polymer.Async.timeOut.after(100),
@@ -537,11 +578,19 @@
               let filtersValues = [
                 {
                   filterName: 'Country Programme Output',
-                  selectedValue: _.map(this.selectedCpOutputs, 'id')
+                  selectedValue: this.selectedCpOutputs
+                },
+                {
+                  filterName: 'Donors',
+                  selectedValue: this.selectedDonors
+                },
+                {
+                  filterName: 'Grants',
+                  selectedValue: this.selectedGrants
                 },
                 {
                   filterName: 'UNICEF focal point',
-                  selectedValue: _.map(this.selectedUnicefFocalPoints, 'id')
+                  selectedValue: this.selectedUnicefFocalPoints
                 },
                 {
                   filterName: 'Starts After',
@@ -567,12 +616,6 @@
         }
       }
 
-      _prepareQueryStrVal(arr, prop) {
-        return _.map(arr, function(obj) {
-          return obj[prop] + '';
-        });
-      }
-
       _filterInterventionsData(forceNoLoading) {
         // Query is debounced with a debounce time
         // set depending on what action the user takes
@@ -588,10 +631,12 @@
                   this.sortOrder.direction,
                   this.q.toLowerCase(),
                   this.selectedDocumentTypes,
-                  this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
+                  this.selectedCpOutputs.map(cpo => String(cpo)),
+                  this.selectedDonors.map(d => String(d)),
+                  this.getFilterValuesByProperty(this.grants, 'name', this.selectedGrants),
                   this.selectedStatuses,
                   this.selectedSections.map(s => String(s)),
-                  this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'id'),
+                  this.selectedUnicefFocalPoints.map(ufc => String(ufc)),
                   this.selectedOffices.map(o => String(o)),
                   this.startDate,
                   this.endDate,
@@ -612,8 +657,10 @@
           status: this.selectedStatuses.join('|'),
           section: this.selectedSections.join('|'),
           offices: this.selectedOffices.join('|'),
-          cp_outputs: _.map(this.selectedCpOutputs, 'id').join('|'),
-          unicef_focal_points: _.map(this.selectedUnicefFocalPoints, 'id').join('|'),
+          cp_outputs: this.selectedCpOutputs.join('|'),
+          donors: this.selectedDonors.join('|'),
+          grants: this.selectedGrants.join('|'),
+          unicef_focal_points: this.selectedUnicefFocalPoints.join('|'),
           start: this.startDate,
           end: this.endDate,
           sort: this.sortOrder
@@ -626,7 +673,9 @@
           document_type: this.selectedDocumentTypes,
           sections: this.selectedSections,
           office: this.selectedOffices,
-          unicef_focal_points: _.map(this.selectedUnicefFocalPoints, 'id'),
+          donors: this.selectedDonors,
+          grants: this.selectedGrants,
+          unicef_focal_points: this.selectedUnicefFocalPoints,
           start: this.startDate,
           end: this.endDate,
           search: this.q
@@ -634,57 +683,15 @@
         return this._buildExportQueryString(params);
       }
 
-      _setSelectedOffices(officesStr) {
-        let officesIdsArr = officesStr.split('|');
-        if (officesIdsArr && officesIdsArr.length) {
-          officesIdsArr = officesIdsArr.map(function(officeIdStr) {
-            return parseInt(officeIdStr, 10);
-          });
-          if (!this.offices || !this.offices.length) {
-            return [];
-          }
-          return this.offices.filter(function(o) {
-            return officesIdsArr.indexOf(parseInt(o.id, 10)) > -1;
-          });
-        }
-        return [];
-      }
-
-      _setSelectedUnicefFocalPoints(focalPtsStr) {
-        let focalPtsStrArr = focalPtsStr.split('|');
-        if (focalPtsStrArr && focalPtsStrArr.length) {
-          focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
-            return parseInt(fPtsIdStr, 10);
-          });
-          if (!this.unicefUsersData || !this.unicefUsersData.length) {
-            return [];
-          }
-          return this.unicefUsersData.filter(function(u) {
-            return focalPtsStrArr.indexOf(parseInt(u.id, 10)) > -1;
-          });
-        }
-        return [];
-      }
-
-      _setSelectedCpOutputs(cpOutputsString) {
-        let cpOut = cpOutputsString.split('|');
-        if (cpOut && cpOut.length) {
-          cpOut = cpOut.map(function(cpOutStrValue) {
-            return parseInt(cpOutStrValue, 10);
-          });
-          if (!this.cpOutputs || !this.cpOutputs.length) {
-            return [];
-          }
-          return this.cpOutputs.filter(function(cpo) {
-            return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
-          });
-        }
-        return [];
-      }
-
       _filtersChanged() {
         this.set('debounceTime', 150);
         this.resetPageNumber();
+      }
+
+      _arrayFilterChanged(filterVal, oldFilterVals) {
+        if (typeof oldFilterVals !== 'undefined' && filterVal.length !== oldFilterVals.length) {
+          this._filtersChanged();
+        }
       }
 
       _canShowListDatesFrsWarnings(status) {
