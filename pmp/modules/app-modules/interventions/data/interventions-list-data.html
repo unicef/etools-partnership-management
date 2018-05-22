@@ -60,23 +60,24 @@
       }
 
       _filterFound(intervention, prop, multiple, filterValues) {
-        if (filterValues.length) {
-          let foundValues;
-          if (multiple) {
-            // case for intervention properties values like: offices, sections, cp outputs (array of values)
-            foundValues = intervention[prop].filter(function(propVal) {
-              return filterValues.indexOf(String(propVal)) > -1;
-            });
-            return foundValues && foundValues.length > 0;
-          } else {
-            // case for intervention properties values like: status, doc type (primitive types)
-            foundValues = filterValues.filter(function(selectedFilter) {
-              return selectedFilter === intervention[prop];
-            });
-            return !!foundValues[0];
-          }
+        if (!filterValues.length) {
+          return true;
         }
-        return true;
+
+        let foundValues;
+        if (multiple) {
+          // case for intervention properties values like: offices, sections, cp outputs (array of values)
+          foundValues = intervention[prop].filter(function(propVal) {
+            return filterValues.indexOf(String(propVal)) > -1;
+          });
+          return foundValues && foundValues.length > 0;
+        } else {
+          // case for intervention properties values like: status, doc type (primitive types)
+          foundValues = filterValues.filter(function(selectedFilter) {
+            return selectedFilter === intervention[prop];
+          });
+          return !!foundValues[0];
+        }
       }
 
       query(field, order, searchString, documentTypes, cpOutputs, donors, grants,

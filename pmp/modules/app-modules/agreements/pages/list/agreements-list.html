@@ -433,7 +433,7 @@
                   this.q.trim().toLowerCase(),
                   this.selectedAgTypes,
                   this.selectedAgStatuses,
-                  this.getFilterPropValuesBySelectedIds(this.partnersDropdownData,
+                  this.getFilterValuesByProperty(this.partnersDropdownData,
                       'label', this.selectedPartners, 'value'),
                   this.startDate,
                   this.endDate,
@@ -464,7 +464,7 @@
         let params = {
           agreement_type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partner_name: this.getFilterPropValuesBySelectedIds(this.partnersDropdownData,
+          partner_name: this.getFilterValuesByProperty(this.partnersDropdownData,
               'label', this.selectedPartners, 'value'),
           start: this.startDate,
           end: this.endDate,

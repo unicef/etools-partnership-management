@@ -633,7 +633,7 @@
                   this.selectedDocumentTypes,
                   this.selectedCpOutputs.map(cpo => String(cpo)),
                   this.selectedDonors.map(d => String(d)),
-                  this.getFilterPropValuesBySelectedIds(this.grants, 'name', this.selectedGrants),
+                  this.getFilterValuesByProperty(this.grants, 'name', this.selectedGrants),
                   this.selectedStatuses,
                   this.selectedSections.map(s => String(s)),
                   this.selectedUnicefFocalPoints.map(ufc => String(ufc)),
