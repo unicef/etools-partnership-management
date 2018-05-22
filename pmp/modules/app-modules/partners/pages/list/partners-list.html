@@ -343,6 +343,7 @@
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
         this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
         this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
+        this.set('selectedRiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings));
         this.set('showHidden', urlQueryParams.hidden ? true : false);
 
         this.setPaginationDataFromUrlParams(urlQueryParams);
