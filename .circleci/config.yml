@@ -12,7 +12,8 @@ jobs:
       - run:
           name: Exporting revision number
           command: |
-            sed -i 's/revNo/${CIRCLE_SHA1}/g' bower.json
+            REVNO=${CIRCLE_SHA1}
+            sed -i "s/revNo/$REVNO/g" bower.json
       - store_artifacts:
           path: bower.json
       - run:
