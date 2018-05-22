@@ -284,7 +284,8 @@
 
       static get observers() {
         return [
-          'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, showHidden)',
+          'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
+              'selectedRiskRatings.length, showHidden)',
           '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
           'paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'

@@ -33,6 +33,18 @@
                   type: 'SET_SIGNED_BY_UNICEF_USERS',
                   signedByUnicefUsers: signedByUnicefUsersData
                 };
+              },
+              setDonors: function(donors) {
+                return {
+                  type: 'SET_DONORS',
+                  donors: donors
+                };
+              },
+              setGrants: function(grants) {
+                return {
+                  type: 'SET_GRANTS',
+                  grants: grants
+                };
               }
             };
           }
@@ -48,9 +60,20 @@
               if (!_.isEmpty(response.cp_outputs)) {
                 this.dispatch('setCpOutputs', response.cp_outputs);
               }
+
               // set Signed By UNICEF Users
               if (!_.isEmpty(response.signed_by_unicef_users)) {
                 this.dispatch('setSignedByUnicefUsers', response.signed_by_unicef_users);
+              }
+
+              // set donors
+              if (!_.isEmpty(response.donors)) {
+                this.dispatch('setDonors', response.donors);
+              }
+
+              // set donors
+              if (!_.isEmpty(response.grants)) {
+                this.dispatch('setGrants', response.grants);
               }
             }
           }
