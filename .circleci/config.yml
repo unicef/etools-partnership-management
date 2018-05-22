@@ -61,6 +61,10 @@ jobs:
             TAG=${CIRCLE_BRANCH}
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push unicef/etools-pmp:$TAG
+      - run:
+          name: Exporting revision number
+          command: |
+            echo ${CIRCLE_SHA1} >> revision.txt
 
 workflows:
   version: 2
