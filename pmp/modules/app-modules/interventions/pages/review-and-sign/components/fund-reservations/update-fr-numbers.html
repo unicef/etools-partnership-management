@@ -73,7 +73,6 @@
                            placeholder="&#8212;"
                            allowed-pattern="[0-9]"
                            required
-                           auto-validate
                            error-message="Please fill FR Number or remove the field"
                            on-value-changed="_frNrValueChanged">
               </paper-input>
@@ -139,7 +138,7 @@
 
       ready() {
         super.ready();
-        this.dataSetModel = {fr_number: undefined};
+        this.dataSetModel = {fr_number: null};
       }
 
       _showDeleteFrBtn(interventionStatus, dataItemsLength) {
