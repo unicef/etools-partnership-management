@@ -108,7 +108,8 @@
                                  options="[[years]]"
                                  required
                                  error-message="Required"
-                                 on-iron-select="_yearChanged"
+                                 trigger-value-change-event
+                                 on-etools-selected-item-changed="_yearChanged"
                                  readonly$="[[!editMode]]"
                                  auto-validate>
                 </etools-dropdown>
@@ -323,8 +324,8 @@
       }
 
       _yearChanged(event) {
-        let yearSelected = event.detail.item.getAttribute('item')
-            ? JSON.parse(event.detail.item.getAttribute('item')).value
+        let yearSelected = event.detail.selectedItem
+            ? event.detail.selectedItem.value
             : null;
         let yearDropdown = this.shadowRoot.querySelector('#year_' + event.model.index);
 
