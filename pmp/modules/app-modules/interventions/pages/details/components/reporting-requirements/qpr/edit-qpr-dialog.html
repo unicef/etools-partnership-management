@@ -177,14 +177,19 @@
       }
 
       _duplicateDueDate(dueDate) {
-        return !!this.qprData.find(d => d.due_date === dueDate);
+        let foundQpr = this.qprData.find(d => d.due_date === dueDate);
+        if (this._qprDatesSetEditedIndex > -1 && foundQpr) {
+          let foundQprIndex = this.qprData.indexOf(foundQpr);
+          return foundQprIndex !== +this._qprDatesSetEditedIndex;
+        }
+        return !!foundQpr;
       }
 
       _updateQprData(e) {
         if (e.detail.confirmed) {
           if (this._duplicateDueDate(this._editedQprDatesSet.due_date)) {
             this.toastMsgLoadingSource.fireEvent('toast',
-                {text: 'Requirement dates not added, elected Due Date is already in the list.', showCloseBtn: true});
+                {text: 'Requirement dates not added, selected Due Date is already in the list.', showCloseBtn: true});
             return;
           }
           if (this._qprDatesSetEditedIndex < 0) {

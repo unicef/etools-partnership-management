@@ -23,8 +23,10 @@
       };
     }
 
-    _uneditableStyles(inAmendment, dueDate) {
-      return (inAmendment && this._pastDueDate(dueDate)) ? this._getUneditableStyles() : '';
+    _uneditableStyles(inAmendment, dueDate, id) {
+      return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id)
+          ? this._getUneditableStyles()
+          : '';
     }
 
     _getUneditableStyles() {
@@ -37,8 +39,12 @@
       return moment(dueD).isBefore(now);
     }
 
-    _canEdit(editMode, inAmendment, dueDate) {
-      return editMode && !(inAmendment && this._pastDueDate(dueDate));
+    _canEdit(editMode, inAmendment, dueDate, id) {
+      return editMode && !this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id);
+    }
+
+    _noInAmendmentPastDatesEdit(inAmendment, dueDate, id) {
+      return inAmendment && this._pastDueDate(dueDate) && id > 0;
     }
 
   });
