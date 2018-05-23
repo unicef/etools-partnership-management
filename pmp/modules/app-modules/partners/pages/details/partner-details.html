@@ -262,10 +262,10 @@
           this.set('showCoreValuesAssessmentAttachment',
               this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
 
-          if (this.showCoreValuesAssessmentAttachment) {
-            this._displayCoreValuesAssessmentNotification(partner);
+          if (this.showCoreValuesAssessmentAttachment && partner.core_values_assessment_file) {
+            this._displayCoreValuesAssessmentNotification(partner.core_values_assessment_date);
           }
-          this._displayMicroAssessmentNotification(partner);
+          this._displayMicroAssessmentNotification(partner.assessments);
         }
       }
 
@@ -297,19 +297,17 @@
         }
       }
 
-      _displayCoreValuesAssessmentNotification(partner) {
-        if (partner.core_values_assessment_file) {
-          this._checkAndShowExpiryWarning(partner.core_values_assessment_date, 'Core Values Assessment');
-        }
+      _displayCoreValuesAssessmentNotification(assessmentDate) {
+        this._checkAndShowExpiryWarning(assessmentDate, 'Core Values Assessment');
       }
 
-      _displayMicroAssessmentNotification(partner) {
-        this._checkAndShowExpiryWarning(this._getLatestMicroAssessmentDate(partner), 'Micro Assessment');
+      _displayMicroAssessmentNotification(assessments) {
+        this._checkAndShowExpiryWarning(this._getLatestMicroAssessmentDate(assessments), 'Micro Assessment');
       }
 
-      _getLatestMicroAssessmentDate(partner) {
+      _getLatestMicroAssessmentDate(assessments) {
         let newestDate = 0;
-        partner.assessments.forEach((assessment) => {
+        assessments.forEach((assessment) => {
           if (assessment.type === 'Micro Assessment' && moment(assessment.completed_date).isAfter(newestDate)) {
             newestDate = assessment.completed_date;
           }
