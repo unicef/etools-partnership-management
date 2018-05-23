@@ -265,7 +265,9 @@
           if (this.showCoreValuesAssessmentAttachment && partner.core_values_assessment_file) {
             this._displayCoreValuesAssessmentNotification(partner.core_values_assessment_date);
           }
-          this._displayMicroAssessmentNotification(partner.assessments);
+          if (partner.type_of_assessment === 'Micro Assessment') {
+            this._displayMicroAssessmentNotification(partner.last_assessment_date);
+          }
         }
       }
 
@@ -300,18 +302,8 @@
         this._checkAndShowExpiryWarning(assessmentDate, 'Core Values Assessment');
       }
 
-      _displayMicroAssessmentNotification(assessments) {
-        this._checkAndShowExpiryWarning(this._getLatestMicroAssessmentDate(assessments), 'Micro Assessment');
-      }
-
-      _getLatestMicroAssessmentDate(assessments) {
-        let newestDate = 0;
-        assessments.forEach((assessment) => {
-          if (assessment.type === 'Micro Assessment' && moment(assessment.completed_date).isAfter(newestDate)) {
-            newestDate = assessment.completed_date;
-          }
-        });
-        return newestDate;
+      _displayMicroAssessmentNotification(assessmentDate) {
+        this._checkAndShowExpiryWarning(assessmentDate, 'Micro Assessment');
       }
 
       _getPartnerType(partnerType, csoType) {
