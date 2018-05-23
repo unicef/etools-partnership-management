@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../../mixins/common-mixin.html">
@@ -14,6 +15,7 @@
 
 <link rel="import" href="../../../../../../../layout/components/icons-actions.html">
 <link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
 
 <link rel="import" href="../mixins/reporting-requirements-common-mixin.html">
 <link rel="import" href="../styles/reporting-requirements-lists-styles.html">
@@ -68,14 +70,17 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      */
     const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon
     ], Polymer.Element);
@@ -92,13 +97,20 @@
 
       static get properties() {
         return {
-          editMode: Boolean
+          editMode: Boolean,
+          addEditDialog: Object,
+          _deleteConfirmationDialog: Object,
+          _itemToDeleteIndex: {
+            type: Number,
+            value: -1
+          }
         };
       }
 
       ready() {
         super.ready();
         this._createAddEditDialog();
+        this._createDeleteConfirmationsDialog();
         this._addEventListeners();
       }
 
@@ -112,6 +124,9 @@
         if (this.addEditDialog) {
           document.querySelector('body').removeChild(this.addEditDialog);
         }
+        if (this._deleteConfirmationDialog) {
+          document.querySelector('body').removeChild(this._deleteConfirmationDialog);
+        }
       }
 
       _onEdit(e) {
@@ -119,6 +134,7 @@
         this._setDialogData(e);
         this.addEditDialog.opened = true;
       }
+
       _setDialogData(e) {
         this.addEditDialog.interventionId = this.interventionId;
         this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
@@ -126,23 +142,67 @@
 
       _onDelete(e) {
         e.stopPropagation();
-        this.fireEvent('toast', {text: 'Feature not implemented yet!', showCloseBtn: true});
+        if (this._deleteConfirmationDialog) {
+          let itemToDelete = JSON.parse(e.target.getAttribute('item'));
+          let index = this._getIndexById(itemToDelete.id);
+          this.set('_itemToDeleteIndex', index);
+          this._deleteConfirmationDialog.opened = true;
+        }
+      }
+
+      _onDeleteConfirmation(e) {
+        if (!e.detail.confirmed) {
+          this.set('_itemToDeleteIndex', -1);
+          return;
+        }
+
+        if (this._itemToDeleteIndex > -1) {
+          let itemToDelete = this.reportingRequirements[this._itemToDeleteIndex];
+          let endpoint = this.getEndpoint('specialReportingRequirementsUpdate', {reportId: itemToDelete.id});
+          this.sendRequest({
+            method: 'DELETE',
+            endpoint: endpoint
+          }).then(() => {
+            this.splice('reportingRequirements', this._itemToDeleteIndex, 1);
+          }).catch((error) => {
+            this.logError('Failed to delete special report requirement!',
+                'special-reporting-requirements', error);
+            this.parseRequestErrorsAndShowAsToastMsgs(error);
+          }).then(() => {
+            // delete complete, reset _itemToDeleteIndex
+            this.set('_itemToDeleteIndex', -1);
+          });
+        }
+
+
       }
 
       _createAddEditDialog() {
         this.addEditDialog = document.createElement('add-edit-special-rep-req');
         this.addEditDialog.set('toastMsgLoadingSource', this);
         this.addEditDialog.addEventListener('reporting-requirements-saved',
-            this._onReportingRequirementsSaved.bind(this));
+            this._onSpecialReportingRequirementsSaved.bind(this));
 
         document.querySelector('body').appendChild(this.addEditDialog);
+      }
+
+      _createDeleteConfirmationsDialog() {
+        let confirmationMSg = document.createElement('span');
+        confirmationMSg.innerText = 'Are you sure you want to delete this Special Reporting Requirement?';
+        let confirmationDialogConf = {
+          title: 'Delete Special Reporting Requirement',
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'No',
+          closeCallback: this._onDeleteConfirmation.bind(this),
+          content: confirmationMSg
+        };
+        this._deleteConfirmationDialog = this.createDynamicDialog(confirmationDialogConf);
       }
 
       _openAddDialog() {
         this.addEditDialog.item = {};
         this.addEditDialog.interventionId = this.interventionId;
-        this.addEditDialog.existingDataItems = this.reportingRequirements;
-
         this.addEditDialog.opened = true;
       }
 
@@ -154,6 +214,20 @@
 
       _getReportType() {
         return this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL;
+      }
+
+      _getIndexById(id) {
+        return this.reportingRequirements.findIndex(r => r.id === id);
+      }
+
+      _onSpecialReportingRequirementsSaved(e) {
+        let savedReqItem = e.detail;
+        let index = this._getIndexById(savedReqItem.id);
+        if (index > -1) {
+          this.splice('reportingRequirements', index, 1, savedReqItem);
+        } else {
+          this.push('reportingRequirements', savedReqItem)
+        }
       }
 
     }

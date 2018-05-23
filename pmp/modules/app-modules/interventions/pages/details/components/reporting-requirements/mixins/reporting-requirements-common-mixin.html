@@ -52,10 +52,8 @@
       ];
     }
 
-    _getEndpointObj(id) {
-      let type = this._getReportType();
-
-      if (type === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL) {
+    _getEndpointObj(id, type, isSpecial) {
+      if (isSpecial) {
         return this.getEndpoint('specialReportingRequirements', {intervId: id});
       }
 
@@ -70,10 +68,12 @@
         this.reportingRequirements = [];
         return;
       }
-      let endpoint = this._getEndpointObj(newId);
+      let type = this._getReportType();
+      let isSpecial = type === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL;
+      let endpoint = this._getEndpointObj(newId, type, isSpecial);
       this.sendRequest({method: 'GET', endpoint: endpoint})
           .then((response) => {
-            this.set('reportingRequirements', response.reporting_requirements);
+            this.set('reportingRequirements', isSpecial ? response : response.reporting_requirements);
           })
           .catch((error) => {
             this.logError('Failed to get qpr data from API!', 'reporting-requirements-common-mixin', error);
@@ -84,8 +84,7 @@
     _countReportingReq(length) {
       let l = (typeof length === 'number') ? length : 0;
       this.set('requirementsCount', l);
-
-      if (typeof this._sortRequirementsAsc === 'function') {
+      if (typeof this._sortRequirementsAsc === 'function' && l > 0) {
         this._sortRequirementsAsc();
       }
     }
