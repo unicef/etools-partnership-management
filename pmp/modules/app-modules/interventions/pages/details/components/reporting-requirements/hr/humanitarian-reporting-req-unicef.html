@@ -2,7 +2,6 @@
 <link rel="import" href="../../../../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-<link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../mixins/frontend-pagination-mixin.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
@@ -62,12 +61,10 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
      */
     const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
       EtoolsPmpApp.Mixins.FrontendPagination
     ], Polymer.Element);

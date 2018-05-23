@@ -19,6 +19,7 @@
       :host {
         display: block
       }
+
       paper-input {
         width: 100%;
       }
@@ -51,7 +52,6 @@
       </div>
     </etools-dialog>
 
-
   </template>
 
   <script>
@@ -65,7 +65,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Date
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
-     const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
+    const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.EventHelper,
@@ -85,7 +85,6 @@
         return 'add-edit-special-rep-req';
       }
 
-
       static get properties() {
         return {
           opened: {
@@ -97,65 +96,53 @@
           item: {
             type: Object
           },
-          existingDataItems: {
-            type: Array
-          },
           toastMsgLoadingSource: Object
         };
+      }
+
+      _isNew() {
+        return !this.item.id;
+      }
+
+      _getEndpoint() {
+        if (this._isNew()) {
+          // new/create
+          return this.getEndpoint('specialReportingRequirements', {intervId: this.interventionId});
+        } else {
+          // already saved... update/delete
+          return this.getEndpoint('specialReportingRequirementsUpdate', {reportId: this.item.id});
+        }
       }
 
       _save() {
         let dialog = this.$.addEditDialog;
         dialog.startSpinner();
 
-        if (!this.validate()) {
-          dialog.stopSpinner();
-          this.opened = false;
-          this.showErrorAsToastMsg('Selected Due Date is already in the list', this.toastMsgLoadingSource);
-          return;
-        }
-
-        let endpoint = this.getEndpoint('reportingRequirements', {
-          intervId: this.interventionId,
-          reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL
-        });
+        let endpoint = this._getEndpoint();
+        let method = this._isNew() ? 'POST' : 'PATCH';
         this.sendRequest(
-          {
-            method: 'POST',
-            endpoint: endpoint,
-            body: this._getBody()
-          })
-          .then((response) => {
-            this.fireEvent('reporting-requirements-saved', response.reporting_requirements);
-            dialog.stopSpinner();
-            this.opened = false;
-          })
-          .catch((error) => {
-            dialog.stopSpinner();
-            this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
-            this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
-          });
-      }
-
-      validate() {
-        if (_.isEmpty(this.existingDataItems)) {
-          return true;
-        }
-        if (this.existingDataItems.find(i => this.item.due_date === i.due_date)) {
-          return false;
-        }
-        return true;
+            {
+              method: method,
+              endpoint: endpoint,
+              body: this._getBody()
+            })
+            .then((response) => {
+              this.fireEvent('reporting-requirements-saved', response);
+              dialog.stopSpinner();
+              this.opened = false;
+            })
+            .catch((error) => {
+              dialog.stopSpinner();
+              this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
+              this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+            });
       }
 
       _getBody() {
-        let modifItem = {
+        return {
           due_date: this.item.due_date,
           description: this.item.description
         };
-        if (this.item.id) {
-          modifItem.id = this.item.id;
-        }
-        return {reporting_requirements: [modifItem]};
       }
 
     }
