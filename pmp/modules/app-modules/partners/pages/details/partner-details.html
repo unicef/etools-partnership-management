@@ -304,13 +304,20 @@
       }
 
       _displayMicroAssessmentNotification(partner) {
-        if (this._isMicroAssessment(partner)) {
-          this._checkAndShowExpiryWarning(partner.last_assessment_date, partner.type_of_assessment);
+        if (partner.type_of_assessment === 'Micro Assessment') {
+          this._checkAndShowExpiryWarning(this._getLatestMicroAssessmentDate(partner), partner.type_of_assessment);
         }
       }
 
-      _isMicroAssessment(partner) {
-        return partner.type_of_assessment === 'Micro Assessment';
+      _getLatestMicroAssessmentDate(partner) {
+        let newestDate = '';
+        partner.assessments.forEach((assessment) => {
+          if (!moment(newestDate).isAfter(moment(assessment.completed_date))) {
+            newestDate = assessment.completed_date;
+          }
+        });
+
+        return newestDate;
       }
 
       _getPartnerType(partnerType, csoType) {
