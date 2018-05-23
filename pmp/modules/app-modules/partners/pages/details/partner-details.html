@@ -304,19 +304,16 @@
       }
 
       _displayMicroAssessmentNotification(partner) {
-        if (partner.type_of_assessment === 'Micro Assessment') {
-          this._checkAndShowExpiryWarning(this._getLatestMicroAssessmentDate(partner), partner.type_of_assessment);
-        }
+        this._checkAndShowExpiryWarning(this._getLatestMicroAssessmentDate(partner), partner.type_of_assessment);
       }
 
       _getLatestMicroAssessmentDate(partner) {
-        let newestDate = null;
+        let newestDate = 0;
         partner.assessments.forEach((assessment) => {
-          if (!moment(newestDate).isAfter(moment(assessment.completed_date))) {
+          if (assessment.type === 'Micro Assessment' && moment(assessment.completed_date).isAfter(newestDate)) {
             newestDate = assessment.completed_date;
           }
         });
-
         return newestDate;
       }
 
