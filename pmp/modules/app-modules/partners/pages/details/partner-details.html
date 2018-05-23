@@ -310,7 +310,7 @@
       }
 
       _getLatestMicroAssessmentDate(partner) {
-        let newestDate = '';
+        let newestDate = null;
         partner.assessments.forEach((assessment) => {
           if (!moment(newestDate).isAfter(moment(assessment.completed_date))) {
             newestDate = assessment.completed_date;
