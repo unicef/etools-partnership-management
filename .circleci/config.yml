@@ -10,6 +10,11 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
+          name: Exporting revision number
+          command: |
+            REVNO=${CIRCLE_SHA1}
+            sed -i "0,/revNo/s//$REVNO/" bower.json
+      - run:
           name: Install npm wee
           command: npm install
       - save_cache:
