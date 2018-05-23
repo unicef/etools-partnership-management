@@ -274,18 +274,17 @@
           return;
         }
         let datesFormat = 'YYYY-MM-DD';
-        let now = moment.utc();
+        let today = moment.utc().format(datesFormat);
         let assessmentDate = this._convertDate(assesmentDateString);
         let assessmentExpDate = moment(assessmentDate).add(60, 'months');
 
-        let daysUntilExpire = assessmentExpDate.diff(now, 'days');
+        let daysUntilExpire = assessmentExpDate.diff(today, 'days');
 
         let notifMessage = '';
         if (daysUntilExpire < 0) {
           notifMessage = 'The ' + assesmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
         } else {
           let notifStartDateStr = moment(assessmentDate).add(57, 'months').format(datesFormat);
-          let today = now.format(datesFormat);
           if (moment(notifStartDateStr).isSame(today) || moment(notifStartDateStr).isBefore(today)) {
             notifMessage = 'The ' + assesmentType + ' will expire in ' + daysUntilExpire + ' days';
           }
