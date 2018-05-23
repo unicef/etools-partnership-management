@@ -499,8 +499,8 @@
           {
             filterName: 'Donors',
             type: 'esmm', // etools-dropdown-multi
-            optionValue: 'id',
-            optionLabel: 'name',
+            optionValue: 'value',
+            optionLabel: 'label',
             selectionOptions: donors,
             alreadySelected: [],
             path: 'selectedDonors'
@@ -508,8 +508,8 @@
           {
             filterName: 'Grants',
             type: 'esmm', // etools-dropdown-multi
-            optionValue: 'id',
-            optionLabel: 'name',
+            optionValue: 'value',
+            optionLabel: 'label',
             selectionOptions: grants,
             alreadySelected: [],
             path: 'selectedGrants'
@@ -632,8 +632,8 @@
                   this.q.toLowerCase(),
                   this.selectedDocumentTypes,
                   this.selectedCpOutputs.map(cpo => String(cpo)),
-                  this.selectedDonors.map(d => String(d)),
-                  this.getFilterValuesByProperty(this.grants, 'name', this.selectedGrants),
+                  this.selectedDonors,
+                  this.selectedGrants,
                   this.selectedStatuses,
                   this.selectedSections.map(s => String(s)),
                   this.selectedUnicefFocalPoints.map(ufc => String(ufc)),
