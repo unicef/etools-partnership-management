@@ -122,11 +122,6 @@
         box-sizing: border-box;
       }
 
-      .panel-row-extra-tall {
-        height: 72px;
-        box-sizing: border-box;
-      }
-
       .assessment-row {
         height: 48px;
         font-size: 13px;
@@ -161,9 +156,11 @@
       }
 
       .table-main div.totals {
+        height: 56px;
+        margin-top: -16px;
+        margin-bottom: -15px;
         font-size: 16px;
         color: var(--primary-text-color);
-        height: 71px;
         @apply --layout-center-center;
       }
 
@@ -250,7 +247,7 @@
                           class="content-section">
       <div class="planning-wrapper">
         <div class="layout-horizontal">
-          <div class="table-main col-4 layout-vertical no-r-padd">
+          <div class="table-main col-4 no-r-padd">
             <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
               <div class="col-4 table-title">SPOT CHECKS</div>
               <div class="quarter">Q1</div>
@@ -259,7 +256,7 @@
               <div class="quarter">Q4</div>
               <div class="col-2 center-align">TOTAL</div>
             </div>
-            <div class="panel-row-extra-tall row-h panel-table-row">
+            <div class="row-h panel-table-row">
               <div class="col-4">Required</div>
               <div class="quarter">
                 [[partner.hact_values.spot_checks.planned.q1]]
@@ -278,7 +275,7 @@
               </div>
             </div>
 
-            <div class="panel-row-extra-tall row-h panel-table-row ">
+            <div class="row-h panel-table-row ">
               <div class="col-4">Completed</div>
               <div class="quarter">
                 [[partner.hact_values.spot_checks.completed.q1]]
@@ -298,18 +295,18 @@
             </div>
           </div>
 
-          <div class="table-main col-2 layout-vertical margin-l no-r-padd">
+          <div class="table-main col-2 margin-l no-r-padd">
             <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
               <div class="flex-c table-title">AUDITS</div>
               <div class="col-5 center-align">TOTAL</div>
             </div>
-            <div class="panel-row-extra-tall row-h panel-table-row ">
+            <div class="row-h panel-table-row ">
               <div class="flex-c">Required</div>
               <div class="col-5 layout-horizontal center-align totals darker-bg">
                 [[partner.hact_values.audits.minimum_requirements]]
               </div>
             </div>
-            <div class="panel-row-extra-tall row-h panel-table-row ">
+            <div class="row-h panel-table-row ">
               <div class="flex-c">Completed</div>
               <div class="col-5 layout-horizontal center-align totals darker-bg">
                 [[partner.hact_values.audits.completed]]
@@ -317,7 +314,7 @@
             </div>
           </div>
 
-          <div class="table-main col-4 layout-vertical margin-l no-r-padd">
+          <div class="table-main col-4 margin-l no-r-padd">
               <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
                 <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
                 <div class="quarter">Q1</div>
@@ -326,7 +323,7 @@
                 <div class="quarter">Q4</div>
                 <div class="col-2 center-align">TOTAL</div>
               </div>
-              <div class="panel-row-extra-tall row-h panel-table-row">
+              <div class="row-h panel-table-row">
                 <div class="col-4">Planned</div>
                 <div class="quarter">
                   [[partner.hact_values.programmatic_visits.planned.q1]]
@@ -345,7 +342,7 @@
                 </div>
               </div>
 
-              <div class="panel-row-extra-tall row-h panel-table-row ">
+              <div class="row-h panel-table-row ">
                 <div class="col-4">Completed</div>
                 <div class="quarter">
                   [[partner.hact_values.programmatic_visits.completed.q1]]
