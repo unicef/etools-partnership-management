@@ -8,6 +8,7 @@
 <link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="qpr/quarterly-reporting-requirements.html">
 <link rel="import" href="hr/humanitarian-reporting-req-unicef.html">
@@ -88,7 +89,7 @@
               <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openQprEditDialog"
-                                 hidden$="[[_hideRepReqEditBtn(qprRequirementsCount)]]"></paper-icon-button>
+                                 hidden$="[[_hideRepReqEditBtn(editMode, qprRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianUnicef"
                         class="nav-menu-item">
@@ -96,7 +97,7 @@
               <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openHruEditDialog"
-                                 hidden$="[[_hideRepReqEditBtn(hrUnicefRequirementsCount)]]"></paper-icon-button>
+                                 hidden$="[[_hideRepReqEditBtn(editMode, hrUnicefRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianCluster"
                         class="nav-menu-item">
@@ -136,7 +137,8 @@
 
             <special-reporting-requirements name="special"
                                             intervention-id="[[interventionId]]"
-                                            requirements-count="{{specialRequirementsCount}}">
+                                            requirements-count="{{specialRequirementsCount}}"
+                                            edit-mode="[[editMode]]">
             </special-reporting-requirements>
 
           </iron-pages>
@@ -152,8 +154,9 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
-    class PartnerReportingRequirements extends Polymer.Element {
+    class PartnerReportingRequirements extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(Polymer.Element) {
       static get is() {
         return 'partner-reporting-requirements';
       }
@@ -163,9 +166,6 @@
           selectedReportType: {
             type: String,
             value: 'qtyProgress'
-          },
-          editMode: {
-            type: Boolean
           },
           interventionId: Number,
           interventionStart: String,
@@ -188,6 +188,10 @@
           specialRequirementsCount: {
             type: Number,
             value: 0
+          },
+          editMode: {
+            type: Boolean,
+            statePath: 'pageData.permissions.edit.reporting_periods'
           }
         };
       }
@@ -200,8 +204,8 @@
         this.$.hru.openUnicefHumanitarianRepReqDialog();
       }
 
-      _hideRepReqEditBtn(qprCount) {
-        return qprCount === 0;
+      _hideRepReqEditBtn(editMode, qprCount) {
+        return qprCount === 0 || !editMode;
       }
 
     }
