@@ -253,7 +253,7 @@
       }
 
       _hideDeleteBtn() {
-        return !(!this.partner || !this.partner.core_values_assessment_file);
+        return this.partner && this.partner.core_values_assessment_file;
       }
 
       _partnerChanged(partner) {
@@ -269,6 +269,14 @@
             this._displayMicroAssessmentNotification(partner.last_assessment_date);
           }
         }
+      }
+
+      _displayCoreValuesAssessmentNotification(assessmentDate) {
+        this._checkAndShowExpiryWarning(assessmentDate, 'Core Values Assessment');
+      }
+
+      _displayMicroAssessmentNotification(assessmentDate) {
+        this._checkAndShowExpiryWarning(assessmentDate, 'Micro Assessment');
       }
 
       _checkAndShowExpiryWarning(assesmentDateString, assesmentType) {
@@ -296,14 +304,6 @@
             this.fireEvent('toast', {text: notifMessage, showCloseBtn: true});
           }, 0);
         }
-      }
-
-      _displayCoreValuesAssessmentNotification(assessmentDate) {
-        this._checkAndShowExpiryWarning(assessmentDate, 'Core Values Assessment');
-      }
-
-      _displayMicroAssessmentNotification(assessmentDate) {
-        this._checkAndShowExpiryWarning(assessmentDate, 'Micro Assessment');
       }
 
       _getPartnerType(partnerType, csoType) {
