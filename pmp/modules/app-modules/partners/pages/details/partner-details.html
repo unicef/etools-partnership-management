@@ -283,7 +283,7 @@
         let daysUntilExpire = assessmentExpDate.diff(today, 'days');
 
         let notifMessage = '';
-        if (daysUntilExpire < 0) {
+        if (daysUntilExpire < 1) {
           notifMessage = 'The ' + assesmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
         } else {
           let notifStartDateStr = moment(assessmentDate).add(57, 'months').format(datesFormat);
