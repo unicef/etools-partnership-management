@@ -263,23 +263,15 @@
               this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
 
           if (this.showCoreValuesAssessmentAttachment && partner.core_values_assessment_file) {
-            this._displayCoreValuesAssessmentNotification(partner.core_values_assessment_date);
+            this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
           }
           if (partner.type_of_assessment === 'Micro Assessment') {
-            this._displayMicroAssessmentNotification(partner.last_assessment_date);
+            this._displayAssessmentNotification(partner.last_assessment_date, 'Micro Assessment');
           }
         }
       }
 
-      _displayCoreValuesAssessmentNotification(assessmentDate) {
-        this._checkAndShowExpiryWarning(assessmentDate, 'Core Values Assessment');
-      }
-
-      _displayMicroAssessmentNotification(assessmentDate) {
-        this._checkAndShowExpiryWarning(assessmentDate, 'Micro Assessment');
-      }
-
-      _checkAndShowExpiryWarning(assesmentDateString, assesmentType) {
+      _displayAssessmentNotification(assesmentDateString, assesmentType) {
         if (!assesmentDateString) {
           return;
         }
