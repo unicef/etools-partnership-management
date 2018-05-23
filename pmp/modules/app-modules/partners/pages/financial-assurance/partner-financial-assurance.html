@@ -111,7 +111,7 @@
         @apply --layout-center;
       }
 
-      .view-only {
+      .darker-bg {
         background-color: #FAFAFA;
       }
 
@@ -144,7 +144,7 @@
         @apply --layout-center;
       }
 
-      .audits {
+      .margin-l {
         margin-left: 56px;
       }
 
@@ -153,7 +153,7 @@
         font-size: 12px;
       }
 
-      .spot-checks .row-h {
+      .no-r-padd .row-h {
         padding-right: 0;
       }
 
@@ -252,8 +252,8 @@
                           class="content-section">
       <div class="planning-wrapper">
         <div class="layout-horizontal">
-          <div class="table-main col-6 layout-vertical spot-checks">
-            <div class="table-main panel-row-tall row-h panel-table-row  view-only">
+          <div class="table-main col-4 layout-vertical no-r-padd">
+            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
               <div class="col-4 table-title">SPOT CHECKS</div>
               <div class="quarter">Q1</div>
               <div class="quarter">Q2</div>
@@ -261,112 +261,111 @@
               <div class="quarter">Q4</div>
               <div class="col-2 center-align">TOTAL</div>
             </div>
-            <div class="panel-row-extra-tall row-h panel-table-row  center">
-              <div class="col-4">Minimum Required([[partner.hact_min_requirements.spot_checks]])</div>
+            <div class="panel-row-extra-tall row-h panel-table-row">
+              <div class="col-4">Required</div>
               <div class="quarter">
-                <paper-radio-button
-                    data-idx="q1"
-                    on-tap="_toggleRadio"
-                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
-                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q1)]]">
-                </paper-radio-button>
+                [[partner.hact_values.spot_checks.planned.q1]]
               </div>
               <div class="quarter">
-                <paper-radio-button
-                    data-idx="q2"
-                    on-tap="_toggleRadio"
-                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
-                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q2)]]">
-                </paper-radio-button>
+                [[partner.hact_values.spot_checks.planned.q2]]
               </div>
               <div class="quarter">
-                <paper-radio-button
-                    data-idx="q3"
-                    on-tap="_toggleRadio"
-                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
-                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q3)]]">
-                </paper-radio-button>
+                [[partner.hact_values.spot_checks.planned.q3]]
               </div>
               <div class="quarter">
-                <paper-radio-button
-                    data-idx="q4"
-                    on-tap="_toggleRadio"
-                    disabled="[[!_getSpotCheckBoolVal(partner.hact_min_requirements.spot_checks)]]"
-                    checked="[[_getSpotCheckBoolVal(partner.planned_engagement.spot_check_mr.q4)]]">
-                </paper-radio-button>
+                [[partner.hact_values.spot_checks.planned.q4]]
               </div>
-              <div class="col-2 view-only totals layout-horizontal">
-                <strong>[[partner.hact_min_requirements.spot_checks]]</strong>
+              <div class="col-2 darker-bg totals layout-horizontal">
+                <strong>[[partner.hact_values.spot_checks.planned.total]]</strong>
               </div>
             </div>
 
             <div class="panel-row-extra-tall row-h panel-table-row ">
-              <div class="col-4">Follow-up Required</div>
+              <div class="col-4">Completed</div>
               <div class="quarter">
-                <paper-input
-                    no-label-float
-                    type="number"
-                    value="{{partner.planned_engagement.spot_check_follow_up_q1}}"
-                    disabled="[[!editMode]]"
-                    max="2">
-                </paper-input>
+                [[partner.hact_values.spot_checks.completed.q1]]
               </div>
               <div class="quarter">
-                <paper-input
-                    no-label-float
-                    type="number"
-                    value="{{partner.planned_engagement.spot_check_follow_up_q2}}"
-                    disabled="[[!editMode]]"
-                    max="2">
-                </paper-input>
+                [[partner.hact_values.spot_checks.completed.q2]]
               </div>
               <div class="quarter">
-                <paper-input
-                    no-label-float
-                    type="number"
-                    value="{{partner.planned_engagement.spot_check_follow_up_q3}}"
-                    disabled="[[!editMode]]"
-                    max="2">
-                </paper-input>
+                [[partner.hact_values.spot_checks.completed.q3]]
               </div>
               <div class="quarter">
-                <paper-input
-                    no-label-float
-                    type="number"
-                    value="{{partner.planned_engagement.spot_check_follow_up_q4}}"
-                    on-value-changed="_calculateFollowUpTotal"
-                    disabled="[[!editMode]]"
-                    max="2">
-                </paper-input>
+                [[partner.hact_values.spot_checks.completed.q4]]
               </div>
-              <div class="col-2 view-only totals layout-horizontal center-align">
-                <strong>[[partner.planned_engagement.total_spot_check_follow_up_required]]</strong>
+              <div class="col-2 darker-bg totals layout-horizontal center-align">
+                <strong>[[partner.hact_values.spot_checks.completed.total]]</strong>
               </div>
             </div>
           </div>
 
-          <div class="table-main col-3 layout-vertical audits">
-            <div class="table-main panel-row-tall row-h panel-table-row view-only">
+          <div class="table-main col-2 layout-vertical margin-l no-r-padd">
+            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
               <div class="flex-c table-title">AUDITS</div>
-              <div class="col-5">Required?</div>
+              <div class="col-5 center-align">TOTAL</div>
             </div>
             <div class="panel-row-extra-tall row-h panel-table-row ">
-              <div class="flex-c">Scheduled Audit</div>
-              <div class="col-5 layout-horizontal center-align">
-                <paper-toggle-button
-                    disabled="[[!editMode]]"
-                    checked="{{partner.planned_engagement.scheduled_audit}}"></paper-toggle-button>
+              <div class="flex-c">Required</div>
+              <div class="col-5 layout-horizontal center-align totals darker-bg">
+                [[partner.hact_values.audits.minimum_requirements]]
               </div>
             </div>
             <div class="panel-row-extra-tall row-h panel-table-row ">
-              <div class="flex-c">Special Audit</div>
-              <div class="col-5 layout-horizontal center-align">
-                <paper-toggle-button
-                    disabled="[[!editMode]]"
-                    checked="{{partner.planned_engagement.special_audit}}"></paper-toggle-button>
+              <div class="flex-c">Completed</div>
+              <div class="col-5 layout-horizontal center-align totals darker-bg">
+                [[partner.hact_values.audits.completed]]
               </div>
             </div>
           </div>
+
+          <div class="table-main col-4 layout-vertical margin-l no-r-padd">
+              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
+                <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
+                <div class="quarter">Q1</div>
+                <div class="quarter">Q2</div>
+                <div class="quarter">Q3</div>
+                <div class="quarter">Q4</div>
+                <div class="col-2 center-align">TOTAL</div>
+              </div>
+              <div class="panel-row-extra-tall row-h panel-table-row">
+                <div class="col-4">Planned</div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.planned.q1]]
+                </div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.planned.q2]]
+                </div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.planned.q3]]
+                </div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.planned.q4]]
+                </div>
+                <div class="col-2 darker-bg layout-horizontal totals">
+                  <strong>[[partner.hact_values.programmatic_visits.planned.total]]</strong>
+                </div>
+              </div>
+
+              <div class="panel-row-extra-tall row-h panel-table-row ">
+                <div class="col-4">Completed</div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.completed.q1]]
+                </div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.completed.q2]]
+                </div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.completed.q3]]
+                </div>
+                <div class="quarter">
+                  [[partner.hact_values.programmatic_visits.completed.q4]]
+                </div>
+                <div class="col-2 darker-bg totals layout-horizontal center-align">
+                  <strong>[[partner.hact_values.programmatic_visits.completed.total]]</strong>
+                </div>
+              </div>
+            </div>
         </div>
 
       </div>
@@ -525,10 +524,7 @@
 
       static get observers() {
         return [
-          '_paginate(paginator.page, paginator.page_size)',
-          '_calculateFollowUpTotal(partner.planned_engagement.spot_check_follow_up_q1,' +
-          'partner.planned_engagement.spot_check_follow_up_q2, partner.planned_engagement.spot_check_follow_up_q3,' +
-          'partner.planned_engagement.spot_check_follow_up_q4)'
+          '_paginate(paginator.page, paginator.page_size)'
         ];
       }
 
@@ -626,10 +622,6 @@
         return moment().year();
       }
 
-      _getSpotCheckBoolVal(val) {
-        return !!val;
-      }
-
       _toggleRadio(e) {
         const checked = e.target.checked;
         const quarter = e.target.getAttribute('data-idx');
@@ -642,19 +634,6 @@
           [quarter]: checked ? 1 : 0
         });
         this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
-      }
-
-      _calculateFollowUpTotal(q1, q2, q3, q4) {
-        if (!this.partner) {
-          return;
-        }
-        this.set('partner.planned_engagement.total_spot_check_follow_up_required',
-            _.sum([
-              Number(q1),
-              Number(q2),
-              Number(q3),
-              Number(q4)
-            ]));
       }
 
       _goToReport(e) {
