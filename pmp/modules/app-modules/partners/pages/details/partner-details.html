@@ -269,37 +269,45 @@
         }
       }
 
+      _checkAndShowExpiryWarning(assesmentDateString, assesmentType) {
+        if (!assesmentDateString) {
+          return;
+        }
+        let datesFormat = 'YYYY-MM-DD';
+        let now = moment.utc();
+        let assessmentDate = this._convertDate(assesmentDateString);
+        let assessmentExpDate = moment(assessmentDate).add(60, 'months');
+
+        let daysUntilExpire = assessmentExpDate.diff(now, 'days');
+
+        let notifMessage = '';
+        if (daysUntilExpire < 0) {
+          notifMessage = 'The ' + assesmentType + ' is expired (' +
+              assessmentExpDate.format(datesFormat) + ')';
+        } else {
+          let notifStartDateStr = moment(assessmentDate).add(57, 'months').format(datesFormat);
+          let today = now.format(datesFormat);
+          if (moment(notifStartDateStr).isSame(today) || moment(notifStartDateStr).isBefore(today)) {
+            notifMessage = 'The ' + assesmentType + ' will expire in ' + daysUntilExpire + ' days';
+          }
+        }
+        if (notifMessage) {
+          setTimeout(() => {
+            this.fireEvent('toast', {text: notifMessage, showCloseBtn: true});
+          }, 0);
+        }
+      }
+
       _displayCoreValuesAssessmentNotification(partner) {
-        // ch1889
         if (partner.core_values_assessment_file) {
-          let datesFormat = 'YYYY-MM-DD';
-          let now = moment.utc();
-          let coreValsAssessmentDate = this._convertDate(partner.core_values_assessment_date);
-          let coreValsAssessmentExpDate = moment(coreValsAssessmentDate).add(60, 'months');
-
-          let daysUntilExpire = coreValsAssessmentExpDate.diff(now, 'days');
-
-          let notifMessage = '';
-          if (daysUntilExpire < 0) {
-            notifMessage = 'The Core Values Assessment is expired (' +
-                coreValsAssessmentExpDate.format(datesFormat) + ')';
-          } else {
-            let notifStartDateStr = moment(coreValsAssessmentDate).add(57, 'months').format(datesFormat);
-            let today = now.format(datesFormat);
-            if (moment(notifStartDateStr).isSame(today) || moment(notifStartDateStr).isBefore(today)) {
-              notifMessage = 'The Core Values Assessment will expire in ' + daysUntilExpire + ' days';
-            }
-          }
-          if (notifMessage) {
-            setTimeout(() => {
-              this.fireEvent('toast', {text: notifMessage, showCloseBtn: true});
-            }, 0);
-          }
+          this._checkAndShowExpiryWarning(partner.core_values_assessment_date, 'Core Values Assessment');
         }
       }
 
       _displayMicroAssessmentNotification(partner) {
-        // ch1889
+        if (partner.type_of_assessment === 'Micro Assessment') {
+          this._checkAndShowExpiryWarning(partner.last_assessment_date, 'Micro Assessment');
+        }
       }
 
       _getPartnerType(partnerType, csoType) {
