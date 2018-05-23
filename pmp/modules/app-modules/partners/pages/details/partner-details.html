@@ -282,8 +282,7 @@
 
         let notifMessage = '';
         if (daysUntilExpire < 0) {
-          notifMessage = 'The ' + assesmentType + ' is expired (' +
-              assessmentExpDate.format(datesFormat) + ')';
+          notifMessage = 'The ' + assesmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
         } else {
           let notifStartDateStr = moment(assessmentDate).add(57, 'months').format(datesFormat);
           let today = now.format(datesFormat);
@@ -305,9 +304,13 @@
       }
 
       _displayMicroAssessmentNotification(partner) {
-        if (partner.type_of_assessment === 'Micro Assessment') {
-          this._checkAndShowExpiryWarning(partner.last_assessment_date, 'Micro Assessment');
+        if (this._isMicroAssessment(partner)) {
+          this._checkAndShowExpiryWarning(partner.last_assessment_date, partner.type_of_assessment);
         }
+      }
+
+      _isMicroAssessment(partner) {
+        return partner.type_of_assessment === 'Micro Assessment';
       }
 
       _getPartnerType(partnerType, csoType) {
