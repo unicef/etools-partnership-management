@@ -55,7 +55,8 @@
                                  selected="{{item.disaggregId}}"
                                  option-value="id"
                                  option-label="name"
-                                 on-iron-select="_onDisaggregationSelected"
+                                 trigger-value-change-event
+                                 on-etools-selected-item-changed="_onDisaggregationSelected"
                                  disable-on-focus-handling>
                 </etools-dropdown>
               </div>
@@ -127,7 +128,7 @@
       }
 
       _onDisaggregationSelected(event) {
-        let selectedDisagreg = JSON.parse(event.detail.item.getAttribute('item'));
+        let selectedDisagreg = event.detail.selectedItem;
         if (!selectedDisagreg) {
           return;
         }

@@ -191,6 +191,12 @@
     reportingRequirements: {
       template: '/api/v2/interventions/<%=intervId%>/reporting-requirements/<%=reportType%>/'
     },
+    specialReportingRequirements: {
+      template: '/api/v2/reports/interventions/<%=intervId%>/special-reporting-requirements/'
+    },
+    specialReportingRequirementsUpdate: {
+      template: '/api/v2/reports/interventions/special-reporting-requirements/<%=reportId%>/'
+    },
     reportRequirementsList: {
       template: '/api/v2/interventions/<%=intervId%>/reporting-periods/'
     },
@@ -224,6 +230,9 @@
     },
     resultExports: {
       url: '/api/v2/reports/applied-indicators/intervention/'
+    },
+    pdLocationsExport: {
+      url: '/api/v2/interventions/locations/'
     }
   };
 </script>

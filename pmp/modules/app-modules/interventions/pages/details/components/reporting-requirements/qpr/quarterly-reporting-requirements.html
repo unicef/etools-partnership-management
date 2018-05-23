@@ -3,7 +3,6 @@
 
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-<link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
@@ -46,13 +45,11 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      * @appliesMixin EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements
      */
     const QuarterlyReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
       EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements
     ], Polymer.Element);

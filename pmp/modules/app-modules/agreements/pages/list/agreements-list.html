@@ -175,7 +175,7 @@
                 initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
-            <span class="col-data col-2 ">
+            <span class="col-data col-2">
               <a class="ag-ref truncate"
                  href="agreements/[[agreement.id]]/details"
                  title="[[getDisplayValue(agreement.agreement_number)]]"
@@ -277,14 +277,16 @@
           },
           selectedPartners: {
             type: Array,
-            observer: 'resetPageNumber'
+            observer: '_arrayFilterChanged'
           },
           startDate: {
             type: String,
+            value: '',
             observer: 'resetPageNumber'
           },
           endDate: {
             type: String,
+            value: '',
             observer: 'resetPageNumber'
           },
           partnersDropdownData: {
@@ -325,7 +327,7 @@
         this.initListFiltersData([
           {
             filterName: 'Partner',
-            type: 'esmm', // etools-multi-selection-menu
+            type: 'esmm', // etools-dropdown-multi
             multiple: true,
             selectionOptions: partnersDropdownData,
             alreadySelected: [],
@@ -369,7 +371,7 @@
         this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
         this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
         this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
-        this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
+        this.set('selectedPartners', this._getFilterUrlValuesAsArray(urlQueryParams.partners));
         this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
         this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
 
@@ -389,7 +391,7 @@
               let filtersValues = [
                 {
                   filterName: 'Partner',
-                  selectedValue: _.map(this.selectedPartners, 'value')
+                  selectedValue: this.selectedPartners
                 },
                 {
                   filterName: 'Starts After',
@@ -431,7 +433,8 @@
                   this.q.trim().toLowerCase(),
                   this.selectedAgTypes,
                   this.selectedAgStatuses,
-                  _.map(this.selectedPartners, 'label'),
+                  this.getFilterValuesByProperty(this.partnersDropdownData,
+                      'label', this.selectedPartners, 'value'),
                   this.startDate,
                   this.endDate,
                   this.paginator.page,
@@ -449,7 +452,7 @@
           q: this.q,
           type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partners: _.map(this.selectedPartners, 'value'),
+          partners: this.selectedPartners,
           start: this.startDate,
           end: this.endDate,
           sort: this.sortOrder
@@ -461,7 +464,8 @@
         let params = {
           agreement_type: this.selectedAgTypes,
           status: this.selectedAgStatuses,
-          partner_name: !_.isEmpty(this.selectedPartners) ? this.selectedPartners.map(p => p.label) : '',
+          partner_name: this.getFilterValuesByProperty(this.partnersDropdownData,
+              'label', this.selectedPartners, 'value'),
           start: this.startDate,
           end: this.endDate,
           search: this.q
@@ -469,25 +473,10 @@
         return this._buildCsvExportUrl(params, endpointUrl);
       }
 
-      // Convert ids from URL into array of ids
-      _getPartners(urlIds) {
-        let urlIdsArr = urlIds.split('|');
-        if (urlIdsArr.length) {
-          return this._getPartnersByIds(urlIdsArr);
+      _arrayFilterChanged(filterVal, oldFilterVals) {
+        if (typeof oldFilterVals !== 'undefined' && filterVal.length !== oldFilterVals.length) {
+          this.resetPageNumber();
         }
-        return [];
-      }
-
-      // get partners by ids
-      _getPartnersByIds(partnerIds) {
-        if (partnerIds instanceof Array && partnerIds.length &&
-            this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
-          let _selectedPartners = this.partnersDropdownData.filter(function(partner) {
-            return partnerIds.indexOf(partner.value + '') > -1;
-          });
-          return _selectedPartners;
-        }
-        return [];
       }
 
       // verify date and prettify or not

@@ -59,9 +59,30 @@
         };
       }
 
-      query(field, order, searchString, documentTypes, cpOutputs,
-                      interventionStatuses, sections, unicefFocalPoints, offices, startDate,
-                      endDate, pageNumber, pageSize, showQueryLoading) {
+      _filterFound(intervention, prop, multiple, filterValues) {
+        if (!filterValues.length) {
+          return true;
+        }
+
+        let foundValues;
+        if (multiple) {
+          // case for intervention properties values like: offices, sections, cp outputs (array of values)
+          foundValues = intervention[prop].filter(function(propVal) {
+            return filterValues.indexOf(String(propVal)) > -1;
+          });
+          return foundValues && foundValues.length > 0;
+        } else {
+          // case for intervention properties values like: status, doc type (primitive types)
+          foundValues = filterValues.filter(function(selectedFilter) {
+            return selectedFilter === intervention[prop];
+          });
+          return !!foundValues[0];
+        }
+      }
+
+      query(field, order, searchString, documentTypes, cpOutputs, donors, grants,
+            statuses, sections, unicefFocalPoints, offices, startDate,
+            endDate, pageNumber, pageSize, showQueryLoading) {
 
         // If an active query transaction exists, abort it and start
         // a new one
@@ -94,59 +115,15 @@
 
           queryResult = queryResult.filter(function(intervention) {
 
-            if (documentTypes.length) {
-              let matchType = documentTypes.filter(function(selectedType) {
-                return selectedType === intervention.document_type;
-              })[0];
-
-              if (!matchType) {
-                return false;
-              }
-            }
-
-            if (cpOutputs.length) {
-              let matchCpOut = intervention.cp_outputs.filter(function(cpOut) {
-                return cpOutputs.indexOf(cpOut + '') > -1;
-              });
-              if (matchCpOut && matchCpOut.length === 0) {
-                return false;
-              }
-            }
-
-            if (interventionStatuses.length) {
-              let matchStatus = interventionStatuses.filter(function(selectedStatus) {
-                return selectedStatus === intervention.status;
-              })[0];
-
-              if (!matchStatus) {
-                return false;
-              }
-            }
-
-            if (sections.length) {
-              let matchSections = intervention.sections.filter(function(section) {
-                return sections.indexOf(section + '') > -1;
-              });
-              if (matchSections && matchSections.length === 0) {
-                return false;
-              }
-            }
-            if (unicefFocalPoints.length) {
-              let matchUnicefFocalPoints = intervention.unicef_focal_points.filter(function(fPt) {
-                return unicefFocalPoints.indexOf(fPt + '') > -1;
-              });
-              if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
-                return false;
-              }
-            }
-
-            if (offices.length) {
-              let matchOffices = intervention.offices.filter(function(officeId) {
-                return offices.indexOf(officeId + '') > -1;
-              });
-              if (matchOffices && matchOffices.length === 0) {
-                return false;
-              }
+            if (!self._filterFound(intervention, 'status', false, statuses) ||
+                !self._filterFound(intervention, 'document_type', false, documentTypes) ||
+                !self._filterFound(intervention, 'sections', true, sections) ||
+                !self._filterFound(intervention, 'offices', true, offices) ||
+                !self._filterFound(intervention, 'unicef_focal_points', true, unicefFocalPoints) ||
+                !self._filterFound(intervention, 'cp_outputs', true, cpOutputs) ||
+                !self._filterFound(intervention, 'donors', true, donors) ||
+                !self._filterFound(intervention, 'grants', true, grants)) {
+              return false;
             }
 
             if (startDate && startDate.length &&

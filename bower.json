@@ -4,6 +4,7 @@
     "The eTools Team"
   ],
   "version": "2.0.0",
+  "revision": "revNo",
   "private": true,
   "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
   "dependencies": {
@@ -15,10 +16,10 @@
     "etools-behaviors": "2.0.0",
     "etools-content-panel": "2.0.0",
     "etools-currency-amount-input": "2.0.0",
-    "etools-data-table": "2.0.1",
+    "etools-data-table": "2.0.2",
     "etools-datepicker": "2.1.0",
     "etools-dialog": "2.0.1",
-    "etools-dropdown": "2.0.2",
+    "etools-dropdown": "2.0.4",
     "etools-file": "2.0.0",
     "etools-info-tooltip": "2.0.0",
     "etools-loading": "3.0.0",
