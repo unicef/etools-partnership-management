@@ -51,7 +51,8 @@
         </paper-button>
       </div>
 
-      <qpr-list with-scroll
+      <qpr-list id="qprList"
+                with-scroll
                 qpr-data="[[qprData]]"
                 edit-mode
                 in-amendment="[[inAmendment]]"
@@ -218,7 +219,8 @@
       }
 
       _getEditedQprDatesSetId(index) {
-        return (index >= 0) ? (index + 1) : '';
+        return this.$.qprList.getIndex(index, this.qprData.length);
+        // return (index >= 0) ? (+index + 1) : '';
       }
 
       _saveModifiedQprData() {

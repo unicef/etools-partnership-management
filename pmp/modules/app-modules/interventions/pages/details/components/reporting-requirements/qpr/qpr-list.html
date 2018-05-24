@@ -30,7 +30,7 @@
       <etools-data-table-row no-collapse
                              secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date, item.id)]]">
         <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
-          <span class="col-data col-1 right-align index-col">[[_getIndex(index, qprData.length)]]</span>
+          <span class="col-data col-1 right-align index-col">[[getIndex(index, qprData.length)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
           <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
@@ -85,11 +85,11 @@
         ];
       }
 
-      _getIndex(index, dataItemsLength) {
-        if (index + 1 === dataItemsLength) {
+      getIndex(index, dataItemsLength) {
+        if (+index + 1 === dataItemsLength) {
           return 'FINAL';
         }
-        return index + 1;
+        return +index + 1;
       }
 
       _sortReportingReq(qprData) {

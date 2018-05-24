@@ -26,7 +26,7 @@
     <style include="buttons-styles grid-layout-styles data-table-styles reporting-requirements-lists-styles">
     </style>
 
-    <div class="row-h" hidden$="[[!_empty(reportingRequirements)]]">
+    <div class="row-h" hidden$="[[!_empty(reportingRequirements, reportingRequirements.length)]]">
       There are no special reporting requirements set.
     </div>
 
@@ -36,7 +36,7 @@
       </paper-button>
     </div>
 
-    <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
+    <div class="flex-c" hidden$="[[_empty(reportingRequirements, reportingRequirements.length)]]">
       <etools-data-table-header no-collapse
                                 no-title>
         <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
@@ -224,6 +224,7 @@
         let savedReqItem = e.detail;
         let index = this._getIndexById(savedReqItem.id);
         if (index > -1) {
+          // edit
           this.splice('reportingRequirements', index, 1, savedReqItem);
         } else {
           this.push('reportingRequirements', savedReqItem);
