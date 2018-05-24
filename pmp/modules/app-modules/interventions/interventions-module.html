@@ -134,6 +134,7 @@
             <paper-listbox slot="dropdown-content">
               <paper-item on-tap="_exportPdBudget">[[CONSTANTS.PD_EXPORT_TYPES.PdBudget]] Export</paper-item>
               <paper-item on-tap="_exportPdResult">[[CONSTANTS.PD_EXPORT_TYPES.PdResult]] Export</paper-item>
+              <paper-item on-tap="_exportPdLocations">[[CONSTANTS.PD_EXPORT_TYPES.PdLocations]] Export</paper-item>
             </paper-listbox>
           </paper-menu-button>
         </div>
@@ -728,6 +729,10 @@
 
       _exportPdResult() {
         this._exportPD(this.getEndpoint('resultExports').url);
+      }
+
+      _exportPdLocations() {
+        this._exportPD(this.getEndpoint('pdLocationsExport').url);
       }
 
       _exportPD(endpoint) {
