@@ -5,6 +5,7 @@
   ],
   "version": "2.0.0",
   "revision": "revNo",
+  "buildDate": "bDate",
   "private": true,
   "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
   "dependencies": {
