@@ -184,14 +184,21 @@
                               error-message="Please select Signed PD/SSFA document">
           </etools-single-file>
         </div>
-        <div class="col col-3">
-          <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
+        <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
+          <div class="col col-3">
             <paper-input label="Days from Submission to Signed"
-                         value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
-                         placeholder="&#8212;" readonly>
+                             value="[[intervention.days_from_submission_to_signed]]"
+                             placeholder="&#8212;" readonly>
             </paper-input>
-          </template>
-        </div>
+          </div>
+          <div class="col col-3">
+            <paper-input label="Days from Review to Signed"
+                             value="[[intervention.days_from_review_to_signed]]"
+                             placeholder="&#8212;" readonly>
+            </paper-input>
+          </div>
+        </template>
+
       </div>
     </etools-content-panel>
 
@@ -353,19 +360,6 @@
 
           this.set('agreementAuthorizedOfficers', authorizedOfficerData);
         }
-      }
-
-      getDaysFromSubmissionToSign(dateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
-        if (typeof dateStr === 'string' && dateStr !== '' &&
-            (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
-                typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
-
-          let maxSignedDateStr = this.getMaxDateStr(signedByPartnerDateStr, signedByUnicefDateStr);
-          if (maxSignedDateStr !== null && new Date(dateStr).toString() !== 'Invalid Date') {
-            return this.dateDiff(dateStr, maxSignedDateStr);
-          }
-        }
-        return null;
       }
 
       validate() {
