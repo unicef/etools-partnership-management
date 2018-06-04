@@ -45,7 +45,14 @@
       {value: 'Sub', label: 'Submitted'},
       {value: 'Ove', label: 'Overdue'}
     ],
-    locationTypes: []
+    locationTypes: [],
+    grants: [],
+    donors: [],
+    partnerRiskRatings: [],
+    pageData: {
+      permissions: null,
+      in_amendment: false
+    }
   };
 
   const reduxStoreReducer = (state, action) => {
@@ -56,6 +63,8 @@
     let csoPartnerCopy;
     let indexP;
     let index;
+    let pageDataWithPermsUpdated;
+    let pageDataInAmendment;
 
     switch (action.type) {
       case 'SET_FILE_TYPES':
@@ -184,11 +193,28 @@
       case 'SET_LOCATION_TYPES':
         return Object.assign({}, state, {locationTypes: action.locationTypes});
 
+      case 'SET_DONORS':
+        return Object.assign({}, state, {donors: action.donors});
+
+      case 'SET_GRANTS':
+        return Object.assign({}, state, {grants: action.grants});
+
+      case 'SET_PARTNER_RISK_RATINGS':
+        return Object.assign({}, state, {partnerRiskRatings: action.partnerRiskRatings});
+
       case 'SET_PRP_COUNTRY_DATA':
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
 
       case 'SET_ENV_FLAGS':
         return Object.assign({}, state, {envFlags: action.envFlags});
+
+      case 'SET_PAGE_DATA_PERMISSIONS':
+        pageDataWithPermsUpdated = Object.assign({}, state.pageData, {permissions: action.permissions});
+        return Object.assign({}, state, {pageData: pageDataWithPermsUpdated});
+
+      case 'SET_IN_AMENDMENT_MODE_STATE':
+        pageDataInAmendment = Object.assign({}, state.pageData, {in_amendment: action.in_amendment});
+        return Object.assign({}, state, {pageData: pageDataInAmendment});
 
       default:
         // no change

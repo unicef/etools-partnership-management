@@ -128,7 +128,7 @@
         }
       }
 
-      query(field, order, searchString, partnerTypes, csoTypes,
+      query(field, order, searchString, partnerTypes, csoTypes, riskRatings,
             pageNumber, pageSize, showHidden, showQueryLoading) {
 
         // If an active query transaction exists, abort it and start
@@ -141,7 +141,7 @@
 
         if (showQueryLoading) {
           this.fireEvent('global-loading', {
-            message: 'Loading partners list data...',
+            message: 'Loading...',
             active: true,
             loadingSource: 'partners-list'
           });
@@ -166,6 +166,10 @@
             }
 
             if (!_.isEmpty(csoTypes) && csoTypes.indexOf(partner.cso_type) === -1) {
+              return false;
+            }
+
+            if (!_.isEmpty(riskRatings) && riskRatings.indexOf(partner.rating) === -1) {
               return false;
             }
 

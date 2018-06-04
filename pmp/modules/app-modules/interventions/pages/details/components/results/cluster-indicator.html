@@ -17,10 +17,12 @@
 <dom-module id="cluster-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
+      :host {
+        display: block;
+      }
       paper-input {
         width: 100%;
       }
-
     </style>
     <template is="dom-if" if="[[!isNewIndicator]]">
       <div class="row-h flex-c">
@@ -237,7 +239,7 @@
       }
 
       _getPrpClusterIndicator(clusterIndicId) {
-        this.fireEvent('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
+        this.fireEvent('start-spinner', {spinnerText: 'Loading...'});
         let self = this;
         this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
             .then(function(response) {
@@ -284,7 +286,7 @@
         if (!clusterId) {
           return;
         }
-        this.fireEvent('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});
+        this.fireEvent('start-spinner', {spinnerText: 'Loading...'});
         let self = this;
         this.fireRequest('getPrpClusterIndicators', {id: clusterId})
             .then(function(response) {

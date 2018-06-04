@@ -93,7 +93,7 @@
           this._setPartner({});
           // set the new endpoint
           this.fireEvent('global-loading', {
-            message: 'Loading partner data...',
+            message: 'Loading...',
             active: true,
             loadingSource: this.ajaxLoadingMsgSource
           });
@@ -128,10 +128,47 @@
         }
         if (ajaxMethod === 'DELETE') {
           this.dispatch('deletePartner', this.deletedPartnerId);
-          EtoolsPmpApp.DexieDb.table('partners').delete(this.deletedPartnerId).then(() => {
-            this.fireEvent('reload-list');
-          });
+          this._deletePartnerFromDexie(this.deletedPartnerId);
         }
+      }
+
+      _deletePartnerFromDexie(id) {
+        EtoolsPmpApp.DexieDb.partners.where('id')
+            .equals(parseInt(id, 10))
+            .delete()
+            .then(deleteCount => this._handlePartnerDeleteFromDexieSuccess(deleteCount))
+            .catch(dexieDeleteErr => this._handlePartnerDeleteFromDexieErr(dexieDeleteErr))
+            .then(() => {
+              // disable loading
+              this.fireEvent('global-loading', {
+                active: false,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
+              // go to partners list after delete
+              this.fireEvent('update-main-path', {path: 'partners/list'});
+            });
+      }
+
+      _handlePartnerDeleteFromDexieSuccess(deleteCount) {
+        if (deleteCount === 1) {
+          this.fireEvent('reload-list');
+          this.fireEvent('toast', {
+            text: 'Partner successfully deleted.',
+            showCloseBtn: true
+          });
+        } else {
+          throw new Error('Partner was not deleted from dexie!');
+        }
+      }
+
+      _handlePartnerDeleteFromDexieErr(dexieDeleteErr) {
+        // Partner dexie deleted issue
+        this.logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
+        this.fireEvent('toast', {
+          text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
+          'partner data from browser cache. Use refresh data functionality to update cached partners data.',
+          showCloseBtn: true
+        });
       }
 
       _handleErrorResponse(response, ajaxMethod) {
@@ -162,7 +199,7 @@
           return;
         }
         this.fireEvent('global-loading', {
-          message: 'Creating new partner...',
+          message: 'Importing partner information...',
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
@@ -175,15 +212,11 @@
         this._triggerPartnerRequest({method: 'POST', endpoint: endpoint, body: {}});
       }
 
-      deletePartner(partner, succCallback, errCallback) {
+      deletePartner(partner) {
         if (!partner.id) {
           return;
         }
-
         this.deletedPartnerId = partner.id;
-        this.handleSuccResponseAdditionalCallback = succCallback;
-        this.handleErrResponseAdditionalCallback = errCallback;
-
         let endpoint = this.getEndpoint(this.partnerEndpoints.DELETE, {id: partner.id});
         this._triggerPartnerRequest({method: 'DELETE', endpoint: endpoint, body: {}});
       }
@@ -235,7 +268,7 @@
               }
             }
             this.fireEvent('global-loading', {
-              message: 'Saving partner data...',
+              message: 'Saving...',
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });

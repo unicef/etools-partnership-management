@@ -1,0 +1,90 @@
+<link rel="import" href="../../../../../../../scripts/lodash.html">
+<link rel="import" href="../../../../../../../mixins/date-mixin.html">
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin EtoolsPmpApp.Mixins.Date
+   */
+  EtoolsPmpApp.Mixins.GenerateQuarterlyReportingRequirements =
+      baseClass => class extends EtoolsPmpApp.Mixins.Date(baseClass) {
+
+        static get properties() {
+          return {
+            END_DATE_WEEKS_TO_ADD: {
+              type: Number,
+              value: 12
+            },
+            DUE_DATE_WEEKS_TO_ADD: {
+              type: Number,
+              value: 1
+            },
+            datesFormat: {
+              type: String,
+              value: 'YYYY-MM-DD'
+            }
+          };
+        }
+
+        /**
+         * Used to generate (one time) QPR first dates set.
+         * Generation method:
+         *    - get pd start date and calculate end date
+         *    - end date = start date + 12 weeks
+         *    - calculate due date = end date + 1 week
+         *    - move to next start date = end date + 1 day
+         *    - repeat until entire PD timeline is covered
+         * @param pdStartDateStr
+         * @param pdEndDateStr
+         * @returns {Array}
+         */
+        generateQPRData(pdStartDateStr, pdEndDateStr) {
+          let qprData = [];
+          let start = String(pdStartDateStr);
+          let end = this._generateEndDate(start);
+          while (this._generatedEndIsBeforeOrEqPdEnd(end.format(this.datesFormat), pdEndDateStr)) {
+            // add dates to qpr data list
+            qprData.push(this._getQPRDatesSet(start, end));
+            // recalculate next dates set
+            start = this._getNextStartDateStr(end);
+            end = this._generateEndDate(start);
+          }
+          // add one more to cover entire PD timeline
+          qprData.push(this._getQPRDatesSet(start, end));
+          return qprData;
+        }
+
+        _getQPRDatesSet(start, end) {
+          return {
+            start_date: start,
+            end_date: end.format(this.datesFormat),
+            due_date: this._generateDueDate(end).format(this.datesFormat)
+          };
+        }
+
+        _generatedEndIsBeforeOrEqPdEnd(endDateStr, pdEndStr) {
+          return moment(endDateStr).isBefore(pdEndStr) || moment(endDateStr).isSame(pdEndStr);
+        }
+
+        _generateEndDate(startStr) {
+          let d = moment.utc(this._convertDate(startStr));
+          d.add(this.END_DATE_WEEKS_TO_ADD, 'w');
+          return d;
+        }
+
+        _generateDueDate(momentEndDate) {
+          return moment(momentEndDate).add(this.DUE_DATE_WEEKS_TO_ADD, 'w');
+        }
+
+        _getNextStartDateStr(momentEndDate) {
+          return moment(momentEndDate).add(1, 'd').format(this.datesFormat);
+        }
+
+      };
+
+</script>

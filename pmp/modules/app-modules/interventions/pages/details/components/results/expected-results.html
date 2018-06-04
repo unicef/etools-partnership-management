@@ -86,7 +86,7 @@
                                        edit-mode$="[[editMode]]"
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
-                                       intervention="[[intervention]]"
+                                       intervention-status="[[interventionStatus]]"
                                        show-inactive-indicators="[[showInactiveIndicators]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
@@ -128,6 +128,7 @@
             value: 'interventionResultLinkDelete',
             readOnly: true
           },
+          interventionStatus: String,
           editMode: {
             type: Boolean
           },
@@ -144,7 +145,6 @@
             type: Boolean,
             value: true
           },
-          intervention: String,
           showInactiveIndicators: {
             type: Boolean,
             value: false

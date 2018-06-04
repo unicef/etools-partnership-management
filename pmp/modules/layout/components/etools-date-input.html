@@ -38,6 +38,8 @@
                                   pretty-date="{{value}}"
                                   json-date="{{jsonValue}}"
                                   date="[[prepareDatepickerDate(value)]]"
+                                  min-date="[[minDate]]"
+                                  max-date="[[maxDate]]"
                                   is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
                                   hidden$="[[readonly]]"
                                   no-init="[[noInit]]"
@@ -131,7 +133,13 @@
             type: Boolean,
             value: false
           },
-          validator: String
+          validator: String,
+          minDate: Date,
+          maxDate: Date,
+          disableFutureDates: {
+            type: Boolean,
+            observer: '_disableFutureDatesChanged'
+          }
         };
       }
 
@@ -197,6 +205,12 @@
       // prevents the element from rendering an error message container when valid
       _getErrorMessage(message, invalid) {
         return invalid ? message: '';
+      }
+
+      _disableFutureDatesChanged(disableFutureDates) {
+        if (disableFutureDates) {
+          this.set('maxDate', new Date());
+        }
       }
     }
 

@@ -42,6 +42,13 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Exporting revision number
+          command: |
+            REVNO=${CIRCLE_SHA1}
+            BUILDDATE=$(date -u +%F_%T)
+            sed -i "0,/revNo/s//$REVNO/" bower.json
+            sed -i "0,/bDate/s//$BUILDDATE/" bower.json
+      - run:
           name: Install Docker client
           command: |
             set -x

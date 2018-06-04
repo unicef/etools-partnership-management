@@ -1,11 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
-<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-page-refresh-mixin.html">
-<link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
@@ -21,25 +18,29 @@
       :host(:hover) {
         cursor: pointer;
       }
-      paper-dropdown-menu {
+
+      etools-dropdown {
         width: 160px;
+
+        --paper-listbox: {
+          max-height: 600px;
+        };
+
+        --esmm-icons: {
+          color: var(--countries-dropdown-color);
+          cursor: pointer;
+        };
+
         --paper-input-container-underline: {
           display: none;
         };
+
         --paper-input-container-underline-focus: {
           display: none;
         };
+
         --paper-input-container-underline-disabled: {
           display: none;
-        };
-
-        --paper-input-container-label: {
-          top: 4px;
-        };
-
-        --paper-dropdown-menu-icon: {
-          color: var(--countries-dropdown-color);
-          align-self: flex-end;
         };
 
         --paper-input-container-input: {
@@ -47,54 +48,29 @@
           cursor: pointer;
           min-height: 24px;
           text-align: right;
+          line-height: 21px;  /* for IE */
         };
 
         --paper-menu-button-dropdown: {
           max-height: 380px;
         }
       }
-
-      paper-item {
-        font-size: 15px;
-        white-space: nowrap;
-        cursor: pointer;
-        height: 48px;
-      }
-
-      iron-icon {
-        bottom: 2px;
-        min-width: 24px;
-        min-height: 20px;
-        margin-right: 8px;
-      }
-
-      paper-item iron-icon {
-        margin-right: 16px;
-      }
-
-      paper-listbox {
-        max-height: 360px;
-        overflow-x: hidden;
-        overflow-y: auto;
-      }
     </style>
-
-    <template is="dom-if" if="[[countrySelectorVisible]]">
-      <paper-dropdown-menu id="menu" label="Country" noink no-label-float allow-outside-scroll>
-        <paper-listbox slot="dropdown-content"
-                       id="countriesListbox"
-                       attr-for-selected="country-id"
-                       selected="[[currentCountry.id]]"
-                       on-iron-select="_countrySelected">
-          <template id="repeat" is="dom-repeat" items="[[countries]]">
-            <paper-item country-id$="[[item.id]]">
-              [[item.name]]
-            </paper-item>
-          </template>
-        </paper-listbox>
-
-      </paper-dropdown-menu>
-    </template>
+    <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
+    <etools-dropdown id="countrySelector"
+                     hidden$="[[!countrySelectorVisible]]"
+                     label="Country"
+                     selected="[[currentCountry.id]]"
+                     placeholder="&#8212;"
+                     allow-outside-scroll
+                     no-label-float
+                     options="[[countries]]"
+                     option-label="name"
+                     option-value="id"
+                     trigger-value-change-event
+                     on-etools-selected-item-changed="_countrySelected"
+                     shown-options-limit="250"
+                     hide-search></etools-dropdown>
   </template>
 
   <script>
@@ -110,9 +86,9 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
-        EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
-        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper
-      ], Polymer.Element);
+      EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
+      EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element);
 
     /**
     *
@@ -123,7 +99,7 @@
     class CountriesDropdown extends CountriesDropdownMixin {
 
       static get is() {
-          return 'countries-dropdown';
+        return 'countries-dropdown';
       }
 
       static get properties() {
@@ -139,11 +115,19 @@
         };
       }
 
+      connectedCallback() {
+        super.connectedCallback();
+        setTimeout( () => {
+          let fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
+          this.$.countrySelector.set('fitInto', fitInto);
+        }, 0);
+      }
+
       _countrySelected(e) {
-        if (!e.detail.item) {
+        if (!e.detail.selectedItem) {
           return;
         }
-        let selectedCountryId = parseInt(e.detail.item.getAttribute('country-id'), 10);
+        let selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
         if (selectedCountryId !== this.currentCountry.id) {
           // send post request to change_coutry endpoint
           this._triggerCountryChangeRequest(selectedCountryId);
@@ -153,7 +137,7 @@
       _triggerCountryChangeRequest(countryId) {
         let self = this;
         this.fireEvent('global-loading', {
-          message: 'Please wait while country is changing...',
+          message: 'Please wait while country data is changing...',
           active: true,
           loadingSource: 'country-change'
         });
@@ -162,7 +146,7 @@
           endpoint: this.getEndpoint('changeCountry'),
           method: 'POST',
           body: {country: countryId}
-        }).then(function(resp) {
+        }).then(function() {
           self._handleResponse();
         }).catch(function(error) {
           self._handleError(error);
@@ -170,10 +154,7 @@
       }
 
       _handleResponse() {
-        this.fireEvent('update-main-path', {path: ''});
-        // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
-        // TODO for TODO - refresh method is used elsewhere also and the code relies on the redirect trigerred
-        // by the refresh method
+        this.fireEvent('update-main-path', {path: 'partners'});
         this.refresh();
       }
 
@@ -186,7 +167,7 @@
       _handleError(error) {
         this.logError('Country change failed!', 'countries-dropdown', error);
         // TODO: this should be a larger alert.
-        this.$.countriesListbox.selected = this.currentCountry;
+        this.$.countrySelector.set('selected', this.currentCountry.id);
         this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
         this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});
       }

@@ -26,7 +26,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
-<!-- TODO: polymer2 - piwiki element - console errors fixes needed -->
 <link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 
 <!-- import global config and dexie db config -->
@@ -60,8 +59,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/environment-flags/environment-flags.html">
 
 <!-- other required mixins -->
+<link rel="import" href="modules/amendment-mode/redux-in-amendment-mixin.html">
+<link rel="import" href="modules/amendment-mode/amendment-mode-UI-mixin.html">
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
-<link rel="import" href="modules/mixins/amendment-mode-mixin.html">
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
 <link rel="import" href="modules/mixins/ie11-mixin.html">
 
@@ -137,12 +137,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <environment-flags></environment-flags>
-
-    <etools-piwik-analytics
-        page="[[subroute.prefix]]"
-        user="[[user]]"
-        toast="[[currentToastMessage]]">
-    </etools-piwik-analytics>
 
     <app-location
         route="{{route}}"
@@ -235,6 +229,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <static-common-data></static-common-data>
     <partners-list-data></partners-list-data>
     <agreements-list-data></agreements-list-data>
+
+    <etools-piwik-analytics
+        page="[[subroute.prefix]]"
+        user="[[user]]"
+        toast="[[currentToastMessage]]">
+    </etools-piwik-analytics>
+
   </template>
 
   <script>
@@ -247,7 +248,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsMixins.LoadingMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
-     * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
+     * @appliesMixin EtoolsPmpApp.Mixins.ReduxInAmendmentMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.AmendmentModeUIMixin
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.IE11
@@ -258,7 +260,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsMixins.LoadingMixin,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.ScrollControl,
-      EtoolsPmpApp.Mixins.AmendmentMode,
+      EtoolsPmpApp.Mixins.ReduxInAmendmentMixin,
+      EtoolsPmpApp.Mixins.AmendmentModeUIMixin,
       EtoolsPmpApp.Mixins.UserData,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.IE11
@@ -356,7 +359,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _scrollToTopOnPageChange(module) {
-        // TODO: polymer2 - check if this observer is correct. Do we realy need it?
+        // TODO: polymer2 - check if this observer is correct. Do we really need it?
         // Tested- seems to work the same without it..
         if (!module) {
           return;
@@ -388,7 +391,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageNotFound() {
         this._updatePath('not-found');
         // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-        this.fireEvent('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
+        this.fireEvent('toast', {text: 'An error occurred.', showCloseBtn: true});
       }
 
       _openDataRefreshDialog() {
@@ -451,7 +454,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._updateLastPartnersModuleActivePage(module);
         // clear loading messages queue
         this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-        this._setAmendMode(false);
+        this.updateReduxInAmendment(false);
       }
 
       _getModuleMainElUrl(elementName) {

@@ -77,7 +77,7 @@
         <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
           <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
             <iron-icon icon="add"></iron-icon>
-            Add New Partner
+            Import Partner
           </paper-button>
         </div>
       </div>
@@ -204,7 +204,7 @@
               },
               {
                 tab: 'financial-assurance',
-                tabLabel: 'Financial Assurance',
+                tabLabel: 'Assurance',
                 hidden: false
               }
             ]
@@ -312,8 +312,8 @@
         }
       }
 
-      _deletePartner(event) {
-        event.stopImmediatePropagation();
+      _deletePartner(e) {
+        e.stopImmediatePropagation();
         this.fireEvent('global-loading', {
           active: true,
           message: 'Deleting partner...',
@@ -322,8 +322,7 @@
 
         let partnerData = this.shadowRoot.querySelector('#partnerData');
         if (partnerData) {
-          partnerData.deletePartner(this.partner,
-              this._handlePartnerDeleted.bind(this), this._handlePartnerNotDeleted);
+          partnerData.deletePartner(this.partner);
         }
       }
 
@@ -338,13 +337,6 @@
         });
         this.fireEvent('update-main-path', {
           path: 'partners/list'
-        });
-      }
-
-      _handlePartnerNotDeleted() {
-        this.fireEvent('global-loading', {
-          active: false,
-          loadingSource: 'partner-data'
         });
       }
 
@@ -486,9 +478,8 @@
        * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
        */
       _showPartnersPageLoadingMessage() {
-        let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
         this.fireEvent('global-loading', {
-          message: 'Loading ' + appSection + ' elements...',
+          message: 'Loading...',
           active: true,
           loadingSource: 'partners-page'
         });

@@ -82,7 +82,7 @@
                    tabs="[[indicatorDataTabs]]"
                    active-tab="{{activeTab}}"
                    border-bottom
-                   on-selected-changed="_centerDialog"></etools-tabs>
+                   on-iron-select="_centerDialog"></etools-tabs>
 
       <iron-pages id="indicatorPages"
                   selected="{{activeTab}}"
@@ -130,7 +130,8 @@
             pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
           </div>
           <template is="dom-if" if="[[!isCluster]]" restamp>
-            <indicator-dissaggregations data-items="{{disaggregations}}">
+            <indicator-dissaggregations data-items="{{disaggregations}}"
+                                        on-add-new-disaggreg="_updateScroll">
             </indicator-dissaggregations>
           </template>
           <template is="dom-if" if="[[isCluster]]" restamp>
@@ -239,7 +240,7 @@
           },
           spinnerText: {
             type: String,
-            value: 'Saving indicator..'
+            value: 'Saving...'
           }
         };
       }
@@ -251,6 +252,10 @@
       ready() {
         super.ready();
         this._initIndicatorDialogListeners();
+      }
+
+      _updateScroll() {
+       this.$.indicatorDialog.scrollDown();
       }
 
       _initIndicatorDialogListeners() {
@@ -317,7 +322,7 @@
           e.stopImmediatePropagation();
         }
         this.$.indicatorDialog.stopSpinner();
-        this.spinnerText = 'Saving indicator..';
+        this.spinnerText = 'Saving...';
       }
 
       _startSpinner(e) {

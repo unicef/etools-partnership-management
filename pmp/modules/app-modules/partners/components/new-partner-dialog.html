@@ -13,11 +13,11 @@
     </style>
 
     <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
-                   dialog-title="New Partner" on-close="_handleDialogClosed">
+                   dialog-title="Import Partner" on-close="_handleDialogClosed">
 
-      <paper-input id="vendorNo" label="Vendor #" value="{{vendorNumber}}"
+      <paper-input id="vendorNo" label="VISION Vendor Number" value="{{vendorNumber}}"
                    placeholder="&#8212;" autofocus
-                   required auto-validate error-message="Vendor# is required"
+                   required auto-validate error-message="VISION Vendor number is required"
                    allowed-pattern="[0-9]"
                    char-counter
                    maxlength="11"></paper-input>
