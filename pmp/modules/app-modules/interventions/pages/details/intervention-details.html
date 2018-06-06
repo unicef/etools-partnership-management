@@ -93,6 +93,10 @@
         --iron-icon-width: 18px;
       }
 
+      .see-locations[disabled] {
+        background-color: transparent;
+      }
+
       paper-toggle-button#showInactive {
         --paper-toggle-button-label-color: white;
         --paper-toggle-button-checked-bar-color: white;
@@ -310,7 +314,7 @@
         <paper-button class="secondary-btn see-locations"
                       on-click="_openLocationsDialog"
                       title="See all locations"
-                      hidden$="[[_isEmpty(intervention.flat_locations.length)]]">
+                      disabled$="[[_isEmpty(intervention.flat_locations.length)]]">
           <iron-icon icon="add"></iron-icon>
           See all
         </paper-button>
