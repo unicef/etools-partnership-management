@@ -191,7 +191,7 @@
           Cash Transfers (USD)<br> (Jan-Dec)
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
-          PROG. VISIT<br> Planned / MR / Done
+          PROG. VISIT<br> Planned / MR / Completed
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
           SPOT CHECKS <br> Required / Completed
@@ -247,7 +247,56 @@
                           class="content-section">
       <div class="planning-wrapper">
         <div class="layout-horizontal">
+
           <div class="table-main col-4 no-r-padd">
+            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
+              <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
+              <div class="quarter">Q1</div>
+              <div class="quarter">Q2</div>
+              <div class="quarter">Q3</div>
+              <div class="quarter">Q4</div>
+              <div class="col-2 center-align">TOTAL</div>
+            </div>
+            <div class="row-h panel-table-row">
+              <div class="col-4">Planned</div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.planned.q1]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.planned.q2]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.planned.q3]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.planned.q4]]
+              </div>
+              <div class="col-2 darker-bg layout-horizontal totals">
+                <strong>[[partner.hact_values.programmatic_visits.planned.total]]</strong>
+              </div>
+            </div>
+
+            <div class="row-h panel-table-row ">
+              <div class="col-4">Completed</div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.completed.q1]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.completed.q2]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.completed.q3]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.programmatic_visits.completed.q4]]
+              </div>
+              <div class="col-2 darker-bg totals layout-horizontal center-align">
+                <strong>[[partner.hact_values.programmatic_visits.completed.total]]</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-main col-4 margin-l no-r-padd">
             <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
               <div class="col-4 table-title">SPOT CHECKS</div>
               <div class="quarter">Q1</div>
@@ -314,53 +363,7 @@
             </div>
           </div>
 
-          <div class="table-main col-4 margin-l no-r-padd">
-            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-              <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
-              <div class="quarter">Q1</div>
-              <div class="quarter">Q2</div>
-              <div class="quarter">Q3</div>
-              <div class="quarter">Q4</div>
-              <div class="col-2 center-align">TOTAL</div>
-            </div>
-            <div class="row-h panel-table-row">
-              <div class="col-4">Planned</div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.planned.q1]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.planned.q2]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.planned.q3]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.planned.q4]]
-              </div>
-              <div class="col-2 darker-bg layout-horizontal totals">
-                <strong>[[partner.hact_values.programmatic_visits.planned.total]]</strong>
-              </div>
-            </div>
 
-            <div class="row-h panel-table-row ">
-              <div class="col-4">Completed</div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.completed.q1]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.completed.q2]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.completed.q3]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.programmatic_visits.completed.q4]]
-              </div>
-              <div class="col-2 darker-bg totals layout-horizontal center-align">
-                <strong>[[partner.hact_values.programmatic_visits.completed.total]]</strong>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div>
