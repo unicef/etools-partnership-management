@@ -33,6 +33,7 @@
       iron-label {
         margin-bottom: 24px;
       }
+
     </style>
 
     <etools-dialog id="editQprDialog"
@@ -75,7 +76,7 @@
       </div>
 
       <div class="row-h">
-        <div class="col layout-vertical col-4">
+        <div class="col layout-vertical">
           <iron-label for="startDate">
             Start Date
           </iron-label>
@@ -84,7 +85,7 @@
                                     pretty-date="{{_editedQprDatesSet.start_date}}"
                                     format="YYYY-MM-DD"></etools-simple-datepicker>
         </div>
-        <div class="col layout-vertical col-4">
+        <div class="col layout-vertical">
           <iron-label for="endDate">
             End Date
           </iron-label>
@@ -93,7 +94,7 @@
                                     pretty-date="{{_editedQprDatesSet.end_date}}"
                                     format="YYYY-MM-DD"></etools-simple-datepicker>
         </div>
-        <div class="col layout-vertical col-4">
+        <div class="col layout-vertical">
           <iron-label for="dueDate">
             Due Date
           </iron-label>
