@@ -330,7 +330,7 @@
           return ['targetElForNumericUnit'];
         }
         if (this._getIndUnit() === 'percentage' && this._getIndDisplayType() === 'ratio') {
-          return ['targetNumerator','targetDenominator'];
+          return ['targetNumerator', 'targetDenominator'];
         }
         return (this._unitIsNumeric(this.indicator.indicator.unit))
             ? ['targetElForNumericUnit'] : ['targetElForNonNumericUnit'];
