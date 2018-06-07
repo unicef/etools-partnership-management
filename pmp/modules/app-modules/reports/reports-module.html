@@ -67,7 +67,10 @@
           Partner Reports
         </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
+          <a class="primary"
+             href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
+             target="_blank">[[report.programme_document.reference_number]]</a>
+          <span>: [[report.report_type]][[report.report_number]] [[report.reporting_period]]</span>
           <sup>
             <report-status status="[[report.status]]"></report-status>
           </sup>
