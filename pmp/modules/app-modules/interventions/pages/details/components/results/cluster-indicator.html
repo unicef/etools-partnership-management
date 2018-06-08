@@ -213,17 +213,17 @@
         ];
       }
 
-      ready() {
-        super.ready();
+
+      connectedCallback() {
+        super.connectedCallback();
+
         let self = this;
-        setTimeout(() => {
-          this.fireRequest('getResponsePlans', {})
+        this.fireRequest('getResponsePlans', {})
               .then(function(response) {
                 self.responsePlans = response;
               }).catch(function(error) {
             self.fireEvent('show-toast', {error: {response: error.message || error.response}});
           });
-        }, 10);
       }
 
       indicatorChanged(indicator) {
