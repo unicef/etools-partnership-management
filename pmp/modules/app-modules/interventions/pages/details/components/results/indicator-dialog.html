@@ -193,7 +193,9 @@
               cluster_indicator_title: null,
               cluster_indicator_id: null,
               cluster_name: null,
-              response_plan_name: null
+              response_plan_name: null,
+              label: null,
+              measurement_specifications: null
             }
           },
           actionParams: {
@@ -341,6 +343,7 @@
         if (typeof isCluster === 'undefined' && !skipUndefinedCheck) {
           return;
         }
+        this.resetFieldValues();
         let indicatorEl;
         if (this.isCluster) {
           indicatorEl = this.shadowRoot.querySelector('#clusterIndicatorEl');
