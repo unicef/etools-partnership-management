@@ -11,7 +11,9 @@
 
 <dom-module id="disaggregation-table-row">
   <template strip-whitespace>
-    <style include="disaggregation-table-styles"></style>
+    <style include="disaggregation-table-styles">
+      :host {}
+    </style>
 
     <tr class$="[[_computeClass(rowType)]]">
       <td class="cellTitle">

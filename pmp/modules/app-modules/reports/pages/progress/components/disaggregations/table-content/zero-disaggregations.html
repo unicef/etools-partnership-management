@@ -6,7 +6,9 @@
 <dom-module id="zero-disaggregations">
   <template strip-whitespace>
 
-    <style include='disaggregation-table-styles'></style>
+    <style include="disaggregation-table-styles">
+      :host {}
+    </style>
 
     <disaggregation-table-row
         data="[[totalRow]]"
