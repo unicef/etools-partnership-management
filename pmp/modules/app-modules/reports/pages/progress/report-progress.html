@@ -18,6 +18,7 @@
 <link rel="import" href="components/report-overall.html">
 <link rel="import" href="components/indicator-report-target.html">
 <link rel="import" href="components/indicator-details.html">
+<link rel="import" href="components/sr-details.html">
 
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -96,9 +97,7 @@
 
     <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->
     <template is="dom-if" if="[[_equals(report.report_type, 'SR')]]">
-      <div class="row-h">
-        <p>Special reporting requirements view not available yet.</p>
-      </div>
+      <sr-details report="[[report]]" report-attachment="[[reportAttachment]]"></sr-details>
     </template>
 
     <template is="dom-if" if="[[!_equals(report.report_type, 'SR')]]">
@@ -203,7 +202,8 @@
 
       static get properties() {
         return {
-          report: Object
+          report: Object,
+          reportAttachment: Object
         };
       }
 
