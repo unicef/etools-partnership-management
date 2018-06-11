@@ -80,10 +80,12 @@
           [[_getIndicatorTitle(indicator)]]
         </div>
         <div class="col-2 right-align">
-          [[_displayBaselineOrTarget(indicator.baseline_new, indicator.indicator.unit, indicator.indicator.display_type)]]
+          [[_displayBaselineOrTarget(indicator.baseline_new, indicator.indicator.unit,
+            indicator.indicator.display_type, indicator.cluster_indicator_id)]]
         </div>
         <div class="col-2 right-align">
-          [[_displayBaselineOrTarget(indicator.target_new, indicator.indicator.unit, indicator.indicator.display_type)]]
+          [[_displayBaselineOrTarget(indicator.target_new, indicator.indicator.unit,
+            indicator.indicator.display_type, indicator.cluster_indicator_id)]]
         </div>
         <icons-actions hidden$="[[!editMode]]"
                        show-edit="[[indicator.is_active]]"
@@ -316,12 +318,16 @@
       }
 
 
-      _displayBaselineOrTarget(item, unit, displayType) {
+      _displayBaselineOrTarget(item, unit, displayType, isCluster) {
         if (!item) {
           return '—';
         }
-        if (!item.d && parseInt(item) !== 0) {
+        if (!item.v && parseInt(item.v) !== 0) {
           return '—';
+        }
+
+        if (isCluster && this._clusterIndIsRatio(item)) {
+          return item.v + ' / ' + item.d;
         }
 
         if (unit === 'percentage' && displayType === 'ratio') {
@@ -329,6 +335,10 @@
         }
 
         return item.v;
+      }
+
+      _clusterIndIsRatio(item) {
+        return item.d && parseInt(item.d) !== 1 && parseInt(item.d) !== 100;
       }
 
       _addInactivePrefix(indicator) {

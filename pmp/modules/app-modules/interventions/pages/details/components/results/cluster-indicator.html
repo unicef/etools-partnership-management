@@ -298,7 +298,7 @@
             self.fireEvent('show-toast', {error: {response: error.message || error.response}});
           });
 
-        setTimeout(() => { this.resetValidations()}, 10);
+        this.resetValidations();
       }
 
       indicatorChanged(indicator) {
@@ -412,21 +412,23 @@
       }
 
       resetValidations() {
-        this._resetInvalid('#clusterIndicatorDropdw');
+        setTimeout(() => {
+          this._resetInvalid('#clusterIndicatorDropdw');
 
-        this._resetInvalid('#locationsDropdw');
+          this._resetInvalid('#locationsDropdw');
 
-        this._resetInvalid('#targetEl');
+          this._resetInvalid('#targetEl');
 
-        let targetNominator =  this.shadowRoot.querySelector('#targetNumerator');
-        if (targetNominator) {
-          targetNominator.invalid = false;
+          let targetNominator =  this.shadowRoot.querySelector('#targetNumerator');
+          if (targetNominator) {
+            targetNominator.invalid = false;
 
-          this._resetInvalid('#targetDenominator');
-          this._resetInvalid('#baselineNumerator');
-          this._resetInvalid('#baselineDenominator');
-        }
+            this._resetInvalid('#targetDenominator');
+            this._resetInvalid('#baselineNumerator');
+            this._resetInvalid('#baselineDenominator');
+          }
 
+        }, 10);
       }
       _resetInvalid(elSelector) {
         let elem =  this.shadowRoot.querySelector(elSelector);

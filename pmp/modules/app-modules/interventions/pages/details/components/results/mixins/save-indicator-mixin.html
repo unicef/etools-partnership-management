@@ -184,22 +184,19 @@
 
         _getIndicatorBody() {
           let body = this._getIndicatorModelForSave();
-          this._prepareBaselineAndTarget();
 
           Object.assign(body, _.pick(this.indicator, _.keys(body)));
+          this._prepareBaselineAndTarget(body);
           if (body.hasOwnProperty('disaggregation')) {
             body.disaggregation = this._prepareDisaggregations(body);
           }
           if (this.isCluster && !body.id) {
             body.indicator = null;
-            // TODO for when we can create cluster indic->
-            // see if indicator prop should rather be removed
-            // from clusterIndicatorCreateModel than from here
           }
           return body;
         }
 
-        _prepareBaselineAndTarget() {
+        _prepareBaselineAndTarget(body) {
           if (!this.indicator.target_new || this.indicator.target_new.v === undefined
               || this.indicator.target_new.v === '') {
             this.indicator.target_new = {v: 0, d: 1}; // Avoid empty string or undefined being sent to backend
@@ -208,7 +205,7 @@
               || this.indicator.baseline_new.v === undefined) {
             this.indicator.baseline_new = {v: 0, d: 1};
           }
-          if (this.indicator.indicator) {
+          if (body.indicator) {
             if (this.indicator.indicator.unit === 'number') {
               this._updateBaselineTargetD(1);
             } else if (this.indicator.indicator.display_type === 'percentage') {
