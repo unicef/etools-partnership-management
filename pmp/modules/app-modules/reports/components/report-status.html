@@ -67,7 +67,9 @@
 
       static get properties() {
         return {
-          status: Number,
+          status: {
+            value: null
+          },
           noLabel: {
             type: Boolean,
             value: false
@@ -101,6 +103,9 @@
       }
 
       _computeStatusType(status) {
+        if (status === null || typeof status === 'undefined') {
+          return 'no-status';
+        }
         switch (status) {
           case '1':
           case 'Sub':
@@ -123,7 +128,6 @@
           case 'Pla':
             return 'warning';
           case 'NoS':
-          case null:
             return 'no-status';
           default:
             return 'default';
@@ -131,6 +135,9 @@
       }
 
       _computeLabel(status, final, reportType) {
+        if (status === null || typeof status === 'undefined') {
+          return 'No Status';
+        }
         switch (status) {
           case '1':
             return 'Nothing due';

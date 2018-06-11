@@ -388,6 +388,8 @@
       }
 
       _getPdDuration(start, end) {
+        start = moment.utc(new Date(start + 'Z')).format('YYYY-MM-DD');
+        end = moment.utc(new Date(end + 'Z')).format('YYYY-MM-DD');
         let startDate = this.getDateDisplayValue(start) || 'N/A';
         let endDate = this.getDateDisplayValue(end) || 'N/A';
         return startDate + ' - ' + endDate;
