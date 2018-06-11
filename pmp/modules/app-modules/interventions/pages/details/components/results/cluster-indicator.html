@@ -419,7 +419,7 @@
 
           this._resetInvalid('#targetEl');
 
-          let targetNominator =  this.shadowRoot.querySelector('#targetNumerator');
+          let targetNominator = this.shadowRoot.querySelector('#targetNumerator');
           if (targetNominator) {
             targetNominator.invalid = false;
 
@@ -431,7 +431,7 @@
         }, 10);
       }
       _resetInvalid(elSelector) {
-        let elem =  this.shadowRoot.querySelector(elSelector);
+        let elem = this.shadowRoot.querySelector(elSelector);
         if (elem) {
           elem.invalid = false;
         }
