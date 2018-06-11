@@ -20,16 +20,13 @@
               as="row">
       <disaggregation-table-row
           data="[[row]]"
-          level-reported="[[data.level_reported]]"
           indicator-type="[[data.display_type]]"
-          row-type="middleRow"
-          editable="[[editable]]">
+          row-type="middleRow">
       </disaggregation-table-row>
     </template>
 
     <disaggregation-table-row
         data="[[totalRow]]"
-        level-reported="[[data.level_reported]]"
         indicator-type="[[data.display_type]]"
         row-type="totalsRow">
     </disaggregation-table-row>
@@ -51,22 +48,16 @@
 
       static get properties() {
         return {
-          editable: Number,
-
           data: Object,
-
           mapping: Array,
-
           totalRow: {
             type: Array,
             computed: '_determineTotalRow(data)'
           },
-
           columns: {
             type: Array,
             computed: '_getColumns(mapping)'
           },
-
           rows: {
             type: Array,
             computed: '_determineRows(columns, data)'
