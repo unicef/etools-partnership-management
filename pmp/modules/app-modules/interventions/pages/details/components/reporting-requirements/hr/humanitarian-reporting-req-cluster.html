@@ -103,9 +103,8 @@
           return;
         }
 
-        this.fireRequest({
+        this.fireRequest('hrClusterReportingRequirements',{}, {
             method: 'POST',
-            endpoint: this.getEndpoint('hrClusterReportingRequirements'),
             body: {reportable_ids: clusterIndicIds}
           })
           .then((response) => {
