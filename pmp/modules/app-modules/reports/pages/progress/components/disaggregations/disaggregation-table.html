@@ -137,7 +137,7 @@
 
           viewData: {
             type: Object,
-            computed: '_computeViewData(formattedData, totals)',
+            computed: '_computeViewData(formattedData, totals)'
           },
 
           formattedData: {
@@ -220,7 +220,7 @@
 
       _computeViewData(data, totals) {
         return Object.assign({}, data, {
-          disaggregation: Object.assign({}, data.disaggregation, totals),
+          disaggregation: Object.assign({}, data.disaggregation, totals)
         });
       }
 
