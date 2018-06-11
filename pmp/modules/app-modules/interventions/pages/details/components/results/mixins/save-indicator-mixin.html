@@ -201,7 +201,7 @@
               || this.indicator.target_new.v === '') {
             this.indicator.target_new = {v: 0, d: 1}; // Avoid empty string or undefined being sent to backend
           }
-          if (!this.indicator.baseline_new ||this.indicator.baseline_new.v === ''
+          if (!this.indicator.baseline_new || this.indicator.baseline_new.v === ''
               || this.indicator.baseline_new.v === undefined) {
             this.indicator.baseline_new = {v: 0, d: 1};
           }

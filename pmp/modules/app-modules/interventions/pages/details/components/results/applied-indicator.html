@@ -81,11 +81,11 @@
         </div>
         <div class="col-2 right-align">
           [[_displayBaselineOrTarget(indicator.baseline_new, indicator.indicator.unit,
-            indicator.indicator.display_type, indicator.cluster_indicator_id)]]
+          indicator.indicator.display_type, indicator.cluster_indicator_id)]]
         </div>
         <div class="col-2 right-align">
           [[_displayBaselineOrTarget(indicator.target_new, indicator.indicator.unit,
-            indicator.indicator.display_type, indicator.cluster_indicator_id)]]
+          indicator.indicator.display_type, indicator.cluster_indicator_id)]]
         </div>
         <icons-actions hidden$="[[!editMode]]"
                        show-edit="[[indicator.is_active]]"
@@ -199,7 +199,7 @@
 
       _showDelete(interventionStatus) {
         return (!interventionStatus ||
-                interventionStatus === this.CONSTANTS.STATUSES.Draft.toLowerCase());
+            interventionStatus === this.CONSTANTS.STATUSES.Draft.toLowerCase());
       }
 
       setIndicatorDetails(indicator, disaggregations, locations) {

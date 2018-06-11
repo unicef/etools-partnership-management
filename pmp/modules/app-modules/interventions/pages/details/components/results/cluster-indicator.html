@@ -20,6 +20,7 @@
       :host {
         display: block;
       }
+
       paper-input {
         width: 100%;
       }
@@ -101,24 +102,24 @@
 
     <div class="row-h flex-c">
       <paper-input id="measurementSpecif" label="Measurement Specifications"
-            value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
+                   value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
       </paper-input>
     </div>
 
     <div class="row-h flex-c" hidden$="[[!_typeMatches(prpClusterIndicator, 'number')]]">
       <paper-input id="label" label="Label"
-            value="{{indicator.label}}" placeholder="&#8212;">
+                   value="{{indicator.label}}" placeholder="&#8212;">
       </paper-input>
     </div>
     <div class="row-h flex-c" hidden$="[[_typeMatches(prpClusterIndicator, 'number')]]">
       <div class="col col-4">
         <paper-input id="numeratorLbl" label="Numerator Label"
-              value="{{indicator.numerator_label}}" placeholder="&#8212;">
+                     value="{{indicator.numerator_label}}" placeholder="&#8212;">
         </paper-input>
       </div>
       <div class="col col-4">
         <paper-input id="denomitorLbl" label="Denominator Label"
-              value="{{indicator.denominator_label}}" placeholder="&#8212;">
+                     value="{{indicator.denominator_label}}" placeholder="&#8212;">
         </paper-input>
       </div>
     </div>
@@ -126,40 +127,40 @@
     <template is="dom-if" if="[[_typeMatches(prpClusterIndicator, 'ratio')]]">
       <div class="row-h flex-c">
         <div class="col-4 layout-horizontal">
-            <paper-input label="Baseline"
-                        value="{{indicator.baseline_new.v}}"
-                        type="number"
-                        allowed-pattern="[0-9\.]"
-                        placeholder="Numerator">
-            </paper-input>
-            <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input
-                        value="{{indicator.baseline_new.d}}"
-                        type="number"
-                        min="1"
-                        allowed-pattern="[0-9\.]"
-                        placeholder="Denominator">
-            </paper-input>
+          <paper-input label="Baseline"
+                       value="{{indicator.baseline_new.v}}"
+                       type="number"
+                       allowed-pattern="[0-9\.]"
+                       placeholder="Numerator">
+          </paper-input>
+          <div class="layout-horizontal bottom-aligned dash-separator">/</div>
+          <paper-input
+              value="{{indicator.baseline_new.d}}"
+              type="number"
+              min="1"
+              allowed-pattern="[0-9\.]"
+              placeholder="Denominator">
+          </paper-input>
         </div>
         <div class="col col-4">
-            <paper-input label="Target" id="targetNumerator"
-                        value="{{indicator.target_new.v}}"
-                        type="number"
-                        allowed-pattern="[0-9\.]"
-                        required
-                        auto-validate
-                        placeholder="Numerator">
-            </paper-input>
-            <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input id="targetDenominator"
-                        value="{{indicator.target_new.d}}"
-                        type="number"
-                        min="1"
-                        required
-                        auto-validate
-                        allowed-pattern="[0-9\.]"
-                        placeholder="Denominator">
-            </paper-input>
+          <paper-input label="Target" id="targetNumerator"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       allowed-pattern="[0-9\.]"
+                       required
+                       auto-validate
+                       placeholder="Numerator">
+          </paper-input>
+          <div class="layout-horizontal bottom-aligned dash-separator">/</div>
+          <paper-input id="targetDenominator"
+                       value="{{indicator.target_new.d}}"
+                       type="number"
+                       min="1"
+                       required
+                       auto-validate
+                       allowed-pattern="[0-9\.]"
+                       placeholder="Denominator">
+          </paper-input>
         </div>
       </div>
     </template>
@@ -168,21 +169,21 @@
       <div class="row-h flex-c">
         <div class="col col-4">
           <paper-input label="Baseline"
-                      value="{{indicator.baseline_new.v}}"
-                      type="number"
-                      placeholder="&#8212;">
+                       value="{{indicator.baseline_new.v}}"
+                       type="number"
+                       placeholder="&#8212;">
           </paper-input>
         </div>
         <div class="col col-4">
           <paper-input id="targetEl"
-                      label="Target"
-                      value="{{indicator.target_new.v}}"
-                      type="number"
-                      required
-                      allowed-pattern="[0-9\.]"
-                      auto-validate
-                      error-message="Please add a valid target"
-                      placeholder="&#8212;">
+                       label="Target"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       required
+                       allowed-pattern="[0-9\.]"
+                       auto-validate
+                       error-message="Please add a valid target"
+                       placeholder="&#8212;">
           </paper-input>
         </div>
       </div>
@@ -292,11 +293,12 @@
 
         let self = this;
         this.fireRequest('getResponsePlans', {})
-              .then(function(response) {
-                self.responsePlans = response;
-              }).catch(function(error) {
-            self.fireEvent('show-toast', {error: {response: error.message || error.response}});
-          });
+            .then(function(response) {
+              self.responsePlans = response;
+            })
+            .catch(function(error) {
+              self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+            });
 
         this.resetValidations();
       }
@@ -322,10 +324,11 @@
             .then(function(response) {
               self.prpClusterIndicator = response;
               self.fireEvent('stop-spinner');
-            }).catch(function(error) {
-          self.fireEvent('stop-spinner');
-          self.fireEvent('show-toast', {error: {response: error.message || error.response}});
-        });
+            })
+            .catch(function(error) {
+              self.fireEvent('stop-spinner');
+              self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+            });
       }
 
       _responsePlanChanged(responsePlan) {
@@ -370,8 +373,8 @@
               self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
               self.fireEvent('stop-spinner');
             }).catch(function(error) {
-              self.fireEvent('stop-spinner');
-              self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+          self.fireEvent('stop-spinner');
+          self.fireEvent('show-toast', {error: {response: error.message || error.response}});
         });
       }
 
@@ -400,6 +403,7 @@
         return this.validateComponents(elemIds);
 
       }
+
       _getIndicatorTargetElId() {
         if (!this.prpClusterIndicator || !this.prpClusterIndicator.blueprint) {
           return ['targetEl'];
@@ -430,6 +434,7 @@
 
         }, 10);
       }
+
       _resetInvalid(elSelector) {
         let elem = this.shadowRoot.querySelector(elSelector);
         if (elem) {
@@ -447,7 +452,7 @@
         if (!prpIndic || !prpIndic.blueprint) {
           return false;
         }
-         return prpIndic.blueprint.display_type === type;
+        return prpIndic.blueprint.display_type === type;
       }
 
     }

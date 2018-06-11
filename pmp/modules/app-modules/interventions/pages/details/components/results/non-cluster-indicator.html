@@ -52,6 +52,7 @@
       .no-left-padding {
         padding-left: 0px !important;
       }
+
       .dash-separator {
         padding: 0 8px 0 8px;
         margin-bottom: 10px;
@@ -92,13 +93,13 @@
 
     <div class="row-h flex-c">
       <paper-input id="measurementSpecif" label="Measurement Specifications"
-            value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
+                   value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
       </paper-input>
     </div>
 
     <div class="row-h flex-c" hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
       <paper-input id="label" label="Label"
-            value="{{indicator.label}}" placeholder="&#8212;">
+                   value="{{indicator.label}}" placeholder="&#8212;">
       </paper-input>
     </div>
 
@@ -106,12 +107,12 @@
     <div class="row-h flex-c" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
       <div class="col col-3">
         <paper-input id="numeratorLbl" label="Numerator Label"
-              value="{{indicator.numerator_label}}" placeholder="&#8212;">
+                     value="{{indicator.numerator_label}}" placeholder="&#8212;">
         </paper-input>
       </div>
       <div class="col col-3">
         <paper-input id="denomitorLbl" label="Denominator Label"
-              value="{{indicator.denominator_label}}" placeholder="&#8212;">
+                     value="{{indicator.denominator_label}}" placeholder="&#8212;">
         </paper-input>
       </div>
     </div>
@@ -120,83 +121,83 @@
         <div class="col col-3">
           <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
             <paper-input label="Baseline"
-                        value="{{indicator.baseline_new.v}}"
-                        type="number"
-                        placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+                         value="{{indicator.baseline_new.v}}"
+                         type="number"
+                         placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
           <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
             <paper-input label="Baseline"
-                        value="{{indicator.baseline_new.v}}"
-                        type="number"
-                        min="0"
-                        max="100"
-                        allowed-pattern="[0-9\.]"
-                        placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+                         value="{{indicator.baseline_new.v}}"
+                         type="number"
+                         min="0"
+                         max="100"
+                         allowed-pattern="[0-9\.]"
+                         placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
         </div>
         <div class="col col-3">
-            <paper-input label="Target" id="targetElForNumericUnit"
-                        value="{{indicator.target_new.v}}"
-                        type="number"
-                        placeholder="&#8212;"
-                        required
-                        allowed-pattern="[0-9\.]"
-                        auto-validate
-                        error-message="Please add a valid target"
-                        hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
-            </paper-input>
-            <paper-input label="Target" id="targetElForNonNumericUnit"
-                        value="{{indicator.target_new.v}}"
-                        type="number"
-                        min="0"
-                        max="100"
-                        allowed-pattern="[0-9\.]"
-                        placeholder="&#8212;"
-                        required
-                        auto-validate
-                        error-message="Please add a valid target"
-                        hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
-            </paper-input>
+          <paper-input label="Target" id="targetElForNumericUnit"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       placeholder="&#8212;"
+                       required
+                       allowed-pattern="[0-9\.]"
+                       auto-validate
+                       error-message="Please add a valid target"
+                       hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
+          </paper-input>
+          <paper-input label="Target" id="targetElForNonNumericUnit"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       min="0"
+                       max="100"
+                       allowed-pattern="[0-9\.]"
+                       placeholder="&#8212;"
+                       required
+                       auto-validate
+                       error-message="Please add a valid target"
+                       hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
+          </paper-input>
         </div>
       </template>
       <template is="dom-if" if="[[_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
         <div class="col-3 layout-horizontal">
-            <paper-input label="Baseline"
-                        value="{{indicator.baseline_new.v}}"
-                        type="number"
-                        allowed-pattern="[0-9\.]"
-                        placeholder="Numerator" disabled="[[baselineIsUnknown]]">
-            </paper-input>
-            <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input
-                        value="{{indicator.baseline_new.d}}"
-                        type="number"
-                        min="1"
-                        allowed-pattern="[0-9\.]"
-                        placeholder="Denominator" disabled="[[baselineIsUnknown]]">
-            </paper-input>
+          <paper-input label="Baseline"
+                       value="{{indicator.baseline_new.v}}"
+                       type="number"
+                       allowed-pattern="[0-9\.]"
+                       placeholder="Numerator" disabled="[[baselineIsUnknown]]">
+          </paper-input>
+          <div class="layout-horizontal bottom-aligned dash-separator">/</div>
+          <paper-input
+              value="{{indicator.baseline_new.d}}"
+              type="number"
+              min="1"
+              allowed-pattern="[0-9\.]"
+              placeholder="Denominator" disabled="[[baselineIsUnknown]]">
+          </paper-input>
         </div>
         <div class="col col-3">
-            <paper-input label="Target" id="targetNumerator"
-                        value="{{indicator.target_new.v}}"
-                        type="number"
-                        allowed-pattern="[0-9\.]"
-                        required
-                        auto-validate
-                        placeholder="Numerator">
-            </paper-input>
-            <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input id="targetDenominator"
-                        value="{{indicator.target_new.d}}"
-                        type="number"
-                        min="1"
-                        required
-                        auto-validate
-                        allowed-pattern="[0-9\.]"
-                        placeholder="Denominator">
-            </paper-input>
+          <paper-input label="Target" id="targetNumerator"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       allowed-pattern="[0-9\.]"
+                       required
+                       auto-validate
+                       placeholder="Numerator">
+          </paper-input>
+          <div class="layout-horizontal bottom-aligned dash-separator">/</div>
+          <paper-input id="targetDenominator"
+                       value="{{indicator.target_new.d}}"
+                       type="number"
+                       min="1"
+                       required
+                       auto-validate
+                       allowed-pattern="[0-9\.]"
+                       placeholder="Denominator">
+          </paper-input>
         </div>
       </template>
       <div class="col col-6">
@@ -341,11 +342,13 @@
           return false;
         }
         return (this._getIndDisplayType() === 'ratio' &&
-                this._getIndUnit() === 'percentage');
+            this._getIndUnit() === 'percentage');
       }
+
       _getIndDisplayType() {
         return this.indicator.indicator.display_type;
       }
+
       _getIndUnit() {
         return this.indicator.indicator.unit;
       }
