@@ -133,7 +133,7 @@
           });
         });
 
-        return clusterIndicIds;
+        return _.uniq(clusterIndicIds);
       }
 
       reportingRequirementsChanged(repReq) {
