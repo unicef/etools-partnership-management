@@ -390,18 +390,38 @@
       _selectedPrpClusterIndicatorChanged(prpClusterIndic) {
         if (!prpClusterIndic) {
           this.set('prpDisaggregations', []);
+          if (this.indicator) {
+            this.indicator.baseline_new = {};
+            this.indicator.target_new = {};
+          }
           return;
         }
 
         this.set('indicator.cluster_indicator_title', prpClusterIndic.title);
         this.set('prpDisaggregations', prpClusterIndic.disaggregations);
+
+        if (prpClusterIndic.blueprint.display_type === 'number') {
+          this._resetDenominator(1);
+          this._resetRatioLabels();
+        } else if (prpClusterIndic.blueprint.display_type === 'percentage') {
+          this._resetDenominator(100);
+        }
+      }
+
+      _resetDenominator(newD) {
+        this.indicator.baseline_new.d = newD;
+        this.indicator.target_new.d = newD;
+      }
+
+      _resetRatioLabels() {
+        this.indicator.numerator_label = '';
+        this.indicator.denominator_label = '';
       }
 
       validate() {
         let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
         [].push.apply(elemIds, this._getIndicatorTargetElId());
         return this.validateComponents(elemIds);
-
       }
 
       _getIndicatorTargetElId() {
