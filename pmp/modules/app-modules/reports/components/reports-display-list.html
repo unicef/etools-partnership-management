@@ -35,6 +35,17 @@
       .pd-ref {
         text-transform: none;
       }
+      .final-badge {
+        display: inline-block;
+        border-radius: 1px;
+        padding: 1px 6px;
+        font-size: 10px;
+        text-transform: uppercase;
+        background-color: var(--paper-grey-300);
+        margin-left: 5px;
+        font-weight: bold;
+      }
+
     </style>
 
     <div id="list" class="paper-material" elevation="1">
@@ -72,6 +83,7 @@
             Reporting Period
           </etools-data-table-column>
           <etools-data-table-column class="flex-c">
+            Report Type
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -107,8 +119,14 @@
                 <a class="view-report"
                    href$="reports/[[report.id]]/progress"
                    hidden$="[[!_canViewReport(report.status)]]">
-                  View Report
+                   [[_getReportTitle(report)]]
                 </a>
+                <span hidden$="[[_canViewReport(report.status)]]"> [[_getReportTitle(report)]]</span>
+                <template
+                  is="dom-if"
+                  if="[[report.is_final]]">
+                  <span class="final-badge">final</span>
+                </template>
               </span>
             </div>
 
@@ -284,6 +302,10 @@
           return '-';
         }
         return alreadyformattedDt;
+      }
+
+      _getReportTitle(report) {
+        return report.report_type + report.report_number;
       }
     }
 
