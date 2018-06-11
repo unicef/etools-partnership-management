@@ -72,6 +72,8 @@
         return;
       }
 
+      this.set('reportAttachment', null);
+
       this.fireEvent('global-loading', {
         message: 'Loading...',
         active: true,
