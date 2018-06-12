@@ -113,6 +113,16 @@
               hide-search></etools-dropdown-multi>
         </div>
 
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="CP Structure"
+              options="[[countryProgrammes]]"
+              selected-values="{{selectedCPStructures}}"
+              option-value="id"
+              option-label="name"
+              hide-search></etools-dropdown-multi>
+        </div>
+
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
@@ -381,7 +391,15 @@
             value: [],
             observer: '_arrayFilterChanged'
           },
-
+          selectedCPStructures: {
+            value: [],
+            type: Array,
+            observer: '_arrayFilterChanged'
+          },
+          countryProgrammes: {
+            type: Array,
+            statePath: 'countryProgrammes'
+          },
           sections: {
             type: Array,
             statePath: 'sections'
@@ -450,11 +468,11 @@
       static get observers() {
         return [
           '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-              'selectedSections.length, selectedOffices.length)', // used for non removable filters
+              'selectedSections.length, selectedOffices.length, selectedCpStructures.length)', // used for non removable filters
           '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants)',
           '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
               'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-              'selectedDonors.length, selectedGrants.length, startDate, endDate, ' +
+              'selectedDonors.length, selectedGrants.length, startDate, endDate, selectedCpStructures.length, ' +
               'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
@@ -563,6 +581,7 @@
             selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
             selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
             selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
+            selectedCpStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
             startDate: urlQueryParams.start ? urlQueryParams.start : '',
             endDate: urlQueryParams.end ? urlQueryParams.end : ''
           }
@@ -615,6 +634,7 @@
 
       // Updates URL state with new query string, and launches query
       _updateUrlAndData() {
+        console.log('_updateUrlAndData');
         if (this._canFilterData()) {
           this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
           let qs = this._buildQueryString();
@@ -646,6 +666,7 @@
                   this.selectedSections.map(s => String(s)),
                   this.selectedUnicefFocalPoints.map(ufc => String(ufc)),
                   this.selectedOffices.map(o => String(o)),
+                  this.selectedCpStructures,
                   this.startDate,
                   this.endDate,
                   this.paginator.page,
@@ -669,6 +690,7 @@
           donors: this.selectedDonors.join('|'),
           grants: this.selectedGrants.join('|'),
           unicef_focal_points: this.selectedUnicefFocalPoints.join('|'),
+          cpStructures: this.selectedCPStructures.join('|'),
           start: this.startDate,
           end: this.endDate,
           sort: this.sortOrder
@@ -684,6 +706,7 @@
           donors: this.selectedDonors,
           grants: this.selectedGrants,
           unicef_focal_points: this.selectedUnicefFocalPoints,
+          cpStructures: this.selectedCPStructures,
           start: this.startDate,
           end: this.endDate,
           search: this.q

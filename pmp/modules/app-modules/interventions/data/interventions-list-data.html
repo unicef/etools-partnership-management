@@ -81,7 +81,7 @@
       }
 
       query(field, order, searchString, documentTypes, cpOutputs, donors, grants,
-            statuses, sections, unicefFocalPoints, offices, startDate,
+            statuses, sections, unicefFocalPoints, offices, cpStructures, startDate,
             endDate, pageNumber, pageSize, showQueryLoading) {
 
         // If an active query transaction exists, abort it and start
@@ -122,7 +122,8 @@
                 !self._filterFound(intervention, 'unicef_focal_points', true, unicefFocalPoints) ||
                 !self._filterFound(intervention, 'cp_outputs', true, cpOutputs) ||
                 !self._filterFound(intervention, 'donors', true, donors) ||
-                !self._filterFound(intervention, 'grants', true, grants)) {
+                !self._filterFound(intervention, 'grants', true, grants) ||
+                !self._filterFound(intervention, 'country_programme', true, cpStructures)) {
               return false;
             }
 
