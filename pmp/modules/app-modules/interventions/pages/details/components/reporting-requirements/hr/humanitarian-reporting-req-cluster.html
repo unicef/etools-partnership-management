@@ -103,9 +103,8 @@
           return;
         }
 
-        this.fireRequest({
-            method: 'GET',
-            endpoint: this.getEndpoint('hrClusterReportingRequirements'),
+        this.fireRequest('hrClusterReportingRequirements', {}, {
+            method: 'POST',
             body: {reportable_ids: clusterIndicIds}
           })
           .then((response) => {
@@ -133,7 +132,7 @@
           });
         });
 
-        return clusterIndicIds;
+        return _.uniq(clusterIndicIds);
       }
 
       reportingRequirementsChanged(repReq) {
