@@ -569,7 +569,7 @@
         }
         let requestOptions = this._getEngagementsRequestOptions(partner.id);
         this.sendRequest(requestOptions)
-            .then(results => this._init(results))
+            .then(results => console.log(results))
             .catch(err => this.handleErrorResponse(err));
 
         this.set('basisOptions', []);
