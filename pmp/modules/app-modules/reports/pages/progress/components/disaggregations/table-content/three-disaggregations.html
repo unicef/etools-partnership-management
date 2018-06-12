@@ -9,7 +9,9 @@
 <dom-module id="three-disaggregations">
   <template stip-whitespace>
 
-    <style include='disaggregation-table-styles'></style>
+    <style include="disaggregation-table-styles">
+      :host {}
+    </style>
 
     <!-- Column names -->
     <tr class="horizontal layout headerRow">
@@ -38,10 +40,8 @@
           as="middleRow">
         <disaggregation-table-row
             data="[[middleRow]]"
-            level-reported="[[data.level_reported]]"
             indicator-type="[[data.display_type]]"
-            row-type="middleRow"
-            editable="[[editable]]">
+            row-type="middleRow">
         </disaggregation-table-row>
       </template>
 
@@ -50,7 +50,6 @@
     <!-- Totals row -->
     <disaggregation-table-row
         data="[[columnTotalRow]]"
-        level-reported="[[data.level_reported]]"
         indicator-type="[[data.display_type]]"
         row-type="totalsRow">
     </disaggregation-table-row>
@@ -61,7 +60,6 @@
               as="bottomRow">
       <disaggregation-table-row
           data="[[bottomRow]]"
-          level-reported="[[data.level_reported]]"
           indicator-type="[[data.display_type]]"
           row-type="bottomRow">
       </disaggregation-table-row>
@@ -86,31 +84,22 @@
 
       static get properties() {
         return {
-          editable: Number,
-
           data: Object,
-
           mapping: Array,
-
           columnTotalRow: Object,
-
           columns: {
             type: Array,
             computed: '_getColumns(mapping)'
           },
-
           rows: {
             type: Array,
             computed: '_getRows(mapping)'
           },
-
           bottomRows: Array,
-
           middleRows: {
             type: Array,
             computed: '_getMiddleRows(mapping)'
           },
-
           outerRowsForDisplay: {
             type: Array,
             computed: '_determineOuterRows(columns, rows, data)'
