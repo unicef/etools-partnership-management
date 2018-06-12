@@ -328,10 +328,12 @@
 
       static get observers() {
         return [
-          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, selectedCpStructures.length)', // used for non removable filters
+          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
+            'selectedCpStructures.length)', // used for non removable filters
           '_initFiltersMenuList(partnersDropdownData)',
-          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, selectedCpStructures.length,' +
-          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
+            'selectedPartners, selectedCpStructures.length,' +
+            'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
       }

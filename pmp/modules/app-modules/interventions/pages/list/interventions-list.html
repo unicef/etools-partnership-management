@@ -468,7 +468,8 @@
       static get observers() {
         return [
           '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-              'selectedSections.length, selectedOffices.length, selectedCpStructures.length)', // used for non removable filters
+              'selectedSections.length, selectedOffices.length, ' +
+              'selectedCpStructures.length)', // used for non removable filters
           '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants)',
           '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
               'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
@@ -634,7 +635,6 @@
 
       // Updates URL state with new query string, and launches query
       _updateUrlAndData() {
-        console.log('_updateUrlAndData');
         if (this._canFilterData()) {
           this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
           let qs = this._buildQueryString();
