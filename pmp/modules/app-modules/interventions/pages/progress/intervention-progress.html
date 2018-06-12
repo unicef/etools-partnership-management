@@ -176,7 +176,7 @@
                             target="[[indicatorReport.reportable.target]]"
                             cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                             indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
-                            achivement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                            achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                             indicatorReport.total.v, indicatorReport.total.c)]]"></indicator-report-target>
                       </div>
                     </div>
@@ -388,6 +388,8 @@
       }
 
       _getPdDuration(start, end) {
+        start = moment.utc(new Date(start + 'Z')).format('YYYY-MM-DD');
+        end = moment.utc(new Date(end + 'Z')).format('YYYY-MM-DD');
         let startDate = this.getDateDisplayValue(start) || 'N/A';
         let endDate = this.getDateDisplayValue(end) || 'N/A';
         return startDate + ' - ' + endDate;

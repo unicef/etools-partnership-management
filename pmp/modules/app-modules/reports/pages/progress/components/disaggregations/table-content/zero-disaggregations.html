@@ -6,14 +6,14 @@
 <dom-module id="zero-disaggregations">
   <template strip-whitespace>
 
-    <style include='disaggregation-table-styles'></style>
+    <style include="disaggregation-table-styles">
+      :host {}
+    </style>
 
     <disaggregation-table-row
         data="[[totalRow]]"
-        level-reported="[[data.level_reported]]"
         indicator-type="[[data.display_type]]"
-        row-type="totalsRow"
-        editable="[[editable]]">
+        row-type="totalsRow">
     </disaggregation-table-row>
 
   </template>
@@ -33,7 +33,6 @@
 
       static get properties() {
         return {
-          editable: Number,
           data: Object,
           mapping: Array,
           totalRow: {
