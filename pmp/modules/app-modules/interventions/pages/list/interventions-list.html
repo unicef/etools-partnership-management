@@ -547,18 +547,26 @@
         if (!active || !urlQueryParams) {
           return;
         }
+        if(_.isEmpty(urlQueryParams)) {
+          urlQueryParams.status = 'draft|signed|active';
+        }
+
         this.set('initComplete', false);
-        this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-        this.set('selectedDocumentTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
-        this.set('selectedStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
-        this.set('selectedCpOutputs', this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs));
-        this.set('selectedSections', this._getFilterUrlValuesAsArray(urlQueryParams.section));
-        this.set('selectedDonors', this._getFilterUrlValuesAsArray(urlQueryParams.donors));
-        this.set('selectedGrants', this._getFilterUrlValuesAsArray(urlQueryParams.grants));
-        this.set('selectedUnicefFocalPoints', this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points));
-        this.set('selectedOffices', this._getFilterUrlValuesAsArray(urlQueryParams.offices));
-        this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
-        this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+        this.setProperties(
+          {
+            q: urlQueryParams.q ? urlQueryParams.q : '',
+            selectedDocumentTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
+            selectedStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
+            selectedCpOutputs: this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs),
+            selectedSections: this._getFilterUrlValuesAsArray(urlQueryParams.section),
+            selectedDonors: this._getFilterUrlValuesAsArray(urlQueryParams.donors),
+            selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
+            selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
+            selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
+            startDate: urlQueryParams.start ? urlQueryParams.start : '',
+            endDate: urlQueryParams.end ? urlQueryParams.end : ''
+          }
+        );
 
         this.setPaginationDataFromUrlParams(urlQueryParams);
 

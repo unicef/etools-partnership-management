@@ -364,16 +364,25 @@
       // to the params interpretted from the URL string.
       _init(active) {
         let urlQueryParams = this.urlParams;
+
         if (!active || !urlQueryParams) {
           return;
         }
+
+        if (_.isEmpty(urlQueryParams)) {
+          urlQueryParams.status = 'draft|signed';
+        }
         this.set('initComplete', false);
-        this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-        this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
-        this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
-        this.set('selectedPartners', this._getFilterUrlValuesAsArray(urlQueryParams.partners));
-        this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
-        this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+        this.setProperties(
+          {
+            q: urlQueryParams.q ? urlQueryParams.q : '',
+            selectedAgTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
+            selectedAgStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
+            selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
+            startDate: urlQueryParams.start ? urlQueryParams.start : '',
+            endDate: urlQueryParams.end ? urlQueryParams.end : ''
+          }
+        );
 
         this.setPaginationDataFromUrlParams(urlQueryParams);
 
@@ -383,6 +392,7 @@
         this.set('initComplete', true);
         this._updateSelectedFiltersValues();
       }
+
 
       _updateSelectedFiltersValues() {
         this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
@@ -408,7 +418,9 @@
 
       // Updates URL state with new query string, and launches query
       _updateUrlAndData() {
+        console.log('_updateUrlAndData');
         if (this._canFilterData()) {
+          console.log('_updateUrlAndData can filter');
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           let qs = this._buildQueryString();
           this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs,
