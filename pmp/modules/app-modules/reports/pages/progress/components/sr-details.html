@@ -1,0 +1,59 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
+<link rel="import" href="../../../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+
+<dom-module id="sr-details">
+  <template>
+    <style include="paper-material-styles grid-layout-styles">
+      :host {
+        display: block;
+        background-color: var(--primary-background-color);
+      }
+    </style>
+
+    <div class="paper-material" elevation="1">
+      <div class="row-h">
+        <etools-form-element-wrapper label="Narrative">
+          <span class="placeholder" hidden$="[[report.narrative]]">&#8212;</span>
+          <span hidden$="[[!report.narrative]]">[[report.narrative]]</span>
+        </etools-form-element-wrapper>
+      </div>
+      <div class="row-h">
+        <etools-single-file attachments="[[_prepareAttachmentData(reportAttachment)]]" readonly></etools-single-file>
+      </div>
+    </div>
+
+  </template>
+  <script>
+    class SrDetails extends Polymer.Element {
+
+      static get is() {
+        return 'sr-details';
+      }
+
+      static get properties() {
+        return {
+          report: Object,
+          reportAttachment: Object
+        };
+      }
+
+      _validAttachment(reportAttachment) {
+        return reportAttachment instanceof Array && reportAttachment[0].path;
+      }
+
+      _prepareAttachmentData(reportAttachment) {
+        if (!this._validAttachment(reportAttachment)) {
+          return [];
+        }
+        return reportAttachment[0];
+      }
+
+    }
+
+    window.customElements.define(SrDetails.is, SrDetails);
+  </script>
+</dom-module>

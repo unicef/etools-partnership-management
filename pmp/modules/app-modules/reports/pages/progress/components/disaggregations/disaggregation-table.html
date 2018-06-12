@@ -13,31 +13,57 @@
 <dom-module id="disaggregation-table">
   <template strip-whitespace>
     <style include="disaggregation-table-styles">
-      .location-progress {
-        text-align: right;
+      .data-key {
+        font-size: 12px;
+        color: var(--secondary-text-color);
       }
 
-      .location-progress dt,
-      .location-progress dd {
+      .data-key dt,
+      .data-key dd {
         display: inline;
+      }
+
+      .data-key dd {
         margin: 0;
       }
 
-      .location-progress dt {
-        font-weight: bold;
-      }
     </style>
 
     <div>
+
+      <template
+          is="dom-if"
+          if="[[labels]]"
+          restamp="true">
+        <dl class="data-key">
+          <dt>Data key -</dt>
+          <template
+              is="dom-if"
+              if="[[_equals(data.display_type, 'number')]]"
+              restamp="true">
+            <dd>[ [[_withDefault(labels.label)]] ]</dd>
+          </template>
+          <template
+              is="dom-if"
+              if="[[!_equals(data.display_type, 'number')]]"
+              restamp="true">
+            <dd>
+              [ [[_withDefault(labels.numerator_label)]] ]
+              /
+              [ [[_withDefault(labels.denominator_label)]] ]
+            </dd>
+          </template>
+        </dl>
+      </template>
+
       <table class="vertical layout">
         <template
             is="dom-if"
             if="[[_equals(formattedMapping.length, 0)]]"
             restamp="true">
           <zero-disaggregations
-              data="[[formattedData]]"
-              mapping="[[formattedMapping]]"
-              editable="[[editable]]">
+              data="[[viewData]]"
+              mapping="[[formattedMapping]]">
           </zero-disaggregations>
         </template>
 
@@ -46,9 +72,8 @@
             if="[[_equals(formattedMapping.length, 1)]]"
             restamp="true">
           <one-disaggregation
-              data="[[formattedData]]"
-              mapping="[[formattedMapping]]"
-              editable="[[editable]]">
+              data="[[viewData]]"
+              mapping="[[formattedMapping]]">
           </one-disaggregation>
         </template>
 
@@ -57,9 +82,8 @@
             if="[[_equals(formattedMapping.length, 2)]]"
             restamp="true">
           <two-disaggregations
-              data="[[formattedData]]"
-              mapping="[[formattedMapping]]"
-              editable="[[editable]]">
+              data="[[viewData]]"
+              mapping="[[formattedMapping]]">
           </two-disaggregations>
         </template>
 
@@ -68,9 +92,8 @@
             if="[[_equals(formattedMapping.length, 3)]]"
             restamp="true">
           <three-disaggregations
-              data="[[formattedData]]"
-              mapping="[[formattedMapping]]"
-              editable="[[editable]]">
+              data="[[viewData]]"
+              mapping="[[formattedMapping]]">
           </three-disaggregations>
         </template>
       </table>
@@ -112,6 +135,11 @@
             observer: '_cloneData'
           },
 
+          viewData: {
+            type: Object,
+            computed: '_computeViewData(formattedData, totals)'
+          },
+
           formattedData: {
             type: Object
           },
@@ -132,7 +160,9 @@
           },
 
           fields: Array,
-          mapping: Array
+          mapping: Array,
+          labels: Object,
+          totals: Object
         };
       }
 
@@ -140,6 +170,13 @@
         return [
           '_resetFields(formattedData.disaggregation_reported_on)'
         ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        if (!this.totals) {
+          this.set('totals', {});
+        }
       }
 
       _resetFields(reportedOn) {
@@ -178,6 +215,13 @@
           return;
         }
         this.set('formattedData', JSON.parse(JSON.stringify(data)));
+        this.set('totals', JSON.parse(JSON.stringify(this.formattedData.disaggregation)));
+      }
+
+      _computeViewData(data, totals) {
+        return Object.assign({}, data, {
+          disaggregation: Object.assign({}, data.disaggregation, totals)
+        });
       }
 
     }
