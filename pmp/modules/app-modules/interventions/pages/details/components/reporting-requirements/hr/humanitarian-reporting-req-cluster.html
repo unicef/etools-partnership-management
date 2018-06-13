@@ -16,6 +16,7 @@
       :host {
         display: block;
       }
+
       [hidden] {
         display: none !important;
       }
@@ -104,17 +105,15 @@
         }
 
         this.fireRequest('hrClusterReportingRequirements', {}, {
-            method: 'POST',
-            body: {reportable_ids: clusterIndicIds}
-          })
-          .then((response) => {
-            this.set('reportingRequirements', response);
-          })
-          .catch((error) => {
-            this.logError('Failed to get hr cluster requirements from API!', 'humanitarion-reporting-req-cluster', error);
-            this.parseRequestErrorsAndShowAsToastMsgs(error, this);
-            this.reportingRequirements = [];
-          });
+          method: 'POST',
+          body: {reportable_ids: clusterIndicIds}
+        }).then((response) => {
+          this.set('reportingRequirements', response);
+        }).catch((error) => {
+          this.logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
+          this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+          this.reportingRequirements = [];
+        });
       }
 
       _getClusterIndicIds() {
@@ -172,7 +171,6 @@
       _empty(list) {
         return _.isEmpty(list);
       }
-
     }
 
     window.customElements.define(HumanitarianReportingReqCluster.is, HumanitarianReportingReqCluster);

@@ -20,20 +20,26 @@
       :host {
         display: block;
       }
+
       paper-input {
         width: 100%;
+      }
+
+      .dash-separator {
+        padding: 0 8px 0 8px;
+        margin-bottom: 10px;
       }
     </style>
     <template is="dom-if" if="[[!isNewIndicator]]">
       <div class="row-h flex-c">
-        <div class="col col-5">
+        <div class="col col-6">
           <div class="layout-vertical">
             <label class="paper-label">Response Plan</label>
             <label class="input-label"
                    empty$="[[!indicator.response_plan_name]]">[[indicator.response_plan_name]]</label>
           </div>
         </div>
-        <div class="col col-5">
+        <div class="col col-6">
           <div class="layout-vertical">
             <label class="paper-label">Cluster</label>
             <label class="input-label" empty$="[[!indicator.cluster_name]]">[[indicator.cluster_name]]</label>
@@ -50,7 +56,7 @@
 
     <template is="dom-if" if="[[isNewIndicator]]">
       <div class="row-h flex-c">
-        <div class="col col-5">
+        <div class="col col-6">
           <etools-dropdown id$="responsePlanDropdw"
                            label="Response Plan"
                            placeholder="&#8212;"
@@ -63,7 +69,7 @@
                            disable-on-focus-handling>
           </etools-dropdown>
         </div>
-        <div class="col col-5">
+        <div class="col col-6">
           <etools-dropdown id$="clusterDropdw"
                            label="Cluster"
                            placeholder="&#8212;"
@@ -93,27 +99,95 @@
         </etools-dropdown>
       </div>
     </template>
+
     <div class="row-h flex-c">
-      <div class="col col-2">
-        <paper-input label="Baseline"
-                     value="{{indicator.baseline}}"
-                     type="number"
-                     placeholder="&#8212;">
+      <paper-input id="measurementSpecif" label="Measurement Specifications"
+                   value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
+      </paper-input>
+    </div>
+
+    <div class="row-h flex-c" hidden$="[[!_typeMatches(prpClusterIndicator, 'number')]]">
+      <paper-input id="label" label="Label"
+                   value="{{indicator.label}}" placeholder="&#8212;">
+      </paper-input>
+    </div>
+    <div class="row-h flex-c" hidden$="[[_typeMatches(prpClusterIndicator, 'number')]]">
+      <div class="col col-4">
+        <paper-input id="numeratorLbl" label="Numerator Label"
+                     value="{{indicator.numerator_label}}" placeholder="&#8212;">
         </paper-input>
       </div>
-      <div class="col col-3">
-        <paper-input id="targetEl"
-                     label="Target"
-                     value="{{indicator.target}}"
-                     type="number"
-                     required
-                     allowed-pattern="[0-9\.]"
-                     auto-validate
-                     error-message="Please add a valid target"
-                     placeholder="&#8212;">
+      <div class="col col-4">
+        <paper-input id="denomitorLbl" label="Denominator Label"
+                     value="{{indicator.denominator_label}}" placeholder="&#8212;">
         </paper-input>
       </div>
     </div>
+
+    <template is="dom-if" if="[[_typeMatches(prpClusterIndicator, 'ratio')]]">
+      <div class="row-h flex-c">
+        <div class="col-4 layout-horizontal">
+          <paper-input label="Baseline"
+                       value="{{indicator.baseline_new.v}}"
+                       type="number"
+                       allowed-pattern="[0-9\.]"
+                       placeholder="Numerator">
+          </paper-input>
+          <div class="layout-horizontal bottom-aligned dash-separator">/</div>
+          <paper-input
+              value="{{indicator.baseline_new.d}}"
+              type="number"
+              min="1"
+              allowed-pattern="[0-9\.]"
+              placeholder="Denominator">
+          </paper-input>
+        </div>
+        <div class="col col-4">
+          <paper-input label="Target" id="targetNumerator"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       allowed-pattern="[0-9\.]"
+                       required
+                       auto-validate
+                       placeholder="Numerator">
+          </paper-input>
+          <div class="layout-horizontal bottom-aligned dash-separator">/</div>
+          <paper-input id="targetDenominator"
+                       value="{{indicator.target_new.d}}"
+                       type="number"
+                       min="1"
+                       required
+                       auto-validate
+                       allowed-pattern="[0-9\.]"
+                       placeholder="Denominator">
+          </paper-input>
+        </div>
+      </div>
+    </template>
+
+    <template is="dom-if" if="[[!_typeMatches(prpClusterIndicator, 'ratio')]]">
+      <div class="row-h flex-c">
+        <div class="col col-4">
+          <paper-input label="Baseline"
+                       value="{{indicator.baseline_new.v}}"
+                       type="number"
+                       placeholder="&#8212;">
+          </paper-input>
+        </div>
+        <div class="col col-4">
+          <paper-input id="targetEl"
+                       label="Target"
+                       value="{{indicator.target_new.v}}"
+                       type="number"
+                       required
+                       allowed-pattern="[0-9\.]"
+                       auto-validate
+                       error-message="Please add a valid target"
+                       placeholder="&#8212;">
+          </paper-input>
+        </div>
+      </div>
+    </template>
     <div class="row-h flex-c">
       <div class="layout-vertical">
         <label class="paper-label">Means of Verification</label>
@@ -208,20 +282,25 @@
 
       static get observers() {
         return [
-          '_baselineChanged(indicator.baseline)',
-          '_targetChanged(indicator.target)'
+          '_baselineChanged(indicator.baseline.v)',
+          '_targetChanged(indicator.target.v)'
         ];
       }
 
-      ready() {
-        super.ready();
+
+      connectedCallback() {
+        super.connectedCallback();
+
         let self = this;
         this.fireRequest('getResponsePlans', {})
             .then(function(response) {
               self.responsePlans = response;
-            }).catch(function(error) {
-          self.fireEvent('show-toast', {error: {response: error.message || error.response}});
-        });
+            })
+            .catch(function(error) {
+              self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+            });
+
+        this.resetValidations();
       }
 
       indicatorChanged(indicator) {
@@ -245,10 +324,11 @@
             .then(function(response) {
               self.prpClusterIndicator = response;
               self.fireEvent('stop-spinner');
-            }).catch(function(error) {
-          self.fireEvent('stop-spinner');
-          self.fireEvent('show-toast', {error: {response: error.message || error.response}});
-        });
+            })
+            .catch(function(error) {
+              self.fireEvent('stop-spinner');
+              self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+            });
       }
 
       _responsePlanChanged(responsePlan) {
@@ -310,37 +390,89 @@
       _selectedPrpClusterIndicatorChanged(prpClusterIndic) {
         if (!prpClusterIndic) {
           this.set('prpDisaggregations', []);
+          if (this.indicator) {
+            this.indicator.baseline_new = {};
+            this.indicator.target_new = {};
+          }
           return;
         }
 
         this.set('indicator.cluster_indicator_title', prpClusterIndic.title);
         this.set('prpDisaggregations', prpClusterIndic.disaggregations);
+
+        if (prpClusterIndic.blueprint.display_type === 'number') {
+          this._resetDenominator(1);
+          this._resetRatioLabels();
+        } else if (prpClusterIndic.blueprint.display_type === 'percentage') {
+          this._resetDenominator(100);
+        }
+      }
+
+      _resetDenominator(newD) {
+        this.indicator.baseline_new.d = newD;
+        this.indicator.target_new.d = newD;
+      }
+
+      _resetRatioLabels() {
+        this.indicator.numerator_label = '';
+        this.indicator.denominator_label = '';
       }
 
       validate() {
-        let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw', 'targetEl'];
+        let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
+        [].push.apply(elemIds, this._getIndicatorTargetElId());
         return this.validateComponents(elemIds);
+      }
 
+      _getIndicatorTargetElId() {
+        if (!this.prpClusterIndicator || !this.prpClusterIndicator.blueprint) {
+          return ['targetEl'];
+        }
+        if (this.prpClusterIndicator.blueprint.display_type === 'ratio') {
+          return ['targetNumerator', 'targetDenominator'];
+        }
+
+        return ['targetEl'];
       }
 
       resetValidations() {
-        let indDd = this.shadowRoot.querySelector('#clusterIndicatorDropdw');
-        if (indDd) {
-          indDd.invalid = false;
-        }
-        let locDd = this.shadowRoot.querySelector('#locationsDropdw');
-        if (locDd) {
-          locDd.invalid = false;
-        }
-        let targetEl = this.shadowRoot.querySelector('#targetEl');
-        if (targetEl) {
-          targetEl.invalid = false;
+        setTimeout(() => {
+          this._resetInvalid('#clusterIndicatorDropdw');
+
+          this._resetInvalid('#locationsDropdw');
+
+          this._resetInvalid('#targetEl');
+
+          let targetNominator = this.shadowRoot.querySelector('#targetNumerator');
+          if (targetNominator) {
+            targetNominator.invalid = false;
+
+            this._resetInvalid('#targetDenominator');
+            this._resetInvalid('#baselineNumerator');
+            this._resetInvalid('#baselineDenominator');
+          }
+
+        }, 10);
+      }
+
+      _resetInvalid(elSelector) {
+        let elem = this.shadowRoot.querySelector(elSelector);
+        if (elem) {
+          elem.invalid = false;
         }
       }
 
       resetFieldValues() {
         this.responsePlanId = undefined;
         this.clusterId = undefined;
+        this.indicator.indicator = null;
+      }
+
+      _typeMatches(prpIndic, type) {
+        if (!prpIndic || !prpIndic.blueprint) {
+          return false;
+        }
+        return prpIndic.blueprint.display_type === type;
       }
 
     }
