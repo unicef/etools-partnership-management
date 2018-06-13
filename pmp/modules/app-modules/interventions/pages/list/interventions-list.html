@@ -391,11 +391,7 @@
             value: [],
             observer: '_arrayFilterChanged'
           },
-          selectedCPStructures: {
-            value: [],
-            type: Array,
-            observer: '_arrayFilterChanged'
-          },
+
           countryProgrammes: {
             type: Array,
             statePath: 'countryProgrammes'
@@ -461,6 +457,12 @@
           _sortableFieldNames: {
             type: Array,
             value: ['number', 'partner_name', 'start', 'end']
+          },
+
+          selectedCPStructures: {
+            type: Array,
+            value: [],
+            observer: '_arrayFilterChanged'
           }
         };
       }
