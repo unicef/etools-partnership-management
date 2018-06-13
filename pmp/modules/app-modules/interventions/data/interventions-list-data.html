@@ -74,7 +74,10 @@
         } else {
           // case for intervention properties values like: status, doc type (primitive types)
           foundValues = filterValues.filter(function(selectedFilter) {
-            return selectedFilter === intervention[prop];
+            if (!selectedFilter) {
+              return true;
+            }
+            return selectedFilter.toString() === intervention[prop].toString();
           });
           return !!foundValues[0];
         }
@@ -123,7 +126,7 @@
                 !self._filterFound(intervention, 'cp_outputs', true, cpOutputs) ||
                 !self._filterFound(intervention, 'donors', true, donors) ||
                 !self._filterFound(intervention, 'grants', true, grants) ||
-                !self._filterFound(intervention, 'country_programme', true, cpStructures)) {
+                !self._filterFound(intervention, 'country_programme', false, cpStructures)) {
               return false;
             }
 

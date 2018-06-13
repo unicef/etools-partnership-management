@@ -471,11 +471,11 @@
         return [
           '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
               'selectedSections.length, selectedOffices.length, ' +
-              'selectedCpStructures.length)', // used for non removable filters
+              'selectedCPStructures.length)', // used for non removable filters
           '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants)',
           '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
               'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-              'selectedDonors.length, selectedGrants.length, startDate, endDate, selectedCpStructures.length, ' +
+              'selectedDonors.length, selectedGrants.length, startDate, endDate, selectedCPStructures.length, ' +
               'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
@@ -569,7 +569,7 @@
           return;
         }
         if(_.isEmpty(urlQueryParams)) {
-          urlQueryParams.status = 'draft|signed|active';
+          urlQueryParams.status = 'draft|signed|active|ended|suspended';
         }
 
         this.set('initComplete', false);
@@ -584,7 +584,7 @@
             selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
             selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
             selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
-            selectedCpStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
+            selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
             startDate: urlQueryParams.start ? urlQueryParams.start : '',
             endDate: urlQueryParams.end ? urlQueryParams.end : ''
           }
@@ -668,7 +668,7 @@
                   this.selectedSections.map(s => String(s)),
                   this.selectedUnicefFocalPoints.map(ufc => String(ufc)),
                   this.selectedOffices.map(o => String(o)),
-                  this.selectedCpStructures,
+                  this.selectedCPStructures,
                   this.startDate,
                   this.endDate,
                   this.paginator.page,
