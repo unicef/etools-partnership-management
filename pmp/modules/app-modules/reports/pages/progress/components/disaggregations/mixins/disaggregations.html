@@ -15,7 +15,6 @@
         // It will NOT work for one and zero disaggregations.
         _determineRows(self, rows, columns) {
           let rowsForDisplay = [];
-
           rows.forEach(function(x) {
             let formatted = '';
 
@@ -48,9 +47,7 @@
         // structures them in "()" format for lookup.
         _formatDisaggregationIds(unsortedIds) {
           // IDs must be in ascending order.
-          let ids = unsortedIds.sort(function(a, b) {
-            return a - b;
-          }).reverse();
+          let ids = unsortedIds.sort(function (a, b) {return a - b;});
           let sortedString = '';
 
           if (ids.length === 1) {
