@@ -211,14 +211,14 @@
         };
       }
 
-      _refreshIndicatorDetails() {
+      _shouldRefreshIndicatorDetails() {
         return this.indicatorReportId &&
             (_.isEmpty(this.indicatorReport) ||
               (!_.isEmpty(this.indicatorReport) && this.indicatorReport.id !== parseInt(this.indicatorReportId, 10)));
       }
 
       getIndicatorDetails() {
-        if (!this._refreshIndicatorDetails()) {
+        if (!this._shouldRefreshIndicatorDetails()) {
           // indicator details already loaded
           return;
         }
