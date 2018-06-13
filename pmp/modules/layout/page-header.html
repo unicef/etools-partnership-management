@@ -67,11 +67,10 @@
         width: auto;
       }
 
-      #envWarning {
-        color: #e6e600;
+      .envWarning {
+        color: var(--nonprod-text-warn-color);
         font-weight: 700;
-        font-size: large;
-        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
       }
 
       @media (min-width: 850px) {
@@ -85,7 +84,11 @@
       <div class="titlebar content-align">
         <etools-app-selector id="selector"></etools-app-selector>
         <img id="app-logo" src$="[[importPath]]../../../images/etools-logo-color-white.svg">
-        <div id="envWarning" hidden> - STAGING TESTING EVIRONMENT</div>
+        <dom-if id="envWarningIf">
+          <template>
+            <div class="envWarning"> - STAGING TESTING EVIRONMENT</div>
+          </template>
+        </dom-if>
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
@@ -199,7 +202,7 @@
 
       _isStaging() {
         if (EtoolsPmpApp.Config.isStagingServer()) {
-          this.$.envWarning.hidden = false;
+          this.$.envWarningIf.if = true;
         }
       }
 
