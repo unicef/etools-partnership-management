@@ -211,25 +211,30 @@
         };
       }
 
+      _refreshIndicatorDetails() {
+        return this.indicatorReportId &&
+            (_.isEmpty(this.indicatorReport) ||
+              (!_.isEmpty(this.indicatorReport) && this.indicatorReport.id !== parseInt(this.indicatorReportId, 10)));
+      }
+
       getIndicatorDetails() {
-        if (!_.isEmpty(this.indicatorReport)) {
+        if (!this._refreshIndicatorDetails()) {
           // indicator details already loaded
           return;
         }
-        if (this.indicatorReportId && this.indicatorReportId !== this.indicatorReport.id) {
-          let params = this._computeParams(this.indicatorReportId);
-          this._showLoading();
-          let self = this;
-          this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response) {
-            self.set('indicatorReport', (response && response[0]) ? response[0] : {});
-            self._hideLoading();
-          }).catch(function(error) {
-            let errMsg = 'Indicator details data request failed!';
-            self.logError(errMsg, 'reports-indicator-details', error);
-            self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-            self._hideLoading();
-          });
-        } // else, no need for getting indicator details
+
+        let params = this._computeParams(this.indicatorReportId);
+        this._showLoading();
+        let self = this;
+        this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response) {
+          self.set('indicatorReport', (response && response[0]) ? response[0] : {});
+          self._hideLoading();
+        }).catch(function(error) {
+          let errMsg = 'Indicator details data request failed!';
+          self.logError(errMsg, 'reports-indicator-details', error);
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+          self._hideLoading();
+        });
       }
 
       _showLoading() {
