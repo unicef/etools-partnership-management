@@ -70,11 +70,11 @@
           file: {
             type: Object,
             notify: true,
-            observer: '_autoValidateFile'
+            observer: '_fileChanged'
           },
           internalFile: {
             type: Object,
-            observer: '_fileChanged'
+            observer: '_internalFileChanged'
           },
           elemAttached: {
             type: Boolean,
@@ -108,7 +108,7 @@
         this.elemAttached = true;
       }
 
-      _fileChanged(intr) {
+      _internalFileChanged(intr) {
         if (typeof intr === 'undefined') {
           return;
         }
@@ -156,9 +156,13 @@
         return true;
       }
 
-      _autoValidateFile(file) {
+      _fileChanged(file) {
         if (typeof file === 'undefined') {
           return;
+        }
+        if (file === null) {
+          // reset previous value here as observer on internalFile is not triggered on one way binding
+          this.set('attachments', []);
         }
         // elemAttached condition is to prevent eager validation
         if (this.autoValidate && this.elemAttached) {
@@ -184,7 +188,7 @@
 
       // covers the case when the users cancels file upload
       _fileInputFocused() {
-        this._autoValidateFile(this.file);
+        this._fileChanged(this.file);
       }
 
     }
