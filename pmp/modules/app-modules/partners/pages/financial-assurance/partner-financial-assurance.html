@@ -215,8 +215,8 @@
         </div>
         <div class="col col-2 center-align hact-values">
           [[partner.hact_values.programmatic_visits.planned.total]] /
-          [[partner.hact_min_requirements.programme_visits]] /
-          <span class="green"> [[partner.hact_values.programmatic_visits.completed.total]]</span>
+          <span class="green"> [[partner.hact_min_requirements.programme_visits]]</span> /
+          [[partner.hact_values.programmatic_visits.completed.total]]
         </div>
         <div class="col col-2 center-align hact-values">
           <strong>
@@ -414,8 +414,7 @@
 
     <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
       <monitoring-visits-list intervention-or-partner-id="[[partner.id]]"
-                              endpoint-name="partnerProgrammaticVisits">
-
+                              endpoint-name="partnerT2fProgrammaticVisits">
       </monitoring-visits-list>
     </etools-content-panel>
 
