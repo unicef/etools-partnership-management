@@ -176,31 +176,32 @@
                                       ['future', 'active', 'special'],
                                       ['desc', 'desc', 'asc']);
 
-        if (!this.appModuleItem || !this.appModuleItem.id) {
-          // On new intervention or agreement
-          this._markExpiredCpsAsDisabled(displayableCps);
-        } else {
-          this._resetExpiredCpsMarkedAsDisabled(displayableCps);
-        }
+        // NOTE: Do not remove this code yet, it might be restored in the future
+        // if (!this.appModuleItem || !this.appModuleItem.id) {
+        //   // On new intervention or agreement
+        //   this._markExpiredCpsAsDisabled(displayableCps);
+        // } else {
+        //   this._resetExpiredCpsMarkedAsDisabled(displayableCps);
+        // }
 
         this.sortedCountryProgrammes = displayableCps;
       }
 
-      _markExpiredCpsAsDisabled(sortedCps) {
-        this._markExpiredCps(sortedCps, true);
-      }
+      // _markExpiredCpsAsDisabled(sortedCps) {
+      //   this._markExpiredCps(sortedCps, true);
+      // }
 
-      _resetExpiredCpsMarkedAsDisabled(sortedCps) {
-        this._markExpiredCps(sortedCps, false);
-      }
+      // _resetExpiredCpsMarkedAsDisabled(sortedCps) {
+      //   this._markExpiredCps(sortedCps, false);
+      // }
 
-      _markExpiredCps(sortedCps, disabled) {
-        sortedCps.forEach((element) => {
-          if (element.expired) {
-            element.disableSelection = disabled;
-          }
-        });
-      }
+      // _markExpiredCps(sortedCps, disabled) {
+      //   sortedCps.forEach((element) => {
+      //     if (element.expired) {
+      //       element.disableSelection = disabled;
+      //     }
+      //   });
+      // }
 
       _hasExpiredCpAssigned(cpId) {
         if (cpId || !_.isEmpty(this.countryProgrammes)) {
