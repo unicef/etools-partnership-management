@@ -67,6 +67,12 @@
         width: auto;
       }
 
+      .envWarning {
+        color: var(--nonprod-text-warn-color);
+        font-weight: 700;
+        font-size: 18px;
+      }
+
       @media (min-width: 850px) {
         #menuButton {
           display: none;
@@ -78,6 +84,11 @@
       <div class="titlebar content-align">
         <etools-app-selector id="selector"></etools-app-selector>
         <img id="app-logo" src$="[[importPath]]../../../images/etools-logo-color-white.svg">
+        <dom-if id="envWarningIf">
+          <template>
+            <div class="envWarning"> - STAGING TESTING EVIRONMENT</div>
+          </template>
+        </dom-if>
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
@@ -186,6 +197,13 @@
       ready() {
         super.ready();
         this._setBgColor();
+        this._isStaging();
+      }
+
+      _isStaging() {
+        if (EtoolsPmpApp.Config.isStagingServer()) {
+          this.$.envWarningIf.if = true;
+        }
       }
 
       openDrawer() {
