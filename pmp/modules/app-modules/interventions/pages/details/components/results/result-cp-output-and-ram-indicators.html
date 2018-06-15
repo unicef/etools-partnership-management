@@ -47,7 +47,8 @@
                          required
                          auto-validate
                          error-message="Please select CP Output"
-                         disable-on-focus-handling>
+                         disable-on-focus-handling
+                         disabled="[[disableCpoField]]">
         </etools-dropdown>
       </div>
 
@@ -135,7 +136,8 @@
             type: Boolean,
             value: false
           },
-          toastEventSource: Object
+          toastEventSource: Object,
+          disableCpoField: Boolean
         };
       }
 
@@ -205,6 +207,7 @@
       resetData() {
         this.set('disableConfirmBtn', false);
         this.set('editIndex', null);
+        this.set('expectedResultId', undefined);
         this.set('selectedCpOutputId', undefined);
         this.set('availableCpOutputs', []);
         this.set('cpOutputRamIndicators', []);

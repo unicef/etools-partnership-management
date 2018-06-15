@@ -179,7 +179,8 @@
                                 name="details"
                                 intervention="{{intervention}}"
                                 new-intervention="[[newInterventionActive]]"
-                                original-intervention="[[originalIntervention]]">
+                                original-intervention="[[originalIntervention]]"
+                                user-edit-permission="[[_hasEditPermissions(permissions, intervention)]]">
           </intervention-details>
         </template>
 
@@ -607,6 +608,11 @@
 
       _deleteIntervention(e) {
         this.$.interventionData.deleteIntervention(e.detail.id);
+      }
+
+      _userHasEditPermissions(permissions) {
+        return permissions && permissions.editInterventionDetails === true &&
+            (permissions.partnershipManager || permissions.PME);
       }
 
       _hasEditPermissions(permissions, intervention) {

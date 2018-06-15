@@ -353,6 +353,7 @@
                             indicator-section-options="[[originalIntervention.sections]]"
                             show-inactive-indicators="[[showInactiveIndicators]]"
                             edit-mode="[[permissions.edit.result_links]]"
+                            editable-cpo-ram-indicators="[[_canEditCpoRamIndicators(userEditPermission, intervention.status)]]"
                             on-indicators-changed="_onIndicatorsChanged">
           </expected-results>
         </template>
@@ -427,6 +428,7 @@
             observer: '_interventionChanged',
             notify: true
           },
+          userEditPermission: Boolean,
           permissions: {
             type: Object,
             statePath: 'pageData.permissions'
@@ -851,6 +853,13 @@
 
       _showReportingRequirements(prpModeOff, permission) {
         return !prpModeOff && permission;
+      }
+
+      _canEditCpoRamIndicators(userEditPermission, status) {
+        return userEditPermission &&
+            [this.CONSTANTS.STATUSES.Draft.toLowerCase(),
+              this.CONSTANTS.STATUSES.Signed.toLowerCase(),
+              this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
       }
 
     }
