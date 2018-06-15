@@ -140,7 +140,7 @@
         if (typeof data === 'undefined') {
           return;
         }
-        if ((data.path.indexOf('attachments.#') > -1)) {
+        if (data.path.indexOf('attachments.0') > -1) {
           // file changed
           this._attachmentChanged(this.attachments.length);
         }
