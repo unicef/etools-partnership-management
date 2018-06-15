@@ -118,6 +118,7 @@
             this.cpOutputRamIndicatorsEditElem.resetData();
 
             this.cpOutputRamIndicatorsEditElem.set('interventionId', this.interventionId);
+            this.cpOutputRamIndicatorsEditElem.set('disableCpoField', !this.get('editMode'));
             if (expectedResultId) {
               this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
             }
@@ -170,9 +171,10 @@
           if (!this._canUpdateResult()) {
             return;
           }
-          this.set(['dataItems', e.detail.index, 'cp_output'], e.detail.result.cp_output);
-          this.set(['dataItems', e.detail.index, 'ram_indicators'], e.detail.result.ram_indicators);
-          this.set(['dataItems', e.detail.index, 'ram_indicator_names'], e.detail.result.ram_indicator_names);
+          let index = e.detail.index || 0;
+          this.set(['dataItems', index, 'cp_output'], e.detail.result.cp_output);
+          this.set(['dataItems', index, 'ram_indicators'], e.detail.result.ram_indicators);
+          this.set(['dataItems', index, 'ram_indicator_names'], e.detail.result.ram_indicator_names);
         }
 
         _canUpdateResult() {
