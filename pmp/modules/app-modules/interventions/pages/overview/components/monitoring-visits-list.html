@@ -181,10 +181,13 @@
           showTpmVisits: {
             type: Boolean,
             value: false,
-            reflectToAttribute: true,
-            observer: 'showTpmVisitsChanged'
+            reflectToAttribute: true
           }
         };
+      }
+
+      static get observers() {
+        return ['showTpmVisitsAndIdChanged(interventionOrPartnerId, showTpmVisits)']
       }
 
       _interventionOrPartnerIdChanged(newId) {
@@ -216,7 +219,7 @@
         return shouldHide;
       }
 
-      showTpmVisitsChanged(showTpmVisits) {
+      showTpmVisitsAndIdChanged(partnerId, showTpmVisits) {
         if (!showTpmVisits) {
           this.set('tpmMonitoringVisits', []);
           return;
@@ -224,7 +227,7 @@
 
         this.sendRequest({
           endpoint: this.getEndpoint('partnerTPMProgrammaticVisits',
-           {partnerId: this.interventionOrPartnerId})
+           {partnerId: partnerId})
         }).then((resp) => {
           this.set('tpmMonitoringVisits', resp.results);
           this.set('showLoading', false);
