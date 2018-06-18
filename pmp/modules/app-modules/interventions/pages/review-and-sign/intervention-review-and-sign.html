@@ -174,8 +174,8 @@
           <!-- Signed PD/SSFA -->
           <etools-single-file id="signedIntervFile"
                               label="Signed PD/SSFA"
-                              internal-file=[[intervention.signed_pd_document_file]]
-                              file={{intervention.signed_pd_document}}
+                              internal-file="[[intervention.signed_pd_document_file]]"
+                              file="{{intervention.signed_pd_document}}"
                               accept=".doc,.docx,.pdf,.jpg,.png"
                               hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.signed_pd_document_file)]]"
                               readonly$="[[!permissions.edit.signed_pd_document]]"

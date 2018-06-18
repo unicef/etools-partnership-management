@@ -215,8 +215,8 @@
         </div>
         <div class="col col-2 center-align hact-values">
           [[partner.hact_values.programmatic_visits.planned.total]] /
-          [[partner.hact_min_requirements.programme_visits]] /
-          <span class="green"> [[partner.hact_values.programmatic_visits.completed.total]]</span>
+          <span class="green"> [[partner.hact_min_requirements.programme_visits]]</span> /
+          [[partner.hact_values.programmatic_visits.completed.total]]
         </div>
         <div class="col col-2 center-align hact-values">
           <strong>
@@ -306,21 +306,21 @@
               <div class="col-2 center-align">TOTAL</div>
             </div>
             <div class="row-h panel-table-row">
-              <div class="col-4">Required</div>
+              <div class="col-4">Planned</div>
               <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q1]]
+                [[partner.planned_engagement.spot_check_planned_q1]]
               </div>
               <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q2]]
+                [[partner.planned_engagement.spot_check_planned_q2]]
               </div>
               <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q3]]
+                [[partner.planned_engagement.spot_check_planned_q3]]
               </div>
               <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q4]]
+                [[partner.planned_engagement.spot_check_planned_q4]]
               </div>
               <div class="col-2 darker-bg totals layout-horizontal">
-                <strong>[[partner.hact_values.spot_checks.planned.total]]</strong>
+                <strong>[[partner.planned_engagement.total_spot_check_planned]]</strong>
               </div>
             </div>
 
@@ -414,8 +414,7 @@
 
     <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
       <monitoring-visits-list intervention-or-partner-id="[[partner.id]]"
-                              endpoint-name="partnerProgrammaticVisits">
-
+                              endpoint-name="partnerT2fProgrammaticVisits">
       </monitoring-visits-list>
     </etools-content-panel>
 
