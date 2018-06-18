@@ -37,7 +37,7 @@
       <etools-loading loading-text="Loading..."
                       active$="[[showLoading]]"></etools-loading>
 
-      <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits,length)]]">
+      <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
         <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
           <etools-data-table-column class="col-2" field="reference_number">
             Reference #
@@ -119,7 +119,7 @@
           </etools-data-table-row>
         </template>
       </div>
-      <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits)]]">
+      <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
         <p>There are no monitoring visits.</p>
       </div>
     </div>
