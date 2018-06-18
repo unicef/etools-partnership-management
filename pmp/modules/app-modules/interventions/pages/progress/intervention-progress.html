@@ -382,14 +382,15 @@
         let resultStatusDateStr = '';
         let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
         if (latestIndReport) {
-          resultStatusDateStr = '(' + this.prettyDate(latestIndReport.submission_date) + ')';
+          let d = this._convertToDefaultDateFormat(latestIndReport.submission_date);
+          resultStatusDateStr = '(' + this.prettyDate(d) + ')';
         }
         return resultStatusDateStr;
       }
 
       _getPdDuration(start, end) {
-        start = moment.utc(new Date(start + 'Z')).format('YYYY-MM-DD');
-        end = moment.utc(new Date(end + 'Z')).format('YYYY-MM-DD');
+        start = this._convertToDefaultDateFormat(start);
+        end = this._convertToDefaultDateFormat(end);
         let startDate = this.getDateDisplayValue(start) || 'N/A';
         let endDate = this.getDateDisplayValue(end) || 'N/A';
         return startDate + ' - ' + endDate;
@@ -419,7 +420,11 @@
       }
 
       _getOverallPdStatusDate(date) {
-        return date ? ('(' + this.prettyDate(date) + ')') : '';
+        return date ? ('(' + this.prettyDate(this._convertToDefaultDateFormat(date)) + ')') : '';
+      }
+
+      _convertToDefaultDateFormat(str) {
+        return moment.utc(new Date(str + 'Z')).format('YYYY-MM-DD');
       }
 
     }
