@@ -4,9 +4,9 @@
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
-<link rel="import"
-      href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
@@ -39,6 +39,14 @@
                      placeholder="Search">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
+
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="Report Status"
+              options="[[reportStatuses]]"
+              selected-values="{{queryParams.status}}"
+              hide-search></etools-dropdown-multi>
+        </div>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <div class="filter esmm">
@@ -105,6 +113,8 @@
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
+    const REPORTS_STATUS_DEFAULT_SELECTION = ['Sub', 'Ove', 'Sen'];
+
     /**
      * @polymer
      * @customElement
@@ -154,7 +164,7 @@
               external_partner_id: null,
               cp_output: null,
               section: null,
-              status: null
+              status: ['Sub', 'Ove', 'Sen']
             }
           },
           paginator: {
@@ -173,9 +183,9 @@
 
       static get observers() {
         return [
-          '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
+          '_initListFilters(partners, cpOutputs, sections)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
-          '_init(active, urlParams, _filtersInitialized, paginator)',
+          '_init(active, _filtersInitialized)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
           'queryParams.cp_output, queryParams.section, queryParams.status)'
         ];
@@ -190,8 +200,8 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
       }
 
-      _initListFilters(partners, cpOutputs, sections, reportStatuses) {
-        if (!partners || !cpOutputs || !sections || !reportStatuses) {
+      _initListFilters(partners, cpOutputs, sections) {
+        if (!partners || !cpOutputs || !sections) {
           return;
         }
         // init list filter options
@@ -225,15 +235,6 @@
             selectionOptions: sections,
             alreadySelected: null,
             path: 'queryParams.section'
-          },
-          {
-            filterName: 'Report Status',
-            type: 'esmm',
-            optionValue: 'value',
-            optionLabel: 'label',
-            selectionOptions: reportStatuses,
-            alreadySelected: null,
-            path: 'queryParams.status'
           }
         ]);
         this._updateSelectedFiltersValues();
@@ -254,20 +255,17 @@
           {
             filterName: 'Section',
             selectedValue: this.queryParams.section
-          },
-          {
-            filterName: 'Report Status',
-            selectedValue: this.queryParams.status
           }
         ];
         this.updateShownFilters(filtersValues);
       }
 
-      _init(active, urlQueryParams, _filtersInitialized) {
-        this.set('_initComplete', false);
+      _init(active, _filtersInitialized) {
         if (!active || !_filtersInitialized) {
           return;
         }
+        let urlQueryParams = this.urlParams;
+        this.set('_initComplete', false);
         this._initSelectedFilters = Polymer.Debouncer.debounce(this._initSelectedFilters,
             Polymer.Async.timeOut.after(20),
             () => {
@@ -276,7 +274,8 @@
                   urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
               this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
               this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
-              this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
+              this.set('queryParams.status',
+                  urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status);
 
               this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
               this.set('paginator.page_size',
@@ -305,8 +304,9 @@
         let qStrData = [];
         if (!_.isEmpty(this.queryParams)) {
           Object.keys(this.queryParams).forEach(function(k) {
-            if (this.queryParams[k]) {
-              qStrData.push(k + '=' + this.queryParams[k]);
+            if (!_.isEmpty(this.queryParams[k])) {
+              let qStrVal = this.queryParams[k] instanceof Array ? this.queryParams[k].join('|') : this.queryParams[k];
+              qStrData.push(k + '=' + qStrVal);
             }
           }.bind(this));
         }
