@@ -82,7 +82,9 @@
       static get properties() {
         return {
           editHruDialog: Object,
-          expectedResults: Array
+          expectedResults: Array,
+          interventionStart: Date
+
         };
       }
       static get observers() {
@@ -137,6 +139,7 @@
         this.editHruDialog.set('hruData', hruData);
         this.editHruDialog.set('selectedDate', null);
         this.editHruDialog.set('interventionId', this.interventionId);
+        this.editHruDialog.set('interventionStart', this.interventionStart);
         this.editHruDialog.openDialog();
       }
 

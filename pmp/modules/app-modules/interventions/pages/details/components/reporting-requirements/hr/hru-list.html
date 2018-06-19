@@ -22,7 +22,8 @@
                               no-title>
       <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
       <etools-data-table-column class="flex-c">Report Due Date</etools-data-table-column>
-      <etools-data-table-column class="col-1"></etools-data-table-column>
+      <etools-data-table-column class="flex-c">Start Date</etools-data-table-column>
+      <etools-data-table-column class="flex-c"></etools-data-table-column>
     </etools-data-table-header>
     <template is="dom-repeat" items="[[hruData]]">
       <etools-data-table-row no-collapse
@@ -30,6 +31,7 @@
         <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
           <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
+          <span class="col-data flex-c">[[getDateDisplayValue(item.start_date)]]</span>
           <span class="col-data flex-c actions">
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
                            data-args$="[[index]]"
@@ -80,6 +82,10 @@
           disableSorting: {
             type: Boolean,
             value: false
+          },
+          startDate: {
+            type: Date,
+            observer: '_updateStartDate'
           }
         };
       }
@@ -97,12 +103,20 @@
         if (!_.isEmpty(data)) {
           this._sortRequirementsAsc();
         }
+
+        this._updateStartDate();
       }
 
       _sortRequirementsAsc() {
         this.hruData.sort((a, b) => {
           return new Date(a.due_date) - new Date(b.due_date);
         });
+      }
+
+      _updateStartDate() {
+        let index = this.hruData.findIndex((el) => !_.isEmpty(el.start_date));
+        this.set('hruData.' + index + '.start_date', null);
+        this.set('hruData.0.start_date', this.startDate);
       }
 
       _getIndex(index) {
