@@ -114,7 +114,7 @@
       }
 
       _updateStartDate() {
-        let index = this.hruData.findIndex((el) => !_.isEmpty(el.start_date));
+        let index = this.hruData.findIndex(el => !_.isEmpty(el.start_date));
         this.set('hruData.' + index + '.start_date', null);
         this.set('hruData.0.start_date', this.startDate);
       }

@@ -129,7 +129,7 @@
             type: Date
           },
           maxDate: {
-            type: Date,
+            type: Date
           },
           minDate: Date,
           selectedDate: String,
@@ -168,7 +168,7 @@
 
       }
       _getSavedStartDate() {
-        let index = this.hruData.findIndex((el) => !_.isEmpty(el.start_date));
+        let index = this.hruData.findIndex(el => !_.isEmpty(el.start_date));
         if (index >= 0)
         {
           return this.hruData[index].start_date;
