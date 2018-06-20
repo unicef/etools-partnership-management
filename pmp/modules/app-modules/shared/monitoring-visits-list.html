@@ -1,20 +1,20 @@
-<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
-<link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../../../../../bower_components/etools-loading/etools-loading.html">
-<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
-<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-<link rel="import" href="../../../../../scripts/lodash.html">
+<link rel="import" href="../../scripts/lodash.html">
 
-<link rel="import" href="../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../mixins/common-mixin.html">
-<link rel="import" href="../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../mixins/common-mixin.html">
+<link rel="import" href="../../mixins/ajax-errors-parser-mixin.html">
 
-<link rel="import" href="../../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../../styles/shared-styles.html">
+<link rel="import" href="../../styles/grid-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="monitoring-visits-list">
   <template strip-whitespace>
@@ -233,7 +233,7 @@
           this.set('showLoading', false);
         }).catch((error) => {
           this.set('showLoading', false);
-          this.parseRequestErrorsAndShowAsToastMsgs(error);
+          this.logError('Error on get TPM visits');
         });
       }
 
