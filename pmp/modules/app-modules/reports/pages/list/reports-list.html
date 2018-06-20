@@ -187,7 +187,7 @@
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, _filtersInitialized)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
-          'queryParams.cp_output, queryParams.section, queryParams.status)'
+            'queryParams.cp_output, queryParams.section, queryParams.status.length)'
         ];
       }
 
@@ -212,6 +212,7 @@
           {
             filterName: 'Partner',
             type: 'esmm',
+            singleSelection: true,
             optionValue: 'value',
             optionLabel: 'label',
             selectionOptions: partners,
@@ -221,6 +222,7 @@
           {
             filterName: 'CP Output',
             type: 'esmm',
+            singleSelection: true,
             optionValue: 'id',
             optionLabel: 'name',
             selectionOptions: cpOutputs,
@@ -230,6 +232,7 @@
           {
             filterName: 'Section',
             type: 'esmm',
+            singleSelection: true,
             optionValue: 'id',
             optionLabel: 'name',
             selectionOptions: sections,
@@ -291,7 +294,6 @@
           return;
         }
         if (!queryParamsData || !pageNr || !pageSize) {
-          // TODO: polymer2 - check if this condition is working properly for p2 observer (running with undefined agrs)
           return;
         }
         let qs = this._buildQueryString();
@@ -304,8 +306,13 @@
         let qStrData = [];
         if (!_.isEmpty(this.queryParams)) {
           Object.keys(this.queryParams).forEach(function(k) {
-            if (!_.isEmpty(this.queryParams[k])) {
-              let qStrVal = this.queryParams[k] instanceof Array ? this.queryParams[k].join('|') : this.queryParams[k];
+            let qStrVal;
+            if (this.queryParams[k] instanceof Array && !_.isEmpty(this.queryParams[k])) {
+              qStrVal = this.queryParams[k].join('|');
+            } else if (['string', 'number'].indexOf(typeof this.queryParams[k]) > -1) {
+              qStrVal = this.queryParams[k];
+            }
+            if (qStrVal) {
               qStrData.push(k + '=' + qStrVal);
             }
           }.bind(this));
