@@ -16,6 +16,10 @@
 <dom-module id="hru-list">
   <template>
     <style include="grid-layout-styles data-table-styles reporting-requirements-lists-styles">
+      :host([with-scroll]) {
+        max-height: 620px;
+        overflow-y: auto;
+      }
     </style>
 
     <etools-data-table-header no-collapse
