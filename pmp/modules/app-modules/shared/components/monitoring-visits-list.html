@@ -1,20 +1,20 @@
-<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../../../../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../bower_components/moment-element/moment-import.html">
 
-<link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../../../../../bower_components/etools-loading/etools-loading.html">
-<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
-<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-<link rel="import" href="../../../../../scripts/lodash.html">
+<link rel="import" href="../../../scripts/lodash.html">
 
-<link rel="import" href="../../../../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../../../../mixins/common-mixin.html">
-<link rel="import" href="../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../mixins/common-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
 
-<link rel="import" href="../../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
 
 <dom-module id="monitoring-visits-list">
   <template strip-whitespace>
@@ -37,7 +37,7 @@
       <etools-loading loading-text="Loading..."
                       active$="[[showLoading]]"></etools-loading>
 
-      <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
+      <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
         <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
           <etools-data-table-column class="col-2" field="reference_number">
             Reference #
@@ -59,7 +59,7 @@
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
+        <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
               <span class="col-data col-2">
@@ -88,8 +88,38 @@
             </div>
           </etools-data-table-row>
         </template>
+
+        <template id="rows" is="dom-repeat" items="[[tpmMonitoringVisits]]" as="visit">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-2">
+                <a class="truncate"
+                   href$="/tpm/visits/[[visit.id]]/details"
+                   title="[[visit.reference_number]]"
+                   target="_blank">
+                  [[visit.reference_number]]
+                </a>
+              </span>
+              <span class="col-data col-2" title="[[visit.primary_traveler]]">
+                <span class="truncate"> [[visit.tpm_partner.name]] </span>
+              </span>
+              <span class="col-data col-2" title="[[visit.travel_type]]">
+                  TPM Visit
+              </span>
+              <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
+                  [[getDateDisplayValue(visit.end_date)]]
+              </span>
+              <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
+                  [[getLocNames(visit.locations)]]
+              </span>
+              <span class="col-data col-2 capitalize" title="[[visit.status]]">
+                  [[visit.status]]
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
       </div>
-      <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
+      <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
         <p>There are no monitoring visits.</p>
       </div>
     </div>
@@ -137,13 +167,27 @@
             value: true
           },
           monitoringVisits: {
-            type: Array
+            type: Array,
+            value: []
+          },
+          tpmMonitoringVisits: {
+            type: Array,
+            value: []
           },
           interventionOrPartnerId: {
             type: Number,
             observer: '_interventionOrPartnerIdChanged'
+          },
+          showTpmVisits: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
           }
         };
+      }
+
+      static get observers() {
+        return ['showTpmVisitsAndIdChanged(interventionOrPartnerId, showTpmVisits)'];
       }
 
       _interventionOrPartnerIdChanged(newId) {
@@ -167,8 +211,42 @@
         });
       }
 
-      _hideMonitoringVisits(length) {
-        return length === 0;
+      _hideMonitoringVisits(t2flength, tpmLength) {
+        let shouldHide = t2flength === 0;
+        if (this.showTpmVisits) {
+          shouldHide = shouldHide && (tpmLength === 0);
+        }
+        return shouldHide;
+      }
+
+      showTpmVisitsAndIdChanged(partnerId, showTpmVisits) {
+        if (!showTpmVisits) {
+          this.set('tpmMonitoringVisits', []);
+          return;
+        }
+
+        this.sendRequest({
+          endpoint: this.getEndpoint('partnerTPMProgrammaticVisits',
+           {partnerId: partnerId})
+        }).then((resp) => {
+          this.set('tpmMonitoringVisits', resp.results);
+          this.set('showLoading', false);
+        }).catch((error) => {
+          this.set('showLoading', false);
+          this.logError('Error on get TPM visits');
+        });
+      }
+
+      getLocNames(locations) {
+        if (_.isEmpty(locations)) {
+          return '-';
+        }
+
+        if (locations.length === 1) {
+          return locations[0].name;
+        }
+
+        return locations.reduce((a, b) => a.name + ', ' + b.name);
       }
     }
 
