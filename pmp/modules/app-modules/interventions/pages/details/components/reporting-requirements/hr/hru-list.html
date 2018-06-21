@@ -27,7 +27,7 @@
       <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
       <etools-data-table-column class="flex-c">Report Due Date</etools-data-table-column>
       <etools-data-table-column class="flex-c">Start Date</etools-data-table-column>
-      <etools-data-table-column class="flex-c"></etools-data-table-column>
+      <etools-data-table-column class="col-1"></etools-data-table-column>
     </etools-data-table-header>
     <template is="dom-repeat" items="[[hruData]]">
       <etools-data-table-row no-collapse
@@ -36,7 +36,7 @@
           <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.start_date)]]</span>
-          <span class="col-data flex-c actions">
+          <span class="col-data col-1 actions">
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
                            data-args$="[[index]]"
                            on-delete="_deleteHruReq"
