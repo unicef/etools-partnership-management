@@ -6,6 +6,7 @@
 <link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
@@ -25,6 +26,11 @@
       :host {
         @apply --layout-flex;
         width: 100%;
+
+        --paper-tooltip: {
+          text-align: center;
+          line-height: 1.4;
+        };
       }
 
       .pd-ref,
@@ -35,6 +41,7 @@
       .pd-ref {
         text-transform: none;
       }
+
       .final-badge {
         display: inline-block;
         border-radius: 1px;
@@ -44,6 +51,10 @@
         background-color: var(--paper-grey-300);
         margin-left: 5px;
         font-weight: bold;
+      }
+
+      .tooltip-trigger {
+        position: relative;
       }
 
     </style>
@@ -61,12 +72,6 @@
                                   label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
                                     of [[paginator.count]] results to show"
                                   no-collapse>
-
-          <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-            <etools-data-table-column class="col-2">
-              PD/SSFA ref.#
-            </etools-data-table-column>
-          </template>
           <etools-data-table-column class="flex-c">
             Report #
           </etools-data-table-column>
@@ -77,20 +82,48 @@
             Due Date
           </etools-data-table-column>
           <etools-data-table-column class="flex-c">
-            Date of Submission
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
-            Date of Acceptance
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
             Reporting Period
           </etools-data-table-column>
+          <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
+            <etools-data-table-column class="col-2">
+              PD/SSFA ref.#
+            </etools-data-table-column>
+          </template>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="[[reports]]" as="report">
           <etools-data-table-row no-collapse>
 
             <div slot="row-data">
+              <span class="col-data flex-c">
+                <span id$="tooltip-trigger-[[report.id]]" class="tooltip-trigger">
+                  <a class="view-report"
+                     href$="reports/[[report.id]]/progress"
+                     hidden$="[[!_canViewReport(report.status)]]">
+                    [[_getReportTitle(report)]]
+                  </a>
+                  <span hidden$="[[_canViewReport(report.status)]]">[[_getReportTitle(report)]]</span>
+                  <template
+                      is="dom-if"
+                      if="[[report.is_final]]">
+                    <span class="final-badge">final</span>
+                  </template>
+                </span>
+                <paper-tooltip for$="tooltip-trigger-[[report.id]]"
+                               position="right"
+                               fit-to-visible-bounds>
+                  [[report.programme_document.title]]
+                </paper-tooltip>
+              </span>
+              <span class="col-data flex-c">
+                <report-status status="[[report.status]]"></report-status>
+              </span>
+              <span class="col-data flex-c">
+                [[_displayOrDefault(report.due_date)]]
+              </span>
+              <span class="col-data flex-c">
+                [[getDisplayValue(report.reporting_period)]]
+              </span>
               <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
                 <span class="col-data col-2">
                   <a class="pd-ref truncate"
@@ -100,34 +133,6 @@
                   </a>
                 </span>
               </template>
-              <span class="col-data flex-c">
-                  <a class="view-report"
-                  href$="reports/[[report.id]]/progress"
-                  hidden$="[[!_canViewReport(report.status)]]">
-                  [[_getReportTitle(report)]]
-               </a>
-               <span hidden$="[[_canViewReport(report.status)]]"> [[_getReportTitle(report)]]</span>
-               <template
-                 is="dom-if"
-                 if="[[report.is_final]]">
-                 <span class="final-badge">final</span>
-               </template>
-              </span>
-              <span class="col-data flex-c">
-                <report-status status="[[report.status]]"></report-status>
-              </span>
-              <span class="col-data flex-c">
-                [[_displayOrDefault(report.due_date)]]
-              </span>
-              <span class="col-data flex-c">
-                [[_displayOrDefault(report.submission_date)]]
-              </span>
-              <span class="col-data flex-c">
-                [[_displayOrDefault(report.review_date)]]
-              </span>
-              <span class="col-data flex-c">
-                [[getDisplayValue(report.reporting_period)]]
-              </span>
             </div>
 
           </etools-data-table-row>
