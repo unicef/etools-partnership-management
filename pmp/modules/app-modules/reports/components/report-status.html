@@ -22,6 +22,7 @@
         color: var(--primary-color);
       }
 
+      :host([status-type="submitted"]) iron-icon,
       :host([status-type="success"]) iron-icon {
         color: var(--success-color);
       }
@@ -108,12 +109,13 @@
         }
         switch (status) {
           case '1':
-          case 'Sub':
           case 'Met':
           case 'OnT':
           case 'Com':
           case 'Acc':
             return 'success';
+          case 'Sub':
+            return 'submitted';
           case '2':
           case 'Ove':
           case 'Sen':
@@ -179,6 +181,8 @@
           switch (type) {
             case 'success':
               return 'icons:check-circle';
+            case 'submitted':
+              return 'icons:assignment-turned-in';
             case 'error':
             case 'warning':
               return 'icons:error';
