@@ -71,16 +71,19 @@
                                     min-date="[[minDate]]"
                                     max-date="[[maxDate]]"
                                     class="pad-top"></etools-simple-datepicker>
+          <paper-button id="add-selected-date" class="secondary-btn" on-click="_updateStartDate">
+            Select Start Date
+          </paper-button>
         </div>
         <div class="col col-6">
           <div class="row-h" hidden$="[[!_empty(hruData.length)]]">No dates added.</div>
-          <hru-list class="flex-c"
+          <hru-list id="hruList"
+                    class="flex-c"
                     with-scroll
                     hru-data="[[hruData]]"
                     hidden$="[[_empty(hruData.length)]]"
                     edit-mode
                     in-amendment="[[inAmendment]]"
-                    start-date="[[repStartDate]]"
                     on-delete-hru="_deleteHruDate">
           </hru-list>
         </div>
@@ -143,6 +146,10 @@
             value: -1
           }
         };
+      }
+
+      _updateStartDate() {
+        this.$.hruList._updateStartDate(this.repStartDate);
       }
 
       intervStartChanged() {

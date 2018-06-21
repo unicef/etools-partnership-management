@@ -86,10 +86,6 @@
           disableSorting: {
             type: Boolean,
             value: false
-          },
-          startDate: {
-            type: Date,
-            observer: '_updateStartDate'
           }
         };
       }
@@ -108,7 +104,7 @@
           this._sortRequirementsAsc();
         }
 
-        this._updateStartDate();
+        this._updateStartDateAfterListChanges();
       }
 
       _sortRequirementsAsc() {
@@ -117,10 +113,30 @@
         });
       }
 
-      _updateStartDate() {
+      _getExistingStartDate() {
+        if (_.isEmpty(this.hruData)) {
+          return null;
+        }
+        let item = this.hruData.find(el => !_.isEmpty(el.start_date));
+        return item ? item.start_date : null;
+      }
+
+      _updateStartDateAfterListChanges() {
+        let stDt = this._getExistingStartDate();
+        if (stDt) {
+          this._updateStartDate(stDt);
+        }
+      }
+
+      _updateStartDate(startDate) {
+        if (_.isEmpty(this.hruData)) {
+          return;
+        }
         let index = this.hruData.findIndex(el => !_.isEmpty(el.start_date));
-        this.set('hruData.' + index + '.start_date', null);
-        this.set('hruData.0.start_date', this.startDate);
+        if (index >= 0) {
+          this.set('hruData.' + index + '.start_date', null);
+        }
+        this.set('hruData.0.start_date', startDate);
       }
 
       _getIndex(index) {
