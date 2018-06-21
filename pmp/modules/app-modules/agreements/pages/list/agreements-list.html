@@ -329,10 +329,10 @@
       static get observers() {
         return [
           'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
-            'selectedCpStructures.length)', // used for non removable filters
+            'selectedCPStructures.length)', // used for non removable filters
           '_initFiltersMenuList(partnersDropdownData)',
           '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
-            'selectedPartners, selectedCpStructures.length,' +
+            'selectedPartners, selectedCPStructures.length,' +
             'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
@@ -399,7 +399,7 @@
             selectedAgTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
             selectedAgStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
             selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
-            selectedCpStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
+            selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
             startDate: urlQueryParams.start ? urlQueryParams.start : '',
             endDate: urlQueryParams.end ? urlQueryParams.end : ''
           }
