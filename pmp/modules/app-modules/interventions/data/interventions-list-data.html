@@ -74,10 +74,7 @@
         } else {
           // case for intervention properties values like: status, doc type (primitive types)
           foundValues = filterValues.filter(function(selectedFilter) {
-            if (!selectedFilter) {
-              return true;
-            }
-            return selectedFilter.toString() === intervention[prop].toString();
+            return String(selectedFilter) === String(intervention[prop]);
           });
           return !!foundValues[0];
         }
