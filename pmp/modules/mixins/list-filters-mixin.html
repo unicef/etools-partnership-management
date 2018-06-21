@@ -99,7 +99,6 @@
     removeFilter(event) {
       let filterName = event.target.getAttribute('data-filter-name'); // TODO: polymer2 - test on IE11
       let path = event.target.getAttribute('data-reset-path');
-
       this.removeFilterOption(filterName, path);
     }
 
@@ -110,8 +109,9 @@
 
       let filterIndex = this.selectedFilters.findIndex(f => f.filterName === filterName);
       if (filterIndex >= 0) {
+        let filterIsSingleSelectionDr = this.selectedFilters[filterIndex].singleSelection;
         if (this.selectedFilters[filterIndex].hasOwnProperty('alreadySelected')) {
-          this.selectedFilters[filterIndex].alreadySelected = [];
+          this.selectedFilters[filterIndex].alreadySelected = filterIsSingleSelectionDr ? null : [];
         }
         if (this.selectedFilters[filterIndex].hasOwnProperty('dateSelected')) {
           this.selectedFilters[filterIndex].dateSelected = '';
@@ -123,7 +123,12 @@
         // remove filter
         this.splice('selectedFilters', filterIndex, 1);
         this._updateAvailableFilterOptions();
-        this.set(path, filterType === 'esmm' ? [] : (filterType === 'datepicker' ? '' : null));
+
+        if (filterIsSingleSelectionDr) {
+          this.set(path, null);
+        } else {
+          this.set(path, (filterType === 'esmm') ? [] : (filterType === 'datepicker' ? '' : null));
+        }
       }
     }
 
