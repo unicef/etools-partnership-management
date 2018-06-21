@@ -83,6 +83,16 @@
               hide-search></etools-dropdown-multi>
         </div>
 
+        <div class="filter esmm">
+          <etools-dropdown-multi
+              label="CP Structure"
+              options="[[countryProgrammes]]"
+              selected-values="{{selectedCPStructures}}"
+              option-value="id"
+              option-label="name"
+              hide-search></etools-dropdown-multi>
+        </div>
+
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <div class="filter esmm">
@@ -279,6 +289,10 @@
             type: Array,
             observer: '_arrayFilterChanged'
           },
+          selectedCPStructures: {
+            type: Array,
+            observer: '_arrayFilterChanged'
+          },
           startDate: {
             type: String,
             value: '',
@@ -292,6 +306,10 @@
           partnersDropdownData: {
             type: Array,
             statePath: 'partnersDropdownData'
+          },
+          countryProgrammes: {
+            type: Array,
+            statePath: 'countryProgrammes'
           },
           agreementTypes: {
             type: Array,
@@ -310,10 +328,12 @@
 
       static get observers() {
         return [
-          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length)', // used for non removable filters
+          'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
+            'selectedCPStructures.length)', // used for non removable filters
           '_initFiltersMenuList(partnersDropdownData)',
-          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, selectedPartners, ' +
-          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+          '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
+            'selectedPartners, selectedCPStructures.length,' +
+            'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ];
       }
@@ -364,16 +384,26 @@
       // to the params interpretted from the URL string.
       _init(active) {
         let urlQueryParams = this.urlParams;
+
         if (!active || !urlQueryParams) {
           return;
         }
+
+        if (_.isEmpty(urlQueryParams)) {
+          urlQueryParams.status = 'draft|signed';
+        }
         this.set('initComplete', false);
-        this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-        this.set('selectedAgTypes', this._getFilterUrlValuesAsArray(urlQueryParams.type));
-        this.set('selectedAgStatuses', this._getFilterUrlValuesAsArray(urlQueryParams.status));
-        this.set('selectedPartners', this._getFilterUrlValuesAsArray(urlQueryParams.partners));
-        this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
-        this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+        this.setProperties(
+          {
+            q: urlQueryParams.q ? urlQueryParams.q : '',
+            selectedAgTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
+            selectedAgStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
+            selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
+            selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
+            startDate: urlQueryParams.start ? urlQueryParams.start : '',
+            endDate: urlQueryParams.end ? urlQueryParams.end : ''
+          }
+        );
 
         this.setPaginationDataFromUrlParams(urlQueryParams);
 
@@ -383,6 +413,7 @@
         this.set('initComplete', true);
         this._updateSelectedFiltersValues();
       }
+
 
       _updateSelectedFiltersValues() {
         this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
@@ -437,6 +468,7 @@
                       'label', this.selectedPartners, 'value'),
                   this.startDate,
                   this.endDate,
+                  this.selectedCPStructures,
                   this.paginator.page,
                   this.paginator.page_size,
                   forceNoLoading ? false : this.showQueryLoading
@@ -455,6 +487,7 @@
           partners: this.selectedPartners,
           start: this.startDate,
           end: this.endDate,
+          cpStructures: this.selectedCPStructures,
           sort: this.sortOrder
         });
       }
@@ -468,6 +501,7 @@
               'label', this.selectedPartners, 'value'),
           start: this.startDate,
           end: this.endDate,
+          cpStructures: this.selectedCPStructures,
           search: this.q
         };
         return this._buildCsvExportUrl(params, endpointUrl);
