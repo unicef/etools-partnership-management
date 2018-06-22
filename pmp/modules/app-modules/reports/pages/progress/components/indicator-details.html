@@ -15,6 +15,7 @@
 <link rel="import" href="../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../mixins/utils-mixin.html">
 
+<link rel="import" href="../../../components/report-status.html">
 <link rel="import" href="disaggregations/disaggregation-table.html">
 
 <dom-module id="indicator-details">
@@ -89,46 +90,73 @@
 
     <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
     <template is="dom-if" if="[[!loading]]">
-      <paper-tabs
-          selected="{{selected}}"
-          fallback-selection="location-[[indicatorReport.indicator_location_data.0.location.id]]"
-          attr-for-selected="name"
-          scrollable
-          hide-scroll-buttons>
-        <template is="dom-repeat" items="[[indicatorReport.indicator_location_data]]" as="location">
-          <paper-tab name="location-[[location.location.id]]">
-            [[location.location.title]]
+      <paper-tabs selected="{{selected}}"
+                  selectable="paper-tab"
+                  scrollable
+                  hide-scroll-buttons>
+        <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
+          <paper-tab>
+            <report-status status="[[_computeLocationStatus(topLevelLocation)]]" no-label></report-status>
+            [[topLevelLocation.title]]
           </paper-tab>
         </template>
       </paper-tabs>
 
-      <iron-pages attr-for-selected="name" selected="{{selected}}">
-        <template is="dom-repeat" items="[[indicatorReport.indicator_location_data]]" as="location">
-          <div name="location-[[location.location.id]]">
-            <div class="tab-header">
-              <dl>
-                <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
-                  <dt>Location progress:</dt>
-                  <dd>[[location.location_progress.v]]</dd>
-                  <dt>Previous location progress:</dt>
-                  <dd>[[location.previous_location_progress.v]]</dd>
-                </template>
-                <template is="dom-if" if="[[_equals(location.display_type, 'percentage')]]" restamp="true">
-                  <dt>Location progress:</dt>
-                  <dd>[[_toPercentage(location.location_progress.c)]]</dd>
-                  <dt>Previous location progress:</dt>
-                  <dd>[[_toPercentage(location.previous_location_progress.c)]]</dd>
-                </template>
-              </dl>
-            </div>
+      <iron-pages selected="{{selected}}">
+        <template is="dom-repeat"
+                  items="[[locationData]]"
+                  as="topLevelLocation">
+          <div>
+            <paper-tabs selected="{{topLevelLocation.selected}}"
+                        selectable="paper-tab"
+                        hide-scroll-buttons
+                        scrollable>
+              <template
+                  is="dom-repeat"
+                  items="[[topLevelLocation.byEntity]]"
+                  as="location">
+                <paper-tab>[[location.reporting_entity.title]]</paper-tab>
+              </template>
+            </paper-tabs>
 
-            <div class="table-container app-grid">
-              <div class="item">
-                <disaggregation-table data="[[location]]" mapping="[[indicatorReport.disagg_lookup_map]]">
-                </disaggregation-table>
-              </div>
-            </div>
+            <iron-pages selected="{{topLevelLocation.selected}}">
+              <template
+                  is="dom-repeat"
+                  items="[[topLevelLocation.byEntity]]"
+                  as="location">
+
+                <div>
+                  <div class="tab-header">
+                    <dl>
+                      <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
+                        <dt>Location progress against [[location.reporting_entity.title]] target:</dt>
+                        <dd>[[_formatNumber(location.location_progress.v, '0', 0, '\,')]]</dd>
+                        <dt>Previous location progress:</dt>
+                        <dd>[[_formatNumber(location.previous_location_progress.v, '0', 0, '\,')]]</dd>
+                      </template>
+                      <template is="dom-if" if="[[_equals(location.display_type, 'percentage')]]" restamp="true">
+                        <dt>Location progress:</dt>
+                        <dd>[[_toPercentage(location.location_progress.c)]]</dd>
+                        <dt>Previous location progress:</dt>
+                        <dd>[[_toPercentage(location.previous_location_progress.c)]]</dd>
+                      </template>
+                    </dl>
+                  </div>
+
+                  <div class="table-container app-grid">
+                    <div class="item">
+                      <disaggregation-table data="[[location]]"
+                                            mapping="[[indicatorReport.disagg_lookup_map]]"
+                                            labels="[[indicatorReport.labels]]">
+                      </disaggregation-table>
+                    </div>
+                  </div>
+                </div>
+
+              </template>
+            </iron-pages>
           </div>
+
         </template>
       </iron-pages>
     </template>
@@ -168,36 +196,45 @@
             value: false
           },
           selected: {
-            type: String,
-            value: ''
+            type: Number,
+            value: 0
           },
           isClusterIndicator: {
             type: Boolean,
             value: false,
             reflectToAttribute: true
+          },
+          locationData: {
+            type: Array,
+            computed: '_computeLocationData(indicatorReport.indicator_location_data)'
           }
         };
       }
 
+      _shouldRefreshIndicatorDetails() {
+        return this.indicatorReportId &&
+            (_.isEmpty(this.indicatorReport) ||
+              (!_.isEmpty(this.indicatorReport) && this.indicatorReport.id !== parseInt(this.indicatorReportId, 10)));
+      }
+
       getIndicatorDetails() {
-        if (!_.isEmpty(this.indicatorReport)) {
+        if (!this._shouldRefreshIndicatorDetails()) {
           // indicator details already loaded
           return;
         }
-        if (this.indicatorReportId && this.indicatorReportId !== this.indicatorReport.id) {
-          let params = this._computeParams(this.indicatorReportId);
-          this._showLoading();
-          let self = this;
-          this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response) {
-            self.set('indicatorReport', (response && response[0]) ? response[0] : {});
-            self._hideLoading();
-          }).catch(function(error) {
-            let errMsg = 'Indicator details data request failed!';
-            self.logError(errMsg, 'reports-indicator-details', error);
-            self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-            self._hideLoading();
-          });
-        } // else, no need for getting indicator details
+
+        let params = this._computeParams(this.indicatorReportId);
+        this._showLoading();
+        let self = this;
+        this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response) {
+          self.set('indicatorReport', (response && response[0]) ? response[0] : {});
+          self._hideLoading();
+        }).catch(function(error) {
+          let errMsg = 'Indicator details data request failed!';
+          self.logError(errMsg, 'reports-indicator-details', error);
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+          self._hideLoading();
+        });
       }
 
       _showLoading() {
@@ -213,6 +250,39 @@
           pks: indicatorReportId,
           limit: 1
         };
+      }
+
+      _computeLocationData(rawLocationData) {
+        let byLocation = (rawLocationData || [])
+            .reduce(function(acc, location) {
+              let locationId = location.location.id;
+
+              if (typeof acc[locationId] === 'undefined') {
+                acc[locationId] = {
+                  title: location.location.title,
+                  byEntity: [],
+                  selected: 0
+                };
+              }
+
+              acc[locationId].byEntity.push(location);
+              if (acc[locationId].byEntity.length >= 2) {
+                acc[locationId].selected = acc[locationId].byEntity.length - 1;
+              }
+              return acc;
+            }, {});
+
+        return Object.keys(byLocation)
+            .map(function(key) {
+              return byLocation[key];
+            })
+            .sort(function(a, b) {
+              return b.is_master_location_data - a.is_master_location_data;
+            });
+      }
+
+      _computeLocationStatus(location) {
+        return location.byEntity[0].is_complete ? 1 : 2; //  'success' : 'error'
       }
 
     }

@@ -87,9 +87,6 @@
         }
       }
 
-      #go-to-partner-link {
-        color: var(--primary-color);
-      }
     </style>
 
     <app-route
@@ -114,11 +111,10 @@
             Add Programme Document or SSFA
           </span>
           <span hidden$="[[newInterventionActive]]">
-            <a id="go-to-partner-link"
+            <a class="primary"
                href$="[[rootPath]]partners/[[intervention.partner_id]]/overview"
                target="_blank">[[intervention.partner]]</a>
-            <span hidden$="[[!intervention.partner]]">:</span>
-            [[intervention.number]]
+            <span>: [[intervention.number]]</span>
           </span>
         </template>
       </div>
@@ -183,7 +179,8 @@
                                 name="details"
                                 intervention="{{intervention}}"
                                 new-intervention="[[newInterventionActive]]"
-                                original-intervention="[[originalIntervention]]">
+                                original-intervention="[[originalIntervention]]"
+                                user-edit-permission="[[_hasEditPermissions(permissions, intervention)]]">
           </intervention-details>
         </template>
 
@@ -326,6 +323,7 @@
               number: undefined,
               prc_review_document_file: null,
               signed_pd_document_file: null,
+              signed_pd_document: null,
               title: undefined,
               status: '',
               start: null,
@@ -610,6 +608,11 @@
 
       _deleteIntervention(e) {
         this.$.interventionData.deleteIntervention(e.detail.id);
+      }
+
+      _userHasEditPermissions(permissions) {
+        return permissions && permissions.editInterventionDetails === true &&
+            (permissions.partnershipManager || permissions.PME);
       }
 
       _hasEditPermissions(permissions, intervention) {

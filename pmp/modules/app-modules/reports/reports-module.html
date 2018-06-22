@@ -67,7 +67,10 @@
           Partner Reports
         </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
+          <a class="primary"
+             href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
+             target="_blank">[[report.programme_document.reference_number]]</a>
+          <span>: [[report.report_type]][[report.report_number]] [[report.reporting_period]]</span>
           <sup>
             <report-status status="[[report.status]]"></report-status>
           </sup>
@@ -112,7 +115,8 @@
           <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
             <report-progress id="reportDetails"
                              name="progress"
-                             report="[[report]]"></report-progress>
+                             report="[[report]]"
+                             report-attachment="[[reportAttachment]]"></report-progress>
           </template>
         </iron-pages>
 
@@ -181,7 +185,10 @@
           },
           permissions: {
             type: Object
-          }
+          },
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String
         };
       }
 

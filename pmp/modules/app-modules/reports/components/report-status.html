@@ -18,6 +18,11 @@
         margin-top: -2px;
       }
 
+      :host([status-type="default"]) iron-icon {
+        color: var(--primary-color);
+      }
+
+      :host([status-type="submitted"]) iron-icon,
       :host([status-type="success"]) iron-icon {
         color: var(--success-color);
       }
@@ -27,7 +32,7 @@
       }
 
       :host([status-type="neutral"]) iron-icon {
-        color: var(--primary-color);
+        color: var(--secondary-text-color);
       }
 
       :host([status-type="warning"]) iron-icon {
@@ -45,6 +50,7 @@
     <template is="dom-if" if="[[!noLabel]]">
       <span>[[label]]</span>
     </template>
+    <slot></slot>
 
   </template>
 
@@ -62,7 +68,9 @@
 
       static get properties() {
         return {
-          status: Number,
+          status: {
+            value: null
+          },
           noLabel: {
             type: Boolean,
             value: false
@@ -78,52 +86,67 @@
           },
           label: {
             type: String,
-            computed: '_computeLabel(status)'
+            computed: '_computeLabel(status, final, reportType)'
           },
           icon: {
             type: String,
             computed: '_computeIcon(statusType)'
+          },
+          final: {
+            type: Boolean,
+            value: false
+          },
+          reportType: {
+            type: String,
+            value: ''
           }
         };
       }
 
       _computeStatusType(status) {
+        if (status === null || typeof status === 'undefined') {
+          return 'no-status';
+        }
         switch (status) {
-          case 1:
-          case 'Sub':
+          case '1':
+          case 'Met':
           case 'OnT':
           case 'Com':
           case 'Acc':
             return 'success';
-          case 2:
+          case 'Sub':
+            return 'submitted';
+          case '2':
           case 'Ove':
           case 'Sen':
-          case 'NoP':
-          case 'Rej':
             return 'error';
-          case 3:
-          case 'Met':
+          case '3':
           case 'Due':
+          case 'NoP':
           case 'Ong':
             return 'neutral';
+          case 'Rej':
           case 'Con':
           case 'Pla':
             return 'warning';
           case 'NoS':
-          case null:
             return 'no-status';
+          default:
+            return 'default';
         }
       }
 
-      _computeLabel(status) {
-        // TODO: refactor status label get method to use redux store statuses
+      _computeLabel(status, final, reportType) {
+        if (status === null || typeof status === 'undefined') {
+          return 'No Status';
+        }
         switch (status) {
-          case 1:
+          case '1':
             return 'Nothing due';
-          case 2:
+          case '2':
           case 'Ove':
             return 'Overdue';
-          case 3:
+          case '3':
           case 'Due':
             return 'Due';
           case 'Sub':
@@ -131,26 +154,25 @@
           case 'Rej':
             return 'Rejected';
           case 'Met':
-            return 'Met';
+            return final ? 'Met results as planned' : 'Met';
           case 'OnT':
             return 'On Track';
           case 'NoP':
             return 'No Progress';
           case 'Con':
-            return 'Constrained';
+            return final ? 'Constrained (partially met result)' : 'Constrained';
           case 'Ong':
             return 'Ongoing';
           case 'Pla':
             return 'Planned';
           case 'Com':
             return 'Completed';
+          case 'NoS':
+            return 'No Status';
           case 'Sen':
             return 'Sent Back';
           case 'Acc':
-            return 'Accepted';
-          case 'NoS':
-          case null:
-            return 'No Status';
+            return reportType !== 'HR' ? 'Accepted' : 'Received';
         }
       }
 
@@ -159,6 +181,8 @@
           switch (type) {
             case 'success':
               return 'icons:check-circle';
+            case 'submitted':
+              return 'icons:assignment-turned-in';
             case 'error':
             case 'warning':
               return 'icons:error';

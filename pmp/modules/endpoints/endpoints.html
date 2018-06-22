@@ -114,8 +114,11 @@
     monitoringVisits: {
       template: '/api/t2f/travels/activities/partnership/<%=id%>/?year=<%=year%>'
     },
-    partnerProgrammaticVisits: {
-      template: '/api/t2f/travels/activities/<%=id%>/?year=<%=year%>'
+    partnerT2fProgrammaticVisits: {
+      template: '/api/t2f/travels/activities/<%=id%>/?year=<%=year%>&status=completed'
+    },
+    partnerTPMProgrammaticVisits: {
+      template: '/api/tpm/visits/?ordering=reference_number&status=unicef_approved&tpm_activities__partner=<%=partnerId%>'
     },
     sectorLocationsDelete: {
       template: '/api/v2/interventions/sector-locations/<%=id%>/'
@@ -180,8 +183,16 @@
       template: '/api/unicef/<%=countryId%>/progress-reports/',
       token: 'prp'
     },
+    hrClusterReportingRequirements: {
+      template: '/api/indicator/reporting-frequencies/',
+      token: 'prp'
+    },
     reportDetails: {
       template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/',
+      token: 'prp'
+    },
+    srReportAttachment: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachment/',
       token: 'prp'
     },
     reportIndicatorsDetails: {

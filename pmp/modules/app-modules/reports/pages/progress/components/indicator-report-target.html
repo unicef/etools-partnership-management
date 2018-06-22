@@ -46,8 +46,8 @@
       <span title$="[[_prepareValue(cumulativeProgress)]]">[[_prepareValue(cumulativeProgress)]]</span>
     </div>
     <div class="target-row">
-      <span>Achivement in last reporting period in all locations:</span>
-      <span title$="[[_prepareValue(achivement)]]">[[_prepareValue(achivement)]]</span>
+      <span>Achievement in last reporting period in all locations:</span>
+      <span title$="[[_prepareValue(achievement, 'achievement')]]">[[_prepareValue(achievement, 'achievement')]]</span>
     </div>
   </template>
   <script>
@@ -74,7 +74,7 @@
             type: String,
             value: '-'
           },
-          achivement: {
+          achievement: {
             type: String,
             value: '-'
           },
@@ -90,8 +90,9 @@
         };
       }
 
-      _prepareValue(value) {
-        switch (this.valuesType) {
+      _prepareValue(value, type) {
+        let t = type || this.valuesType;
+        switch (t) {
           case 'number':
             value = this._formatNumber(value, '-', 0, '\,');
             break;

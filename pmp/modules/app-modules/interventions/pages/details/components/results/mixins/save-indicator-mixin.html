@@ -33,12 +33,22 @@
                   display_type: 'percentage'
                 },
                 section: null,
-                baseline: null,
-                target: null,
+                baseline_new: {
+                  v: 0,
+                  d: 1
+                },
+                target_new: {
+                  v: 0,
+                  d: 1
+                },
                 means_of_verification: null,
                 locations: [],
                 disaggregation: [],
-                is_high_frequency: false
+                is_high_frequency: false,
+                measurement_specifications: null,
+                label: null,
+                numerator_label: null,
+                denominator_label: null
               }
             },
             nonClusterIndicatorEditModel: {
@@ -46,26 +56,45 @@
               value: {
                 id: null,
                 section: null,
-                baseline: null,
-                target: null,
+                baseline_new: {
+                  v: 0,
+                  d: 1
+                },
+                target_new: {
+                  v: 0,
+                  d: 1
+                },
                 means_of_verification: null,
                 locations: [],
                 disaggregation: [],
-                is_high_frequency: false
+                is_high_frequency: false,
+                measurement_specifications: null,
+                label: null,
+                numerator_label: null,
+                denominator_label: null
               }
             },
             clusterIndicatorCreateModel: {
               type: Object,
               value: {
-                indicator: null,
                 section: null,
-                baseline: null,
-                target: null,
+                baseline_new: {
+                  v: 0,
+                  d: 1
+                },
+                target_new: {
+                  v: 0,
+                  d: 1
+                },
                 locations: [],
                 cluster_indicator_id: null,
                 cluster_indicator_title: null,
                 cluster_name: null,
-                response_plan_name: null
+                response_plan_name: null,
+                measurement_specifications: null,
+                label: null,
+                numerator_label: null,
+                denominator_label: null
               }
             },
             clusterIndicatorEditModel: {
@@ -73,9 +102,19 @@
               value: {
                 id: null,
                 section: null,
-                baseline: null,
-                target: null,
-                locations: []
+                baseline_new: {
+                  v: 0,
+                  d: 1
+                },
+                target_new: {
+                  v: 0,
+                  d: 1
+                },
+                locations: [],
+                measurement_specifications: null,
+                label: null,
+                numerator_label: null,
+                denominator_label: null
               }
             }
           };
@@ -145,26 +184,49 @@
 
         _getIndicatorBody() {
           let body = this._getIndicatorModelForSave();
-          if (this.indicator.target === '' || this.indicator.target === undefined) {
-            this.indicator.target = null; // Avoid empty string or undefined being sent to backend
-          }
-          if (this.indicator.baseline === '' || this.indicator.baseline === undefined) {
-            this.indicator.baseline = null;
-          }
+
           Object.assign(body, _.pick(this.indicator, _.keys(body)));
+
+          this._prepareBaselineAndTarget(body);
+
           if (body.hasOwnProperty('disaggregation')) {
-            body.disaggregation = this._prepareDisaggregations(body);
+            body.disaggregation = this._prepareDisaggregations();
           }
           if (this.isCluster && !body.id) {
             body.indicator = null;
-            // TODO for when we can create cluster indic->
-            // see if indicator prop should rather be removed
-            // from clusterIndicatorCreateModel than from here
           }
           return body;
         }
 
-        _prepareDisaggregations(body) {
+        _prepareBaselineAndTarget(indicator) {
+          if (!indicator.target_new || indicator.target_new.v === undefined
+              || indicator.target_new.v === '') {
+            indicator.target_new = {v: 0, d: 1};
+          }
+          if (!indicator.baseline_new || indicator.baseline_new.v === ''
+              || indicator.baseline_new.v === undefined) {
+            indicator.baseline_new = {v: 0, d: 1};
+          }
+          if (indicator.indicator) {
+            if (indicator.indicator.unit === 'number') {
+              this._updateBaselineTargetD(indicator, 1);
+              this._resetRatioLabels(indicator);
+            } else if (indicator.indicator.display_type === 'percentage') {
+              this._updateBaselineTargetD(indicator, 100);
+            }
+          }
+        }
+
+        _updateBaselineTargetD(indicator, d) {
+          indicator.baseline_new.d = d;
+          indicator.target_new.d = d;
+        }
+        _resetRatioLabels(indicator) {
+          indicator.numerator_label = '';
+          indicator.denominator_label = '';
+        }
+
+        _prepareDisaggregations() {
           if (!this.disaggregations || !this.disaggregations.length) {
             return [];
           }
