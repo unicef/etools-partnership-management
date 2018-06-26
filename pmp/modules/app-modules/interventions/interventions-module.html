@@ -159,7 +159,7 @@
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-          <interventions-list id="intList"
+          <interventions-list id="list"
                               name="list"
                               active="[[listActive]]"
                               csv-download-qs="{{csvDownloadQs}}"
@@ -405,7 +405,6 @@
 
       _initInterventionsModuleListeners() {
         this.addEventListener('intervention-save-error', this._interventionSaveErrors.bind(this));
-        this.addEventListener('reload-list', this._reloadInterventionsList.bind(this));
         this.addEventListener('tab-content-attached', this._interventionPageAttached.bind(this));
         this.addEventListener('trigger-intervention-loading-msg',
             this._handleInterventionSelectionLoadingMsg.bind(this));
@@ -681,18 +680,6 @@
 
       _isAttachementsTabActive(activeTab) {
         return activeTab === 'attachments';
-      }
-
-      _reloadInterventionsList(e) {
-        e.stopImmediatePropagation();
-        try {
-          let interventions = this.shadowRoot.querySelector('#intList');
-          if (interventions && !interventions.$.list.classList.contains('hidden')) {
-            interventions._filterInterventionsData(true);
-          }
-        } catch (err) {
-          this.logWarn('List refresh error occurred', '[interventions-page]', err);
-        }
       }
 
       _handleTabSelectAction(e) {

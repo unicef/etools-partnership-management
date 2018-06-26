@@ -641,12 +641,12 @@
           this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
           let qs = this._buildQueryString();
           this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated, qs,
-              this._filterInterventionsData.bind(this));
+              this._filterListData.bind(this));
           _interventionsLastNavigated = qs || _interventionsLastNavigated;
         }
       }
 
-      _filterInterventionsData(forceNoLoading) {
+      _filterListData(forceNoLoading) {
         // Query is debounced with a debounce time
         // set depending on what action the user takes
         this._queryDebouncer = Polymer.Debouncer.debounce(this._queryDebouncer,
