@@ -391,7 +391,7 @@
         dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash_local) +
             parseFloat(intervention.planned_budget.in_kind_amount_local);
         dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution_local);
-        dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
+        dexieObject.total_budget = dexieObject.unicef_budget + dexieObject.cso_contribution;
         dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash_local);
         dexieObject.budget_currency = intervention.planned_budget.currency;
       }
