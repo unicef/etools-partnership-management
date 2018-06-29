@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-error-messages-box.html">
@@ -47,21 +48,28 @@
           min-width: 150px !important;
         }
       }
+
+      iron-icon {
+        margin-right: 5px;
+        margin-top: -5px;
+        color: var(--dark-secondary-text-color);
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partner Details">
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Full Name"
-                       value="[[partner.name]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Full Name">
+            <span class="placeholder" hidden$="[[_isHidden(partner.name)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.name)]]">[[partner.name]]</span>
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
-          <paper-input label="Short Name"
-                       value="[[partner.short_name]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Short Name">
+            <span class="placeholder" hidden$="[[_isHidden(partner.short_name)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.short_name)]]">[[partner.short_name]]</span>
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <paper-input label="Alternate Name"
@@ -79,10 +87,13 @@
                        readonly></paper-input>
         </div>
         <div class="col col-4">
-          <paper-input label="Partner Type"
-                       value="[[_getPartnerType(partner.partner_type, partner.cso_type)]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Partner Type">
+            <span class="placeholder"
+                  hidden$="[[!_empty(_partnerComputedType)]]">&#8212;</span>
+            <span hidden$="[[_empty(_partnerComputedType)]]">
+              [[_partnerComputedType]]
+            </span>
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <etools-dropdown-multi label="Shared Partner"
@@ -96,14 +107,14 @@
 
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Core Values Last Assessment Date"
-                       name="core_values_assessment_date"
-                       value="[[prettyDate(partner.core_values_assessment_date)]]"
-                       placeholder="&#8212;"
-                       readonly>
-            <div slot="prefix">
-              <iron-icon icon="date-range"></iron-icon>
-            </div>
+          <etools-form-element-wrapper label="Core Values Last Assessment Date">
+            <span><iron-icon icon="date-range"></iron-icon></span>
+            <span class="placeholder" hidden$="[[_isHidden(partner.core_values_assessment_date)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.core_values_assessment_date)]]">
+              [[prettyDate(partner.core_values_assessment_date)]]
+            </span>
+          </etools-form-element-wrapper>
+
           </paper-input>
         </div>
         <div class="col col-4">
@@ -121,58 +132,60 @@
       </div>
 
       <div class="row-h flex-c">
-        <paper-input label="Address"
-                     value="{{partner.address}}"
-                     placeholder="&#8212;"
-                     readonly>
-          <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
-        </paper-input>
+
+        <etools-form-element-wrapper label="Address">
+          <span><iron-icon slot="prefix" icon="communication:location-on"></iron-icon></span>
+          <span class="placeholder" hidden$="[[_isHidden(partner.address)]]">&#8212;</span>
+          <span hidden$="[[!_isHidden(partner.address)]]">[[partner.address]]</span>
+        </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Phone Number"
-                       value="{{partner.phone_number}}"
-                       placeholder="&#8212;"
-                       readonly>
-            <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-          </paper-input>
+
+          <etools-form-element-wrapper label="Phone Number">
+            <span><iron-icon slot="prefix" icon="communication:phone"></iron-icon></span>
+            <span class="placeholder" hidden$="[[_isHidden(partner.phone_number)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.phone_number)]]">[[partner.phone_number]]</span>
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
-          <paper-input label="E-mail address"
-                       value="{{partner.email}}"
-                       placeholder="&#8212;"
-                       readonly>
-            <iron-icon slot="prefix" icon="communication:email"></iron-icon>
-          </paper-input>
+
+          <etools-form-element-wrapper label="E-mail address">
+            <span><iron-icon icon="communication:email"></iron-icon></span>
+            <span class="placeholder" hidden$="[[_isHidden(partner.email)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.email)]]">[[partner.email]]</span>
+          </etools-form-element-wrapper>
+
         </div>
         <div class="col col-4"></div>
       </div>
       <div class="row-h flex-c">
         <div class="col col-4">
           <!-- Risk rating -->
-          <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                       label="Partner Risk Rating"
-                       value="[[getRiskRatingValue(partner.rating)]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+            <etools-form-element-wrapper label="Partner Risk Rating">
+              <span class="placeholder" hidden$="[[!_empty(_partnerComputedRiskRating)]]">&#8212;</span>
+              <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
+                    hidden$="[[_empty(_partnerComputedRiskRating)]]">
+                [[getRiskRatingValue(partner.rating)]]
+              </span>
+            </etools-form-element-wrapper>
+
         </div>
         <div class="col col-4">
           <!-- Type of assessment -->
-          <paper-input label="Type of Assessment"
-                       value="[[partner.type_of_assessment]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Type of Assessment">
+            <span class="placeholder" hidden$="[[_isHidden(partner.type_of_assessment)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.type_of_assessment)]]">[[partner.type_of_assessment]]</span>
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <!--Date last assessed-->
-          <paper-input label="Date of Report"
-                       value="[[prettyDate(partner.last_assessment_date)]]"
-                       placeholder="&#8212;"
-                       readonly>
-            <div slot="prefix">
-              <iron-icon icon="date-range"></iron-icon>
-            </div>
-          </paper-input>
+          <etools-form-element-wrapper label="Date of Report">
+            <span><iron-icon icon="date-range"></iron-icon></span>
+            <span class="placeholder" hidden$="[[_isHidden(partner.last_assessment_date)]]">&#8212;</span>
+            <span hidden$="[[!_isHidden(partner.last_assessment_date)]]">[[prettyDate(partner.last_assessment_date)]]</span>
+          </etools-form-element-wrapper>
+
         </div>
       </div>
     </etools-content-panel>
@@ -238,6 +251,14 @@
           showCoreValuesAssessmentAttachment: {
             type: Boolean,
             value: false
+          },
+          _partnerComputedType: {
+            type: String,
+            computed: '_computePartnerType(partner)'
+          },
+          _partnerComputedRiskRating: {
+            type: String,
+            computed: '_computePartnerRiskRating(partner)'
           }
         };
       }
@@ -298,6 +319,20 @@
         }
       }
 
+      _computePartnerType(partner) {
+        return !_.isEmpty(partner)
+          ? this._getPartnerType(partner.partner_type, partner.cso_type)
+          : '';
+      }
+
+      _computePartnerRiskRating(partner) {
+        if(this.getRiskRatingValue(partner.rating) !== 'Not Available') {
+          return this.getRiskRatingValue(partner.rating);
+        }else {
+          return '';
+        }
+      }
+
       _getPartnerType(partnerType, csoType) {
         return (csoType !== null) ? (partnerType + '/' + csoType) : partnerType;
       }
@@ -313,6 +348,14 @@
 
       _validatePageData() {
         return this.$.staffMembersList.validate();
+      }
+
+      _isHidden(val) {
+        return !!val;
+      }
+
+      _empty(val) {
+        return _.isEmpty(val);
       }
 
     }
