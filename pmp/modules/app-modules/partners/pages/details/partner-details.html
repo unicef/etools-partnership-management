@@ -55,14 +55,22 @@
         color: var(--dark-secondary-text-color);
       }
 
+      .shortenText{
+        display: inline-block;
+        max-width: 400px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partner Details">
       <div class="row-h flex-c">
         <div class="col col-4">
-          <etools-form-element-wrapper label="Full Name">
+          <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]">
             <span class="placeholder" hidden$="[[_isHidden(partner.name)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.name)]]">[[partner.name]]</span>
+            <span class="shortenText" hidden$="[[!_isHidden(partner.name)]]">[[partner.name]]</span>
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
@@ -133,10 +141,10 @@
 
       <div class="row-h flex-c">
 
-        <etools-form-element-wrapper label="Address">
+        <etools-form-element-wrapper label="Address" title$="[[partner.address]]">
           <span><iron-icon slot="prefix" icon="communication:location-on"></iron-icon></span>
           <span class="placeholder" hidden$="[[_isHidden(partner.address)]]">&#8212;</span>
-          <span hidden$="[[!_isHidden(partner.address)]]">[[partner.address]]</span>
+          <span class="shortenText" hidden$="[[!_isHidden(partner.address)]]">[[partner.address]]</span>
         </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
@@ -150,10 +158,10 @@
         </div>
         <div class="col col-4">
 
-          <etools-form-element-wrapper label="E-mail address">
+          <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]">
             <span><iron-icon icon="communication:email"></iron-icon></span>
             <span class="placeholder" hidden$="[[_isHidden(partner.email)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.email)]]">[[partner.email]]</span>
+            <span class="shortenText" hidden$="[[!_isHidden(partner.email)]]">[[partner.email]]</span>
           </etools-form-element-wrapper>
 
         </div>
