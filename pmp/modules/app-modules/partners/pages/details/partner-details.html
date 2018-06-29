@@ -171,9 +171,9 @@
         <div class="col col-4">
           <!-- Risk rating -->
             <etools-form-element-wrapper label="Partner Risk Rating">
-              <span class="placeholder" hidden$="[[!_empty(_partnerComputedRiskRating)]]">&#8212;</span>
+              <span class="placeholder" hidden$="[[!_empty(partner.rating)]]">&#8212;</span>
               <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                    hidden$="[[_empty(_partnerComputedRiskRating)]]">
+                    hidden$="[[_empty(partner.rating)]]">
                 [[getRiskRatingValue(partner.rating)]]
               </span>
             </etools-form-element-wrapper>
@@ -263,10 +263,6 @@
           _partnerComputedType: {
             type: String,
             computed: '_computePartnerType(partner)'
-          },
-          _partnerComputedRiskRating: {
-            type: String,
-            computed: '_computePartnerRiskRating(partner)'
           }
         };
       }
@@ -331,14 +327,6 @@
         return !_.isEmpty(partner)
           ? this._getPartnerType(partner.partner_type, partner.cso_type)
           : '';
-      }
-
-      _computePartnerRiskRating(partner) {
-        if(this.getRiskRatingValue(partner.rating) !== 'Not Available') {
-          return this.getRiskRatingValue(partner.rating);
-        }else {
-          return '';
-        }
       }
 
       _getPartnerType(partnerType, csoType) {
