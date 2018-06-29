@@ -15,8 +15,7 @@
         return;
       }
 
-      if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage' &&
-          this.indicator.indicator.display_type !== 'ratio') {
+      if (this._displayTypeIsPercentage(this.indicator)) {
         let val = this._getValidPercentageValue(baselineV);
         this.set('indicator.baseline_new.v', val);
       }
@@ -27,8 +26,7 @@
         return;
       }
 
-      if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage' &&
-          this.indicator.indicator.display_type !== 'ratio') {
+      if (this._displayTypeIsPercentage(this.indicator)) {
         let val = this._getValidPercentageValue(targetV);
         this.set('indicator.target_new.v', val);
       }
@@ -36,6 +34,11 @@
 
     _isEmptyExcept0(value) {
       return value === null || value === undefined || value === '';
+    }
+
+    _displayTypeIsPercentage(indicator) {
+      return (indicator.indicator && indicator.indicator.unit === 'percentage' &&
+          indicator.indicator.display_type !== 'ratio');
     }
 
     _getValidPercentageValue(val) {

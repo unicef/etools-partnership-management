@@ -274,7 +274,8 @@
         return [
           '_baselineChanged(indicator.baseline_new.v)',
           '_targetChanged(indicator.target_new.v)',
-          '_baselineUnknownChanged(baselineIsUnknown)'
+          '_baselineUnknownChanged(baselineIsUnknown)',
+          '_typeChanged(indicator.indicator.display_type, indicator.indicator.unit)'
         ];
       }
 
@@ -290,7 +291,7 @@
           this.baselineIsUnknown = false;
           this.readonly = false;
         } else {
-          this.baselineIsUnknown = !(indicator.baseline_new || parseInt(indicator.baseline_new.v) === 0);
+          this.baselineIsUnknown = !(indicator.baseline_new) || this._isEmptyExcept0(indicator.baseline_new.v);
           this.readonly = true;
         }
       }
@@ -303,8 +304,12 @@
 
       _baselineUnknownChanged(isUnknown) {
         if (isUnknown) {
-          this.set('indicator.baseline_new', null);
+          this.set('indicator.baseline_new', {v: null, d: 1});
         }
+      }
+
+      _typeChanged() {
+        this.resetValidations();
       }
 
       validate() {
@@ -315,7 +320,9 @@
 
       resetValidations() {
         setTimeout(() => {
-          let elemIds = ['titleEl', 'locationsDropdw', 'targetElForNumericUnit', 'targetElForNonNumericUnit'];
+          let elemIds = ['titleEl', 'locationsDropdw'];
+          [].push.apply(elemIds, this._getIndicatorTargetElId());
+
           let i;
           for (i = 0; i < elemIds.length; i++) {
             let elem = this.shadowRoot.querySelector('#' + elemIds[i]);
