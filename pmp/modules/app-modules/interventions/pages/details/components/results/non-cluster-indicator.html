@@ -274,7 +274,8 @@
         return [
           '_baselineChanged(indicator.baseline_new.v)',
           '_targetChanged(indicator.target_new.v)',
-          '_baselineUnknownChanged(baselineIsUnknown)'
+          '_baselineUnknownChanged(baselineIsUnknown)',
+          '_typeChanged(indicator.indicator.display_type, indicator.indicator.unit)'
         ];
       }
 
@@ -307,6 +308,10 @@
         }
       }
 
+      _typeChanged() {
+        this.resetValidations();
+      }
+
       validate() {
         let elemIds = ['titleEl', 'locationsDropdw'];
         [].push.apply(elemIds, this._getIndicatorTargetElId());
@@ -315,7 +320,9 @@
 
       resetValidations() {
         setTimeout(() => {
-          let elemIds = ['titleEl', 'locationsDropdw', 'targetElForNumericUnit', 'targetElForNonNumericUnit'];
+          let elemIds = ['titleEl', 'locationsDropdw'];
+          [].push.apply(elemIds, this._getIndicatorTargetElId());
+
           let i;
           for (i = 0; i < elemIds.length; i++) {
             let elem = this.shadowRoot.querySelector('#' + elemIds[i]);
