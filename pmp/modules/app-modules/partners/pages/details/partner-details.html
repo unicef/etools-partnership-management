@@ -49,12 +49,6 @@
         }
       }
 
-      iron-icon {
-        margin-right: 5px;
-        margin-top: -5px;
-        color: var(--dark-secondary-text-color);
-      }
-
       .shortenText{
         display: inline-block;
         max-width: 400px;
@@ -69,14 +63,14 @@
       <div class="row-h flex-c">
         <div class="col col-4">
           <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]">
-            <span class="placeholder" hidden$="[[_isHidden(partner.name)]]">&#8212;</span>
-            <span class="shortenText" hidden$="[[!_isHidden(partner.name)]]">[[partner.name]]</span>
+            <span class="placeholder" hidden$="[[!_empty(partner.name)]]">&#8212;</span>
+            <span class="shortenText" hidden$="[[_empty(partner.name)]]">[[partner.name]]</span>
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Short Name">
-            <span class="placeholder" hidden$="[[_isHidden(partner.short_name)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.short_name)]]">[[partner.short_name]]</span>
+            <span class="placeholder" hidden$="[[!_empty(partner.short_name)]]">&#8212;</span>
+            <span hidden$="[[_empty(partner.short_name)]]">[[partner.short_name]]</span>
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
@@ -116,9 +110,9 @@
       <div class="row-h flex-c">
         <div class="col col-4">
           <etools-form-element-wrapper label="Core Values Last Assessment Date">
-            <span><iron-icon icon="date-range"></iron-icon></span>
-            <span class="placeholder" hidden$="[[_isHidden(partner.core_values_assessment_date)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.core_values_assessment_date)]]">
+            <iron-icon icon="date-range" slot="prefix"></iron-icon>
+            <span class="placeholder" hidden$="[[!_empty(partner.core_values_assessment_date)]]">&#8212;</span>
+            <span hidden$="[[_empty(partner.core_values_assessment_date)]]">
               [[prettyDate(partner.core_values_assessment_date)]]
             </span>
           </etools-form-element-wrapper>
@@ -140,28 +134,27 @@
       </div>
 
       <div class="row-h flex-c">
-
         <etools-form-element-wrapper label="Address" title$="[[partner.address]]">
-          <span><iron-icon slot="prefix" icon="communication:location-on"></iron-icon></span>
-          <span class="placeholder" hidden$="[[_isHidden(partner.address)]]">&#8212;</span>
-          <span class="shortenText" hidden$="[[!_isHidden(partner.address)]]">[[partner.address]]</span>
+          <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
+          <span class="placeholder" hidden$="[[!_empty(partner.address)]]">&#8212;</span>
+          <span class="shortenText" hidden$="[[_empty(partner.address)]]">[[partner.address]]</span>
         </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
         <div class="col col-4">
 
           <etools-form-element-wrapper label="Phone Number">
-            <span><iron-icon slot="prefix" icon="communication:phone"></iron-icon></span>
-            <span class="placeholder" hidden$="[[_isHidden(partner.phone_number)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.phone_number)]]">[[partner.phone_number]]</span>
+            <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
+            <span class="placeholder" hidden$="[[!_empty(partner.phone_number)]]">&#8212;</span>
+            <span hidden$="[[_empty(partner.phone_number)]]">[[partner.phone_number]]</span>
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
 
           <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]">
-            <span><iron-icon icon="communication:email"></iron-icon></span>
-            <span class="placeholder" hidden$="[[_isHidden(partner.email)]]">&#8212;</span>
-            <span class="shortenText" hidden$="[[!_isHidden(partner.email)]]">[[partner.email]]</span>
+            <iron-icon icon="communication:email" slot="prefix"></iron-icon>
+            <span class="placeholder" hidden$="[[!_empty(partner.email)]]">&#8212;</span>
+            <span class="shortenText" hidden$="[[_empty(partner.email)]]">[[partner.email]]</span>
           </etools-form-element-wrapper>
 
         </div>
@@ -182,16 +175,16 @@
         <div class="col col-4">
           <!-- Type of assessment -->
           <etools-form-element-wrapper label="Type of Assessment">
-            <span class="placeholder" hidden$="[[_isHidden(partner.type_of_assessment)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.type_of_assessment)]]">[[partner.type_of_assessment]]</span>
+            <span class="placeholder" hidden$="[[!_empty(partner.type_of_assessment)]]">&#8212;</span>
+            <span hidden$="[[_empty(partner.type_of_assessment)]]">[[partner.type_of_assessment]]</span>
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <!--Date last assessed-->
           <etools-form-element-wrapper label="Date of Report">
-            <span><iron-icon icon="date-range"></iron-icon></span>
-            <span class="placeholder" hidden$="[[_isHidden(partner.last_assessment_date)]]">&#8212;</span>
-            <span hidden$="[[!_isHidden(partner.last_assessment_date)]]">[[prettyDate(partner.last_assessment_date)]]</span>
+            <iron-icon icon="date-range" slot="prefix"></iron-icon>
+            <span class="placeholder" hidden$="[[!_empty(partner.last_assessment_date)]]">&#8212;</span>
+            <span hidden$="[[_empty(partner.last_assessment_date)]]">[[prettyDate(partner.last_assessment_date)]]</span>
           </etools-form-element-wrapper>
 
         </div>
@@ -344,10 +337,6 @@
 
       _validatePageData() {
         return this.$.staffMembersList.validate();
-      }
-
-      _isHidden(val) {
-        return !!val;
       }
 
       _empty(val) {
