@@ -44,7 +44,8 @@
         };
         --engagements-row: {
           padding: 0 24px;
-        }
+        };
+        --risk-rating-color: var(--risk-rating-default-color);
       }
 
       /* overview panel styles */
@@ -75,7 +76,7 @@
       }
 
       .risk-rating {
-        @apply --risk-rating-color;
+        background: var(--risk-rating-color);
         width: 4px;
         margin-right: 8px;
       }
@@ -571,8 +572,8 @@
         }
         let requestOptions = this._getEngagementsRequestOptions(partner.id);
         this.sendRequest(requestOptions)
-            .then(results => this._init(results))
-            .catch(err => this.handleErrorResponse(err));
+            .then((results) => this._init(results))
+            .catch((err) => this.handleErrorResponse(err));
 
         this.set('basisOptions', []);
         this._addBasisFromPartner();
@@ -615,7 +616,7 @@
       }
 
       _applyRiskRatingColor() {
-        this.updateStyles({'--risk-rating-color': `background: ${this.RISKRATINGCOLORS[this.partner.rating]}`});
+        this.updateStyles({'--risk-rating-color': this.RISKRATINGCOLORS[this.partner.rating]});
       }
 
       _getYear() {
