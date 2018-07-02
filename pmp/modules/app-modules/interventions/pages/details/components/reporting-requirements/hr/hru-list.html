@@ -26,7 +26,6 @@
                               no-title>
       <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
       <etools-data-table-column class="flex-c">Report Due Date</etools-data-table-column>
-      <etools-data-table-column class="flex-c">Start Date</etools-data-table-column>
       <etools-data-table-column class="col-1"></etools-data-table-column>
     </etools-data-table-header>
     <template is="dom-repeat" items="[[hruData]]">
@@ -35,7 +34,6 @@
         <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
           <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
-          <span class="col-data flex-c">[[getDateDisplayValue(item.start_date)]]</span>
           <span class="col-data col-1 actions">
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
                            data-args$="[[index]]"
@@ -86,6 +84,9 @@
           disableSorting: {
             type: Boolean,
             value: false
+          },
+          startDate: {
+            type: Date
           }
         };
       }
@@ -104,7 +105,7 @@
           this._sortRequirementsAsc();
         }
 
-        this._updateStartDateAfterListChanges();
+        this._updateStartDate(this.startDate);
       }
 
       _sortRequirementsAsc() {
@@ -113,31 +114,28 @@
         });
       }
 
-      _getExistingStartDate() {
-        if (_.isEmpty(this.hruData)) {
-          return null;
-        }
-        let item = this.hruData.find(el => !_.isEmpty(el.start_date));
-        return item ? item.start_date : null;
-      }
-
-      _updateStartDateAfterListChanges() {
-        let stDt = this._getExistingStartDate();
-        if (stDt) {
-          this._updateStartDate(stDt);
-        }
-      }
-
       _updateStartDate(startDate) {
         if (_.isEmpty(this.hruData)) {
           return;
         }
-        let index = this.hruData.findIndex(el => !_.isEmpty(el.start_date));
-        if (index >= 0) {
-          this.set('hruData.' + index + '.start_date', null);
+
+        if (startDate) {
+          this.set('hruData.0.start_date', startDate);
+
+          this._calculateStartDateForTheRestOfItems();
         }
-        this.set('hruData.0.start_date', startDate);
       }
+      _calculateStartDateForTheRestOfItems() {
+        let i;
+        for (i = 1; i < this.hruData.length; i++) {
+          this.set('hruData.' + i + '.start_date', this._computeStartDate(i));
+        }
+      }
+
+      _computeStartDate(i) {
+        return moment(this.hruData[i-1].due_date).add(1, 'days').format('YYYY-MM-DD');
+      }
+
 
       _getIndex(index) {
         if (this.usePaginationIndex) {
