@@ -86,7 +86,8 @@
             value: false
           },
           startDate: {
-            type: Date
+            type: Date,
+            observer: '_startDateChanged'
           }
         };
       }
@@ -101,11 +102,12 @@
         if (this.disableSorting) {
           return;
         }
-        if (!_.isEmpty(data)) {
-          this._sortRequirementsAsc();
+        if (_.isEmpty(data)) {
+          return;
         }
 
-        this._updateStartDate(this.startDate);
+        this._sortRequirementsAsc();
+        this.updateStartDates(this.startDate);
       }
 
       _sortRequirementsAsc() {
@@ -114,7 +116,11 @@
         });
       }
 
-      _updateStartDate(startDate) {
+      _startDateChanged(startDate) {
+        this.updateStartDates(startDate);
+      }
+
+      updateStartDates(startDate) {
         if (_.isEmpty(this.hruData)) {
           return;
         }

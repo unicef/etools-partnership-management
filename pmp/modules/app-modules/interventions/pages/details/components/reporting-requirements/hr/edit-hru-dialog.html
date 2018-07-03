@@ -130,8 +130,7 @@
             statePath: 'pageData.in_amendment'
           },
           repStartDate: {
-            type: Date,
-            observer: '_selectedStartDateChanged'
+            type: Date
           },
           minDate: Date,
           selectedDate: String,
@@ -151,10 +150,6 @@
         };
       }
 
-      _updateStartDate() {
-        this.$.hruList._updateStartDate(this.repStartDate);
-      }
-
       intervStartChanged() {
         if (this.interventionStart) {
           this.minDate = this._getMinDate();
@@ -167,10 +162,6 @@
           return moment(stDt).add(-1, 'days').toDate();
         }
         return null;
-      }
-
-      _selectedStartDateChanged() {
-        this._updateStartDate();
       }
 
       _setDefaultStartDate() {
