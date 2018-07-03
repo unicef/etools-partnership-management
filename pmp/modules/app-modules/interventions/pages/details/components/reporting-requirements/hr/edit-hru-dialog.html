@@ -181,17 +181,14 @@
         }
       }
       _getSavedStartDate() {
-        let index = this.hruData.findIndex(el => !_.isEmpty(el.start_date));
-        if (index >= 0)
-        {
-          return this.hruData[index].start_date;
-        } else {
-          return null;
-        }
+        this.hruData.sort((a, b) => {
+          return new Date(a.due_date) - new Date(b.due_date);
+        });
+
+        return this.hruData[0].start_date;
       }
       _initStartDateWithPDStartDt() {
-        // this.minDate is prev. set to PD start date
-        this.repStartDate = this.minDate.toString();
+        this.repStartDate = this._convertDate(this.interventionStart);
       }
 
       openDialog() {
