@@ -84,10 +84,6 @@
           disableSorting: {
             type: Boolean,
             value: false
-          },
-          startDate: {
-            type: Date,
-            observer: '_startDateChanged'
           }
         };
       }
@@ -105,9 +101,7 @@
         if (_.isEmpty(data)) {
           return;
         }
-
         this._sortRequirementsAsc();
-        this.updateStartDates(this.startDate);
       }
 
       _sortRequirementsAsc() {
@@ -115,33 +109,6 @@
           return new Date(a.due_date) - new Date(b.due_date);
         });
       }
-
-      _startDateChanged(startDate) {
-        this.updateStartDates(startDate);
-      }
-
-      updateStartDates(startDate) {
-        if (_.isEmpty(this.hruData)) {
-          return;
-        }
-
-        if (startDate) {
-          this.set('hruData.0.start_date', startDate);
-
-          this._calculateStartDateForTheRestOfItems();
-        }
-      }
-      _calculateStartDateForTheRestOfItems() {
-        let i;
-        for (i = 1; i < this.hruData.length; i++) {
-          this.set('hruData.' + i + '.start_date', this._computeStartDate(i));
-        }
-      }
-
-      _computeStartDate(i) {
-        return moment(this.hruData[i-1].due_date).add(1, 'days').format('YYYY-MM-DD');
-      }
-
 
       _getIndex(index) {
         if (this.usePaginationIndex) {

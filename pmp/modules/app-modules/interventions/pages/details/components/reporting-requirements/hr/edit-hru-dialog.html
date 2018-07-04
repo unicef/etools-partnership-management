@@ -122,8 +122,7 @@
         return {
           interventionId: Number,
           interventionStart: {
-            type: Date,
-            observer: 'intervStartChanged'
+            type: Date
           },
           inAmendment: {
             type: Boolean,
@@ -150,13 +149,21 @@
         };
       }
 
-      intervStartChanged() {
-        if (this.interventionStart) {
-          this.minDate = this._getMinDate();
-          this._setDefaultStartDate();
-        }
+      static get observers() {
+        return [
+          'intervDataChanged(interventionStart, interventionId)'
+        ];
       }
+
+      intervDataChanged() {
+        this.minDate = this._getMinDate();
+        this._setDefaultStartDate();
+      }
+
       _getMinDate() {
+        if (!this.interventionStart) {
+          return null;
+        }
         let stDt = this._convertDate(this.interventionStart);
         if (stDt) {
           return moment(stDt).add(-1, 'days').toDate();
@@ -166,7 +173,7 @@
 
       _setDefaultStartDate() {
         if (_.isEmpty(this.hruData)) {
-          this._initStartDateWithPDStartDt();
+          this.repStartDate = this.interventionStart;
         } else {
           this.repStartDate = this._getSavedStartDate();
         }
@@ -177,9 +184,6 @@
         });
 
         return this.hruData[0].start_date;
-      }
-      _initStartDateWithPDStartDt() {
-        this.repStartDate = this._convertDate(this.interventionStart);
       }
 
       openDialog() {
@@ -212,11 +216,30 @@
         return index === -1;
       }
 
-      _getEditedQprDatesSetId(index) {
-        return (index >= 0) ? (index + 1) : '';
+      updateStartDates(startDate) {
+        if (_.isEmpty(this.hruData)) {
+          return;
+        }
+
+        this.set('hruData.0.start_date', startDate);
+
+        this._calculateStartDateForTheRestOfItems();
+      }
+
+      _calculateStartDateForTheRestOfItems() {
+        let i;
+        for (i = 1; i < this.hruData.length; i++) {
+          this.set('hruData.' + i + '.start_date', this._computeStartDate(i));
+        }
+      }
+
+      _computeStartDate(i) {
+        return moment(this.hruData[i-1].due_date).add(1, 'days').format('YYYY-MM-DD');
       }
 
       _saveHurData() {
+        this.updateStartDates(this.repStartDate);
+
         let endpoint = this.getEndpoint('reportingRequirements', {
           intervId: this.interventionId,
           reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.HR

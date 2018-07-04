@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../../../mixins/frontend-pagination-mixin.html">
+<link rel="import" href="../../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
@@ -63,10 +64,12 @@
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.ReportingRequirementsCommon
      * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.ReportingRequirementsCommon,
-      EtoolsPmpApp.Mixins.FrontendPagination
+      EtoolsPmpApp.Mixins.FrontendPagination,
+      EtoolsPmpApp.Mixins.EventHelper,
     ], Polymer.Element);
 
     /**
@@ -132,6 +135,10 @@
       }
 
       openUnicefHumanitarianRepReqDialog() {
+        if (!this.interventionStart) {
+          this.fireEvent('toast', {text: 'You have to fill PD Start Date first!', showCloseBtn: true});
+          return;
+        }
         let hruData = [];
         if (this.requirementsCount > 0) {
           hruData = JSON.parse(JSON.stringify(this.reportingRequirements));
