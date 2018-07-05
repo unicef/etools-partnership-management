@@ -87,9 +87,6 @@
         }
       }
 
-      #go-to-partner-link {
-        color: var(--primary-color);
-      }
     </style>
 
     <app-route
@@ -114,11 +111,10 @@
             Add Programme Document or SSFA
           </span>
           <span hidden$="[[newInterventionActive]]">
-            <a id="go-to-partner-link"
+            <a class="primary"
                href$="[[rootPath]]partners/[[intervention.partner_id]]/overview"
                target="_blank">[[intervention.partner]]</a>
-            <span hidden$="[[!intervention.partner]]">:</span>
-            [[intervention.number]]
+            <span>: [[intervention.number]]</span>
           </span>
         </template>
       </div>
@@ -163,7 +159,7 @@
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-          <interventions-list id="intList"
+          <interventions-list id="list"
                               name="list"
                               active="[[listActive]]"
                               csv-download-qs="{{csvDownloadQs}}"
@@ -183,7 +179,8 @@
                                 name="details"
                                 intervention="{{intervention}}"
                                 new-intervention="[[newInterventionActive]]"
-                                original-intervention="[[originalIntervention]]">
+                                original-intervention="[[originalIntervention]]"
+                                user-edit-permission="[[_hasEditPermissions(permissions, intervention)]]">
           </intervention-details>
         </template>
 
@@ -326,6 +323,7 @@
               number: undefined,
               prc_review_document_file: null,
               signed_pd_document_file: null,
+              signed_pd_document: null,
               title: undefined,
               status: '',
               start: null,
@@ -407,7 +405,6 @@
 
       _initInterventionsModuleListeners() {
         this.addEventListener('intervention-save-error', this._interventionSaveErrors.bind(this));
-        this.addEventListener('reload-list', this._reloadInterventionsList.bind(this));
         this.addEventListener('tab-content-attached', this._interventionPageAttached.bind(this));
         this.addEventListener('trigger-intervention-loading-msg',
             this._handleInterventionSelectionLoadingMsg.bind(this));
@@ -612,6 +609,11 @@
         this.$.interventionData.deleteIntervention(e.detail.id);
       }
 
+      _userHasEditPermissions(permissions) {
+        return permissions && permissions.editInterventionDetails === true &&
+            (permissions.partnershipManager || permissions.PME);
+      }
+
       _hasEditPermissions(permissions, intervention) {
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
@@ -678,18 +680,6 @@
 
       _isAttachementsTabActive(activeTab) {
         return activeTab === 'attachments';
-      }
-
-      _reloadInterventionsList(e) {
-        e.stopImmediatePropagation();
-        try {
-          let interventions = this.shadowRoot.querySelector('#intList');
-          if (interventions && !interventions.$.list.classList.contains('hidden')) {
-            interventions._filterInterventionsData(true);
-          }
-        } catch (err) {
-          this.logWarn('List refresh error occurred', '[interventions-page]', err);
-        }
       }
 
       _handleTabSelectAction(e) {

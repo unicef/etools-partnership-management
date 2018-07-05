@@ -62,9 +62,11 @@
 
         _createToastElement() {
           this._toast = document.createElement('etools-toast');
-          this._toast.set('fitInto', this.$.appHeadLayout);
           this._toast.addEventListener('toast-confirm', this._toggleToast.bind(this, this._toast));
           document.querySelector('body').appendChild(this._toast);
+          if (!this.isIE) {
+            this._toast.set('fitInto', this.$.appHeadLayout);
+          }
 
           this._toastAfterRenderSetup();
         }

@@ -29,7 +29,7 @@
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../interventions/pages/overview/components/monitoring-visits-list.html">
+<link rel="import" href="../../../shared/components/monitoring-visits-list.html">
 
 <link rel="import" href="components/assessments-items.html">
 
@@ -191,7 +191,7 @@
           Cash Transfers (USD)<br> (Jan-Dec)
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
-          PROG. VISIT<br> Planned / MR / Done
+          PROG. VISIT<br> Planned / MR / Completed
         </etools-data-table-column>
         <etools-data-table-column class="col col-2 center-align">
           SPOT CHECKS <br> Required / Completed
@@ -214,13 +214,15 @@
           </div>
         </div>
         <div class="col col-2 center-align hact-values">
-          [[partner.hact_values.programmatic_visits.planned.total]] /
-          [[partner.hact_min_requirements.programme_visits]] /
-          <span class="green"> [[partner.hact_values.programmatic_visits.completed.total]]</span>
+          <strong>
+            [[partner.hact_values.programmatic_visits.planned.total]] /
+            <span class="green"> [[partner.hact_min_requirements.programme_visits]]</span> /
+            [[partner.hact_values.programmatic_visits.completed.total]]
+          </strong>
         </div>
         <div class="col col-2 center-align hact-values">
           <strong>
-            <span class="green">[[partner.hact_min_requirements.spot_checks]] </span>
+            <span class="green">[[partner.planned_engagement.spot_check_required]] </span>
             / [[partner.hact_values.spot_checks.completed.total]]
           </strong>
         </div>
@@ -247,74 +249,8 @@
                           class="content-section">
       <div class="planning-wrapper">
         <div class="layout-horizontal">
+
           <div class="table-main col-4 no-r-padd">
-            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-              <div class="col-4 table-title">SPOT CHECKS</div>
-              <div class="quarter">Q1</div>
-              <div class="quarter">Q2</div>
-              <div class="quarter">Q3</div>
-              <div class="quarter">Q4</div>
-              <div class="col-2 center-align">TOTAL</div>
-            </div>
-            <div class="row-h panel-table-row">
-              <div class="col-4">Required</div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q1]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q2]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q3]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.planned.q4]]
-              </div>
-              <div class="col-2 darker-bg totals layout-horizontal">
-                <strong>[[partner.hact_values.spot_checks.planned.total]]</strong>
-              </div>
-            </div>
-
-            <div class="row-h panel-table-row">
-              <div class="col-4">Completed</div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.completed.q1]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.completed.q2]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.completed.q3]]
-              </div>
-              <div class="quarter">
-                [[partner.hact_values.spot_checks.completed.q4]]
-              </div>
-              <div class="col-2 darker-bg totals layout-horizontal center-align">
-                <strong>[[partner.hact_values.spot_checks.completed.total]]</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="table-main col-2 margin-l no-r-padd">
-            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
-              <div class="flex-c table-title">AUDITS</div>
-              <div class="col-5 center-align">TOTAL</div>
-            </div>
-            <div class="row-h panel-table-row ">
-              <div class="flex-c">Required</div>
-              <div class="col-5 layout-horizontal center-align totals darker-bg">
-                [[partner.hact_values.audits.minimum_requirements]]
-              </div>
-            </div>
-            <div class="row-h panel-table-row ">
-              <div class="flex-c">Completed</div>
-              <div class="col-5 layout-horizontal center-align totals darker-bg">
-                [[partner.hact_values.audits.completed]]
-              </div>
-            </div>
-          </div>
-
-          <div class="table-main col-4 margin-l no-r-padd">
             <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
               <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
               <div class="quarter">Q1</div>
@@ -361,6 +297,75 @@
               </div>
             </div>
           </div>
+
+          <div class="table-main col-4 margin-l no-r-padd">
+            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
+              <div class="col-4 table-title">SPOT CHECKS</div>
+              <div class="quarter">Q1</div>
+              <div class="quarter">Q2</div>
+              <div class="quarter">Q3</div>
+              <div class="quarter">Q4</div>
+              <div class="col-2 center-align">TOTAL</div>
+            </div>
+            <div class="row-h panel-table-row">
+              <div class="col-4">Planned</div>
+              <div class="quarter">
+                [[partner.planned_engagement.spot_check_planned_q1]]
+              </div>
+              <div class="quarter">
+                [[partner.planned_engagement.spot_check_planned_q2]]
+              </div>
+              <div class="quarter">
+                [[partner.planned_engagement.spot_check_planned_q3]]
+              </div>
+              <div class="quarter">
+                [[partner.planned_engagement.spot_check_planned_q4]]
+              </div>
+              <div class="col-2 darker-bg totals layout-horizontal">
+                <strong>[[partner.planned_engagement.total_spot_check_planned]]</strong>
+              </div>
+            </div>
+
+            <div class="row-h panel-table-row">
+              <div class="col-4">Completed</div>
+              <div class="quarter">
+                [[partner.hact_values.spot_checks.completed.q1]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.spot_checks.completed.q2]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.spot_checks.completed.q3]]
+              </div>
+              <div class="quarter">
+                [[partner.hact_values.spot_checks.completed.q4]]
+              </div>
+              <div class="col-2 darker-bg totals layout-horizontal center-align">
+                <strong>[[partner.hact_values.spot_checks.completed.total]]</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-main col-2 margin-l no-r-padd">
+            <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
+              <div class="flex-c table-title">AUDITS</div>
+              <div class="col-5 center-align">TOTAL</div>
+            </div>
+            <div class="row-h panel-table-row ">
+              <div class="flex-c">Required</div>
+              <div class="col-5 layout-horizontal center-align totals darker-bg">
+                [[partner.hact_min_requirements.audits]]
+              </div>
+            </div>
+            <div class="row-h panel-table-row ">
+              <div class="flex-c">Completed</div>
+              <div class="col-5 layout-horizontal center-align totals darker-bg">
+                [[partner.hact_values.audits.completed]]
+              </div>
+            </div>
+          </div>
+
+
         </div>
 
       </div>
@@ -411,8 +416,8 @@
 
     <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
       <monitoring-visits-list intervention-or-partner-id="[[partner.id]]"
-                              endpoint-name="partnerProgrammaticVisits">
-
+                              endpoint-name="partnerT2fProgrammaticVisits"
+                              show-tpm-visits>
       </monitoring-visits-list>
     </etools-content-panel>
 

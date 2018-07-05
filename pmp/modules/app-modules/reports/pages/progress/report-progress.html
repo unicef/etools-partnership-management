@@ -18,6 +18,7 @@
 <link rel="import" href="components/report-overall.html">
 <link rel="import" href="components/indicator-report-target.html">
 <link rel="import" href="components/indicator-details.html">
+<link rel="import" href="components/sr-details.html">
 
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -84,88 +85,97 @@
       }
     </style>
 
-    <div id="no-report-data"
-         class="paper-material"
-         elevation="1"
-         hidden$="[[!_noReportDataToShow(report.programme_document.cp_outputs)]]">
-      <div class="row-h">
-        <p>There is no report data to display.</p>
+    <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->
+    <template is="dom-if" if="[[_equals(report.report_type, 'SR')]]">
+      <sr-details report="[[report]]" report-attachment="[[reportAttachment]]"></sr-details>
+    </template>
+
+    <template is="dom-if" if="[[!_equals(report.report_type, 'SR')]]">
+      <div id="no-report-data"
+           class="paper-material"
+           elevation="1"
+           hidden$="[[!_noReportDataToShow(report.programme_document.cp_outputs)]]">
+        <div class="row-h">
+          <p>There is no report data to display.</p>
+        </div>
       </div>
-    </div>
 
-    <template is="dom-repeat"
-              items="[[report.programme_document.cp_outputs]]"
-              as="result"
-              index-as="resultIndex">
-      <etools-content-panel class="content-section" panel-title="[[result.title]]">
-
-        <template is="dom-repeat"
-                  items="[[result.ll_outputs]]"
-                  as="lowerResult"
-                  index-as="lowerResultIndex">
-
-          <report-overall lower-result-title="[[lowerResult.title]]"
-                          latest-indicator="[[_getLowerResultLatestIndicator(lowerResult.id)]]"></report-overall>
+      <template is="dom-repeat"
+                items="[[report.programme_document.cp_outputs]]"
+                as="result"
+                index-as="resultIndex">
+        <etools-content-panel class="content-section" panel-title="[[result.title]]">
 
           <template is="dom-repeat"
-                    items="[[_getLowerResultIndicatorReports(lowerResult.id)]]"
-                    as="indicatorReport"
-                    index-as="indicatorReportIndex">
+                    items="[[result.ll_outputs]]"
+                    as="lowerResult"
+                    index-as="lowerResultIndex">
 
-            <div class="indicator">
-              <div class="layout-horizontal">
-                <div class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]">
-                  <paper-icon-button on-click="_toggle"
-                                     toggles-ind-details$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                                     icon$="[[_computeIcon(indicatorReport.expanded)]]">
-                  </paper-icon-button>
-                </div>
+            <report-overall lower-result-title="[[lowerResult.title]]"
+                            latest-indicator="[[_getLowerResultLatestIndicator(lowerResult.id)]]"></report-overall>
 
-                <div class="indicator-header layout-horizontal flex-c">
-                  <div class="col col-8 indicator-header-title">
-                    <h3>
-                      [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
-                      [[indicatorReport.reportable.blueprint.title]]
-                    </h3>
-                    <div class="layout-horizontal calculation-formula">
-                      <span>
-                        calculation method accross locations:
-                        [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]
-                      </span>
-                      <span class="calculation-formula-delimiter">|</span>
-                      <span>
-                        calculation across reporting periods:
-                        [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_periods)]]
-                      </span>
+            <template is="dom-repeat"
+                      items="[[_getLowerResultIndicatorReports(lowerResult.id)]]"
+                      as="indicatorReport"
+                      index-as="indicatorReportIndex">
+
+              <div class="indicator">
+                <div class="layout-horizontal">
+                  <div class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]">
+                    <paper-icon-button on-click="_toggle"
+                                       toggles-ind-details$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                                       icon$="[[_computeIcon(indicatorReport.expanded)]]">
+                    </paper-icon-button>
+                  </div>
+
+                  <div class="indicator-header layout-horizontal flex-c">
+                    <div class="col col-8 indicator-header-title">
+                      <h3>
+                        [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                        [[indicatorReport.reportable.blueprint.title]]
+                      </h3>
+                      <div class="layout-horizontal calculation-formula">
+                        <span>
+                          calculation method accross locations:
+                          <strong>[[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]</strong>
+                        </span>
+                          <span class="calculation-formula-delimiter">|</span>
+                          <span>
+                          calculation across reporting periods:
+                            <strong>[[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_periods)]]</strong>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col col-4 indicator-header-target">
+                      <indicator-report-target
+                          values-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                          target="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.target.v, indicatorReport.reportable.target.c)]]"
+                          cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
+                          achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.total.v, indicatorReport.total.c)]]"
+                          bold></indicator-report-target>
                     </div>
                   </div>
-                  <div class="col col-4 indicator-header-target">
-                    <indicator-report-target
-                        values-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                        target="[[indicatorReport.reportable.target]]"
-                        cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
-                              indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
-                        achivement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
-                              indicatorReport.total.v, indicatorReport.total.c)]]"
-                        bold></indicator-report-target>
-                  </div>
                 </div>
+
+                <iron-collapse id="collapse-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                               opened="{{indicatorReport.expanded}}"
+                               on-transitioning-changed="_indicatorDetailsTransitioningComplete">
+                  <indicator-details
+                      id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                      indicator-report-id="[[indicatorReport.id]]"
+                      is-cluster-indicator$="[[indicatorReport.is_cluster_indicator]]">
+                  </indicator-details>
+                </iron-collapse>
               </div>
+            </template>
 
-              <iron-collapse id="collapse-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                             opened="{{indicatorReport.expanded}}"
-                             on-transitioning-changed="_indicatorDetailsTransitioningComplete">
-                <indicator-details
-                    id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                    indicator-report-id="[[indicatorReport.id]]"
-                    is-cluster-indicator$="[[indicatorReport.is_cluster_indicator]]">
-                </indicator-details>
-              </iron-collapse>
-            </div>
           </template>
+        </etools-content-panel>
+      </template>
 
-        </template>
-      </etools-content-panel>
     </template>
 
   </template>
@@ -191,7 +201,8 @@
 
       static get properties() {
         return {
-          report: Object
+          report: Object,
+          reportAttachment: Object
         };
       }
 

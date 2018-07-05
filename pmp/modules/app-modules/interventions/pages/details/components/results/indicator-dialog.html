@@ -185,15 +185,17 @@
                 display_type: 'percentage'
               },
               section: null,
-              baseline: null,
-              target: null,
+              baseline_new: {},
+              target_new: {},
               means_of_verification: null,
               locations: [],
               disaggregation: [],
               cluster_indicator_title: null,
               cluster_indicator_id: null,
               cluster_name: null,
-              response_plan_name: null
+              response_plan_name: null,
+              label: null,
+              measurement_specifications: null
             }
           },
           actionParams: {
@@ -287,6 +289,8 @@
         if (!data) { // new indicator
           this.isCluster = false;
           this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
+          this.set('disaggregations', []);
+          this.preselectSectionAndLocation();
           return;
         }
 
@@ -294,6 +298,15 @@
         this.set('indicator', data);
         if (!this.isCluster) {
           this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
+        }
+      }
+
+      preselectSectionAndLocation() {
+        if (this.sectionOptions && this.sectionOptions.length === 1) {
+          this.set('indicator.section', this.sectionOptions[0].id);
+        }
+        if (this.locationOptions && this.locationOptions.length === 1) {
+          this.set('indicator.locations', [this.locationOptions[0].id]);
         }
       }
 

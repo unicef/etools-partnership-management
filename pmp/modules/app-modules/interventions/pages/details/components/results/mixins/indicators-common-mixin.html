@@ -10,30 +10,35 @@
    */
   EtoolsPmpApp.Mixins.IndicatorsCommon = Polymer.dedupingMixin(superClass => class extends superClass {
 
-    _baselineChanged(baseline) {
-      if (!this.indicator || this._isEmptyExcept0(baseline)) {
+    _baselineChanged(baselineV) {
+      if (!this.indicator || this._isEmptyExcept0(baselineV)) {
         return;
       }
 
-      if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
-        let val = this._getValidPercentageValue(baseline);
-        this.set('indicator.baseline', val);
+      if (this._displayTypeIsPercentage(this.indicator)) {
+        let val = this._getValidPercentageValue(baselineV);
+        this.set('indicator.baseline_new.v', val);
       }
     }
 
-    _targetChanged(target) {
-      if (!this.indicator || this._isEmptyExcept0(target)) {
+    _targetChanged(targetV) {
+      if (!this.indicator || this._isEmptyExcept0(targetV)) {
         return;
       }
 
-      if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
-        let val = this._getValidPercentageValue(target);
-        this.set('indicator.target', val);
+      if (this._displayTypeIsPercentage(this.indicator)) {
+        let val = this._getValidPercentageValue(targetV);
+        this.set('indicator.target_new.v', val);
       }
     }
 
     _isEmptyExcept0(value) {
       return value === null || value === undefined || value === '';
+    }
+
+    _displayTypeIsPercentage(indicator) {
+      return (indicator.indicator && indicator.indicator.unit === 'percentage' &&
+          indicator.indicator.display_type !== 'ratio');
     }
 
     _getValidPercentageValue(val) {

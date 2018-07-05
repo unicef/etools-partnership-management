@@ -74,10 +74,11 @@
               <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
                 <span class="ram-indicator-name">[[ramIndicatorName]]</span>
               </template>
-              <icons-actions hidden$="[[!editMode]]"
-                                   data-args$="[[index]]"
-                                   on-edit="_editCpOutputAndRamIndicators"
-                                   on-delete="_openDeleteConfirmation">
+              <icons-actions hidden$="[[!editableCpoRamIndicators]]"
+                             data-args$="[[index]]"
+                             on-edit="_editCpOutputAndRamIndicators"
+                             show-delete="[[editMode]]"
+                             on-delete="_openDeleteConfirmation">
               </icons-actions>
             </div>
           </div>
@@ -129,6 +130,9 @@
             readOnly: true
           },
           interventionStatus: String,
+          editableCpoRamIndicators: {
+            type: Boolean
+          },
           editMode: {
             type: Boolean
           },
@@ -265,7 +269,6 @@
           this.indicatorDialog.setTitle('Edit Indicator');
         }
         this.indicatorDialog.toastEventSource = this;
-        this.indicatorDialog.resetFieldValues();
         this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
         this.indicatorDialog.openIndicatorDialog();
         this.indicatorDialog.resetValidationsAndStyle(undefined, true);

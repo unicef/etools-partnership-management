@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
+<link rel="import" href="../../../config/app-constants.html">
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
@@ -14,6 +15,7 @@
    * @polymerMixin
    * @mixinFunction
    * @appliesMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.Constants
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
    * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
@@ -21,6 +23,7 @@
    */
   EtoolsPmpApp.Mixins.ReportDetails = superclass => class extends EtoolsMixinFactory.combineMixins([
     EtoolsLogsMixin,
+    EtoolsPmpApp.Mixins.Constants,
     EtoolsPmpApp.Mixins.EventHelper,
     EtoolsPmpApp.Mixins.Endpoints,
     EtoolsPmpApp.Mixins.AjaxErrorsParser,
@@ -29,6 +32,7 @@
     static get properties() {
       return {
         report: Object,
+        reportAttachment: Object,
         currentUser: {
           type: Object,
           statePath: 'currentUser'
@@ -50,32 +54,65 @@
               event: 'download-report'
             }
           ]
+        },
+        _loadingMsgSource: {
+          type: String,
+          value: 'report-details'
+        },
+        _logMsgPrefix: {
+          type: String,
+          value: 'report-details-behavior'
         }
       };
     }
 
     requestReportDetails(id) {
-      let loadingSource = 'report-details';
-      let logMsgPrefix = 'report-details-behavior';
       if (!this.currentUser) {
-        this.logWarn('Logged user data not init in Redux store.', logMsgPrefix);
+        this.logWarn('Logged user data not init in Redux store.', this._logMsgPrefix);
         return;
       }
+
+      this.set('reportAttachment', null);
 
       this.fireEvent('global-loading', {
         message: 'Loading...',
         active: true,
-        loadingSource: loadingSource
+        loadingSource: this._loadingMsgSource
       });
 
       this.fireRequest('reportDetails', {reportId: id}).then((response) => {
         this.set('report', response);
-        this.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
+        this.fireEvent('global-loading', {active: false, loadingSource: this._loadingMsgSource});
+        // get SR attachment
+        if (this.isPrpSRReport(response.report_type)) {
+          this._getSRAttachment(response.id);
+        }
       }).catch((error) => {
         let errMsg = 'Reports details data request failed!';
-        this.logError(errMsg, logMsgPrefix, error);
+        this.logError(errMsg, this._logMsgPrefix, error);
         this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
-        this.fireEvent('global-loading', {active: false, loadingSource: loadingSource});
+        this.fireEvent('global-loading', {active: false, loadingSource: this._loadingMsgSource});
+      });
+    }
+
+    isPrpSRReport(repType) {
+      return repType === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+    }
+
+    _getSRAttachment(reportId) {
+      this.fireEvent('global-loading', {
+        message: 'Loading...',
+        active: true,
+        loadingSource: this._loadingMsgSource
+      });
+      this.fireRequest('srReportAttachment', {reportId: reportId}).then((response) => {
+        this.set('reportAttachment', response);
+        this.fireEvent('global-loading', {active: false, loadingSource: this._loadingMsgSource});
+      }).catch((error) => {
+        let errMsg = 'Reports details data request failed!';
+        this.logError(errMsg, this._logMsgPrefix, error);
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+        this.fireEvent('global-loading', {active: false, loadingSource: this._loadingMsgSource});
       });
     }
 
