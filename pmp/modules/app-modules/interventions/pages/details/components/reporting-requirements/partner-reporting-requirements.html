@@ -126,6 +126,7 @@
             <humanitarian-reporting-req-unicef id="hru"
                                                name="humanitarianUnicef"
                                                intervention-id="[[interventionId]]"
+                                               intervention-start="[[interventionStart]]"
                                                requirements-count="{{hrUnicefRequirementsCount}}"
                                                expected-results="[[expectedResults]]">
             </humanitarian-reporting-req-unicef>
@@ -169,7 +170,7 @@
             value: 'qtyProgress'
           },
           interventionId: Number,
-          interventionStart: String,
+          interventionStart: Date,
           interventionEnd: String,
           expectedResults: Array,
 

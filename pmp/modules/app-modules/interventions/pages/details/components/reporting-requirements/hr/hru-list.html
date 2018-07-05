@@ -16,6 +16,10 @@
 <dom-module id="hru-list">
   <template>
     <style include="grid-layout-styles data-table-styles reporting-requirements-lists-styles">
+      :host([with-scroll]) {
+        max-height: 400px;
+        overflow-y: auto;
+      }
     </style>
 
     <etools-data-table-header no-collapse
@@ -30,7 +34,7 @@
         <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
           <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
           <span class="col-data flex-c">[[getDateDisplayValue(item.due_date)]]</span>
-          <span class="col-data flex-c actions">
+          <span class="col-data col-1 actions">
             <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
                            data-args$="[[index]]"
                            on-delete="_deleteHruReq"
@@ -94,9 +98,10 @@
         if (this.disableSorting) {
           return;
         }
-        if (!_.isEmpty(data)) {
-          this._sortRequirementsAsc();
+        if (_.isEmpty(data)) {
+          return;
         }
+        this._sortRequirementsAsc();
       }
 
       _sortRequirementsAsc() {
