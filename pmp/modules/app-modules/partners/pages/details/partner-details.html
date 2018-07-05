@@ -62,15 +62,11 @@
     <etools-content-panel class="content-section" panel-title="Partner Details">
       <div class="row-h flex-c">
         <div class="col col-4">
-          <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]">
-            <span class="placeholder" hidden$="[[!_empty(partner.name)]]">&#8212;</span>
-            <span class="shortenText" hidden$="[[_empty(partner.name)]]">[[partner.name]]</span>
+          <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
-          <etools-form-element-wrapper label="Short Name">
-            <span class="placeholder" hidden$="[[!_empty(partner.short_name)]]">&#8212;</span>
-            <span hidden$="[[_empty(partner.short_name)]]">[[partner.short_name]]</span>
+          <etools-form-element-wrapper label="Short Name" value="[[partner.short_name]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
@@ -89,12 +85,7 @@
                        readonly></paper-input>
         </div>
         <div class="col col-4">
-          <etools-form-element-wrapper label="Partner Type">
-            <span class="placeholder"
-                  hidden$="[[!_empty(_partnerComputedType)]]">&#8212;</span>
-            <span hidden$="[[_empty(_partnerComputedType)]]">
-              [[_partnerComputedType]]
-            </span>
+          <etools-form-element-wrapper label="Partner Type" value="[[_partnerComputedType]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
@@ -109,12 +100,9 @@
 
       <div class="row-h flex-c">
         <div class="col col-4">
-          <etools-form-element-wrapper label="Core Values Last Assessment Date">
+          <etools-form-element-wrapper label="Core Values Last Assessment Date"
+                                       value="[[prettyDate(partner.core_values_assessment_date)]]">
             <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            <span class="placeholder" hidden$="[[!_empty(partner.core_values_assessment_date)]]">&#8212;</span>
-            <span hidden$="[[_empty(partner.core_values_assessment_date)]]">
-              [[prettyDate(partner.core_values_assessment_date)]]
-            </span>
           </etools-form-element-wrapper>
 
           </paper-input>
@@ -134,27 +122,21 @@
       </div>
 
       <div class="row-h flex-c">
-        <etools-form-element-wrapper label="Address" title$="[[partner.address]]">
+        <etools-form-element-wrapper label="Address" title$="[[partner.address]]" value="[[partner.address]]">
           <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
-          <span class="placeholder" hidden$="[[!_empty(partner.address)]]">&#8212;</span>
-          <span class="shortenText" hidden$="[[_empty(partner.address)]]">[[partner.address]]</span>
         </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
         <div class="col col-4">
 
-          <etools-form-element-wrapper label="Phone Number">
+          <etools-form-element-wrapper label="Phone Number" value="[[partner.phone_number]]">
             <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-            <span class="placeholder" hidden$="[[!_empty(partner.phone_number)]]">&#8212;</span>
-            <span hidden$="[[_empty(partner.phone_number)]]">[[partner.phone_number]]</span>
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
 
-          <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]">
+          <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
             <iron-icon icon="communication:email" slot="prefix"></iron-icon>
-            <span class="placeholder" hidden$="[[!_empty(partner.email)]]">&#8212;</span>
-            <span class="shortenText" hidden$="[[_empty(partner.email)]]">[[partner.email]]</span>
           </etools-form-element-wrapper>
 
         </div>
@@ -164,9 +146,7 @@
         <div class="col col-4">
           <!-- Risk rating -->
             <etools-form-element-wrapper label="Partner Risk Rating">
-              <span class="placeholder" hidden$="[[!_empty(partner.rating)]]">&#8212;</span>
-              <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                    hidden$="[[_empty(partner.rating)]]">
+              <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]">
                 [[getRiskRatingValue(partner.rating)]]
               </span>
             </etools-form-element-wrapper>
@@ -174,17 +154,13 @@
         </div>
         <div class="col col-4">
           <!-- Type of assessment -->
-          <etools-form-element-wrapper label="Type of Assessment">
-            <span class="placeholder" hidden$="[[!_empty(partner.type_of_assessment)]]">&#8212;</span>
-            <span hidden$="[[_empty(partner.type_of_assessment)]]">[[partner.type_of_assessment]]</span>
+          <etools-form-element-wrapper label="Type of Assessment" value="[[partner.type_of_assessment]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <!--Date last assessed-->
-          <etools-form-element-wrapper label="Date of Report">
+          <etools-form-element-wrapper label="Date of Report" value="[[prettyDate(partner.last_assessment_date)]]">
             <iron-icon icon="date-range" slot="prefix"></iron-icon>
-            <span class="placeholder" hidden$="[[!_empty(partner.last_assessment_date)]]">&#8212;</span>
-            <span hidden$="[[_empty(partner.last_assessment_date)]]">[[prettyDate(partner.last_assessment_date)]]</span>
           </etools-form-element-wrapper>
 
         </div>
