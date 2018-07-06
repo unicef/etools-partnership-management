@@ -21,15 +21,31 @@
         };
       }
 
-      ::slotted(.placeholder) {
+      .paper-input-input {
+        @apply --layout-horizontal;
+      }
+
+      ::slotted(iron-icon) {
+        margin-right: 5px;
+        margin-top: -2px;
+        color: var(--dark-secondary-text-color);
+      }
+
+      .placeholder:before {
+        content: "\2014";
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
       }
+
     </style>
     <paper-input-container always-float-label="[[alwaysFloatLabel]]"
                            no-label-float="[[noLabelFloat]]"
                            required$="[[required]]">
       <label hidden$=[[!label]] slot="label">[[label]]</label>
       <div slot="input" class="paper-input-input">
+        <slot name="prefix"></slot>
+        <span class$="[[_getPlaceholderClass(value)]]">
+          [[_getDisplayValue(value)]]
+        </span>
         <slot></slot>
       </div>
     </paper-input-container>
@@ -52,6 +68,7 @@
       static get properties() {
         return {
           label: String,
+          value: String,
           alwaysFloatLabel: {
             type: Boolean,
             value: true
@@ -70,6 +87,17 @@
           return;
         }
         this.updateStyles();
+      }
+
+      _getPlaceholderClass(value) {
+        return !value ? 'placeholder' : '';
+      }
+
+      _getDisplayValue(value) {
+        if(value != null && value !== undefined) {
+          return value;
+        }
+        return '';
       }
 
     }
