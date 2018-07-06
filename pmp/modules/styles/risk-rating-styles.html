@@ -7,7 +7,7 @@
     <style>
       :host {
         --risk-rating-field: {
-          width: 100%;
+          display: inline-block;
           height: 24px;
           text-align: center;
           padding: 0 5px;
@@ -49,70 +49,44 @@
           background-color: var(--risk-rating-not-assesed-color);
           color: var(--dark-secondary-text-color);
         };
+
+        --risk-rating-not-required: {
+          @apply --risk-rating-field;
+          background-color: var(--risk-rating-not-required-color);
+          color: var(--dark-secondary-text-color);
+        }
       }
 
       .risk-rating-field {
-        width: auto;
-      }
-
-      span.risk-rating-field.low {
-        @apply --risk-rating-low;
+        width: 100%;
       }
 
       .risk-rating-field.low {
-        --paper-input-container-input: {
-          @apply --risk-rating-low;
-        };
+        @apply --risk-rating-low;
       }
 
-      span.risk-rating-field.moderate {
+      .risk-rating-field.moderate,
+      .risk-rating-field.medium {
         @apply --risk-rating-moderate;
       }
 
-      .risk-rating-field.moderate {
-        --paper-input-container-input: {
-          @apply --risk-rating-moderate;
-        };
-      }
-
-      span.risk-rating-field.high {
+      .risk-rating-field.high {
         @apply --risk-rating-high;
       }
 
-      .risk-rating-field.high {
-        --paper-input-container-input: {
-          @apply --risk-rating-high;
-        };
-      }
-
-      span.risk-rating-field.significant {
+      .risk-rating-field.significant {
         @apply --risk-rating-significant;
       }
 
-      .risk-rating-field.significant {
-        --paper-input-container-input: {
-          @apply --risk-rating-significant;
-        };
-      }
-
-      span.risk-rating-field.unavailable {
+      .risk-rating-field.unavailable {
         @apply --risk-rating-unavailable;
       }
 
-      .risk-rating-field.unavailable {
-        --paper-input-container-input: {
-          @apply --risk-rating-unavailable;
-        };
-      }
-
-      span.risk-rating-field.non-assessed {
+      .risk-rating-field.non-assessed {
         @apply --risk-rating-not-assessed;
       }
-
-      .risk-rating-field.non-assessed {
-        --paper-input-container-input: {
-          @apply --risk-rating-not-assessed;
-        };
+      .risk-rating-field.not-required {
+        @apply --risk-rating-not-required;
       }
 
     </style>

@@ -21,6 +21,7 @@
 <link rel="import" href="../../../../mixins/ajax-server-errors-mixin.html">
 <link rel="import" href="../../../../mixins/date-mixin.html">
 <link rel="import" href="../../../../mixins/pagination-mixin.html">
+<link rel="import" href="../../../../mixins/risk-rating-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
@@ -29,13 +30,14 @@
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/risk-rating-styles.html">
 <link rel="import" href="../../../shared/components/monitoring-visits-list.html">
 
 <link rel="import" href="components/assessments-items.html">
 
 <dom-module id="partner-financial-assurance">
   <template strip-whitespace>
-    <style include="page-common-styles grid-layout-styles shared-styles data-table-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles data-table-styles risk-rating-styles">
 
       :host {
         --paper-input-container-input-webkit-spinner: {
@@ -74,8 +76,7 @@
         box-sizing: content-box;
       }
 
-      .risk-rating {
-        @apply --risk-rating-color;
+      .rating-bar {
         width: 4px;
         margin-right: 8px;
       }
@@ -205,7 +206,7 @@
         <div class="col col-6 vision">
           <div class="from-vision">from VISION</div>
           <div class="layout-horizontal col-4">
-            <div class="risk-rating"></div>
+            <div class$="risk-rating-field [[getRiskRatingClass(partner.rating)]] rating-bar"></div>
             [[partner.rating]]
           </div>
           <div class="col col-4">[[partner.type_of_assessment]]</div>
@@ -443,6 +444,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
      * @appliesMixin EtoolsPmpApp.Mixins.Pagination
+     * @appliesMixin EtoolsPmpApp.Mixins.RiskRating
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnerFinancialAssuranceMixins = EtoolsMixinFactory.combineMixins([
@@ -451,6 +453,7 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.AjaxServerErrors,
       EtoolsPmpApp.Mixins.Pagination,
+      EtoolsPmpApp.Mixins.RiskRating,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
@@ -489,16 +492,6 @@
               'ma': 'Micro Assessment',
               'sc': 'Spot Check',
               'sa': 'Special Audit'
-            }
-          },
-          RISKRATINGCOLORS: {
-            type: Object,
-            value: {
-              'Not Required': 'var(--risk-rating-not-required-color)',
-              'Low': 'var(--risk-rating-low-color)',
-              'Moderate': 'var(--risk-rating-medium-color)',
-              'Significant': 'var(--risk-rating-significant-color)',
-              'High': 'var(--risk-rating-high-color)'
             }
           },
           basisOptions: {
@@ -576,7 +569,6 @@
 
         this.set('basisOptions', []);
         this._addBasisFromPartner();
-        this._applyRiskRatingColor();
       }
 
       _addBasisFromPartner() {
@@ -612,10 +604,6 @@
 
       _validatePageData() {
         return this.$.assessmentsList.validate();
-      }
-
-      _applyRiskRatingColor() {
-        this.updateStyles({'--risk-rating-color': `background: ${this.RISKRATINGCOLORS[this.partner.rating]}`});
       }
 
       _getYear() {
