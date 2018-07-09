@@ -77,10 +77,13 @@
           <etools-data-table-column class="col-2">
             Amendment Types
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-2">
             Signed Amendment
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="flex-c">
+            Internal / PRC Reviews
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
             Other Info
           </etools-data-table-column>
         </etools-data-table-header>
@@ -97,14 +100,21 @@
               <span class="col-data col-2">
                 [[_getReadonlyAmendmentTypes(item.types)]]
               </span>
-              <span class="col-data col-4">
+              <span class="col-data col-2">
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
                   <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
                 </span>
               </span>
-              <div class="col-data col-3 break-word">
+              <span class="col-data flex-c">
+                <iron-icon icon="attachment" class="attachment" hidden$="[[!item.prc_review_file]]"></iron-icon>
+                <span class="break-word file-label">
+                  <!-- target="_blank" is there for IE -->
+                  <a href$="[[item.prc_review_file]]" target="_blank" download>[[getFileNameFromURL(item.prc_review_file)]]</a>
+                </span>
+              </span>
+              <div class="col-data flex-c break-word">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
                   <div class="other-description">
                     [[item.other_description]]
