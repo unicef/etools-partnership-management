@@ -157,7 +157,6 @@
 
       intervDataChanged() {
         this.minDate = this._getMinDate();
-        this._setDefaultStartDate();
       }
 
       _getMinDate() {
@@ -187,6 +186,7 @@
       }
 
       openDialog() {
+        this._setDefaultStartDate();
         this.$.editHruDialog.opened = true;
       }
 
