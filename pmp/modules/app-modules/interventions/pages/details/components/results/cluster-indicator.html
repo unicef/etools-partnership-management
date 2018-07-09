@@ -100,17 +100,6 @@
       </div>
     </template>
 
-    <div class="row-h flex-c">
-      <paper-input id="measurementSpecif" label="Measurement Specifications"
-                   value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
-      </paper-input>
-    </div>
-
-    <div class="row-h flex-c" hidden$="[[!_typeMatches(prpClusterIndicator, 'number')]]">
-      <paper-input id="label" label="Label"
-                   value="{{indicator.label}}" placeholder="&#8212;">
-      </paper-input>
-    </div>
     <div class="row-h flex-c" hidden$="[[_typeMatches(prpClusterIndicator, 'number')]]">
       <div class="col col-4">
         <paper-input id="numeratorLbl" label="Numerator Label"
@@ -128,14 +117,14 @@
       <div class="row-h flex-c">
         <div class="col-4 layout-horizontal">
           <paper-input label="Baseline"
-                       value="{{indicator.baseline_new.v}}"
+                       value="{{indicator.baseline.v}}"
                        type="number"
                        allowed-pattern="[0-9\.]"
                        placeholder="Numerator">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input
-              value="{{indicator.baseline_new.d}}"
+              value="{{indicator.baseline.d}}"
               type="number"
               min="1"
               allowed-pattern="[0-9\.]"
@@ -144,7 +133,7 @@
         </div>
         <div class="col col-4">
           <paper-input label="Target" id="targetNumerator"
-                       value="{{indicator.target_new.v}}"
+                       value="{{indicator.target.v}}"
                        type="number"
                        allowed-pattern="[0-9\.]"
                        required
@@ -153,7 +142,7 @@
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input id="targetDenominator"
-                       value="{{indicator.target_new.d}}"
+                       value="{{indicator.target.d}}"
                        type="number"
                        min="1"
                        required
@@ -169,7 +158,7 @@
       <div class="row-h flex-c">
         <div class="col col-4">
           <paper-input label="Baseline"
-                       value="{{indicator.baseline_new.v}}"
+                       value="{{indicator.baseline.v}}"
                        type="number"
                        placeholder="&#8212;">
           </paper-input>
@@ -177,7 +166,7 @@
         <div class="col col-4">
           <paper-input id="targetEl"
                        label="Target"
-                       value="{{indicator.target_new.v}}"
+                       value="{{indicator.target.v}}"
                        type="number"
                        required
                        allowed-pattern="[0-9\.]"
@@ -391,8 +380,8 @@
         if (!prpClusterIndic) {
           this.set('prpDisaggregations', []);
           if (this.indicator) {
-            this.indicator.baseline_new = {};
-            this.indicator.target_new = {};
+            this.indicator.baseline = {};
+            this.indicator.target = {};
           }
           return;
         }
@@ -409,8 +398,8 @@
       }
 
       _resetDenominator(newD) {
-        this.indicator.baseline_new.d = newD;
-        this.indicator.target_new.d = newD;
+        this.indicator.baseline.d = newD;
+        this.indicator.target.d = newD;
       }
 
       _resetRatioLabels() {
