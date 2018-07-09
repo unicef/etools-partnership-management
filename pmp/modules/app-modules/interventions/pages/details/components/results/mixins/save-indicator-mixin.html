@@ -33,11 +33,11 @@
                   display_type: 'percentage'
                 },
                 section: null,
-                baseline_new: {
+                baseline: {
                   v: 0,
                   d: 1
                 },
-                target_new: {
+                target: {
                   v: 0,
                   d: 1
                 },
@@ -45,8 +45,6 @@
                 locations: [],
                 disaggregation: [],
                 is_high_frequency: false,
-                measurement_specifications: null,
-                label: null,
                 numerator_label: null,
                 denominator_label: null
               }
@@ -56,11 +54,11 @@
               value: {
                 id: null,
                 section: null,
-                baseline_new: {
+                baseline: {
                   v: 0,
                   d: 1
                 },
-                target_new: {
+                target: {
                   v: 0,
                   d: 1
                 },
@@ -68,8 +66,6 @@
                 locations: [],
                 disaggregation: [],
                 is_high_frequency: false,
-                measurement_specifications: null,
-                label: null,
                 numerator_label: null,
                 denominator_label: null
               }
@@ -78,11 +74,11 @@
               type: Object,
               value: {
                 section: null,
-                baseline_new: {
+                baseline: {
                   v: 0,
                   d: 1
                 },
-                target_new: {
+                target: {
                   v: 0,
                   d: 1
                 },
@@ -91,8 +87,6 @@
                 cluster_indicator_title: null,
                 cluster_name: null,
                 response_plan_name: null,
-                measurement_specifications: null,
-                label: null,
                 numerator_label: null,
                 denominator_label: null
               }
@@ -102,17 +96,15 @@
               value: {
                 id: null,
                 section: null,
-                baseline_new: {
+                baseline: {
                   v: 0,
                   d: 1
                 },
-                target_new: {
+                target: {
                   v: 0,
                   d: 1
                 },
                 locations: [],
-                measurement_specifications: null,
-                label: null,
                 numerator_label: null,
                 denominator_label: null
               }
@@ -199,13 +191,13 @@
         }
 
         _prepareBaselineAndTarget(indicator) {
-          if (!indicator.target_new || indicator.target_new.v === undefined
-              || indicator.target_new.v === '') {
-            indicator.target_new = {v: 0, d: 1};
+          if (!indicator.target || indicator.target.v === undefined
+              || indicator.target.v === '') {
+            indicator.target = {v: 0, d: 1};
           }
-          if (!indicator.baseline_new || indicator.baseline_new.v === ''
-              || indicator.baseline_new.v === undefined) {
-            indicator.baseline_new = {v: null, d: 1};
+          if (!indicator.baseline || indicator.baseline.v === ''
+              || indicator.baseline.v === undefined) {
+            indicator.baseline = {v: null, d: 1};
           }
           if (indicator.indicator) {
             if (indicator.indicator.unit === 'number') {
@@ -219,8 +211,8 @@
         }
 
         _updateBaselineTargetD(indicator, d) {
-          indicator.baseline_new.d = d;
-          indicator.target_new.d = d;
+          indicator.baseline.d = d;
+          indicator.target.d = d;
         }
         _resetRatioLabels(indicator) {
           indicator.numerator_label = '';
