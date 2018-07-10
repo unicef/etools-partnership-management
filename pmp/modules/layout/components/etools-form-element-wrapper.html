@@ -21,6 +21,10 @@
         };
       }
 
+      :host(.right-align) paper-input-container {
+        text-align: right;
+      }
+
       .paper-input-input {
         @apply --layout-horizontal;
       }
@@ -31,8 +35,8 @@
         color: var(--dark-secondary-text-color);
       }
 
-      .placeholder:before {
-        content: "\2014";
+      .placeholder {
+        /*content: "\2014";*/
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
       }
 
@@ -94,10 +98,7 @@
       }
 
       _getDisplayValue(value) {
-        if(value != null && value !== undefined) {
-          return value;
-        }
-        return '';
+        return (value != null && value !== undefined) ? value : '—';
       }
 
     }

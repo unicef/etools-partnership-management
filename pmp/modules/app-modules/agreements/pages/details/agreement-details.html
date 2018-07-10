@@ -99,8 +99,9 @@
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
           <div class="col col-3">
-            <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
-              <span>[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]</span>
+
+            <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
+                                         value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
             </etools-form-element-wrapper>
           </div>
         </template>
@@ -122,8 +123,8 @@
               required>
           </etools-dropdown>
           <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
-                                       hidden$="[[agreement.permissions.edit.partner]]">
-            <span>[[agreement.partner_name]]</span>
+                                       hidden$="[[agreement.permissions.edit.partner]]"
+                                      value="[[agreement.partner_name]]">
           </etools-form-element-wrapper>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]" restamp>
@@ -176,8 +177,8 @@
                 hidden$="[[!agreement.permissions.edit.partner_manager]]">
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"
-                                         hidden$="[[agreement.permissions.edit.partner_manager]]">
-              <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
+                                         hidden$="[[agreement.permissions.edit.partner_manager]]"
+                                        value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-3">
@@ -234,8 +235,8 @@
         </etools-dropdown-multi>
         <etools-form-element-wrapper label="Authorized Officers"
                                      required$="[[agreement.permissions.required.authorized_officers]]"
-                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]">
-          <span>[[_getReadonlyAuthorizedOfficers(agreement)]]</span>
+                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                                    value="[[_getReadonlyAuthorizedOfficers(agreement)]]">
         </etools-form-element-wrapper>
       </div>
 

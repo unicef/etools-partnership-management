@@ -147,8 +147,8 @@
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
                     <etools-form-element-wrapper no-label-float
-                                                 id="unicef-cash">
-                      [[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]
+                                                 id="unicef-cash"
+                                                  value="[[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]">
                     </etools-form-element-wrapper>
                   </template>
                   <template is="dom-if"
@@ -179,10 +179,10 @@
               </etools-currency-amount-input>
             </span>
 
-            <span class="col-data col-2 right-align">
-              <etools-form-element-wrapper no-label-float>
-                [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
-                plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]
+            <span class="col-data col-2">
+              <etools-form-element-wrapper class="right-align" no-label-float
+                value="[[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
+                plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]">
               </etools-form-element-wrapper>
             </span>
           </div>
