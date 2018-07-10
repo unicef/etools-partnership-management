@@ -29,7 +29,7 @@
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
-<link rel="import" href="components/agreement-amendments.html">
+<link rel="import" href="components/amendments/agreement-amendments.html">
 <link rel="import" href="components/generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
@@ -273,15 +273,14 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
-        <agreement-amendments id="agreementAmendments"
-                              data-items="{{agreement.amendments}}"
-                              agreement-type="[[agreement.agreement_type]]"
-                              edit-mode$="[[agreement.permissions.edit.amendments]]"
-                              on-unlock-authorized-officers="_unlockAuthorizedOfficers"
-                              on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
-        </agreement-amendments>
-      </etools-content-panel>
+      <agreement-amendments id="agreementAmendments"
+                            class="content-section"
+                            data-items="{{agreement.amendments}}"
+                            agreement-type="[[agreement.agreement_type]]"
+                            edit-mode$="[[agreement.permissions.edit.amendments]]"
+                            on-unlock-authorized-officers="_unlockAuthorizedOfficers"
+                            on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
+      </agreement-amendments>
     </template>
 
   </template>

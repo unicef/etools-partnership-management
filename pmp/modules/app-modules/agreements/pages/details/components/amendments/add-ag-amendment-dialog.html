@@ -1,0 +1,75 @@
+<link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+
+<dom-module id="add-ag-amendment-dialog">
+  <template>
+    <style>
+      :host {
+        /* host CSS */
+      }
+    </style>
+
+    <etools-dialog no-padding
+                   keep-dialog-open
+                   id="add-ag-amendment"
+                   opened="{{opened}}"
+                   size="md"
+                   hidden$="[[datePickerOpen]]"
+                   ok-btn-text="Save"
+                   dialog-title="Add Amendment"
+                   on-confirm-btn-clicked="_validateAndSaveAmendment">
+      Add new agreement amendment dialog content here...
+    </etools-dialog>
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     */
+    class AddAgAmendmentDialog extends Polymer.Element {
+
+      static get is() {
+        return 'add-ag-amendment-dialog';
+      }
+
+      static get properties() {
+        return {
+          opened: {
+            type: Boolean,
+            value: false
+          },
+          datePickerOpen: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      _validateAndSaveAmendment(e) {
+        console.log('Add amendment... tralalalalaaaaaa');
+      }
+
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+      }
+
+    }
+
+    window.customElements.define(AddAgAmendmentDialog.is, AddAgAmendmentDialog);
+  </script>
+</dom-module>
