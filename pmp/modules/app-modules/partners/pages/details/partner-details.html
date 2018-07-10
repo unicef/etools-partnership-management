@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/iron-icons/communication-icons.html">
@@ -7,6 +8,8 @@
 <link rel="import" href="../../../../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
@@ -38,15 +41,17 @@
         width: 100%;
       }
 
-      #core-values-assessment {
-        width: 100%;
-      }
-
       etools-single-file {
         --etools-file-upload-button: {
           /* IE fix */
           min-width: 150px !important;
         }
+      }
+
+      paper-toggle-button#showArchived {
+        font-size: 16px;
+        --paper-toggle-button-label-color: white;
+        --paper-toggle-button-checked-bar-color: white;
       }
 
     </style>
@@ -88,29 +93,6 @@
                                  readonly$="[[!editMode]]">
           </etools-dropdown-multi>
         </div>
-      </div>
-
-      <div class="row-h flex-c">
-        <div class="col col-4">
-          <etools-form-element-wrapper label="Core Values Last Assessment Date"
-                                       value="[[prettyDate(partner.core_values_assessment_date)]]">
-            <iron-icon icon="date-range" slot="prefix"></iron-icon>
-          </etools-form-element-wrapper>
-
-          </paper-input>
-        </div>
-        <div class="col col-4">
-          <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
-            <etools-single-file file="{{partner.core_values_assessment}}"
-                                internal-file="{{partner.core_values_assessment_file}}"
-                                label="Core Values Assessment"
-                                hide-delete-btn="[[_hideDeleteBtn(partner.core_values_assessment)]]"
-                                readonly$="[[!editMode]]"
-                                accept=".doc,.docx,.pdf,.jpg,.png">
-            </etools-single-file>
-          </div>
-        </div>
-        <div class="col col-4"></div>
       </div>
 
       <div class="row-h flex-c">
@@ -157,6 +139,71 @@
 
         </div>
       </div>
+    </etools-content-panel>
+
+    <etools-content-panel class="content-section" panel-title="Core Values Assessments">
+      <div slot="panel-btns" id="show-archived">
+          <paper-toggle-button id="showArchived"
+                          hidden$="[[thereAreArchivedAssessments]]"
+                          checked="{{showArchivedAssesments}}">
+            Show Archived
+          </paper-toggle-button>
+      </div>
+
+      <div class="row-h flex-c">
+        <div class="col col-4">
+          <etools-form-element-wrapper label="Core Values Last Assessment Date"
+                                        value="[[prettyDate(partner.core_values_assessment_date)]]">
+            <iron-icon icon="date-range" slot="prefix"></iron-icon>
+          </etools-form-element-wrapper>
+
+          </paper-input>
+        </div>
+        <div class="col flex-c">
+          <etools-single-file file="{{partner.core_values_assessment}}"
+                              internal-file="{{partner.core_values_assessment_file}}"
+                              label="Core Values Assessment"
+                              hide-delete-btn="[[_hideDeleteBtn(partner.core_values_assessment)]]"
+                              readonly$="[[!editMode]]"
+                              hidden$="[[!showCoreValuesAssessmentAttachment]]"
+                              accept=".doc,.docx,.pdf,.jpg,.png">
+          </etools-single-file>
+        </div>
+      </div>
+      <!-- ---------NEW DESIGN ------ -->
+      <etools-data-table-header no-title no-collapse>
+        <etools-data-table-column class="col-4" field="reference_number">
+          Last Assessment Date
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="primary_traveler">
+          Assesment
+        </etools-data-table-column>
+      </etools-data-table-header>
+      <template is="dom-repeat" items="{{partner.coreValueAssesmentsArr}}">
+        <etools-data-table-row>
+          <div slot="row-data">
+            <span class="col col-4">
+                <etools-form-element-wrapper label="Core Values Last Assessment Date"
+                                              value="[[prettyDate(item.core_values_assessment_date)]]">
+                  <iron-icon icon="date-range" slot="prefix"></iron-icon>
+                </etools-form-element-wrapper>
+
+                </paper-input>
+              </span>
+              <span class="col flex-c">
+                <etools-single-file file="{{partner.core_values_assessment}}"
+                                    internal-file="{{partner.core_values_assessment_file}}"
+                                    label="Core Values Assessment"
+                                    hide-delete-btn="[[_hideDeleteBtn(item.core_values_assessment)]]"
+                                    readonly$="[[!editMode]]"
+                                    hidden$="[[!showCoreValuesAssessmentAttachment]]"
+                                    accept=".doc,.docx,.pdf,.jpg,.png">
+                </etools-single-file>
+              </span>
+
+          </div>
+        </etools-data-table-row>
+      </template>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="Partner Contacts ([[partner.staff_members.length]])"
@@ -224,6 +271,14 @@
           _partnerComputedType: {
             type: String,
             computed: '_computePartnerType(partner)'
+          },
+          thereAreArchivedAssessments: {
+            type: Boolean,
+            value: false
+          },
+          showArchivedAssesments: {
+            type: Boolean,
+            value: false
           }
         };
       }
