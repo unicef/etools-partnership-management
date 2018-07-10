@@ -159,12 +159,10 @@
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="Partner Contacts ([[partner.staff_members.length]])"
-                          show-expand-btn>
-      <staff-members id="staffMembersList"
-                     data-items="{{partner.staff_members}}"
-                     edit-mode="[[editMode]]"></staff-members>
-    </etools-content-panel>
+    <staff-members id="staffMembersList"
+                    data-items="{{partner.staff_members}}"
+                    edit-mode="[[editMode]]">
+    </staff-members>
   </template>
   <script>
     'use strict';
