@@ -19,6 +19,7 @@
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="add-edit-staff-members.html">
 
 <dom-module id="staff-members">
   <template strip-whitespace>
@@ -250,6 +251,9 @@
           showInactive: {
             type: Boolean,
             value: false
+          },
+          addEditDialog: {
+            type: Object
           }
         };
       }
@@ -269,6 +273,16 @@
           email: null,
           active: true
         };
+        this._createAddEditDialog();
+      }
+
+      _createAddEditDialog() {
+        this.addEditDialog = document.createElement('add-edit-staff-members');
+        document.querySelector('body').appendChild(this.addEditDialog);
+      }
+
+      openAddEditDialog() {
+        this.addEditDialog.open();
       }
 
       _isVisible(active, showInactive) {
@@ -302,42 +316,6 @@
         return typeof value !== 'undefined' && value !== null && value !== '';
       }
 
-      _isValid(field, title, firstName, lastName, emailAddress, phone, index) {
-        let valid = true;
-        switch (field) {
-          case 'title':
-            if (!this._notEmpty(title) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
-                    this._notEmpty(emailAddress) || this._notEmpty(phone))) {
-              valid = false;
-            }
-            break;
-          case 'firstName':
-            if (!this._notEmpty(firstName) && (this._notEmpty(title) || this._notEmpty(lastName) ||
-                    this._notEmpty(emailAddress) || this._notEmpty(phone))) {
-              valid = false;
-            }
-            break;
-          case 'lastName':
-            if (!this._notEmpty(lastName) && (this._notEmpty(title) || this._notEmpty(firstName) ||
-                    this._notEmpty(emailAddress) || this._notEmpty(phone))) {
-              valid = false;
-            }
-            break;
-          case 'emailAddress':
-            if (this._notEmpty(emailAddress)) {
-              valid = this._validStaffMemberEmailAddress(emailAddress, index);
-            } else {
-              if (this._notEmpty(phone) || this._notEmpty(title) || this._notEmpty(firstName) ||
-                  this._notEmpty(lastName)) {
-                valid = false;
-              } else {
-                valid = true; // empty staff member data, hide error msgs
-              }
-            }
-            break;
-        }
-        return valid;
-      }
 
       _addNewStaffMember() {
         if (this.editMode) {

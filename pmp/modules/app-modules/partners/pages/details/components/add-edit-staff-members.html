@@ -1,0 +1,136 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+
+<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
+
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../styles/shared-styles.html">
+
+<dom-module id="add-edit-staff-members">
+  <template>
+    <style include="grid-layout-styles shared-styles">
+
+      .pad-r {
+        padding-right: 12px;
+      }
+      .pad-l {
+        padding-left: 12px;
+      }
+    </style>
+    <etools-dialog id="staffMemberDialog" dialog-title="Partner Contact" size="md"
+                   ok-btn-text="Save" keep-dialog-open spinner-Text="Saving...">
+      <div class="row-h flex-c">
+        <div class="pad-r col-6">
+          <paper-input id="position" label="Position"
+                  value="{{item.title}}"
+                  placeholder="&#8212;"
+                  invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
+                  error-message="Position is required"></paper-input>
+        </div>
+        <div class="pad-l col-6">
+          <etools-form-element-wrapper>
+            <paper-checkbox checked="{{item.active}}">
+              Active?
+            </paper-checkbox>
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="pad-r col-6">
+            <paper-input id$="firstName"
+                         label="First Name"
+                         value="{{item.first_name}}"
+                         placeholder="&#8212;"
+                         invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
+                         error-message="First name is required">
+            </paper-input>
+        </div>
+        <div class="pad-l col-6">
+            <paper-input id$="lastName"
+                         label="Last Name"
+                         value="{{item.last_name}}"
+                         placeholder="&#8212;"
+                         invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
+                         error-message="Last name is required">
+            </paper-input>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="pad-r col-6">
+          <paper-input id$="email"
+                       label="E-mail address"
+                       value="{{item.email}}"
+                       placeholder="&#8212;"
+                       invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
+                       error-message="A valid & unused email address is required">
+            <iron-icon slot="prefix" icon="communication:email"></iron-icon>
+          </paper-input>
+        </div>
+        <div class="pad-l col-6">
+            <paper-input id$="phone"
+                         label="Phone number"
+                         value="{{item.phone}}"
+                         placeholder="&#8212;"
+                         allowed-pattern="[0-9\ \.\+\-\(\)]">
+              <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
+            </paper-input>
+        </div>
+      </div>
+    </etools-dialog>
+  </template>
+  <script>
+    'use strict';
+    class AddEditStaffMembers extends Polymer.Element {
+      static get is() {
+        return 'add-edit-staff-members';
+      }
+
+      open() {
+        this.$.staffMemberDialog.opened = true;
+      }
+
+      _isValid(field, title, firstName, lastName, emailAddress, phone, index) {
+        let valid = true;
+        switch (field) {
+          case 'title':
+            if (!this._notEmpty(title) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
+                    this._notEmpty(emailAddress) || this._notEmpty(phone))) {
+              valid = false;
+            }
+            break;
+          case 'firstName':
+            if (!this._notEmpty(firstName) && (this._notEmpty(title) || this._notEmpty(lastName) ||
+                    this._notEmpty(emailAddress) || this._notEmpty(phone))) {
+              valid = false;
+            }
+            break;
+          case 'lastName':
+            if (!this._notEmpty(lastName) && (this._notEmpty(title) || this._notEmpty(firstName) ||
+                    this._notEmpty(emailAddress) || this._notEmpty(phone))) {
+              valid = false;
+            }
+            break;
+          case 'emailAddress':
+            if (this._notEmpty(emailAddress)) {
+              valid = this._validStaffMemberEmailAddress(emailAddress, index);
+            } else {
+              if (this._notEmpty(phone) || this._notEmpty(title) || this._notEmpty(firstName) ||
+                  this._notEmpty(lastName)) {
+                valid = false;
+              } else {
+                valid = true; // empty staff member data, hide error msgs
+              }
+            }
+            break;
+        }
+        return valid;
+      }
+
+    }
+    window.customElements.define(AddEditStaffMembers.is, AddEditStaffMembers);
+  </script>
+
+</dom-module>
