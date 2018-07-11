@@ -3,27 +3,22 @@
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../../bower_components/iron-icon/iron-icon.html">
 
-<link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
-<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../../layout/components/icons-actions.html">
+<link rel="import" href="../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="add-edit-staff-members.html">
 
 <dom-module id="staff-members">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles data-table-styles">
+    <style include="grid-layout-styles shared-styles data-table-styles">
       [hidden] {
         display: none !important;
       }
@@ -31,11 +26,6 @@
       :host {
         display: block;
         width: 100%;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply --paper-fab-btn-green;
-        };
       }
 
       paper-icon-button[disabled] {
@@ -83,96 +73,15 @@
                 checked="{{showInactive}}">
           Show Inactive
         </paper-toggle-button>
-        <div class="separator">
+        <div class="separator" hidden$="[[!editMode]]">
         </div>
         <paper-icon-button icon="add-box"
+              disabled="[[!editMode]]"
+              hidden$="[[!editMode]]"
               title="Add"
               on-click="_addPartnerContact">
         </paper-icon-button>
       </div>
-
-
-      <!-- <div hidden$="[[_emptyList(dataItems.length)]]">
-        <template is="dom-repeat" items="{{dataItems}}">
-          <div class="row-h item-container">
-            <div class="item-actions-container">
-              <div class="actions">
-                <paper-icon-button class="action delete"
-                                  on-tap="_openDeleteConfirmation"
-                                  data-args$="[[index]]"
-                                  disabled="[[!_canBeRemoved(item.id)]]"
-                                  icon="cancel"></paper-icon-button>
-              </div>
-            </div>
-            <div class="item-content">
-              <div class="row-h">
-                <div class="col col-4">
-                  <paper-input id$="title_[[index]]"
-                              label="Position"
-                              value="{{item.title}}"
-                              placeholder="&#8212;"
-                              readonly$="[[!editMode]]"
-                              invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
-                              error-message="Position is required">
-                  </paper-input>
-                </div>
-                <div class="col col-4">
-                  <paper-input id$="firstName_[[index]]"
-                              label="First Name"
-                              value="{{item.first_name}}"
-                              placeholder="&#8212;"
-                              readonly$="[[!editMode]]"
-                              invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
-                              error-message="First name is required">
-                  </paper-input>
-                </div>
-                <div class="col col-4">
-                  <paper-input id$="lastName_[[index]]"
-                              label="Last Name"
-                              value="{{item.last_name}}"
-                              placeholder="&#8212;"
-                              readonly$="[[!editMode]]"
-                              invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
-                              error-message="Last name is required">
-                  </paper-input>
-                </div>
-              </div>
-              <div class="row-h">
-                <div class="col col-4">
-                  <paper-input id$="phone_[[index]]"
-                              label="Phone number"
-                              value="{{item.phone}}"
-                              placeholder="&#8212;"
-                              allowed-pattern="[0-9\ \.\+\-\(\)]"
-                              readonly$="[[!editMode]]">
-                    <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-                  </paper-input>
-                </div>
-                <div class="col col-4">
-                  <paper-input id$="email_[[index]]"
-                              label="E-mail address"
-                              value="{{item.email}}"
-                              placeholder="&#8212;"
-                              readonly$="[[!_canBeRemoved(item.id)]]"
-                              invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
-                              error-message="A valid & unused email address is required">
-                    <iron-icon slot="prefix" icon="communication:email"></iron-icon>
-                  </paper-input>
-                </div>
-                <div class="col col-4">
-                  <etools-form-element-wrapper>
-                    <paper-checkbox checked="{{item.active}}"
-                                    disabled$="[[!editMode]]">
-                      Active?
-                    </paper-checkbox>
-                  </etools-form-element-wrapper>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </template>
-      </div> -->
 
       <div hidden$="[[_emptyList(dataItems.length)]]">
         <etools-data-table-header no-collapse no-title>
@@ -218,7 +127,10 @@
                 <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
-                             on-edit="_editPartnerContact"></icons-actions>
+                             hidden$="[[!editMode]]"
+                             show-delete="[[showDelete]]"
+                             on-edit="_editPartnerContact">
+              </icons-actions>
             </div>
           </etools-data-table-row>
         </template>
@@ -228,11 +140,6 @@
         <p>There are no staff members added.</p>
       </div>
 
-      <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-        <paper-fab icon="add"
-                  on-tap="_addNewStaffMember"
-                  title="Add"></paper-fab>
-      </div>
     </etools-content-panel>
 
   </template>
@@ -243,9 +150,9 @@
     /**
      * @polymer
      * @customElement
-     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class StaffMembers extends EtoolsPmpApp.Mixins.RepeatableDataSets(Polymer.Element) {
+    class StaffMembers extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get properties() {
         return {
@@ -255,6 +162,13 @@
           },
           addEditDialog: {
             type: Object
+          },
+          showDelete: {
+            type: Boolean,
+            value: false
+          },
+          editMode: {
+            type: Boolean
           }
         };
       }
@@ -333,16 +247,8 @@
         return true;
       }
 
-
-      _addNewStaffMember() {
-        if (this.editMode) {
-          let lastStaffMemberAdded = this.dataItems[this.dataItems.length - 1];
-          if (this._emptyStaffMemberData(lastStaffMemberAdded)) {
-            this.fireEvent('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
-          } else {
-            this._addElement();
-          }
-        }
+      _emptyList(length) {
+        return length === 0;
       }
 
     }

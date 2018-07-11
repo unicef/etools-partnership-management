@@ -85,6 +85,11 @@
   </template>
   <script>
     'use strict';
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
     class AddEditStaffMembers extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
       static get is() {
         return 'add-edit-staff-members';
