@@ -1,10 +1,23 @@
 <link rel="import" href="../../../../../../../../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+
+<link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
+<link rel="import" href="../../../../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../../../../layout/components/etools-single-file.html">
+
+<link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
+
+<link rel="import" href="../../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../../styles/file-styles.html">
 
 <dom-module id="add-ag-amendment-dialog">
   <template>
-    <style>
+    <style include="shared-styles grid-layout-styles file-styles">
       :host {
         /* host CSS */
       }
@@ -16,10 +29,70 @@
                    opened="{{opened}}"
                    size="md"
                    hidden$="[[datePickerOpen]]"
-                   ok-btn-text="Save"
+                   ok-btn-text="Add to amendments list"
                    dialog-title="Add Amendment"
+                   on-close="_handleDialogClosed"
                    on-confirm-btn-clicked="_validateAndSaveAmendment">
-      Add new agreement amendment dialog content here...
+
+      <div class="row-h flex-c">
+        <div class="col col-4">
+          <!-- Signed Date -->
+          <required-and-not-future-date-validator validator-name="ag_am_signed_date_validator"
+                                                  field-selector="#signedDate">
+          </required-and-not-future-date-validator>
+          <etools-date-input id="signedDate"
+                             label="Signed Date"
+                             value="{{amendment.signed_date}}"
+                             error-message="Please select signed date"
+                             no-init show-clear-btn
+                             validator="ag_am_signed_date_validator"
+                             auto-validate="[[autoValidate]]">
+          </etools-date-input>
+        </div>
+        <div class="col col-8">
+          <!-- Signed Agreement -->
+          <etools-single-file id="signedAmendment"
+                              label="Signed Amendment"
+                              file="{{amendment.signed_amendment}}"
+                              internal-file="{{amendment.signed_amendment_file}}"
+                              error-message="Signed Amendment file is required"
+                              required
+                              auto-validate="[[autoValidate]]"
+                              accept=".doc,.docx,.pdf,.jpg,.png">
+          </etools-single-file>
+        </div>
+      </div>
+
+      <div class="row-h flex-c">
+        <etools-dropdown-multi id="amendmentTypes"
+                               label="Amendment Types"
+                               options="[[amendmentTypes]]"
+                               selected-values="{{amendment.types}}"
+                               hide-search
+                               error-message="Please select amendment type"
+                               required
+                               auto-validate="[[autoValidate]]"
+                               trigger-value-change-event
+                               on-etools-selected-items-changed="_onAmendmentTypesSelected">
+        </etools-dropdown-multi>
+      </div>
+
+      <template is="dom-if" if="[[showAuthorizedOfficers]]" restamp>
+        <div class="row-h flex-c">
+          <etools-dropdown-multi id="officers"
+                                 label="Authorized Officers"
+                                 placeholder="&#8212;"
+                                 options="[[authorizedOfficersOptions)]]"
+                                 option-value="id"
+                                 option-label="name"
+                                 selected-values="{{authorizedOfficers}}"
+                                 error-message="Please enter Partner Authorized Officer(s)"
+                                 required
+                                 auto-validate$="[[enableEditForAuthorizedOfficers]]">
+          </etools-dropdown-multi>
+        </div>
+      </template>
+
     </etools-dialog>
   </template>
   <script>
@@ -28,8 +101,13 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class AddAgAmendmentDialog extends Polymer.Element {
+    class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.EventHelper
+    ], Polymer.Element) {
 
       static get is() {
         return 'add-ag-amendment-dialog';
@@ -44,12 +122,79 @@
           datePickerOpen: {
             type: Boolean,
             value: false
-          }
+          },
+          amendmentTypes: {
+            type: Array,
+            value: []
+          },
+          amendment: Object,
+          amendmentModel: {
+            type: Object,
+            value: {
+              id: null,
+              signed_date: null,
+              types: [],
+              signed_amendment: null,
+              signed_amendment_file: null
+            }
+          },
+          autoValidate: {
+            type: Boolean,
+            value: false
+          },
+          showAuthorizedOfficers: {
+            type: Boolean,
+            value: false
+          },
+          authorizedOfficersOptions: {
+            type: Array,
+            value: []
+          },
+          authorizedOfficers: Array
         };
       }
 
+      initAmendment(a) {
+        if (a && a.constructor === Object && Object.keys(a).length > 0) {
+          // edit unsaved existing amendment
+          this.set('amendment', JSON.parse(JSON.stringify(a)));
+        } else {
+          this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));
+        }
+      }
+
       _validateAndSaveAmendment(e) {
-        console.log('Add amendment... tralalalalaaaaaa');
+        if (this.validate()) {
+          this.fireEvent('append-amendment', {amendment: this.amendment});
+          this.set('opened', false);
+        }
+      }
+
+      _handleDialogClosed(e) {
+        this.set('autoValidate', false);
+        this._resetValidations();
+      }
+
+      _resetValidations() {
+        let elemsSelectors = ['#signedDate', '#signedAmendment', '#amendmentTypes'];
+        elemsSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el) {
+            el.set('invalid', false);
+          }
+        });
+      }
+
+      validate() {
+        let isValid = true;
+        let elemsSelectors = ['#signedDate', '#signedAmendment', '#amendmentTypes'];
+        elemsSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el && !el.validate()) {
+            isValid = false;
+          }
+        });
+        return isValid;
       }
 
       constructor() {

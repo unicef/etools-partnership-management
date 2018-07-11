@@ -666,7 +666,6 @@
         let reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
         if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           reqFieldsSelectors.push('#cpStructure');
-          reqFieldsSelectors.push('#agreementAmendments');
         }
         reqFieldsSelectors.forEach(function(fSelector) {
           let field = this.shadowRoot.querySelector(fSelector);

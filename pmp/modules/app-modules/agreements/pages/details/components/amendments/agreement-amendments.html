@@ -7,7 +7,9 @@
 <link rel="import" href="../../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
+
 <link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
@@ -85,6 +87,9 @@
         color: var(--dark-icon-color);
         margin-right: 8px;
       }
+      .unsaved-amendment {
+        color: var(--warning-color);
+      }
     </style>
 
     <etools-content-panel panel-title="Amendments ([[dataItems.length]])">
@@ -129,6 +134,7 @@
           <etools-data-table-column class="flex-c">
             Signed Amendment
           </etools-data-table-column>
+          <etools-data-table-column class="flex-1"></etools-data-table-column>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="{{dataItems}}">
@@ -136,11 +142,18 @@
           <etools-data-table-row no-collapse>
             <div slot="row-data">
               <span class="col-data col-1">
-                [[item.number]]
+                <template is="dom-if" if="[[item.id]]" restamp>
+                  [[item.number]]
+                </template>
+                <template is="dom-if" if="[[!item.id]]" restamp>
+                  <etools-info-tooltip class="unsaved-amendment" icon="info-outline" position="right">
+                    <span slot="field">Not saved</span>
+                    <span slot="message">Use right sidebar 'Save' button to save this amendment</span>
+                  </etools-info-tooltip>
+                </template>
               </span>
               <span class="col-data col-4">
                 [[_getReadonlyAmendmentTypes(item.types)]]
-
               </span>
               <span class="col-data col-2">
                 [[prettyDate(item.signed_date)]]
@@ -149,83 +162,22 @@
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <span class="break-word">
                   <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.signed_amendment_file]]"
-                     target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                  <template is="dom-if" if="[[item.id]]" restamp>
+                    <a href$="[[item.signed_amendment_file]]"
+                       target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                  </template>
+                  <template is="dom-if" if="[[!item.id]]" restamp>
+                    <span>[[item.signed_amendment.name]]</span>
+                  </template>
                 </span>
+              </span>
+              <span class="col-data flex-1">
+                <template is="dom-if" if="[[!item.id]]" restamp>
+                  edit action here... just for unsaved
+                </template>
               </span>
             </div>
           </etools-data-table-row>
-
-          <!--<div class="row-h item-container">-->
-            <!--<div class$="item-actions-container [[_getLockedClass(item.id)]]" data-item-nr$="[[_getItemNr(index)]]">-->
-              <!--<div class="actions">-->
-                <!--<paper-icon-button class="action delete"-->
-                                   <!--on-tap="_openDeleteConfirmation"-->
-                                   <!--data-args$="[[index]]"-->
-                                   <!--icon="cancel">-->
-                <!--</paper-icon-button>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="item-content">-->
-
-              <!--<div class="row-h flex-c">-->
-                <!--<div class="col col-4">-->
-                  <!--&lt;!&ndash; Signed Date &ndash;&gt;-->
-                  <!--<required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"-->
-                                                          <!--field-selector="#signedDate_[[index]]">-->
-                  <!--</required-and-not-future-date-validator>-->
-                  <!--<etools-date-input id$="signedDate_[[index]]"-->
-                                     <!--label="Signed Date"-->
-                                     <!--value="{{item.signed_date}}"-->
-                                     <!--error-message="Please select signed date"-->
-                                     <!--no-init show-clear-btn-->
-                                     <!--readonly$="[[_showReadonlyDetails(item.id)]]"-->
-                                     <!--validator="signedDate_[[index]]_validator"-->
-                                     <!--auto-validate$="[[!_showReadonlyDetails(item.id)]]">-->
-                  <!--</etools-date-input>-->
-                <!--</div>-->
-                <!--<div class="col col-8 file-container">-->
-                  <!--&lt;!&ndash; Signed Agreement &ndash;&gt;-->
-                  <!--<div class="file-wrapper">-->
-                    <!--<etools-single-file id$="fileUpload_[[index]]"-->
-                                        <!--label="Signed Amendment"-->
-                                        <!--file="{{item.signed_amendment}}"-->
-                                        <!--internal-file="{{item.signed_amendment_file}}"-->
-                                        <!--error-message="Signed Amendment file is required"-->
-                                        <!--required-->
-                                        <!--auto-validate-->
-                                        <!--accept=".doc,.docx,.pdf,.jpg,.png"-->
-                                        <!--readonly$="[[_showReadonlyDetails(item.id)]]">-->
-                    <!--</etools-single-file>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="row-h flex-c">-->
-                <!--<template is="dom-if" if="[[!_showReadonlyDetails(item.id)]]">-->
-                  <!--<etools-dropdown-multi id$="amendmentTypes_[[index]]"-->
-                                         <!--label="Amendment Types"-->
-                                         <!--trigger-value-change-event$="[[!_showReadonlyDetails(item.id)]]"-->
-                                         <!--options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"-->
-                                         <!--selected-values="{{item.types}}"-->
-                                         <!--hide-search-->
-                                         <!--error-message="Please select amendment type"-->
-                                         <!--required-->
-                                         <!--auto-validate-->
-                                         <!--on-etools-selected-items-changed="_onAmendmentTypesSelected">-->
-                  <!--</etools-dropdown-multi>-->
-                <!--</template>-->
-                <!--<template is="dom-if" if="[[_showReadonlyDetails(item.id)]]">-->
-                  <!--&lt;!&ndash; readonly amendment types &ndash;&gt;-->
-                  <!--<etools-form-element-wrapper label="Amendment Types">-->
-                    <!--<span class="placeholder" hidden$="[[item.types.length]]">&#8212;</span>-->
-                    <!--<span hidden$="[[!item.types.length]]">-->
-                    <!--[[_getReadonlyAmendmentTypes(item.types)]]-->
-                  <!--</span>-->
-                  <!--</etools-form-element-wrapper>-->
-                <!--</template>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
         </template>
       </div>
 
@@ -316,7 +268,7 @@
         this._addAgAmendmentDialog = document.createElement('add-ag-amendment-dialog');
         this._addAgAmendmentDialog.setAttribute('id', 'addAgAmendmentDialog');
         this._addAgAmendmentDialog.toastEventSource = this;
-        // this._addAgAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
+        this._addAgAmendmentDialog.addEventListener('append-amendment', this.appendNewAmendment.bind(this));
         document.querySelector('body').appendChild(this._addAgAmendmentDialog);
       }
 
@@ -329,10 +281,17 @@
 
       _openAddAgAmendmentDialog() {
         if (this._addAgAmendmentDialog) {
+          let ag = {};
+          if (ag.id > 0) {
+            this.logError('Cannot edit a saved agreement!', 'add-ag-amendment-dialog');
+            return;
+          }
+          this._addAgAmendmentDialog.amendmentTypes = this._getAmendmentTypes(this.agreementType, this._amendmentTypes);
+          this._addAgAmendmentDialog.initAmendment(ag);
           this._addAgAmendmentDialog.opened = true;
+          this._addAgAmendmentDialog.autoValidate = true;
         }
       }
-
 
       _getAmendmentTypes(agreementType, _amendmentTypes) {
         if ([this.CONSTANTS.AGREEMENT_TYPES.PCA,
@@ -347,37 +306,15 @@
         return _amendmentTypes;
       }
 
-      validate() {
-        if (!this.dataItems) {
-          return true;
+      appendNewAmendment(e) {
+        let unsavedAmendment = e.detail.amendment;
+        if (unsavedAmendment) {
+          if (e.detail.index > 0) {
+            this.set(['dataItems', e.detail.index], unsavedAmendment);
+          } else {
+            this.push('dataItems', unsavedAmendment);
+          }
         }
-        let isValid = true;
-        this.dataItems.forEach((amendm, index) => {
-          if (amendm.id) {
-            return;
-          }
-          let signedDateEl = this.shadowRoot.querySelector('#signedDate_' + index);
-          if (signedDateEl) {
-            if (!signedDateEl.validate()) {
-              isValid = false;
-            }
-          }
-          if (!amendm.signed_amendment) {
-            this.shadowRoot.querySelector('#fileUpload_' + index).invalid = true;
-            isValid = false;
-          }
-          let amendmentTypes = this.shadowRoot.querySelector('#amendmentTypes_' + index);
-          if (amendmentTypes && !amendmentTypes.validate()) {
-            isValid = false;
-          }
-        });
-        return isValid;
-      }
-
-      // If the amendment can be removed, the left border and top badge needs to have a different style.
-      // This class will help with that.
-      _getLockedClass(amendmentId) {
-        return this._showReadonlyDetails(amendmentId) ? 'locked' : '';
       }
 
       _showReadonlyDetails(amendmentId) {
@@ -394,22 +331,6 @@
             !amendmentItem.signed_amendment &&
             ((amendmentItem.types instanceof Array && amendmentItem.types.length === 0) ||
                 !amendmentItem.types);
-      }
-
-      // Validate last added amendment and if is not empty add a new one
-      _addNewAmendment() {
-        let lastAmendmentItemIndex = this.dataItems.length - 1;
-        if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] &&
-            !this._showReadonlyDetails(this.dataItems[lastAmendmentItemIndex].id)) {
-          let lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
-          if (this._amendmentFieldsAreEmpty(lastAmendmentItem)) {
-            this.fireEvent('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
-          } else {
-            this._addElement();
-          }
-        } else {
-          this._addElement();
-        }
       }
 
       _dataItemsChanged(dataLength) {
