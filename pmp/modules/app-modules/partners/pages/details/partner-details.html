@@ -76,10 +76,8 @@
 
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Vendor Number"
-                       value="[[partner.vendor_number]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Vendor Number" value="[[partner.vendor_number]]">
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Partner Type" value="[[_partnerComputedType]]">
