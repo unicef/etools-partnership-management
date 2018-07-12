@@ -19,6 +19,11 @@
         --paper-input-container-underline-disabled: {
           display: none;
         };
+        --paper-input-prefix: {
+          margin-right: 5px;
+          margin-top: -2px;
+          color: var(--dark-secondary-text-color);
+        }
       }
 
       :host(.right-align) paper-input-container {
@@ -27,16 +32,18 @@
 
       .paper-input-input {
         @apply --layout-horizontal;
+        display: inline-block;
       }
 
-      ::slotted(iron-icon) {
-        margin-right: 5px;
-        margin-top: -2px;
-        color: var(--dark-secondary-text-color);
+      :host(.ie) .paper-input-input {
+        display: inline-block;
+      }
+
+      :host(.ie) .input-value {
+        line-height: 24px;
       }
 
       .placeholder {
-        /*content: "\2014";*/
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
       }
 
@@ -45,9 +52,9 @@
                            no-label-float="[[noLabelFloat]]"
                            required$="[[required]]">
       <label hidden$=[[!label]] slot="label">[[label]]</label>
+      <slot name="prefix" slot="prefix"></slot>
       <div slot="input" class="paper-input-input">
-        <slot name="prefix"></slot>
-        <span class$="[[_getPlaceholderClass(value)]]">
+        <span class$="input-value [[_getPlaceholderClass(value)]]">
           [[_getDisplayValue(value)]]
         </span>
         <slot></slot>
@@ -84,6 +91,14 @@
             observer: '_requiredChanged'
           }
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        const appShell = document.querySelector('app-shell');
+        if (appShell && appShell.classList.contains('ie')) {
+          this.classList.add('ie');
+        }
       }
 
       _requiredChanged(req) {
