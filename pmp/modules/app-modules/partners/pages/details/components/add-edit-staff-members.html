@@ -9,10 +9,11 @@
 
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../styles/required-field-styles.html">
 
 <dom-module id="add-edit-staff-members">
   <template>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       paper-input {
         width: 100%;
       }
@@ -27,9 +28,9 @@
     <etools-dialog id="staffMemberDialog" dialog-title="Partner Contact" size="md"
                    ok-btn-text="Save" keep-dialog-open spinner-Text="Saving..."
                    on-confirm-btn-clicked="_savePartnerContact">
-      <div class="row-h flex-c">
+      <div class="layout-horizontal row-padding-v flex-c">
         <div class="col col-6">
-          <paper-input id="position" label="Position"
+          <paper-input id="title" label="Position"
                   value="{{item.title}}"
                   placeholder="&#8212;"
                   invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
@@ -38,17 +39,18 @@
         <div class="col col-6">
           <etools-form-element-wrapper>
             <paper-checkbox checked="{{item.active}}">
-              Active?
+              Active Staff
             </paper-checkbox>
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h flex-c">
+      <div class="layout-horizontal row-padding-v flex-c">
         <div class="col col-6">
             <paper-input id="firstName"
                          label="First Name"
                          value="{{item.first_name}}"
                          placeholder="&#8212;"
+                         required
                          invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                          error-message="First name is required">
             </paper-input>
@@ -58,17 +60,19 @@
                          label="Last Name"
                          value="{{item.last_name}}"
                          placeholder="&#8212;"
+                         required
                          invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                          error-message="Last name is required">
             </paper-input>
         </div>
       </div>
-      <div class="row-h flex-c">
+      <div class="layout-horizontal row-padding-v flex-c">
         <div class="col col-6">
           <paper-input id="email"
                        label="E-mail address"
                        value="{{item.email}}"
                        placeholder="&#8212;"
+                       required
                        invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                        error-message="A valid & unused email address is required">
             <iron-icon slot="prefix" icon="communication:email"></iron-icon>
@@ -111,6 +115,7 @@
       }
 
       open() {
+        this.resetValidations();
         this.$.staffMemberDialog.opened = true;
       }
 
@@ -177,37 +182,33 @@
         return sameEmailItems.length > 0;
       }
 
-      _emptyStaffMemberData(member) {
-        return member
-            && !this._notEmpty(member.first_name)
-            && !this._notEmpty(member.last_name)
-            && !this._notEmpty(member.phone)
-            && !this._notEmpty(member.email);
-      }
-
       validate() {
         let valid = true;
-        if (this.dataItems instanceof Array && this.dataItems.length > 0) {
-          for (let j = 0; j < this.dataItems.length; j++) {
-            if (this._emptyStaffMemberData(this.dataItems[j])) {
-              valid = false;
-              break;
-            }
-            let fields = ['#firstName', '#lastName',
-              '#phone', '#email', '#title'];
-            for (let i = 0; i < fields.length; i++) {
-              let el = this.$.staffMemberDialog.querySelector(fields[i]);
-              if (el && el.invalid) {
-                valid = false;
-                break;
-              }
-            }
-            if (!valid) {
-              break;
-            }
+        let fields = ['#firstName', '#lastName', '#email'];
+        let elements = [];
+        for (let i = 0; i < fields.length; i++) {
+           elements[i] = this.$.staffMemberDialog.querySelector(fields[i]);
+           elements[i].validate();
+        }
+
+        [].push.apply(fields, ['#email', '#title']);
+
+        for (let i = 0; i < fields.length; i++) {
+          let el = elements[i] || this.$.staffMemberDialog.querySelector(fields[i]);
+          if (el && el.invalid) {
+            valid = false;
+            break;
           }
         }
         return valid;
+      }
+
+      resetValidations() {
+        let fields = ['#firstName', '#lastName', '#email', '#phone', '#title'];
+        for (let i = 0; i < fields.length; i++) {
+           let el = this.$.staffMemberDialog.querySelector(fields[i]);
+           el.invalid = false;
+        }
       }
 
       _savePartnerContact() {
