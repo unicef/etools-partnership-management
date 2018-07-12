@@ -1,0 +1,75 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
+<link rel="import" href="../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../styles/required-field-styles.html">
+
+<dom-module id="edit-core-values-assessment">
+  <template>
+    <style>
+      :host {
+        display: block
+      }
+    </style>
+
+    <etools-dialog id="cvaDialog" dialog-title="Upload Core Values Assessment"
+                   ok-btn-text="Save" on-confirm-btn-clicked="_saveCoreValueAssessment">
+      <div>
+          <etools-form-element-wrapper label="Date Last Assessed"
+                    value="[[prettyDate(item.core_values_assessment_date)]]">
+          </etools-form-element-wrapper>
+      </div>
+      <div>
+          <etools-single-file file="{{item.core_values_assessment}}"
+                    internal-file="{{item.core_values_assessment_file}}"
+                    label="Core Values Assessment"
+                    accept=".doc,.docx,.pdf,.jpg,.png">
+          </etools-single-file>
+      </div>
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     */
+    class EditCoreValuesAssessment extends EtoolsPmpApp.Mixins.Common(Polymer.Element) {
+      static get is() {
+        return 'edit-core-values-assessment';
+      }
+
+      static get properties() {
+        return {
+          item: {
+            type: Object
+          }
+        };
+      }
+
+      open() {
+        this.$.cvaDialog.opened = true;
+      }
+
+      _saveCoreValueAssessment() {
+        if (!_fileUploaded()) {
+          return;
+        }
+        this.fireEvent('save-core-values-assessment', item);
+      }
+
+      _fileUploaded() {
+        //....
+      }
+
+    }
+
+    window.customElements.define(EditCoreValuesAssessment.is, EditCoreValuesAssessment);
+  </script>
+</dom-module>

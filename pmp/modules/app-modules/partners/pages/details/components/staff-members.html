@@ -197,6 +197,13 @@
         this._createAddEditDialog();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.addEditDialog) {
+          document.querySelector('body').removeChild(this.addEditDialog);
+        }
+      }
+
       dataItemsChanged() {
         this._sortInactiveLast();
       }

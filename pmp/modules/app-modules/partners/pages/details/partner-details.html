@@ -14,6 +14,7 @@
 
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-error-messages-box.html">
+<link rel="import" href="../../../../layout/components/icons-actions.html">
 <link rel="import" href="../../../../scripts/lodash.html">
 
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
@@ -28,6 +29,7 @@
 <link rel="import" href="../../../../styles/risk-rating-styles.html">
 
 <link rel="import" href="components/staff-members.html">
+<link rel="import" href="components/edit-core-values-assessment.html">
 
 <dom-module id="partner-details">
   <template>
@@ -57,6 +59,17 @@
         font-size: 16px;
         --paper-toggle-button-label-color: white;
         --paper-toggle-button-checked-bar-color: white;
+      }
+
+      icons-actions {
+        --icons-actions: {
+          background-color: white;
+        };
+        visibility: hidden;
+      }
+
+      etools-data-table-row:hover icons-actions {
+        visibility: visible;
       }
 
     </style>
@@ -153,7 +166,7 @@
           </paper-toggle-button>
       </div>
 
-      <div class="row-h flex-c">
+      <!-- <div class="row-h flex-c">
         <div class="col col-4">
           <etools-form-element-wrapper label="Core Values Last Assessment Date"
                                         value="[[prettyDate(partner.core_values_assessment_date)]]">
@@ -172,20 +185,24 @@
                               accept=".doc,.docx,.pdf,.jpg,.png">
           </etools-single-file>
         </div>
-      </div>
+      </div> -->
       <!-- ---------NEW DESIGN ------ -->
       <etools-data-table-header no-title no-collapse>
-        <etools-data-table-column class="col-4" field="reference_number">
-          Last Assessment Date
+        <etools-data-table-column class="col-4">
+          <div>Date Last Assessed</div>
+          <div>(from VISION)</div>
         </etools-data-table-column>
-        <etools-data-table-column class="flex-c" field="primary_traveler">
-          Assesment
+        <etools-data-table-column class="col-7">
+          Core Values Assesment
+        </etools-data-table-column>
+        <etools-data-table-column class="col-1">
+          Archived
         </etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{partner.coreValueAssesmentsArr}}">
         <etools-data-table-row>
-          <div slot="row-data">
-            <span class="col col-4">
+          <div slot="row-data" class="p-relative">
+            <span class="col col-3">
                 <etools-form-element-wrapper label="Core Values Last Assessment Date"
                                               value="[[prettyDate(item.core_values_assessment_date)]]">
                   <iron-icon icon="date-range" slot="prefix"></iron-icon>
@@ -193,21 +210,25 @@
 
                 </paper-input>
               </span>
-              <span class="col flex-c">
-                <etools-single-file file="{{partner.core_values_assessment}}"
-                                    internal-file="{{partner.core_values_assessment_file}}"
-                                    label="Core Values Assessment"
-                                    hide-delete-btn="[[_hideDeleteBtn(item.core_values_assessment)]]"
-                                    readonly$="[[!editMode]]"
-                                    hidden$="[[!showCoreValuesAssessmentAttachment]]"
-                                    accept=".doc,.docx,.pdf,.jpg,.png">
-                </etools-single-file>
-              </span>
+              <span class="col col-6">
+                  <etools-form-element-wrapper label="Core Values Last Assessment Date"
+                        value="[[prettyDate(item.core_values_assessment_date)]]">
+                    <iron-icon icon="file-upload" slot="prefix"></iron-icon>
+                  </etools-form-element-wrapper>
 
+              </span>
+              <span class="col col-1">
+                <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
+              </span>
+              <icons-actions item$="[[item]]"
+                            hidden$="[[!showCoreValuesAssessmentAttachment]]"
+                            show-delete="[[showDelete]]"
+                            on-edit="_editCoreValuesAssessment">
+              </icons-actions>
           </div>
         </etools-data-table-row>
       </template>
-    </etools-content-panel> 
+    </etools-content-panel>
 
     <staff-members id="staffMembersList"
                     data-items="[[partner.staff_members]]"
@@ -281,6 +302,13 @@
           showArchivedAssesments: {
             type: Boolean,
             value: false
+          },
+          showDelete: {
+            type: Boolean,
+            value: false
+          },
+          editCVADialog: {
+            type: Object
           }
         };
       }
@@ -293,6 +321,30 @@
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
         this.fireEvent('tab-content-attached');
+        this._createEditCoreValuesAssessmentsDialog();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.editCVADialog) {
+          document.querySelector('body').removeChild(this.editCVADialog);
+        }
+      }
+
+      _createEditCoreValuesAssessmentsDialog() {
+        this.editCVADialog = document.createElement('edit-core-values-assessment');
+        this.editCVADialog.addEventListener('save-core-values-assessment',
+            this._saveCoreValuesAssessment.bind(this));
+        document.querySelector('body').appendChild(this.editCVADialog);
+      }
+
+      _editCoreValuesAssessment(e) {
+        this.editCVADialog.item = JSON.parse(e.target.getAttribute('item'));
+        this.editCVADialog.open();
+      }
+
+      _saveCoreValuesAssessment(e) {
+        this.fireEvent('save-core-values-assessment', e.detail);
       }
 
       _hideDeleteBtn() {
