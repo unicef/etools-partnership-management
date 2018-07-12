@@ -90,28 +90,29 @@
     <div id="progress-summary" class="content-section paper-material" elevation="1">
       <div class="row-h">
         <div class="layout-vertical col-4">
-          <etools-form-element-wrapper label="PD Duration">
-            [[_getPdDuration(progress.start_date, progress.end_date)]]
+          <etools-form-element-wrapper label="PD Duration"
+                                       value="[[_getPdDuration(progress.start_date, progress.end_date)]]">
           </etools-form-element-wrapper>
           <etools-progress-bar value="[[pdProgress]]" no-decimals></etools-progress-bar>
         </div>
         <div class="layout-vertical col-4">
           <div class="layout-horizontal" id="cash-progress">
-            <etools-form-element-wrapper label="Cash Transfered">
-              [[latestAcceptedPr.programme_document.funds_received_to_date_currency]]
-              [[displayCurrencyAmount(latestAcceptedPr.programme_document.funds_received_to_date, '0', 0)]]
+            <etools-form-element-wrapper label="Cash Transfered"
+                                         value="[[latestAcceptedPr.programme_document.funds_received_to_date_currency]]
+                                         [[displayCurrencyAmount(latestAcceptedPr.programme_document.funds_received_to_date, '0', 0)]]">
             </etools-form-element-wrapper>
-            <etools-form-element-wrapper label="UNICEF Cash">
-              [[latestAcceptedPr.programme_document.total_unicef_cash_currency]]
-              [[displayCurrencyAmount(latestAcceptedPr.programme_document.total_unicef_cash, '0', 0)]]
+            <etools-form-element-wrapper label="UNICEF Cash"
+                                         value="[[latestAcceptedPr.programme_document.total_unicef_cash_currency]]
+                                         [[displayCurrencyAmount(latestAcceptedPr.programme_document.total_unicef_cash, '0', 0)]]">
             </etools-form-element-wrapper>
           </div>
           <etools-progress-bar value="[[cashProgress]]" no-decimals></etools-progress-bar>
         </div>
         <div class="col col-4">
-          <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
-            <report-status status="[[latestAcceptedPr.review_overall_status]]"></report-status>
-            <span> [[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
+          <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF"
+                                       value="[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]"
+                                       no-placeholder>
+            <report-status status="[[latestAcceptedPr.review_overall_status]]" slot="prefix"></report-status>
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -389,6 +390,7 @@
       }
 
       _getPdDuration(start, end) {
+        console.log(start, end);
         start = this._convertToDefaultDateFormat(start);
         end = this._convertToDefaultDateFormat(end);
         let startDate = this.getDateDisplayValue(start) || 'N/A';
