@@ -148,7 +148,7 @@
                     <!-- readonly unicef cash -->
                     <etools-form-element-wrapper no-label-float
                                                  id="unicef-cash"
-                                                  value="[[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]">
+                                                 value="[[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]">
                     </etools-form-element-wrapper>
                   </template>
                   <template is="dom-if"
@@ -181,8 +181,8 @@
 
             <span class="col-data col-2">
               <etools-form-element-wrapper class="right-align" no-label-float
-                value="[[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
-                plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]">
+                  value="[[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
+                  plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]">
               </etools-form-element-wrapper>
             </span>
           </div>
