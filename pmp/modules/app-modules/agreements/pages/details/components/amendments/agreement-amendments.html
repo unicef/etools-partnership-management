@@ -8,29 +8,21 @@
 <link rel="import" href="../../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
+<!--<link rel="import" href="../../../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">-->
 <link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
 
-
-<link rel="import" href="../../../../../../layout/components/etools-form-element-wrapper.html">
-<link rel="import" href="../../../../../../layout/components/etools-single-file.html">
-<link rel="import" href="../../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../../../../styles/file-styles.html">
 <link rel="import" href="../../../../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../../../../scripts/lodash.html">
 <link rel="import" href="../../../../../../redux/etools-data-redux-store.html">
-<link rel="import" href="../../../../../../mixins/repeatable-data-sets-mixin.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../../mixins/common-mixin.html">
 
@@ -39,8 +31,7 @@
 <dom-module id="agreement-amendments">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles shared-styles data-table-styles
-          repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles buttons-styles">
+        include="grid-layout-styles shared-styles data-table-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -134,7 +125,6 @@
           <etools-data-table-column class="flex-c">
             Signed Amendment
           </etools-data-table-column>
-          <etools-data-table-column class="flex-1"></etools-data-table-column>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="{{dataItems}}">
@@ -171,11 +161,6 @@
                   </template>
                 </span>
               </span>
-              <span class="col-data flex-1">
-                <template is="dom-if" if="[[!item.id]]" restamp>
-                  edit action here... just for unsaved
-                </template>
-              </span>
             </div>
           </etools-data-table-row>
         </template>
@@ -195,17 +180,13 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      */
     const AgreementAmendmentsRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-      EtoolsPmpApp.Mixins.RepeatableDataSets,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common
@@ -223,7 +204,7 @@
 
       static get properties() {
         return {
-          _deleteEpName: {
+          _deleteEpName: { // TODO: check/implement delete option
             type: String,
             value: 'agreementAmendmentsDelete',
             readOnly: true
@@ -242,14 +223,20 @@
               'CP extension': 'Extension of Country Programme Cycle'
             }
           },
-          _addAgAmendmentDialog: Object
+          _addAgAmendmentDialog: Object,
+          authorizedOfficers: {
+            type: Array,
+            value: []
+          },
+          showAuthorizedOfficers: {
+            type: Boolean,
+            value: false
+          },
+          selectedAo: {
+            type: Array,
+            notify: true
+          }
         };
-      }
-
-      static get observers() {
-        return [
-          '_dataItemsChanged(dataItems.length)'
-        ];
       }
 
       ready() {
@@ -268,7 +255,7 @@
         this._addAgAmendmentDialog = document.createElement('add-ag-amendment-dialog');
         this._addAgAmendmentDialog.setAttribute('id', 'addAgAmendmentDialog');
         this._addAgAmendmentDialog.toastEventSource = this;
-        this._addAgAmendmentDialog.addEventListener('append-amendment', this.appendNewAmendment.bind(this));
+        this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment.bind(this));
         document.querySelector('body').appendChild(this._addAgAmendmentDialog);
       }
 
@@ -281,15 +268,9 @@
 
       _openAddAgAmendmentDialog() {
         if (this._addAgAmendmentDialog) {
-          let ag = {};
-          if (ag.id > 0) {
-            this.logError('Cannot edit a saved agreement!', 'add-ag-amendment-dialog');
-            return;
-          }
-          this._addAgAmendmentDialog.amendmentTypes = this._getAmendmentTypes(this.agreementType, this._amendmentTypes);
-          this._addAgAmendmentDialog.initAmendment(ag);
-          this._addAgAmendmentDialog.opened = true;
-          this._addAgAmendmentDialog.autoValidate = true;
+          const amendmentTypes = this._getAmendmentTypes(this.agreementType, this._amendmentTypes);
+          this._addAgAmendmentDialog.initData(this.authorizedOfficers, this.showAuthorizedOfficers, amendmentTypes);
+          this._addAgAmendmentDialog.set('opened', true);
         }
       }
 
@@ -306,82 +287,15 @@
         return _amendmentTypes;
       }
 
-      appendNewAmendment(e) {
+      saveNewAmendment(e) {
         let unsavedAmendment = e.detail.amendment;
         if (unsavedAmendment) {
-          if (e.detail.index > 0) {
-            this.set(['dataItems', e.detail.index], unsavedAmendment);
-          } else {
-            this.push('dataItems', unsavedAmendment);
+          this.push('dataItems', unsavedAmendment);
+
+          if (e.detail.ao instanceof Array && e.detail.ao.length > 0) {
+            this.set('selectedAo', e.detail.ao);
+            this.fireEvent('save-agreement');
           }
-        }
-      }
-
-      _showReadonlyDetails(amendmentId) {
-        return parseInt(amendmentId, 10) > 0;
-      }
-
-      _getItemNr(index) {
-        return parseInt(index, 10) + 1;
-      }
-
-      // Check if amendment fields are empty
-      _amendmentFieldsAreEmpty(amendmentItem) {
-        return (amendmentItem.signed_date === null || amendmentItem.signed_date === '') &&
-            !amendmentItem.signed_amendment &&
-            ((amendmentItem.types instanceof Array && amendmentItem.types.length === 0) ||
-                !amendmentItem.types);
-      }
-
-      _dataItemsChanged(dataLength) {
-        this._dataItemsChangeDebouncer = Polymer.Debouncer.debounce(this._dataItemsChangeDebouncer,
-            Polymer.Async.timeOut.after(10),
-            () => {
-              // check for 'Change authorized officer' when amendments length changes
-              this._handleNoChangeAuthorizedOfficersTypeInAmendments();
-            });
-      }
-
-      // types array contains 'Change authorized officer'
-      _changeAuthorizedOfficersTypeSelected(amendmentTypes) {
-        if (!(amendmentTypes instanceof Array && amendmentTypes.length > 0)) {
-          return false;
-        }
-        return amendmentTypes.indexOf('Change authorized officer') > -1;
-      }
-
-      // unlock authorized officers field from agreement details
-      _triggerAuthorizedOfficersUnlock() {
-        this.fireEvent('unlock-authorized-officers');
-      }
-
-      // lock authorized officers field from agreement details
-      _triggerAuthorizedOfficersLock() {
-        this.fireEvent('lock-authorized-officers');
-      }
-
-      _newAmendmentsHaveChangeAuthOfficersSelected() {
-        let changeAuthOfficersTypeSelected = this.dataItems.find(
-            amendment => !amendment.id && this._changeAuthorizedOfficersTypeSelected(amendment.types)
-        );
-        return !!changeAuthOfficersTypeSelected;
-      }
-
-      _handleNoChangeAuthorizedOfficersTypeInAmendments() {
-        if (!this._newAmendmentsHaveChangeAuthOfficersSelected()) {
-          // lock authorized officers
-          this._triggerAuthorizedOfficersLock();
-        }
-      }
-
-      _onAmendmentTypesSelected(e) {
-        e.stopImmediatePropagation();
-        if (!_.isEmpty(this.dataItems) && this.dataItems[e.model.index] &&
-            this._changeAuthorizedOfficersTypeSelected(this.dataItems[e.model.index].types)) {
-          // unlock authorized officers
-          this._triggerAuthorizedOfficersUnlock();
-        } else {
-          this._handleNoChangeAuthorizedOfficersTypeInAmendments();
         }
       }
 
@@ -408,6 +322,10 @@
           return amTypesFiltered.concat(legacyAmTypesFiltered).join(' | ');
         }
         return null;
+      }
+
+      _emptyList(listLength) {
+        return listLength === 0;
       }
     }
 

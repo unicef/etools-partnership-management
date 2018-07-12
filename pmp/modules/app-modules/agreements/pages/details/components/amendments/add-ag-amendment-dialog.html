@@ -14,10 +14,11 @@
 <link rel="import" href="../../../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../styles/file-styles.html">
+<link rel="import" href="../../../../../../styles/required-field-styles.html">
 
 <dom-module id="add-ag-amendment-dialog">
   <template>
-    <style include="shared-styles grid-layout-styles file-styles">
+    <style include="shared-styles grid-layout-styles file-styles required-field-starred-styles">
       :host {
         /* host CSS */
       }
@@ -46,7 +47,8 @@
                              error-message="Please select signed date"
                              no-init show-clear-btn
                              validator="ag_am_signed_date_validator"
-                             auto-validate="[[autoValidate]]">
+                             auto-validate="[[autoValidate]]"
+                             required>
           </etools-date-input>
         </div>
         <div class="col col-8">
@@ -77,18 +79,17 @@
         </etools-dropdown-multi>
       </div>
 
-      <template is="dom-if" if="[[showAuthorizedOfficers]]" restamp>
+      <template is="dom-if" if="[[_showAuthorizedOfficersField(showAuthorizedOfficers, _aoTypeSelected)]]" restamp>
         <div class="row-h flex-c">
           <etools-dropdown-multi id="officers"
                                  label="Authorized Officers"
                                  placeholder="&#8212;"
-                                 options="[[authorizedOfficersOptions)]]"
+                                 options="[[authorizedOfficersOptions]]"
                                  option-value="id"
                                  option-label="name"
                                  selected-values="{{authorizedOfficers}}"
                                  error-message="Please enter Partner Authorized Officer(s)"
-                                 required
-                                 auto-validate$="[[enableEditForAuthorizedOfficers]]">
+                                 required auto-validate>
           </etools-dropdown-multi>
         </div>
       </template>
@@ -150,22 +151,38 @@
             type: Array,
             value: []
           },
-          authorizedOfficers: Array
+          authorizedOfficers: {
+            type: Array,
+            value: []
+          },
+          _aoTypeSelected: {
+            type: Boolean,
+            value: false
+          },
+          _validationSelectors: {
+            type: Array,
+            value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
+          }
         };
       }
 
-      initAmendment(a) {
-        if (a && a.constructor === Object && Object.keys(a).length > 0) {
-          // edit unsaved existing amendment
-          this.set('amendment', JSON.parse(JSON.stringify(a)));
-        } else {
-          this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));
-        }
+      initData(authorizedOfficers, showAuthorizedOfficers, amendmentTypes) {
+        this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));
+        this.set('amendmentTypes', amendmentTypes);
+        this.set('authorizedOfficersOptions',
+            JSON.parse(JSON.stringify(authorizedOfficers)));
+        this.set('authorizedOfficers', []);
+        this.set('showAuthorizedOfficers', showAuthorizedOfficers);
+        this.set('autoValidate', true);
+        this.set('_aoTypeSelected', false);
+        this._resetValidations();
       }
 
       _validateAndSaveAmendment(e) {
         if (this.validate()) {
-          this.fireEvent('append-amendment', {amendment: this.amendment});
+          this.fireEvent('update-amendment-and-ao', {
+            amendment: this.amendment,
+            ao: JSON.parse(JSON.stringify(this.authorizedOfficers))});
           this.set('opened', false);
         }
       }
@@ -176,8 +193,7 @@
       }
 
       _resetValidations() {
-        let elemsSelectors = ['#signedDate', '#signedAmendment', '#amendmentTypes'];
-        elemsSelectors.forEach((selector) => {
+        this._validationSelectors.forEach((selector) => {
           let el = this.shadowRoot.querySelector(selector);
           if (el) {
             el.set('invalid', false);
@@ -187,8 +203,7 @@
 
       validate() {
         let isValid = true;
-        let elemsSelectors = ['#signedDate', '#signedAmendment', '#amendmentTypes'];
-        elemsSelectors.forEach((selector) => {
+        this._validationSelectors.forEach((selector) => {
           let el = this.shadowRoot.querySelector(selector);
           if (el && !el.validate()) {
             isValid = false;
@@ -197,20 +212,19 @@
         return isValid;
       }
 
-      constructor() {
-        super();
+      _showAuthorizedOfficersField(showAuthorizedOfficers, _aoTypeSelected) {
+        return showAuthorizedOfficers && _aoTypeSelected;
       }
 
-      ready() {
-        super.ready();
+      _onAmendmentTypesSelected() {
+        this.set('_aoTypeSelected', this._getAOSelectedFlagVal());
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
+      _getAOSelectedFlagVal() {
+        if (!(this.amendment && this.amendment.types instanceof Array && this.amendment.types.length > 0)) {
+          return false;
+        }
+        return this.amendment.types.indexOf('Change authorized officer') > -1;
       }
 
     }
