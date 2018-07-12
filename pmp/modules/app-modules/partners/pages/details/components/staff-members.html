@@ -109,19 +109,19 @@
           <etools-data-table-row no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
             <div slot="row-data" class="p-relative">
               <span class="col-data col-2">
-                [[item.title]]
+                [[_displayValue(item.title)]]
               </span>
               <span class="col-data col-2">
-                [[item.first_name]]
+                [[_displayValue(item.first_name)]]
               </span>
               <span class="col-data col-2">
-                [[item.last_name]]
+                [[_displayValue(item.last_name)]]
               </span>
               <span class="col-data col-2">
-                [[item.phone]]
+                [[_displayValue(item.phone)]]
               </span>
               <span class="col-data col-3">
-                [[item.email]]
+                [[_displayValue(item.email)]]
               </span>
               <span class="col-data col-1 center-align">
                 <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
@@ -240,15 +240,12 @@
         return active || showInactive;
       }
 
-      _canBeRemoved(id) {
-        if (!this.editMode || id) {
-          return false;
-        }
-        return true;
-      }
-
       _emptyList(length) {
         return length === 0;
+      }
+
+      _displayValue(value) {
+        return value ? value : '-';
       }
 
     }
