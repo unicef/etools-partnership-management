@@ -35,6 +35,11 @@
       :host {
         @apply --layout-vertical;
         width: 100%;
+
+        --etools-file-upload-button: {
+          /* overrides previus color, possibly from pd-attachements */
+          color: var(--etools-file-main-btn-color);
+        };
       }
 
       paper-input {
