@@ -13,11 +13,14 @@
 <dom-module id="add-edit-staff-members">
   <template>
     <style include="grid-layout-styles shared-styles">
+      paper-input {
+        width: 100%;
+      }
 
-      .pad-r {
+      .col:first-of-type {
         padding-right: 12px;
       }
-      .pad-l {
+      .col:not(:first-of-type) {
         padding-left: 12px;
       }
     </style>
@@ -25,14 +28,14 @@
                    ok-btn-text="Save" keep-dialog-open spinner-Text="Saving..."
                    on-confirm-btn-clicked="_savePartnerContact">
       <div class="row-h flex-c">
-        <div class="pad-r col-6">
+        <div class="col col-6">
           <paper-input id="position" label="Position"
                   value="{{item.title}}"
                   placeholder="&#8212;"
                   invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                   error-message="Position is required"></paper-input>
         </div>
-        <div class="pad-l col-6">
+        <div class="col col-6">
           <etools-form-element-wrapper>
             <paper-checkbox checked="{{item.active}}">
               Active?
@@ -41,7 +44,7 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <div class="pad-r col-6">
+        <div class="col col-6">
             <paper-input id="firstName"
                          label="First Name"
                          value="{{item.first_name}}"
@@ -50,7 +53,7 @@
                          error-message="First name is required">
             </paper-input>
         </div>
-        <div class="pad-l col-6">
+        <div class="col col-6">
             <paper-input id="lastName"
                          label="Last Name"
                          value="{{item.last_name}}"
@@ -61,7 +64,7 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <div class="pad-r col-6">
+        <div class="col col-6">
           <paper-input id="email"
                        label="E-mail address"
                        value="{{item.email}}"
@@ -71,7 +74,7 @@
             <iron-icon slot="prefix" icon="communication:email"></iron-icon>
           </paper-input>
         </div>
-        <div class="pad-l col-6">
+        <div class="col col-6">
             <paper-input id="phone"
                          label="Phone number"
                          value="{{item.phone}}"
