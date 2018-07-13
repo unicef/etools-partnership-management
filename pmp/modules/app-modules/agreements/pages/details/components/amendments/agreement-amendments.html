@@ -294,8 +294,9 @@
 
           if (e.detail.ao instanceof Array && e.detail.ao.length > 0) {
             this.set('selectedAo', e.detail.ao);
-            this.fireEvent('save-agreement');
           }
+
+          this.fireEvent('save-agreement');
         }
       }
 
