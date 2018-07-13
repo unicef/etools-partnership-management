@@ -193,10 +193,10 @@
           <div>Date Last Assessed</div>
           <div>(from VISION)</div>
         </etools-data-table-column>
-        <etools-data-table-column class="col-7">
+        <etools-data-table-column class="col-6">
           Core Values Assesment
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Archived
         </etools-data-table-column>
       </etools-data-table-header>
@@ -207,17 +207,15 @@
                 <etools-form-element-wrapper value="[[prettyDate(item.date)]]">
                   <iron-icon icon="date-range" slot="prefix"></iron-icon>
                 </etools-form-element-wrapper>
-
-                </paper-input>
               </span>
-              <span class="col-7">
+              <span class="col-6">
                   <etools-form-element-wrapper
                         value="[[prettyDate(item.attachment_file)]]">
                     <iron-icon icon="attachment" slot="prefix"></iron-icon>
                   </etools-form-element-wrapper>
 
               </span>
-              <span class="col-1">
+              <span class="col-2">
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
