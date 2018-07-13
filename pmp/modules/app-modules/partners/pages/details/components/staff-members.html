@@ -54,9 +54,6 @@
       }
 
       icons-actions {
-        --icons-actions: {
-          background-color: white;
-        };
         visibility: hidden;
       }
 
@@ -101,16 +98,16 @@
           <etools-data-table-column class="col-2">
             Phone Number
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             Email Address
           </etools-data-table-column>
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2 center-align">
             Active Staff
           </etools-data-table-column>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="{{dataItems}}">
-          <etools-data-table-row no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
+          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
             <div slot="row-data" class="p-relative">
               <span class="col-data col-2">
                 [[_displayValue(item.title)]]
@@ -124,10 +121,10 @@
               <span class="col-data col-2">
                 [[_displayValue(item.phone)]]
               </span>
-              <span class="col-data col-3">
+              <span class="col-data col-2">
                 [[_displayValue(item.email)]]
               </span>
-              <span class="col-data col-1 center-align">
+              <span class="col-data col-2 center-align">
                 <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
