@@ -162,32 +162,11 @@
     <etools-content-panel class="content-section" panel-title="Core Values Assessments">
       <div slot="panel-btns" id="show-archived">
           <paper-toggle-button id="showArchived"
-                          hidden$="[[thereAreArchivedAssessments]]"
-                          checked="{{showArchivedAssesments}}">
+                          checked="{{showArchivedAssessments}}">
             Show Archived
           </paper-toggle-button>
       </div>
 
-      <!-- <div class="row-h flex-c">
-        <div class="col col-4">
-          <etools-form-element-wrapper label="Core Values Last Assessment Date"
-                                        value="[[prettyDate(partner.core_values_assessment_date)]]">
-            <iron-icon icon="date-range" slot="prefix"></iron-icon>
-          </etools-form-element-wrapper>
-
-          </paper-input>
-        </div>
-        <div class="col flex-c">
-          <etools-single-file file="{{partner.core_values_assessment}}"
-                              internal-file="{{partner.core_values_assessment_file}}"
-                              label="Core Values Assessment"
-                              hide-delete-btn="[[_hideDeleteBtn(partner.core_values_assessment)]]"
-                              readonly$="[[!editMode]]"
-                              hidden$="[[!showCoreValuesAssessmentAttachment]]"
-                              accept=".doc,.docx,.pdf,.jpg,.png">
-          </etools-single-file>
-        </div>
-      </div> -->
       <!-- ---------NEW DESIGN ------ -->
       <etools-data-table-header no-title no-collapse>
         <etools-data-table-column class="col-4">
@@ -202,7 +181,9 @@
         </etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{partner.core_values_assessments}}">
-        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[_canEditCVA(item.attachment_file)]]">
+        <etools-data-table-row no-collapse
+          secondary-bg-on-hover$="[[_canEditCVA(item.attachment_file, item.archived)]]"
+          hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-4">
                   <iron-icon icon="date-range"></iron-icon>
@@ -292,11 +273,7 @@
             type: String,
             computed: '_computePartnerType(partner)'
           },
-          thereAreArchivedAssessments: {
-            type: Boolean,
-            value: false
-          },
-          showArchivedAssesments: {
+          showArchivedAssessments: {
             type: Boolean,
             value: false
           },
@@ -328,6 +305,13 @@
         }
       }
 
+      _shouldShowCVA(archived, showArchived) {
+        if (showArchived) {
+          return true;
+        }
+        return archived;
+      }
+
       _createEditCoreValuesAssessmentsDialog() {
         this.editCVADialog = document.createElement('edit-core-values-assessment');
         this.editCVADialog.addEventListener('save-core-values-assessment',
@@ -348,8 +332,8 @@
         return this.partner && this.partner.core_values_assessment_file;
       }
 
-      _canEditCVA(attachment) {
-        if (attachment) {
+      _canEditCVA(attachment, archived) {
+        if (attachment || archived) {
           return false;
         }
         return this.showCoreValuesAssessmentAttachment;
