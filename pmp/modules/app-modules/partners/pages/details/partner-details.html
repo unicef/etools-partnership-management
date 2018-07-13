@@ -33,7 +33,7 @@
 
 <dom-module id="partner-details">
   <template>
-    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -200,25 +200,24 @@
           Archived
         </etools-data-table-column>
       </etools-data-table-header>
-      <template is="dom-repeat" items="{{partner.coreValueAssesmentsArr}}">
-        <etools-data-table-row>
+      <template is="dom-repeat" items="{{partner.core_values_assessments}}">
+        <etools-data-table-row no-collapse>
           <div slot="row-data" class="p-relative">
-            <span class="col col-3">
-                <etools-form-element-wrapper label="Core Values Last Assessment Date"
-                                              value="[[prettyDate(item.core_values_assessment_date)]]">
+            <span class="col-4">
+                <etools-form-element-wrapper value="[[prettyDate(item.date)]]">
                   <iron-icon icon="date-range" slot="prefix"></iron-icon>
                 </etools-form-element-wrapper>
 
                 </paper-input>
               </span>
-              <span class="col col-6">
-                  <etools-form-element-wrapper label="Core Values Last Assessment Date"
-                        value="[[prettyDate(item.core_values_assessment_date)]]">
-                    <iron-icon icon="file-upload" slot="prefix"></iron-icon>
+              <span class="col-7">
+                  <etools-form-element-wrapper
+                        value="[[prettyDate(item.attachment_file)]]">
+                    <iron-icon icon="attachment" slot="prefix"></iron-icon>
                   </etools-form-element-wrapper>
 
               </span>
-              <span class="col col-1">
+              <span class="col-1">
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
