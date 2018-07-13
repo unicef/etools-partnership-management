@@ -29,7 +29,7 @@
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
-<link rel="import" href="components/agreement-amendments.html">
+<link rel="import" href="components/amendments/agreement-amendments.html">
 <link rel="import" href="components/generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
@@ -103,7 +103,6 @@
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
           <div class="col col-3">
-
             <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
                                          value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
             </etools-form-element-wrapper>
@@ -128,7 +127,7 @@
           </etools-dropdown>
           <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
                                        hidden$="[[agreement.permissions.edit.partner]]"
-                                      value="[[agreement.partner_name]]">
+                                       value="[[agreement.partner_name]]">
           </etools-form-element-wrapper>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]" restamp>
@@ -182,7 +181,7 @@
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"
                                          hidden$="[[agreement.permissions.edit.partner_manager]]"
-                                        value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]">
+                                         value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-3">
@@ -232,15 +231,15 @@
                                option-value="id"
                                option-label="name"
                                selected-values="{{authorizedOfficers}}"
-                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode)]]"
                                error-message="Please enter Partner Authorized Officer(s)"
                                required$="[[agreement.permissions.required.authorized_officers]]"
                                auto-validate$="[[enableEditForAuthorizedOfficers]]">
         </etools-dropdown-multi>
         <etools-form-element-wrapper label="Authorized Officers"
                                      required$="[[agreement.permissions.required.authorized_officers]]"
-                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
-                                    value="[[_getReadonlyAuthorizedOfficers(agreement)]]">
+                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode)]]"
+                                     value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers)]]">
         </etools-form-element-wrapper>
       </div>
 
@@ -278,15 +277,15 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
-        <agreement-amendments id="agreementAmendments"
-                              data-items="{{agreement.amendments}}"
-                              agreement-type="[[agreement.agreement_type]]"
-                              edit-mode$="[[agreement.permissions.edit.amendments]]"
-                              on-unlock-authorized-officers="_unlockAuthorizedOfficers"
-                              on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
-        </agreement-amendments>
-      </etools-content-panel>
+      <agreement-amendments id="agreementAmendments"
+                            class="content-section"
+                            data-items="{{agreement.amendments}}"
+                            agreement-type="[[agreement.agreement_type]]"
+                            edit-mode$="[[agreement.permissions.edit.amendments]]"
+                            show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
+                            authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+                            selected-ao="{{authorizedOfficers}}">
+      </agreement-amendments>
     </template>
 
   </template>
@@ -594,13 +593,20 @@
         return '';
       }
 
-      _getReadonlyAuthorizedOfficers(agreement) {
-        if (!agreement.authorized_officers || !agreement.authorized_officers.length) {
+      _getReadonlyAuthorizedOfficers(agreement, selection) {
+        let ao = [];
+        const aoSelected = selection instanceof Array && selection.length > 0;
+        if (aoSelected) {
+          const selectedIds = selection.map(s => parseInt(s, 10));
+          ao = this._getAvailableAuthOfficers(this.staffMembers, agreement.authorized_officers)
+              .filter(a => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
+        } else {
+          ao = agreement.authorized_officers || [];
+        }
+        if (!ao || !ao.length) {
           return '';
         }
-        let names = agreement.authorized_officers.map(function(officer) {
-          return officer.first_name + ' ' + officer.last_name;
-        });
+        const names = ao.map(officer => aoSelected ? officer.name : (officer.first_name + ' ' + officer.last_name));
         return names.join(' | ');
       }
 
@@ -626,44 +632,12 @@
         this.set('authorizedOfficers', []);
       }
 
-      // trigger authorized officers field to be locked/unlocked
-      _unlockAuthorizedOfficers(e) {
-        e.stopImmediatePropagation();
-        this.set('enableEditForAuthorizedOfficers', true);
-      }
-
       // set authorized officers field readonly mode
-      _allowAuthorizedOfficersEditing(agreementStatus, editMode, enableEditForAuthorizedOfficers) {
-        if (!this.agreement) {
+      _allowAuthorizedOfficersEditing(agreementStatus, editMode) {
+        if (!this.agreement || !editMode) {
           return false;
         }
-        if (!editMode) {
-          // used has no edit permissions
-          return false;
-        }
-
-        // canBeEdited = false - either field is locked or the user has no edit permissions;
-        // not knowing exactly why is false we need to check user editMode first(first method lines)
-        let canBeEdited = this.agreement.permissions.edit.authorized_officers;
-        // if is locked (in signed status), enableEditForAuthorizedOfficers will make this field editable
-        if (!canBeEdited && enableEditForAuthorizedOfficers) {
-          // reset existing officers selection
-          this.set('authorizedOfficers', []);
-          return true;
-        }
-        return canBeEdited;
-      }
-
-      // trugger authorized officers field lock and restore initial value(if needed)
-      _lockAuthorizedOfficersAndRestoreSelection(e) {
-        e.stopImmediatePropagation();
-        if (!this.enableEditForAuthorizedOfficers) {
-          // stop; enableEditForAuthorizedOfficers already set to false
-          return;
-        }
-        // restore officers selection (because you do not have any new amendment for changing this field)
-        this._initAuthorizedOfficers(this.originalAgreementData.authorized_officers);
-        this.set('enableEditForAuthorizedOfficers', false);
+        return this.agreement.permissions.edit.authorized_officers;
       }
 
       // Validate agreement fields
@@ -672,7 +646,6 @@
         let reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
         if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           reqFieldsSelectors.push('#cpStructure');
-          reqFieldsSelectors.push('#agreementAmendments');
         }
         reqFieldsSelectors.forEach(function(fSelector) {
           let field = this.shadowRoot.querySelector(fSelector);
