@@ -58,14 +58,14 @@
       }
 
       _saveCoreValueAssessment() {
-        if (!_fileUploaded()) {
+        if (!this._fileUploaded()) {
           return;
         }
-        this.fireEvent('save-core-values-assessment', item);
+        this.fireEvent('save-core-values-assessment', this.item);
       }
 
       _fileUploaded() {
-        //....
+        // ....
       }
 
     }
