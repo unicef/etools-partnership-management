@@ -202,7 +202,7 @@
         </etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{partner.core_values_assessments}}">
-        <etools-data-table-row no-collapse secondary-bg-on-hover>
+        <etools-data-table-row no-collapse secondary-bg-on-hover$="[[_canEditCVA(item.attachment_file)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-4">
                   <iron-icon icon="date-range"></iron-icon>
@@ -346,6 +346,13 @@
 
       _hideDeleteBtn() {
         return this.partner && this.partner.core_values_assessment_file;
+      }
+
+      _canEditCVA(attachment) {
+        if (attachment) {
+          return false;
+        }
+        return this.showCoreValuesAssessmentAttachment;
       }
 
       _partnerChanged(partner) {
