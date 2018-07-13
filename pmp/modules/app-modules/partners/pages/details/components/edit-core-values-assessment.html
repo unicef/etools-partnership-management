@@ -7,23 +7,24 @@
 <link rel="import" href="../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../../styles/required-field-styles.html">
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
 
 <dom-module id="edit-core-values-assessment">
   <template>
-    <style>
+    <style include="grid-layout-styles">
       :host {
         display: block
       }
     </style>
 
-    <etools-dialog id="cvaDialog" dialog-title="Upload Core Values Assessment"
+    <etools-dialog id="cvaDialog" dialog-title="Upload Core Values Assessment" size="md"
                    ok-btn-text="Save" on-confirm-btn-clicked="_saveCoreValueAssessment">
-      <div>
+      <div class="layout-horizontal row-padding-v">
           <etools-form-element-wrapper label="Date Last Assessed"
-                    value="[[prettyDate(item.core_values_assessment_date)]]">
+                    value="[[prettyDate(item.date)]]">
           </etools-form-element-wrapper>
       </div>
-      <div>
+      <div class="layout-horizontal row-padding-v">
           <etools-single-file file="{{item.core_values_assessment}}"
                     internal-file="{{item.core_values_assessment_file}}"
                     label="Core Values Assessment"
