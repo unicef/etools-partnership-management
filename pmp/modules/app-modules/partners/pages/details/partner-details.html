@@ -62,14 +62,15 @@
       }
 
       icons-actions {
-        --icons-actions: {
-          background-color: white;
-        };
         visibility: hidden;
       }
 
       etools-data-table-row:hover icons-actions {
         visibility: visible;
+      }
+
+      iron-icon {
+        color: var(--dark-secondary-text-color);
       }
 
     </style>
@@ -201,19 +202,17 @@
         </etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{partner.core_values_assessments}}">
-        <etools-data-table-row no-collapse>
+        <etools-data-table-row no-collapse secondary-bg-on-hover>
           <div slot="row-data" class="p-relative">
             <span class="col-4">
-                <etools-form-element-wrapper value="[[prettyDate(item.date)]]">
-                  <iron-icon icon="date-range" slot="prefix"></iron-icon>
-                </etools-form-element-wrapper>
+                  <iron-icon icon="date-range"></iron-icon>
+                  [[prettyDate(item.date)]]
               </span>
               <span class="col-6">
-                  <etools-form-element-wrapper
-                        value="[[prettyDate(item.attachment_file)]]">
-                    <iron-icon icon="attachment" slot="prefix"></iron-icon>
-                  </etools-form-element-wrapper>
-
+                  <iron-icon icon="attachment" hidden$="[[!item.attachment_file]]"></iron-icon>
+                  <span hidden$="[[item.attachment_file]]">-</span>
+                  <a href$="[[item.attachment_file]]"
+                          target="_blank" download>[[getFileNameFromURL(item.attachment_file)]]</a>
               </span>
               <span class="col-2">
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
