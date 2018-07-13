@@ -217,10 +217,10 @@
       }
 
       _onAmendmentTypesSelected() {
-        this.set('_aoTypeSelected', this._getAOSelectedFlagVal());
+        this.set('_aoTypeSelected', this._isAoTypeSelected());
       }
 
-      _getAOSelectedFlagVal() {
+      _isAoTypeSelected() {
         if (!(this.amendment && this.amendment.types instanceof Array && this.amendment.types.length > 0)) {
           return false;
         }
