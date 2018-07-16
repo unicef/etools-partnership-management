@@ -6,10 +6,11 @@
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
 
@@ -175,11 +176,11 @@
             </div>
             <div class="row-details-content flex">
               <span class="rdc-title">Actual Cash Transfer for CP</span>
-              <span>$ [[getDisplayValue(partner.total_ct_cp)]]</span>
+              <span>$ [[displayCurrencyAmount(partner.total_ct_cp, '0')]]</span>
             </div>
             <div class="row-details-content flex">
               <span class="rdc-title">Actual Cash Transfer for Current Year</span>
-              <span>$ [[getDisplayValue(partner.total_ct_cy)]]</span>
+              <span>$ [[displayCurrencyAmount(partner.total_ct_ytd, '0')]]</span>
             </div>
           </div>
         </etools-data-table-row>
@@ -202,6 +203,7 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsMixins.EtoolsCurrency
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
@@ -211,6 +213,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsMixins.EtoolsCurrency,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.ListFilters,
