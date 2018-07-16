@@ -1,0 +1,124 @@
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/etools-dialog/etools-dialog.html">
+
+<link rel="import" href="../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../layout/components/etools-single-file.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
+
+<dom-module id="pd-termination">
+  <template>
+    <style include="shared-styles grid-layout-styles file-styles required-field-starred-styles">
+      :host {
+        /* host CSS */
+      }
+
+      #pdTermination {
+        --etools-dialog-default-btn-bg: var(--error-color);
+      }
+
+      .warning {
+        padding: 16px 24px;
+        background-color: var(--lightest-info-color);
+      }
+    </style>
+
+    <etools-dialog no-padding
+                   keep-dialog-open
+                   id="pdTermination"
+                   opened="{{opened}}"
+                   size="md"
+                   hidden$="[[warningOpen]]"
+                   ok-btn-text="Terminate"
+                   dialog-title="PD/SSFA Termination"
+                   on-close="_handleDialogClosed"
+                   on-confirm-btn-clicked="_triggerPdTermination">
+
+      <div class="row-h flex-c">
+        <etools-date-input id="terminationDate"
+                           label="Termination Date"
+                           value="{{termination.date}}"
+                           error-message="Please select termination date"
+                           no-init show-clear-btn
+                           auto-validate
+                           required>
+        </etools-date-input>
+      </div>
+
+      <div class="row-h flex-c">
+        <etools-single-file id="terminationNotice"
+                            label="Termination Notice"
+                            file="{{termination.attachment_notice}}"
+                            error-message="Termination Notice file is required"
+                            required
+                            auto-validate
+                            accept=".doc,.docx,.pdf,.jpg,.png">
+        </etools-single-file>
+      </div>
+      <div class="row-h flex-c">
+        <p class="layout-horizontal warning">
+          Once you hit save, the PD/SSFA will be Terminated and this action cannot be reversed
+        </p>
+      </div>
+
+    </etools-dialog>
+
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     */
+    class PdTermination extends Polymer.Element {
+
+      static get is() {
+        return 'pd-termination';
+      }
+
+      static get properties() {
+        return {
+          opened: Boolean,
+          termination: {
+            type: Object,
+            value: {
+              date: null,
+              attachment_notice: null
+            }
+          }
+        };
+      }
+
+      _handleDialogClosed() {
+        console.log('dialog close...');
+      }
+
+      _triggerPdTermination() {
+        console.log('terminate...');
+      }
+
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+      }
+
+    }
+
+    window.customElements.define(PdTermination.is, PdTermination);
+  </script>
+</dom-module>

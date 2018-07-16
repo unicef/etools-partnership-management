@@ -63,6 +63,7 @@
 
         disconnectedCallback() {
           super.disconnectedCallback();
+          console.log('pd status disconnected 1... hehe');
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
           }
