@@ -110,7 +110,8 @@
                 agreement="[[agreement]]"
                 authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
-                is-new-agreement="[[newAgreementActive]]">
+                is-new-agreement="[[newAgreementActive]]"
+                on-save-agreement="_validateAndTriggerAgreementSave">
             </agreement-details>
           </template>
         </iron-pages>
