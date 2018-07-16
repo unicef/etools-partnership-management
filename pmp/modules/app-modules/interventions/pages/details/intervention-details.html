@@ -34,6 +34,7 @@
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
+<link rel="import" href="../../../../layout/components/year-dropdown.html">
 
 <link rel="import" href="components/agreement-selector.html">
 
@@ -117,7 +118,7 @@
                               selected-agreement="{{agreement}}"
                               intervention="[[intervention]]"></agreement-selector>
         </div>
-        <div class="col col-3">
+        <div class="col col-2">
           <etools-dropdown id="documentType"
                            label="Document Type"
                            placeholder="&#8212;"
@@ -132,7 +133,16 @@
           </etools-dropdown>
 
         </div>
-        <div class="col col-3" title$="[[intervention.number]]">
+
+        <!--[[_showYearDropdownField(intervention)]]-->
+
+        <div hidden$="[[!_isDraft(intervention.status)]]" class="col col-2">
+          <year-dropdown selected-year="{{intervention.reference_number_year}}">
+
+          </year-dropdown>
+        </div>
+
+        <div class="col col-2" title$="[[intervention.number]]">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[intervention.number]]"
@@ -211,6 +221,7 @@
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
+
         <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
           <paper-toggle-button checked="{{intervention.contingency_pd}}"
                                disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
@@ -584,6 +595,11 @@
         }
         return !(contingencyPd && intervention.status !== 'active');
 
+      }
+
+      _isDraft(status) {
+        return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+            status === '';
       }
 
       _openLocationsDialog() {

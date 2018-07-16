@@ -14,6 +14,8 @@
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
+<link rel="import" href="../../../../layout/components/year-dropdown.html">
+
 
 <link rel="import" href="../../../../styles/required-field-styles.html">
 <link rel="import" href="../../../../styles/buttons-styles.html">
@@ -91,7 +93,14 @@
               required>
           </etools-dropdown>
         </div>
-        <div class="col col-3">
+
+        <div hidden$="[[!_showYearDropdown(agreement.status)]]" class="col col-2">
+          <year-dropdown selected-year="{{agreement.reference_number_year}}">
+
+          </year-dropdown>
+        </div>
+
+        <div class="col col-2">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[agreement.agreement_number]]"
@@ -102,7 +111,7 @@
           </paper-input>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
-          <div class="col col-3">
+          <div class="col col-2">
 
             <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
                                          value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
@@ -501,6 +510,11 @@
       // Verify if agreement status is 'draft'
       _isDraft() {
         return this.isNewAgreement || (this.agreement && this.agreement.status === 'draft');
+      }
+
+      _showYearDropdown(status) {
+        return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+            status === '' || status === undefined;
       }
 
       _allowEdit(agreementStatus, editMode) {
