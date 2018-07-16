@@ -42,13 +42,16 @@
       :host([status-type="no-status"]) iron-icon {
         color: var(--medium-icon-color);
       }
+      #label {
+        color: var(--primary-text-color);
+      }
     </style>
 
     <template is="dom-if" if="[[!noIcon]]">
       <iron-icon icon$="[[icon]]"></iron-icon>
     </template>
     <template is="dom-if" if="[[!noLabel]]">
-      <span>[[label]]</span>
+      <span id="label">[[label]]</span>
     </template>
     <slot></slot>
 

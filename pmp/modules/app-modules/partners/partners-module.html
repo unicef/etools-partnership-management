@@ -266,7 +266,15 @@
       _initListeners() {
         this.addEventListener('partner-save-error', this._partnerSaveError);
         this.addEventListener('create-partner', this._createPartner);
+        this.addEventListener('save-partner-contact', this._savePartnerContact);
         this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+      }
+
+      _savePartnerContact(e) {
+        this._savePartner({
+          id: this.partner.id,
+          staff_members: [e.detail]
+        });
       }
 
       _createNewPartnerDialog() {
