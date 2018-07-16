@@ -75,6 +75,7 @@
                        label="E-mail address"
                        value="{{item.email}}"
                        placeholder="&#8212;"
+                       readonly$="[[!_isNewStaffMember(item)]]"
                        maxlength="50"
                        required
                        invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
@@ -122,6 +123,10 @@
       open() {
         this.resetValidations();
         this.$.staffMemberDialog.opened = true;
+      }
+
+      _isNewStaffMember(item) {
+        return (!item || !item.id);
       }
 
       _isValid(field, title, firstName, lastName, emailAddress, phone) {
