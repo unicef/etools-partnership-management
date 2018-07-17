@@ -600,8 +600,10 @@
           const selectedIds = selection.map(s => parseInt(s, 10));
           ao = this._getAvailableAuthOfficers(this.staffMembers, agreement.authorized_officers)
               .filter(a => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
-        } else if (agreement.authorized_officers !== undefined) {
-          ao = agreement.authorized_officers || [];
+        } else {
+          ao = (agreement && agreement.authorized_officers instanceof Array) 
+            ? agreement.authorized_officers 
+            : [];
         }
         if (!ao || !ao.length) {
           return '';
