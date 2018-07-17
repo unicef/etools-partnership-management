@@ -252,14 +252,15 @@
       </div>
 
       <div class="row-h flex-c">
-        <paper-toggle-button checked="{{agreement.specialConditionsPCA}}"
-                             hidden$="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
+        <paper-toggle-button checked="{{agreement.special_conditions_pca}}"
+                             hidden$="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]"
+                             disabled$="[[!agreement.permissions.edit.special_conditions_pca]]">
           Special Conditions PCA
         </paper-toggle-button>
       </div>
       <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
         <div class="generate-pca col col-3"
-             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.specialConditionsPCA)]]">
+             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
           <paper-input-container
               class="form-field-wrapper secondary-btn-wrapper"
               always-float-label>
@@ -273,7 +274,7 @@
           </paper-input-container>
         </div>
         <div class="generate-pca col col-3"
-             hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.specialConditionsPCA)]]">
+             hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
           <span class="type-warning">[[generatePCAMessage]]</span>
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
@@ -400,7 +401,7 @@
         return [
           '_agreementFieldChanged(agreement.*)',
           '_partnerChanged(agreement.partner)',
-          '_handleSpecialConditionsPca(agreement.specialConditionsPCA, agreement.agreement_type)'
+          '_handleSpecialConditionsPca(agreement.special_conditions_pca, agreement.agreement_type)'
         ];
       }
 
