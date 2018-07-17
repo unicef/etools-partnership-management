@@ -67,6 +67,7 @@
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
         margin-right: 24px;
+        padding-right: 24px;
       }
 
       .generate-pca[hidden] + .col {
@@ -434,7 +435,7 @@
         }
 
         if (isSpecialConditionsPCA) {
-          this.generatePCAMessage = 'Generate PCA tempplate not available for Special Conditions PCA';
+          this.generatePCAMessage = 'Generate PCA template not available for Special Conditions PCA';
         } else {
           this.generatePCAMessage = 'Save before generating the PCA template';
         }
@@ -552,7 +553,7 @@
           return false;
         }
 
-        return isSpecialConditionsPCA && isNewAgreement;
+        return isSpecialConditionsPCA || isNewAgreement;
       }
 
       _partnerChanged(currentPartnerId) {
