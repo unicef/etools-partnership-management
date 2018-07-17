@@ -33,6 +33,7 @@
           <paper-input id="title" label="Position"
                   value="{{item.title}}"
                   placeholder="&#8212;"
+                  maxlength="30"
                   invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                   error-message="Position is required"></paper-input>
         </div>
@@ -50,6 +51,7 @@
                          label="First Name"
                          value="{{item.first_name}}"
                          placeholder="&#8212;"
+                         maxlength="30"
                          required
                          invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                          error-message="First name is required">
@@ -60,6 +62,7 @@
                          label="Last Name"
                          value="{{item.last_name}}"
                          placeholder="&#8212;"
+                         maxlength="30"
                          required
                          invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                          error-message="Last name is required">
@@ -72,6 +75,8 @@
                        label="E-mail address"
                        value="{{item.email}}"
                        placeholder="&#8212;"
+                       readonly$="[[!_isNewStaffMember(item)]]"
+                       maxlength="50"
                        required
                        invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                        error-message="A valid & unused email address is required">
@@ -83,6 +88,7 @@
                          label="Phone number"
                          value="{{item.phone}}"
                          placeholder="&#8212;"
+                         maxlength="15"
                          allowed-pattern="[0-9\ \.\+\-\(\)]">
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
             </paper-input>
@@ -117,6 +123,10 @@
       open() {
         this.resetValidations();
         this.$.staffMemberDialog.opened = true;
+      }
+
+      _isNewStaffMember(item) {
+        return (!item || !item.id);
       }
 
       _isValid(field, title, firstName, lastName, emailAddress, phone) {
