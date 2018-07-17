@@ -20,7 +20,14 @@
         --etools-dialog-default-btn-bg: var(--error-color);
       }
 
+      #pdTerminationConfirmation {
+        --etools-dialog-confirm-btn-bg: var(--primary-color);
+      }
+
       .warning {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
         padding: 16px 24px;
         background-color: var(--lightest-info-color);
       }
@@ -31,13 +38,18 @@
                    id="pdTermination"
                    opened="{{opened}}"
                    size="md"
-                   hidden$="[[warningOpen]]"
+                   hidden$="[[warningOpened]]"
                    ok-btn-text="Terminate"
-                   dialog-title="PD/SSFA Termination"
+                   dialog-title="Terminate PD/SSFA"
                    on-close="_handleDialogClosed"
                    on-confirm-btn-clicked="_triggerPdTermination">
 
       <div class="row-h flex-c">
+
+        <paper-input label="Test" required error-message="Test error" auto-validate></paper-input>
+
+        </paper-input>
+
         <etools-date-input id="terminationDate"
                            label="Termination Date"
                            value="{{termination.date}}"
@@ -58,12 +70,24 @@
                             accept=".doc,.docx,.pdf,.jpg,.png">
         </etools-single-file>
       </div>
-      <div class="row-h flex-c">
-        <p class="layout-horizontal warning">
+      <div class="row-h">
+        <div class="warning">
           Once you hit save, the PD/SSFA will be Terminated and this action cannot be reversed
-        </p>
+        </div>
       </div>
 
+    </etools-dialog>
+
+    <etools-dialog no-padding
+                   id="pdTerminationConfirmation"
+                   theme="confirmation"
+                   opened="{{warningOpened}}"
+                   size="md"
+                   ok-btn-text="Continue"
+                   on-close="_terminationConfirmed">
+      <div class="row-h">
+        Please make sure that the reporting requirements for the PD are updated with the correct dates
+      </div>
     </etools-dialog>
 
   </template>
@@ -83,23 +107,68 @@
       static get properties() {
         return {
           opened: Boolean,
+          warningOpened: Boolean,
           termination: {
             type: Object,
             value: {
               date: null,
               attachment_notice: null
             }
+          },
+          _validationSelectors: {
+            type: Array,
+            value: ['#terminationDate', '#terminationNotice']
           }
         };
       }
 
-      _handleDialogClosed() {
+      _handleDialogClosed(e) {
         console.log('dialog close...');
       }
 
-      _triggerPdTermination() {
+      _triggerPdTermination(e) {
         console.log('terminate...');
+        this.set('warningOpened', true);
       }
+
+      _terminationConfirmed(e) {
+        if (e.detail.confirmed) {
+          this._terminatePD();
+        }
+      }
+
+      _terminatePD() {
+        if (this.validate()) {
+          const terminationDialog = this.$.pdTermination;
+          terminationDialog.startSpinner();
+          // TODO: terminate PD
+          // make request to terminate
+          // validate fields, make sure to reset validations on modal open
+        }
+      }
+
+      // TODO: refactor validation at some point (common with ag add amendment dialog and more)
+      resetValidations() {
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el) {
+            el.set('invalid', false);
+          }
+        });
+      }
+
+      // TODO: refactor validation at some point (common with ag add amendment dialog and more)
+      validate() {
+        let isValid = true;
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el && !el.validate()) {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+
 
       constructor() {
         super();

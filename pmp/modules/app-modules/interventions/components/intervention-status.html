@@ -126,7 +126,6 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        console.log('pd status disconnected 2...');
         if (this._terminationDialog) {
           document.querySelector('body').removeChild(this._terminationDialog);
         }
@@ -434,8 +433,8 @@
           return;
         }
 
+        this._terminationDialog.resetValidations();
         this._terminationDialog.set('opened', true);
-
       }
 
       _setStatusDraft() {
