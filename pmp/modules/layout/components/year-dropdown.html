@@ -1,7 +1,6 @@
 <link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
-
 <dom-module id="year-dropdown">
 
   <template strip-whitespace>
@@ -31,9 +30,6 @@
                      hide-search>
 
     </etools-dropdown>
-
-
-
 
   </template>
 
@@ -65,12 +61,11 @@
         };
       }
 
-
       ready() {
         super.ready();
         let year = this._getCurrentYear();
         let optYears = [];
-        for(let i=year-5; i<= year+5; i++ ) {
+        for (let i = year - 5; i <= year + 5; i++) {
           optYears.push({value: i, label: i});
         }
 
@@ -81,9 +76,7 @@
         return new Date().getFullYear();
       }
 
-
     }
-
 
     window.customElements.define(YearDropdown.is, YearDropdown);
   </script>
