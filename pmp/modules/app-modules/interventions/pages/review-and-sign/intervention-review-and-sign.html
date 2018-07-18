@@ -75,7 +75,7 @@
         </div>
         <div class="col col-3">
           <!-- Submitted to PRC? -->
-          <etools-form-element-wrapper>
+          <etools-form-element-wrapper no-placeholder>
             <paper-checkbox checked="{{intervention.submitted_to_prc}}"
                             disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
                             hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">

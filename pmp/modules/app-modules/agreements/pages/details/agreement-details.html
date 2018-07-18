@@ -616,7 +616,9 @@
           ao = this._getAvailableAuthOfficers(this.staffMembers, agreement.authorized_officers)
               .filter(a => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
         } else {
-          ao = agreement.authorized_officers || [];
+          ao = (agreement && agreement.authorized_officers instanceof Array)
+            ? agreement.authorized_officers
+            : [];
         }
         if (!ao || !ao.length) {
           return '';
