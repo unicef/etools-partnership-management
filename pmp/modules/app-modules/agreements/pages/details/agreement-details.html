@@ -80,6 +80,10 @@
         font-size: 16px;
       }
 
+      year-dropdown {
+        margin-right: 24px;
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Agreement Details">
@@ -102,12 +106,10 @@
           </etools-dropdown>
         </div>
 
-        <div hidden$="[[!_showYearDropdown(agreement.status)]]" class="col col-2">
-          <year-dropdown selected-year="{{agreement.reference_number_year}}">
+        <div class="col col-3">
+          <year-dropdown selected-year="{{agreement.reference_number_year}}"
+                         hidden$="[[!_showYearDropdown(agreement.status)]]">
           </year-dropdown>
-        </div>
-
-        <div class="col col-2">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[agreement.agreement_number]]"
@@ -118,7 +120,7 @@
           </paper-input>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
-          <div class="col col-2">
+          <div class="col col-3">
 
             <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
                                          value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">

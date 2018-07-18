@@ -107,6 +107,10 @@
       div[slot="panel-btns"]#add-show-inactive-btns {
         @apply --layout-horizontal;
       }
+
+      year-dropdown {
+        margin-right: 24px;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -118,7 +122,7 @@
                               selected-agreement="{{agreement}}"
                               intervention="[[intervention]]"></agreement-selector>
         </div>
-        <div class="col col-2">
+        <div class="col col-3">
           <etools-dropdown id="documentType"
                            label="Document Type"
                            placeholder="&#8212;"
@@ -134,12 +138,10 @@
 
         </div>
 
-        <div hidden$="[[!_isDraft(intervention.status)]]" class="col col-2">
-          <year-dropdown selected-year="{{intervention.reference_number_year}}">
+        <div class="col col-3" title$="[[intervention.number]]">
+          <year-dropdown selected-year="{{intervention.reference_number_year}}"
+                         hidden$="[[!_isDraft(intervention.status)]]">
           </year-dropdown>
-        </div>
-
-        <div class="col col-2" title$="[[intervention.number]]">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[intervention.number]]"
