@@ -197,6 +197,7 @@
               amendments: [],
               agreement_type: null,
               agreement_number: undefined,
+              reference_number_year: null,
               attached_agreement: undefined,
               start: undefined,
               end: undefined,
@@ -409,6 +410,7 @@
           status: '',
           agreement_type: agreement.agreement_type,
           partner: agreement.partner,
+          reference_number_year: agreement.reference_number_year,
           authorized_officers: this.authorizedOfficers
         };
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
@@ -443,6 +445,9 @@
 
         if (this._primitiveFieldIsModified('partner')) {
           changes.partner = this.agreement.partner;
+        }
+        if (this._primitiveFieldIsModified('reference_number_year')) {
+          changes.reference_number_year = this.agreement.reference_number_year;
         }
 
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
