@@ -1,0 +1,26 @@
+machine:
+   services:
+     - docker
+
+dependencies:
+  cache_directories:
+    - "~/dockercache"
+
+  override:
+    - if [[ -e ~/dockercache/pmp.tar ]]; then docker load -i ~/dockercache/pmp.tar; fi
+    - if [[ -e ~/dockercache/pmptest.tar ]]; then docker load -i ~/dockercache/pmptest.tar; fi
+    - docker build --rm=false -t unicef/etools-pmp:$CIRCLE_BRANCH .
+    - docker build --rm=false -t unicef/etools-pmp-test:$CIRCLE_BRANCH --file docker-test .
+    - mkdir -p ~/dockercache; docker save unicef/etools-pmp-test > ~/dockercache/pmptest.tar; docker save unicef/etools-pmp > ~/dockercache/pmp.tar
+
+
+test:
+   override:
+     - docker run -it unicef/etools-pmp-test:$CIRCLE_BRANCH
+
+deployment:
+   hub:
+     branch: [develop, staging, demo, master]
+     commands:
+       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+       - docker push unicef/etools-pmp

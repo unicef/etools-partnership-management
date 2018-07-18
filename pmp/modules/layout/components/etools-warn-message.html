@@ -1,0 +1,54 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+
+
+<link rel="import" href="../../styles/shared-styles.html">
+
+
+<dom-module id="etools-date-input">
+
+  <template>
+
+    <style include="shared-styles">
+
+    </style>
+
+    <div class$="[[available]]">
+      <p>[[message]]</p>
+    </div>
+
+  </template>
+
+
+  <script>
+    'use strict';
+
+  /**
+   * @polymer
+   * @customElement
+   */
+  class EtoolsWarnMessage extends Polymer.Element {
+
+    static get is() {
+      return 'etools-warn-message';
+      }
+
+    static get properties() {
+      return {
+        message: {
+          type: String,
+          value: null
+        },
+        available: {
+          type: Boolean,
+          value: false
+        }
+      };
+    }
+
+  }
+
+
+  </script>
+
+
+</dom-module>
