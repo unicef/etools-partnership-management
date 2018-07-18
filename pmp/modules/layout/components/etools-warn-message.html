@@ -1,53 +1,62 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 
-
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/grid-layout-styles.html">
 
 
-<dom-module id="etools-date-input">
+<dom-module id="etools-warn-message">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="shared-styles grid-layout-styles">
+
+      .warning {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        padding: 16px 24px;
+        background-color: var(--lightest-info-color);
+      }
+
 
     </style>
 
-    <div class$="[[available]]">
-      <p>[[message]]</p>
+
+    <div class="row-h">
+      <div class="warning">
+        [[message]]
+      </div>
     </div>
 
-  </template>
 
+  </template>
 
   <script>
     'use strict';
 
-  /**
-   * @polymer
-   * @customElement
-   */
-  class EtoolsWarnMessage extends Polymer.Element {
+    /**
+     * @polymer
+     * @customElement
+     */
+    class EtoolsWarnMessage extends Polymer.Element {
 
-    static get is() {
-      return 'etools-warn-message';
+      static get is() {
+        return 'etools-warn-message';
       }
 
-    static get properties() {
-      return {
-        message: {
-          type: String,
-          value: null
-        },
-        available: {
-          type: Boolean,
-          value: false
-        }
-      };
+      static get properties() {
+        return {
+          message: {
+            type: String,
+            value: ''
+          }
+        };
+      }
+
+
     }
 
-  }
-
-
+    window.customElements.define(EtoolsWarnMessage.is, EtoolsWarnMessage);
   </script>
 
 
