@@ -208,6 +208,7 @@
               country_programme: undefined,
               signed_by: null,
               partner_manager: null,
+              special_conditions_pca: false,
               permissions: {
                 edit: {
                   agreement_type: true,
@@ -222,7 +223,8 @@
                   signed_by_id: true,
                   signed_by_partner_date: true,
                   signed_by_unicef_date: true,
-                  start: true
+                  start: true,
+                  special_conditions_pca: true
                 },
                 required: {
                   agreement_type: true,
@@ -447,6 +449,7 @@
         if (this._primitiveFieldIsModified('reference_number_year')) {
           changes.reference_number_year = this.agreement.reference_number_year;
         }
+
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           if (this._authorizedOfficersChanged()) {
             changes.authorized_officers = this.authorizedOfficers;
@@ -481,7 +484,11 @@
           if (this._objectFieldIsModified('amendments')) {
             changes.amendments = this.agreement.amendments;
           }
+          if (this._primitiveFieldIsModified('special_conditions_pca')) {
+            changes.special_conditions_pca = this.agreement.special_conditions_pca;
+          }
         }
+
         return changes;
       }
 

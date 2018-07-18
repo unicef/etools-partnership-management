@@ -5,10 +5,12 @@
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
 
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
@@ -67,11 +69,17 @@
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
         margin-right: 24px;
+        padding-right: 24px;
       }
 
       .generate-pca[hidden] + .col {
         padding-left: 0;
       }
+
+      paper-toggle-button {
+        font-size: 16px;
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Agreement Details">
@@ -96,7 +104,6 @@
 
         <div hidden$="[[!_showYearDropdown(agreement.status)]]" class="col col-2">
           <year-dropdown selected-year="{{agreement.reference_number_year}}">
-
           </year-dropdown>
         </div>
 
@@ -253,9 +260,16 @@
         </etools-form-element-wrapper>
       </div>
 
+      <div class="row-h flex-c">
+        <paper-toggle-button checked="{{agreement.special_conditions_pca}}"
+                             hidden$="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]"
+                             disabled$="[[!agreement.permissions.edit.special_conditions_pca]]">
+          Special Conditions PCA
+        </paper-toggle-button>
+      </div>
       <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
         <div class="generate-pca col col-3"
-             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
+             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
           <paper-input-container
               class="form-field-wrapper secondary-btn-wrapper"
               always-float-label>
@@ -269,8 +283,8 @@
           </paper-input-container>
         </div>
         <div class="generate-pca col col-3"
-             hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
-          <span class="type-warning">Save before generating the PCA template</span>
+             hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
+          <span class="type-warning">[[generatePCAMessage]]</span>
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
           <etools-single-file
@@ -384,6 +398,10 @@
           enableEditForAuthorizedOfficers: {
             type: Boolean,
             value: false
+          },
+          generatePCAMessage: {
+            type: String,
+            value: 'Save before generating the PCA template'
           }
         };
       }
@@ -391,7 +409,8 @@
       static get observers() {
         return [
           '_agreementFieldChanged(agreement.*)',
-          '_partnerChanged(agreement.partner)'
+          '_partnerChanged(agreement.partner)',
+          '_handleSpecialConditionsPca(agreement.special_conditions_pca, agreement.agreement_type)'
         ];
       }
 
@@ -417,6 +436,18 @@
         super.disconnectedCallback();
         if (this.generatePCADialog) {
           document.querySelector('body').removeChild(this.generatePCADialog);
+        }
+      }
+
+      _handleSpecialConditionsPca(isSpecialConditionsPCA, agreementType) {
+        if (agreementType !== this.CONSTANTS.AGREEMENT_TYPES.PCA) {
+          this.set('agreement.isSpecialConditionsPCA', false);
+        }
+
+        if (isSpecialConditionsPCA) {
+          this.generatePCAMessage = 'Generate PCA template not available for Special Conditions PCA';
+        } else {
+          this.generatePCAMessage = 'Save before generating the PCA template';
         }
       }
 
@@ -525,12 +556,19 @@
         return !(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft());
       }
 
-      _showGeneratePcaBtn(type, isNewAgreement) {
+      _showGeneratePcaBtn(type, isNewAgreement, isSpecialConditionsPCA) {
+        if (isSpecialConditionsPCA) {
+          return false;
+        }
         return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && this._isDraft() && !isNewAgreement;
       }
 
-      _showGeneratePcaWarning(type, isNewAgreement) {
-        return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && isNewAgreement;
+      _showGeneratePcaWarning(type, isNewAgreement, isSpecialConditionsPCA) {
+        if (type !== this.CONSTANTS.AGREEMENT_TYPES.PCA) {
+          return false;
+        }
+
+        return isSpecialConditionsPCA || isNewAgreement;
       }
 
       _partnerChanged(currentPartnerId) {
