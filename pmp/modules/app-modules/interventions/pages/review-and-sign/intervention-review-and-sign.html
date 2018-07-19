@@ -167,19 +167,21 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <!-- Signed by UNICEF -->
-        <etools-dropdown id="signedByUnicef"
-                         label="Signed by UNICEF"
-                         placeholder="&#8212;"
-                         options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
-                         option-value="id"
-                         option-label="name"
-                         selected="{{intervention.unicef_signatory}}"
-                         dynamic-align
-                         readonly$="[[!permissions.edit.unicef_signatory]]"
-                         auto-validate
-                         error-message="Please select UNICEF user">
-        </etools-dropdown>
+        <div class="col col-6">
+          <!-- Signed by UNICEF -->
+          <etools-dropdown id="signedByUnicef"
+                           label="Signed by UNICEF"
+                           placeholder="&#8212;"
+                           options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
+                           option-value="id"
+                           option-label="name"
+                           selected="{{intervention.unicef_signatory}}"
+                           dynamic-align
+                           readonly$="[[!permissions.edit.unicef_signatory]]"
+                           auto-validate
+                           error-message="Please select UNICEF user">
+          </etools-dropdown>
+        </div>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6 file-container space-left">
