@@ -14,6 +14,7 @@
 
 <link rel="import" href="../../../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../../../../layout/components/etools-warn-message.html">
 <link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
@@ -86,9 +87,9 @@
         </etools-dropdown-multi>
       </div>
       <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
-        <span class="type-warning">
-          [[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]
-        </span>
+        <etools-warn-message message="[[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]">
+
+        </etools-warn-message>
       </div>
       <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
         <paper-input id="other"
