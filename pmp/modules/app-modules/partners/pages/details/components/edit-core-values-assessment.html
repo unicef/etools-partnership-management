@@ -28,8 +28,8 @@
       </div>
       <div class="layout-horizontal row-padding-v">
           <etools-single-file id="attachment"
-                    file="{{item.attachment}}"
-                    internal-file="{{item.attachment_file}}"
+                    file="{{item.assessment}}"
+                    internal-file="{{item.assessment_file}}"
                     label="Core Values Assessment"
                     required
                     accept=".doc,.docx,.pdf,.jpg,.png">
@@ -69,6 +69,7 @@
           return;
         }
         this.fireEvent('save-core-values-assessment', this.item);
+        this.$.cvaDialog.opened = false;
       }
 
     }

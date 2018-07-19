@@ -251,7 +251,7 @@
             if (partner.hasOwnProperty('core_values_assessments')) {
               if (partner.core_values_assessments.length) {
                 for(let i = 0; i < partner.core_values_assessments.length; i++) {
-                  if (partner.core_values_assessments[i].attachment instanceof File) {
+                  if (partner.core_values_assessments[i].assessment instanceof File) {
                     withUpload = true;
                     break;
                   }

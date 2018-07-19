@@ -159,7 +159,6 @@
           </paper-toggle-button>
       </div>
 
-      <!-- ---------NEW DESIGN ------ -->
       <etools-data-table-header no-title no-collapse>
         <etools-data-table-column class="col-4">
           <div>Date Last Assessed</div>
@@ -174,7 +173,7 @@
       </etools-data-table-header>
       <template is="dom-repeat" items="{{partner.core_values_assessments}}">
         <etools-data-table-row no-collapse
-          secondary-bg-on-hover$="[[_canEditCVA(item.attachment_file, item.archived)]]"
+          secondary-bg-on-hover$="[[_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
           hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-4">
@@ -182,16 +181,16 @@
                   [[prettyDate(item.date)]]
               </span>
               <span class="col-6">
-                  <iron-icon icon="attachment" hidden$="[[!item.attachment_file]]"></iron-icon>
-                  <span hidden$="[[item.attachment_file]]">-</span>
-                  <a href$="[[item.attachment_file]]"
-                          target="_blank" download>[[getFileNameFromURL(item.attachment_file)]]</a>
+                  <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
+                  <span hidden$="[[item.assessment_file]]">—</span>
+                  <a href$="[[item.assessment_file]]"
+                          target="_blank" download>[[getFileNameFromURL(item.assessment_file)]]</a>
               </span>
               <span class="col-2">
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
-                            hidden$="[[!showCoreValuesAssessmentAttachment]]"
+                            hidden$="[[!_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
                             show-delete="[[showDelete]]"
                             on-edit="_editCoreValuesAssessment">
               </icons-actions>
