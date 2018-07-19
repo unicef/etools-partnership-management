@@ -216,17 +216,7 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By UNICEF -->
-            <etools-dropdown
-                id="signedByUnicef"
-                label="Signed By UNICEF"
-                placeholder="&#8212;"
-                options="[[unicefSeniorStaff]]"
-                option-value="id"
-                option-label="name"
-                selected="{{agreement.signed_by}}"
-                dynamic-align
-                readonly$="[[!agreement.permissions.edit.signed_by]]">
-            </etools-dropdown>
+            <etools-form-element-wrapper value="Signed by UNICEF Authorized Officer"></etools-form-element-wrapper>
           </div>
 
           <div class="col col-3">
@@ -321,14 +311,12 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.StaffMembersData
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.Common,
@@ -430,8 +418,6 @@
         // triggered by parent element on stamp
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.fireEvent('tab-content-attached');
-
-        this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
       }
 
       disconnectedCallback() {

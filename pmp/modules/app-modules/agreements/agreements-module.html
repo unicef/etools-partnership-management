@@ -219,7 +219,6 @@
                   end: true,
                   partner: true,
                   partner_manager: true,
-                  signed_by: true,
                   signed_by_id: true,
                   signed_by_partner_date: true,
                   signed_by_unicef_date: true,
@@ -231,7 +230,6 @@
                   partner: true,
                   country_programme: true,
                   partner_manager: false,
-                  signed_by: false,
                   signed_by_partner_date: false,
                   signed_by_unicef_date: false
                 }
@@ -420,7 +418,6 @@
         newAgreement = Object.assign(newAgreement, {
           signed_by_unicef_date: agreement.signed_by_unicef_date,
           signed_by_partner_date: agreement.signed_by_partner_date,
-          signed_by: agreement.signed_by,
           partner_manager: agreement.partner_manager,
           attached_agreement: agreement.attached_agreement
         });
@@ -461,7 +458,7 @@
             changes.attached_agreement = this.agreement.attached_agreement;
           }
 
-          let signedByFields = ['partner_manager', 'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date'];
           signedByFields.forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
