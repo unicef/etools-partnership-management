@@ -1,0 +1,84 @@
+<link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="year-dropdown">
+
+  <template strip-whitespace>
+
+    <style include="shared-styles">
+
+      :host {
+        display: block;
+        box-sizing: border-box;
+      }
+
+      :host(:hover) {
+        cursor: pointer;
+      }
+
+      etools-dropdown {
+        max-width: 100%;
+      }
+
+    </style>
+
+    <etools-dropdown id="yearSelector"
+                     label="Year"
+                     options="[[years]]"
+                     selected="{{selectedYear}}"
+                     allow-outside-scroll
+                     hide-search>
+
+    </etools-dropdown>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     *
+     * @polymer
+     * @customElement
+     */
+    class YearDropdown extends Polymer.Element {
+
+      static get is() {
+        return 'year-dropdown';
+      }
+
+
+      static get properties() {
+        return {
+          selectedYear: {
+            type: Number,
+            notify: true
+          },
+          years: {
+            type: Array,
+            value: []
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        let year = this._getCurrentYear();
+        let optYears = [];
+        for (let i = year - 5; i <= year + 5; i++) {
+          optYears.push({value: i, label: i});
+        }
+
+        this.set('years', optYears);
+      }
+
+      _getCurrentYear() {
+        return new Date().getFullYear();
+      }
+
+    }
+
+    window.customElements.define(YearDropdown.is, YearDropdown);
+  </script>
+
+</dom-module>

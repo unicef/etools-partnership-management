@@ -14,7 +14,6 @@
     countryProgrammes: [],
     interventionDocTypes: [],
     interventionStatuses: [],
-    sectors: [],
     sections: [],
     unicefUsersData: [],
     locations: [],
@@ -84,9 +83,6 @@
 
       case 'SET_INTERVENTION_STATUSES':
         return Object.assign({}, state, {interventionStatuses: action.statuses});
-
-      case 'SET_SECTORS':
-        return Object.assign({}, state, {sectors: action.sectors});
 
       case 'SET_SECTIONS':
         return Object.assign({}, state, {sections: action.sections});

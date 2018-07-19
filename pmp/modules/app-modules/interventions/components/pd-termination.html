@@ -3,6 +3,7 @@
 
 <link rel="import" href="../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../layout/components/etools-warn-message.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -71,9 +72,10 @@
         </etools-single-file>
       </div>
       <div class="row-h">
-        <div class="warning">
-          Once you hit save, the PD/SSFA will be Terminated and this action cannot be reversed
-        </div>
+        <etools-warn-message
+                message="Once you hit save, the PD/SSFA will be Terminated and this action cannot be reversed">
+
+        </etools-warn-message>
       </div>
 
     </etools-dialog>
