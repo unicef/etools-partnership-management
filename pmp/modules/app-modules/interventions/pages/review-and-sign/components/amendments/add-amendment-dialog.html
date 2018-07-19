@@ -33,10 +33,6 @@
         };
       }
 
-      .type-warning {
-        color: var(--warning-color);
-      }
-
       paper-input#other {
         width: 100%;
       }
@@ -88,7 +84,6 @@
       </div>
       <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
         <etools-warn-message message="[[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]">
-
         </etools-warn-message>
       </div>
       <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
