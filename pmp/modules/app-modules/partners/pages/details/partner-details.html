@@ -159,26 +159,27 @@
           </paper-toggle-button>
       </div>
 
-      <etools-data-table-header no-title no-collapse>
-        <etools-data-table-column class="col-4">
-          <div>Date Last Assessed</div>
-          <div>(from VISION)</div>
-        </etools-data-table-column>
-        <etools-data-table-column class="col-6">
-          Core Values Assesment
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2">
-          Archived
-        </etools-data-table-column>
-      </etools-data-table-header>
-      <template is="dom-repeat" items="{{partner.core_values_assessments}}">
-        <etools-data-table-row no-collapse
-          secondary-bg-on-hover$="[[_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
-          hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
-          <div slot="row-data" class="p-relative">
-            <span class="col-4">
+      <div hidden$="[[_empty(partner.core_values_assessments)]]">
+        <etools-data-table-header no-title no-collapse>
+          <etools-data-table-column class="col-4">
+            <div>Date Last Assessed</div>
+            <div>(from VISION)</div>
+          </etools-data-table-column>
+          <etools-data-table-column class="col-6">
+            Core Values Assesment
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Archived
+          </etools-data-table-column>
+        </etools-data-table-header>
+        <template is="dom-repeat" items="{{partner.core_values_assessments}}">
+          <etools-data-table-row no-collapse
+            secondary-bg-on-hover$="[[_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
+            hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
+            <div slot="row-data" class="p-relative">
+              <span class="col-4">
                   <iron-icon icon="date-range"></iron-icon>
-                  [[prettyDate(item.date)]]
+                  [[prettyDate(item.date, null,'—')]]
               </span>
               <span class="col-6">
                   <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
@@ -190,13 +191,17 @@
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
-                            hidden$="[[!_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
-                            show-delete="[[showDelete]]"
-                            on-edit="_editCoreValuesAssessment">
+                      hidden$="[[!_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
+                      show-delete="[[showDelete]]"
+                      on-edit="_editCoreValuesAssessment">
               </icons-actions>
-          </div>
-        </etools-data-table-row>
-      </template>
+            </div>
+          </etools-data-table-row>
+        </template>
+      </div>
+      <div class="row-h" hidden$="[[!_empty(partner.core_values_assessments)]]">
+        There are no Core Value Assessments.
+      </div>
     </etools-content-panel>
 
     <staff-members id="staffMembersList"
