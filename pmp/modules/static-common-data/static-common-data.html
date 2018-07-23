@@ -13,7 +13,6 @@
 <link rel="import" href="mixins/locations-data.html">
 <link rel="import" href="mixins/offices-data.html">
 <link rel="import" href="mixins/sections-data.html">
-<link rel="import" href="mixins/sectors-data.html">
 <link rel="import" href="mixins/unicef-users-data.html">
 <link rel="import" href="mixins/user-country-data.html">
 <link rel="import" href="mixins/disaggregations-data.html">
@@ -34,7 +33,6 @@
      * @appliesMixin EtoolsPmpApp.Mixins.LocationsData
      * @appliesMixin EtoolsPmpApp.Mixins.OfficesData
      * @appliesMixin EtoolsPmpApp.Mixins.SectionsData
-     * @appliesMixin EtoolsPmpApp.Mixins.SectorsData
      * @appliesMixin EtoolsPmpApp.Mixins.UnicefUsersData
      * @appliesMixin EtoolsPmpApp.Mixins.UserCountryData
      * @appliesMixin EtoolsPmpApp.Mixins.DisaggregationsData
@@ -45,8 +43,7 @@
       EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.CountryProgrammesData,
       EtoolsPmpApp.Mixins.DropdownsPmpData, EtoolsPmpApp.Mixins.DropdownsStaticData,
       EtoolsPmpApp.Mixins.LocationsData, EtoolsPmpApp.Mixins.OfficesData,
-      EtoolsPmpApp.Mixins.SectionsData, EtoolsPmpApp.Mixins.SectorsData,
-      EtoolsPmpApp.Mixins.UnicefUsersData, EtoolsPmpApp.Mixins.UserCountryData,
+      EtoolsPmpApp.Mixins.SectionsData, EtoolsPmpApp.Mixins.UnicefUsersData, EtoolsPmpApp.Mixins.UserCountryData,
       EtoolsPmpApp.Mixins.DisaggregationsData, EtoolsPmpApp.Mixins.PRPCountries
     ], Polymer.Element);
 
@@ -60,7 +57,7 @@
           pmpStaticDataEndpointsNames: {
             type: Array,
             value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-              'sections', 'sectors', 'unicefUsers', 'userCountryDetails']
+              'sections', 'unicefUsers', 'userCountryDetails']
           },
           pmpDataEndpointNamesForPrpSections: {
             type: Array,
@@ -125,8 +122,6 @@
             return this._handleOfficesResponse;
           case 'sections':
             return this._handleSectionsResponse;
-          case 'sectors':
-            return this._handleSectorsResponse;
           case 'unicefUsers':
             return this._handleUnicefUsersResponse;
           case 'userCountryDetails':

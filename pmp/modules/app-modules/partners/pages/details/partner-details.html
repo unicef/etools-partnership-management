@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/iron-icons/communication-icons.html">
@@ -7,9 +8,12 @@
 <link rel="import" href="../../../../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-error-messages-box.html">
+<link rel="import" href="../../../../layout/components/icons-actions.html">
 <link rel="import" href="../../../../scripts/lodash.html">
 
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
@@ -24,44 +28,54 @@
 <link rel="import" href="../../../../styles/risk-rating-styles.html">
 
 <link rel="import" href="components/staff-members.html">
+<link rel="import" href="components/edit-core-values-assessment.html">
 
 <dom-module id="partner-details">
   <template>
-    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
+
+        --etools-file-upload-button: {
+          /* overrides previus color, possibly from pd-attachements */
+          color: var(--etools-file-main-btn-color);
+        };
       }
 
       paper-input {
         width: 100%;
       }
 
-      #core-values-assessment {
-        width: 100%;
+      paper-toggle-button#showArchived {
+        font-size: 16px;
+        --paper-toggle-button-label-color: white;
+        --paper-toggle-button-checked-bar-color: white;
       }
 
-      etools-single-file {
-        --etools-file-upload-button: {
-          /* IE fix */
-          min-width: 150px !important;
-        }
+      icons-actions {
+        visibility: hidden;
       }
+
+      etools-data-table-row:hover icons-actions {
+        visibility: visible;
+      }
+
+      iron-icon {
+        color: var(--dark-secondary-text-color);
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partner Details">
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Full Name"
-                       value="[[partner.name]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
-          <paper-input label="Short Name"
-                       value="[[partner.short_name]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Short Name" value="[[partner.short_name]]">
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <paper-input label="Alternate Name"
@@ -73,16 +87,12 @@
 
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Vendor Number"
-                       value="[[partner.vendor_number]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Vendor Number" value="[[partner.vendor_number]]">
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
-          <paper-input label="Partner Type"
-                       value="[[_getPartnerType(partner.partner_type, partner.cso_type)]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Partner Type" value="[[_partnerComputedType]]">
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <etools-dropdown-multi label="Shared Partner"
@@ -95,94 +105,110 @@
       </div>
 
       <div class="row-h flex-c">
-        <div class="col col-4">
-          <paper-input label="Core Values Last Assessment Date"
-                       name="core_values_assessment_date"
-                       value="[[prettyDate(partner.core_values_assessment_date)]]"
-                       placeholder="&#8212;"
-                       readonly>
-            <div slot="prefix">
-              <iron-icon icon="date-range"></iron-icon>
-            </div>
-          </paper-input>
-        </div>
-        <div class="col col-4">
-          <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
-            <etools-single-file file="{{partner.core_values_assessment}}"
-                                internal-file="{{partner.core_values_assessment_file}}"
-                                label="Core Values Assessment"
-                                hide-delete-btn="[[_hideDeleteBtn(partner.core_values_assessment)]]"
-                                readonly$="[[!editMode]]"
-                                accept=".doc,.docx,.pdf,.jpg,.png">
-            </etools-single-file>
-          </div>
-        </div>
-        <div class="col col-4"></div>
-      </div>
-
-      <div class="row-h flex-c">
-        <paper-input label="Address"
-                     value="{{partner.address}}"
-                     placeholder="&#8212;"
-                     readonly>
+        <etools-form-element-wrapper label="Address" title$="[[partner.address]]" value="[[partner.address]]">
           <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
-        </paper-input>
+        </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Phone Number"
-                       value="{{partner.phone_number}}"
-                       placeholder="&#8212;"
-                       readonly>
+
+          <etools-form-element-wrapper label="Phone Number" value="[[partner.phone_number]]">
             <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
-          </paper-input>
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
-          <paper-input label="E-mail address"
-                       value="{{partner.email}}"
-                       placeholder="&#8212;"
-                       readonly>
-            <iron-icon slot="prefix" icon="communication:email"></iron-icon>
-          </paper-input>
+
+          <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
+            <iron-icon icon="communication:email" slot="prefix"></iron-icon>
+          </etools-form-element-wrapper>
+
         </div>
         <div class="col col-4"></div>
       </div>
       <div class="row-h flex-c">
         <div class="col col-4">
           <!-- Risk rating -->
-          <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
-                       label="Partner Risk Rating"
-                       value="[[getRiskRatingValue(partner.rating)]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+            <etools-form-element-wrapper label="Partner Risk Rating"
+                                         no-placeholder>
+              <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]">
+                [[getRiskRatingValue(partner.rating)]]
+              </span>
+            </etools-form-element-wrapper>
+
         </div>
         <div class="col col-4">
           <!-- Type of assessment -->
-          <paper-input label="Type of Assessment"
-                       value="[[partner.type_of_assessment]]"
-                       placeholder="&#8212;"
-                       readonly></paper-input>
+          <etools-form-element-wrapper label="Type of Assessment" value="[[partner.type_of_assessment]]">
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-4">
           <!--Date last assessed-->
-          <paper-input label="Date of Report"
-                       value="[[prettyDate(partner.last_assessment_date)]]"
-                       placeholder="&#8212;"
-                       readonly>
-            <div slot="prefix">
-              <iron-icon icon="date-range"></iron-icon>
-            </div>
-          </paper-input>
+          <etools-form-element-wrapper label="Date of Report" value="[[prettyDate(partner.last_assessment_date)]]">
+            <iron-icon icon="date-range" slot="prefix"></iron-icon>
+          </etools-form-element-wrapper>
+
         </div>
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="Partner Contacts ([[partner.staff_members.length]])"
-                          show-expand-btn>
-      <staff-members id="staffMembersList"
-                     data-items="{{partner.staff_members}}"
-                     edit-mode="[[editMode]]"></staff-members>
+    <etools-content-panel class="content-section" panel-title="Core Values Assessments">
+      <div slot="panel-btns" id="show-archived">
+          <paper-toggle-button id="showArchived"
+                          checked="{{showArchivedAssessments}}">
+            Show Archived
+          </paper-toggle-button>
+      </div>
+
+      <div hidden$="[[_empty(partner.core_values_assessments)]]">
+        <etools-data-table-header no-title no-collapse>
+          <etools-data-table-column class="col-4">
+            <div>Date Last Assessed</div>
+            <div>(from VISION)</div>
+          </etools-data-table-column>
+          <etools-data-table-column class="col-6">
+            Core Values Assesment
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Archived
+          </etools-data-table-column>
+        </etools-data-table-header>
+        <template is="dom-repeat" items="{{partner.core_values_assessments}}">
+          <etools-data-table-row no-collapse
+            secondary-bg-on-hover$="[[_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
+            hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
+            <div slot="row-data" class="p-relative">
+              <span class="col-4">
+                  <iron-icon icon="date-range"></iron-icon>
+                  [[prettyDate(item.date, null,'—')]]
+              </span>
+              <span class="col-6">
+                  <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
+                  <span hidden$="[[item.assessment_file]]">—</span>
+                  <a href$="[[item.assessment_file]]"
+                          target="_blank" download>[[getFileNameFromURL(item.assessment_file)]]</a>
+              </span>
+              <span class="col-2">
+                <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
+              </span>
+              <icons-actions item$="[[item]]"
+                      hidden$="[[!_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
+                      show-delete="[[showDelete]]"
+                      on-edit="_editCoreValuesAssessment">
+              </icons-actions>
+            </div>
+          </etools-data-table-row>
+        </template>
+      </div>
+      <div class="row-h" hidden$="[[!_empty(partner.core_values_assessments)]]">
+        There are no Core Value Assessments.
+      </div>
     </etools-content-panel>
+
+    <staff-members id="staffMembersList"
+                    data-items="[[partner.staff_members]]"
+                    edit-mode="[[editMode]]">
+    </staff-members>
+
   </template>
   <script>
     'use strict';
@@ -238,6 +264,21 @@
           showCoreValuesAssessmentAttachment: {
             type: Boolean,
             value: false
+          },
+          _partnerComputedType: {
+            type: String,
+            computed: '_computePartnerType(partner)'
+          },
+          showArchivedAssessments: {
+            type: Boolean,
+            value: false
+          },
+          showDelete: {
+            type: Boolean,
+            value: false
+          },
+          editCVADialog: {
+            type: Object
           }
         };
       }
@@ -250,10 +291,48 @@
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
         this.fireEvent('tab-content-attached');
+        this._createEditCoreValuesAssessmentsDialog();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.editCVADialog) {
+          document.querySelector('body').removeChild(this.editCVADialog);
+        }
+      }
+
+      _shouldShowCVA(archived, showArchived) {
+        if (showArchived) {
+          return true;
+        }
+        return !archived;
+      }
+
+      _createEditCoreValuesAssessmentsDialog() {
+        this.editCVADialog = document.createElement('edit-core-values-assessment');
+        this.editCVADialog.addEventListener('save-core-values-assessment',
+            this._saveCoreValuesAssessment.bind(this));
+        document.querySelector('body').appendChild(this.editCVADialog);
+      }
+
+      _editCoreValuesAssessment(e) {
+        this.editCVADialog.item = JSON.parse(e.target.getAttribute('item'));
+        this.editCVADialog.open();
+      }
+
+      _saveCoreValuesAssessment(e) {
+        this.fireEvent('save-core-values-assessment', e.detail);
       }
 
       _hideDeleteBtn() {
         return this.partner && this.partner.core_values_assessment_file;
+      }
+
+      _canEditCVA(attachment, archived) {
+        if (attachment || archived) {
+          return false;
+        }
+        return this.showCoreValuesAssessmentAttachment;
       }
 
       _partnerChanged(partner) {
@@ -298,6 +377,12 @@
         }
       }
 
+      _computePartnerType(partner) {
+        return !_.isEmpty(partner)
+          ? this._getPartnerType(partner.partner_type, partner.cso_type)
+          : '';
+      }
+
       _getPartnerType(partnerType, csoType) {
         return (csoType !== null) ? (partnerType + '/' + csoType) : partnerType;
       }
@@ -313,6 +398,10 @@
 
       _validatePageData() {
         return this.$.staffMembersList.validate();
+      }
+
+      _empty(val) {
+        return _.isEmpty(val);
       }
 
     }

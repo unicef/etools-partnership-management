@@ -80,11 +80,11 @@
           [[_getIndicatorTitle(indicator)]]
         </div>
         <div class="col-2 right-align">
-          [[_displayBaselineOrTarget(indicator.baseline_new, indicator.indicator.unit,
+          [[_displayBaselineOrTarget(indicator.baseline, indicator.indicator.unit,
           indicator.indicator.display_type, indicator.cluster_indicator_id)]]
         </div>
         <div class="col-2 right-align">
-          [[_displayBaselineOrTarget(indicator.target_new, indicator.indicator.unit,
+          [[_displayBaselineOrTarget(indicator.target, indicator.indicator.unit,
           indicator.indicator.display_type, indicator.cluster_indicator_id)]]
         </div>
         <icons-actions hidden$="[[!editMode]]"
@@ -164,10 +164,6 @@
           disaggregationNames: {
             type: Array,
             value: ['—']
-          },
-          showDelete: {
-            type: Boolean,
-            value: false
           },
           editMode: {
             type: Boolean

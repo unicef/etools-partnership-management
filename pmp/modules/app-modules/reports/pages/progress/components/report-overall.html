@@ -10,20 +10,16 @@
 
     <div class="row-h">
       <div class="col col-5">
-        <etools-form-element-wrapper label="PD output or SSFA expected result">
-          <span class="placeholder" hidden$="[[lowerResultTitle]]">&#8212;</span>
-          <span hidden$="[[!lowerResultTitle]]">[[lowerResultTitle]]</span>
+        <etools-form-element-wrapper label="PD output or SSFA expected result" value="[[lowerResultTitle]]">
         </etools-form-element-wrapper>
       </div>
       <div class="col col-2">
-        <etools-form-element-wrapper label="Overall Status">
-          <report-status status="[[latestIndicator.overall_status]]"></report-status>
+        <etools-form-element-wrapper label="Overall Status" no-placeholder>
+          <report-status status="[[latestIndicator.overall_status]]" slot="prefix"></report-status>
         </etools-form-element-wrapper>
       </div>
       <div class="col col-5">
-        <etools-form-element-wrapper label="Narative Assessment">
-          <span class="placeholder" hidden$="[[latestIndicator.narrative_assessment]]">&#8212;</span>
-          <span hidden$="[[!latestIndicator.narrative_assessment]]">[[latestIndicator.narrative_assessment]]</span>
+        <etools-form-element-wrapper label="Narative Assessment" value="[[latestIndicator.narrative_assessment]]">
         </etools-form-element-wrapper>
       </div>
     </div>

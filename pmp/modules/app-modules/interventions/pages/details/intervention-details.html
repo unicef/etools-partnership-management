@@ -34,6 +34,7 @@
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
+<link rel="import" href="../../../../layout/components/year-dropdown.html">
 
 <link rel="import" href="components/agreement-selector.html">
 
@@ -106,6 +107,10 @@
       div[slot="panel-btns"]#add-show-inactive-btns {
         @apply --layout-horizontal;
       }
+
+      year-dropdown {
+        margin-right: 24px;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -132,7 +137,11 @@
           </etools-dropdown>
 
         </div>
+
         <div class="col col-3" title$="[[intervention.number]]">
+          <year-dropdown selected-year="{{intervention.reference_number_year}}"
+                         hidden$="[[!_isDraft(intervention.status)]]">
+          </year-dropdown>
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[intervention.number]]"
@@ -202,8 +211,8 @@
           </etools-dropdown-multi>
         </div>
         <div class="col col-6">
-          <etools-form-element-wrapper label="Partner Vendor Number">
-            [[intervention.partner_vendor]]
+          <etools-form-element-wrapper label="Partner Vendor Number"
+                                       value="[[intervention.partner_vendor]]">
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -211,6 +220,7 @@
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
+
         <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
           <paper-toggle-button checked="{{intervention.contingency_pd}}"
                                disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
@@ -295,7 +305,6 @@
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
         <div class="row-h flex-c">
           <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-            <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
             <template is="dom-repeat" items="[[intervention.cluster_names]]">
               <span class="names-padding">[[item]]</span>
             </template>
@@ -584,6 +593,11 @@
         }
         return !(contingencyPd && intervention.status !== 'active');
 
+      }
+
+      _isDraft(status) {
+        return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+            status === '';
       }
 
       _openLocationsDialog() {

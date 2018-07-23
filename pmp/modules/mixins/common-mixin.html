@@ -55,6 +55,9 @@
     }
 
     getFileNameFromURL(url) {
+      if (!url) {
+        return '';
+      }
       return _.head(url.split('?')).split('/').pop();
     }
 

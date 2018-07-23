@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
+<link rel="import" href="../../../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../../../scripts/lodash.html">
 <link rel="import" href="../../../../../../../config/app-constants.html">
 <link rel="import" href="../../../../../../../endpoints/endpoints-mixin.html">
@@ -16,12 +17,13 @@
 <link rel="import" href="../../../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../../../../styles/required-field-styles.html">
 
 <link rel="import" href="hru-list.html">
 
 <dom-module id="edit-hru-dialog">
   <template strip-whitespace>
-    <style include="grid-layout-styles buttons-styles data-table-styles">
+    <style include="grid-layout-styles buttons-styles data-table-styles required-field-starred-styles">
       *[hidden] {
         display: none !important;
       }
@@ -32,6 +34,11 @@
         margin-top: 24px;
         padding-right: 0;
       }
+
+      .start-date {
+        padding-bottom: 24px;
+        max-width: 300px;
+      }
     </style>
 
     <etools-dialog id="editHruDialog"
@@ -40,9 +47,20 @@
                    on-confirm-btn-clicked="_saveHurData"
                    ok-btn-text="Save"
                    keep-dialog-open
+                   hidden$="[[datePickerOpen]]"
                    spinner-text="Saving...">
-
-      <div class="layout-horizontal">
+      <div class="start-date">
+      <etools-date-input id="dtPickerStDate"
+                        label="Select start date"
+                        value="{{repStartDate}}"
+                        required
+                        min-date="[[minDate]]"
+                        auto-validate
+                        open="{{datePickerOpen}}"
+                        no-init show-clear-btn>
+      </etools-date-input>
+      </div>
+      <div>
         Use the date picker to select due dates of humanitarian report requirements.
       </div>
 
@@ -59,7 +77,8 @@
         </div>
         <div class="col col-6">
           <div class="row-h" hidden$="[[!_empty(hruData.length)]]">No dates added.</div>
-          <hru-list class="flex-c"
+          <hru-list id="hruList"
+                    class="flex-c"
                     with-scroll
                     hru-data="[[hruData]]"
                     hidden$="[[_empty(hruData.length)]]"
@@ -101,10 +120,17 @@
       static get properties() {
         return {
           interventionId: Number,
+          interventionStart: {
+            type: Date
+          },
           inAmendment: {
             type: Boolean,
             statePath: 'pageData.in_amendment'
           },
+          repStartDate: {
+            type: Date
+          },
+          minDate: Date,
           selectedDate: String,
           hruData: {
             type: Array,
@@ -114,11 +140,52 @@
           _hruEditedIndex: {
             type: Number,
             value: -1
+          },
+          datePickerOpen: {
+            type: Boolean,
+            value: false
           }
         };
       }
 
+      static get observers() {
+        return [
+          'intervDataChanged(interventionStart, interventionId)'
+        ];
+      }
+
+      intervDataChanged() {
+        this.minDate = this._getMinDate();
+      }
+
+      _getMinDate() {
+        if (!this.interventionStart) {
+          return null;
+        }
+        let stDt = this._convertDate(this.interventionStart);
+        if (stDt) {
+          return moment(stDt).add(-1, 'days').toDate();
+        }
+        return null;
+      }
+
+      _setDefaultStartDate() {
+        if (_.isEmpty(this.hruData)) {
+          this.repStartDate = this.interventionStart;
+        } else {
+          this.repStartDate = this._getSavedStartDate();
+        }
+      }
+      _getSavedStartDate() {
+        this.hruData.sort((a, b) => {
+          return new Date(a.due_date) - new Date(b.due_date);
+        });
+
+        return this.hruData[0].start_date;
+      }
+
       openDialog() {
+        this._setDefaultStartDate();
         this.$.editHruDialog.opened = true;
       }
 
@@ -137,7 +204,7 @@
               {text: 'This date is already added to the list.', showCloseBtn: true});
           return;
         }
-        this.push('hruData', {due_date: this.selectedDate});
+        this.push('hruData', {due_date: this.selectedDate, end_date: this.selectedDate});
       }
 
       _deleteHruDate(e) {
@@ -148,11 +215,30 @@
         return index === -1;
       }
 
-      _getEditedQprDatesSetId(index) {
-        return (index >= 0) ? (index + 1) : '';
+      updateStartDates(startDate) {
+        if (_.isEmpty(this.hruData)) {
+          return;
+        }
+
+        this.set('hruData.0.start_date', startDate);
+
+        this._calculateStartDateForTheRestOfItems();
+      }
+
+      _calculateStartDateForTheRestOfItems() {
+        let i;
+        for (i = 1; i < this.hruData.length; i++) {
+          this.set('hruData.' + i + '.start_date', this._computeStartDate(i));
+        }
+      }
+
+      _computeStartDate(i) {
+        return moment(this.hruData[i-1].due_date).add(1, 'days').format('YYYY-MM-DD');
       }
 
       _saveHurData() {
+        this.updateStartDates(this.repStartDate);
+
         let endpoint = this.getEndpoint('reportingRequirements', {
           intervId: this.interventionId,
           reportType: this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.HR
