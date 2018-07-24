@@ -353,9 +353,9 @@
       }
 
       _sortCvaDescByDate() {
-        this.partner.core_values_assessments.sort((a,b) => {
+        this.partner.core_values_assessments.sort((a, b) => {
           return new Date(b.date) - new Date(a.date);
-        })
+        });
       }
 
       _displayAssessmentNotification(assesmentDateString, assesmentType) {
