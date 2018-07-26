@@ -395,7 +395,7 @@
         let options = {
           method: 'POST',
           endpoint: this.getEndpoint('attachmentsUpload'),
-          body: {attachment: file},
+          body: {file: file},
           multiPart: true,
           prepareMultipartData: true
         }
