@@ -100,10 +100,12 @@
                 </span>
               </span>
               <span class="col-data flex-c">
-                <iron-icon icon="attachment" class="attachment" hidden$="[[!item.prc_review_file]]"></iron-icon>
+                <iron-icon icon="attachment" class="attachment" hidden$="[[!item.internal_prc_review]]"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.prc_review_file]]" target="_blank" download>[[getFileNameFromURL(item.prc_review_file)]]</a>
+                  <a href$="[[item.internal_prc_review]]" target="_blank" download>
+                    [[getFileNameFromURL(item.internal_prc_review)]]
+                  </a>
                 </span>
               </span>
               <div class="col-data flex-c break-word">
