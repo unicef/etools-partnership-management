@@ -354,12 +354,31 @@
           return;
         }
         this.startSpinner();
+
         delete this.newAmendment.internal_prc_review_file;
+
+        if (this.newAmendment.internal_prc_review) {
+
+          this._uploadPrcReviewAttachment(this.newAmendment.internal_prc_review)
+          .then((response) => this._saveAmendment(this.newAmendment, response.id))
+          .catch((err) => this._handleErrorResponse(err));
+
+        } else {
+          delete this.newAmendment.internal_prc_review;
+          this._saveAmendment(this.newAmendment);
+        }
+
+      }
+
+      _saveAmendment(newAmendment, prcRevAttachmentId)  {
+        if (prcRevAttachmentId) {
+          newAmendment.internal_prc_review = prcRevAttachmentId;
+        }
 
         let options = {
           method: 'POST',
           endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId}),
-          body: this.newAmendment,
+          body: newAmendment,
           multiPart: true,
           prepareMultipartData: true
         };
@@ -368,7 +387,23 @@
             .then((resp) => {
               this._handleResponse(resp);
             }).catch((error) => {
-          this._handleErrorResponse(error);
+              this._handleErrorResponse(error);
+        });
+      }
+
+      _uploadPrcReviewAttachment(file) {
+        let options = {
+          method: 'POST',
+          endpoint: this.getEndpoint('attachmentsUpload'),
+          body: {attachment: file},
+          multiPart: true,
+          prepareMultipartData: true
+        }
+        return this.sendRequest(options)
+            .then((resp) => {
+              return resp;
+            }).catch((error) => {
+              throw new Error('Error uploading Internal PRC Review Attachment');
         });
       }
 
