@@ -110,7 +110,8 @@
                 agreement="[[agreement]]"
                 authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
-                is-new-agreement="[[newAgreementActive]]">
+                is-new-agreement="[[newAgreementActive]]"
+                on-save-agreement="_validateAndTriggerAgreementSave">
             </agreement-details>
           </template>
         </iron-pages>
@@ -196,6 +197,7 @@
               amendments: [],
               agreement_type: null,
               agreement_number: undefined,
+              reference_number_year: null,
               attached_agreement: undefined,
               start: undefined,
               end: undefined,
@@ -206,6 +208,7 @@
               country_programme: undefined,
               signed_by: null,
               partner_manager: null,
+              special_conditions_pca: false,
               permissions: {
                 edit: {
                   agreement_type: true,
@@ -216,18 +219,17 @@
                   end: true,
                   partner: true,
                   partner_manager: true,
-                  signed_by: true,
                   signed_by_id: true,
                   signed_by_partner_date: true,
                   signed_by_unicef_date: true,
-                  start: true
+                  start: true,
+                  special_conditions_pca: true
                 },
                 required: {
                   agreement_type: true,
                   partner: true,
                   country_programme: true,
                   partner_manager: false,
-                  signed_by: false,
                   signed_by_partner_date: false,
                   signed_by_unicef_date: false
                 }
@@ -406,6 +408,7 @@
           status: '',
           agreement_type: agreement.agreement_type,
           partner: agreement.partner,
+          reference_number_year: agreement.reference_number_year,
           authorized_officers: this.authorizedOfficers
         };
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
@@ -415,7 +418,6 @@
         newAgreement = Object.assign(newAgreement, {
           signed_by_unicef_date: agreement.signed_by_unicef_date,
           signed_by_partner_date: agreement.signed_by_partner_date,
-          signed_by: agreement.signed_by,
           partner_manager: agreement.partner_manager,
           attached_agreement: agreement.attached_agreement
         });
@@ -441,6 +443,10 @@
         if (this._primitiveFieldIsModified('partner')) {
           changes.partner = this.agreement.partner;
         }
+        if (this._primitiveFieldIsModified('reference_number_year')) {
+          changes.reference_number_year = this.agreement.reference_number_year;
+        }
+
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           if (this._authorizedOfficersChanged()) {
             changes.authorized_officers = this.authorizedOfficers;
@@ -452,7 +458,7 @@
             changes.attached_agreement = this.agreement.attached_agreement;
           }
 
-          let signedByFields = ['partner_manager', 'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date'];
           signedByFields.forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
@@ -475,7 +481,11 @@
           if (this._objectFieldIsModified('amendments')) {
             changes.amendments = this.agreement.amendments;
           }
+          if (this._primitiveFieldIsModified('special_conditions_pca')) {
+            changes.special_conditions_pca = this.agreement.special_conditions_pca;
+          }
         }
+
         return changes;
       }
 

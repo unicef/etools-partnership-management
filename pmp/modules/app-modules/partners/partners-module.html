@@ -266,7 +266,23 @@
       _initListeners() {
         this.addEventListener('partner-save-error', this._partnerSaveError);
         this.addEventListener('create-partner', this._createPartner);
+        this.addEventListener('save-partner-contact', this._savePartnerContact);
+        this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
         this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+      }
+
+      _savePartnerContact(e) {
+        this._savePartner({
+          id: this.partner.id,
+          staff_members: [e.detail]
+        });
+      }
+
+      _saveCoreValuesAssessment(e) {
+        this._savePartner({
+          id: this.partner.id,
+          core_values_assessments: [e.detail]
+        });
       }
 
       _createNewPartnerDialog() {

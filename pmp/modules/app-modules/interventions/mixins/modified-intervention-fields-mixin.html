@@ -63,13 +63,13 @@
       let updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
         'prc_review_document', 'prc_review_document_file', 'partner_authorized_officer_signatory',
         'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document',
-        'signed_pd_document_file', 'in_amendment'];
+        'signed_pd_document_file', 'in_amendment', 'signed_by_unicef'];
 
       return this._buildModifiedInterventionObject(updatableFields, []);
     }
 
     _getModifiedInterventionDetails() {
-      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
+      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme', 'reference_number_year',
         'start', 'end', 'contingency_pd'];
       let updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
         'sections', 'flat_locations', 'planned_budget', 'planned_visits'];

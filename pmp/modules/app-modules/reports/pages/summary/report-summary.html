@@ -22,42 +22,41 @@
     <div class="content-section paper-material" elevation="1">
       <div class="row-h">
         <div class="col col-6">
-          <etools-form-element-wrapper label="Submitted by">
-            [[getDisplayValue(report.submitted_by)]]
+          <etools-form-element-wrapper label="Submitted by"
+                                       value="[[getDisplayValue(report.submitted_by)]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-6">
-          <etools-form-element-wrapper label="Submission date">
-            [[getDateDisplayValue(report.submission_date)]]
+          <etools-form-element-wrapper label="Submission date"
+                                       value="[[getDateDisplayValue(report.submission_date)]]">
           </etools-form-element-wrapper>
         </div>
       </div>
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Partner contribution to date">
-            [[getDisplayValue(report.partner_contribution_to_date)]]
+          <etools-form-element-wrapper label="Partner contribution to date"
+                                       value="[[getDisplayValue(report.partner_contribution_to_date)]]">
           </etools-form-element-wrapper>
         </div>
       </div>
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Funds received to date">
-            [[displayCurrencyAmount(report.funds_received_to_date, '0')]] [[report.funds_received_to_date_currency]]
-            ([[getDisplayValue(report.funds_received_to_date_percentage)]]%)
+          <etools-form-element-wrapper label="Funds received to date" value="[[displayCurrencyAmount(report.funds_received_to_date, '0')]] [[report.funds_received_to_date_currency]]
+            ([[getDisplayValue(report.funds_received_to_date_percentage)]]%)">
           </etools-form-element-wrapper>
         </div>
       </div>
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Challneges/bottlenecks in the reporting period (latest)">
-            [[getDisplayValue(report.challenges_in_the_reporting_period)]]
+          <etools-form-element-wrapper label="Challneges/bottlenecks in the reporting period (latest)"
+                                       value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]">
           </etools-form-element-wrapper>
         </div>
       </div>
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Proposed way forward (latest)">
-            [[getDisplayValue(report.proposed_way_forward)]]
+          <etools-form-element-wrapper label="Proposed way forward (latest)"
+                                       value="[[getDisplayValue(report.proposed_way_forward)]]">
           </etools-form-element-wrapper>
         </div>
       </div>

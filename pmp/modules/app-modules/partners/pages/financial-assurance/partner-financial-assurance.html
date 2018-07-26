@@ -76,11 +76,6 @@
         box-sizing: content-box;
       }
 
-      .rating-bar {
-        width: 4px;
-        margin-right: 8px;
-      }
-
       .from-vision {
         position: absolute;
         color: var(--secondary-color);
@@ -205,9 +200,10 @@
       <div class="row-h overview-row">
         <div class="col col-6 vision">
           <div class="from-vision">from VISION</div>
-          <div class="layout-horizontal col-4">
-            <div class$="risk-rating-field [[getRiskRatingClass(partner.rating)]] rating-bar"></div>
-            [[partner.rating]]
+          <div class="col-4">
+            <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]">
+              [[partner.rating]]
+            </span>
           </div>
           <div class="col col-4">[[partner.type_of_assessment]]</div>
           <div class="col col-4 center-align">

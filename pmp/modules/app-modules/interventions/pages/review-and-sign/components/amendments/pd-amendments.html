@@ -32,17 +32,9 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
-      .list-container {
-        position: relative;
-      }
       .attachment {
         color: var(--dark-icon-color);
         margin-right: 8px;
-      }
-      .break-word {
-        word-break: break-word;
-        word-wrap: break-word; /* for IE */
-        align-items: center;
       }
       .file-label {
         width: calc(100% - 32px);
@@ -63,7 +55,7 @@
           </paper-icon-button>
         </div>
       </template>
-      <div class="list-container" id="amendments-wrapper">
+      <div class="p-relative" id="amendments-wrapper">
         <etools-data-table-header id="listHeader"
                                   no-collapse
                                   no-title

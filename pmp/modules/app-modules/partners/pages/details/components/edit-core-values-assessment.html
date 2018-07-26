@@ -1,0 +1,79 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
+<link rel="import" href="../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../styles/required-field-styles.html">
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../styles/required-field-styles.html">
+
+<dom-module id="edit-core-values-assessment">
+  <template>
+    <style include="grid-layout-styles required-field-starred-styles">
+      :host {
+        display: block
+      }
+    </style>
+
+    <etools-dialog id="cvaDialog" dialog-title="Upload Core Values Assessment" size="md"
+                   ok-btn-text="Save" keep-dialog-open on-confirm-btn-clicked="_saveCoreValueAssessment">
+      <div class="layout-horizontal row-padding-v">
+          <etools-form-element-wrapper label="Date Last Assessed"
+                    value="[[prettyDate(item.date)]]">
+          </etools-form-element-wrapper>
+      </div>
+      <div class="layout-horizontal row-padding-v">
+          <etools-single-file id="attachment"
+                    file="{{item.assessment}}"
+                    internal-file="{{item.assessment_file}}"
+                    label="Core Values Assessment"
+                    required
+                    accept=".doc,.docx,.pdf,.jpg,.png">
+          </etools-single-file>
+      </div>
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     */
+    class EditCoreValuesAssessment extends EtoolsPmpApp.Mixins.EventHelper(
+          EtoolsPmpApp.Mixins.Common(Polymer.Element)) {
+      static get is() {
+        return 'edit-core-values-assessment';
+      }
+
+      static get properties() {
+        return {
+          item: {
+            type: Object
+          }
+        };
+      }
+
+      open() {
+        this.$.cvaDialog.opened = true;
+      }
+
+      _saveCoreValueAssessment() {
+        if (!this.shadowRoot.querySelector('#attachment').validate()) {
+          return;
+        }
+        this.fireEvent('save-core-values-assessment', this.item);
+        this.$.cvaDialog.opened = false;
+      }
+
+    }
+
+    window.customElements.define(EditCoreValuesAssessment.is, EditCoreValuesAssessment);
+  </script>
+</dom-module>
