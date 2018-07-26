@@ -84,13 +84,11 @@
       <div slot="panel-btns" id="edit-btns">
         <paper-icon-button icon="cancel"
                            hidden$="[[!_showCancelBtn(_showCancelButton)]]"
-                           disabled$="[[!_showCancelBtn(_showCancelButton)]]"
                            title="Cancel"
                            on-click="_cancelEdit">
         </paper-icon-button>
         <paper-icon-button icon="create"
-                           hidden$="[[!_showEditBtn(editMode, unicefCashEditMode, _showCancelButton)]]"
-                           disabled$="[[!_showEditBtn(editMode, unicefCashEditMode, _showCancelButton)]]"
+                           hidden$="[[!_visibleEditBtn]]"
                            title="Edit"
                            on-click="_editPlannedBudget">
         </paper-icon-button>
@@ -253,6 +251,10 @@
           countryData: {
             type: Object,
             statePath: 'countryData'
+          },
+          _visibleEditBtn: {
+            type: Boolean,
+            computed: '_showEditBtn(editMode, unicefCashEditMode, _showCancelButton, interventionId)'
           }
         };
       }
@@ -295,8 +297,8 @@
         return showCancelButton && this.interventionId;
       }
 
-      _showEditBtn(editMode, unicefCashEditMode, showCancelButton) {
-        return (editMode || unicefCashEditMode) && !showCancelButton && this.interventionId;
+      _showEditBtn(editMode, unicefCashEditMode, showCancelButton, interventionId) {
+        return (editMode || unicefCashEditMode) && !showCancelButton && interventionId > 0;
       }
 
       _isReadonly(editMode, editablePlannedBudget, interventionId) {
