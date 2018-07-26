@@ -117,8 +117,8 @@
       <div class="row-h flex-c">
         <etools-single-file id="prc-review-upload"
                             label="Internal / PRC Reviews"
-                            internal-file="[[newAmendment.prc_review_file]]"
-                            file="{{newAmendment.prc_review}}"
+                            internal-file="[[newAmendment.internal_prc_review_file]]"
+                            file="{{newAmendment.internal_prc_review}}"
                             accept=".doc,.docx,.pdf,.jpg,.png">
         </etools-single-file>
       </div>
@@ -199,8 +199,8 @@
               'signed_amendment': null,
               'signed_amendment_file': '',
               'amendment_number': null,
-              'prc_review': null,
-              'prc_review_file': null
+              'internal_prc_review': null,
+              'internal_prc_review_file': null
             }
           }
         };
@@ -354,6 +354,7 @@
           return;
         }
         this.startSpinner();
+        delete this.newAmendment.internal_prc_review_file;
 
         let options = {
           method: 'POST',
