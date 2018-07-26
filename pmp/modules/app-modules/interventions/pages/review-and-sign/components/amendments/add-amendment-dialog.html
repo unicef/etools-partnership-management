@@ -360,8 +360,8 @@
         if (this.newAmendment.internal_prc_review) {
 
           this._uploadPrcReviewAttachment(this.newAmendment.internal_prc_review)
-          .then((response) => this._saveAmendment(this.newAmendment, response.id))
-          .catch((err) => this._handleErrorResponse(err));
+          .then(response => this._saveAmendment(this.newAmendment, response.id))
+          .catch(err => this._handleErrorResponse(err));
 
         } else {
           delete this.newAmendment.internal_prc_review;
@@ -370,7 +370,7 @@
 
       }
 
-      _saveAmendment(newAmendment, prcRevAttachmentId)  {
+      _saveAmendment(newAmendment, prcRevAttachmentId) {
         if (prcRevAttachmentId) {
           newAmendment.internal_prc_review = prcRevAttachmentId;
         }
@@ -398,7 +398,7 @@
           body: {file: file},
           multiPart: true,
           prepareMultipartData: true
-        }
+        };
         return this.sendRequest(options)
             .then((resp) => {
               return resp;
