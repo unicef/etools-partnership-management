@@ -101,7 +101,8 @@
               required>
           </etools-dropdown>
 
-          <year-dropdown selected-year="{{agreement.reference_number_year}}"
+          <year-dropdown label="Reference Year"
+                         selected-year="{{agreement.reference_number_year}}"
                          hidden$="[[!_showYearDropdown(agreement.status)]]">
           </year-dropdown>
         </div>

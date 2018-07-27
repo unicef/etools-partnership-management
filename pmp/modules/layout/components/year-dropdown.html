@@ -25,7 +25,7 @@
     </style>
 
     <etools-dropdown id="yearSelector"
-                     label="Year"
+                     label="[[label]]"
                      options="[[years]]"
                      selected="{{selectedYear}}"
                      allow-outside-scroll
@@ -52,6 +52,10 @@
 
       static get properties() {
         return {
+          label: {
+            type: String,
+            value: 'Year'
+          },
           selectedYear: {
             type: Number,
             notify: true

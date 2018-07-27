@@ -54,7 +54,7 @@
         width: 100%;
       }
 
-      paper-input,
+      paper-input:not(#ref-nr),
       agreement-selector,
       etools-cp-structure {
         width: 100%;
@@ -139,11 +139,13 @@
         </div>
 
         <div class="col col-3" title$="[[intervention.number]]">
-          <year-dropdown selected-year="{{intervention.reference_number_year}}"
+          <year-dropdown label="Reference Year"
+                         selected-year="{{intervention.reference_number_year}}"
                          hidden$="[[!_isDraft(intervention.status)]]">
           </year-dropdown>
           <!-- Reference Number -->
-          <paper-input label="Reference Number"
+          <paper-input id="ref-nr"
+                       label="Reference Number"
                        value="[[intervention.number]]"
                        placeholder="&#8212;"
                        disabled></paper-input>
