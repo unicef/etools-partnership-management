@@ -181,7 +181,7 @@
                 [[prettyDate(item.date)]]
                 <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
               </span>
-              <span class="col-6">
+              <span class="col-6 break-word">
                   <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
                   <span hidden$="[[item.assessment_file]]" class="placeholder-style">&#8212;</span>
                   <a href$="[[item.assessment_file]]"
@@ -353,6 +353,9 @@
       }
 
       _sortCvaDescByDate() {
+        if (!this.partner.core_values_assessments || this.partner.core_values_assessments.length <= 1) {
+          return;
+        }
         this.partner.core_values_assessments.sort((a, b) => {
           return new Date(b.date) - new Date(a.date);
         });
