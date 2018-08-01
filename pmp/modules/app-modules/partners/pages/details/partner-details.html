@@ -178,12 +178,12 @@
             hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
             <div slot="row-data" class="p-relative">
               <span class="col-4">
-                  <iron-icon icon="date-range"></iron-icon>
-                  [[prettyDate(item.date, null,'—')]]
+                [[prettyDate(item.date)]]
+                <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
               </span>
-              <span class="col-6">
+              <span class="col-6 break-word">
                   <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
-                  <span hidden$="[[item.assessment_file]]">—</span>
+                  <span hidden$="[[item.assessment_file]]" class="placeholder-style">&#8212;</span>
                   <a href$="[[item.assessment_file]]"
                           target="_blank" download>[[getFileNameFromURL(item.assessment_file)]]</a>
               </span>
@@ -347,7 +347,18 @@
           if (partner.type_of_assessment === 'Micro Assessment') {
             this._displayAssessmentNotification(partner.last_assessment_date, 'Micro Assessment');
           }
+
+          this._sortCvaDescByDate();
         }
+      }
+
+      _sortCvaDescByDate() {
+        if (!this.partner.core_values_assessments || this.partner.core_values_assessments.length <= 1) {
+          return;
+        }
+        this.partner.core_values_assessments.sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        });
       }
 
       _displayAssessmentNotification(assesmentDateString, assesmentType) {
@@ -398,6 +409,13 @@
 
       _validatePageData() {
         return this.$.staffMembersList.validate();
+      }
+      _isEmptyDate(date) {
+        if (!date) {
+          return true;
+        }
+        let converted = this.prettyDate(date);
+        return !converted;
       }
 
       _empty(val) {
