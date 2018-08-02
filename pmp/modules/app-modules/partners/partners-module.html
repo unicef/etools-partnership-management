@@ -422,8 +422,8 @@
       _partnerDataIsValid() {
         let valid = true;
         let partnersPages = [
-          this.shadowRoot.querySelector('#financialAssurance'),
-          this.shadowRoot.querySelector('#partnerDetails')
+          this.shadowRoot.querySelector('#financialAssurance')
+          // this.shadowRoot.querySelector('#partnerDetails')
         ];
         partnersPages.forEach((pageEl) => {
           if (pageEl && !pageEl._validatePageData()) {
