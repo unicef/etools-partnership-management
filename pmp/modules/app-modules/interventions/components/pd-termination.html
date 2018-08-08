@@ -24,14 +24,6 @@
       #pdTerminationConfirmation {
         --etools-dialog-confirm-btn-bg: var(--primary-color);
       }
-
-      .warning {
-        display: flex;
-        flex-direction: row;
-        flex: 1;
-        padding: 16px 24px;
-        background-color: var(--lightest-info-color);
-      }
     </style>
 
     <etools-dialog no-padding
@@ -46,11 +38,6 @@
                    on-confirm-btn-clicked="_triggerPdTermination">
 
       <div class="row-h flex-c">
-
-        <paper-input label="Test" required error-message="Test error" auto-validate></paper-input>
-
-        </paper-input>
-
         <etools-date-input id="terminationDate"
                            label="Termination Date"
                            value="{{termination.date}}"
@@ -74,7 +61,6 @@
       <div class="row-h">
         <etools-warn-message
                 message="Once you hit save, the PD/SSFA will be Terminated and this action cannot be reversed">
-
         </etools-warn-message>
       </div>
 
