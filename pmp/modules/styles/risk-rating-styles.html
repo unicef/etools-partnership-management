@@ -12,7 +12,6 @@
           text-align: center;
           padding: 0 5px;
           background-color: var(--risk-rating-significant-color);
-          color: var(--light-primary-text-color);
           /* TODO: capitalize might not be applied, iron-input bug */
           text-transform: capitalize;
           box-sizing: border-box;
@@ -41,7 +40,9 @@
 
         --risk-rating-unavailable: {
           @apply --risk-rating-field;
-          background-color: var(--risk-rating-default-color);
+          color: var(--primary-text-color);
+          background-color: transparent;
+          text-align: left;
           padding-left: 0;
         };
         --risk-rating-not-assessed: {

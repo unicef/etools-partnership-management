@@ -13,7 +13,7 @@
     "app-route": "PolymerElements/app-route#^2.0.0",
     "dexie": "^2.0.1",
     "etools-ajax": "3.0.0",
-    "etools-app-selector": "2.0.2",
+    "etools-app-selector": "2.1.0",
     "etools-behaviors": "2.0.0",
     "etools-content-panel": "2.0.0",
     "etools-currency-amount-input": "2.0.0",
@@ -61,7 +61,8 @@
   "resolutions": {
     "polymer": "^2.0.0",
     "lodash": "^4.17.5",
-    "moment-element": "^3.0.0"
+    "moment-element": "^3.0.0",
+    "etools-dialog": "^2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"

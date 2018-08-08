@@ -21,10 +21,11 @@
 <link rel="import" href="../../../../../../styles/file-styles.html">
 <link rel="import" href="../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../../styles/required-field-styles.html">
 
 <dom-module id="add-amendment-dialog">
   <template>
-    <style include="grid-layout-styles buttons-styles file-styles shared-styles">
+    <style include="grid-layout-styles buttons-styles file-styles shared-styles required-field-starred-styles">
 
       :host {
         --etools-file-upload-button: {
@@ -99,7 +100,7 @@
       </div>
       <div class="row-h flex-c">
         <!-- Signed Agreement -->
-        <etools-single-file id="file-upload"
+        <etools-single-file id="signed-agreement-upload"
                             label="Signed Agreement"
                             internal-file="[[newAmendment.signed_amendment_file]]"
                             file="{{newAmendment.signed_amendment}}"
@@ -107,6 +108,14 @@
                             error-message="Attachment required"
                             required
                             auto-validate>
+        </etools-single-file>
+      </div>
+      <div class="row-h flex-c">
+        <etools-single-file id="prc-review-upload"
+                            label="Internal / PRC Reviews"
+                            internal-file="[[newAmendment.internal_prc_review_file]]"
+                            file="{{newAmendment.internal_prc_review}}"
+                            accept=".doc,.docx,.pdf,.jpg,.png">
         </etools-single-file>
       </div>
     </etools-dialog>
@@ -185,7 +194,9 @@
               'signed_date': null,
               'signed_amendment': null,
               'signed_amendment_file': '',
-              'amendment_number': null
+              'amendment_number': null,
+              'internal_prc_review': null,
+              'internal_prc_review_file': null
             }
           }
         };
@@ -203,8 +214,6 @@
       }
 
       resetAmendment() {
-        // this is to trigger change detection on etools-single-file
-        this.set('newAmendment.signed_amendment_file', null);
         this.set('newAmendment', JSON.parse(JSON.stringify(this.newAmendmentModel)));
       }
 
@@ -266,7 +275,7 @@
 
       _validateFileUpload(amendment) {
         let valid = true;
-        let fileUplodEl = this.shadowRoot.querySelector('#file-upload');
+        let fileUplodEl = this.shadowRoot.querySelector('#signed-agreement-upload');
         if (fileUplodEl) {
           valid = !!amendment.signed_amendment;
           fileUplodEl.invalid = !valid;
@@ -300,7 +309,7 @@
         if (signedDateEl) {
           signedDateEl.invalid = false;
         }
-        let fileUpload = this.shadowRoot.querySelector('#file-upload');
+        let fileUpload = this.shadowRoot.querySelector('#signed-agreement-upload');
         if (fileUpload) {
           fileUpload.invalid = false;
         }
@@ -342,10 +351,30 @@
         }
         this.startSpinner();
 
+        delete this.newAmendment.internal_prc_review_file;
+
+        if (this.newAmendment.internal_prc_review) {
+
+          this._uploadPrcReviewAttachment(this.newAmendment.internal_prc_review)
+          .then(response => this._saveAmendment(this.newAmendment, response.id))
+          .catch(err => this._handleErrorResponse(err));
+
+        } else {
+          delete this.newAmendment.internal_prc_review;
+          this._saveAmendment(this.newAmendment);
+        }
+
+      }
+
+      _saveAmendment(newAmendment, prcRevAttachmentId) {
+        if (prcRevAttachmentId) {
+          newAmendment.internal_prc_review = prcRevAttachmentId;
+        }
+
         let options = {
           method: 'POST',
           endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId}),
-          body: this.newAmendment,
+          body: newAmendment,
           multiPart: true,
           prepareMultipartData: true
         };
@@ -354,7 +383,23 @@
             .then((resp) => {
               this._handleResponse(resp);
             }).catch((error) => {
-          this._handleErrorResponse(error);
+              this._handleErrorResponse(error);
+        });
+      }
+
+      _uploadPrcReviewAttachment(file) {
+        let options = {
+          method: 'POST',
+          endpoint: this.getEndpoint('attachmentsUpload'),
+          body: {file: file},
+          multiPart: true,
+          prepareMultipartData: true
+        };
+        return this.sendRequest(options)
+            .then((resp) => {
+              return resp;
+            }).catch((error) => {
+              throw new Error('Error uploading Internal PRC Review Attachment');
         });
       }
 

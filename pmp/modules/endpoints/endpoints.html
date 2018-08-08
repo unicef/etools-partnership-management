@@ -83,7 +83,7 @@
       cachingKey: 'dropdownsStatic'
     },
     locations: {
-      url: '/api/locations',
+      url: '/api/locations-light',
       exp: 60 * 60 * 60 * 1000, // 60h
       cachingKey: 'locations'
     },
@@ -239,6 +239,9 @@
     },
     pdLocationsExport: {
       url: '/api/v2/interventions/locations/'
+    },
+    attachmentsUpload: {
+      url: '/api/v2/attachments/upload/'
     }
   };
 </script>

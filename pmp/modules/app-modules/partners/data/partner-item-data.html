@@ -248,11 +248,17 @@
               this.set('handleSuccResponseAdditionalCallback', callback);
             }
             let withUpload = false; // used to set multipart prop on etools-ajax
-            if (partner.hasOwnProperty('core_values_assessment')) {
-              if (partner.core_values_assessment instanceof File) {
-                withUpload = true;
-              } else {
-                delete partner.core_values_assessment;
+            if (partner.hasOwnProperty('core_values_assessments')) {
+              if (partner.core_values_assessments.length) {
+                for(let i = 0; i < partner.core_values_assessments.length; i++) {
+                  if (partner.core_values_assessments[i].assessment instanceof File) {
+                    withUpload = true;
+                    break;
+                  }
+                }
+                if (!withUpload) {
+                delete partner.core_values_assessments;
+                }
               }
             }
             if (partner.hasOwnProperty('assessments')) {

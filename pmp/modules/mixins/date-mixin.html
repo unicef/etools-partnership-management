@@ -13,9 +13,9 @@
    */
   EtoolsPmpApp.Mixins.Date = Polymer.dedupingMixin(baseClass => class extends EtoolsLogsMixin(baseClass) {
 
-    prettyDate(dateString, format) {
+    prettyDate(dateString, format, placeholder) {
       let date = this._convertDate(dateString);
-      return (!date) ? '' : this._utcDate(date, format);
+      return (!date) ? (placeholder ? placeholder : ''): this._utcDate(date, format);
     }
 
     _utcDate(date, format) {
