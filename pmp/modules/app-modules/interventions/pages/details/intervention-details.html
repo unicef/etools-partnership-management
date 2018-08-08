@@ -54,7 +54,7 @@
         width: 100%;
       }
 
-      paper-input:not(#ref-nr),
+      paper-input,
       agreement-selector,
       etools-cp-structure {
         width: 100%;
@@ -108,21 +108,22 @@
         @apply --layout-horizontal;
       }
 
-      year-dropdown {
-        margin-right: 24px;
-      }
+
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
-      <div class="row-h flex-c">
-        <div class="col col-6">
+      <div class="row-h">
+        <div class="col flex-c">
           <agreement-selector id="agreementSelector"
                               agreement-id="{{intervention.agreement}}"
                               partner-id="{{selectedPartnerId}}"
                               selected-agreement="{{agreement}}"
                               intervention="[[intervention]]"></agreement-selector>
         </div>
-        <div class="col col-3">
+      </div>
+      <div class="row-h">
+        <div class="col col-6">
           <etools-dropdown id="documentType"
                            label="Document Type"
                            placeholder="&#8212;"
@@ -138,12 +139,13 @@
 
         </div>
 
-        <div class="col col-3" title$="[[intervention.number]]">
-          <year-dropdown label="Reference Year"
+        <div class="col" title$="[[intervention.number]]">
+          <year-dropdown label="Ref. Year"
                          selected-year="{{intervention.reference_number_year}}"
                          hidden$="[[!_isDraft(intervention.status)]]">
           </year-dropdown>
-          <!-- Reference Number -->
+        </div>
+        <div class="col flex-c">
           <paper-input id="ref-nr"
                        label="Reference Number"
                        value="[[intervention.number]]"
@@ -212,11 +214,7 @@
                                  error-message="Please select partner focal points">
           </etools-dropdown-multi>
         </div>
-        <div class="col col-6">
-          <etools-form-element-wrapper label="Partner Vendor Number"
-                                       value="[[intervention.partner_vendor]]">
-          </etools-form-element-wrapper>
-        </div>
+
       </div>
     </etools-content-panel>
 
