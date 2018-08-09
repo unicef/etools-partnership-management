@@ -5,15 +5,20 @@
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
+
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
+<link rel="import" href="../../../../layout/components/year-dropdown.html">
+
 
 <link rel="import" href="../../../../styles/required-field-styles.html">
 <link rel="import" href="../../../../styles/buttons-styles.html">
@@ -29,7 +34,7 @@
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
-<link rel="import" href="components/agreement-amendments.html">
+<link rel="import" href="components/amendments/agreement-amendments.html">
 <link rel="import" href="components/generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
@@ -41,7 +46,11 @@
         width: 100%;
         --esmm-list-wrapper: {
           max-height: 400px;
-        }
+        };
+        --etools-file-upload-button: {
+          /* overrides previus color, possibly from pd-attachements */
+          color: var(--etools-file-main-btn-color);
+        };
       }
 
       .type-warning {
@@ -61,11 +70,21 @@
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
         margin-right: 24px;
+        padding-right: 24px;
       }
 
       .generate-pca[hidden] + .col {
         padding-left: 0;
       }
+
+      paper-toggle-button {
+        font-size: 16px;
+      }
+
+      #cancelAoEdit {
+        color: var(--error-color);
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Agreement Details">
@@ -86,7 +105,13 @@
               error-message="Please select agreement type"
               required>
           </etools-dropdown>
+
+          <year-dropdown label="Reference Year"
+                         selected-year="{{agreement.reference_number_year}}"
+                         hidden$="[[!_showYearDropdown(agreement.status)]]">
+          </year-dropdown>
         </div>
+
         <div class="col col-3">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
@@ -99,8 +124,9 @@
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
           <div class="col col-3">
-            <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
-              <span>[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]</span>
+
+            <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
+                                         value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
             </etools-form-element-wrapper>
           </div>
         </template>
@@ -122,8 +148,8 @@
               required>
           </etools-dropdown>
           <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
-                                       hidden$="[[agreement.permissions.edit.partner]]">
-            <span>[[agreement.partner_name]]</span>
+                                       hidden$="[[agreement.permissions.edit.partner]]"
+                                       value="[[agreement.partner_name]]">
           </etools-form-element-wrapper>
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]" restamp>
@@ -176,8 +202,8 @@
                 hidden$="[[!agreement.permissions.edit.partner_manager]]">
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"
-                                         hidden$="[[agreement.permissions.edit.partner_manager]]">
-              <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
+                                         hidden$="[[agreement.permissions.edit.partner_manager]]"
+                                         value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-3">
@@ -193,17 +219,7 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By UNICEF -->
-            <etools-dropdown
-                id="signedByUnicef"
-                label="Signed By UNICEF"
-                placeholder="&#8212;"
-                options="[[unicefSeniorStaff]]"
-                option-value="id"
-                option-label="name"
-                selected="{{agreement.signed_by}}"
-                dynamic-align
-                readonly$="[[!agreement.permissions.edit.signed_by]]">
-            </etools-dropdown>
+            <etools-form-element-wrapper value="Signed by UNICEF Authorized Officer"></etools-form-element-wrapper>
           </div>
 
           <div class="col col-3">
@@ -227,21 +243,46 @@
                                option-value="id"
                                option-label="name"
                                selected-values="{{authorizedOfficers}}"
-                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
                                error-message="Please enter Partner Authorized Officer(s)"
                                required$="[[agreement.permissions.required.authorized_officers]]"
                                auto-validate$="[[enableEditForAuthorizedOfficers]]">
         </etools-dropdown-multi>
         <etools-form-element-wrapper label="Authorized Officers"
                                      required$="[[agreement.permissions.required.authorized_officers]]"
-                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]">
-          <span>[[_getReadonlyAuthorizedOfficers(agreement)]]</span>
+                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
+                                     value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]">
         </etools-form-element-wrapper>
       </div>
 
+      <div class="layout-horizontal row-padding-h"
+           hidden$="[[!_showAoEditBtn(agreement.status, editMode, agreement.permissions.edit.authorized_officers)]]">
+        <paper-button id="editAo"
+                      class="secondary-btn"
+                      on-tap="_enableAoEdit"
+                      hidden$="[[allowAoEditForSSFA]]">
+          <iron-icon icon="create"></iron-icon>
+          <span>Amend Authorized Officers</span>
+        </paper-button>
+        <paper-button id="cancelAoEdit"
+                      class="secondary-btn"
+                      on-tap="_cancelAoEdit"
+                      hidden$="[[!allowAoEditForSSFA]]">
+          <iron-icon icon="cancel"></iron-icon>
+          <span>Cancel Authorized Officers amendment</span>
+        </paper-button>
+      </div>
+
+      <div class="row-h flex-c">
+        <paper-toggle-button checked="{{agreement.special_conditions_pca}}"
+                             hidden$="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]"
+                             disabled$="[[!agreement.permissions.edit.special_conditions_pca]]">
+          Special Conditions PCA
+        </paper-toggle-button>
+      </div>
       <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
         <div class="generate-pca col col-3"
-             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
+             hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
           <paper-input-container
               class="form-field-wrapper secondary-btn-wrapper"
               always-float-label>
@@ -255,8 +296,8 @@
           </paper-input-container>
         </div>
         <div class="generate-pca col col-3"
-             hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
-          <span class="type-warning">Save before generating the PCA template</span>
+             hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
+          <span class="type-warning">[[generatePCAMessage]]</span>
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
           <etools-single-file
@@ -273,15 +314,15 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
-        <agreement-amendments id="agreementAmendments"
-                              data-items="{{agreement.amendments}}"
-                              agreement-type="[[agreement.agreement_type]]"
-                              edit-mode$="[[agreement.permissions.edit.amendments]]"
-                              on-unlock-authorized-officers="_unlockAuthorizedOfficers"
-                              on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
-        </agreement-amendments>
-      </etools-content-panel>
+      <agreement-amendments id="agreementAmendments"
+                            class="content-section"
+                            data-items="{{agreement.amendments}}"
+                            agreement-type="[[agreement.agreement_type]]"
+                            edit-mode$="[[agreement.permissions.edit.amendments]]"
+                            show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
+                            authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+                            selected-ao="{{authorizedOfficers}}">
+      </agreement-amendments>
     </template>
 
   </template>
@@ -291,14 +332,12 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.StaffMembersData
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.Common,
@@ -370,6 +409,14 @@
           enableEditForAuthorizedOfficers: {
             type: Boolean,
             value: false
+          },
+          generatePCAMessage: {
+            type: String,
+            value: 'Save before generating the PCA template'
+          },
+          allowAoEditForSSFA: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -377,7 +424,8 @@
       static get observers() {
         return [
           '_agreementFieldChanged(agreement.*)',
-          '_partnerChanged(agreement.partner)'
+          '_partnerChanged(agreement.partner)',
+          '_handleSpecialConditionsPca(agreement.special_conditions_pca, agreement.agreement_type)'
         ];
       }
 
@@ -395,14 +443,24 @@
         // triggered by parent element on stamp
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.fireEvent('tab-content-attached');
-
-        this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
         if (this.generatePCADialog) {
           document.querySelector('body').removeChild(this.generatePCADialog);
+        }
+      }
+
+      _handleSpecialConditionsPca(isSpecialConditionsPCA, agreementType) {
+        if (agreementType !== this.CONSTANTS.AGREEMENT_TYPES.PCA) {
+          this.set('agreement.isSpecialConditionsPCA', false);
+        }
+
+        if (isSpecialConditionsPCA) {
+          this.generatePCAMessage = 'Generate PCA template not available for Special Conditions PCA';
+        } else {
+          this.generatePCAMessage = 'Save before generating the PCA template';
         }
       }
 
@@ -447,6 +505,8 @@
         if (this.generatePCADialog) {
           this.generatePCADialog.agreementId = agreement.id;
         }
+
+        this.set('allowAoEditForSSFA', false);
 
         if (typeof agreement === 'object' && agreement !== null && agreement.id) {
           // prevent wrong new agreement value
@@ -498,6 +558,11 @@
         return this.isNewAgreement || (this.agreement && this.agreement.status === 'draft');
       }
 
+      _showYearDropdown(status) {
+        return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+            status === '' || status === undefined;
+      }
+
       _allowEdit(agreementStatus, editMode) {
         editMode = editMode || this.editMode;
         if (!editMode) {
@@ -506,12 +571,19 @@
         return !(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft());
       }
 
-      _showGeneratePcaBtn(type, isNewAgreement) {
+      _showGeneratePcaBtn(type, isNewAgreement, isSpecialConditionsPCA) {
+        if (isSpecialConditionsPCA) {
+          return false;
+        }
         return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && this._isDraft() && !isNewAgreement;
       }
 
-      _showGeneratePcaWarning(type, isNewAgreement) {
-        return type === this.CONSTANTS.AGREEMENT_TYPES.PCA && isNewAgreement;
+      _showGeneratePcaWarning(type, isNewAgreement, isSpecialConditionsPCA) {
+        if (type !== this.CONSTANTS.AGREEMENT_TYPES.PCA) {
+          return false;
+        }
+
+        return isSpecialConditionsPCA || isNewAgreement;
       }
 
       _partnerChanged(currentPartnerId) {
@@ -578,8 +650,8 @@
         }
         if (this.agreement.partner_signatory) {
           return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
-        } else if (this.staffMembers && this.staffMembers.length) {
-          let selectedPartner = this.staffMembers.filter(function(s) {
+        } else if (staffMembers && staffMembers.length) {
+          let selectedPartner = staffMembers.filter(function(s) {
             return parseInt(s.id) === parseInt(selectedId);
           });
           if (selectedPartner && selectedPartner.length) {
@@ -589,13 +661,22 @@
         return '';
       }
 
-      _getReadonlyAuthorizedOfficers(agreement) {
-        if (!agreement.authorized_officers || !agreement.authorized_officers.length) {
+      _getReadonlyAuthorizedOfficers(agreement, selection, staffMembers) {
+        let ao = [];
+        const aoSelected = selection instanceof Array && selection.length > 0;
+        if (aoSelected) {
+          const selectedIds = selection.map(s => parseInt(s, 10));
+          ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)
+              .filter(a => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
+        } else {
+          ao = (agreement && agreement.authorized_officers instanceof Array)
+            ? agreement.authorized_officers
+            : [];
+        }
+        if (!ao || !ao.length) {
           return '';
         }
-        let names = agreement.authorized_officers.map(function(officer) {
-          return officer.first_name + ' ' + officer.last_name;
-        });
+        const names = ao.map(officer => aoSelected ? officer.name : (officer.first_name + ' ' + officer.last_name));
         return names.join(' | ');
       }
 
@@ -621,44 +702,32 @@
         this.set('authorizedOfficers', []);
       }
 
-      // trigger authorized officers field to be locked/unlocked
-      _unlockAuthorizedOfficers(e) {
-        e.stopImmediatePropagation();
-        this.set('enableEditForAuthorizedOfficers', true);
-      }
-
       // set authorized officers field readonly mode
-      _allowAuthorizedOfficersEditing(agreementStatus, editMode, enableEditForAuthorizedOfficers) {
-        if (!this.agreement) {
+      _allowAuthorizedOfficersEditing(agreementStatus, editMode, allowAoEditForSSFA) {
+        if (!this.agreement || !editMode) {
           return false;
         }
-        if (!editMode) {
-          // used has no edit permissions
-          return false;
+        if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA &&
+            agreementStatus === this.CONSTANTS.STATUSES.Signed.toLowerCase()) {
+          return !this.agreement.permissions.edit.authorized_officers ? false : allowAoEditForSSFA;
+        } else {
+          return this.agreement.permissions.edit.authorized_officers;
         }
-
-        // canBeEdited = false - either field is locked or the user has no edit permissions;
-        // not knowing exactly why is false we need to check user editMode first(first method lines)
-        let canBeEdited = this.agreement.permissions.edit.authorized_officers;
-        // if is locked (in signed status), enableEditForAuthorizedOfficers will make this field editable
-        if (!canBeEdited && enableEditForAuthorizedOfficers) {
-          // reset existing officers selection
-          this.set('authorizedOfficers', []);
-          return true;
-        }
-        return canBeEdited;
       }
 
-      // trugger authorized officers field lock and restore initial value(if needed)
-      _lockAuthorizedOfficersAndRestoreSelection(e) {
-        e.stopImmediatePropagation();
-        if (!this.enableEditForAuthorizedOfficers) {
-          // stop; enableEditForAuthorizedOfficers already set to false
-          return;
-        }
-        // restore officers selection (because you do not have any new amendment for changing this field)
-        this._initAuthorizedOfficers(this.originalAgreementData.authorized_officers);
-        this.set('enableEditForAuthorizedOfficers', false);
+      _showAoEditBtn(status, editMode, permissionsEditAO) {
+        return this.agreement && this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA && editMode &&
+            permissionsEditAO && status === this.CONSTANTS.STATUSES.Signed.toLowerCase();
+      }
+
+      _enableAoEdit() {
+        this.set('allowAoEditForSSFA', true);
+      }
+
+      _cancelAoEdit() {
+        this._initAuthorizedOfficers(this.agreement.authorized_officers);
+        this.$.officers.resetInvalidState();
+        this.set('allowAoEditForSSFA', false);
       }
 
       // Validate agreement fields
@@ -667,7 +736,6 @@
         let reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
         if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           reqFieldsSelectors.push('#cpStructure');
-          reqFieldsSelectors.push('#agreementAmendments');
         }
         reqFieldsSelectors.forEach(function(fSelector) {
           let field = this.shadowRoot.querySelector(fSelector);

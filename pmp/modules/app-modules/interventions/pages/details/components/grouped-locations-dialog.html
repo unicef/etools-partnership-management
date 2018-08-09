@@ -190,7 +190,7 @@
             adminLevelLocation: null,
             subordinateLocations: []
           };
-          if (this.interventionLocations[i].location_type === adminLevel) {
+          if (this.interventionLocations[i].gateway.name === adminLevel) { // gateway.name is location_type
             grouping.adminLevelLocation = this.interventionLocations[i];
             groupedLocations.push(grouping);
             continue;
@@ -247,7 +247,7 @@
         if (!parent) {
           return null;
         }
-        if (parent.location_type === adminLevel) {
+        if (parent.gateway.name === adminLevel) {
           return parent;
         }
         return this._findAdminLevelParent(parent, adminLevel);

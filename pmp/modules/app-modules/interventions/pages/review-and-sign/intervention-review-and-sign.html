@@ -35,6 +35,11 @@
       :host {
         @apply --layout-vertical;
         width: 100%;
+
+        --etools-file-upload-button: {
+          /* overrides previus color, possibly from pd-attachements */
+          color: var(--etools-file-main-btn-color);
+        };
       }
 
       paper-input {
@@ -70,7 +75,7 @@
         </div>
         <div class="col col-3">
           <!-- Submitted to PRC? -->
-          <etools-form-element-wrapper>
+          <etools-form-element-wrapper no-placeholder>
             <paper-checkbox checked="{{intervention.submitted_to_prc}}"
                             disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
                             hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
@@ -141,20 +146,10 @@
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
-          <!-- Signed by UNICEF -->
-          <etools-dropdown id="signedByUnicef"
-                           label="Signed by UNICEF"
-                           placeholder="&#8212;"
-                           options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
-                           option-value="id"
-                           option-label="name"
-                           selected="{{intervention.unicef_signatory}}"
-                           dynamic-align
-                           readonly$="[[!permissions.edit.unicef_signatory]]"
-                           required$="[[permissions.required.unicef_signatory]]"
-                           auto-validate
-                           error-message="Please select UNICEF user">
-          </etools-dropdown>
+          <!-- Signed by UNICEF Authorized Officer -->
+          <etools-form-element-wrapper no-placeholder>
+              Signed by UNICEF Authorized Officer
+          </etools-form-element-wrapper>
         </div>
         <div class="col col-3">
           <!-- Signed by UNICEF Date -->
@@ -167,6 +162,23 @@
                              error-message="Date is required"
                              no-init show-clear-btn disable-future-dates>
           </etools-date-input>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <!-- Signed by UNICEF -->
+          <etools-dropdown id="signedByUnicef"
+                           label="Signed by UNICEF"
+                           placeholder="&#8212;"
+                           options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
+                           option-value="id"
+                           option-label="name"
+                           selected="{{intervention.unicef_signatory}}"
+                           dynamic-align
+                           readonly$="[[!permissions.edit.unicef_signatory]]"
+                           auto-validate
+                           error-message="Please select UNICEF user">
+          </etools-dropdown>
         </div>
       </div>
       <div class="row-h flex-c">

@@ -49,7 +49,7 @@
             Travel Type
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="date">
-            When
+            End Date
           </etools-data-table-column>
           <etools-data-table-column class="col-2" field="locations">
             Locations
@@ -76,8 +76,8 @@
               <span class="col-data col-2" title="[[visit.travel_type]]">
                   [[visit.travel_type]]
               </span>
-              <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
-                  [[getDateDisplayValue(visit.date)]]
+              <span class="col-data col-2" title="[[getDateDisplayValue(visit.travel_latest_date)]]">
+                  [[getDateDisplayValue(visit.travel_latest_date)]]
               </span>
               <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
                   [[getDisplayValue(visit.locations)]]
@@ -100,13 +100,13 @@
                   [[visit.reference_number]]
                 </a>
               </span>
-              <span class="col-data col-2" title="[[visit.primary_traveler]]">
+              <span class="col-data col-2" title="[[visit.tpm_partner.name]]">
                 <span class="truncate"> [[visit.tpm_partner.name]] </span>
               </span>
-              <span class="col-data col-2" title="[[visit.travel_type]]">
+              <span class="col-data col-2" title="TPM Visit">
                   TPM Visit
               </span>
-              <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
+              <span class="col-data col-2" title="[[getDateDisplayValue(visit.end_date)]]">
                   [[getDateDisplayValue(visit.end_date)]]
               </span>
               <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">

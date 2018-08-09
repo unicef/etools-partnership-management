@@ -107,6 +107,12 @@
         };
       }
 
+      static get observers() {
+        return [
+          '_handleStatusChange(status, agreementId)'
+        ];
+      }
+
       ready() {
         super.ready();
         this.set('sectionName', 'Agreement');

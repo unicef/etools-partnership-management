@@ -82,13 +82,8 @@
       exp: 6 * 60 * 60 * 1000, // 6h
       cachingKey: 'dropdownsStatic'
     },
-    sectors: {
-      url: '/api/reports/sectors',
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'sectors'
-    },
     locations: {
-      url: '/api/locations',
+      url: '/api/locations-light',
       exp: 60 * 60 * 60 * 1000, // 60h
       cachingKey: 'locations'
     },
@@ -104,7 +99,7 @@
       url: '/api/v2/reports/countryprogramme/'
     },
     sections: {
-      url: '/api/sections',
+      url: '/api/v2/reports/sections/',
       exp: 6 * 60 * 60 * 1000,
       cachingKey: 'sections'
     },
@@ -244,6 +239,9 @@
     },
     pdLocationsExport: {
       url: '/api/v2/interventions/locations/'
+    },
+    attachmentsUpload: {
+      url: '/api/v2/attachments/upload/'
     }
   };
 </script>

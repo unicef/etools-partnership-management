@@ -28,15 +28,20 @@
     <div id="agreement-selector-content" class="row-h flex-c">
       <template is="dom-if" if="[[!permissions.edit.agreement]]">
         <div class="col col-6">
-          <etools-form-element-wrapper label="Partner Organization" required>
-            <span class="placeholder" hidden$="[[intervention.partner]]">&#8212;</span>
-            <span hidden$="[[!intervention.partner]]">[[intervention.partner]]</span>
+          <etools-form-element-wrapper label="Partner Organization"
+                                       required
+                                       value="[[intervention.partner]]">
           </etools-form-element-wrapper>
         </div>
-        <div class="col col-6">
-          <etools-form-element-wrapper label="Agreement" required>
-            <span class="placeholder" hidden$="[[selectedAgreement.agreement_number]]">&#8212;</span>
-            <span hidden$="[[!selectedAgreement.agreement_number]]">[[selectedAgreement.agreement_number]]</span>
+        <div class="col col-3">
+          <etools-form-element-wrapper label="Partner Vendor Number"
+                                       value="[[intervention.partner_vendor]]">
+          </etools-form-element-wrapper>
+        </div>
+        <div class="col col-3">
+          <etools-form-element-wrapper label="Agreement"
+                                       required
+                                       value="[[selectedAgreement.agreement_number]]">
           </etools-form-element-wrapper>
         </div>
       </template>
@@ -56,8 +61,13 @@
                            error-message="Partner is required">
           </etools-dropdown>
         </div>
+        <div class="col col-2">
+          <etools-form-element-wrapper label="Partner Vendor Number"
+                                       value="[[intervention.partner_vendor]]">
+          </etools-form-element-wrapper>
+        </div>
 
-        <div class="col col-6">
+        <div class="col flex-c">
           <etools-dropdown id="agreements"
                            label="Agreement"
                            placeholder="&#8212;"

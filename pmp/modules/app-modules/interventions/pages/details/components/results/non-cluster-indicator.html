@@ -91,18 +91,6 @@
       </paper-input>
     </div>
 
-    <div class="row-h flex-c">
-      <paper-input id="measurementSpecif" label="Measurement Specifications"
-                   value="{{indicator.measurement_specifications}}" placeholder="&#8212;">
-      </paper-input>
-    </div>
-
-    <div class="row-h flex-c" hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
-      <paper-input id="label" label="Label"
-                   value="{{indicator.label}}" placeholder="&#8212;">
-      </paper-input>
-    </div>
-
     <!-- Baseline & Target -->
     <div class="row-h flex-c" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
       <div class="col col-3">
@@ -121,14 +109,14 @@
         <div class="col col-3">
           <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
             <paper-input label="Baseline"
-                         value="{{indicator.baseline_new.v}}"
+                         value="{{indicator.baseline.v}}"
                          type="number"
                          placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
           <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
             <paper-input label="Baseline"
-                         value="{{indicator.baseline_new.v}}"
+                         value="{{indicator.baseline.v}}"
                          type="number"
                          min="0"
                          max="100"
@@ -139,7 +127,7 @@
         </div>
         <div class="col col-3">
           <paper-input label="Target" id="targetElForNumericUnit"
-                       value="{{indicator.target_new.v}}"
+                       value="{{indicator.target.v}}"
                        type="number"
                        placeholder="&#8212;"
                        required
@@ -149,7 +137,7 @@
                        hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
           </paper-input>
           <paper-input label="Target" id="targetElForNonNumericUnit"
-                       value="{{indicator.target_new.v}}"
+                       value="{{indicator.target.v}}"
                        type="number"
                        min="0"
                        max="100"
@@ -165,14 +153,14 @@
       <template is="dom-if" if="[[_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
         <div class="col-3 layout-horizontal">
           <paper-input label="Baseline"
-                       value="{{indicator.baseline_new.v}}"
+                       value="{{indicator.baseline.v}}"
                        type="number"
                        allowed-pattern="[0-9\.]"
                        placeholder="Numerator" disabled="[[baselineIsUnknown]]">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input
-              value="{{indicator.baseline_new.d}}"
+              value="{{indicator.baseline.d}}"
               type="number"
               min="1"
               allowed-pattern="[0-9\.]"
@@ -181,7 +169,7 @@
         </div>
         <div class="col col-3">
           <paper-input label="Target" id="targetNumerator"
-                       value="{{indicator.target_new.v}}"
+                       value="{{indicator.target.v}}"
                        type="number"
                        allowed-pattern="[0-9\.]"
                        required
@@ -190,7 +178,7 @@
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input id="targetDenominator"
-                       value="{{indicator.target_new.d}}"
+                       value="{{indicator.target.d}}"
                        type="number"
                        min="1"
                        required
@@ -272,9 +260,10 @@
 
       static get observers() {
         return [
-          '_baselineChanged(indicator.baseline_new.v)',
-          '_targetChanged(indicator.target_new.v)',
-          '_baselineUnknownChanged(baselineIsUnknown)'
+          '_baselineChanged(indicator.baseline.v)',
+          '_targetChanged(indicator.target.v)',
+          '_baselineUnknownChanged(baselineIsUnknown)',
+          '_typeChanged(indicator.indicator.display_type, indicator.indicator.unit)'
         ];
       }
 
@@ -290,7 +279,7 @@
           this.baselineIsUnknown = false;
           this.readonly = false;
         } else {
-          this.baselineIsUnknown = !(indicator.baseline_new) || this._isEmptyExcept0(indicator.baseline_new.v);
+          this.baselineIsUnknown = !(indicator.baseline) || this._isEmptyExcept0(indicator.baseline.v);
           this.readonly = true;
         }
       }
@@ -303,8 +292,12 @@
 
       _baselineUnknownChanged(isUnknown) {
         if (isUnknown) {
-          this.set('indicator.baseline_new', {v: null, d: 1});
+          this.set('indicator.baseline', {v: null, d: 1});
         }
+      }
+
+      _typeChanged() {
+        this.resetValidations();
       }
 
       validate() {
@@ -315,7 +308,9 @@
 
       resetValidations() {
         setTimeout(() => {
-          let elemIds = ['titleEl', 'locationsDropdw', 'targetElForNumericUnit', 'targetElForNonNumericUnit'];
+          let elemIds = ['titleEl', 'locationsDropdw'];
+          [].push.apply(elemIds, this._getIndicatorTargetElId());
+
           let i;
           for (i = 0; i < elemIds.length; i++) {
             let elem = this.shadowRoot.querySelector('#' + elemIds[i]);
