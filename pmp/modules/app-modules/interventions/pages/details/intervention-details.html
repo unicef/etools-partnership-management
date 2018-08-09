@@ -56,7 +56,8 @@
 
       paper-input,
       agreement-selector,
-      etools-cp-structure {
+      etools-cp-structure,
+      #ref-year {
         width: 100%;
       }
 
@@ -108,19 +109,15 @@
         @apply --layout-horizontal;
       }
 
-
-
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
       <div class="row-h">
-        <div class="col flex-c">
-          <agreement-selector id="agreementSelector"
-                              agreement-id="{{intervention.agreement}}"
-                              partner-id="{{selectedPartnerId}}"
-                              selected-agreement="{{agreement}}"
-                              intervention="[[intervention]]"></agreement-selector>
-        </div>
+        <agreement-selector id="agreementSelector"
+                            agreement-id="{{intervention.agreement}}"
+                            partner-id="{{selectedPartnerId}}"
+                            selected-agreement="{{agreement}}"
+                            intervention="[[intervention]]"></agreement-selector>
       </div>
       <div class="row-h">
         <div class="col col-6">
@@ -139,10 +136,10 @@
 
         </div>
 
-        <div class="col" title$="[[intervention.number]]">
-          <year-dropdown label="Ref. Year"
-                         selected-year="{{intervention.reference_number_year}}"
-                         hidden$="[[!_isDraft(intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_isDraft(intervention.status)]]">
+          <year-dropdown id="ref-year"
+                         label="Ref. Year"
+                         selected-year="{{intervention.reference_number_year}}">
           </year-dropdown>
         </div>
         <div class="col flex-c">
@@ -150,7 +147,7 @@
                        label="Reference Number"
                        value="[[intervention.number]]"
                        placeholder="&#8212;"
-                       disabled></paper-input>
+                       readonly></paper-input>
         </div>
       </div>
       <div class="row-h flex-c">
@@ -777,9 +774,8 @@
 
       validate() {
         let valid = true;
-        let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
-          '#partnerFocalPts', '#cpStructure', '#sections',
-          '#plannedBudget', '#plannedVisits'];
+        let fieldSelectors = ['#agreementSelector', '#documentType', '#ref-year', '#title', '#unicefOffices',
+          '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
         }

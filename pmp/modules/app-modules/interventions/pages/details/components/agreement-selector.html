@@ -24,9 +24,6 @@
       .no-left-padding {
         padding-left: 0 !important;
       }
-      .vendor-width {
-        width: 164px;
-      }
     </style>
     <div id="agreement-selector-content" class="row-h flex-c">
       <template is="dom-if" if="[[!permissions.edit.agreement]]">
@@ -36,12 +33,12 @@
                                        value="[[intervention.partner]]">
           </etools-form-element-wrapper>
         </div>
-        <div class="col vendor-width">
+        <div class="col col-3">
           <etools-form-element-wrapper label="Partner Vendor Number"
                                        value="[[intervention.partner_vendor]]">
           </etools-form-element-wrapper>
         </div>
-        <div class="col flex-c">
+        <div class="col col-3">
           <etools-form-element-wrapper label="Agreement"
                                        required
                                        value="[[selectedAgreement.agreement_number]]">
@@ -64,7 +61,7 @@
                            error-message="Partner is required">
           </etools-dropdown>
         </div>
-        <div class="col vendor-width">
+        <div class="col col-2">
           <etools-form-element-wrapper label="Partner Vendor Number"
                                        value="[[intervention.partner_vendor]]">
           </etools-form-element-wrapper>

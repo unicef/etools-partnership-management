@@ -1,11 +1,12 @@
 <link rel="import" href="../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/required-field-styles.html">
 
 <dom-module id="year-dropdown">
 
   <template strip-whitespace>
 
-    <style include="shared-styles">
+    <style include="shared-styles required-field-starred-styles">
 
       :host {
         display: block;
@@ -28,8 +29,9 @@
                      options="[[years]]"
                      selected="{{selectedYear}}"
                      allow-outside-scroll
-                     hide-search>
-
+                     hide-search
+                     required auto-validate
+                     error-message="Year is required">
     </etools-dropdown>
 
   </template>
@@ -79,6 +81,10 @@
 
       _getCurrentYear() {
         return new Date().getFullYear();
+      }
+
+      validate() {
+        return this.$.yearSelector.validate();
       }
 
     }
