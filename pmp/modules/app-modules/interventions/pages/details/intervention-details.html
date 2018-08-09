@@ -54,9 +54,10 @@
         width: 100%;
       }
 
-      paper-input:not(#ref-nr),
+      paper-input,
       agreement-selector,
-      etools-cp-structure {
+      etools-cp-structure,
+      #ref-year {
         width: 100%;
       }
 
@@ -108,21 +109,18 @@
         @apply --layout-horizontal;
       }
 
-      year-dropdown {
-        margin-right: 24px;
-      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
-      <div class="row-h flex-c">
+      <div class="row-h">
+        <agreement-selector id="agreementSelector"
+                            agreement-id="{{intervention.agreement}}"
+                            partner-id="{{selectedPartnerId}}"
+                            selected-agreement="{{agreement}}"
+                            intervention="[[intervention]]"></agreement-selector>
+      </div>
+      <div class="row-h">
         <div class="col col-6">
-          <agreement-selector id="agreementSelector"
-                              agreement-id="{{intervention.agreement}}"
-                              partner-id="{{selectedPartnerId}}"
-                              selected-agreement="{{agreement}}"
-                              intervention="[[intervention]]"></agreement-selector>
-        </div>
-        <div class="col col-3">
           <etools-dropdown id="documentType"
                            label="Document Type"
                            placeholder="&#8212;"
@@ -138,17 +136,18 @@
 
         </div>
 
-        <div class="col col-3" title$="[[intervention.number]]">
-          <year-dropdown label="Reference Year"
-                         selected-year="{{intervention.reference_number_year}}"
-                         hidden$="[[!_isDraft(intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_isDraft(intervention.status)]]">
+          <year-dropdown id="ref-year"
+                         label="Ref. Year"
+                         selected-year="{{intervention.reference_number_year}}">
           </year-dropdown>
-          <!-- Reference Number -->
+        </div>
+        <div class="col flex-c">
           <paper-input id="ref-nr"
                        label="Reference Number"
                        value="[[intervention.number]]"
                        placeholder="&#8212;"
-                       disabled></paper-input>
+                       readonly></paper-input>
         </div>
       </div>
       <div class="row-h flex-c">
@@ -212,11 +211,7 @@
                                  error-message="Please select partner focal points">
           </etools-dropdown-multi>
         </div>
-        <div class="col col-6">
-          <etools-form-element-wrapper label="Partner Vendor Number"
-                                       value="[[intervention.partner_vendor]]">
-          </etools-form-element-wrapper>
-        </div>
+
       </div>
     </etools-content-panel>
 
@@ -779,9 +774,8 @@
 
       validate() {
         let valid = true;
-        let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
-          '#partnerFocalPts', '#cpStructure', '#sections',
-          '#plannedBudget', '#plannedVisits'];
+        let fieldSelectors = ['#agreementSelector', '#documentType', '#ref-year', '#title', '#unicefOffices',
+          '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
         }
