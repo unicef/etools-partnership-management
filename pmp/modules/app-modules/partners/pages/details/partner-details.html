@@ -65,6 +65,13 @@
         color: var(--dark-secondary-text-color);
       }
 
+      .cvs-file {
+        width: auto;
+        max-width: calc(100% - 32px);
+        margin-left: 8px;
+        word-break: break-all;
+      }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partner Details">
@@ -177,17 +184,17 @@
             secondary-bg-on-hover$="[[_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
             hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
             <div slot="row-data" class="p-relative">
-              <span class="col-4">
+              <span class="col-data col-4">
                 [[prettyDate(item.date)]]
                 <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
               </span>
-              <span class="col-6 break-word">
+              <span class="col-data col-6">
                   <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
                   <span hidden$="[[item.assessment_file]]" class="placeholder-style">&#8212;</span>
-                  <a href$="[[item.assessment_file]]"
-                          target="_blank" download>[[getFileNameFromURL(item.assessment_file)]]</a>
+                  <a class="cvs-file" href$="[[item.assessment_file]]"
+                     target="_blank" download>[[getFileNameFromURL(item.assessment_file)]]</a>
               </span>
-              <span class="col-2">
+              <span class="col-data col-2">
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
