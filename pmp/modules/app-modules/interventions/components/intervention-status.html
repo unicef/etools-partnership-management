@@ -48,9 +48,7 @@
 
       static get properties() {
         return {
-          interventionId: {
-            type: Number
-          },
+          interventionId: Number,
           activeTab: {
             type: String,
             observer: '_activeTabChanged'
@@ -434,6 +432,11 @@
         }
 
         this._terminationDialog.resetValidations();
+        this._terminationDialog.set('interventionId', this.interventionId);
+        this._terminationDialog.set('termination', {
+          date: null,
+          attachment_notice: null
+        });
         this._terminationDialog.set('opened', true);
       }
 
@@ -459,7 +462,7 @@
         this._terminationDialog = document.createElement('pd-termination');
         document.querySelector('body').appendChild(this._terminationDialog);
 
-        // this._terminationDialog.addEventListener('something...', this.something....bind(this));
+        this._terminationDialog.set('terminationElSource', this);
       }
 
     }

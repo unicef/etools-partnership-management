@@ -5,6 +5,9 @@
 <link rel="import" href="../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../layout/components/etools-warn-message.html">
 
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
@@ -85,8 +88,10 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
-    class PdTermination extends Polymer.Element {
+    class PdTermination extends EtoolsPmpApp.Mixins.AjaxErrorsParser(EtoolsPmpApp.Mixins.Endpoints(Polymer.Element)) {
 
       static get is() {
         return 'pd-termination';
@@ -94,28 +99,28 @@
 
       static get properties() {
         return {
+          interventionId: Number,
           opened: Boolean,
           warningOpened: Boolean,
           termination: {
-            type: Object,
-            value: {
-              date: null,
-              attachment_notice: null
-            }
+            type: Object
           },
           _validationSelectors: {
             type: Array,
             value: ['#terminationDate', '#terminationNotice']
-          }
+          },
+          terminationElSource: Object
         };
       }
 
       _handleDialogClosed(e) {
-        console.log('dialog close...');
+        this.resetValidations();
       }
 
       _triggerPdTermination(e) {
-        console.log('terminate...');
+        if (!this.validate()) {
+          return;
+        }
         this.set('warningOpened', true);
       }
 
@@ -127,11 +132,17 @@
 
       _terminatePD() {
         if (this.validate()) {
-          const terminationDialog = this.$.pdTermination;
-          terminationDialog.startSpinner();
-          // TODO: terminate PD
-          // make request to terminate
-          // validate fields, make sure to reset validations on modal open
+          this._uploadTerminationNotice(this.termination.attachment_notice).then((r) => {
+            this.terminationElSource.fireEvent('terminate-pd',
+                {
+                  interventionId: this.interventionId,
+                  terminationData: {
+                    date: this.termination.date,
+                    fileId: r.id
+                  }
+                });
+            this.set('opened', false);
+          }).catch(err => this._handleErrorResponse(err));
         }
       }
 
@@ -157,21 +168,23 @@
         return isValid;
       }
 
-
-      constructor() {
-        super();
-      }
-
-      ready() {
-        super.ready();
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
+      _uploadTerminationNotice(file) {
+        let options = {
+          method: 'POST',
+          endpoint: this.getEndpoint('attachmentsUpload'),
+          body: {file: file},
+          multiPart: true,
+          prepareMultipartData: true
+        };
+        this.$.pdTermination.startSpinner();
+        return this.sendRequest(options)
+            .then((resp) => {
+              this.$.pdTermination.stopSpinner();
+              return resp;
+            }).catch((error) => {
+              this.$.pdTermination.stopSpinner();
+              throw new Error('Error uploading termination notice');
+            });
       }
 
     }

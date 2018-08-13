@@ -176,6 +176,16 @@
           let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
           return diff.length > 0;
         }
+
+        _terminatePd(e) {
+          let terminationData = {
+            id: e.detail.interventionId,
+            status: this.CONSTANTS.STATUSES.Terminated.toLowerCase(),
+            end: e.detail.terminationData.date,
+            termination_doc_attachment: e.detail.terminationData.fileId
+          };
+          this.$.interventionData.saveIntervention(terminationData);
+        }
       });
 
 </script>

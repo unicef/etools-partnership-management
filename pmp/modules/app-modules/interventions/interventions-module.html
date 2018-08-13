@@ -234,12 +234,13 @@
           <intervention-status status="[[intervention.status]]"
                                active="[[!listActive]]"
                                active-tab="[[routeData.tab]]"
-                               intervention-id$="[[intervention.id]]"
+                               intervention-id="[[intervention.id]]"
                                new-intervention="[[newInterventionActive]]"
                                intervention-agreement-status="[[agreement.status]]"
                                on-save-intervention="_validateAndSaveIntervention"
                                on-update-intervention-status="_updateInterventionStatus"
                                on-delete-intervention="_deleteIntervention"
+                               on-terminate-pd="_terminatePd"
                                edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
           </intervention-status>
         </div> <!-- sidebar content end -->
