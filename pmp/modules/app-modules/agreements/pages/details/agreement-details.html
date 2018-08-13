@@ -5,6 +5,7 @@
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
@@ -79,8 +80,8 @@
         font-size: 16px;
       }
 
-      year-dropdown {
-        margin-right: 24px;
+      #cancelAoEdit {
+        color: var(--error-color);
       }
 
     </style>
@@ -240,16 +241,34 @@
                                option-value="id"
                                option-label="name"
                                selected-values="{{authorizedOfficers}}"
-                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode)]]"
+                               hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
                                error-message="Please enter Partner Authorized Officer(s)"
                                required$="[[agreement.permissions.required.authorized_officers]]"
                                auto-validate$="[[enableEditForAuthorizedOfficers]]">
         </etools-dropdown-multi>
         <etools-form-element-wrapper label="Authorized Officers"
                                      required$="[[agreement.permissions.required.authorized_officers]]"
-                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode)]]"
-                                     value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers)]]">
+                                     hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
+                                     value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]">
         </etools-form-element-wrapper>
+      </div>
+
+      <div class="layout-horizontal row-padding-h"
+           hidden$="[[!_showAoEditBtn(agreement.status, editMode, agreement.permissions.edit.authorized_officers)]]">
+        <paper-button id="editAo"
+                      class="secondary-btn"
+                      on-tap="_enableAoEdit"
+                      hidden$="[[allowAoEditForSSFA]]">
+          <iron-icon icon="create"></iron-icon>
+          <span>Amend Authorized Officers</span>
+        </paper-button>
+        <paper-button id="cancelAoEdit"
+                      class="secondary-btn"
+                      on-tap="_cancelAoEdit"
+                      hidden$="[[!allowAoEditForSSFA]]">
+          <iron-icon icon="cancel"></iron-icon>
+          <span>Cancel Authorized Officers amendment</span>
+        </paper-button>
       </div>
 
       <div class="row-h flex-c">
@@ -392,6 +411,10 @@
           generatePCAMessage: {
             type: String,
             value: 'Save before generating the PCA template'
+          },
+          allowAoEditForSSFA: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -480,6 +503,8 @@
         if (this.generatePCADialog) {
           this.generatePCADialog.agreementId = agreement.id;
         }
+
+        this.set('allowAoEditForSSFA', false);
 
         if (typeof agreement === 'object' && agreement !== null && agreement.id) {
           // prevent wrong new agreement value
@@ -623,8 +648,8 @@
         }
         if (this.agreement.partner_signatory) {
           return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
-        } else if (this.staffMembers && this.staffMembers.length) {
-          let selectedPartner = this.staffMembers.filter(function(s) {
+        } else if (staffMembers && staffMembers.length) {
+          let selectedPartner = staffMembers.filter(function(s) {
             return parseInt(s.id) === parseInt(selectedId);
           });
           if (selectedPartner && selectedPartner.length) {
@@ -634,12 +659,12 @@
         return '';
       }
 
-      _getReadonlyAuthorizedOfficers(agreement, selection) {
+      _getReadonlyAuthorizedOfficers(agreement, selection, staffMembers) {
         let ao = [];
         const aoSelected = selection instanceof Array && selection.length > 0;
         if (aoSelected) {
           const selectedIds = selection.map(s => parseInt(s, 10));
-          ao = this._getAvailableAuthOfficers(this.staffMembers, agreement.authorized_officers)
+          ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)
               .filter(a => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
         } else {
           ao = (agreement && agreement.authorized_officers instanceof Array)
@@ -676,11 +701,31 @@
       }
 
       // set authorized officers field readonly mode
-      _allowAuthorizedOfficersEditing(agreementStatus, editMode) {
+      _allowAuthorizedOfficersEditing(agreementStatus, editMode, allowAoEditForSSFA) {
         if (!this.agreement || !editMode) {
           return false;
         }
-        return this.agreement.permissions.edit.authorized_officers;
+        if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA &&
+            agreementStatus === this.CONSTANTS.STATUSES.Signed.toLowerCase()) {
+          return !this.agreement.permissions.edit.authorized_officers ? false : allowAoEditForSSFA;
+        } else {
+          return this.agreement.permissions.edit.authorized_officers;
+        }
+      }
+
+      _showAoEditBtn(status, editMode, permissionsEditAO) {
+        return this.agreement && this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA && editMode &&
+            permissionsEditAO && status === this.CONSTANTS.STATUSES.Signed.toLowerCase();
+      }
+
+      _enableAoEdit() {
+        this.set('allowAoEditForSSFA', true);
+      }
+
+      _cancelAoEdit() {
+        this._initAuthorizedOfficers(this.agreement.authorized_officers);
+        this.$.officers.resetInvalidState();
+        this.set('allowAoEditForSSFA', false);
       }
 
       // Validate agreement fields
