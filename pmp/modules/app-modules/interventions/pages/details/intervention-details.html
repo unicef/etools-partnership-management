@@ -601,7 +601,7 @@
         if (this._isTerminated(status)) {
           return false;
         }
-        return this._showStartEndDateFields(agreement, intervention, contingencyPd)
+        return this._showStartEndDateFields(agreement, intervention, contingencyPd);
       }
 
       _isDraft(status) {
@@ -610,7 +610,7 @@
       }
 
       _isTerminated(status) {
-        return status === this.CONSTANTS.STATUSES.Terminated.toLowerCase()
+        return status === this.CONSTANTS.STATUSES.Terminated.toLowerCase();
       }
 
       _openLocationsDialog() {
