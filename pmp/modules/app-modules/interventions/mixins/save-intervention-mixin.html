@@ -54,7 +54,7 @@
             if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
               detailsPrimitiveFields.push('start', 'end');
             }
-            if (this.intervention.document_type !== 'SSFA' && ['','draft'].indexOf(this.intervention.status) > -1) {
+            if (this.intervention.document_type !== 'SSFA' && ['', 'draft'].indexOf(this.intervention.status) > -1) {
               detailsPrimitiveFields.push('reference_number_year');
             }
             interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&

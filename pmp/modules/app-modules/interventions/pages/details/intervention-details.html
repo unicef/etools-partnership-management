@@ -557,7 +557,7 @@
           }
           return false;
         }
-        if (['','draft'].indexOf(status) < 0) {
+        if (['', 'draft'].indexOf(status) < 0) {
           return false;
         }
 
@@ -792,7 +792,7 @@
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
         }
-        if (this.intervention.document_type !== 'SSFA' && ['','draft'].indexOf(this.intervention.status) > -1) {
+        if (this.intervention.document_type !== 'SSFA' && ['', 'draft'].indexOf(this.intervention.status) > -1) {
           fieldSelectors.push('#ref-year');
         }
         fieldSelectors.forEach(function(selector) {
