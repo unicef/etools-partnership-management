@@ -187,6 +187,11 @@
             });
       }
 
+      _handleErrorResponse(error) {
+        this.$.pdTermination.stopSpinner();
+        this.showErrorAsToastMsg(error.message, this.terminationElSource);
+      }
+
     }
 
     window.customElements.define(PdTermination.is, PdTermination);
