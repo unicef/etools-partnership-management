@@ -54,6 +54,9 @@
             if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
               detailsPrimitiveFields.push('start', 'end');
             }
+            if (this.intervention.status === 'draft') {
+              detailsPrimitiveFields.push('reference_number_year');
+            }
             interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
                 this._validateInterventionObjectFields(detailsObjFields);
 

@@ -774,10 +774,13 @@
 
       validate() {
         let valid = true;
-        let fieldSelectors = ['#agreementSelector', '#documentType', '#ref-year', '#title', '#unicefOffices',
+        let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
           '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
+        }
+        if (this.intervention.status === 'draft') {
+          fieldSelectors.push('#ref-year');
         }
         fieldSelectors.forEach(function(selector) {
           let field = this.shadowRoot.querySelector(selector);
