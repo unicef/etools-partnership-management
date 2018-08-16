@@ -136,7 +136,7 @@
 
         </div>
 
-        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_isDraft(intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type, intervention.status)]]">
           <year-dropdown id="ref-year"
                          label="Ref. Year"
                          selected-year="{{intervention.reference_number_year}}">
@@ -550,6 +550,19 @@
           document.querySelector('body').removeChild(this.locationsDialog);
         }
       }
+      _showRefYear(pdType, status) {
+        if (pdType === 'SSFA') {
+          if (this.intervention) {
+            this.intervention.reference_number_year = null;
+          }
+          return false;
+        }
+        if (['','draft'].indexOf(status) < 0) {
+          return false;
+        }
+
+        return true;
+      }
 
       _updateNoOfPdOutputs() {
         if (!this.intervention.result_links) {
@@ -779,7 +792,7 @@
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
         }
-        if (this.intervention.status === 'draft') {
+        if (this.intervention.document_type !== 'SSFA' && ['','draft'].indexOf(this.intervention.status) > -1) {
           fieldSelectors.push('#ref-year');
         }
         fieldSelectors.forEach(function(selector) {
