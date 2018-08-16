@@ -38,7 +38,7 @@
           this.fireEvent('clear-server-errors');
           this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
           if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-            return;
+            return false;
           }
 
           let interventionDetailsEl = this.shadowRoot.querySelector('#interventionDetails');
@@ -77,7 +77,7 @@
 
           if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
             this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-            return;
+            return false;
           }
 
           let interventionData;
@@ -92,6 +92,7 @@
           interventionData = this._prepareDataForSave(interventionData);
 
           this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          return true;
         }
 
         _validateInterventionObjectFields(interventionFields) {
