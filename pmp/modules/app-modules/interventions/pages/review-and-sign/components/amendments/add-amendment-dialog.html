@@ -357,7 +357,7 @@
 
           this._uploadPrcReviewAttachment(this.newAmendment.internal_prc_review)
           .then(response => this._saveAmendment(this.newAmendment, response.id))
-          .catch(err => this._handleErrorResponse(err));
+          .catch(err => this._handleErrorResponse(err, true));
 
         } else {
           delete this.newAmendment.internal_prc_review;
@@ -409,9 +409,14 @@
         this.stopSpinner();
       }
 
-      _handleErrorResponse(error) {
+      _handleErrorResponse(error, doNotParseError) {
         this.stopSpinner();
-        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        if (doNotParseError) {
+          this.showErrorAsToastMsg(error.message, this.toastEventSource);
+        } else {
+          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        }
+
       }
     }
 

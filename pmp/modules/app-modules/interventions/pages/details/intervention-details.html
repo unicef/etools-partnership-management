@@ -136,7 +136,7 @@
 
         </div>
 
-        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_isDraft(intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type, intervention.status)]]">
           <year-dropdown id="ref-year"
                          label="Ref. Year"
                          selected-year="{{intervention.reference_number_year}}">
@@ -568,6 +568,19 @@
         }
       }
 
+      _showRefYear(pdType, status) {
+        if (pdType === 'SSFA') {
+          if (this.intervention) {
+            this.intervention.reference_number_year = null;
+          }
+          return false;
+        }
+        if (!this._isDraft(status)) {
+          return false;
+        }
+         return true;
+      }
+
       _getNoOfInactiveIndicators() {
         return this.intervention.result_links.map((rl) => {
           return rl.ll_results.map((llr) => {
@@ -774,10 +787,13 @@
 
       validate() {
         let valid = true;
-        let fieldSelectors = ['#agreementSelector', '#documentType', '#ref-year', '#title', '#unicefOffices',
+        let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
           '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
+        }
+        if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
+          fieldSelectors.push('#ref-year');
         }
         fieldSelectors.forEach(function(selector) {
           let field = this.shadowRoot.querySelector(selector);
