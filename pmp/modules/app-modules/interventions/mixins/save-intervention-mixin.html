@@ -38,7 +38,7 @@
           this.fireEvent('clear-server-errors');
           this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
           if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-            return;
+            return false;
           }
 
           let interventionDetailsEl = this.shadowRoot.querySelector('#interventionDetails');
@@ -53,6 +53,9 @@
               'sections', 'flat_locations', 'offices'];
             if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
               detailsPrimitiveFields.push('start', 'end');
+            }
+            if (this.intervention.document_type !== 'SSFA' && ['', 'draft'].indexOf(this.intervention.status) > -1) {
+              detailsPrimitiveFields.push('reference_number_year');
             }
             interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
                 this._validateInterventionObjectFields(detailsObjFields);
@@ -77,7 +80,7 @@
 
           if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
             this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-            return;
+            return false;
           }
 
           let interventionData;
@@ -92,6 +95,7 @@
           interventionData = this._prepareDataForSave(interventionData);
 
           this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          return true;
         }
 
         _validateInterventionObjectFields(interventionFields) {
