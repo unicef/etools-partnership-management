@@ -139,6 +139,11 @@
           disableFutureDates: {
             type: Boolean,
             observer: '_disableFutureDatesChanged'
+          },
+          requiredAndNotFutureDate: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
           }
         };
       }
@@ -156,10 +161,11 @@
             name: 'etools-date-default-validator',
             type: 'validator',
             validate: (value) => {
-              return this.required && typeof value === 'string' && value !== '';
+              return typeof value === 'string' && value !== '';
             }
           };
-
+          // TODO - validator should be defined globally(IronMeta) only once
+          // -> extract validator in separate file
           new Polymer.IronMeta({
             type: defaultValidator.type,
             key: defaultValidator.name,
@@ -207,6 +213,10 @@
        * @return {boolean}
        */
       validate() {
+        if (!this.required && !this.requiredAndNotFutureDate) {
+          return true;
+        }
+
         // hasValidator check (let hasValidator = this.hasValidator();) not required anymore,
         // the input has a default validator
         let valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
