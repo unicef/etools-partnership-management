@@ -55,12 +55,12 @@
 
           if (this.intervention.activation_letter_attachment instanceof File) {
             this._uploadActivationLetter(this.intervention.activation_letter_attachment)
-              .then(response => {
+              .then((response) => {
                 interventionData.activation_letter_attachment = response.id;
                 this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
               })
-              .catch(err => {
-                this.showErrorAsToastMsg(error.message);
+              .catch((err) => {
+                this.showErrorAsToastMsg(err.message);
                 return false;
               });
           } else {
