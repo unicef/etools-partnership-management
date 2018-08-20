@@ -638,8 +638,8 @@
         return 'col-3';
       }
 
-      _updateRequired(activation_letter_attachment) {
-        if (activation_letter_attachment instanceof File) {
+      _updateRequired(activatioLetterAtt) {
+        if (activatioLetterAtt instanceof File) {
           this.set('permissions.required.start', true);
           this.set('permissions.required.end', true);
         }
