@@ -53,8 +53,37 @@
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
 
-          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          if (this.intervention.activation_letter_attachment instanceof File) {
+            this._uploadActivationLetter(this.intervention.activation_letter_attachment)
+              .then(response => {
+                interventionData.activation_letter_attachment = response.id;
+                this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+              })
+              .catch(err => {
+                this.showErrorAsToastMsg(error.message);
+                return false;
+              });
+          } else {
+            this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          }
+
           return true;
+        }
+
+        _uploadActivationLetter(file) {
+          let options = {
+            method: 'POST',
+            endpoint: this.getEndpoint('attachmentsUpload'),
+            body: {file: file},
+            multiPart: true,
+            prepareMultipartData: true
+          };
+          return this.sendRequest(options)
+              .then((resp) => {
+                return resp;
+              }).catch((error) => {
+                throw new Error('Error uploading Activation Letter');
+          });
         }
 
         _getModifiedFields() {
