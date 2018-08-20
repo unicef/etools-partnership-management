@@ -5,8 +5,61 @@
 <dom-module id="list-filter-styles">
   <template>
     <style>
-        #listControls {
+      #filters {
         @apply --layout-horizontal;
+        @apply --layout-center;
+        padding: 8px 24px;
+        margin-bottom: 24px;
+        box-sizing: border-box;
+        min-height: 62px;
+        height: auto;
+      }
+
+      #filters .filter {
+        min-width: 160px;
+        width: auto;
+        min-height: 62px;
+        height: auto;
+      }
+
+      #filters #query {
+        --paper-input-container: {
+          width: 194px;
+        };
+        min-width: 194px;
+      }
+
+      #filters .filter.date {
+        --paper-input-container: {
+          width: 160px;
+        };
+        min-width: 160px;
+      }
+
+      #filters > *:not(:last-child) {
+        margin-right: 16px;
+      }
+
+      #hiddenToggle {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        cursor: pointer;
+        font-weight: normal;
+        font-size: 16px;
+      }
+
+      #hiddenToggle paper-toggle-button {
+        margin-left: 10px;
+      }
+
+
+      /*
+        TODO:  remove #listControls, wrap-controls, fixed-controls, filter-bar-action-wrapper
+        cleanup uneeded CSS
+      */
+      #listControls {
+        @apply --layout-horizontal;
+        @apply --layout-center;
         padding: 8px 24px;
         margin-bottom: 24px;
         background: var(--list-bg-color);
@@ -95,19 +148,6 @@
           background: none;
           opacity: 0;
         }
-      }
-
-      #hiddenToggle {
-        @apply --layout-horizontal;
-
-        padding: 10px 8px 10px 8px;
-        cursor: pointer;
-        font-weight: normal;
-        font-size: 16px;
-      }
-
-      #hiddenToggle paper-toggle-button {
-        margin-left: 10px;
       }
     </style>
   </template>

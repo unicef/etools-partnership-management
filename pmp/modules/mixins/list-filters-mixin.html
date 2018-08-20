@@ -96,6 +96,7 @@
     }
 
     // remove already selected filter, also reset filter path value
+    // TODO: remove if not used anymore
     removeFilter(event) {
       let filterName = event.target.getAttribute('data-filter-name'); // TODO: polymer2 - test on IE11
       let path = event.target.getAttribute('data-reset-path');
