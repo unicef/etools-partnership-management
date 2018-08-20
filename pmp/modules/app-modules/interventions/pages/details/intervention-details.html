@@ -35,6 +35,7 @@
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
 <link rel="import" href="../../../../layout/components/year-dropdown.html">
+<link rel="import" href="../../../../layout/components/etools-single-file.html">
 
 <link rel="import" href="components/agreement-selector.html">
 
@@ -216,15 +217,24 @@
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c row-second-bg">
+      <div class="row-h flex-c row-second-bg layout-wrap">
 
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}"
-                               disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
-          </paper-toggle-button>
+        <div hidden$="[[!_showContingencyPd(agreement)]]" class$="col [[_getContingencyClass(intervention.contingency_pd)]] layout-horizontal">
+          <div class="col flex-c">
+            <paper-toggle-button checked="{{intervention.contingency_pd}}"
+                                disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
+            </paper-toggle-button>
+          </div>
+          <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
+            <etools-single-file label="Activation Notice"
+                      internal-file="[[intervention.activation_letter_file]]"
+                      file="[[intervention.activation_letter]]"
+                      hidden$="[[!intervention.contingency_pd]]">
+            </etools-single-file>
+          </div>
         </div>
         <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+             class="col col-3" no-left-padding$="[[!_addLeftPadding(agreement, intervention.contingency_pd)]]">
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
                                icon-first
@@ -606,8 +616,24 @@
         if (!this._showContingencyPd(agreement)) {
           return true;
         }
-        return !(contingencyPd && intervention.status !== 'active');
+        return !(contingencyPd && this._isDraft(intervention.status));
 
+      }
+      _addLeftPadding(agreement, contingencyPD) {
+        if (this._showContingencyPd(agreement)) {
+          if (contingencyPD) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+        return true;
+      }
+      _getContingencyClass(contingencyPd) {
+        if (contingencyPd) {
+          return 'col-12';
+        }
+        return 'col-3';
       }
 
       _showDaysUntilExpiry(status, agreement, intervention, contingencyPd) {
