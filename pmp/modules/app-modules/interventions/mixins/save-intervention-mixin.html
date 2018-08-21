@@ -56,7 +56,7 @@
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
 
-          if (this.intervention.activation_letter_attachment instanceof File) {
+          if (this.intervention.activation_letter_file instanceof File) {
             this._uploadActivationLetter(this.intervention.activation_letter_file)
               .then((response) => {
                 delete interventionData.activation_letter_file;
