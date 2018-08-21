@@ -2,6 +2,7 @@
 <link rel="import" href="modified-intervention-fields-mixin.html">
 <link rel="import" href="../../../mixins/array-helper-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
 <link rel="import" href="../../../config/app-constants.html">
@@ -21,13 +22,15 @@
    * @appliesMixin EtoolsPmpApp.Mixins.ModifiedInterventionFields
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    * @appliesMixin EtoolsPmpApp.Mixins.Constants
+   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
    */
   EtoolsPmpApp.Mixins.SaveIntervention = Polymer.dedupingMixin(
       superClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.EventHelper,
         EtoolsPmpApp.Mixins.ArrayHelper,
         EtoolsPmpApp.Mixins.ModifiedInterventionFields,
-        EtoolsPmpApp.Mixins.Constants
+        EtoolsPmpApp.Mixins.Constants,
+        EtoolsPmpApp.Mixins.AjaxErrorsParser
       ], superClass) {
 
         _validateAndSaveIntervention(event) {
@@ -60,7 +63,7 @@
                 this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
               })
               .catch((err) => {
-                this.showErrorAsToastMsg(err.message);
+                this.parseRequestErrorsAndShowAsToastMsgs(err);
                 return false;
               });
           } else {
@@ -82,7 +85,7 @@
               .then((resp) => {
                 return resp;
               }).catch((error) => {
-                throw new Error('Error uploading Activation Letter');
+                throw error;
           });
         }
 

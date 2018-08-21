@@ -219,7 +219,8 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg layout-wrap">
 
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class$="col [[_getContingencyClass(intervention.contingency_pd)]] layout-horizontal">
+        <div hidden$="[[!_showContingencyPd(agreement)]]"
+             class$="col [[_getContingencyClass(intervention.contingency_pd)]] layout-horizontal">
           <div class="col flex-c">
             <paper-toggle-button checked="{{intervention.contingency_pd}}"
                                 disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
