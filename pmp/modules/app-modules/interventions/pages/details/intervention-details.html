@@ -234,8 +234,7 @@
             </etools-single-file>
           </div>
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3" no-left-padding$="[[!_addLeftPadding(agreement, intervention.contingency_pd)]]">
+        <div class="col col-3" no-left-padding$="[[!_addLeftPadding(agreement, intervention.contingency_pd)]]">
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
                                icon-first
@@ -257,8 +256,7 @@
           </etools-info-tooltip>
 
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3">
+        <div class="col col-3">
           <etools-info-tooltip class="fr-nr-warn"
                                custom-icon
                                icon-first
@@ -280,7 +278,7 @@
         </div>
         <div class="col col-3">
           <div class="expiry-warning"
-               hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention, intervention.contingency_pd)]]">
+               hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
           <etools-single-file label="Termination Notice"
@@ -614,13 +612,6 @@
         expectedResultsElem._addNewCpOutputAndRamIndicators();
       }
 
-      _showStartEndDateFields(agreement, intervention, contingencyPd) {
-        if (!this._showContingencyPd(agreement)) {
-          return true;
-        }
-        return !(contingencyPd && this._isDraft(intervention.status));
-
-      }
       _addLeftPadding(agreement, contingencyPD) {
         if (this._showContingencyPd(agreement)) {
           if (contingencyPD) {
@@ -649,11 +640,11 @@
         }
       }
 
-      _showDaysUntilExpiry(status, agreement, intervention, contingencyPd) {
+      _showDaysUntilExpiry(status, agreement, intervention) {
         if (this._isTerminated(status)) {
           return false;
         }
-        return this._showStartEndDateFields(agreement, intervention, contingencyPd);
+        return true;
       }
 
       _isDraft(status) {
