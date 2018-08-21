@@ -220,7 +220,7 @@
       <div class="row-h flex-c row-second-bg layout-wrap">
 
         <div hidden$="[[!_showContingencyPd(agreement)]]"
-             class$="col [[_getContingencyClass(intervention.contingency_pd)]] layout-horizontal">
+             class$="col [[_getContingencyClass(intervention.contingency_pd)]]">
           <div class="col flex-c">
             <paper-toggle-button checked="{{intervention.contingency_pd}}"
                                 disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
@@ -228,8 +228,8 @@
           </div>
           <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
             <etools-single-file label="Activation Letter"
-                      internal-file="{{intervention.activation_letter_file}}"
-                      file="{{intervention.activation_letter_attachment}}"
+                      internal-file="{{intervention.activation_letter_attachment}}"
+                      file="{{intervention.activation_letter_file}}"
                       hidden$="[[!intervention.contingency_pd]]">
             </etools-single-file>
           </div>
@@ -538,7 +538,7 @@
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           '_contingencyPDChanged(intervention.contingency_pd)',
           '_updateNoOfPdOutputs(intervention.result_links.*)',
-          '_updateRequired(intervention.activation_letter_attachment)'
+          '_updateRequired(intervention.activation_letter_file)'
         ];
       }
 

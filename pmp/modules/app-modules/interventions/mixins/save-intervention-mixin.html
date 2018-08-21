@@ -57,8 +57,10 @@
           interventionData = this._prepareDataForSave(interventionData);
 
           if (this.intervention.activation_letter_attachment instanceof File) {
-            this._uploadActivationLetter(this.intervention.activation_letter_attachment)
+            this._uploadActivationLetter(this.intervention.activation_letter_file)
               .then((response) => {
+                delete interventionData.activation_letter_file;
+
                 interventionData.activation_letter_attachment = response.id;
                 this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
               })
@@ -201,10 +203,6 @@
               !(this.intervention.prc_review_document instanceof File)) {
             delete interventionData.prc_review_document;
             delete interventionData.prc_review_document_file;
-          }
-
-          if (interventionData.activation_letter_file) {
-            delete interventionData.activation_letter_file;
           }
 
           return interventionData;
