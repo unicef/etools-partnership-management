@@ -237,7 +237,6 @@
         _terminatePd(e) {
           let terminationData = {
             id: e.detail.interventionId,
-            status: this.CONSTANTS.STATUSES.Terminated.toLowerCase(),
             end: e.detail.terminationData.date,
             termination_doc_attachment: e.detail.terminationData.fileId
           };
