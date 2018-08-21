@@ -620,8 +620,10 @@
           this.set('permissions.required.start', true);
           this.set('permissions.required.end', true);
         } else {
-          this.set('permissions.required.start', this.originalIntervention.permissions.required.start);
-          this.set('permissions.required.end', this.originalIntervention.permissions.required.end);
+          if (this.originalIntervention &&  this.originalIntervention.permissions) {
+            this.set('permissions.required.start', this.originalIntervention.permissions.required.start);
+            this.set('permissions.required.end', this.originalIntervention.permissions.required.end);
+          }
         }
       }
 
