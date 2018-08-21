@@ -149,6 +149,7 @@
       }
 
       let errorResponse = this.tryGetResponseError(error);
+      console.log(error, errorResponse);
       let errorsString = this.formatServerErrorAsText(errorResponse);
 
       this.showErrorAsToastMsg(errorsString, source);
