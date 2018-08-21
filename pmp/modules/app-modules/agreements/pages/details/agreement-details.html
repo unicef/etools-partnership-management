@@ -89,7 +89,7 @@
     <etools-content-panel class="content-section" panel-title="Agreement Details">
 
       <div class="row-h flex-c b-border row-second-bg">
-        <div class="col col-6">
+        <div class="col col-5">
           <!-- Agreement Type -->
           <etools-dropdown
               id="agreementType"
@@ -104,11 +104,12 @@
               error-message="Please select agreement type"
               required>
           </etools-dropdown>
-
-          <year-dropdown label="Reference Year"
-                         selected-year="{{agreement.reference_number_year}}"
-                         hidden$="[[!_showYearDropdown(agreement.status)]]">
-          </year-dropdown>
+        </div>
+        <div class="col col-1">
+            <year-dropdown label="Ref. Year"
+                        selected-year="{{agreement.reference_number_year}}"
+                        hidden$="[[!_showYearDropdown(agreement.status)]]">
+            </year-dropdown>
         </div>
 
         <div class="col col-3">
