@@ -279,16 +279,16 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-6">
-          <div class="expiry-warning"
-               hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
-            <span>[[_daysUntilExpiry(intervention.end)]]</span>
-          </div>
+        <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
           <etools-single-file label="Termination Notice"
                               internal-file=[[intervention.termination_doc_attachment]]
-                              readonly
-                              hidden$="[[!_isTerminated(intervention.status)]]">
+                              readonly>
           </etools-single-file>
+        </div>
+        <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
+          <div class="expiry-warning">
+            <span>[[_daysUntilExpiry(intervention.end)]]</span>
+          </div>
         </div>
       </div>
       <div class="row-h flex-c">
