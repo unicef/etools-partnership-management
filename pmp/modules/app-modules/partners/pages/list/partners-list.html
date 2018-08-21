@@ -73,7 +73,10 @@
           disabled$="[[showOnlyGovernmentType]]"
           options="[[partnerTypes]]"
           selected-values="{{selectedPartnerTypes}}"
-          hide-search></etools-dropdown-multi>
+          hide-search
+          min-width="350px"
+          horizontal-align="left"
+          no-dynamic-align></etools-dropdown-multi>
 
       <etools-dropdown-multi
           class="filter"
@@ -81,7 +84,10 @@
           placeholder="Select"
           options="[[csoTypes]]"
           selected-values="{{selectedCsoTypes}}"
-          hide-search></etools-dropdown-multi>
+          hide-search
+          min-width="350px"
+          horizontal-align="left"
+          no-dynamic-align></etools-dropdown-multi>
 
       <etools-dropdown-multi
           class="filter"
@@ -89,7 +95,10 @@
           placeholder="Select"
           options="[[riskRatings]]"
           selected-values="{{selectedRiskRatings}}"
-          hide-search></etools-dropdown-multi>
+          hide-search
+          min-width="160px"
+          horizontal-align="left"
+          no-dynamic-align></etools-dropdown-multi>
 
       <div id="hiddenToggle" class="filter">
         Show hidden

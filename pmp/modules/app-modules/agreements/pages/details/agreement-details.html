@@ -98,7 +98,6 @@
               placeholder="&#8212;"
               options="[[agreementTypes]]"
               selected="{{agreement.agreement_type}}"
-              dynamic-align
               hide-search
               readonly$="[[_isAgreementTypeReadonly(agreement)]]"
               auto-validate
@@ -141,7 +140,6 @@
               placeholder="&#8212;"
               options="[[partnersDropdownData]]"
               selected="{{agreement.partner}}"
-              dynamic-align
               hidden$="[[!agreement.permissions.edit.partner]]"
               auto-validate
               error-message="Please select a partner"
@@ -198,7 +196,6 @@
                 option-value="id"
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
-                dynamic-align
                 hidden$="[[!agreement.permissions.edit.partner_manager]]">
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"

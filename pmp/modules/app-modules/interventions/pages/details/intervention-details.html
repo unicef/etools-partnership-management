@@ -127,7 +127,6 @@
                            options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
                            selected="{{intervention.document_type}}"
                            hide-search
-                           dynamic-align
                            readonly$="[[!permissions.edit.document_type]]"
                            required$="[[permissions.required.document_type]]"
                            auto-validate
@@ -172,7 +171,6 @@
                                  option-label="name"
                                  option-value="id"
                                  selected-values="{{intervention.offices}}"
-                                 dynamic-align
                                  readonly$="[[!permissions.edit.offices]]"
                                  required$="[[permissions.required.offices]]"
                                  auto-validate
@@ -187,7 +185,6 @@
                                  option-label="name"
                                  option-value="id"
                                  selected-values="{{intervention.unicef_focal_points}}"
-                                 dynamic-align
                                  readonly$="[[!permissions.edit.unicef_focal_points]]"
                                  required$="[[permissions.required.unicef_focal_points]]"
                                  auto-validate
@@ -204,7 +201,6 @@
                                  option-value="id"
                                  option-label="name"
                                  selected-values="{{intervention.partner_focal_points}}"
-                                 dynamic-align
                                  readonly$="[[!permissions.edit.partner_focal_points]]"
                                  required$="[[permissions.required.partner_focal_points]]"
                                  auto-validate

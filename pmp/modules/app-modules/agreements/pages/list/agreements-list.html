@@ -72,7 +72,10 @@
           placeholder="Select"
           options="[[agreementTypes]]"
           selected-values="{{selectedAgTypes}}"
-          hide-search></etools-dropdown-multi>
+          hide-search
+          min-width="350px"
+          horizontal-align="left"
+          no-dynamic-align></etools-dropdown-multi>
 
       <etools-dropdown-multi
           class="filter"
@@ -80,7 +83,10 @@
           placeholder="Select"
           options="[[agreementStatuses]]"
           selected-values="{{selectedAgStatuses}}"
-          hide-search></etools-dropdown-multi>
+          hide-search
+          min-width="160px"
+          horizontal-align="left"
+          no-dynamic-align></etools-dropdown-multi>
 
       <etools-dropdown-multi
           class="filter"
@@ -90,7 +96,10 @@
           selected-values="{{selectedCPStructures}}"
           option-value="id"
           option-label="name"
-          hide-search></etools-dropdown-multi>
+          hide-search
+          min-width="400px"
+          horizontal-align="left"
+          no-dynamic-align></etools-dropdown-multi>
 
       <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
         <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
@@ -103,7 +112,10 @@
               selected-values="[[filter.alreadySelected]]"
               data-filter-path$="[[filter.path]]"
               on-etools-selected-items-changed="esmmValueChanged"
-              trigger-value-change-event>
+              trigger-value-change-event
+              min-width="400px"
+              horizontal-align="left"
+              no-dynamic-align>
           </etools-dropdown-multi>
         </template>
 
