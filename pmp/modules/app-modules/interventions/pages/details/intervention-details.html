@@ -217,16 +217,13 @@
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c row-second-bg layout-wrap">
-
-        <div hidden$="[[!_showContingencyPd(agreement)]]"
-             class="col col-12">
-          <div class="col flex-c">
+      <div class="row-h flex-c row-second-bg"  hidden$="[[!_showContingencyPd(agreement)]]">
+          <div class="col col-3">
             <paper-toggle-button checked="{{intervention.contingency_pd}}"
                                 disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
             </paper-toggle-button>
           </div>
-          <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
+          <div class="col col-9">
             <etools-single-file label="Activation Letter"
                       internal-file="{{intervention.activation_letter_attachment}}"
                       file="{{intervention.activation_letter_file_temp}}"
@@ -234,8 +231,9 @@
                       hide-delete-btn>
             </etools-single-file>
           </div>
-        </div>
-        <div class="col col-3" no-left-padding>
+      </div>
+      <div class="row-h row-second-bg">
+        <div class="col col-3">
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
                                icon-first
@@ -277,7 +275,7 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-3">
+        <div class="col col-6">
           <div class="expiry-warning"
                hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
