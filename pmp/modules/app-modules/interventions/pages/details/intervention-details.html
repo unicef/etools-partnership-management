@@ -220,7 +220,7 @@
       <div class="row-h flex-c row-second-bg layout-wrap">
 
         <div hidden$="[[!_showContingencyPd(agreement)]]"
-             class$="col [[_getContingencyClass(intervention.contingency_pd)]]">
+             class="col col-12">
           <div class="col flex-c">
             <paper-toggle-button checked="{{intervention.contingency_pd}}"
                                 disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
@@ -230,11 +230,12 @@
             <etools-single-file label="Activation Letter"
                       internal-file="{{intervention.activation_letter_attachment}}"
                       file="{{intervention.activation_letter_file_temp}}"
-                      hidden$="[[!intervention.contingency_pd]]">
+                      hidden$="[[!intervention.contingency_pd]]"
+                      hide-delete-btn>
             </etools-single-file>
           </div>
         </div>
-        <div class="col col-3" no-left-padding$="[[!_addLeftPadding(agreement, intervention.contingency_pd)]]">
+        <div class="col col-3" no-left-padding>
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
                                icon-first
@@ -610,24 +611,6 @@
           return;
         }
         expectedResultsElem._addNewCpOutputAndRamIndicators();
-      }
-
-      _addLeftPadding(agreement, contingencyPD) {
-        if (this._showContingencyPd(agreement)) {
-          if (contingencyPD) {
-            return false;
-          } else {
-            return true;
-          }
-        }
-        return true;
-      }
-
-      _getContingencyClass(contingencyPd) {
-        if (contingencyPd) {
-          return 'col-12';
-        }
-        return 'col-3';
       }
 
       _updateRequired(activatioLetterAtt) {
