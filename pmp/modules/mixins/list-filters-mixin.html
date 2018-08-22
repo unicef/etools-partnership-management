@@ -14,9 +14,6 @@
         listFilterOptions: {
           type: Array
         },
-        availableListFilterOptions: {
-          type: Array
-        },
         selectedFilters: {
           type: Array
         }
@@ -31,104 +28,43 @@
       // init add filter menu options
       this.setProperties({
         listFilterOptions: filterOptions,
-        availableListFilterOptions: filterOptions,
-        selectedFilters: []});
+        selectedFilters: []
+      });
     }
 
-    // update filter data
-    updateFilters(filterName, property, newValue) {
-      let i;
-      // update main filters
-      if (this.listFilterOptions) {
-        if (this.listFilterOptions instanceof Array && this.listFilterOptions.length > 0) {
-          for (i = 0; i < this.listFilterOptions.length; i++) {
-            if (this.listFilterOptions[i].filterName === filterName) {
-              this.set('listFilterOptions.' + i + '.' + property, newValue);
-              break;
-            }
-          }
-        }
-        // update available filters
-        let found = false;
-        if (this.availableListFilterOptions instanceof Array && this.availableListFilterOptions.length > 0) {
-          for (i = 0; i < this.availableListFilterOptions.length; i++) {
-            if (this.availableListFilterOptions[i].filterName === filterName) {
-              this.set('availableListFilterOptions.' + i + '.' + property, newValue);
-              found = true;
-              break;
-            }
-          }
-        }
-        // if the filter was moved from available to selected then update in selected filters
-        if (!found) {
-          if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
-            for (i = 0; i < this.selectedFilters.length; i++) {
-              if (this.selectedFilters[i].filterName === filterName) {
-                this.set('selectedFilters.' + i + '.' + property, newValue);
-                break;
-              }
-            }
-          }
-        }
-      }
+    _isAlreadySelected(filter) {
+      let selectedOpt = this.selectedFilters.find(function(selectedFilter) {
+        return selectedFilter.filterName === filter.filterName;
+      });
+      return !!selectedOpt;
     }
 
     // select a filter from ADD FILTER menu
-    selectFilter(event) {
-      let selectedOption = event.model.item;
-      this.push('selectedFilters', selectedOption);
-      this.$.filterMenu.close();
-      this._updateAvailableFilterOptions();
-    }
-
-    // update ADD FILTER menu options
-    _updateAvailableFilterOptions() {
-      if (!(this.listFilterOptions instanceof Array && this.listFilterOptions.length > 0)) {
-        return;
-      }
-      let availableOptions = this.listFilterOptions.filter(function(option) {
-        let selectedOpt = this.selectedFilters.filter(function(selectedFilter) {
-          return selectedFilter.filterName === option.filterName;
-        })[0];
-        return !selectedOpt;
-      }.bind(this));
-      this.set('availableListFilterOptions', availableOptions);
-    }
-
-    // remove already selected filter, also reset filter path value
-    // TODO: remove if not used anymore
-    removeFilter(event) {
-      let filterName = event.target.getAttribute('data-filter-name'); // TODO: polymer2 - test on IE11
-      let path = event.target.getAttribute('data-reset-path');
-      this.removeFilterOption(filterName, path);
-    }
-
-    removeFilterOption(filterName, path) {
-      if (!(this.selectedFilters instanceof Array && this.selectedFilters.length)) {
-        return;
-      }
-
-      let filterIndex = this.selectedFilters.findIndex(f => f.filterName === filterName);
-      if (filterIndex >= 0) {
-        let filterIsSingleSelectionDr = this.selectedFilters[filterIndex].singleSelection;
-        if (this.selectedFilters[filterIndex].hasOwnProperty('alreadySelected')) {
-          this.selectedFilters[filterIndex].alreadySelected = filterIsSingleSelectionDr ? null : [];
-        }
-        if (this.selectedFilters[filterIndex].hasOwnProperty('dateSelected')) {
-          this.selectedFilters[filterIndex].dateSelected = '';
-        }
-        if (this.selectedFilters[filterIndex].hasOwnProperty('disabled')) {
-          this.selectedFilters[filterIndex].disabled = false;
-        }
-        let filterType = this.selectedFilters[filterIndex].type;
-        // remove filter
+    selectFilter(e) {
+      const selectedOption = e.model.item;
+      const selectedIdx = e.model.index;
+      if (!this._isAlreadySelected(selectedOption)) {
+        // add
+        this.push('selectedFilters', selectedOption);
+        this.set(['listFilterOptions', selectedIdx, 'selected'], true);
+      } else {
+        // remove
+        const filterIndex = this.selectedFilters.findIndex(f => f.filterName === selectedOption.filterName);
+        this._clearFilterSelection(selectedOption);
         this.splice('selectedFilters', filterIndex, 1);
-        this._updateAvailableFilterOptions();
+        this.set(['listFilterOptions', selectedIdx, 'selected'], false);
+      }
+      // update dropdown position, because add filter btn position is changing
+      // TODO: maybe not the best approach... might not be a good ideea
+      // this.$.filterMenu.shadowRoot.querySelector('#dropdown').notifyResize();
+    }
 
-        if (filterIsSingleSelectionDr) {
-          this.set(path, null);
+    _clearFilterSelection(filter) {
+      if (filter) {
+        if (filter.singleSelection) {
+          this.set(filter.path, null);
         } else {
-          this.set(path, (filterType === 'esmm') ? [] : (filterType === 'datepicker' ? '' : null));
+          this.set(filter.path, (filter.type === 'esmm') ? [] : (filter.type === 'datepicker' ? '' : null));
         }
       }
     }
@@ -229,7 +165,7 @@
           }
         }.bind(this));
         // refresh available filters and remove those selected
-        this._updateAvailableFilterOptions();
+        // this._updateAvailableFilterOptions();
       }
     }
 

@@ -113,14 +113,15 @@
         padding: 0 0 0 8px;
       }
 
+      /* make sure you keep next lines of css */
+
       #filterMenu {
-        max-width: 200px;
         min-width: 130px;
         padding: 0;
-        --paper-menu-button-content: {
-          overflow-y: auto;
-          overflow-x: hidden !important;
-        }
+        /*--paper-menu-button-content: {*/
+          /*overflow-y: auto;*/
+          /*overflow-x: hidden !important;*/
+        /*}*/
       }
 
       #filterMenu .button {
@@ -133,20 +134,19 @@
         margin-right: 5px;
       }
 
-      #listControls paper-item {
-        --paper-item-selected: {
-          font-weight: normal !important;
-        };
-        --paper-item-focused: {
-          background-color: var(--list-secondary-color, #ffffff);
-        };
-        --paper-item-focused-before: {
-          background: none;
-          opacity: 0;
-        };
-        --paper-item-focused-after: {
-          background: none;
-          opacity: 0;
+      #filterMenu paper-listbox {
+        min-width: 200px;
+      }
+
+      #filterMenu paper-icon-item {
+        --paper-item-icon-width: auto;
+      }
+
+      #filterMenu paper-icon-item.iron-selected,
+      #filterMenu paper-icon-item[selected] {
+        background: var(--esmm-list-item-selected-color, #dcdcdc);
+        --paper-item-icon: {
+          margin-right: 16px;
         }
       }
     </style>

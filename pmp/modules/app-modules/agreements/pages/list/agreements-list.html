@@ -8,7 +8,8 @@
 <link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
@@ -127,20 +128,25 @@
                              value="{{filter.dateSelected}}"
                              on-date-has-changed="_filterDateHasChanged"
                              data-filter-path$="[[filter.path]]"
-                             fire-date-has-changed no-init show-clear-btn>
+                             fire-date-has-changed
+                             no-init
+                             show-clear-btn>
           </etools-date-input>
         </template>
 
       </template>
 
-      <paper-menu-button id="filterMenu">
+      <paper-menu-button id="filterMenu" ignore-select>
         <paper-button class="button" slot="dropdown-trigger">
           <iron-icon icon="filter-list"></iron-icon>
           Add filter
         </paper-button>
-        <paper-listbox slot="dropdown-content">
-          <template is="dom-repeat" items="[[availableListFilterOptions]]">
-            <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+        <paper-listbox slot="dropdown-content" multi>
+          <template is="dom-repeat" items="[[listFilterOptions]]">
+            <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+              <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+              <paper-item-body>[[item.filterName]]</paper-item-body>
+            </paper-icon-item>
           </template>
         </paper-listbox>
       </paper-menu-button>
@@ -343,19 +349,22 @@
             multiple: true,
             selectionOptions: partnersDropdownData,
             alreadySelected: [],
-            path: 'selectedPartners'
+            path: 'selectedPartners',
+            selected: false
           },
           {
             filterName: 'Starts After',
             type: 'datepicker', // etools-datepicker
             dateSelected: '',
-            path: 'startDate'
+            path: 'startDate',
+            selected: false
           },
           {
             filterName: 'Ends Before',
             type: 'datepicker', // etools-datepicker
             dateSelected: '',
-            path: 'endDate'
+            path: 'endDate',
+            selected: false
           }
         ]);
         this._updateSelectedFiltersValues();
