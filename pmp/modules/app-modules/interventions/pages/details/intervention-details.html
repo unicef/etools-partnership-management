@@ -222,19 +222,19 @@
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg"  hidden$="[[!_showContingencyPd(agreement)]]">
-          <div class="col col-3">
-            <paper-toggle-button checked="{{intervention.contingency_pd}}"
-                                disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
-            </paper-toggle-button>
-          </div>
-          <div class="col col-9">
-            <etools-single-file label="Activation Letter"
-                      internal-file="{{intervention.activation_letter_attachment}}"
-                      file="{{intervention.activation_letter_file_temp}}"
-                      hidden$="[[!intervention.contingency_pd]]"
-                      hide-delete-btn>
-            </etools-single-file>
-          </div>
+        <div class="col col-3">
+          <paper-toggle-button checked="{{intervention.contingency_pd}}"
+                              disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
+          </paper-toggle-button>
+        </div>
+        <div class="col col-9">
+          <etools-single-file label="Activation Letter"
+                    internal-file="{{intervention.activation_letter_attachment}}"
+                    file="{{intervention.activation_letter_file_temp}}"
+                    hidden$="[[!intervention.contingency_pd]]"
+                    hide-delete-btn>
+          </etools-single-file>
+        </div>
       </div>
       <div class="row-h row-second-bg">
         <div class="col col-3">
