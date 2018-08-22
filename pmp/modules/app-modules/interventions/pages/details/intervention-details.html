@@ -35,6 +35,7 @@
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
 <link rel="import" href="../../../../layout/components/year-dropdown.html">
+<link rel="import" href="../../../../layout/components/etools-single-file.html">
 
 <link rel="import" href="components/agreement-selector.html">
 
@@ -107,6 +108,10 @@
 
       div[slot="panel-btns"]#add-show-inactive-btns {
         @apply --layout-horizontal;
+      }
+
+      etools-date-input {
+        min-width: 100px; /*IE fix*/
       }
 
     </style>
@@ -216,15 +221,23 @@
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c row-second-bg">
-
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
+      <div class="row-h flex-c row-second-bg"  hidden$="[[!_showContingencyPd(agreement)]]">
+        <div class="col col-3">
           <paper-toggle-button checked="{{intervention.contingency_pd}}"
-                               disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
+                              disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
           </paper-toggle-button>
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div class="col col-9">
+          <etools-single-file label="Activation Letter"
+                    internal-file="{{intervention.activation_letter_attachment}}"
+                    file="{{intervention.activation_letter_file_temp}}"
+                    hidden$="[[!intervention.contingency_pd]]"
+                    hide-delete-btn>
+          </etools-single-file>
+        </div>
+      </div>
+      <div class="row-h row-second-bg">
+        <div class="col col-3">
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
                                icon-first
@@ -246,8 +259,7 @@
           </etools-info-tooltip>
 
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3">
+        <div class="col col-3">
           <etools-info-tooltip class="fr-nr-warn"
                                custom-icon
                                icon-first
@@ -267,16 +279,16 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-3">
-          <div class="expiry-warning"
-               hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention, intervention.contingency_pd)]]">
-            <span>[[_daysUntilExpiry(intervention.end)]]</span>
-          </div>
+        <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
           <etools-single-file label="Termination Notice"
                               internal-file=[[intervention.termination_doc_attachment]]
-                              readonly
-                              hidden$="[[!_isTerminated(intervention.status)]]">
+                              readonly>
           </etools-single-file>
+        </div>
+        <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
+          <div class="expiry-warning">
+            <span>[[_daysUntilExpiry(intervention.end)]]</span>
+          </div>
         </div>
       </div>
       <div class="row-h flex-c">
@@ -528,7 +540,8 @@
           'intervention.start, intervention.status)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           '_contingencyPDChanged(intervention.contingency_pd)',
-          '_updateNoOfPdOutputs(intervention.result_links.*)'
+          '_updateNoOfPdOutputs(intervention.result_links.*)',
+          '_updateRequired(intervention.activation_letter_file_temp)'
         ];
       }
 
@@ -602,19 +615,23 @@
         expectedResultsElem._addNewCpOutputAndRamIndicators();
       }
 
-      _showStartEndDateFields(agreement, intervention, contingencyPd) {
-        if (!this._showContingencyPd(agreement)) {
-          return true;
+      _updateRequired(activatioLetterAtt) {
+        if (activatioLetterAtt instanceof File) {
+          this.set('permissions.required.start', true);
+          this.set('permissions.required.end', true);
+        } else {
+          if (this.originalIntervention && this.originalIntervention.permissions) {
+            this.set('permissions.required.start', this.originalIntervention.permissions.required.start);
+            this.set('permissions.required.end', this.originalIntervention.permissions.required.end);
+          }
         }
-        return !(contingencyPd && intervention.status !== 'active');
-
       }
 
-      _showDaysUntilExpiry(status, agreement, intervention, contingencyPd) {
+      _showDaysUntilExpiry(status, agreement, intervention) {
         if (this._isTerminated(status)) {
           return false;
         }
-        return this._showStartEndDateFields(agreement, intervention, contingencyPd);
+        return true;
       }
 
       _isDraft(status) {
@@ -805,7 +822,8 @@
         let valid = true;
         let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
           '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
-        if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
+
+        if (this._isContingencyAndHasActivationLetter() || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
         }
         if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
@@ -818,6 +836,11 @@
           }
         }.bind(this));
         return valid;
+      }
+
+      _isContingencyAndHasActivationLetter() {
+        return this.intervention.contingency_pd &&
+          (this.intervention.activation_letter_file_temp instanceof File || this.intervention.activation_letter_attachment);
       }
 
       _daysUntilExpiry(end) {
