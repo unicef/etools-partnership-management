@@ -615,8 +615,8 @@
         expectedResultsElem._addNewCpOutputAndRamIndicators();
       }
 
-      _updateRequired(activatioLetterAtt) {
-        if (activatioLetterAtt instanceof File) {
+      _updateRequired(activationLetterAtt) {
+        if (activationLetterAtt instanceof File) {
           this.set('permissions.required.start', true);
           this.set('permissions.required.end', true);
         } else {
@@ -628,10 +628,7 @@
       }
 
       _showDaysUntilExpiry(status, agreement, intervention) {
-        if (this._isTerminated(status)) {
-          return false;
-        }
-        return true;
+        return !this._isTerminated(status);
       }
 
       _isDraft(status) {
@@ -814,8 +811,25 @@
               options = this.documentTypes;
               break;
           }
+
+          this._resetSelectedDocType(options);
         }
+
         return options;
+      }
+
+      _resetSelectedDocType(options) {
+        if (!this.intervention || !this.intervention.document_type || options === undefined) {
+          return;
+        }
+        if (!options || !options.length) {
+          this.set('intervention.document_type', null);
+          return;
+        }
+        let selIsInOptions = options.find(o => o.value === this.intervention.document_type);
+        if (!selIsInOptions) {
+          this.set('intervention.document_type', null);
+        }
       }
 
       validate() {
