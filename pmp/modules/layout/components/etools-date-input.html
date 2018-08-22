@@ -139,8 +139,41 @@
           disableFutureDates: {
             type: Boolean,
             observer: '_disableFutureDatesChanged'
+          },
+          requiredAndNotFutureDate: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
           }
         };
+      }
+
+      ready() {
+        super.ready();
+        this._initDefaultValidator();
+      }
+
+      _initDefaultValidator() {
+        // TODO: integrate required and not future date here based on some flag property
+        // new way to implement custom validators :)
+        if (typeof this.validator !== 'string' || this.validator === '') {
+          const defaultValidator = {
+            name: 'etools-date-default-validator',
+            type: 'validator',
+            validate: (value) => {
+              return typeof value === 'string' && value !== '';
+            }
+          };
+          // TODO - validator should be defined globally(IronMeta) only once
+          // -> extract validator in separate file
+          new Polymer.IronMeta({
+            type: defaultValidator.type,
+            key: defaultValidator.name,
+            value: defaultValidator
+          });
+
+          this.set('validator', defaultValidator.name);
+        }
       }
 
       connectedCallback() {
@@ -180,17 +213,13 @@
        * @return {boolean}
        */
       validate() {
-        let hasValidator = this.hasValidator();
-        let valid = true;
-
-        if (hasValidator) {
-          // custom validator provided, use it to validate this field
-          valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
-        } else {
-          // let paper-input use it's default validator
-          valid = this.$.dateInput.validate();
+        if (!this.required && !this.requiredAndNotFutureDate) {
+          return true;
         }
 
+        // hasValidator check (let hasValidator = this.hasValidator();) not required anymore,
+        // the input has a default validator
+        let valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
         this.set('invalid', !valid);
         return valid;
       }
