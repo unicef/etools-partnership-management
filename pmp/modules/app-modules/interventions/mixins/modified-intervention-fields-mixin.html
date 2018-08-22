@@ -68,9 +68,13 @@
       return this._buildModifiedInterventionObject(updatableFields, []);
     }
 
-    _getModifiedInterventionDetails() {
-      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme', 'reference_number_year',
-        'start', 'end', 'contingency_pd'];
+    _getModifiedInterventionDetails(docType) {
+      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
+        'start', 'end'];
+      if (docType !== 'SSFA') {
+        updatableFields.push('reference_number_year');
+        updatableFields.push('contingency_pd');
+      }
       let updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
         'sections', 'flat_locations', 'planned_budget', 'planned_visits'];
       let modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);

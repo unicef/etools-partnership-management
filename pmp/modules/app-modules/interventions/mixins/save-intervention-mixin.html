@@ -88,7 +88,7 @@
             interventionData = Object.assign({}, this.intervention);
             interventionData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
           } else {
-            let modifiedDetails = this._getModifiedInterventionDetails();
+            let modifiedDetails = this._getModifiedInterventionDetails(this.intervention.document_type);
             let modifiedReviewAndSign = this._getModifiedReviewAndSign();
             interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
           }
