@@ -388,7 +388,7 @@
 
         let agrDataToSave;
         if (this.newAgreementActive) {
-          agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement)
+          agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement);
         } else {
           agrDataToSave = this._getCurrentChanges();
           agrDataToSave.id = this.agreement.id; // we need the id
