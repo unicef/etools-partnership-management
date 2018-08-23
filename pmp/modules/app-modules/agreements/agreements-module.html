@@ -17,6 +17,7 @@
 <link rel="import" href="../../layout/page-content-header/page-content-header-slotted-styles.html">
 <link rel="import" href="../../layout/components/etools-tabs.html">
 <link rel="import" href="../../layout/components/etools-error-messages-box.html">
+<link rel="import" href="../../endpoints/endpoints-mixin.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -153,6 +154,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
@@ -160,7 +162,8 @@
       EtoolsPmpApp.Mixins.ScrollControl,
       EtoolsPmpApp.Mixins.ModuleRouting,
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Endpoints
     ], Polymer.Element);
 
     /**
@@ -374,31 +377,64 @@
         this.fireEvent('clear-server-errors');
       }
 
-      // Save agreement if all fields are validated
       _validateAndTriggerAgreementSave(e) {
         e.stopImmediatePropagation();
+        if (!this.validateAgreement()) {
+          return false;
+        }
+
+        let agrDataToSave;
+        if (this.newAgreementActive) {
+          agrDataToSave =this._prepareNewAgreementDataForSave(this.agreement)
+        } else {
+          agrDataToSave = this._getCurrentChanges();
+          agrDataToSave.id = this.agreement.id; // we need the id
+        }
+        if (this.agreement.attachment_temp instanceof File) {
+          this._uploadSignedAgreement(this.agreement.attachment_temp)
+            .then((response) => {
+              agrDataToSave.attachment = response.id;
+              this._saveAgreement(agrDataToSave);
+            })
+            .catch((err) => {
+              console.log();
+              return false;
+            });
+        } else {
+          this._saveAgreement(agrDataToSave);
+        }
+      }
+
+      _uploadSignedAgreement(file) {
+        let options = {
+            method: 'POST',
+            endpoint: this.getEndpoint('attachmentsUpload'),
+            body: {file: file},
+            multiPart: true,
+            prepareMultipartData: true
+          };
+          return this.sendRequest(options)
+              .then((resp) => {
+                return resp;
+              }).catch((error) => {
+                throw error;
+          });
+      }
+
+      validateAgreement() {
         if (!this._hasEditPermissions(this.permissions)) {
-          return;
+          return false;
         }
         let agreementDetailsEl = this.shadowRoot.querySelector('#agreementDetails');
         if (!agreementDetailsEl) {
-          return;
+          return false;
         }
         if (!agreementDetailsEl._validateAgreement()) {
           this.fireEvent('toast', {text: 'Document can not be saved ' +
               'because of missing data in Details tab', showCloseBtn: true});
-          return;
+          return false;
         }
-        if (this.newAgreementActive) {
-          this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
-        } else {
-          // check/get only changed content to be used as a body to the save request
-          let changedAgreementProperties = this._getCurrentChanges();
-          // we also need the id
-          changedAgreementProperties.id = this.agreement.id;
-          // fire update agreement
-          this._saveAgreement(changedAgreementProperties);
-        }
+        return true;
       }
 
       _prepareNewAgreementDataForSave(agreement) {
