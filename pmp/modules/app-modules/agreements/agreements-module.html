@@ -10,6 +10,7 @@
 <link rel="import" href="../../config/app-constants.html">
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
@@ -155,6 +156,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
@@ -163,7 +165,8 @@
       EtoolsPmpApp.Mixins.ModuleRouting,
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
       EtoolsPmpApp.Mixins.Constants,
-      EtoolsPmpApp.Mixins.Endpoints
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
     ], Polymer.Element);
 
     /**
@@ -385,7 +388,7 @@
 
         let agrDataToSave;
         if (this.newAgreementActive) {
-          agrDataToSave =this._prepareNewAgreementDataForSave(this.agreement)
+          agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement)
         } else {
           agrDataToSave = this._getCurrentChanges();
           agrDataToSave.id = this.agreement.id; // we need the id
@@ -397,7 +400,7 @@
               this._saveAgreement(agrDataToSave);
             })
             .catch((err) => {
-              console.log();
+              this.parseRequestErrorsAndShowAsToastMsgs(err);
               return false;
             });
         } else {
