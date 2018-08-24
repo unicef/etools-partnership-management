@@ -300,11 +300,11 @@
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
           <etools-single-file
-              file="{{agreement.attached_agreement}}"
-              internal-file="[[agreement.attached_agreement_file]]"
+              file="{{agreement.attachment_temp}}"
+              internal-file="[[agreement.attachment]]"
               label="Signed Agreement"
               accept=".doc,.docx,.pdf,.jpg,.png"
-              hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attached_agreement)]]"
+              hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attachment)]]"
               readonly$="[[!agreement.permissions.edit.attached_agreement]]"
               required$="[[agreement.permissions.required.attached_agreement]]">
           </etools-single-file>
@@ -475,7 +475,7 @@
       // Refer to unicef/etools-issues#232:
       // For Draft Status, only Change option is available. No delete option is available in Draft.
       _hideDeleteBtn() {
-        return this._isDraft() && this.agreement && this.agreement.attached_agreement_file;
+        return this._isDraft() && this.agreement && this.agreement.attachment;
       }
 
       _isNewAgreementChanged(isNew) {
