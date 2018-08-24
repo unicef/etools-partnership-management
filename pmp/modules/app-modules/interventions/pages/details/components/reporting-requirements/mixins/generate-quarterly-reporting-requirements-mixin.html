@@ -75,7 +75,7 @@
           let d = moment.utc(this._convertDate(startStr));
           d.add(this.END_DATE_WEEKS_TO_ADD, 'w');
           if (d.isAfter(pdEndStr)) {
-            return moment(pdEndStr);
+            return moment.utc(this.convertDate(pdEndStr));
           }
           return d;
         }
