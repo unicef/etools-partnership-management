@@ -60,12 +60,11 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h" hidden>
-        <div class="col col-12">
-          <etools-single-file label="Attachments"
-                              readonly>
-          </etools-single-file>
-        </div>
+      <div class="row-h">
+        <etools-single-file label="Attachment"
+                            attachments="[[_prepareAttachmentData(reportAttachment)]]"
+                            readonly>
+        </etools-single-file>
       </div>
     </div>
 
@@ -92,7 +91,8 @@
 
       static get properties() {
         return {
-          report: Object
+          report: Object,
+          reportAttachment: Object
         };
       }
 
@@ -103,6 +103,10 @@
          * triggered by parent element on stamp or by tap event on tabs
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+      }
+
+      _prepareAttachmentData(reportAttachment) {
+        return (reportAttachment instanceof Array && reportAttachment[0].path) ? reportAttachment[0] : [];
       }
 
     }
