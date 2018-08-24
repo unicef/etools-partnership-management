@@ -35,12 +35,13 @@
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
 <link rel="import" href="../../../../layout/components/year-dropdown.html">
+<link rel="import" href="../../../../layout/components/etools-single-file.html">
 
 <link rel="import" href="components/agreement-selector.html">
 
 <link rel="import" href="components/planned-budget.html">
 <link rel="import" href="components/results/expected-results.html">
-<!-- <link rel="import" href="components/planned-visits.html"> -->
+<link rel="import" href="components/planned-visits.html">
 <link rel="import" href="components/reporting-requirements/partner-reporting-requirements.html">
 <link rel="import" href="components/grouped-locations-dialog.html">
 
@@ -107,6 +108,10 @@
 
       div[slot="panel-btns"]#add-show-inactive-btns {
         @apply --layout-horizontal;
+      }
+
+      etools-date-input {
+        min-width: 100px; /*IE fix*/
       }
 
     </style>
@@ -216,15 +221,23 @@
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c row-second-bg">
-
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
+      <div class="row-h flex-c row-second-bg"  hidden$="[[!_showContingencyPd(agreement)]]">
+        <div class="col col-3">
           <paper-toggle-button checked="{{intervention.contingency_pd}}"
-                               disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
+                              disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
           </paper-toggle-button>
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div class="col col-9">
+          <etools-single-file label="Activation Letter"
+                    internal-file="{{intervention.activation_letter_attachment}}"
+                    file="{{intervention.activation_letter_file_temp}}"
+                    hidden$="[[!intervention.contingency_pd]]"
+                    hide-delete-btn>
+          </etools-single-file>
+        </div>
+      </div>
+      <div class="row-h row-second-bg">
+        <div class="col col-3">
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
                                icon-first
@@ -246,8 +259,7 @@
           </etools-info-tooltip>
 
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3">
+        <div class="col col-3">
           <etools-info-tooltip class="fr-nr-warn"
                                custom-icon
                                icon-first
@@ -267,8 +279,13 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-3"
-             hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
+        <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
+          <etools-single-file label="Termination Notice"
+                              internal-file=[[intervention.termination_doc_attachment]]
+                              readonly>
+          </etools-single-file>
+        </div>
+        <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
@@ -378,13 +395,13 @@
                     intervention="[[intervention]]">
     </planned-budget>
 
-    <!-- <etools-content-panel class="content-section" panel-title="Planned Visits">
+    <etools-content-panel class="content-section" panel-title="Planned Visits">
       <planned-visits id="plannedVisits"
                       data-items="{{intervention.planned_visits}}"
                       edit-mode="[[permissions.edit.planned_visits]]"
                       years="[[years]]">
       </planned-visits>
-    </etools-content-panel> -->
+    </etools-content-panel>
 
     <template is="dom-if"
               if="[[_showReportingRequirements(environmentFlags.prp_mode_off, permissions.view.reporting_periods)]]"
@@ -468,10 +485,10 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
-          // years: {
-          //   type: Array,
-          //   value: []
-          // },
+          years: {
+            type: Array,
+            value: []
+          },
           agreement: {
             type: Object
           },
@@ -518,12 +535,13 @@
       static get observers() {
         return [
           '_newInterventionFlagChanged(newIntervention)',
-          // '_setYears(intervention.start, intervention.end)',
+           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
           'intervention.start, intervention.status)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           '_contingencyPDChanged(intervention.contingency_pd)',
-          '_updateNoOfPdOutputs(intervention.result_links.*)'
+          '_updateNoOfPdOutputs(intervention.result_links.*)',
+          '_updateRequired(intervention.activation_letter_file_temp)'
         ];
       }
 
@@ -597,17 +615,29 @@
         expectedResultsElem._addNewCpOutputAndRamIndicators();
       }
 
-      _showStartEndDateFields(agreement, intervention, contingencyPd) {
-        if (!this._showContingencyPd(agreement)) {
-          return true;
+      _updateRequired(activationLetterAtt) {
+        if (activationLetterAtt instanceof File) {
+          this.set('permissions.required.start', true);
+          this.set('permissions.required.end', true);
+        } else {
+          if (this.originalIntervention && this.originalIntervention.permissions) {
+            this.set('permissions.required.start', this.originalIntervention.permissions.required.start);
+            this.set('permissions.required.end', this.originalIntervention.permissions.required.end);
+          }
         }
-        return !(contingencyPd && intervention.status !== 'active');
+      }
 
+      _showDaysUntilExpiry(status, agreement, intervention) {
+        return !this._isTerminated(status);
       }
 
       _isDraft(status) {
         return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
             status === '';
+      }
+
+      _isTerminated(status) {
+        return status === this.CONSTANTS.STATUSES.Terminated.toLowerCase();
       }
 
       _openLocationsDialog() {
@@ -720,25 +750,25 @@
         e.target.set('autoValidate', true);
       }
 
-      // _setYears(interventionStart, interventionEnd) {
-      //   if (typeof interventionStart === 'string' && interventionStart !== ''
-      //       && typeof interventionEnd === 'string' && interventionEnd !== '') {
+      _setYears(interventionStart, interventionEnd) {
+        if (typeof interventionStart === 'string' && interventionStart !== ''
+            && typeof interventionEnd === 'string' && interventionEnd !== '') {
 
-      //     let start = parseInt(interventionStart.substr(0, 4), 10);
-      //     let end = parseInt(interventionEnd.substr(0, 4), 10);
-      //     let years = [];
-      //     while (start <= end) {
-      //       years.push({
-      //         value: start,
-      //         label: start
-      //       });
-      //       start++;
-      //     }
-      //     this.set('years', years);
-      //   } else {
-      //     this.set('years', []);
-      //   }
-      // }
+          let start = parseInt(interventionStart.substr(0, 4), 10);
+          let end = parseInt(interventionEnd.substr(0, 4), 10);
+          let years = [];
+          while (start <= end) {
+            years.push({
+              value: start,
+              label: start
+            });
+            start++;
+          }
+          this.set('years', years);
+        } else {
+          this.set('years', []);
+        }
+      }
 
       _selectedPartnerIdChanged(id, oldId) {
         if (typeof oldId === 'number'
@@ -781,18 +811,37 @@
               options = this.documentTypes;
               break;
           }
+
+          this._resetSelectedDocType(options);
         }
+
         return options;
+      }
+
+      _resetSelectedDocType(options) {
+        if (!this.intervention || !this.intervention.document_type || options === undefined) {
+          return;
+        }
+        if (!options || !options.length) {
+          this.set('intervention.document_type', null);
+          return;
+        }
+        let selIsInOptions = options.find(o => o.value === this.intervention.document_type);
+        if (!selIsInOptions) {
+          this.set('intervention.document_type', null);
+        }
       }
 
       validate() {
         let valid = true;
         let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
           '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
-        if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
+
+        if (this._isContingencyAndHasActivationLetter() || this.intervention.status === 'active') {
           fieldSelectors.push('#intStart', '#intEnd');
         }
-        if (this.intervention.document_type !== 'SSFA' && ['', 'draft'].indexOf(this.intervention.status) > -1) {
+    
+        if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
           fieldSelectors.push('#ref-year');
         }
         fieldSelectors.forEach(function(selector) {
@@ -802,6 +851,11 @@
           }
         }.bind(this));
         return valid;
+      }
+
+      _isContingencyAndHasActivationLetter() {
+        return this.intervention.contingency_pd &&
+          (this.intervention.activation_letter_file_temp instanceof File || this.intervention.activation_letter_attachment);
       }
 
       _daysUntilExpiry(end) {

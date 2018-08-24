@@ -2,6 +2,7 @@
 <link rel="import" href="modified-intervention-fields-mixin.html">
 <link rel="import" href="../../../mixins/array-helper-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
 <link rel="import" href="../../../config/app-constants.html">
@@ -21,13 +22,15 @@
    * @appliesMixin EtoolsPmpApp.Mixins.ModifiedInterventionFields
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    * @appliesMixin EtoolsPmpApp.Mixins.Constants
+   * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
    */
   EtoolsPmpApp.Mixins.SaveIntervention = Polymer.dedupingMixin(
       superClass => class extends EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.EventHelper,
         EtoolsPmpApp.Mixins.ArrayHelper,
         EtoolsPmpApp.Mixins.ModifiedInterventionFields,
-        EtoolsPmpApp.Mixins.Constants
+        EtoolsPmpApp.Mixins.Constants,
+        EtoolsPmpApp.Mixins.AjaxErrorsParser
       ], superClass) {
 
         _validateAndSaveIntervention(event) {
@@ -38,13 +41,74 @@
           this.fireEvent('clear-server-errors');
           this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
           if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-            return;
+            return false;
           }
 
-          let interventionDetailsEl = this.shadowRoot.querySelector('#interventionDetails');
-          let interventionDetailsAreValid = false;
-          if (interventionDetailsEl && typeof interventionDetailsEl.validate === 'function') {
-            interventionDetailsAreValid = interventionDetailsEl.validate();
+          let interventionDetailsAreValid = this._validateInterventionDetails();
+
+          let reviewAndSignIsValid = this._validateReviewAndSign();
+
+          if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
+            this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
+            return false;
+          }
+
+          let interventionData = this._getModifiedFields();
+          interventionData = this._prepareDataForSave(interventionData);
+
+          if (this.intervention.activation_letter_file_temp instanceof File) {
+            this._uploadActivationLetter(this.intervention.activation_letter_file_temp)
+              .then((response) => {
+
+                interventionData.activation_letter_attachment = response.id;
+                this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+              })
+              .catch((err) => {
+                this.parseRequestErrorsAndShowAsToastMsgs(err);
+                return false;
+              });
+          } else {
+            this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          }
+
+          return true;
+        }
+
+        _uploadActivationLetter(file) {
+          let options = {
+            method: 'POST',
+            endpoint: this.getEndpoint('attachmentsUpload'),
+            body: {file: file},
+            multiPart: true,
+            prepareMultipartData: true
+          };
+          return this.sendRequest(options)
+              .then((resp) => {
+                return resp;
+              }).catch((error) => {
+                throw error;
+          });
+        }
+
+        _getModifiedFields() {
+          let interventionData;
+          if (this._isNewIntervention()) {
+            interventionData = Object.assign({}, this.intervention);
+            interventionData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
+          } else {
+            let modifiedDetails = this._getModifiedInterventionDetails();
+            let modifiedReviewAndSign = this._getModifiedReviewAndSign();
+            interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
+          }
+          return interventionData;
+        }
+
+        _validateInterventionDetails() {
+          let valid = false;
+          let intervDetailsEl = this.shadowRoot.querySelector('#interventionDetails');
+
+          if (intervDetailsEl && typeof intervDetailsEl.validate === 'function') {
+            valid = intervDetailsEl.validate();
           } else {
             // details element not stamped...
             // validate current data that belongs to details tab against permissions
@@ -57,44 +121,33 @@
             if (this.intervention.document_type !== 'SSFA' && ['', 'draft'].indexOf(this.intervention.status) > -1) {
               detailsPrimitiveFields.push('reference_number_year');
             }
-            interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
+
+            valid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
                 this._validateInterventionObjectFields(detailsObjFields);
 
             this.set('_forceDetUiValidationOnAttach', true);
           }
 
+          return valid;
+        }
+
+        _validateReviewAndSign() {
+          let valid = false;
           let reviewAndSignEl = this.shadowRoot.querySelector('#interventionReviewAndSign');
-          let reviewAndSignIsValid = false;
+
           if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
-            reviewAndSignIsValid = reviewAndSignEl.validate();
+            valid = reviewAndSignEl.validate();
           } else {
             // review and signed element not stamped...
             // validate current data that belongs to this tab against permissions
             let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
               'unicef_signatory', 'signed_by_unicef_date'];
             let reviewAndSignObjFields = ['signed_pd_document'];
-            reviewAndSignIsValid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
+            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
                 this._validateInterventionObjectFields(reviewAndSignObjFields);
             this.set('_forceReviewUiValidationOnAttach', true);
           }
-
-          if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
-            this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-            return;
-          }
-
-          let interventionData;
-          if (this._isNewIntervention()) {
-            interventionData = Object.assign({}, this.intervention);
-            interventionData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
-          } else {
-            let modifiedDetails = this._getModifiedInterventionDetails();
-            let modifiedReviewAndSign = this._getModifiedReviewAndSign();
-            interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
-          }
-          interventionData = this._prepareDataForSave(interventionData);
-
-          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          return valid;
         }
 
         _validateInterventionObjectFields(interventionFields) {
@@ -151,6 +204,7 @@
             delete interventionData.prc_review_document;
             delete interventionData.prc_review_document_file;
           }
+
           return interventionData;
         }
 
@@ -178,6 +232,15 @@
         _needFrsUpdate(frs) {
           let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
           return diff.length > 0;
+        }
+
+        _terminatePd(e) {
+          let terminationData = {
+            id: e.detail.interventionId,
+            end: e.detail.terminationData.date,
+            termination_doc_attachment: e.detail.terminationData.fileId
+          };
+          this.$.interventionData.saveIntervention(terminationData);
         }
       });
 
