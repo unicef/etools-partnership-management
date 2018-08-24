@@ -63,7 +63,7 @@
         <etools-date-input id="signed-date"
                            label="Signed date"
                            value="{{newAmendment.signed_date}}"
-                           required
+                           required-and-not-future-date
                            open="{{datePickerOpen}}"
                            validator="signedDate_validator"
                            auto-validate
