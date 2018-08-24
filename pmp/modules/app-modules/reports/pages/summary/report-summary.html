@@ -11,6 +11,7 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
@@ -60,7 +61,7 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h">
+      <div class="row-h" hidden$="[[isPrpSRReport(response.report_type)]]">
         <etools-single-file label="Attachment"
                             attachments="[[_prepareAttachmentData(reportAttachment)]]"
                             readonly>
@@ -75,11 +76,13 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsMixins.EtoolsCurrency
      */
     class ReportSummary extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsMixins.EtoolsCurrency
@@ -107,6 +110,15 @@
 
       _prepareAttachmentData(reportAttachment) {
         return (reportAttachment instanceof Array && reportAttachment[0].path) ? reportAttachment[0] : [];
+      }
+
+      /**
+       * SR report check, used to hide attachment from this page. SR report attachment is displayed in progress tab
+       * @param repType
+       * @returns {boolean}
+       */
+      isPrpSRReport(repType) {
+        return repType === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
       }
 
     }
