@@ -20,9 +20,9 @@
               type: Number,
               value: 12
             },
-            DUE_DATE_WEEKS_TO_ADD: {
+            DUE_DATE_DAYS_TO_ADD: {
               type: Number,
-              value: 1
+              value: 30
             },
             datesFormat: {
               type: String,
@@ -46,13 +46,13 @@
         generateQPRData(pdStartDateStr, pdEndDateStr) {
           let qprData = [];
           let start = String(pdStartDateStr);
-          let end = this._generateEndDate(start);
-          while (this._generatedEndIsBeforeOrEqPdEnd(end.format(this.datesFormat), pdEndDateStr)) {
+          let end = this._generateEndDate(start, pdEndDateStr);
+          while (this._generatedEndIsBeforePdEnd(end.format(this.datesFormat), pdEndDateStr)) {
             // add dates to qpr data list
             qprData.push(this._getQPRDatesSet(start, end));
             // recalculate next dates set
             start = this._getNextStartDateStr(end);
-            end = this._generateEndDate(start);
+            end = this._generateEndDate(start, pdEndDateStr);
           }
           // add one more to cover entire PD timeline
           qprData.push(this._getQPRDatesSet(start, end));
@@ -67,18 +67,21 @@
           };
         }
 
-        _generatedEndIsBeforeOrEqPdEnd(endDateStr, pdEndStr) {
-          return moment(endDateStr).isBefore(pdEndStr) || moment(endDateStr).isSame(pdEndStr);
+        _generatedEndIsBeforePdEnd(endDateStr, pdEndStr) {
+          return moment(endDateStr).isBefore(pdEndStr);
         }
 
-        _generateEndDate(startStr) {
+        _generateEndDate(startStr, pdEndStr) {
           let d = moment.utc(this._convertDate(startStr));
           d.add(this.END_DATE_WEEKS_TO_ADD, 'w');
+          if (d.isAfter(pdEndStr)) {
+            return moment.utc(this.convertDate(pdEndStr));
+          }
           return d;
         }
 
         _generateDueDate(momentEndDate) {
-          return moment(momentEndDate).add(this.DUE_DATE_WEEKS_TO_ADD, 'w');
+          return moment(momentEndDate).add(this.DUE_DATE_DAYS_TO_ADD, 'd');
         }
 
         _getNextStartDateStr(momentEndDate) {
