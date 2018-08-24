@@ -58,98 +58,102 @@
 
     <div id="filters" class="paper-material" elevation="1">
 
-      <paper-input id="query"
-                   class="filter"
-                   type="search"
-                   placeholder="Search"
-                   autocomplete="off"
-                   value="{{q}}">
-        <iron-icon icon="search" slot="prefix"></iron-icon>
-      </paper-input>
+      <div id="filters-fields">
+        <paper-input id="query"
+                     class="filter"
+                     type="search"
+                     placeholder="Search"
+                     autocomplete="off"
+                     value="{{q}}">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </paper-input>
 
-      <etools-dropdown-multi
-          class="filter"
-          label="Type"
-          placeholder="Select"
-          options="[[agreementTypes]]"
-          selected-values="{{selectedAgTypes}}"
-          hide-search
-          min-width="350px"
-          horizontal-align="left"
-          no-dynamic-align></etools-dropdown-multi>
+        <etools-dropdown-multi
+            class="filter"
+            label="Type"
+            placeholder="Select"
+            options="[[agreementTypes]]"
+            selected-values="{{selectedAgTypes}}"
+            hide-search
+            min-width="350px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-      <etools-dropdown-multi
-          class="filter"
-          label="Status"
-          placeholder="Select"
-          options="[[agreementStatuses]]"
-          selected-values="{{selectedAgStatuses}}"
-          hide-search
-          min-width="160px"
-          horizontal-align="left"
-          no-dynamic-align></etools-dropdown-multi>
+        <etools-dropdown-multi
+            class="filter"
+            label="Status"
+            placeholder="Select"
+            options="[[agreementStatuses]]"
+            selected-values="{{selectedAgStatuses}}"
+            hide-search
+            min-width="160px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-      <etools-dropdown-multi
-          class="filter"
-          label="CP Structure"
-          placeholder="Select"
-          options="[[countryProgrammes]]"
-          selected-values="{{selectedCPStructures}}"
-          option-value="id"
-          option-label="name"
-          hide-search
-          min-width="400px"
-          horizontal-align="left"
-          no-dynamic-align></etools-dropdown-multi>
+        <etools-dropdown-multi
+            class="filter"
+            label="CP Structure"
+            placeholder="Select"
+            options="[[countryProgrammes]]"
+            selected-values="{{selectedCPStructures}}"
+            option-value="id"
+            option-label="name"
+            hide-search
+            min-width="400px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-      <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-        <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
-          <etools-dropdown-multi
-              class="filter"
-              label="[[filter.filterName]]"
-              placeholder="Select"
-              disabled$="[[!filter.selectionOptions.length]]"
-              options="[[filter.selectionOptions]]"
-              selected-values="[[filter.alreadySelected]]"
-              data-filter-path$="[[filter.path]]"
-              on-etools-selected-items-changed="esmmValueChanged"
-              trigger-value-change-event
-              min-width="400px"
-              horizontal-align="left"
-              no-dynamic-align>
-          </etools-dropdown-multi>
-        </template>
-
-        <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-          <etools-date-input id$="datepicker_[[filter.path]]"
-                             class="filter date"
-                             label="[[filter.filterName]]"
-                             placeholder="Select"
-                             value="{{filter.dateSelected}}"
-                             on-date-has-changed="_filterDateHasChanged"
-                             data-filter-path$="[[filter.path]]"
-                             fire-date-has-changed
-                             no-init
-                             show-clear-btn>
-          </etools-date-input>
-        </template>
-
-      </template>
-
-      <paper-menu-button id="filterMenu" ignore-select>
-        <paper-button class="button" slot="dropdown-trigger">
-          <iron-icon icon="filter-list"></iron-icon>
-          Add filter
-        </paper-button>
-        <paper-listbox slot="dropdown-content" multi>
-          <template is="dom-repeat" items="[[listFilterOptions]]">
-            <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
-              <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
-              <paper-item-body>[[item.filterName]]</paper-item-body>
-            </paper-icon-item>
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <etools-dropdown-multi
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="Select"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                selected-values="[[filter.alreadySelected]]"
+                data-filter-path$="[[filter.path]]"
+                on-etools-selected-items-changed="esmmValueChanged"
+                trigger-value-change-event
+                min-width="400px"
+                horizontal-align="left"
+                no-dynamic-align>
+            </etools-dropdown-multi>
           </template>
-        </paper-listbox>
-      </paper-menu-button>
+
+          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+            <etools-date-input id$="datepicker_[[filter.path]]"
+                               class="filter date"
+                               label="[[filter.filterName]]"
+                               placeholder="Select"
+                               value="{{filter.dateSelected}}"
+                               on-date-has-changed="_filterDateHasChanged"
+                               data-filter-path$="[[filter.path]]"
+                               fire-date-has-changed
+                               no-init
+                               show-clear-btn>
+            </etools-date-input>
+          </template>
+
+        </template>
+      </div>
+
+      <div class="fixed-controls">
+        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+          <paper-button class="button" slot="dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>
+            Add filter
+          </paper-button>
+          <paper-listbox slot="dropdown-content" multi>
+            <template is="dom-repeat" items="[[listFilterOptions]]">
+              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+                <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+                <paper-item-body>[[item.filterName]]</paper-item-body>
+              </paper-icon-item>
+            </template>
+          </paper-listbox>
+        </paper-menu-button>
+      </div>
 
     </div>
 
