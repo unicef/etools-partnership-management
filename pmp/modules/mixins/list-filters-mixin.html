@@ -50,19 +50,27 @@
       } else {
         // remove
         const filterIndex = this.selectedFilters.findIndex(f => f.filterName === selectedOption.filterName);
-        this._clearFilterSelection(selectedOption);
+        this._clearFilterSelection(selectedOption, selectedIdx);
         this.splice('selectedFilters', filterIndex, 1);
-        this.set(['listFilterOptions', selectedIdx, 'selected'], false);
       }
     }
 
-    _clearFilterSelection(filter) {
+    _clearFilterSelection(filter, selectedIdx) {
       if (filter) {
+        // reset selected values
         if (filter.singleSelection) {
           this.set(filter.path, null);
         } else {
           this.set(filter.path, (filter.type === 'esmm') ? [] : (filter.type === 'datepicker' ? '' : null));
         }
+        // reset selected values from filters list
+        if (filter.type === 'esmm') {
+          this.set(['listFilterOptions', selectedIdx, 'alreadySelected'], filter.singleSelection ? null : []);
+        }
+        if (filter.type === 'datepicker') {
+          this.set(['listFilterOptions', selectedIdx, 'dateSelected'], '');
+        }
+        this.set(['listFilterOptions', selectedIdx, 'selected'], false);
       }
     }
 
