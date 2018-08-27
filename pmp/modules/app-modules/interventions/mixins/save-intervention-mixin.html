@@ -121,6 +121,7 @@
             if (this.intervention.document_type !== 'SSFA' && ['', 'draft'].indexOf(this.intervention.status) > -1) {
               detailsPrimitiveFields.push('reference_number_year');
             }
+
             valid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
                 this._validateInterventionObjectFields(detailsObjFields);
 

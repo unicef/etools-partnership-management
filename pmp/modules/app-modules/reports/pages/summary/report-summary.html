@@ -11,6 +11,7 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
@@ -60,12 +61,11 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h" hidden>
-        <div class="col col-12">
-          <etools-single-file label="Attachments"
-                              readonly>
-          </etools-single-file>
-        </div>
+      <div class="row-h" hidden$="[[isPrpSRReport(response.report_type)]]">
+        <etools-single-file label="Attachment"
+                            attachments="[[_prepareAttachmentData(reportAttachment)]]"
+                            readonly>
+        </etools-single-file>
       </div>
     </div>
 
@@ -76,11 +76,13 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsMixins.EtoolsCurrency
      */
     class ReportSummary extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsMixins.EtoolsCurrency
@@ -92,7 +94,8 @@
 
       static get properties() {
         return {
-          report: Object
+          report: Object,
+          reportAttachment: Object
         };
       }
 
@@ -103,6 +106,19 @@
          * triggered by parent element on stamp or by tap event on tabs
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+      }
+
+      _prepareAttachmentData(reportAttachment) {
+        return (reportAttachment instanceof Array && reportAttachment[0].path) ? reportAttachment[0] : [];
+      }
+
+      /**
+       * SR report check, used to hide attachment from this page. SR report attachment is displayed in progress tab
+       * @param repType
+       * @returns {boolean}
+       */
+      isPrpSRReport(repType) {
+        return repType === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
       }
 
     }
