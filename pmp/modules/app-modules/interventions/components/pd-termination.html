@@ -93,8 +93,9 @@
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      */
-    class PdTermination extends EtoolsPmpApp.Mixins.AjaxErrorsParser(EtoolsPmpApp.Mixins.EnvironmentFlags
-      (EtoolsPmpApp.Mixins.Endpoints(Polymer.Element))) {
+    class PdTermination extends EtoolsPmpApp.Mixins.AjaxErrorsParser
+      (EtoolsPmpApp.Mixins.EnvironmentFlags
+        (EtoolsPmpApp.Mixins.Endpoints(Polymer.Element))) {
 
       static get is() {
         return 'pd-termination';
