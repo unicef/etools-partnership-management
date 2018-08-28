@@ -88,7 +88,7 @@
       }
 
       _determineRows(columns, data) {
-        if (typeof mapping === 'undefined' || typeof data === 'undefined') {
+        if (typeof columns === 'undefined' || typeof data === 'undefined') {
           return;
         }
         return columns.map(function(z) {
