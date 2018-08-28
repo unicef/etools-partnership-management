@@ -112,6 +112,14 @@
           terminationElSource: Object
         };
       }
+      connectedCallback() {
+        super.connectedCallback();
+        this.$.terminationDate.maxDate = this._getMaxDate();
+      }
+
+      _getMaxDate() {
+        return moment(Date.now()).add(30, 'd').toDate();
+      }
 
       _handleDialogClosed(e) {
         this.resetValidations();
