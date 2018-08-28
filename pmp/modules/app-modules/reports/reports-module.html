@@ -108,15 +108,15 @@
                           url-params="[[preservedListQueryParams]]"></reports-list>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(activePage, 'other-info')]]">
-            <report-summary name="other-info"
+          <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
+            <report-summary name="summary"
                             report="[[report]]"
                             report-attachment="[[reportAttachment]]"></report-summary>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(activePage, 'reporting-results')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
             <report-progress id="reportDetails"
-                             name="reporting-results"
+                             name="progress"
                              report="[[report]]"
                              report-attachment="[[reportAttachment]]"></report-progress>
           </template>
@@ -168,12 +168,12 @@
             type: Array,
             value: [
               {
-                tab: 'reporting-results',
+                tab: 'progress',
                 tabLabel: 'Reporting Results',
                 hidden: false
               },
               {
-                tab: 'other-info',
+                tab: 'summary',
                 tabLabel: 'Other Info',
                 hidden: false
               }
