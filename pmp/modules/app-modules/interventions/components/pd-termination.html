@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../layout/components/etools-single-file.html">
@@ -93,9 +94,11 @@
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      */
-    class PdTermination extends EtoolsPmpApp.Mixins.AjaxErrorsParser
-      (EtoolsPmpApp.Mixins.EnvironmentFlags
-        (EtoolsPmpApp.Mixins.Endpoints(Polymer.Element))) {
+    class PdTermination extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.Endpoints,
+      ], Polymer.Element) {
 
       static get is() {
         return 'pd-termination';
