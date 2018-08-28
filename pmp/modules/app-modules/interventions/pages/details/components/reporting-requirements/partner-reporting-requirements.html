@@ -89,7 +89,7 @@
               <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openQprEditDialog"
-                                 hidden$="[[_hideRepReqEditBtn(editMode, qprRequirementsCount)]]"></paper-icon-button>
+                                 hidden$="[[!editMode]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianUnicef"
                         class="nav-menu-item">
@@ -97,7 +97,7 @@
               <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openHruEditDialog"
-                                 hidden$="[[_hideRepReqEditBtn(editMode, hrUnicefRequirementsCount)]]"></paper-icon-button>
+                                 hidden$="[[!editMode]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianCluster"
                         class="nav-menu-item">
@@ -120,7 +120,8 @@
                                               intervention-id="[[interventionId]]"
                                               intervention-start="[[interventionStart]]"
                                               intervention-end="[[interventionEnd]]"
-                                              requirements-count="{{qprRequirementsCount}}">
+                                              requirements-count="{{qprRequirementsCount}}"
+                                              edit-mode="[[editMode]]">
             </quarterly-reporting-requirements>
 
             <humanitarian-reporting-req-unicef id="hru"
@@ -128,7 +129,8 @@
                                                intervention-id="[[interventionId]]"
                                                intervention-start="[[interventionStart]]"
                                                requirements-count="{{hrUnicefRequirementsCount}}"
-                                               expected-results="[[expectedResults]]">
+                                               expected-results="[[expectedResults]]"
+                                               edit-mode="[[editMode]]">
             </humanitarian-reporting-req-unicef>
 
             <humanitarian-reporting-req-cluster name="humanitarianCluster"
@@ -203,10 +205,6 @@
 
       _openHruEditDialog() {
         this.$.hru.openUnicefHumanitarianRepReqDialog();
-      }
-
-      _hideRepReqEditBtn(editMode, qprCount) {
-        return qprCount === 0 || !editMode;
       }
 
     }

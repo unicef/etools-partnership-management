@@ -30,7 +30,7 @@
       <div class="row-h">
         There are no quarterly reporting requirements set.
       </div>
-      <div class="row-h">
+      <div class="row-h" hidden$="[[!editMode]]">
         <paper-button class="secondary-btn" on-click="openQuarterlyRepRequirementsDialog">
           Add Requirements
         </paper-button>
@@ -68,7 +68,8 @@
         return {
           interventionStart: String,
           interventionEnd: String,
-          editQprDialog: Object
+          editQprDialog: Object,
+          editMode: Boolean
         };
       }
 
