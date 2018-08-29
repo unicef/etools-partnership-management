@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../layout/components/etools-single-file.html">
@@ -7,6 +8,7 @@
 
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../environment-flags/environment-flags-mixin.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -90,8 +92,13 @@
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      */
-    class PdTermination extends EtoolsPmpApp.Mixins.AjaxErrorsParser(EtoolsPmpApp.Mixins.Endpoints(Polymer.Element)) {
+    class PdTermination extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.Endpoints
+      ], Polymer.Element) {
 
       static get is() {
         return 'pd-termination';
@@ -112,6 +119,14 @@
           terminationElSource: Object
         };
       }
+      connectedCallback() {
+        super.connectedCallback();
+        this.$.terminationDate.maxDate = this._getMaxDate();
+      }
+
+      _getMaxDate() {
+        return moment(Date.now()).add(30, 'd').toDate();
+      }
 
       _handleDialogClosed(e) {
         this.resetValidations();
@@ -121,7 +136,12 @@
         if (!this.validate()) {
           return;
         }
-        this.set('warningOpened', true);
+        if (this.environmentFlags &&
+            !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
+          this.set('warningOpened', true);
+        } else {
+          this._terminatePD();
+        }
       }
 
       _terminationConfirmed(e) {
