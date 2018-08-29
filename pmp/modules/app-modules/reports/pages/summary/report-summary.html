@@ -109,7 +109,14 @@
       }
 
       _prepareAttachmentData(reportAttachment) {
-        return (reportAttachment instanceof Array && reportAttachment[0].path) ? reportAttachment[0] : [];
+        if (!reportAttachment) {
+          return [];
+        }
+        if (reportAttachment instanceof Array && reportAttachment[0].path) {
+          return reportAttachment[0];
+        } else {
+          return [reportAttachment];
+        }
       }
 
       /**
