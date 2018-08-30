@@ -28,7 +28,7 @@
       <div class="row-h">
         There are no humanitarian report requirements set.
       </div>
-      <div class="row-h" hidden$="[[!_thereAreHFIndicators(expectedResults)]]">
+      <div class="row-h" hidden$="[[!_showAdd(expectedResults, editMode)]]">
         <paper-button class="secondary-btn" on-click="openUnicefHumanitarianRepReqDialog">
           ADD REQUIREMENTS
         </paper-button>
@@ -175,6 +175,14 @@
         });
         return hfIndicator ? true : false;
       }
+
+      _showAdd(expectedResults, editMode) {
+        if (!editMode) {
+          return false;
+        }
+        return this._thereAreHFIndicators(expectedResults);
+      }
+
     }
 
     window.customElements.define(HumanitarianReportingReqUnicef.is, HumanitarianReportingReqUnicef);
