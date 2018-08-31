@@ -111,7 +111,7 @@
         let errMsg = 'Report attachment request failed!';
         this.logError(errMsg, this._logMsgPrefix, error);
         if (error.status === 404) {
-          //it means there is no attachment, which seems like a weird approach
+          // it means there is no attachment, which seems like a weird approach
         } else {
           this.parseRequestErrorsAndShowAsToastMsgs(error, this);
         }
