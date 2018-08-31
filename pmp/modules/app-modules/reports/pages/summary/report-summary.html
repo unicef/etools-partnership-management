@@ -61,9 +61,9 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h" hidden$="[[isPrpSRReport(response.report_type)]]">
+      <div class="row-h">
         <etools-single-file label="Attachment"
-                            attachments="[[_prepareAttachmentData(reportAttachment)]]"
+                            attachments="[[attachments]]"
                             readonly>
         </etools-single-file>
       </div>
@@ -95,7 +95,14 @@
       static get properties() {
         return {
           report: Object,
-          reportAttachment: Object
+          reportAttachment: {
+            type: Object,
+            observer: '_prepareAttachmentData'
+          },
+          attachments: {
+            type: Array,
+            value: []
+          }
         };
       }
 
@@ -110,12 +117,13 @@
 
       _prepareAttachmentData(reportAttachment) {
         if (!reportAttachment) {
-          return [];
+          this.attachments = [];
+          return;
         }
         if (reportAttachment instanceof Array && reportAttachment[0].path) {
-          return reportAttachment[0];
+          this.attachments = reportAttachment[0];
         } else {
-          return [reportAttachment];
+          this.attachments = [reportAttachment];
         }
       }
 
