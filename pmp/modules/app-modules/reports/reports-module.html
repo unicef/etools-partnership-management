@@ -51,13 +51,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="/list"
+        pattern="[[rootPath]]reports/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/:id/:tab"
+        pattern="[[rootPath]]reports/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
