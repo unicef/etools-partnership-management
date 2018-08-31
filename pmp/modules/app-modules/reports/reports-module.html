@@ -197,7 +197,7 @@
       static get observers() {
         return [
           '_pageChanged(listActive, tabsActive, routeData)',
-          '_observeRouteDataId(routeData.id, listActive, tabsActive)',
+          '_loadReport(routeData.id, tabsActive, prpCountries, currentUser)',
           '_reportChanged(report)'
         ];
       }
@@ -252,8 +252,11 @@
         this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
       }
 
-      _observeRouteDataId(reportId, listActive) {
-        if (listActive || !reportId) {
+      _loadReport(reportId, tabsActive, prpCountries, currentUser) {
+        if (_.isEmpty(prpCountries) || _.isEmpty(currentUser)) {
+          return;
+        }
+        if (!tabsActive || !reportId) {
           return;
         }
         let id = parseInt(reportId, 10);
