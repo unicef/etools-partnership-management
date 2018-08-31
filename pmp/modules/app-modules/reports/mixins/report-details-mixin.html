@@ -99,15 +99,31 @@
         active: true,
         loadingSource: this._loadingMsgSource
       });
+      this.set('reportAttachment', null);
       this.fireRequest('reportAttachment', {reportId: reportId}).then((response) => {
-        this.set('reportAttachment', response);
         this.fireEvent('global-loading', {active: false, loadingSource: this._loadingMsgSource});
+
+        if (!this._attachmentHasNullFields(response)) {
+          this.set('reportAttachment', response);
+        }
+
       }).catch((error) => {
-        let errMsg = 'Reports details data request failed!';
+        let errMsg = 'Report attachment request failed!';
         this.logError(errMsg, this._logMsgPrefix, error);
-        this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+        if (error.status === 404) {
+          //it means there is no attachment, which seems like a weird approach
+        } else {
+          this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+        }
         this.fireEvent('global-loading', {active: false, loadingSource: this._loadingMsgSource});
       });
+    }
+
+    _attachmentHasNullFields(att) {
+      if (!att) {
+        return true;
+      }
+      return (!att.file_name && !att.path);
     }
 
   };
