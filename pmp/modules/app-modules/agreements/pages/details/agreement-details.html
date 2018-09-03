@@ -236,7 +236,7 @@
       <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]">
         <!-- Partner Authorized Officers (partner staff members) -->
         <etools-dropdown-multi id="officers"
-                               label="Authorized Officers"
+                               label="Partner Authorized Officers"
                                placeholder="&#8212;"
                                options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                option-value="id"
@@ -247,7 +247,7 @@
                                required$="[[agreement.permissions.required.authorized_officers]]"
                                auto-validate$="[[enableEditForAuthorizedOfficers]]">
         </etools-dropdown-multi>
-        <etools-form-element-wrapper label="Authorized Officers"
+        <etools-form-element-wrapper label="Partner Authorized Officers"
                                      required$="[[agreement.permissions.required.authorized_officers]]"
                                      hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
                                      value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]">
@@ -261,14 +261,14 @@
                       on-tap="_enableAoEdit"
                       hidden$="[[allowAoEditForSSFA]]">
           <iron-icon icon="create"></iron-icon>
-          <span>Amend Authorized Officers</span>
+          <span>Amend Partner Authorized Officers</span>
         </paper-button>
         <paper-button id="cancelAoEdit"
                       class="secondary-btn"
                       on-tap="_cancelAoEdit"
                       hidden$="[[!allowAoEditForSSFA]]">
           <iron-icon icon="cancel"></iron-icon>
-          <span>Cancel Authorized Officers amendment</span>
+          <span>Cancel Partner Authorized Officers amendment</span>
         </paper-button>
       </div>
 
