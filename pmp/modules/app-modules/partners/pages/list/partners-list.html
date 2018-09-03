@@ -56,56 +56,57 @@
     </template>
 
     <div id="filters" class="paper-material" elevation="1">
+      <div id="filters-fields">
 
-      <paper-input id="query"
-                   class="filter"
-                   type="search"
-                   autocomplete="off"
-                   value="{{q}}"
-                   placeholder="Search partner">
-        <iron-icon icon="search" slot="prefix"></iron-icon>
-      </paper-input>
+        <paper-input id="query"
+                     class="filter"
+                     type="search"
+                     autocomplete="off"
+                     value="{{q}}"
+                     placeholder="Search partner">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </paper-input>
 
-      <etools-dropdown-multi
-          class="filter"
-          label="Partner Type"
-          placeholder="Select"
-          disabled$="[[showOnlyGovernmentType]]"
-          options="[[partnerTypes]]"
-          selected-values="{{selectedPartnerTypes}}"
-          hide-search
-          min-width="350px"
-          horizontal-align="left"
-          no-dynamic-align></etools-dropdown-multi>
+        <etools-dropdown-multi
+            class="filter"
+            label="Partner Type"
+            placeholder="Select"
+            disabled$="[[showOnlyGovernmentType]]"
+            options="[[partnerTypes]]"
+            selected-values="{{selectedPartnerTypes}}"
+            hide-search
+            min-width="350px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-      <etools-dropdown-multi
-          class="filter"
-          label="CSO Type"
-          placeholder="Select"
-          options="[[csoTypes]]"
-          selected-values="{{selectedCsoTypes}}"
-          hide-search
-          min-width="350px"
-          horizontal-align="left"
-          no-dynamic-align></etools-dropdown-multi>
+        <etools-dropdown-multi
+            class="filter"
+            label="CSO Type"
+            placeholder="Select"
+            options="[[csoTypes]]"
+            selected-values="{{selectedCsoTypes}}"
+            hide-search
+            min-width="350px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-      <etools-dropdown-multi
-          class="filter"
-          label="Risk Rating"
-          placeholder="Select"
-          options="[[riskRatings]]"
-          selected-values="{{selectedRiskRatings}}"
-          hide-search
-          min-width="160px"
-          horizontal-align="left"
-          no-dynamic-align></etools-dropdown-multi>
+        <etools-dropdown-multi
+            class="filter"
+            label="Risk Rating"
+            placeholder="Select"
+            options="[[riskRatings]]"
+            selected-values="{{selectedRiskRatings}}"
+            hide-search
+            min-width="160px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-      <div id="hiddenToggle" class="filter">
-        Show hidden
-        <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
+        <div id="hiddenToggle" class="filter">
+          Show hidden
+          <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
+        </div>
+
       </div>
-
-
     </div>
 
     <div id="list" elevation="1" class="paper-material hidden">
