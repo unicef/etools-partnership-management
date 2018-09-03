@@ -30,6 +30,12 @@
         height: auto;
       }
 
+      #filters-fields etools-dropdown.filter {
+        /* TODO: 160px as requested makes etools-dropdown a little bit too small, no resize here...
+        we might need to change this in the future (used only on reports filters) */
+        width: 160px;
+      }
+
       #filters-fields #query {
         --paper-input-container: {
           width: 280px;
@@ -100,7 +106,6 @@
         };
       }
 
-      #filterMenu paper-icon-item.iron-selected,
       #filterMenu paper-icon-item[selected] {
         background: var(--esmm-list-item-selected-color, #dcdcdc);
         --paper-item-icon: {

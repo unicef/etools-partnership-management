@@ -65,11 +65,11 @@
       </interventions-list-data>
     </template>
 
-    <div id="listControls" class="paper-material" elevation="1">
+    <div id="filters" class="paper-material" elevation="1">
 
-      <div class="wrap-controls">
-
+      <div id="filters-fields">
         <paper-input id="query"
+                     class="filter"
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
@@ -77,92 +77,93 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="Status"
-              options="[[interventionStatuses]]"
-              selected-values="{{selectedStatuses}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="Status"
+            options="[[interventionStatuses]]"
+            selected-values="{{selectedStatuses}}"
+            hide-search
+            min-width="160px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="PD/SSFA Type"
-              options="[[documentTypes]]"
-              selected-values="{{selectedDocumentTypes}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="PD/SSFA Type"
+            options="[[documentTypes]]"
+            selected-values="{{selectedDocumentTypes}}"
+            hide-search
+            min-width="400px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="Sections"
-              options="[[sections]]"
-              option-value="id"
-              option-label="name"
-              selected-values="{{selectedSections}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="Sections"
+            options="[[sections]]"
+            option-value="id"
+            option-label="name"
+            selected-values="{{selectedSections}}"
+            hide-search
+            min-width="350px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="Offices"
-              options="[[offices]]"
-              option-value="id"
-              option-label="name"
-              selected-values="{{selectedOffices}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="Offices"
+            options="[[offices]]"
+            option-value="id"
+            option-label="name"
+            selected-values="{{selectedOffices}}"
+            hide-search
+            min-width="250px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="CP Structure"
-              options="[[countryProgrammes]]"
-              selected-values="{{selectedCPStructures}}"
-              option-value="id"
-              option-label="name"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="CP Structure"
+            options="[[countryProgrammes]]"
+            selected-values="{{selectedCPStructures}}"
+            option-value="id"
+            option-label="name"
+            hide-search
+            min-width="400px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
-            <div class="filter esmm">
-              <etools-dropdown-multi
-                  label="[[filter.filterName]]"
-                  placeholder="&#8212;"
-                  disabled$="[[!filter.selectionOptions.length]]"
-                  options="[[filter.selectionOptions]]"
-                  option-value="[[filter.optionValue]]"
-                  option-label="[[filter.optionLabel]]"
-                  selected-values="[[filter.alreadySelected]]"
-                  trigger-value-change-event
-                  on-etools-selected-items-changed="esmmValueChanged"
-                  data-filter-path$="[[filter.path]]">
-              </etools-dropdown-multi>
-              <paper-icon-button class="remove-field remove" icon="cancel"
-                                 on-tap="removeFilter"
-                                 data-filter-name$="[[filter.filterName]]"
-                                 data-reset-path$="[[filter.path]]">
-              </paper-icon-button>
-            </div>
+            <etools-dropdown-multi
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected-values="[[filter.alreadySelected]]"
+                trigger-value-change-event
+                on-etools-selected-items-changed="esmmValueChanged"
+                data-filter-path$="[[filter.path]]"
+                min-width="400px"
+                horizontal-align="left"
+                no-dynamic-align>
+            </etools-dropdown-multi>
           </template>
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-            <div class="filter">
-              <etools-date-input id$="datepicker_[[filter.path]]"
-                                 label="[[filter.filterName]]"
-                                 placeholder="&#8212;"
-                                 value="[[filter.dateSelected]]"
-                                 on-date-has-changed="_filterDateHasChanged"
-                                 data-filter-path$="[[filter.path]]"
-                                 fire-date-has-changed no-init show-clear-btn>
-              </etools-date-input>
-              <paper-icon-button class="remove-field remove" icon="cancel"
-                                 on-tap="removeFilter"
-                                 data-filter-name$="[[filter.filterName]]"
-                                 data-reset-path$="[[filter.path]]">
-              </paper-icon-button>
-            </div>
+            <etools-date-input id$="datepicker_[[filter.path]]"
+                               class="filter date"
+                               label="[[filter.filterName]]"
+                               placeholder="&#8212;"
+                               value="[[filter.dateSelected]]"
+                               on-date-has-changed="_filterDateHasChanged"
+                               data-filter-path$="[[filter.path]]"
+                               fire-date-has-changed no-init show-clear-btn>
+            </etools-date-input>
           </template>
 
         </template>
@@ -170,21 +171,23 @@
 
       <div class="fixed-controls">
 
-        <div class="filter-bar-action-wrapper menu-btn-wrapper">
-          <paper-menu-button id="filterMenu" dynamic-align>
-            <paper-button class="button" slot="dropdown-trigger">
-              <iron-icon icon="filter-list"></iron-icon>
-              add filter
-            </paper-button>
-            <paper-listbox slot="dropdown-content">
-              <template is="dom-repeat" items="[[availableListFilterOptions]]">
-                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
-              </template>
-            </paper-listbox>
-          </paper-menu-button>
-        </div>
+        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+          <paper-button class="button" slot="dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>
+            Add filter
+          </paper-button>
+          <paper-listbox slot="dropdown-content" multi>
+            <template is="dom-repeat" items="[[listFilterOptions]]">
+              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+                <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+                <paper-item-body>[[item.filterName]]</paper-item-body>
+              </paper-icon-item>
+            </template>
+          </paper-listbox>
+        </paper-menu-button>
 
       </div>
+
     </div>
 
     <div id="list" class="paper-material" elevation="1">
@@ -515,7 +518,8 @@
             optionLabel: 'name',
             selectionOptions: cpOutputs,
             alreadySelected: [],
-            path: 'selectedCpOutputs'
+            path: 'selectedCpOutputs',
+            selected: false
           },
           {
             filterName: 'Donors',
@@ -524,7 +528,8 @@
             optionLabel: 'label',
             selectionOptions: donors,
             alreadySelected: [],
-            path: 'selectedDonors'
+            path: 'selectedDonors',
+            selected: false
           },
           {
             filterName: 'Grants',
@@ -533,7 +538,8 @@
             optionLabel: 'label',
             selectionOptions: grants,
             alreadySelected: [],
-            path: 'selectedGrants'
+            path: 'selectedGrants',
+            selected: false
           },
           {
             filterName: 'UNICEF focal point',
@@ -542,19 +548,22 @@
             optionLabel: 'name',
             selectionOptions: unicefUsersData,
             alreadySelected: [],
-            path: 'selectedUnicefFocalPoints'
+            path: 'selectedUnicefFocalPoints',
+            selected: false
           },
           {
             filterName: 'Starts After',
             type: 'datepicker', // etools-datepicker
             path: 'startDate',
-            dateSelected: ''
+            dateSelected: '',
+            selected: false
           },
           {
             filterName: 'Ends Before',
             type: 'datepicker', // etools-datepicker
             path: 'endDate',
-            dateSelected: ''
+            dateSelected: '',
+            selected: false
           }
         ]);
         this._updateSelectedFiltersValues();

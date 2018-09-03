@@ -28,11 +28,12 @@
     <style include="shared-styles list-filter-styles paper-material-styles">
     </style>
 
-    <div id="listControls" class="paper-material" elevation="1">
+    <div id="filters" class="paper-material" elevation="1">
 
-      <div class="wrap-controls">
+      <div id="filters-fields">
 
         <paper-input id="query"
+                     class="filter"
                      type="search"
                      autocomplete="off"
                      value="{{queryParams.pd_ref_title}}"
@@ -40,55 +41,59 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="Report Status"
-              options="[[reportStatuses]]"
-              selected-values="{{queryParams.status}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="Report Status"
+            options="[[reportStatuses]]"
+            selected-values="{{queryParams.status}}"
+            hide-search
+            min-width="160px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-          <div class="filter esmm">
-            <etools-dropdown
-                label="[[filter.filterName]]"
-                placeholder="&#8212;"
-                disabled$="[[!filter.selectionOptions.length]]"
-                options="[[filter.selectionOptions]]"
-                option-value="[[filter.optionValue]]"
-                option-label="[[filter.optionLabel]]"
-                selected="[[filter.alreadySelected]]"
-                on-selected-changed="filterValueChanged"
-                data-filter-path$="[[filter.path]]">
-            </etools-dropdown>
-            <paper-icon-button class="remove-field remove"
-                               icon="cancel"
-                               on-tap="removeFilter"
-                               data-filter-name$="[[filter.filterName]]"
-                               data-reset-path$="[[filter.path]]">
-            </paper-icon-button>
-          </div>
+
+          <etools-dropdown
+              class="filter"
+              label="[[filter.filterName]]"
+              placeholder="&#8212;"
+              disabled$="[[!filter.selectionOptions.length]]"
+              options="[[filter.selectionOptions]]"
+              option-value="[[filter.optionValue]]"
+              option-label="[[filter.optionLabel]]"
+              selected="[[filter.alreadySelected]]"
+              on-selected-changed="filterValueChanged"
+              data-filter-path$="[[filter.path]]"
+              min-width="400px"
+              horizontal-align="left"
+              no-dynamic-align
+              enable-none-option>
+          </etools-dropdown>
         </template>
 
       </div>
 
       <div class="fixed-controls">
-        <div class="filter-bar-action-wrapper menu-btn-wrapper">
-          <paper-menu-button id="filterMenu">
-            <paper-button slot="dropdown-trigger" class="button">
-              <iron-icon icon="filter-list"></iron-icon>
-              Add filter
-            </paper-button>
-            <paper-listbox slot="dropdown-content">
-              <template is="dom-repeat" items="[[availableListFilterOptions]]">
-                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
-              </template>
-            </paper-listbox>
-          </paper-menu-button>
-        </div>
+
+        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+          <paper-button class="button" slot="dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>
+            Add filter
+          </paper-button>
+          <paper-listbox slot="dropdown-content" multi>
+            <template is="dom-repeat" items="[[listFilterOptions]]">
+              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+                <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+                <paper-item-body>[[item.filterName]]</paper-item-body>
+              </paper-icon-item>
+            </template>
+          </paper-listbox>
+        </paper-menu-button>
+
       </div>
 
     </div>
+
     <reports-display-list query-params="[[queryParams]]"
                           paginator="{{paginator}}"
                           wait-query-params-init></reports-display-list>
@@ -215,7 +220,8 @@
             optionLabel: 'label',
             selectionOptions: partners,
             alreadySelected: null,
-            path: 'queryParams.external_partner_id'
+            path: 'queryParams.external_partner_id',
+            selected: false
           },
           {
             filterName: 'CP Output',
@@ -225,7 +231,8 @@
             optionLabel: 'name',
             selectionOptions: cpOutputs,
             alreadySelected: null,
-            path: 'queryParams.cp_output'
+            path: 'queryParams.cp_output',
+            selected: false
           },
           {
             filterName: 'Section',
@@ -235,7 +242,8 @@
             optionLabel: 'name',
             selectionOptions: sections,
             alreadySelected: null,
-            path: 'queryParams.section'
+            path: 'queryParams.section',
+            selected: false
           }
         ]);
         this._updateSelectedFiltersValues();
