@@ -20,7 +20,7 @@
     "etools-data-table": "2.0.3",
     "etools-datepicker": "2.1.2",
     "etools-dialog": "2.1.0",
-    "etools-dropdown": "2.0.4",
+    "etools-dropdown": "2.1.0",
     "etools-file": "2.0.1",
     "etools-info-tooltip": "2.0.0",
     "etools-loading": "3.0.0",
@@ -62,10 +62,10 @@
     "polymer": "^2.0.0",
     "lodash": "^4.17.5",
     "moment-element": "^3.0.0",
-    "etools-dialog": "^2.1.0"
+    "etools-dialog": "^2.1.0",
+    "etools-dropdown": "2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   }
 }
-

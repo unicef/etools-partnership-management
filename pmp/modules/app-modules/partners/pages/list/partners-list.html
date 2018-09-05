@@ -10,7 +10,8 @@
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
-<link rel="import" href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
+<link rel="import"
+      href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
 
@@ -54,56 +55,58 @@
       </partners-list-data>
     </template>
 
-    <div id="listControls" class="paper-material" elevation="1">
-
-      <div class="wrap-controls">
+    <div id="filters" class="paper-material" elevation="1">
+      <div id="filters-fields">
 
         <paper-input id="query"
+                     class="filter"
                      type="search"
                      autocomplete="off"
                      value="{{q}}"
-                     placeholder="Search">
+                     placeholder="Search partner">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="Partner Type"
-              disabled$="[[showOnlyGovernmentType]]"
-              options="[[partnerTypes]]"
-              selected-values="{{selectedPartnerTypes}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="Partner Type"
+            placeholder="Select"
+            disabled$="[[showOnlyGovernmentType]]"
+            options="[[partnerTypes]]"
+            selected-values="{{selectedPartnerTypes}}"
+            hide-search
+            min-width="350px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-        <div class="filter esmm">
-          <etools-dropdown-multi
-              label="CSO Type"
-              options="[[csoTypes]]"
-              selected-values="{{selectedCsoTypes}}"
-              hide-search></etools-dropdown-multi>
-        </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="CSO Type"
+            placeholder="Select"
+            options="[[csoTypes]]"
+            selected-values="{{selectedCsoTypes}}"
+            hide-search
+            min-width="350px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
 
-        <div class="filter esmm">
-            <etools-dropdown-multi
-                label="Risk Rating"
-                options="[[riskRatings]]"
-                selected-values="{{selectedRiskRatings}}"
-                hide-search></etools-dropdown-multi>
-          </div>
+        <etools-dropdown-multi
+            class="filter"
+            label="Risk Rating"
+            placeholder="Select"
+            options="[[riskRatings]]"
+            selected-values="{{selectedRiskRatings}}"
+            hide-search
+            min-width="160px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown-multi>
+
+        <div id="hiddenToggle" class="filter">
+          Show hidden
+          <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
+        </div>
 
       </div>
-
-      <div class="fixed-controls">
-
-        <div class="filter-bar-action-wrapper">
-          <div id="hiddenToggle">
-            Show hidden
-            <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
     <div id="list" elevation="1" class="paper-material hidden">
@@ -288,7 +291,7 @@
       static get observers() {
         return [
           'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
-              'selectedRiskRatings.length, showHidden)',
+          'selectedRiskRatings.length, showHidden)',
           '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
           'paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -345,8 +348,8 @@
 
           this._updateUrlAndDislayedData(this.currentPage + '/list',
               _partnersLastNavigated,
-               qs,
-               this._filterListData.bind(this));
+              qs,
+              this._filterListData.bind(this));
 
           _partnersLastNavigated = qs || _partnersLastNavigated;
         }
