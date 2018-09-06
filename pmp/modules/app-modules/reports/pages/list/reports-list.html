@@ -51,6 +51,17 @@
             horizontal-align="left"
             no-dynamic-align></etools-dropdown-multi>
 
+        <etools-dropdown
+            class="filter"
+            label="Report Type"
+            options="[[reportTypes]]"
+            selected="{{queryParams.report_type}}"
+            hide-search
+            enable-none-option
+            min-width="300px"
+            horizontal-align="left"
+            no-dynamic-align></etools-dropdown>
+
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
           <etools-dropdown
@@ -159,6 +170,10 @@
             type: Array,
             statePath: 'reportStatuses'
           },
+          reportTypes: {
+            type: Array,
+            statePath: 'reportTypes'
+          },
           // selected filters values
           queryParams: {
             type: Object,
@@ -167,7 +182,8 @@
               external_partner_id: null,
               cp_output: null,
               section: null,
-              status: ['Sub', 'Ove', 'Sen']
+              status: ['Sub', 'Ove', 'Sen'],
+              report_type: null
             }
           },
           paginator: {
@@ -190,7 +206,7 @@
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, _filtersInitialized)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
-            'queryParams.cp_output, queryParams.section, queryParams.status.length)'
+            'queryParams.cp_output, queryParams.section, queryParams.status.length, queryParams.report_type)'
         ];
       }
 
@@ -285,6 +301,7 @@
               this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
               this.set('queryParams.status',
                   urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status);
+              this.set('queryParams.report_type', urlQueryParams.report_type ? urlQueryParams.report_type : null);
 
               this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
               this.set('paginator.page_size',
