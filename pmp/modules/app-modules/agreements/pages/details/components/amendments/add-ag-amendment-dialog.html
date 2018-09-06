@@ -48,21 +48,21 @@
                              no-init show-clear-btn
                              validator="ag_am_signed_date_validator"
                              auto-validate="[[autoValidate]]"
-                             required>
+                             required-and-not-future-date>
           </etools-date-input>
         </div>
-        <div class="col col-8">
-          <!-- Signed Agreement -->
-          <etools-single-file id="signedAmendment"
-                              label="Signed Amendment"
-                              file="{{amendment.signed_amendment}}"
-                              internal-file="{{amendment.signed_amendment_file}}"
-                              error-message="Signed Amendment file is required"
-                              required
-                              auto-validate="[[autoValidate]]"
-                              accept=".doc,.docx,.pdf,.jpg,.png">
-          </etools-single-file>
-        </div>
+      </div>
+      <div class="row-h flex-c">
+        <!-- Signed Agreement -->
+        <etools-single-file id="signedAmendment"
+                            label="Signed Amendment"
+                            file="{{amendment.signed_amendment}}"
+                            internal-file="{{amendment.signed_amendment_file}}"
+                            error-message="Signed Amendment file is required"
+                            required
+                            auto-validate="[[autoValidate]]"
+                            accept=".doc,.docx,.pdf,.jpg,.png">
+        </etools-single-file>
       </div>
 
       <div class="row-h flex-c">

@@ -109,6 +109,7 @@
                                    value="{{item.completed_date}}"
                                    readonly="[[!editMode]]"
                                    auto-validate
+                                   required-and-not-future-date
                                    validator="dateSubmitted_[[index]]_validator"
                                    no-init show-clear-btn>
                 </etools-date-input>

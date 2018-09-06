@@ -396,8 +396,7 @@
           <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
           <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
           <a class="report col" target="_blank"
-             href$="[[auditorPortalBasePath]]audits/[[item.id]]/overview"
-             on-tap="_goToReport">
+             href$="[[item.object_url]]">
             <paper-icon-button icon="icons:open-in-new"></paper-icon-button>
             View Report
           </a>
@@ -620,15 +619,15 @@
         this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
       }
 
-      _goToReport(e) {
-        let id = e.model.item.id;
-        let sourceEvent = e.detail.sourceEvent;
-        const path = `${EtoolsPmpApp.Config.baseSite}${this.auditorPortalBasePath}audits/${id}/overview`;
-        if (!sourceEvent.ctrlKey && !sourceEvent.metaKey) {
-          e.preventDefault();
-          window.location.href = path;
-        }
-      }
+      // _goToReport(e) {
+      //   let id = e.model.item.id;
+      //   let sourceEvent = e.detail.sourceEvent;
+      //   const path = `${EtoolsPmpApp.Config.baseSite}${this.auditorPortalBasePath}audits/${id}/overview`;
+      //   if (!sourceEvent.ctrlKey && !sourceEvent.metaKey) {
+      //     e.preventDefault();
+      //     window.location.href = path;
+      //   }
+      // }
 
       _getMinReqAudits(plannedEngagement) {
         return !plannedEngagement ? 0

@@ -1,0 +1,219 @@
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../layout/components/etools-single-file.html">
+<link rel="import" href="../../../layout/components/etools-warn-message.html">
+
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../environment-flags/environment-flags-mixin.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
+
+<dom-module id="pd-termination">
+  <template>
+    <style include="shared-styles grid-layout-styles file-styles required-field-starred-styles">
+      :host {
+        /* host CSS */
+      }
+
+      #pdTermination {
+        --etools-dialog-default-btn-bg: var(--error-color);
+      }
+
+      #pdTerminationConfirmation {
+        --etools-dialog-confirm-btn-bg: var(--primary-color);
+      }
+    </style>
+
+    <etools-dialog no-padding
+                   keep-dialog-open
+                   id="pdTermination"
+                   opened="{{opened}}"
+                   size="md"
+                   hidden$="[[warningOpened]]"
+                   ok-btn-text="Terminate"
+                   dialog-title="Terminate PD/SSFA"
+                   on-close="_handleDialogClosed"
+                   on-confirm-btn-clicked="_triggerPdTermination">
+
+      <div class="row-h flex-c">
+        <etools-date-input id="terminationDate"
+                           label="Termination Date"
+                           value="{{termination.date}}"
+                           error-message="Please select termination date"
+                           no-init show-clear-btn
+                           auto-validate
+                           required>
+        </etools-date-input>
+      </div>
+
+      <div class="row-h flex-c">
+        <etools-single-file id="terminationNotice"
+                            label="Termination Notice"
+                            file="{{termination.attachment_notice}}"
+                            error-message="Termination Notice file is required"
+                            required
+                            auto-validate
+                            accept=".doc,.docx,.pdf,.jpg,.png">
+        </etools-single-file>
+      </div>
+      <div class="row-h">
+        <etools-warn-message
+                message="Once you hit save, the PD/SSFA will be Terminated and this action cannot be reversed">
+        </etools-warn-message>
+      </div>
+
+    </etools-dialog>
+
+    <etools-dialog no-padding
+                   id="pdTerminationConfirmation"
+                   theme="confirmation"
+                   opened="{{warningOpened}}"
+                   size="md"
+                   ok-btn-text="Continue"
+                   on-close="_terminationConfirmed">
+      <div class="row-h">
+        Please make sure that the reporting requirements for the PD are updated with the correct dates
+      </div>
+    </etools-dialog>
+
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     */
+    class PdTermination extends EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EnvironmentFlags,
+      EtoolsPmpApp.Mixins.Endpoints
+      ], Polymer.Element) {
+
+      static get is() {
+        return 'pd-termination';
+      }
+
+      static get properties() {
+        return {
+          interventionId: Number,
+          opened: Boolean,
+          warningOpened: Boolean,
+          termination: {
+            type: Object
+          },
+          _validationSelectors: {
+            type: Array,
+            value: ['#terminationDate', '#terminationNotice']
+          },
+          terminationElSource: Object
+        };
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.$.terminationDate.maxDate = this._getMaxDate();
+      }
+
+      _getMaxDate() {
+        return moment(Date.now()).add(30, 'd').toDate();
+      }
+
+      _handleDialogClosed(e) {
+        this.resetValidations();
+      }
+
+      _triggerPdTermination(e) {
+        if (!this.validate()) {
+          return;
+        }
+        if (this.environmentFlags &&
+            !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
+          this.set('warningOpened', true);
+        } else {
+          this._terminatePD();
+        }
+      }
+
+      _terminationConfirmed(e) {
+        if (e.detail.confirmed) {
+          this._terminatePD();
+        }
+      }
+
+      _terminatePD() {
+        if (this.validate()) {
+          this._uploadTerminationNotice(this.termination.attachment_notice).then((r) => {
+            this.terminationElSource.fireEvent('terminate-pd',
+                {
+                  interventionId: this.interventionId,
+                  terminationData: {
+                    date: this.termination.date,
+                    fileId: r.id
+                  }
+                });
+            this.set('opened', false);
+          }).catch(err => this._handleErrorResponse(err));
+        }
+      }
+
+      // TODO: refactor validation at some point (common with ag add amendment dialog and more)
+      resetValidations() {
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el) {
+            el.set('invalid', false);
+          }
+        });
+      }
+
+      // TODO: refactor validation at some point (common with ag add amendment dialog and more)
+      validate() {
+        let isValid = true;
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el && !el.validate()) {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+
+      _uploadTerminationNotice(file) {
+        let options = {
+          method: 'POST',
+          endpoint: this.getEndpoint('attachmentsUpload'),
+          body: {file: file},
+          multiPart: true,
+          prepareMultipartData: true
+        };
+        this.$.pdTermination.startSpinner();
+        return this.sendRequest(options)
+            .then((resp) => {
+              this.$.pdTermination.stopSpinner();
+              return resp;
+            }).catch((error) => {
+              this.$.pdTermination.stopSpinner();
+              throw new Error('Error uploading termination notice');
+            });
+      }
+
+      _handleErrorResponse(error) {
+        this.$.pdTermination.stopSpinner();
+        this.showErrorAsToastMsg(error.message, this.terminationElSource);
+      }
+
+    }
+
+    window.customElements.define(PdTermination.is, PdTermination);
+  </script>
+</dom-module>

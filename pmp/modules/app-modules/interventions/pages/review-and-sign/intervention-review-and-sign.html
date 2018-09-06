@@ -127,8 +127,7 @@
                            readonly$="[[!permissions.edit.partner_authorized_officer_signatory]]"
                            required$="[[permissions.required.partner_authorized_officer_signatory]]"
                            auto-validate
-                           error-message="Please select Partner Authorized Officer"
-                           dynamic-align>
+                           error-message="Please select Partner Authorized Officer">
           </etools-dropdown>
         </div>
         <div class="col col-3">
@@ -174,7 +173,6 @@
                            option-value="id"
                            option-label="name"
                            selected="{{intervention.unicef_signatory}}"
-                           dynamic-align
                            readonly$="[[!permissions.edit.unicef_signatory]]"
                            auto-validate
                            error-message="Please select UNICEF user">
@@ -278,7 +276,7 @@
           },
           signedByUnicefUsers: {
             type: Array,
-            statePath: 'signedByUnicefUsers'
+            statePath: 'unicefUsersData'
           },
           agreement: {
             type: Object,

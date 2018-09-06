@@ -8,6 +8,7 @@
 <link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="./pd-termination.html">
 
 <dom-module id="intervention-status">
   <template strip-whitespace>
@@ -47,9 +48,7 @@
 
       static get properties() {
         return {
-          interventionId: {
-            type: Number
-          },
+          interventionId: Number,
           activeTab: {
             type: String,
             observer: '_activeTabChanged'
@@ -103,7 +102,9 @@
           deleteWarningMessage: {
             type: String,
             value: 'Are you sure you want to delete this PD/SSFA?'
-          }
+          },
+
+          _terminationDialog: Object
         };
       }
 
@@ -115,8 +116,17 @@
         this._createDeleteConfirmationDialog();
         this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm.bind(this));
 
+        this._createTerminationDialog();
+
         // has to be run async for shadycss to load
         setTimeout(this.setPossibleStatuses.bind(this), 0);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._terminationDialog) {
+          document.querySelector('body').removeChild(this._terminationDialog);
+        }
       }
 
       setPossibleStatuses() {
@@ -416,7 +426,18 @@
       }
 
       _setStatusTerminated() {
-        this._updateStatus(this.CONSTANTS.STATUSES.Terminated.toLowerCase());
+        // this._updateStatus(this.CONSTANTS.STATUSES.Terminated.toLowerCase());
+        if (!this._statusChangeIsValid(this.CONSTANTS.STATUSES.Terminated.toLowerCase())) {
+          return;
+        }
+
+        this._terminationDialog.resetValidations();
+        this._terminationDialog.set('interventionId', this.interventionId);
+        this._terminationDialog.set('termination', {
+          date: null,
+          attachment_notice: null
+        });
+        this._terminationDialog.set('opened', true);
       }
 
       _setStatusDraft() {
@@ -435,6 +456,13 @@
         if (e.detail.confirmed) {
           this.fireEvent('delete-intervention', {id: this.interventionId});
         }
+      }
+
+      _createTerminationDialog() {
+        this._terminationDialog = document.createElement('pd-termination');
+        document.querySelector('body').appendChild(this._terminationDialog);
+
+        this._terminationDialog.set('terminationElSource', this);
       }
 
     }

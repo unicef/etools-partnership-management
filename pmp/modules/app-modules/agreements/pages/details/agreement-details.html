@@ -12,7 +12,6 @@
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
@@ -84,6 +83,12 @@
       #cancelAoEdit {
         color: var(--error-color);
       }
+      .padd-right {
+        padding-right: 16px;
+      }
+      .year-coll {
+        width: 105px;
+      }
 
     </style>
 
@@ -91,26 +96,27 @@
 
       <div class="row-h flex-c b-border row-second-bg">
         <div class="col col-6">
-          <!-- Agreement Type -->
-          <etools-dropdown
-              id="agreementType"
-              label="Agreement Type"
-              placeholder="&#8212;"
-              options="[[agreementTypes]]"
-              selected="{{agreement.agreement_type}}"
-              dynamic-align
-              hide-search
-              readonly$="[[_isAgreementTypeReadonly(agreement)]]"
-              auto-validate
-              error-message="Please select agreement type"
-              required>
-          </etools-dropdown>
-
-          <year-dropdown label="Reference Year"
-                         selected-year="{{agreement.reference_number_year}}"
-                         hidden$="[[!_showYearDropdown(agreement.status)]]">
-          </year-dropdown>
-        </div>
+          <div class="flex-c padd-right">
+            <!-- Agreement Type -->
+            <etools-dropdown
+                id="agreementType"
+                label="Agreement Type"
+                placeholder="&#8212;"
+                options="[[agreementTypes]]"
+                selected="{{agreement.agreement_type}}"
+                hide-search
+                readonly$="[[_isAgreementTypeReadonly(agreement)]]"
+                auto-validate
+                error-message="Please select agreement type"
+                required>
+            </etools-dropdown>
+          </div>
+          <div class="year-col" hidden$="[[!_showYearDropdown(agreement.status)]]">
+              <year-dropdown label="Ref. Year"
+                          selected-year="{{agreement.reference_number_year}}">
+              </year-dropdown>
+          </div>
+      </div>
 
         <div class="col col-3">
           <!-- Reference Number -->
@@ -124,7 +130,6 @@
         </div>
         <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
           <div class="col col-3">
-
             <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
                                          value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
             </etools-form-element-wrapper>
@@ -141,7 +146,6 @@
               placeholder="&#8212;"
               options="[[partnersDropdownData]]"
               selected="{{agreement.partner}}"
-              dynamic-align
               hidden$="[[!agreement.permissions.edit.partner]]"
               auto-validate
               error-message="Please select a partner"
@@ -198,7 +202,6 @@
                 option-value="id"
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
-                dynamic-align
                 hidden$="[[!agreement.permissions.edit.partner_manager]]">
             </etools-dropdown>
             <etools-form-element-wrapper label="Signed By Partner"
@@ -237,7 +240,7 @@
       <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]">
         <!-- Partner Authorized Officers (partner staff members) -->
         <etools-dropdown-multi id="officers"
-                               label="Authorized Officers"
+                               label="Partner Authorized Officers"
                                placeholder="&#8212;"
                                options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                option-value="id"
@@ -248,7 +251,7 @@
                                required$="[[agreement.permissions.required.authorized_officers]]"
                                auto-validate$="[[enableEditForAuthorizedOfficers]]">
         </etools-dropdown-multi>
-        <etools-form-element-wrapper label="Authorized Officers"
+        <etools-form-element-wrapper label="Partner Authorized Officers"
                                      required$="[[agreement.permissions.required.authorized_officers]]"
                                      hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
                                      value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]">
@@ -262,14 +265,14 @@
                       on-tap="_enableAoEdit"
                       hidden$="[[allowAoEditForSSFA]]">
           <iron-icon icon="create"></iron-icon>
-          <span>Amend Authorized Officers</span>
+          <span>Amend Partner Authorized Officers</span>
         </paper-button>
         <paper-button id="cancelAoEdit"
                       class="secondary-btn"
                       on-tap="_cancelAoEdit"
                       hidden$="[[!allowAoEditForSSFA]]">
           <iron-icon icon="cancel"></iron-icon>
-          <span>Cancel Authorized Officers amendment</span>
+          <span>Cancel Partner Authorized Officers amendment</span>
         </paper-button>
       </div>
 
@@ -301,11 +304,11 @@
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
           <etools-single-file
-              file="{{agreement.attached_agreement}}"
-              internal-file="[[agreement.attached_agreement_file]]"
+              file="{{agreement.attachment_temp}}"
+              internal-file="[[agreement.attachment]]"
               label="Signed Agreement"
               accept=".doc,.docx,.pdf,.jpg,.png"
-              hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attached_agreement)]]"
+              hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attachment)]]"
               readonly$="[[!agreement.permissions.edit.attached_agreement]]"
               required$="[[agreement.permissions.required.attached_agreement]]">
           </etools-single-file>
@@ -390,11 +393,6 @@
             value: [],
             notify: true
           },
-          unicefSeniorStaff: {
-            type: Array,
-            value: [],
-            statePath: 'signedByUnicefUsers'
-          },
           originalAgreementData: {
             type: Object,
             value: null
@@ -476,7 +474,7 @@
       // Refer to unicef/etools-issues#232:
       // For Draft Status, only Change option is available. No delete option is available in Draft.
       _hideDeleteBtn() {
-        return this._isDraft() && this.agreement && this.agreement.attached_agreement_file;
+        return this._isDraft() && this.agreement && this.agreement.attachment;
       }
 
       _isNewAgreementChanged(isNew) {
