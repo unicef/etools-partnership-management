@@ -2,17 +2,19 @@
 <link rel="import" href="../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">s
+<link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../layout/page-content-header/page-content-header.html">
 <link rel="import" href="../../layout/components/etools-tabs.html">
-<link rel="import" href="../../layout/components/etools-status/etools-action-button.html">
 
 <link rel="import" href="mixins/report-details-mixin.html">
 <link rel="import" href="components/report-status.html">
@@ -42,10 +44,6 @@
 
       h1[main-title] sup {
         font-size: 14px;
-      }
-
-      etools-action-button {
-        min-width: 160px;
       }
 
       iron-icon {
@@ -111,10 +109,6 @@
               </paper-listbox>
             </paper-menu-button>
 
-          <!-- <etools-action-button actions="[[reportActions]]"
-                                on-accept-report="_accept"
-                                on-send-back-to-partner="_sendBackToPartner"
-                                on-download-report="_download"></etools-action-button> -->
         </div>
       </div>
 
