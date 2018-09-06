@@ -118,8 +118,16 @@
                   [[report.programme_document.title]]
                 </paper-tooltip>
               </span>
-              <span class="col-data flex-c" title="[[report.partner_vendor_number]]">
-                [[_displayOrDefault(report.partner_name)]]
+              <span class="col-data flex-c">
+                <span id$="tooltip-partner-[[report.id]]" class="tooltip-trigger">
+                  [[_displayOrDefault(report.partner_name)]]
+                </span>
+
+                <paper-tooltip for$="tooltip-partner-[[report.id]]"
+                                position="right"
+                                fit-to-visible-bounds>
+                  [[report.partner_vendor_number]]
+                </paper-tooltip>
               </span>
               <span class="col-data flex-c">
                 <report-status status="[[report.status]]"></report-status>
