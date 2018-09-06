@@ -5,6 +5,7 @@
 <link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">s
 <link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
@@ -45,16 +46,22 @@
       h1[main-title] sup {
         font-size: 14px;
       }
-
       iron-icon {
         color: var(--dark-secondary-text-color);
       }
-
+      .tooltip-trigger {
+        position: relative;
+      }
       .no-right-padd {
         padding-right: 0;
       }
       .move-to-the-right {
         margin-right: -20px;
+      }
+      .secondary-title {
+        font-size: 12px;
+        font-weight: bold;
+        color: var(--primary-color);
       }
     </style>
 
@@ -76,13 +83,32 @@
           Partner Reports
         </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <a class="primary"
-             href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
-             target="_blank">[[report.programme_document.reference_number]]</a>
+          <div class="secondary-title">
+            <a target="_blank"
+              href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
+               [[report.partner_org_name]] - [[report.partner_vendor_number]]
+            </a>
+          </div>
+
+          <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
+            <a class="primary"
+              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
+              target="_blank">
+                [[report.programme_document.reference_number]]
+            </a>
+          </span>
+
           <span>: [[report.report_type]][[report.report_number]] [[report.reporting_period]]</span>
           <!-- <sup>
             <report-status status="[[report.status]]"></report-status>
           </sup> -->
+          <paper-tooltip for="tooltip-trigger-pdtitle"
+                    position="bottom"
+                    fit-to-visible-bounds
+                    animation-delay="0"
+                    offset="0">
+            [[report.programme_document.title]]
+          </paper-tooltip>
         </template>
       </div>
 
