@@ -76,6 +76,9 @@
             Report #
           </etools-data-table-column>
           <etools-data-table-column class="flex-c">
+            Partner
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
             Report Status
           </etools-data-table-column>
           <etools-data-table-column class="flex-c">
@@ -113,6 +116,17 @@
                                position="right"
                                fit-to-visible-bounds>
                   [[report.programme_document.title]]
+                </paper-tooltip>
+              </span>
+              <span class="col-data flex-c">
+                <span id$="tooltip-partner-[[report.id]]" class="tooltip-trigger">
+                  [[_displayOrDefault(report.partner_name)]]
+                </span>
+
+                <paper-tooltip for$="tooltip-partner-[[report.id]]"
+                                position="right"
+                                fit-to-visible-bounds>
+                  [[report.partner_vendor_number]]
                 </paper-tooltip>
               </span>
               <span class="col-data flex-c">
@@ -302,11 +316,11 @@
         return this.waitQueryParamsInit && !qParamsData.value && qParamsData.path === 'queryParams';
       }
 
-      _displayOrDefault(alreadyformattedDt) {
-        if (!alreadyformattedDt) {
+      _displayOrDefault(val) {
+        if (!val) {
           return '-';
         }
-        return alreadyformattedDt;
+        return val;
       }
 
       _getReportTitle(report) {
