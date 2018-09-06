@@ -47,6 +47,17 @@
       etools-action-button {
         min-width: 160px;
       }
+
+      iron-icon {
+        color: var(--dark-secondary-text-color);
+      }
+
+      .no-right-padd {
+        padding-right: 0;
+      }
+      .move-to-the-right {
+        margin-right: -20px;
+      }
     </style>
 
     <app-route
@@ -77,12 +88,33 @@
         </template>
       </div>
 
-      <div slot="title-row-actions" class="content-header-actions">
-        <div class="action" hidden$="[[!tabsActive]]">
-          <etools-action-button actions="[[reportActions]]"
+      <div slot="title-row-actions" class="content-header-actions move-to-the-right">
+        <div hidden$="[[!tabsActive]]">
+
+          <paper-menu-button close-on-activate class="no-right-padd">
+            <paper-button slot="dropdown-trigger" class="primary-btn">
+              Accept / Send Back
+            </paper-button>
+            <paper-listbox slot="dropdown-content">
+              <paper-item on-tap="_accept">Accept</paper-item>
+              <paper-item on-tap="_sendBackToPartner">Send Back to Partner</paper-item>
+            </paper-listbox>
+          </paper-menu-button>
+
+          <paper-menu-button close-on-activate horizontal-align="right">
+              <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
+              <paper-listbox slot="dropdown-content">
+                <paper-item on-tap="_downloadAnexC">Download Report</paper-item>
+                <paper-item on-tap="_goToActionPointModule">Add Action Point</paper-item>
+                <paper-item on-tap="_downloadXls">Download XLS</paper-item>
+                <paper-item on-tap="_downloadPdf">Download PDF</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+
+          <!-- <etools-action-button actions="[[reportActions]]"
                                 on-accept-report="_accept"
                                 on-send-back-to-partner="_sendBackToPartner"
-                                on-download-report="_download"></etools-action-button>
+                                on-download-report="_download"></etools-action-button> -->
         </div>
       </div>
 
@@ -290,14 +322,34 @@
         return report.programme_document.reference_number + '_' + report.id + '_' + report.status + '.pdf';
       }
 
-      _download() {
+      _downloadAnexC() {
+        this._download('downloadReportAnexC');
+      }
+
+      _downloadXls() {
+        this._download('downloadReportXls');
+      }
+
+      _downloadPdf() {
+        this._download('downloadReportPdf');
+      }
+
+      _download(endpoint) {
         if (!this.report) {
           return;
         }
+
         let a = document.createElement('a');
         a.setAttribute('target', '_blank');
-        let downloadEndpoint = this.getEndpoint('downloadReport', {reportId: this.report.id});
+        let downloadEndpoint = this.getEndpoint(endpoint, {reportId: this.report.id});
         a.href = downloadEndpoint.url;
+        a.click();
+      }
+
+      _goToActionPointModule() {
+        let a = document.createElement('a');
+        a.setAttribute('target', '_blank');
+        a.href = '/apd/';
         a.click();
       }
 

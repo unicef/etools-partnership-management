@@ -223,8 +223,16 @@
       token: 'prp',
       cachingKey: 'prpCountries'
     },
-    downloadReport: {
+    downloadReportAnexC: {
       template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/annex-C-export-PDF/',
+      token: 'prp'
+    },
+    downloadReportXls: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=xlsx',
+      token: 'prp'
+    },
+    downloadReportPdf: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=pdf',
       token: 'prp'
     },
     // tokens get/refresh endpoints
