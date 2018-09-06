@@ -91,13 +91,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="[[rootPath]]interventions/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="[[rootPath]]interventions/:id/:tab"
+        pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
