@@ -48,6 +48,8 @@
           padding: 0 !important;
           margin-right: 16px !important;
           background-color: var(--collapse-icon-bg-color, var(--primary-color));
+          background-image: var(--collapse-icon-bg-image, none);
+          background-size: 5.66px 5.66px;
         };
       }
 
@@ -226,9 +228,17 @@
 
       _updateCollapsableIconBg(indicator) {
         if (indicator.cluster_indicator_id) {
-          this.updateStyles({'--collapse-icon-bg-color': 'var(--ternary-color)'});
+          this.updateStyles({'--collapse-icon-bg-color': 'var(--ternary-color)', '--collapse-icon-bg-image': 'none'});
         } else {
-          this.updateStyles({'--collapse-icon-bg-color': 'var(--primary-color)'});
+          let hfBgImg = 'none';
+          if (indicator.is_high_frequency) {
+            hfBgImg = 'linear-gradient(135deg, #066ac7 12.50%, #0099ff 12.50%, #0099ff 50%, #066ac7 50%, ' +
+                '#066ac7 62.50%, #0099ff 62.50%, #0099ff 100%)';
+          }
+          this.updateStyles({
+            '--collapse-icon-bg-color': 'var(--primary-color)',
+            '--collapse-icon-bg-image': hfBgImg
+          });
         }
       }
 
