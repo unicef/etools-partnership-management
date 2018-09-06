@@ -80,9 +80,9 @@
              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
              target="_blank">[[report.programme_document.reference_number]]</a>
           <span>: [[report.report_type]][[report.report_number]] [[report.reporting_period]]</span>
-          <sup>
+          <!-- <sup>
             <report-status status="[[report.status]]"></report-status>
-          </sup>
+          </sup> -->
         </template>
       </div>
 
@@ -94,7 +94,7 @@
               Accept / Send Back
             </paper-button>
             <paper-listbox slot="dropdown-content">
-              <paper-item on-tap="_accept">Accept</paper-item>
+              <paper-item on-tap="_accept">Accept Report</paper-item>
               <paper-item on-tap="_sendBackToPartner">Send Back to Partner</paper-item>
             </paper-listbox>
           </paper-menu-button>
