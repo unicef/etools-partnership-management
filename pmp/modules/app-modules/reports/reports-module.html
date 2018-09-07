@@ -343,27 +343,40 @@
       }
 
       _downloadAnexC() {
-        this._download('downloadReportAnexC');
+        let filename = 'Progress Report.pdf'
+        this._tokenizedDownload('downloadReportAnexC', filename);
       }
 
       _downloadXls() {
-        this._download('downloadReportXls');
+        let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
+        this._tokenizedDownload('downloadReportXls', filename);
+      }
+
+      _getCurrentDateTime() {
+        return moment(new Date()).format('ddd D MMM h-mm-ss YYYY');
       }
 
       _downloadPdf() {
-        this._download('downloadReportPdf');
+        let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
+        this._tokenizedDownload('downloadReportPdf', filename);
       }
 
-      _download(endpoint) {
+      _tokenizedDownload(endpoint, filename) {
         if (!this.report) {
           return;
         }
 
-        let a = document.createElement('a');
-        a.setAttribute('target', '_blank');
-        let downloadEndpoint = this.getEndpoint(endpoint, {reportId: this.report.id});
-        a.href = downloadEndpoint.url;
-        a.click();
+        this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
+            .then(blob => {
+              // create a blob url representing the data
+              let url = window.URL.createObjectURL(blob);
+              // attach blob url to anchor element with download attribute
+              let anchor = document.createElement('a');
+              anchor.setAttribute('href', url);
+              anchor.setAttribute('download', filename);
+              anchor.click();
+              window.URL.revokeObjectURL(url);
+            })
       }
 
       _goToActionPointModule() {
