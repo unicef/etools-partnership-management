@@ -368,19 +368,24 @@
 
         this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
             .then(blob => {
-              // create a blob url representing the data
-              let url = window.URL.createObjectURL(blob);
-              // attach blob url to anchor element with download attribute
-              let anchor = document.createElement('a');
-              anchor.setAttribute('href', url);
-              anchor.setAttribute('download', filename);
-              anchor.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));;
-              setTimeout(() => {
-                window.URL.revokeObjectURL(url);
-              }, 100);
-
+              if (window.navigator.userAgent.indexOf('Trident/') > -1) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                // create a blob url representing the data
+                let url = window.URL.createObjectURL(blob);
+                // attach blob url to anchor element with download attribute
+                let anchor = document.createElement('a');
+                anchor.setAttribute('href', url);
+                anchor.setAttribute('download', filename);
+                anchor.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));;
+                setTimeout(() => {
+                  window.URL.revokeObjectURL(url);
+                }, 100);
+              }
             })
       }
+
+
 
       _goToActionPointModule() {
         let a = document.createElement('a');
