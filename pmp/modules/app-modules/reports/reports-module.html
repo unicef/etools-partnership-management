@@ -374,8 +374,11 @@
               let anchor = document.createElement('a');
               anchor.setAttribute('href', url);
               anchor.setAttribute('download', filename);
-              anchor.click();
-              window.URL.revokeObjectURL(url);
+              anchor.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));;
+              setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+              }, 100);
+
             })
       }
 
