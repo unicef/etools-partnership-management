@@ -377,7 +377,10 @@
                 let anchor = document.createElement('a');
                 anchor.setAttribute('href', url);
                 anchor.setAttribute('download', filename);
+
+                //* anchor.click() doesn't work on ff, edge
                 anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+
                 setTimeout(() => {
                   window.URL.revokeObjectURL(url);
                 }, 100);
