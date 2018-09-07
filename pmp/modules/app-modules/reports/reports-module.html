@@ -343,7 +343,7 @@
       }
 
       _downloadAnexC() {
-        let filename = 'Progress Report.pdf'
+        let filename = 'Progress Report.pdf';
         this._tokenizedDownload('downloadReportAnexC', filename);
       }
 
@@ -367,7 +367,7 @@
         }
 
         this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
-            .then(blob => {
+            .then((blob) => {
               if (window.navigator.userAgent.indexOf('Trident/') > -1) {
                 window.navigator.msSaveBlob(blob, filename);
               } else {
@@ -377,21 +377,19 @@
                 let anchor = document.createElement('a');
                 anchor.setAttribute('href', url);
                 anchor.setAttribute('download', filename);
-                anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));;
+                anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
                 setTimeout(() => {
                   window.URL.revokeObjectURL(url);
                 }, 100);
               }
-            })
+            });
       }
-
-
 
       _goToActionPointModule() {
         let a = document.createElement('a');
         a.setAttribute('target', '_blank');
         a.href = '/apd/';
-        a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));;
+        a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
       }
 
       disconnectedCallback() {
