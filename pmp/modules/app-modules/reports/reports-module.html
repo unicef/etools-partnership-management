@@ -377,7 +377,7 @@
                 let anchor = document.createElement('a');
                 anchor.setAttribute('href', url);
                 anchor.setAttribute('download', filename);
-                anchor.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));;
+                anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));;
                 setTimeout(() => {
                   window.URL.revokeObjectURL(url);
                 }, 100);
@@ -391,7 +391,7 @@
         let a = document.createElement('a');
         a.setAttribute('target', '_blank');
         a.href = '/apd/';
-        a.click();
+        a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));;
       }
 
       disconnectedCallback() {
