@@ -2,17 +2,20 @@
 <link rel="import" href="../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">s
+<link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../layout/page-content-header/page-content-header.html">
 <link rel="import" href="../../layout/components/etools-tabs.html">
-<link rel="import" href="../../layout/components/etools-status/etools-action-button.html">
 
 <link rel="import" href="mixins/report-details-mixin.html">
 <link rel="import" href="components/report-status.html">
@@ -43,9 +46,22 @@
       h1[main-title] sup {
         font-size: 14px;
       }
-
-      etools-action-button {
-        min-width: 160px;
+      iron-icon {
+        color: var(--dark-secondary-text-color);
+      }
+      .tooltip-trigger {
+        position: relative;
+      }
+      .no-right-padd {
+        padding-right: 0;
+      }
+      .move-to-the-right {
+        margin-right: -20px;
+      }
+      .secondary-title {
+        font-size: 12px;
+        font-weight: bold;
+        color: var(--primary-color);
       }
     </style>
 
@@ -67,22 +83,58 @@
           Partner Reports
         </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <a class="primary"
-             href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
-             target="_blank">[[report.programme_document.reference_number]]</a>
+          <div class="secondary-title">
+            <a target="_blank"
+              href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
+               [[report.partner_org_name]] - [[report.partner_vendor_number]]
+            </a>
+          </div>
+
+          <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
+            <a class="primary"
+              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
+              target="_blank">
+                [[report.programme_document.reference_number]]
+            </a>
+          </span>
+
           <span>: [[report.report_type]][[report.report_number]] [[report.reporting_period]]</span>
-          <sup>
+          <!-- <sup>
             <report-status status="[[report.status]]"></report-status>
-          </sup>
+          </sup> -->
+          <paper-tooltip for="tooltip-trigger-pdtitle"
+                    position="bottom"
+                    fit-to-visible-bounds
+                    animation-delay="0"
+                    offset="0">
+            [[report.programme_document.title]]
+          </paper-tooltip>
         </template>
       </div>
 
-      <div slot="title-row-actions" class="content-header-actions">
-        <div class="action" hidden$="[[!tabsActive]]">
-          <etools-action-button actions="[[reportActions]]"
-                                on-accept-report="_accept"
-                                on-send-back-to-partner="_sendBackToPartner"
-                                on-download-report="_download"></etools-action-button>
+      <div slot="title-row-actions" class="content-header-actions move-to-the-right">
+        <div hidden$="[[!tabsActive]]">
+
+          <paper-menu-button close-on-activate class="no-right-padd">
+            <paper-button slot="dropdown-trigger" class="primary-btn">
+              Accept / Send Back
+            </paper-button>
+            <paper-listbox slot="dropdown-content">
+              <paper-item on-tap="_accept">Accept Report</paper-item>
+              <paper-item on-tap="_sendBackToPartner">Send Back to Partner</paper-item>
+            </paper-listbox>
+          </paper-menu-button>
+
+          <paper-menu-button close-on-activate horizontal-align="right">
+              <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
+              <paper-listbox slot="dropdown-content">
+                <paper-item on-tap="_downloadAnexC">Download Report</paper-item>
+                <paper-item on-tap="_goToActionPointModule">Add Action Point</paper-item>
+                <paper-item on-tap="_downloadXls">Download XLS</paper-item>
+                <paper-item on-tap="_downloadPdf">Download PDF</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+
         </div>
       </div>
 
@@ -297,15 +349,57 @@
         return report.programme_document.reference_number + '_' + report.id + '_' + report.status + '.pdf';
       }
 
-      _download() {
+      _downloadAnexC() {
+        let filename = 'Progress Report.pdf';
+        this._tokenizedDownload('downloadReportAnexC', filename);
+      }
+
+      _downloadXls() {
+        let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
+        this._tokenizedDownload('downloadReportXls', filename);
+      }
+
+      _getCurrentDateTime() {
+        return moment(new Date()).format('ddd D MMM h-mm-ss YYYY');
+      }
+
+      _downloadPdf() {
+        let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
+        this._tokenizedDownload('downloadReportPdf', filename);
+      }
+
+      _tokenizedDownload(endpoint, filename) {
         if (!this.report) {
           return;
         }
+
+        this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
+            .then((blob) => {
+              if (window.navigator.userAgent.indexOf('Trident/') > -1) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                // create a blob url representing the data
+                let url = window.URL.createObjectURL(blob);
+                // attach blob url to anchor element with download attribute
+                let anchor = document.createElement('a');
+                anchor.setAttribute('href', url);
+                anchor.setAttribute('download', filename);
+
+                //* anchor.click() doesn't work on ff, edge
+                anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+
+                setTimeout(() => {
+                  window.URL.revokeObjectURL(url);
+                }, 100);
+              }
+            });
+      }
+
+      _goToActionPointModule() {
         let a = document.createElement('a');
         a.setAttribute('target', '_blank');
-        let downloadEndpoint = this.getEndpoint('downloadReport', {reportId: this.report.id});
-        a.href = downloadEndpoint.url;
-        a.click();
+        a.href = '/apd/';
+        a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
       }
 
       disconnectedCallback() {
