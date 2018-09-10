@@ -67,13 +67,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="[[rootPath]]reports/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="[[rootPath]]reports/:id/:tab"
+        pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -242,7 +242,11 @@
           },
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
-          rootPath: String
+          rootPath: String,
+          moduleName: {
+            type: String,
+            value: 'reports'
+          }
         };
       }
 
@@ -284,7 +288,8 @@
       }
 
       _pageChanged(listActive, tabsActive, routeData) {
-        if (!listActive && !tabsActive || typeof routeData === 'undefined') {
+        // Using isActiveModule will prevent wrong page import
+        if (!this.isActiveModule() || (!listActive && !tabsActive) || typeof routeData === 'undefined') {
           return;
         }
 
@@ -305,9 +310,11 @@
       }
 
       _loadReport(reportId, tabsActive, prpCountries, currentUser) {
-        if (_.isEmpty(prpCountries) || _.isEmpty(currentUser)) {
+        // Using isActiveModule will prevent report request with the wrong id (PD id)
+        if (!this.isActiveModule() || _.isEmpty(prpCountries) || _.isEmpty(currentUser)) {
           return;
         }
+
         if (!tabsActive || !reportId) {
           return;
         }

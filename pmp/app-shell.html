@@ -188,14 +188,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
             <interventions-module id="interventions" class="main-page"
-                                  route="{{route}}"
+                                  route="{{subroute}}"
                                   permissions="[[permissions]]">
             </interventions-module>
           </template>
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
             <reports-module id="reports" class="main-page"
-                            route="{{route}}"
+                            route="{{subroute}}"
                             permissions="[[permissions]]">
             </reports-module>
           </template>
