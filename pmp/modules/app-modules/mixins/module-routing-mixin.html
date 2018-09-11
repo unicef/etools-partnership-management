@@ -176,8 +176,9 @@
           });
         }
 
-        isActiveModule() {
-          return this.rootPath + this.moduleName === this.route.prefix;
+        isActiveModule(moduleName) {
+          const mName = !moduleName ? this.moduleName : moduleName;
+          return this.rootPath + mName === this.route.prefix;
         }
 
       });
