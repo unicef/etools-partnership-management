@@ -303,7 +303,7 @@
 
       _pageChanged(listActive, tabsActive, routeData) {
         // Using isActiveModule will prevent wrong page import
-        if (!this.isActiveModule() || (!listActive && !tabsActive)) {
+        if (!this.isActiveModule(this.currentPage) || (!listActive && !tabsActive)) {
           return;
         }
 

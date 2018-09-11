@@ -12,6 +12,8 @@
 <link rel="import" href="../../../../mixins/utils-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
+<link rel="import" href="../../../../layout/components/etools-ram-indicators.html">
+
 <link rel="import" href="../../components/report-status.html">
 <link rel="import" href="components/report-overall.html">
 <link rel="import" href="components/indicator-report-target.html">
@@ -103,6 +105,11 @@
                 as="result"
                 index-as="resultIndex">
         <etools-content-panel class="content-section" panel-title="[[result.title]]">
+
+          <!-- RAM indicators display -->
+          <etools-ram-indicators class="row-h"
+                                 intervention-id="[[report.programme_document.external_id]]"
+                                 cp-id="[[result.external_cp_output_id]]"></etools-ram-indicators>
 
           <template is="dom-repeat"
                     items="[[result.ll_outputs]]"
