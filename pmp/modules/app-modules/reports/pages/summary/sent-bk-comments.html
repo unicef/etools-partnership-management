@@ -1,0 +1,49 @@
+<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/etools-dialog/etools-dialog.html">
+
+<dom-module id="sent-bk-comments">
+  <template>
+    <style>
+      :host {
+        display: block
+      }
+    </style>
+
+    <etools-dialog opened="{{opened}}"
+      dialog-title="Feedback Sent Back"
+      hide-confirm-btn>
+      [[comment]]
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     */
+    class SentBkComments extends Polymer.Element {
+      static get is() {
+        return 'sent-bk-comments';
+      }
+
+      static get properties() {
+        return {
+          comment: {
+            type: String,
+            value: ''
+          },
+          opened: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+
+    }
+
+    window.customElements.define(SentBkComments.is, SentBkComments);
+  </script>
+</dom-module>
