@@ -27,6 +27,7 @@
         color: var(--success-color);
       }
 
+      :host([status-type="no-status"]) iron-icon,
       :host([status-type="error"]) iron-icon {
         color: var(--dark-error-color);
       }
@@ -39,9 +40,6 @@
         color: var(--warning-color);
       }
 
-      :host([status-type="no-status"]) iron-icon {
-        color: var(--medium-icon-color);
-      }
       #label {
         color: var(--primary-text-color);
       }
