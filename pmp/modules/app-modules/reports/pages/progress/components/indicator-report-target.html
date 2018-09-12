@@ -35,6 +35,28 @@
       :host([bold]) .target-row span:last-child {
         font-weight: bold;
       }
+
+      @media print {
+        :host(.print-inline) .target-row {
+          display: inline;
+          width: auto;
+          text-align: left;
+          padding-right: 0;
+          margin-right: 16px;
+        }
+
+        :host(.print-inline) .target-row:last-child {
+          margin-right: 0;
+        }
+
+        :host(.print-inline) .target-row span:last-child {
+          display: initial;
+          width: auto;
+          margin-left: 8px;
+          overflow: visible;
+          text-overflow: unset;
+        }
+      }
     </style>
 
     <div class="target-row">

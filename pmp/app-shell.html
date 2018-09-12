@@ -134,6 +134,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host(.ie) #page-container.in-amendment {
         margin-bottom: -40px;
       }
+
+      @media print {
+        #drawer,
+        app-header {
+          display: none;
+        }
+        app-drawer-layout {
+          --app-drawer-width: 0 !important;
+          margin-top: -60px; /* eliminate 60px top margin set by header */
+        }
+        #appHeadLayout {
+          width: 100%;
+        }
+      }
     </style>
 
     <environment-flags></environment-flags>

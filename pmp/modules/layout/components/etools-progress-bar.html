@@ -22,6 +22,34 @@
       paper-progress {
         width: var(--etools-progress-bar-width, 200px);
       }
+
+      @media print {
+        paper-progress {
+          position: relative;
+        }
+
+        paper-progress::before,
+        paper-progress::after {
+          content: ' ';
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 0;
+        }
+
+        paper-progress::before {
+          z-index: 1;
+          right: 0;
+          border-bottom: 10px solid var(--paper-progress-container-color, var(--google-grey-300));
+        }
+
+        paper-progress::after {
+          z-index: 1;
+          border-bottom: 10px solid var(--primary-color);
+          width: var(--etools-progress-width-on-print, 0%);
+        }
+      }
     </style>
     <paper-progress value="[[progressValue]]"
                     secondary-progress="[[_getSecondaryProgress(progressValue)]]"></paper-progress>
@@ -66,6 +94,9 @@
         }
         value = (value > 100) ? 100 : value; // cannot be bigger than 100
         value = (value < 0) ? 0 : value; // cannot be less that 0
+
+        this.updateStyles({'--etools-progress-width-on-print': value + '%'});
+
         return value;
       }
 
