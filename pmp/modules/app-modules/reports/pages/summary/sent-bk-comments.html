@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
 <dom-module id="sent-bk-comments">
   <template>
@@ -10,9 +11,12 @@
     </style>
 
     <etools-dialog opened="{{opened}}"
-      dialog-title="Feedback Sent Back"
+      dialog-title="Comments Sent Back"
       hide-confirm-btn>
-      [[comment]]
+      <etools-form-element-wrapper label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
+            value="[[report.sent_back_feedback]]">
+      </etools-form-element-wrapper>
+
     </etools-dialog>
 
   </template>
@@ -30,7 +34,7 @@
 
       static get properties() {
         return {
-          comment: {
+          report: {
             type: String,
             value: ''
           },
@@ -41,6 +45,9 @@
         };
       }
 
+      _getHeading(reviewDt, reviewedBy) {
+        return (reviewDt ? reviewDt : '-') + ' ' + (reviewedBy ? reviewedBy : '-');
+      }
 
     }
 

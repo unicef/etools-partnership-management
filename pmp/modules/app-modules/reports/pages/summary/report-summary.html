@@ -57,7 +57,7 @@
           <etools-form-element-wrapper label="Report Status" class="w-auto"
                                         value="[[getReportStatus(report.status, report.reviewed_by_name)]]">
           </etools-form-element-wrapper>
-          <iron-icon icon="speaker-notes" on-click="_seeSentBackComments"></iron-icon>
+          <iron-icon icon="speaker-notes" on-click="_seeSentBackComments" hidden$="[[!statusIs(report.status, 'Sen')]]"></iron-icon>
         </div>
         <div class="col col-2" hidden$="[[statusIs(report.status, 'Sub')]]">
           <etools-form-element-wrapper label="Date of Status"
@@ -152,7 +152,6 @@
 
       _createSentBkCommentsDialog() {
         this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
-        this.sentBkCommentsDialog.comment = this.report.sent_back_feedback;
         document.querySelector('body').appendChild(this.sentBkCommentsDialog);
       }
 
@@ -205,6 +204,7 @@
       }
 
       _seeSentBackComments() {
+        this.sentBkCommentsDialog.report = this.report;
         this.sentBkCommentsDialog.opened = true;
       }
 
