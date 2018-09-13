@@ -113,9 +113,10 @@
       </div>
 
       <div slot="title-row-actions" class="content-header-actions move-to-the-right">
-        <div hidden$="[[!tabsActive]]">
+        <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
+          <report-status status="[[report.review_overall_status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
 
-          <paper-menu-button close-on-activate class="no-right-padd">
+          <paper-menu-button close-on-activate class="no-right-padd" hidden$="[[!statusIs(report.status, 'Sub')]]">
             <paper-button slot="dropdown-trigger" class="primary-btn">
               Accept / Send Back
             </paper-button>
@@ -285,6 +286,17 @@
         });
 
         this._createReportStatusUpdateDialogs();
+      }
+
+      _hideActionBtns(tabsActive, report) {
+        if (!tabsActive) {
+          return true;
+        }
+        if (!report) {
+          return true;
+        }
+
+        return false;
       }
 
       _pageChanged(listActive, tabsActive, routeData) {
@@ -473,6 +485,11 @@
           }
         }
       }
+
+      statusIs(currentStatus, status) {
+        return currentStatus === status;
+      }
+
     }
 
     window.customElements.define(ReportsModule.is, ReportsModule);
