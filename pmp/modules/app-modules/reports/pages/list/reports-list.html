@@ -63,23 +63,43 @@
             no-dynamic-align></etools-dropdown>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-
-          <etools-dropdown
-              class="filter"
-              label="[[filter.filterName]]"
-              placeholder="&#8212;"
-              disabled$="[[!filter.selectionOptions.length]]"
-              options="[[filter.selectionOptions]]"
-              option-value="[[filter.optionValue]]"
-              option-label="[[filter.optionLabel]]"
-              selected="[[filter.alreadySelected]]"
-              on-selected-changed="filterValueChanged"
-              data-filter-path$="[[filter.path]]"
-              min-width="400px"
-              horizontal-align="left"
-              no-dynamic-align
-              enable-none-option>
-          </etools-dropdown>
+          <template is="dom-if" if="[[filter.singleSelection]]">
+            <etools-dropdown
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected="[[filter.alreadySelected]]"
+                on-selected-changed="filterValueChanged"
+                data-filter-path$="[[filter.path]]"
+                min-width="400px"
+                horizontal-align="left"
+                no-dynamic-align
+                enable-none-option>
+            </etools-dropdown>
+          </template>
+          <template is="dom-if" if="[[!filter.singleSelection]]">
+            <etools-dropdown-multi
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected-values="[[filter.alreadySelected]]"
+                trigger-value-change-event
+                on-etools-selected-items-changed="esmmValueChanged"
+                data-filter-path$="[[filter.path]]"
+                min-width="400px"
+                horizontal-align="left"
+                no-dynamic-align
+                enable-none-option>
+            </etools-dropdown-multi>
+          </template>
         </template>
 
       </div>
@@ -112,6 +132,8 @@
 
   <script>
     'use strict';
+
+    let _reportsLastNavigated = null;
 
     /**
      * @polymer
@@ -174,6 +196,10 @@
             type: Array,
             statePath: 'reportTypes'
           },
+          unicefUsersData: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
           // selected filters values
           queryParams: {
             type: Object,
@@ -183,7 +209,8 @@
               cp_output: null,
               section: null,
               status: ['Sub', 'Ove', 'Sen'],
-              report_type: null
+              report_type: null,
+              focal_points: []
             }
           },
           paginator: {
@@ -202,11 +229,12 @@
 
       static get observers() {
         return [
-          '_initListFilters(partners, cpOutputs, sections)',
+          '_initListFilters(partners, cpOutputs, sections, unicefUsersData)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, _filtersInitialized)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
-            'queryParams.cp_output, queryParams.section, queryParams.status.length, queryParams.report_type)'
+            'queryParams.cp_output, queryParams.section, queryParams.status.length, queryParams.report_type, ' +
+            'queryParams.focal_points.length)'
         ];
       }
 
@@ -219,8 +247,8 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
       }
 
-      _initListFilters(partners, cpOutputs, sections) {
-        if (!partners || !cpOutputs || !sections) {
+      _initListFilters(partners, cpOutputs, sections, unicefUsersData) {
+        if (!partners || !cpOutputs || !sections || !unicefUsersData) {
           return;
         }
         // init list filter options
@@ -260,6 +288,17 @@
             alreadySelected: null,
             path: 'queryParams.section',
             selected: false
+          },
+          {
+            filterName: 'UNICEF focal points',
+            type: 'esmm',
+            singleSelection: false,
+            optionValue: 'email',
+            optionLabel: 'name',
+            selectionOptions: unicefUsersData,
+            alreadySelected: [],
+            path: 'queryParams.focal_points',
+            selected: false
           }
         ]);
         this._updateSelectedFiltersValues();
@@ -268,6 +307,7 @@
 
       // update selected filters(prezent in URL) at page refresh
       _updateSelectedFiltersValues() {
+        console.log(this.queryParams.focal_points);
         let filtersValues = [
           {
             filterName: 'Partner',
@@ -280,6 +320,10 @@
           {
             filterName: 'Section',
             selectedValue: this.queryParams.section
+          },
+          {
+            filterName: 'UNICEF focal points',
+            selectedValue: this.queryParams.focal_points
           }
         ];
         this.updateShownFilters(filtersValues);
@@ -301,6 +345,8 @@
               this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
               this.set('queryParams.status',
                   urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status);
+              this.set('queryParams.focal_points',
+                  urlQueryParams.focal_points ? urlQueryParams.focal_points.split('|') : this.queryParams.focal_points);
               this.set('queryParams.report_type', urlQueryParams.report_type ? urlQueryParams.report_type : null);
 
               this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
@@ -319,9 +365,13 @@
         if (!queryParamsData || !pageNr || !pageSize) {
           return;
         }
+
         let qs = this._buildQueryString();
-        // update URL
-        this.updateAppState('reports/list', qs, true);
+        if (qs !== _reportsLastNavigated) {
+          // update URL
+          this.updateAppState('reports/list', qs, true);
+          _reportsLastNavigated = qs || _reportsLastNavigated;
+        }
       }
 
       // Outputs the query string for the list
