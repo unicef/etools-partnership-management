@@ -207,7 +207,7 @@
               section: null,
               status: ['Sub', 'Ove', 'Sen'],
               report_type: null,
-              focal_points: []
+              unicef_focal_points: []
             }
           },
           paginator: {
@@ -295,7 +295,7 @@
             optionLabel: 'name',
             selectionOptions: unicefUsersData,
             alreadySelected: [],
-            path: 'queryParams.focal_points',
+            path: 'queryParams.unicef_focal_points',
             selected: false
           }
         ]);
@@ -319,7 +319,7 @@
           },
           {
             filterName: 'UNICEF focal points',
-            selectedValue: this.queryParams.focal_points
+            selectedValue: this.queryParams.unicef_focal_points
           }
         ];
         this.updateShownFilters(filtersValues);
@@ -341,8 +341,8 @@
               this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
               this.set('queryParams.status',
                   urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status);
-              this.set('queryParams.focal_points',
-                  urlQueryParams.focal_points ? urlQueryParams.focal_points.split('|') : []);
+              this.set('queryParams.unicef_focal_points',
+                  urlQueryParams.unicef_focal_points ? urlQueryParams.unicef_focal_points.split('|') : []);
               this.set('queryParams.report_type', urlQueryParams.report_type ? urlQueryParams.report_type : null);
 
               this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
@@ -396,8 +396,8 @@
 
       /**
        * _prevFiltersChangedArgs check will prevent page reset in case queryParams array values are updated,
-       * but with the same value. Ex: by default queryParams.focal_points = [], when filter si selected from menu,
-       * queryParams.focal_points is updated, but to a new empty array (by esmm) and this will
+       * but with the same value. Ex: by default queryParams.unicef_focal_points = [], when filter si selected from menu,
+       * queryParams.unicef_focal_points is updated, but to a new empty array (by esmm) and this will
        * trigger _filtersChanged observer.
        * @private
        */
