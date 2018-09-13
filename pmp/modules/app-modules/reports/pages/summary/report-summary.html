@@ -150,6 +150,14 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.sentBkCommentsDialog) {
+          document.querySelector('body').removeChild(this.sentBkCommentsDialog);
+        }
+      }
+
+
       _createSentBkCommentsDialog() {
         this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
         document.querySelector('body').appendChild(this.sentBkCommentsDialog);
