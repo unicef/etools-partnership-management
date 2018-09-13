@@ -402,6 +402,7 @@
        * @private
        */
       _filtersChanged() {
+        // eslint-disable-next-line
         let sAgrs = JSON.stringify(arguments);
         if (this._prevFiltersChangedArgs !== sAgrs) {
           this.set('paginator.page', 1);
