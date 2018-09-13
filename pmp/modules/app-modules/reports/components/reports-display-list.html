@@ -232,7 +232,8 @@
           _endpointName: {
             type: String,
             value: 'reports'
-          }
+          },
+          _lastParamsUsed: Object
         };
       }
 
@@ -252,6 +253,12 @@
             Polymer.Async.timeOut.after(this.debounceInterval),
             () => {
               let params = this._prepareReqParamsObj(interventionId);
+
+              if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params)) {
+                return;
+              }
+
+              this._lastParamsUsed = Object.assign({}, params);
 
               this.fireEvent('global-loading', {
                 message: 'Loading...',
@@ -304,7 +311,8 @@
         let params = {};
         if (!_.isEmpty(this.queryParams)) {
           Object.keys(this.queryParams).forEach(function(k) {
-            if (this.queryParams[k]) {
+            if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
+                (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
               params[k] = this.queryParams[k];
             }
           }.bind(this));

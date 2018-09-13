@@ -96,8 +96,7 @@
                 data-filter-path$="[[filter.path]]"
                 min-width="400px"
                 horizontal-align="left"
-                no-dynamic-align
-                enable-none-option>
+                no-dynamic-align>
             </etools-dropdown-multi>
           </template>
         </template>
@@ -132,8 +131,6 @@
 
   <script>
     'use strict';
-
-    let _reportsLastNavigated = null;
 
     /**
      * @polymer
@@ -223,7 +220,8 @@
           _initComplete: {
             type: Boolean,
             value: false
-          }
+          },
+          _prevFiltersChangedArgs: String
         };
       }
 
@@ -301,13 +299,11 @@
             selected: false
           }
         ]);
-        this._updateSelectedFiltersValues();
         this.set('_filtersInitialized', true);
       }
 
       // update selected filters(prezent in URL) at page refresh
       _updateSelectedFiltersValues() {
-        console.log(this.queryParams.focal_points);
         let filtersValues = [
           {
             filterName: 'Partner',
@@ -336,7 +332,7 @@
         let urlQueryParams = this.urlParams;
         this.set('_initComplete', false);
         this._initSelectedFilters = Polymer.Debouncer.debounce(this._initSelectedFilters,
-            Polymer.Async.timeOut.after(20),
+            Polymer.Async.timeOut.after(0),
             () => {
               this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
               this.set('queryParams.external_partner_id',
@@ -346,7 +342,7 @@
               this.set('queryParams.status',
                   urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status);
               this.set('queryParams.focal_points',
-                  urlQueryParams.focal_points ? urlQueryParams.focal_points.split('|') : this.queryParams.focal_points);
+                  urlQueryParams.focal_points ? urlQueryParams.focal_points.split('|') : []);
               this.set('queryParams.report_type', urlQueryParams.report_type ? urlQueryParams.report_type : null);
 
               this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
@@ -367,11 +363,8 @@
         }
 
         let qs = this._buildQueryString();
-        if (qs !== _reportsLastNavigated) {
-          // update URL
-          this.updateAppState('reports/list', qs, true);
-          _reportsLastNavigated = qs || _reportsLastNavigated;
-        }
+        // update URL
+        this.updateAppState('reports/list', qs, true);
       }
 
       // Outputs the query string for the list
@@ -401,8 +394,19 @@
         return qStrData.join('&');
       }
 
+      /**
+       * _prevFiltersChangedArgs check will prevent page reset in case queryParams array values are updated,
+       * but with the same value. Ex: by default queryParams.focal_points = [], when filter si selected from menu,
+       * queryParams.focal_points is updated, but to a new empty array (by esmm) and this will
+       * trigger _filtersChanged observer.
+       * @private
+       */
       _filtersChanged() {
-        this.set('paginator.page', 1);
+        let sAgrs = JSON.stringify(arguments);
+        if (this._prevFiltersChangedArgs !== sAgrs) {
+          this.set('paginator.page', 1);
+          this._prevFiltersChangedArgs = sAgrs;
+        }
       }
     }
 
