@@ -70,10 +70,12 @@
       <template is="dom-if" if="[[reports.length]]">
         <etools-data-table-header id="listHeader"
                                   label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
-                                    of [[paginator.count]] results to show"
-                                  no-collapse>
-          <etools-data-table-column class="flex-c">
+                                    of [[paginator.count]] results to show">
+          <etools-data-table-column class="col-2">
             Report #
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+            Partner
           </etools-data-table-column>
           <etools-data-table-column class="flex-c">
             Report Status
@@ -91,11 +93,11 @@
           </template>
         </etools-data-table-header>
 
-        <template is="dom-repeat" items="[[reports]]" as="report">
-          <etools-data-table-row no-collapse>
+        <template is="dom-repeat" items="[[reports]]" as="report" on-dom-change="_listDataChanged">
+          <etools-data-table-row>
 
             <div slot="row-data">
-              <span class="col-data flex-c">
+              <span class="col-data col-2">
                 <span id$="tooltip-trigger-[[report.id]]" class="tooltip-trigger">
                   <a class="view-report"
                      href$="reports/[[report.id]]/progress"
@@ -116,6 +118,17 @@
                 </paper-tooltip>
               </span>
               <span class="col-data flex-c">
+                <span id$="tooltip-partner-[[report.id]]" class="tooltip-trigger">
+                  [[_displayOrDefault(report.partner_name)]]
+                </span>
+
+                <paper-tooltip for$="tooltip-partner-[[report.id]]"
+                                position="right"
+                                fit-to-visible-bounds>
+                  [[report.partner_vendor_number]]
+                </paper-tooltip>
+              </span>
+              <span class="col-data flex-c">
                 <report-status status="[[report.status]]"></report-status>
               </span>
               <span class="col-data flex-c">
@@ -133,6 +146,13 @@
                   </a>
                 </span>
               </template>
+            </div>
+
+            <div slot="row-data-details">
+              <div class="row-details-content">
+                <span class="rdc-title flex-c">UNICEF Focal Points</span>
+                <span>[[getDisplayValue(report.unicef_focal_points)]]</span>
+              </div>
             </div>
 
           </etools-data-table-row>
@@ -218,7 +238,8 @@
           _endpointName: {
             type: String,
             value: 'reports'
-          }
+          },
+          _lastParamsUsed: Object
         };
       }
 
@@ -238,6 +259,12 @@
             Polymer.Async.timeOut.after(this.debounceInterval),
             () => {
               let params = this._prepareReqParamsObj(interventionId);
+
+              if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params)) {
+                return;
+              }
+
+              this._lastParamsUsed = Object.assign({}, params);
 
               this.fireEvent('global-loading', {
                 message: 'Loading...',
@@ -290,7 +317,8 @@
         let params = {};
         if (!_.isEmpty(this.queryParams)) {
           Object.keys(this.queryParams).forEach(function(k) {
-            if (this.queryParams[k]) {
+            if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
+                (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
               params[k] = this.queryParams[k];
             }
           }.bind(this));
@@ -302,15 +330,28 @@
         return this.waitQueryParamsInit && !qParamsData.value && qParamsData.path === 'queryParams';
       }
 
-      _displayOrDefault(alreadyformattedDt) {
-        if (!alreadyformattedDt) {
+      _displayOrDefault(val) {
+        if (!val) {
           return '-';
         }
-        return alreadyformattedDt;
+        return val;
       }
 
       _getReportTitle(report) {
         return report.report_type + report.report_number;
+      }
+
+      // TODO: this is the same function from lists common mixin, but we do not need that entire functionality here
+      // refactor in near future
+      _listDataChanged() {
+        let rows = this.shadowRoot.querySelectorAll('etools-data-table-row');
+        if (rows && rows.length) {
+          for (let i = 0; i < rows.length; i++) {
+            if (rows[i].detailsOpened) {
+              rows[i].set('detailsOpened', false);
+            }
+          }
+        }
       }
     }
 

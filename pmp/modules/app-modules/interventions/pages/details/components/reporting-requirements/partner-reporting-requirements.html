@@ -89,7 +89,7 @@
               <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openQprEditDialog"
-                                 hidden$="[[!editMode]]"></paper-icon-button>
+                                 hidden$="[[_hideRepReqEditBtn(editMode, qprRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianUnicef"
                         class="nav-menu-item">
@@ -97,7 +97,7 @@
               <paper-icon-button class="edit-rep-req"
                                  icon="create"
                                  on-click="_openHruEditDialog"
-                                 hidden$="[[!editMode]]"></paper-icon-button>
+                                 hidden$="[[_hideRepReqEditBtn(editMode, hrUnicefRequirementsCount)]]"></paper-icon-button>
             </paper-item>
             <paper-item name="humanitarianCluster"
                         class="nav-menu-item">
@@ -205,6 +205,10 @@
 
       _openHruEditDialog() {
         this.$.hru.openUnicefHumanitarianRepReqDialog();
+      }
+
+      _hideRepReqEditBtn(editMode, qprCount) {
+        return qprCount === 0 || !editMode;
       }
 
     }

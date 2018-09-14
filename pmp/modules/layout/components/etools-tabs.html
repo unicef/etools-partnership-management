@@ -39,6 +39,12 @@
       paper-tab.iron-selected .tab-content {
         color: var(--primary-color);
       }
+
+      @media print {
+        :host {
+          display: none;
+        }
+      }
     </style>
 
     <paper-tabs id="tabs"

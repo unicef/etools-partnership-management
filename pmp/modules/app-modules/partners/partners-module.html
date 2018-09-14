@@ -302,7 +302,8 @@
       }
 
       _pageChanged(listActive, tabsActive, routeData) {
-        if (!listActive && !tabsActive) {
+        // Using isActiveModule will prevent wrong page import
+        if (!this.isActiveModule(this.currentPage) || (!listActive && !tabsActive)) {
           return;
         }
 
@@ -357,7 +358,9 @@
       }
 
       _observeRouteDataId(id) {
-        if (typeof id === 'undefined') {
+        // Using isActiveModule will prevent wrong partner details request
+        // (with an id from other app module, like reports)
+        if (!this.isActiveModule() || typeof id === 'undefined') {
           return;
         }
         if (this.route && this.route.prefix.indexOf('partners') > -1) {

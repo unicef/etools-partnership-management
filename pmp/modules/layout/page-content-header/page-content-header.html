@@ -43,6 +43,19 @@
         margin-top: 5px;
       }
 
+      @media print {
+        :host {
+          padding: 0;
+          border-bottom: none;
+          min-height: 0 !important;
+          margin-bottom: 16px;
+        }
+
+        .title-row h1 {
+          font-size: 18px;
+        }
+      }
+
     </style>
 
     <div class="content-header-row title-row">

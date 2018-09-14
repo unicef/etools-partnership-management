@@ -97,11 +97,17 @@
         this.$.reportRatingDialog.stopSpinner();
       }
 
+      getCurrentDate() {
+        return moment(new Date()).format('D-MMM-YYYY');
+      }
+
       saveStatus() {
         let self = this;
         let requestBody = {
           status: 'Acc',
-          overall_status: this.selectedOverallStatus
+          overall_status: this.selectedOverallStatus,
+          reviewed_by_name: this.currentUser.name,
+          review_date: this.getCurrentDate()
         };
 
         this.startSpinner();
