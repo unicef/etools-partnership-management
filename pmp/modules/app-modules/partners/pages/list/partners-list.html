@@ -135,7 +135,7 @@
           <div slot="row-data">
               <span class="col-data flex">
                 <a class="vendor-nr truncate"
-                   href$="[[currentPage]]/[[partner.id]]/details"
+                   href$="[[currentModule]]/[[partner.id]]/details"
                    title$="[[getDisplayValue(partner.vendor_number)]]"
                    on-tap="_triggerPartnerLoadingMsg">
                   [[getDisplayValue(partner.vendor_number)]]
@@ -276,7 +276,7 @@
             value: false,
             observer: '_showOnlyGovernmentTypeFlagChanged'
           },
-          currentPage: String,
+          currentModule: String,
           _sortableFieldNames: {
             type: Array,
             value: ['vendor_number', 'name']
@@ -346,7 +346,7 @@
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           let qs = this._buildQueryString();
 
-          this._updateUrlAndDislayedData(this.currentPage + '/list',
+          this._updateUrlAndDislayedData(this.currentModule + '/list',
               _partnersLastNavigated,
               qs,
               this._filterListData.bind(this));
