@@ -109,8 +109,7 @@
 
           <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
             <a class="primary"
-              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
-              target="_blank">
+              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports">
                 [[report.programme_document.reference_number]]
             </a>
           </span>
@@ -563,6 +562,7 @@
               reportsDisplayList.set(['reports', index, 'submission_date'], report.submission_date);
               reportsDisplayList.set(['reports', index, 'review_date'], report.review_date);
               reportsDisplayList.set(['reports', index, 'reporting_period'], report.reporting_period);
+              reportsDisplayList.set(['reports', index, 'sent_back_feedback'], report.sent_back_feedback);
             }
 
           }
