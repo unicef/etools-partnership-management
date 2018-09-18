@@ -11,7 +11,8 @@
     </style>
 
     <etools-dialog opened="{{opened}}"
-      dialog-title="Comments Sent Back"
+      dialog-title="Sent Back Comments"
+      size="md"
       hide-confirm-btn>
       <etools-form-element-wrapper label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
             value="[[report.sent_back_feedback]]">
@@ -46,7 +47,10 @@
       }
 
       _getHeading(reviewDt, reviewedBy) {
-        return (reviewDt ? reviewDt : '-') + ' ' + (reviewedBy ? reviewedBy : '-');
+        if (!reviewDt && !reviewedBy) {
+          return '';
+        }
+        return (reviewDt ? reviewDt : 'N/A') + ' ' + (reviewedBy ? reviewedBy : 'N/A');
       }
 
     }
