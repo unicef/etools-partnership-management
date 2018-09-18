@@ -47,11 +47,10 @@
       }
 
       _getHeading(reviewDt, reviewedBy) {
-        let h = (reviewDt ? reviewDt : 'N/A') + ' ' + (reviewedBy ? reviewedBy : 'N/A');
-        if (h == 'N/A N/A') {
+        if (!reviewDt && !reviewedBy) {
           return '';
         }
-        return h;
+        return (reviewDt ? reviewDt : 'N/A') + ' ' + (reviewedBy ? reviewedBy : 'N/A');
       }
 
     }
