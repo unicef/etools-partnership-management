@@ -408,6 +408,10 @@
 
         let params = {};
 
+        if (typeof reportsList.queryParams.pd_ref_title === 'string' && reportsList.queryParams.pd_ref_title !== '') {
+          params.pd_ref_title = reportsList.queryParams.pd_ref_title;
+        }
+
         if (reportsList.queryParams.status.length > 0) {
           params.report_status = reportsList.queryParams.status;
         }
@@ -427,6 +431,11 @@
         if (reportsList.queryParams.section) {
           params.report_section = reportsList.queryParams.section;
         }
+
+        if (reportsList.queryParams.unicef_focal_points.length > 0) {
+          params.unicef_focal_points = reportsList.queryParams.unicef_focal_points;
+        }
+
         params.export = type;
 
         this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params})
