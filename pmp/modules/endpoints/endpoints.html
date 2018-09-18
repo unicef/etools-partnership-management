@@ -235,6 +235,10 @@
       template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=pdf',
       token: 'prp'
     },
+    reportIndicatorsExport: {
+      template: '/api/unicef/<%=countryId%>/programme-document/indicators/',
+      token: 'prp'
+    },
     // tokens get/refresh endpoints
     prpToken: {
       url: '/api/jwt/get'
