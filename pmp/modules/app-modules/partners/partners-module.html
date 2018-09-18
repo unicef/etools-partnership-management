@@ -105,7 +105,7 @@
             <partners-list id="list"
                            name="list"
                            show-only-government-type="[[showOnlyGovernmentType]]"
-                           current-page="[[currentPage]]"
+                           current-module="[[currentModule]]"
                            active="[[listActive]]"
                            csv-download-url="{{csvDownloadUrl}}"
                            url-params="[[preservedListQueryParams]]">
@@ -230,14 +230,14 @@
             type: Boolean,
             value: false
           },
-          currentPage: String,
+          currentModule: String,
           originalPartnerData: Object
         };
       }
 
       static get observers() {
         return [
-          '_pageChanged(listActive, tabsActive, routeData)',
+          '_pageChanged(listActive, tabsActive, routeData, currentModule)',
           '_observeRouteDataId(routeData.id)'
         ];
       }
@@ -301,9 +301,9 @@
         }
       }
 
-      _pageChanged(listActive, tabsActive, routeData) {
+      _pageChanged(listActive, tabsActive, routeData, currentModule) {
         // Using isActiveModule will prevent wrong page import
-        if (!this.isActiveModule(this.currentPage) || (!listActive && !tabsActive)) {
+        if (!this.isActiveModule(this.currentModule) || (!listActive && !tabsActive)) {
           return;
         }
 
@@ -360,7 +360,7 @@
       _observeRouteDataId(id) {
         // Using isActiveModule will prevent wrong partner details request
         // (with an id from other app module, like reports)
-        if (!this.isActiveModule() || typeof id === 'undefined') {
+        if (!this.isActiveModule(this.currentModule) || typeof id === 'undefined') {
           return;
         }
         if (this.route && this.route.prefix.indexOf('partners') > -1) {
