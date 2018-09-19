@@ -3,8 +3,9 @@
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">s
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">s
 <link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
@@ -63,6 +64,22 @@
         font-weight: bold;
         color: var(--primary-color);
       }
+
+      /* TODO: refactor export btn styles (maybe use a common style module) */
+      #export paper-item {
+        --paper-item-selected: {
+          font-weight: normal !important;
+        };
+        /* Prevent first item highlighted by default */
+        --paper-item-focused-before: {
+          background: none;
+          opacity: 0;
+        };
+        --paper-item-focused-after: {
+          background: none;
+          opacity: 0;
+        }
+      }
     </style>
 
     <app-route
@@ -92,8 +109,7 @@
 
           <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
             <a class="primary"
-              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports"
-              target="_blank">
+              href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports">
                 [[report.programme_document.reference_number]]
             </a>
           </span>
@@ -113,6 +129,20 @@
       </div>
 
       <div slot="title-row-actions" class="content-header-actions move-to-the-right">
+
+        <div class="action" hidden$="[[!listActive]]">
+          <paper-menu-button id="export" close-on-activate horizontal-align="right">
+            <paper-button slot="dropdown-trigger">
+              <iron-icon icon="file-download"></iron-icon>
+              Export
+            </paper-button>
+            <paper-listbox slot="dropdown-content">
+              <paper-item on-tap="_exportIndicatorsPDF">Export Indicators - PDF</paper-item>
+              <paper-item on-tap="_exportIndicatorsXLS">Export Indicators - XLS</paper-item>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
+
         <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
           <report-status status="[[report.review_overall_status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
 
@@ -361,14 +391,64 @@
         return report.programme_document.reference_number + '_' + report.id + '_' + report.status + '.pdf';
       }
 
+      _exportIndicatorsPDF() {
+        this._exportIndicators('pdf');
+      }
+
+      _exportIndicatorsXLS() {
+        this._exportIndicators('xlsx');
+      }
+
+      _exportIndicators(type) {
+        const reportsList = this.shadowRoot.querySelector('#list');
+        if (reportsList instanceof Polymer.Element === false) {
+          return;
+        }
+
+        let params = {};
+
+        if (typeof reportsList.queryParams.pd_ref_title === 'string' && reportsList.queryParams.pd_ref_title !== '') {
+          params.pd_ref_title = reportsList.queryParams.pd_ref_title;
+        }
+
+        if (reportsList.queryParams.status.length > 0) {
+          params.report_status = reportsList.queryParams.status;
+        }
+
+        if (reportsList.queryParams.report_type) {
+          params.report_type = reportsList.queryParams.report_type;
+        }
+
+        if (reportsList.queryParams.external_partner_id) {
+          params.report_partner_external = reportsList.queryParams.external_partner_id;
+        }
+
+        if (reportsList.queryParams.cp_output) {
+          params.cp_output = reportsList.queryParams.cp_output;
+        }
+
+        if (reportsList.queryParams.section) {
+          params.report_section = reportsList.queryParams.section;
+        }
+
+        if (reportsList.queryParams.unicef_focal_points.length > 0) {
+          params.unicef_focal_points = reportsList.queryParams.unicef_focal_points;
+        }
+
+        params.export = type;
+
+        this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params})
+            .then(blob => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+      }
+
       _downloadAnexC() {
         let filename = 'Progress Report.pdf';
-        this._tokenizedDownload('downloadReportAnexC', filename);
+        this._reportTokenizedDownload('downloadReportAnexC', filename);
       }
 
       _downloadXls() {
         let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
-        this._tokenizedDownload('downloadReportXls', filename);
+        this._reportTokenizedDownload('downloadReportXls', filename);
       }
 
       _getCurrentDateTime() {
@@ -377,34 +457,36 @@
 
       _downloadPdf() {
         let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
-        this._tokenizedDownload('downloadReportPdf', filename);
+        this._reportTokenizedDownload('downloadReportPdf', filename);
       }
 
-      _tokenizedDownload(endpoint, filename) {
+      _reportTokenizedDownload(endpoint, filename) {
         if (!this.report) {
           return;
         }
 
         this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
-            .then((blob) => {
-              if (window.navigator.userAgent.indexOf('Trident/') > -1) {
-                window.navigator.msSaveBlob(blob, filename);
-              } else {
-                // create a blob url representing the data
-                let url = window.URL.createObjectURL(blob);
-                // attach blob url to anchor element with download attribute
-                let anchor = document.createElement('a');
-                anchor.setAttribute('href', url);
-                anchor.setAttribute('download', filename);
+            .then(blob => this._handleBlobDataReceivedAndStartDownload(blob, filename));
+      }
 
-                //* anchor.click() doesn't work on ff, edge
-                anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+      _handleBlobDataReceivedAndStartDownload(blob, filename) {
+        if (window.navigator.userAgent.indexOf('Trident/') > -1) {
+          window.navigator.msSaveBlob(blob, filename);
+        } else {
+          // create a blob url representing the data
+          let url = window.URL.createObjectURL(blob);
+          // attach blob url to anchor element with download attribute
+          let anchor = document.createElement('a');
+          anchor.setAttribute('href', url);
+          anchor.setAttribute('download', filename);
 
-                setTimeout(() => {
-                  window.URL.revokeObjectURL(url);
-                }, 100);
-              }
-            });
+          //* anchor.click() doesn't work on ff, edge
+          anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        }
       }
 
       _goToActionPointModule() {
@@ -480,6 +562,7 @@
               reportsDisplayList.set(['reports', index, 'submission_date'], report.submission_date);
               reportsDisplayList.set(['reports', index, 'review_date'], report.review_date);
               reportsDisplayList.set(['reports', index, 'reporting_period'], report.reporting_period);
+              reportsDisplayList.set(['reports', index, 'sent_back_feedback'], report.sent_back_feedback);
             }
 
           }

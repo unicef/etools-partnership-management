@@ -61,7 +61,7 @@
       </etools-date-input>
       </div>
       <div>
-        Use the date picker to select due dates of humanitarian report requirements.
+        Use the date picker to select end dates of humanitarian report requirements.
       </div>
 
       <div class="layout-horizontal row-padding-v">
@@ -198,13 +198,17 @@
       }
 
       _addToList() {
-        let alreadySelected = this.hruData.find(d => d.due_date === this.selectedDate);
+        let alreadySelected = this.hruData.find(d => d.end_date === this.selectedDate);
         if (alreadySelected) {
           this.toastMsgLoadingSource.fireEvent('toast',
               {text: 'This date is already added to the list.', showCloseBtn: true});
           return;
         }
-        this.push('hruData', {due_date: this.selectedDate, end_date: this.selectedDate});
+        this.push('hruData', {end_date: this.selectedDate, due_date: this._oneDayAfterEndDate(this.selectedDate)});
+      }
+
+      _oneDayAfterEndDate(endDt) {
+        return moment(endDt).add(1, 'days').format('YYYY-MM-DD');
       }
 
       _deleteHruDate(e) {
@@ -233,7 +237,7 @@
       }
 
       _computeStartDate(i) {
-        return moment(this.hruData[i-1].due_date).add(1, 'days').format('YYYY-MM-DD');
+        return moment(this.hruData[i-1].end_date).add(1, 'days').format('YYYY-MM-DD');
       }
 
       _saveHurData() {
