@@ -205,9 +205,6 @@
                       <div class="col-data col-9">
                         [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
                         [[indicatorReport.reportable.blueprint.title]]
-                        indicators on this PD Output or SSFA Expected Result
-                        indicators on this PD Output or SSFA Expected Result
-                        indicators on this PD Output or SSFA Expected Result
                       </div>
                       <div class="col-data col-3 progress-bar">
                         <etools-progress-bar class="report-progress-bar"
@@ -220,7 +217,8 @@
                         <indicator-report-target
                             class="print-inline"
                             values-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                            target="[[indicatorReport.reportable.target]]"
+                            target="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.target.v, indicatorReport.reportable.target.c)]]"
                             cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                             indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
                             achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
