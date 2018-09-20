@@ -22,6 +22,8 @@
             tabsActive: Boolean,
             route: Object,
             routeData: Object,
+            rootPath: String,
+            moduleName: String,
             activePage: {
               type: String,
               notify: true,
@@ -47,12 +49,12 @@
           this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached.bind(this));
         }
 
-        _activePageChanged(currentPage, previousPage) {
-          if (typeof currentPage === 'undefined') {
+        _activePageChanged(currentModule, previousPage) {
+          if (typeof currentModule === 'undefined') {
             return;
           }
           this._clearRouteQueryParamsIfNeeded(previousPage);
-          this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
+          this._resetTabAttachedFlagIfNeeded(currentModule, previousPage);
         }
 
         /*
@@ -77,8 +79,8 @@
         /*
          * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
          */
-        _resetTabAttachedFlagIfNeeded(currentPage, previousPage) {
-          let selectedTab = this.shadowRoot.querySelector('[name="' + currentPage + '"]');
+        _resetTabAttachedFlagIfNeeded(currentModule, previousPage) {
+          let selectedTab = this.shadowRoot.querySelector('[name="' + currentModule + '"]');
           if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
             this.set('tabAttached', false);
           }
@@ -172,6 +174,11 @@
               resolve();
             }
           });
+        }
+
+        isActiveModule(moduleName) {
+          const mName = !moduleName ? this.moduleName : moduleName;
+          return this.rootPath + mName === this.route.prefix;
         }
 
       });

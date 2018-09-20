@@ -1,5 +1,8 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import"
       href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
@@ -14,49 +17,72 @@
 <link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="sent-bk-comments.html">
 
 <dom-module id="report-summary">
   <template>
     <style include="page-common-styles grid-layout-styles shared-styles paper-material-styles">
+      .remove-padding {
+        padding: 0 !important;
+      }
+      iron-icon[icon="speaker-notes"] {
+        color: var(--primary-color);
+        padding-top: 14px;
+        padding-left: 8px;
+        cursor: pointer;
+      }
+      .report-status {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+      .w-auto {
+        width: auto;
+      }
+
     </style>
 
-    <div class="content-section paper-material" elevation="1">
-      <div class="row-h">
-        <div class="col col-6">
-          <etools-form-element-wrapper label="Submitted by"
+    <div class="content-section paper-material remove-padding" elevation="1">
+      <div class="row-h b-border">
+        <div class="col col-5">
+          <etools-form-element-wrapper label="Submitted By"
                                        value="[[getDisplayValue(report.submitted_by)]]">
           </etools-form-element-wrapper>
         </div>
-        <div class="col col-6">
-          <etools-form-element-wrapper label="Submission date"
-                                       value="[[getDateDisplayValue(report.submission_date)]]">
+        <div class="col col-2">
+          <etools-form-element-wrapper label="Submission Date"
+                                       value="[[_displayOrDefault(report.submission_date)]]">
+          </etools-form-element-wrapper>
+        </div>
+        <div class="col col-3 report-status" hidden$="[[statusIs(report.status, 'Sub')]]">
+          <etools-form-element-wrapper label="Report Status" class="w-auto"
+                                        value="[[getReportStatus(report.status, report.reviewed_by_name)]]">
+          </etools-form-element-wrapper>
+          <iron-icon icon="speaker-notes" on-click="_seeSentBackComments" hidden$="[[!statusIs(report.status, 'Sen')]]"></iron-icon>
+        </div>
+        <div class="col col-2" hidden$="[[statusIs(report.status, 'Sub')]]">
+          <etools-form-element-wrapper label="Date of Status"
+                                        value="[[_displayOrDefault(report.review_date)]]">
           </etools-form-element-wrapper>
         </div>
       </div>
+
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Partner contribution to date"
+          <etools-form-element-wrapper label="Partner Contribution to Date"
                                        value="[[getDisplayValue(report.partner_contribution_to_date)]]">
           </etools-form-element-wrapper>
         </div>
       </div>
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Funds received to date" value="[[displayCurrencyAmount(report.funds_received_to_date, '0')]] [[report.funds_received_to_date_currency]]
-            ([[getDisplayValue(report.funds_received_to_date_percentage)]]%)">
-          </etools-form-element-wrapper>
-        </div>
-      </div>
-      <div class="row-h">
-        <div class="col col-12">
-          <etools-form-element-wrapper label="Challneges/bottlenecks in the reporting period (latest)"
+          <etools-form-element-wrapper label="Challneges/Bottlenecks in the Reporting Period (latest)"
                                        value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]">
           </etools-form-element-wrapper>
         </div>
       </div>
       <div class="row-h">
         <div class="col col-12">
-          <etools-form-element-wrapper label="Proposed way forward (latest)"
+          <etools-form-element-wrapper label="Proposed Way Forward (latest)"
                                        value="[[getDisplayValue(report.proposed_way_forward)]]">
           </etools-form-element-wrapper>
         </div>
@@ -70,6 +96,7 @@
     </div>
 
   </template>
+
   <script>
     'use strict';
 
@@ -102,8 +129,16 @@
           attachments: {
             type: Array,
             value: []
+          },
+          sentBkCommentsDialog: {
+            type: Object
           }
         };
+      }
+
+      ready() {
+        super.ready();
+        this._createSentBkCommentsDialog();
       }
 
       connectedCallback() {
@@ -113,6 +148,19 @@
          * triggered by parent element on stamp or by tap event on tabs
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.sentBkCommentsDialog) {
+          document.querySelector('body').removeChild(this.sentBkCommentsDialog);
+        }
+      }
+
+
+      _createSentBkCommentsDialog() {
+        this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
+        document.querySelector('body').appendChild(this.sentBkCommentsDialog);
       }
 
       _prepareAttachmentData(reportAttachment) {
@@ -134,6 +182,38 @@
        */
       isPrpSRReport(repType) {
         return repType === this.CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+      }
+
+      _displayOrDefault(val) {
+        if (!val) {
+          return '-';
+        }
+        return val;
+      }
+
+      getReportStatus(status, username) {
+        let stat = '';
+        switch(status) {
+          case 'Acc':
+            stat = 'Accepted by ';
+            break;
+          case 'Sen':
+            stat = 'Sent back by ';
+            break;
+          default:
+            stat = '';
+        }
+
+        return stat + (username ? username : 'N/A');
+      }
+
+      statusIs(currentStatus, status) {
+        return currentStatus === status;
+      }
+
+      _seeSentBackComments() {
+        this.sentBkCommentsDialog.report = this.report;
+        this.sentBkCommentsDialog.opened = true;
       }
 
     }

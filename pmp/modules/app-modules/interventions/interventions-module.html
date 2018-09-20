@@ -537,9 +537,11 @@
       }
 
       _pageChanged(listActive, tabsActive, routeData) {
-        if (!listActive && !tabsActive) {
+        // Using isActiveModule will prevent wrong page import
+        if (!this.isActiveModule() || (!listActive && !tabsActive)) {
           return;
         }
+
         this.scrollToTopOnCondition(!listActive);
 
         if (listActive) {
@@ -561,7 +563,8 @@
       }
 
       _observeRouteDataId(id) {
-        if (typeof id === 'undefined') {
+        // Using isActiveModule will prevent PD details/reports/progress request with the wrong id (report id)
+        if (!this.isActiveModule() || typeof id === 'undefined') {
           return;
         }
         setTimeout(() => {
