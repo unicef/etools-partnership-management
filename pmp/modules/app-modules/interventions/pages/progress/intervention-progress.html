@@ -98,7 +98,7 @@
         }
 
         .indicator-report .col-data {
-          max-width: unset;
+          max-width: calc(100% - 224px);
           flex: none;
           width: auto;
         }
@@ -115,6 +115,7 @@
           display: flex;
           width: auto;
           max-width: none;
+          margin-top: 16px;
           flex: 1;
         }
 
@@ -216,7 +217,8 @@
                         <indicator-report-target
                             class="print-inline"
                             values-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                            target="[[indicatorReport.reportable.target]]"
+                            target="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.target.v, indicatorReport.reportable.target.c)]]"
                             cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                             indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
                             achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
