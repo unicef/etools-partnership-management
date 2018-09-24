@@ -260,7 +260,8 @@
             () => {
               let params = this._prepareReqParamsObj(interventionId);
 
-              if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params)) {
+              if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params) ||
+                  (this.noPdSsfaRef && !params.programme_document_ext)) {
                 return;
               }
 

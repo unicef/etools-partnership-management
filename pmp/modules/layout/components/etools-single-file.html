@@ -188,7 +188,9 @@
 
       // covers the case when the users cancels file upload
       _fileInputFocused() {
-        this._fileChanged(this.file);
+        if (this.file) {
+          this._fileChanged(this.file);
+        }
       }
 
     }
