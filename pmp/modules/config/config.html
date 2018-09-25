@@ -20,16 +20,16 @@
             return 'http://127.0.0.1:8080';
           }
           if (EtoolsPmpApp.Config.isStagingServer()) {
-            return 'https://staging.partnerreportingportal.org';
+            return 'https://demo.partnerreportingportal.org';
           }
           if (EtoolsPmpApp.Config.isDevServer()) {
             return 'https://dev.partnerreportingportal.org';
           }
           if (EtoolsPmpApp.Config.isDemoServer()) {
-            return 'https://demo.partnerreportingportal.org';
+            return 'https://dev.partnerreportingportal.org';
           }
           if (EtoolsPmpApp.Config.isProductionServer()) {
-            return 'https://partnerreportingportal.org';
+            return 'https://www.partnerreportingportal.org';
           }
           return 'https://dev.partnerreportingportal.org';
         }
