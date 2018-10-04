@@ -119,10 +119,10 @@
             value = this._formatNumber(value, '-', 0, '\,');
             break;
           case 'percentage':
-            value = this._toPercentage(value);
+            value = value + '%';
             break;
         }
-        return value ? value : '-';
+        return value ? value : '0';
       }
 
     }
