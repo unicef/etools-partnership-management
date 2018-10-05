@@ -41,27 +41,6 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <!--<etools-dropdown-multi-->
-            <!--class="filter"-->
-            <!--label="Report Status"-->
-            <!--options="[[reportStatuses]]"-->
-            <!--selected-values="{{queryParams.status}}"-->
-            <!--hide-search-->
-            <!--min-width="160px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown-multi>-->
-
-        <!--<etools-dropdown-->
-            <!--class="filter"-->
-            <!--label="Report Type"-->
-            <!--options="[[reportTypes]]"-->
-            <!--selected="{{queryParams.report_type}}"-->
-            <!--hide-search-->
-            <!--enable-none-option-->
-            <!--min-width="300px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown>-->
-
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <template is="dom-if" if="[[filter.singleSelection]]">
             <etools-dropdown
