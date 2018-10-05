@@ -76,62 +76,6 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <!--<etools-dropdown-multi-->
-            <!--class="filter"-->
-            <!--label="Status"-->
-            <!--options="[[interventionStatuses]]"-->
-            <!--selected-values="{{selectedStatuses}}"-->
-            <!--hide-search-->
-            <!--min-width="160px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown-multi>-->
-
-        <!--<etools-dropdown-multi-->
-            <!--class="filter"-->
-            <!--label="PD/SSFA Type"-->
-            <!--options="[[documentTypes]]"-->
-            <!--selected-values="{{selectedDocumentTypes}}"-->
-            <!--hide-search-->
-            <!--min-width="400px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown-multi>-->
-
-        <!--<etools-dropdown-multi-->
-            <!--class="filter"-->
-            <!--label="Sections"-->
-            <!--options="[[sections]]"-->
-            <!--option-value="id"-->
-            <!--option-label="name"-->
-            <!--selected-values="{{selectedSections}}"-->
-            <!--hide-search-->
-            <!--min-width="350px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown-multi>-->
-
-        <!--<etools-dropdown-multi-->
-            <!--class="filter"-->
-            <!--label="Offices"-->
-            <!--options="[[offices]]"-->
-            <!--option-value="id"-->
-            <!--option-label="name"-->
-            <!--selected-values="{{selectedOffices}}"-->
-            <!--hide-search-->
-            <!--min-width="250px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown-multi>-->
-
-        <!--<etools-dropdown-multi-->
-            <!--class="filter"-->
-            <!--label="CP Structure"-->
-            <!--options="[[countryProgrammes]]"-->
-            <!--selected-values="{{selectedCPStructures}}"-->
-            <!--option-value="id"-->
-            <!--option-label="name"-->
-            <!--hide-search-->
-            <!--min-width="400px"-->
-            <!--horizontal-align="left"-->
-            <!--no-dynamic-align></etools-dropdown-multi>-->
-
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
