@@ -90,25 +90,6 @@
             </etools-dropdown-multi>
           </template>
 
-          <!--<template is="dom-if" if="[[isEsmmFilter(filter)]]">-->
-            <!--&lt;!&ndash; esmm single &ndash;&gt;-->
-            <!--<etools-dropdown-->
-                <!--class="filter"-->
-                <!--label="[[filter.filterName]]"-->
-                <!--placeholder="Select"-->
-                <!--disabled$="[[!filter.selectionOptions.length]]"-->
-                <!--options="[[filter.selectionOptions]]"-->
-                <!--option-value="[[filter.optionValue]]"-->
-                <!--option-label="[[filter.optionLabel]]"-->
-                <!--selected="[[filter.alreadySelected]]"-->
-                <!--on-selected-changed="filterValueChanged"-->
-                <!--data-filter-path$="[[filter.path]]"-->
-                <!--min-width="[[filter.minWidth]]"-->
-                <!--horizontal-align="left"-->
-                <!--no-dynamic-align>-->
-            <!--</etools-dropdown>-->
-          <!--</template>-->
-
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <etools-date-input id$="datepicker_[[filter.path]]"
                                class="filter date"
