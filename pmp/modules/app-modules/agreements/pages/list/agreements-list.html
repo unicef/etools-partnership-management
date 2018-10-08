@@ -68,54 +68,23 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <etools-dropdown-multi
-            class="filter"
-            label="Type"
-            placeholder="Select"
-            options="[[agreementTypes]]"
-            selected-values="{{selectedAgTypes}}"
-            hide-search
-            min-width="350px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
-
-        <etools-dropdown-multi
-            class="filter"
-            label="Status"
-            placeholder="Select"
-            options="[[agreementStatuses]]"
-            selected-values="{{selectedAgStatuses}}"
-            hide-search
-            min-width="160px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
-
-        <etools-dropdown-multi
-            class="filter"
-            label="CP Structure"
-            placeholder="Select"
-            options="[[countryProgrammes]]"
-            selected-values="{{selectedCPStructures}}"
-            option-value="id"
-            option-label="name"
-            hide-search
-            min-width="400px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
-
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)">
+            <!-- esmm multi -->
             <etools-dropdown-multi
                 class="filter"
                 label="[[filter.filterName]]"
                 placeholder="Select"
                 disabled$="[[!filter.selectionOptions.length]]"
                 options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
                 selected-values="[[filter.alreadySelected]]"
                 data-filter-path$="[[filter.path]]"
                 on-etools-selected-items-changed="esmmValueChanged"
                 trigger-value-change-event
-                min-width="400px"
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
                 horizontal-align="left"
                 no-dynamic-align>
             </etools-dropdown-multi>
@@ -142,7 +111,7 @@
         <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
           <paper-button class="button" slot="dropdown-trigger">
             <iron-icon icon="filter-list"></iron-icon>
-            Add filter
+            Filters
           </paper-button>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -332,7 +301,7 @@
         return [
           'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
           'selectedCPStructures.length)', // used for non removable filters
-          '_initFiltersMenuList(partnersDropdownData)',
+          '_initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes)',
           '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
           'selectedPartners, selectedCPStructures.length,' +
           'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
@@ -340,21 +309,43 @@
         ];
       }
 
-      _initFiltersMenuList(partnersDropdownData) {
-        if (!partnersDropdownData) {
+      _initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes) {
+        if (!partnersDropdownData || !agreementStatuses || !agreementTypes || !countryProgrammes) {
           // this is just to be safe, the method should only get triggered once when redux data is loaded
           return;
         }
         // init list filter options
         this.initListFiltersData([
           {
+            filterName: 'CP Structure',
+            type: 'esmm', // etools-dropdown-multi
+            selectionOptions: countryProgrammes,
+            optionValue: 'id',
+            optionLabel: 'name',
+            alreadySelected: [],
+            path: 'selectedCPStructures',
+            selected: true,
+            minWidth: '400px',
+            hideSearch: true
+          },
+          {
+            filterName: 'Ends Before',
+            type: 'datepicker', // etools-datepicker
+            dateSelected: '',
+            path: 'endDate',
+            selected: false
+          },
+          {
             filterName: 'Partner',
             type: 'esmm', // etools-dropdown-multi
-            multiple: true,
             selectionOptions: partnersDropdownData,
+            optionValue: 'value',
+            optionLabel: 'label',
             alreadySelected: [],
             path: 'selectedPartners',
-            selected: false
+            selected: false,
+            minWidth: '400px',
+            hideSearch: false
           },
           {
             filterName: 'Starts After',
@@ -364,11 +355,28 @@
             selected: false
           },
           {
-            filterName: 'Ends Before',
-            type: 'datepicker', // etools-datepicker
-            dateSelected: '',
-            path: 'endDate',
-            selected: false
+            filterName: 'Status',
+            type: 'esmm', // etools-dropdown-multi
+            selectionOptions: agreementStatuses,
+            optionValue: 'value',
+            optionLabel: 'label',
+            alreadySelected: [],
+            path: 'selectedAgStatuses',
+            selected: true,
+            minWidth: '160px',
+            hideSearch: true
+          },
+          {
+            filterName: 'Type',
+            type: 'esmm', // etools-dropdown-multi
+            selectionOptions: agreementTypes,
+            optionValue: 'value',
+            optionLabel: 'label',
+            alreadySelected: [],
+            path: 'selectedAgTypes',
+            selected: true,
+            minWidth: '350px',
+            hideSearch: true
           }
         ]);
         this._updateSelectedFiltersValues();
@@ -425,6 +433,18 @@
             Polymer.Async.timeOut.after(20),
             () => {
               let filtersValues = [
+                {
+                  filterName: 'Type',
+                  selectedValue: this.selectedAgTypes
+                },
+                {
+                  filterName: 'Status',
+                  selectedValue: this.selectedAgStatuses
+                },
+                {
+                  filterName: 'CP Structure',
+                  selectedValue: this.selectedCPStructures
+                },
                 {
                   filterName: 'Partner',
                   selectedValue: this.selectedPartners
