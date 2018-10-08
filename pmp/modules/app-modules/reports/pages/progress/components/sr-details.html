@@ -35,19 +35,27 @@
       static get properties() {
         return {
           report: Object,
-          reportAttachment: Object
+          reportAttachment: {
+            type: Object,
+            observer: '_prepareAttachmentData'
+          },
+          attachments: {
+            type: Array,
+            value: []
+          }
         };
       }
 
-      _validAttachment(reportAttachment) {
-        return reportAttachment instanceof Array && reportAttachment[0].path;
-      }
-
       _prepareAttachmentData(reportAttachment) {
-        if (!this._validAttachment(reportAttachment)) {
-          return [];
+        if (!reportAttachment) {
+          this.attachments = [];
+          return;
         }
-        return reportAttachment[0];
+        if (reportAttachment instanceof Array && reportAttachment[0].path) {
+          this.attachments = reportAttachment[0];
+        } else {
+          this.attachments = [reportAttachment];
+        }
       }
 
     }

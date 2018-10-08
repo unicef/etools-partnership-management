@@ -87,7 +87,7 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h">
+      <div class="row-h"  hidden$="[[isPrpSRReport(report.report_type)]]">
         <etools-single-file label="Attachment"
                             attachments="[[attachments]]"
                             readonly>
