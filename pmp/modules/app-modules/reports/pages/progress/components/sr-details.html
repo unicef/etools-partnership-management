@@ -50,13 +50,12 @@
 
       _prepareAttachmentData(reportAttachment) {
         if (!reportAttachment) {
-          this.attachments = [];
-          return;
+          return [];
         }
         if (reportAttachment instanceof Array && reportAttachment[0].path) {
-          this.attachments = reportAttachment[0];
+          return reportAttachment[0];
         } else {
-          this.attachments = [reportAttachment];
+          return [reportAttachment];
         }
       }
 
