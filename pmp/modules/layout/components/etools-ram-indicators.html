@@ -109,7 +109,7 @@
       _getRamIndicatorsData(interventionId, cpId) {
         // Debounce to make sure the request is called only after both params are updated
         this._debounceRamIndRequest = Polymer.Debouncer.debounce(this._debounceUrlUpdate,
-            Polymer.Async.timeOut.after(100),
+            Polymer.Async.timeOut.after(30),
             () => {
               const validIds = interventionId > 0 && cpId > 0;
               if (!validIds) {
