@@ -20,7 +20,9 @@
         </etools-form-element-wrapper>
       </div>
       <div class="row-h">
-        <etools-single-file attachments="[[_prepareAttachmentData(reportAttachment)]]" readonly></etools-single-file>
+        <etools-single-file attachments="[[attachments]]"
+                            readonly>
+        </etools-single-file>
       </div>
     </div>
 
@@ -36,12 +38,12 @@
         return {
           report: Object,
           reportAttachment: {
-            type: Object,
-            observer: '_prepareAttachmentData'
+            type: Object
           },
           attachments: {
             type: Array,
-            value: []
+            value: [],
+            computed: '_prepareAttachmentData(reportAttachment)'
           }
         };
       }

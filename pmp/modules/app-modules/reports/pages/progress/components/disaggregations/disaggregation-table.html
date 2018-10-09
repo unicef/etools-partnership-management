@@ -168,7 +168,7 @@
           labels: Object,
           viewLabel: {
             type: Boolean,
-            computed: '_computeLabelVisibility(app, indicatorType)'
+            computed: '_computeLabelVisibility(indicatorType)'
           },
           totals: Object
         };
@@ -194,9 +194,8 @@
         this.set('fields', []);
       }
 
-      _computeLabelVisibility(app, indicatorType) {
-        if ((String(app) === String('ip-reporting'))
-          && (String(indicatorType) === String('number'))) {
+      _computeLabelVisibility(indicatorType) {
+        if (String(indicatorType) === 'number') {
           return false;
         } else {
           return true;

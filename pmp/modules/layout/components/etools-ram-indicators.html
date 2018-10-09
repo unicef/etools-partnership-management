@@ -107,12 +107,17 @@
       }
 
       _getRamIndicatorsData(interventionId, cpId) {
-        const validIds = interventionId > 0 && cpId > 0;
-        if (!validIds) {
-          return;
-        }
+        // Debounce to make sure the request is called only after both params are updated
+        this._debounceRamIndRequest = Polymer.Debouncer.debounce(this._debounceUrlUpdate,
+            Polymer.Async.timeOut.after(30),
+            () => {
+              const validIds = interventionId > 0 && cpId > 0;
+              if (!validIds) {
+                return;
+              }
 
-        this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+              this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+            });
       }
 
       _requestRamIndicatorsData(reqPayload) {
