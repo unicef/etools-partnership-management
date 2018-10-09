@@ -123,12 +123,12 @@
         return {
           report: Object,
           reportAttachment: {
-            type: Object,
-            observer: '_prepareAttachmentData'
+            type: Object
           },
           attachments: {
             type: Array,
-            value: []
+            value: [],
+            computed: '_prepareAttachmentData(reportAttachment)'
           },
           sentBkCommentsDialog: {
             type: Object
