@@ -246,7 +246,7 @@
       static get observers() {
         return [
           '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size,' +
-          ' paginator.page, queryParams.*)'
+          ' paginator.page, queryParams.*, queryParams.status.length)'
         ];
       }
 
