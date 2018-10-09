@@ -65,7 +65,7 @@
     </div>
     <div class="target-row">
       <span>Cumulative progress in all locations:</span>
-      <span title$="[[_prepareValue(cumulativeProgress)]]">[[_prepareValue(cumulativeProgress)]]</span>
+      <span title$="[[_prepareValue(cumulativeProgress, 'cumulative')]]">[[_prepareValue(cumulativeProgress, 'cumulative')]]</span>
     </div>
     <div class="target-row">
       <span>Achievement in last reporting period in all locations:</span>
@@ -105,21 +105,24 @@
             value: false,
             reflectToAttribute: true
           },
-          valuesType: {
+          displayType: {
             type: String,
             value: 'number'
           }
         };
       }
 
-      _prepareValue(value, type) {
-        let t = type || this.valuesType;
-        switch (t) {
+      _prepareValue(value, valueType) {
+        switch (this.displayType) {
           case 'number':
             value = this._formatNumber(value, '-', 0, '\,');
             break;
-          case 'percentage':
-            value = value + '%';
+          default: // 'ratio' and 'percentage'
+            if (['cumulative', 'achievement'].indexOf(valueType) > -1) {
+              value = _toPercentage(value);
+            } else {
+              value = value + '%';
+            }
             break;
         }
         return value ? value : '0';
