@@ -300,6 +300,7 @@
         return groups.substring(1, groups.length);
       }
 
+      // Both unit and displayType are used because of inconsitencies in the db.
       _getIndicatorDisplayType(unit, displayType) {
         if (!unit) {
           return '';
@@ -314,6 +315,7 @@
             } else if (displayType === 'ratio') {
               return '/ ';
             }
+            return '';
           default:
             return '';
         }
