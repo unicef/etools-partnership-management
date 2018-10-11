@@ -87,7 +87,7 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-      <div class="row-h">
+      <div class="row-h"  hidden$="[[isPrpSRReport(report.report_type)]]">
         <etools-single-file label="Attachment"
                             attachments="[[attachments]]"
                             readonly>
@@ -123,12 +123,12 @@
         return {
           report: Object,
           reportAttachment: {
-            type: Object,
-            observer: '_prepareAttachmentData'
+            type: Object
           },
           attachments: {
             type: Array,
-            value: []
+            value: [],
+            computed: '_prepareAttachmentData(reportAttachment)'
           },
           sentBkCommentsDialog: {
             type: Object
@@ -165,13 +165,12 @@
 
       _prepareAttachmentData(reportAttachment) {
         if (!reportAttachment) {
-          this.attachments = [];
-          return;
+          return [];
         }
         if (reportAttachment instanceof Array && reportAttachment[0].path) {
-          this.attachments = reportAttachment[0];
+          return reportAttachment[0];
         } else {
-          this.attachments = [reportAttachment];
+          return [reportAttachment];
         }
       }
 

@@ -246,7 +246,7 @@
       static get observers() {
         return [
           '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size,' +
-          ' paginator.page, queryParams.*)'
+          ' paginator.page, queryParams.*, queryParams.status.length)'
         ];
       }
 
@@ -260,7 +260,8 @@
             () => {
               let params = this._prepareReqParamsObj(interventionId);
 
-              if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params)) {
+              if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params) ||
+                  (this.noPdSsfaRef && !params.programme_document_ext)) {
                 return;
               }
 

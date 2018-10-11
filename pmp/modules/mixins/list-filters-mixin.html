@@ -87,8 +87,8 @@
      *  - 'esmm' (etools-dropdown-multi)
      *  - 'datepicker' (etools-datepicker)
      */
-    filterTypeIs(expentedType, checkedTypeValue) {
-      return expentedType === checkedTypeValue;
+    filterTypeIs(expectedType, checkedTypeValue) {
+      return expectedType === checkedTypeValue;
     }
 
     // 'esmm' (etools-dropdown-multi) filter value changed
@@ -121,11 +121,11 @@
       if (Array.isArray(filters) && filters.length > 0) {
         filters.forEach((filter) => {
           // check available filters
+          const filterObj = this.listFilterOptions.find(f => f.filterName === filter.filterName);
+          if (!filterObj) {
+            return;
+          }
           if (this._validateFilterSelectedValue(filter.selectedValue)) {
-            const filterObj = this.listFilterOptions.find(f => f.filterName === filter.filterName);
-            if (!filterObj) {
-              return;
-            }
             if (!this._isAlreadySelected(filterObj)) {
               // filter not selected => select filter
               this.push('selectedFilters', filterObj);
@@ -150,7 +150,11 @@
                 }
               }
             }
-
+          } else {
+            // just add filter in selected filters list if it's selected property is true
+            if (filterObj.selected && !this._isAlreadySelected(filterObj)) {
+              this.push('selectedFilters', filterObj);
+            }
           }
         });
       }

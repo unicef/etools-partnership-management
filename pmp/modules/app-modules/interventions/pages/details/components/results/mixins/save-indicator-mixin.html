@@ -187,6 +187,10 @@
           if (this.isCluster && !body.id) {
             body.indicator = null;
           }
+
+          if (body.indicator && body.indicator.unit === 'number') {
+            body.indicator.display_type = 'number';
+          }
           return body;
         }
 

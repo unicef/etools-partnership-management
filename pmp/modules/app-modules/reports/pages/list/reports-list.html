@@ -41,27 +41,6 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <etools-dropdown-multi
-            class="filter"
-            label="Report Status"
-            options="[[reportStatuses]]"
-            selected-values="{{queryParams.status}}"
-            hide-search
-            min-width="160px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
-
-        <etools-dropdown
-            class="filter"
-            label="Report Type"
-            options="[[reportTypes]]"
-            selected="{{queryParams.report_type}}"
-            hide-search
-            enable-none-option
-            min-width="300px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown>
-
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <template is="dom-if" if="[[filter.singleSelection]]">
             <etools-dropdown
@@ -75,7 +54,8 @@
                 selected="[[filter.alreadySelected]]"
                 on-selected-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
-                min-width="400px"
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
                 horizontal-align="left"
                 no-dynamic-align
                 enable-none-option>
@@ -94,7 +74,8 @@
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
-                min-width="400px"
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
                 horizontal-align="left"
                 no-dynamic-align>
             </etools-dropdown-multi>
@@ -108,7 +89,7 @@
         <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
           <paper-button class="button" slot="dropdown-trigger">
             <iron-icon icon="filter-list"></iron-icon>
-            Add filter
+            Filters
           </paper-button>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -227,7 +208,7 @@
 
       static get observers() {
         return [
-          '_initListFilters(partners, cpOutputs, sections, unicefUsersData)',
+          '_initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
           '_init(active, _filtersInitialized)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
@@ -245,8 +226,8 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
       }
 
-      _initListFilters(partners, cpOutputs, sections, unicefUsersData) {
-        if (!partners || !cpOutputs || !sections || !unicefUsersData) {
+      _initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes) {
+        if (!partners || !cpOutputs || !sections || !unicefUsersData || !reportStatuses || !reportTypes) {
           return;
         }
         // init list filter options
@@ -254,17 +235,6 @@
         // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
         // IMPORTANT!!!
         this.initListFiltersData([
-          {
-            filterName: 'Partner',
-            type: 'esmm',
-            singleSelection: true,
-            optionValue: 'value',
-            optionLabel: 'label',
-            selectionOptions: partners,
-            alreadySelected: null,
-            path: 'queryParams.external_partner_id',
-            selected: false
-          },
           {
             filterName: 'CP Output',
             type: 'esmm',
@@ -274,7 +244,46 @@
             selectionOptions: cpOutputs,
             alreadySelected: null,
             path: 'queryParams.cp_output',
-            selected: false
+            selected: false,
+            minWidth: '400px'
+          },
+          {
+            filterName: 'Partner',
+            type: 'esmm',
+            singleSelection: true,
+            optionValue: 'value',
+            optionLabel: 'label',
+            selectionOptions: partners,
+            alreadySelected: null,
+            path: 'queryParams.external_partner_id',
+            selected: false,
+            minWidth: '400px'
+          },
+          {
+            filterName: 'Report Status',
+            type: 'esmm', // etools-dropdown-multi
+            singleSelection: false,
+            selectionOptions: reportStatuses,
+            optionValue: 'value',
+            optionLabel: 'label',
+            alreadySelected: [],
+            path: 'queryParams.status',
+            selected: true,
+            minWidth: '160px',
+            hideSearch: true
+          },
+          {
+            filterName: 'Report Type',
+            type: 'esmm', // etools-dropdown-multi
+            singleSelection: true,
+            selectionOptions: reportTypes,
+            optionValue: 'value',
+            optionLabel: 'label',
+            alreadySelected: [],
+            path: 'queryParams.report_type',
+            selected: true,
+            minWidth: '300px',
+            hideSearch: true
           },
           {
             filterName: 'Section',
@@ -285,7 +294,9 @@
             selectionOptions: sections,
             alreadySelected: null,
             path: 'queryParams.section',
-            selected: false
+            selected: false,
+            minWidth: '400px',
+            hideSearch: true
           },
           {
             filterName: 'UNICEF focal points',
@@ -296,7 +307,8 @@
             selectionOptions: unicefUsersData,
             alreadySelected: [],
             path: 'queryParams.unicef_focal_points',
-            selected: false
+            selected: false,
+            minWidth: '400px'
           }
         ]);
         this.set('_filtersInitialized', true);
@@ -305,6 +317,14 @@
       // update selected filters(prezent in URL) at page refresh
       _updateSelectedFiltersValues() {
         let filtersValues = [
+          {
+            filterName: 'Report Status',
+            selectedValue: this.queryParams.status
+          },
+          {
+            filterName: 'Report Type',
+            selectedValue: this.queryParams.report_type
+          },
           {
             filterName: 'Partner',
             selectedValue: this.queryParams.external_partner_id

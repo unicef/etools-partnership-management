@@ -77,7 +77,7 @@
     <etools-data-table-row>
       <div slot="row-data" class="p-relative">
         <div class="col-8">
-          [[_getIndicatorType(indicator.indicator.unit)]]
+          [[_getIndicatorDisplayType(indicator.indicator.unit, indicator.indicator.display_type)]]
           <strong>[[_addInactivePrefix(indicator)]]</strong>
           [[_getIndicatorTitle(indicator)]]
         </div>
@@ -300,15 +300,24 @@
         return groups.substring(1, groups.length);
       }
 
-      _getIndicatorType(unit) {
+      // Both unit and displayType are used because of inconsitencies in the db.
+      _getIndicatorDisplayType(unit, displayType) {
         if (!unit) {
           return '';
         }
+
         switch (unit) {
           case 'number':
             return '# ';
           case 'percentage':
-            return '% ';
+            if (displayType === 'percentage') {
+              return '% ';
+            } else if (displayType === 'ratio') {
+              return '/ ';
+            }
+            return '';
+          default:
+            return '';
         }
       }
 

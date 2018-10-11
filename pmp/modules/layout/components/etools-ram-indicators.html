@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
 
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
@@ -107,12 +108,17 @@
       }
 
       _getRamIndicatorsData(interventionId, cpId) {
-        const validIds = interventionId > 0 && cpId > 0;
-        if (!validIds) {
-          return;
-        }
+        // Debounce to make sure the request is called only after both params are updated
+        this._debounceRamIndRequest = Polymer.Debouncer.debounce(this._debounceRamIndRequest,
+            Polymer.Async.timeOut.after(100),
+            () => {
+              const validIds = interventionId > 0 && cpId > 0;
+              if (!validIds) {
+                return;
+              }
 
-        this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+              this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+            });
       }
 
       _requestRamIndicatorsData(reqPayload) {

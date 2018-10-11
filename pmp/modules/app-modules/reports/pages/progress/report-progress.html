@@ -153,9 +153,8 @@
                     </div>
                     <div class="col col-4 indicator-header-target">
                       <indicator-report-target
-                          values-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                          target="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
-                              indicatorReport.reportable.target.v, indicatorReport.reportable.target.c)]]"
+                          display-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                          target="[[indicatorReport.reportable.target.v]]"
                           cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                               indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
                           achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',

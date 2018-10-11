@@ -20,7 +20,9 @@
         </etools-form-element-wrapper>
       </div>
       <div class="row-h">
-        <etools-single-file attachments="[[_prepareAttachmentData(reportAttachment)]]" readonly></etools-single-file>
+        <etools-single-file attachments="[[attachments]]"
+                            readonly>
+        </etools-single-file>
       </div>
     </div>
 
@@ -35,19 +37,26 @@
       static get properties() {
         return {
           report: Object,
-          reportAttachment: Object
+          reportAttachment: {
+            type: Object
+          },
+          attachments: {
+            type: Array,
+            value: [],
+            computed: '_prepareAttachmentData(reportAttachment)'
+          }
         };
       }
 
-      _validAttachment(reportAttachment) {
-        return reportAttachment instanceof Array && reportAttachment[0].path;
-      }
-
       _prepareAttachmentData(reportAttachment) {
-        if (!this._validAttachment(reportAttachment)) {
+        if (!reportAttachment) {
           return [];
         }
-        return reportAttachment[0];
+        if (reportAttachment instanceof Array && reportAttachment[0].path) {
+          return reportAttachment[0];
+        } else {
+          return [reportAttachment];
+        }
       }
 
     }
