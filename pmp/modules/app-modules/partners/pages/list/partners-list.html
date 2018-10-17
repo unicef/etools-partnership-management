@@ -431,6 +431,7 @@
         let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
         this.set('sortOrder', result);
         this.set('initComplete', true);
+        this._updateSelectedFiltersValues();
       }
 
       // Updates URL state with new query string, and launches query
