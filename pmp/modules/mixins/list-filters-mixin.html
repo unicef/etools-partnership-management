@@ -70,6 +70,9 @@
         if (filter.type === 'datepicker') {
           this.set(['listFilterOptions', selectedIdx, 'dateSelected'], '');
         }
+        if (filter.type === 'paper-toggle') {
+          this.set(['listFilterOptions', selectedIdx, 'value'], false);
+        }
         this.set(['listFilterOptions', selectedIdx, 'selected'], false);
       }
     }
@@ -98,6 +101,12 @@
       this.set(filterPath, filterVal);
     }
 
+    toggleValueChanged(e) {
+      let filterPath = e.target.getAttribute('data-filter-path');
+      let filterVal = e.target.checked;
+      this.set(filterPath, filterVal);
+    }
+
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event) {
       if (!event.detail.jsonDate) {
@@ -108,7 +117,10 @@
       this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     }
 
-    _validateFilterSelectedValue(value) {
+    _validateFilterSelectedValue(value, type) {
+      if (type === 'paper-toggle') {
+        return typeof value === 'boolean';
+      }
       return value && ((typeof value === 'string' && value !== '')
           || (Array.isArray(value) && value.length > 0));
     }
@@ -125,7 +137,7 @@
           if (!filterObj) {
             return;
           }
-          if (this._validateFilterSelectedValue(filter.selectedValue)) {
+          if (this._validateFilterSelectedValue(filter.selectedValue, filterObj.type)) {
             if (!this._isAlreadySelected(filterObj)) {
               // filter not selected => select filter
               this.push('selectedFilters', filterObj);
@@ -144,6 +156,8 @@
                   } else if (this.selectedFilters[i].type === 'datepicker') {
                     // update datepicker selection
                     this.set([...filterPath, 'dateSelected'], filter.selectedValue);
+                  } else if (this.selectedFilters[i].type === 'paper-toggle') {
+                    this.set([...filterPath, 'value'], filter.selectedValue);
                   }
                   this._disableFilter(filter, filterPath);
                   break;
