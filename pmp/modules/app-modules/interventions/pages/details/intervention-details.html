@@ -223,16 +223,16 @@
                               disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
           </paper-toggle-button>
         </div>
-        <div class="col col-9">
+        <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
           <etools-single-file label="Activation Letter"
                     internal-file="{{intervention.activation_letter_attachment}}"
                     file="{{intervention.activation_letter_file_temp}}"
-                    hidden$="[[!intervention.contingency_pd]]"
+                    hidden$="[[_isDraft(intervention.status)]]"
                     hide-delete-btn>
           </etools-single-file>
         </div>
       </div>
-      <div class="row-h row-second-bg">
+      <div class="row-h row-second-bg" hidden$="[[_isContingencyAndDraft(intervention.contingency_pd, intervention.status)]]">
         <div class="col col-3">
           <!-- Start date -->
           <etools-info-tooltip class="fr-nr-warn"
@@ -852,6 +852,10 @@
       _isContingencyAndHasActivationLetter() {
         return this.intervention.contingency_pd &&
           (this.intervention.activation_letter_file_temp instanceof File || this.intervention.activation_letter_attachment);
+      }
+
+      _isContingencyAndDraft(contingency, status) {
+        return contingency && this._isDraft(status);
       }
 
       _daysUntilExpiry(end) {
