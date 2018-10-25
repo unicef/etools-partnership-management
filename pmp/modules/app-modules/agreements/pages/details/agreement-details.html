@@ -521,27 +521,14 @@
           }
           this.set('enableEditForAuthorizedOfficers', false);
 
-          this.resetAttachedAgreementElem(agreement);
           this._initAuthorizedOfficers(agreement.authorized_officers);
         } else {
-          this.set('agreement.attached_agreement', {});
-          this.set('agreement.attached_agreement_file', '');
           // new agreement, update status to draft and reset fields
           this._setDraftStatus(this.editMode, this.isNewAgreement);
           this._resetDropdown('#partner');
           this._resetDropdown('#agreementType');
         }
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-data'});
-      }
-
-      resetAttachedAgreementElem(agreement) {
-        // forces etools-single-file to redraw the element
-        if (!agreement.attached_agreement) {
-          this.set('agreement.attached_agreement', {});
-        }
-        if (!agreement.attached_agreement_file) {
-          this.set('agreement.attached_agreement_file', '');
-        }
       }
 
       _resetDropdown(selector) {
