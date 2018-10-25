@@ -204,6 +204,26 @@
         return hasF;
       }
 
+      _uploadAmendmentFile(amendment) {
+        let options = {
+          method: 'POST',
+          endpoint: this.getEndpoint('attachmentsUpload'),
+          body: {file: amendment.signed_amendment},
+          multiPart: true,
+          prepareMultipartData: true
+        };
+        return this.sendRequest(options)
+            .then((resp) => {
+              amendment.signed_amendment_attachment = resp.id;
+              delete amendment.signed_amendment_file;
+              delete amendment.signed_amendment;
+              return amendment;
+            }).catch((error) => {
+              amendment.serverError = error;
+              return amendment
+            });
+      }
+
       // Save agreement data
       saveAgreement(agreement, succCallback) {
         if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
@@ -230,6 +250,7 @@
               this.set('handleSuccResponseAdditionalCallback', succCallback);
             }
             let withUpload = false; // used to set multipart prop on etools-ajax
+            // TODO: this might not be needed as agreement file is uploaded elsewhere
             if (agreement.hasOwnProperty('attached_agreement')) {
               if (agreement.attached_agreement instanceof File) {
                 withUpload = true;
@@ -237,23 +258,64 @@
                 delete agreement.attached_agreement;
               }
             }
-            if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
-              withUpload = true;
-            }
+
+            let newAmendments = agreement.amendments.length > 0
+                ? agreement.amendments.filter(a => !a.signed_amendment_attachment)
+                : [];
+
             this.fireEvent('global-loading', {
               message: 'Saving...',
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            // fire in the hole
-            let method = (isNew) ? 'POST' : 'PATCH';
-            this._triggerAgreementRequest({
-              method: method,
-              endpoint: endpoint,
-              body: agreement,
-              multiPart: withUpload,
-              prepareMultipartData: withUpload
-            });
+
+            if (newAmendments.length > 0) {
+              agreement.amendments = [];
+              let amendmentsUploadPromises = [];
+              newAmendments.forEach((amendment) => {
+                amendmentsUploadPromises.push(this._uploadAmendmentFile(amendment));
+              });
+              Promise.all(amendmentsUploadPromises)
+                  .then((uploadResults) => {
+                    console.log(values);
+                    uploadResults.forEach((res) => {
+                      if (res.serverError) {
+                        // TODO: find a way to sow all upload errors once
+                      } else {
+                        agreement.amendments.push(res);
+                      }
+                    });
+                    // TODO: this should not be duplicated
+                    let method = (isNew) ? 'POST' : 'PATCH';
+                    this._triggerAgreementRequest({
+                      method: method,
+                      endpoint: endpoint,
+                      body: agreement,
+                      multiPart: withUpload,
+                      prepareMultipartData: withUpload
+                    });
+                  })
+                  .catch((error) => {
+                    // js error occurred (server errors are catched in _uploadAmendmentFile)
+                    // TODO
+                  });
+            } else {
+              delete agreement.amendments; // do not include it in payload data if no new amendments were added
+              // TODO: this should not be duplicated
+              let method = (isNew) ? 'POST' : 'PATCH';
+              this._triggerAgreementRequest({
+                method: method,
+                endpoint: endpoint,
+                body: agreement,
+                multiPart: withUpload,
+                prepareMultipartData: withUpload
+              });
+            }
+
+            // if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
+            //   withUpload = true;
+            // }
+
           } else {
             this.fireEvent('toast', {
               text: 'There is nothing to save. No change detected on this agreement.',
