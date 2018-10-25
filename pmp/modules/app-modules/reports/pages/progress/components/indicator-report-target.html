@@ -133,21 +133,6 @@
         return this._formatIndicatorValue(displayType, achievedVal);
       }
 
-      _formatIndicatorValue(displayType, value) {// for Total and Achievement
-        if (value == null) {
-          return value;
-        }
-         const _value = value.toFixed(2);
-         switch (displayType) {
-          case 'percentage':
-            return _value + '%';
-          case 'ratio':
-            return _value + ':1';
-          default:
-            return _value;
-        }
-      }
-
     }
 
     window.customElements.define(IndicatorReportTarget.is, IndicatorReportTarget);

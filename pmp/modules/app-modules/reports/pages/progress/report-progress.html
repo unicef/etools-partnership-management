@@ -147,7 +147,7 @@
                           <span class="calculation-formula-delimiter">|</span>
                           <span>
                           calculation across reporting periods:
-                            <strong>[[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_periods)]]</strong>
+                            <strong>[[_calculationFormulaAcrossPeriods(indicatorReport)]]</strong>
                         </span>
                       </div>
                     </div>
@@ -265,6 +265,11 @@
         return this.report.indicator_reports.filter((rep) => {
           return rep.reportable_object_id === lowerResultId;
         });
+      }
+
+       _calculationFormulaAcrossPeriods(indicator) {
+        return indicator.reportable.blueprint.display_type === 'ratio'
+          ? 'latest' : indicator.reportable.blueprint.calculation_formula_across_periods;
       }
 
     }

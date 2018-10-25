@@ -134,11 +134,11 @@
                         <dt>Previous location progress:</dt>
                         <dd>[[_formatNumber(location.previous_location_progress.v, '0', 0, '\,')]]</dd>
                       </template>
-                      <template is="dom-if" if="[[_equals(location.display_type, 'percentage')]]" restamp="true">
+                      <template is="dom-if" if="[[!_equals(location.display_type, 'number')]]" restamp="true">
                         <dt>Location progress:</dt>
-                        <dd>[[_toPercentage(location.location_progress.c)]]</dd>
+                        <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c)]]</dd>
                         <dt>Previous location progress:</dt>
-                        <dd>[[_toPercentage(location.previous_location_progress.c)]]</dd>
+                        <dd>[[_formatIndicatorValue(location.display_type, location.previous_location_progress.c)]]</dd>
                       </template>
                     </dl>
                   </div>
