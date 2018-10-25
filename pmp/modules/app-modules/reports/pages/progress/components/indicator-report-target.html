@@ -61,15 +61,17 @@
 
     <div class="target-row">
       <span>Target:</span>
-      <span title$="[[_prepareValue(target)]]">[[_prepareValue(target)]]</span>
+      <span title$="[[_getTargetValue(displayType, target)]]">
+        [[_getTargetValue(displayType, target)]]
+      </span>
     </div>
     <div class="target-row">
-      <span>Cumulative progress in all locations:</span>
-      <span title$="[[_prepareValue(cumulativeProgress, 'cumulative')]]">[[_prepareValue(cumulativeProgress, 'cumulative')]]</span>
+      <span>Total cumulative progress:</span>
+      <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">[[_getCumulativeProgress(displayType, cumulativeProgress)]]</span>
     </div>
     <div class="target-row">
-      <span>Achievement in last reporting period in all locations:</span>
-      <span title$="[[_prepareValue(achievement, 'achievement')]]">[[_prepareValue(achievement, 'achievement')]]</span>
+      <span>Achievement in reporting period:</span>
+      <span title$="[[_getAchievement(displayType, achievement)]]">[[_getAchievement(displayType, achievement)]]</span>
     </div>
   </template>
   <script>
@@ -89,8 +91,7 @@
       static get properties() {
         return {
           target: {
-            type: String,
-            value: '-'
+            type: Object
           },
           cumulativeProgress: {
             type: String,
@@ -112,20 +113,24 @@
         };
       }
 
-      _prepareValue(value, valueType) {
-        switch (this.displayType) {
+      _getTargetValue(displayType, target) {
+        switch (displayType) {
           case 'number':
-            value = this._formatNumber(value, '-', 0, '\,');
-            break;
-          default: // 'ratio' and 'percentage'
-            if (['cumulative', 'achievement'].indexOf(valueType) > -1) {
-              value = this._toPercentage(value);
-            } else {
-              value = value + '%';
-            }
-            break;
+            return this._formatNumber(target.v, '-', 0, '\,');
+          case 'ratio':
+            return target.v + '/' + target.d;
+          case 'percentage':
+            return target.v + '%';
         }
-        return value ? value : '0';
+        return '-';
+      }
+
+      _getCumulativeProgress(displayType, cumulativeVal) {
+        return this._formatIndicatorValue(displayType, cumulativeVal);
+      }
+
+      _getAchievement(displayType, achievedVal) {
+        return this._formatIndicatorValue(displayType, achievedVal);
       }
 
     }
