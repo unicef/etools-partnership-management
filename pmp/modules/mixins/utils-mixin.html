@@ -100,14 +100,16 @@
         if (value == null) {
           return value;
         }
-         const _value = value.toFixed(2);
+
          switch (displayType) {
           case 'percentage':
-            return _value + '%';
+            return this._formatNumber(value, '-', 2, '\,') + '%';
           case 'ratio':
-            return _value + ':1';
+            return this._formatNumber(value, '-', 2, '\,') + ':1';
+          case 'number':
+            return this._formatNumber(value, '-', 0, '\,');
           default:
-            return _value;
+            return value;
         }
       }
 
