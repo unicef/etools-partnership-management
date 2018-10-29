@@ -117,10 +117,15 @@
       this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     }
 
-    _validateFilterSelectedValue(value, type) {
+    _validateFilterSelectedValue(value, type, allowEmptyEsmm) {
       if (type === 'paper-toggle') {
         return typeof value === 'boolean';
       }
+
+      if (type === 'esmm' && (Array.isArray(value) && value.length === 0) && allowEmptyEsmm) {
+        return true;
+      }
+
       return value && ((typeof value === 'string' && value !== '')
           || (Array.isArray(value) && value.length > 0));
     }
@@ -137,7 +142,7 @@
           if (!filterObj) {
             return;
           }
-          if (this._validateFilterSelectedValue(filter.selectedValue, filterObj.type)) {
+          if (this._validateFilterSelectedValue(filter.selectedValue, filterObj.type, filter.allowEmpty)) {
             if (!this._isAlreadySelected(filterObj)) {
               // filter not selected => select filter
               this.push('selectedFilters', filterObj);

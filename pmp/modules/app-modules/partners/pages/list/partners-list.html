@@ -105,7 +105,7 @@
       </div>
 
       <div class="fixed-controls">
-        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+        <paper-menu-button id="filterMenu" disabled="[[showOnlyGovernmentType]]" ignore-select horizontal-align="right">
           <paper-button class="button" slot="dropdown-trigger">
             <iron-icon icon="filter-list"></iron-icon>
             Filters
@@ -385,7 +385,8 @@
                 {
                   filterName: 'Partner Type',
                   selectedValue: this.selectedPartnerTypes,
-                  disabled: this.showOnlyGovernmentType
+                  disabled: this.showOnlyGovernmentType,
+                  allowEmpty: true
                 },
                 {
                   filterName: 'CSO Type',
@@ -518,6 +519,7 @@
         }
       }
 
+
       _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType) {
         if (showOnlyGovernmentType) {
           // lock list to government partners only
@@ -527,8 +529,10 @@
           this.set('selectedPartnerTypes', []);
         }
         this.set('selectedCsoTypes', []);
+        this.set('selectedRiskRatings', []);
         this.resetPageNumber();
         this.set('showHidden', false);
+        this._updateSelectedFiltersValues();
       }
 
       _triggerPartnerLoadingMsg() {
