@@ -236,10 +236,8 @@
       }
 
       _uploadFinished(e) {
-        console.log(e);
         if (e.detail.success) {
           const uploadResponse = JSON.parse(e.detail.success);
-          console.log(uploadResponse);
           this.set('amendment.signed_amendment_attachment', uploadResponse.id);
         }
       }
