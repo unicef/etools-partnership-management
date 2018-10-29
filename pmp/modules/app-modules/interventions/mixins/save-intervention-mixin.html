@@ -141,10 +141,8 @@
             // review and signed element not stamped...
             // validate current data that belongs to this tab against permissions
             let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
-              'unicef_signatory', 'signed_by_unicef_date'];
-            let reviewAndSignObjFields = ['signed_pd_document'];
-            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
-                this._validateInterventionObjectFields(reviewAndSignObjFields);
+              'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment'];
+            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields);
             this.set('_forceReviewUiValidationOnAttach', true);
           }
           return valid;
@@ -210,8 +208,9 @@
 
         _showErrorsWarning(validDetails, validReviewAndSign) {
           let msg = '';
-          if (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() &&
-              this.intervention.signed_pd_document instanceof File) {
+          if ((this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+              this.intervention.status === '') &&
+              this.intervention.signed_pd_attachment) {
             msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
                 '(check DETAILS and REVIEW & SIGN tabs).';
           } else {

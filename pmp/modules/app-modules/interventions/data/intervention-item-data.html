@@ -317,12 +317,6 @@
           } else {
             delete intervention.prc_review_document;
           }
-          // check signed_pd_document doc, if no file delete the property from the object
-          if (this._fileField(intervention, 'signed_pd_document')) {
-            prepareMultipartData = true;
-          } else {
-            delete intervention.signed_pd_document;
-          }
 
           if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
             prepareMultipartData = true;
