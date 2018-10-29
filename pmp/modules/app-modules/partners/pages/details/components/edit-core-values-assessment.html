@@ -1,8 +1,8 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../../bower_components/etools-upload/etools-upload.html">
 
-<link rel="import" href="../../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../mixins/common-mixin.html">
@@ -22,18 +22,20 @@
     <etools-dialog id="cvaDialog" dialog-title="Upload Core Values Assessment" size="md"
                    ok-btn-text="Save" keep-dialog-open on-confirm-btn-clicked="_saveCoreValueAssessment">
       <div class="layout-horizontal row-padding-v">
-          <etools-form-element-wrapper label="Date Last Assessed"
-                    value="[[prettyDate(item.date)]]">
-          </etools-form-element-wrapper>
+        <etools-form-element-wrapper label="Date Last Assessed"
+                                     value="[[prettyDate(item.date)]]">
+        </etools-form-element-wrapper>
       </div>
       <div class="layout-horizontal row-padding-v">
-          <etools-single-file id="attachment"
-                    file="{{item.assessment}}"
-                    internal-file="{{item.assessment_file}}"
-                    label="Core Values Assessment"
-                    required
-                    accept=".doc,.docx,.pdf,.jpg,.png">
-          </etools-single-file>
+        <etools-upload id="attachment"
+                       label="Core Values Assessment"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[item.attachment]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       on-upload-finished="_uploadFinished"
+                       required
+                       error-message="Assessment file is required">
+        </etools-upload>
       </div>
     </etools-dialog>
 
@@ -46,8 +48,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class EditCoreValuesAssessment extends EtoolsPmpApp.Mixins.EventHelper(
-          EtoolsPmpApp.Mixins.Common(Polymer.Element)) {
+    class EditCoreValuesAssessment extends EtoolsPmpApp.Mixins.Common(Polymer.Element) {
       static get is() {
         return 'edit-core-values-assessment';
       }
@@ -56,6 +57,13 @@
         return {
           item: {
             type: Object
+          },
+          parent: Object,
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
           }
         };
       }
@@ -68,8 +76,15 @@
         if (!this.shadowRoot.querySelector('#attachment').validate()) {
           return;
         }
-        this.fireEvent('save-core-values-assessment', this.item);
+        this.parent.fireEvent('save-core-values-assessment', this.item);
         this.$.cvaDialog.opened = false;
+      }
+
+      _uploadFinished(e) {
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set('item.attachment', uploadResponse.id);
+        }
       }
 
     }

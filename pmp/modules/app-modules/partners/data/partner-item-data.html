@@ -247,20 +247,27 @@
             if (callback) {
               this.set('handleSuccResponseAdditionalCallback', callback);
             }
-            let withUpload = false; // used to set multipart prop on etools-ajax
-            if (partner.hasOwnProperty('core_values_assessments')) {
-              if (partner.core_values_assessments.length) {
-                for(let i = 0; i < partner.core_values_assessments.length; i++) {
-                  if (partner.core_values_assessments[i].assessment instanceof File) {
-                    withUpload = true;
-                    break;
-                  }
-                }
-                if (!withUpload) {
-                delete partner.core_values_assessments;
-                }
-              }
+
+            partner.core_values_assessments =
+                partner.core_values_assessments.filter(c => typeof c.attachment === 'number' && c.attachment > 0);
+            if (partner.core_values_assessments.length === 0) {
+              delete partner.core_values_assessments;
             }
+
+            let withUpload = false; // used to set multipart prop on etools-ajax
+            // if (partner.hasOwnProperty('core_values_assessments')) {
+            //   if (partner.core_values_assessments.length) {
+            //     for(let i = 0; i < partner.core_values_assessments.length; i++) {
+            //       if (partner.core_values_assessments[i].assessment instanceof File) {
+            //         withUpload = true;
+            //         break;
+            //       }
+            //     }
+            //     if (!withUpload) {
+            //     delete partner.core_values_assessments;
+            //     }
+            //   }
+            // }
             if (partner.hasOwnProperty('assessments')) {
               if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
                 partner.assessments = partner.assessments.map(function(assessment) {

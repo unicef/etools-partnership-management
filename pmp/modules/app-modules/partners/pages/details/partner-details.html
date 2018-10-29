@@ -172,7 +172,7 @@
             <div>(from VISION)</div>
           </etools-data-table-column>
           <etools-data-table-column class="col-6">
-            Core Values Assesment
+            Core Values Assessment
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Archived
@@ -180,7 +180,7 @@
         </etools-data-table-header>
         <template is="dom-repeat" items="{{partner.core_values_assessments}}">
           <etools-data-table-row no-collapse
-            secondary-bg-on-hover$="[[_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
+            secondary-bg-on-hover$="[[_canEditCVA(item.attachment, item.archived, showCoreValuesAssessmentAttachment)]]"
             hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
             <div slot="row-data" class="p-relative">
               <span class="col-data col-4">
@@ -188,16 +188,17 @@
                 <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
               </span>
               <span class="col-data col-6">
-                  <iron-icon icon="attachment" hidden$="[[!item.assessment_file]]"></iron-icon>
-                  <span hidden$="[[item.assessment_file]]" class="placeholder-style">&#8212;</span>
-                  <a class="cvs-file" href$="[[item.assessment_file]]"
-                     target="_blank" download>[[getFileNameFromURL(item.assessment_file)]]</a>
+                  <iron-icon icon="attachment" hidden$="[[!item.attachment]]"></iron-icon>
+                  <span hidden$="[[item.attachment]]" class="placeholder-style">&#8212;</span>
+                  <a class="cvs-file" href$="[[item.attachment]]"
+                     target="_blank" download>[[getFileNameFromURL(item.attachment)]]</a>
               </span>
               <span class="col-data col-2">
+                <span hidden$="[[item.archived]]" class="placeholder-style">&#8212;</span>
                 <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
-                      hidden$="[[!_canEditCVA(item.assessment_file, item.archived, showCoreValuesAssessmentAttachment)]]"
+                      hidden$="[[!_canEditCVA(item.attachment, item.archived, showCoreValuesAssessmentAttachment)]]"
                       show-delete="[[showDelete]]"
                       on-edit="_editCoreValuesAssessment">
               </icons-actions>
@@ -316,22 +317,13 @@
 
       _createEditCoreValuesAssessmentsDialog() {
         this.editCVADialog = document.createElement('edit-core-values-assessment');
-        this.editCVADialog.addEventListener('save-core-values-assessment',
-            this._saveCoreValuesAssessment.bind(this));
+        this.editCVADialog.parent = this;
         document.querySelector('body').appendChild(this.editCVADialog);
       }
 
       _editCoreValuesAssessment(e) {
         this.editCVADialog.item = JSON.parse(e.target.getAttribute('item'));
         this.editCVADialog.open();
-      }
-
-      _saveCoreValuesAssessment(e) {
-        this.fireEvent('save-core-values-assessment', e.detail);
-      }
-
-      _hideDeleteBtn() {
-        return this.partner && this.partner.core_values_assessment_file;
       }
 
       _canEditCVA(attachment, archived) {
@@ -347,7 +339,7 @@
           this.set('showCoreValuesAssessmentAttachment',
               this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
 
-          if (this.showCoreValuesAssessmentAttachment && partner.core_values_assessment_file) {
+          if (this.showCoreValuesAssessmentAttachment) {
             this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
           }
           if (partner.type_of_assessment === 'Micro Assessment') {
@@ -367,24 +359,24 @@
         });
       }
 
-      _displayAssessmentNotification(assesmentDateString, assesmentType) {
-        if (!assesmentDateString) {
+      _displayAssessmentNotification(assessmentDateString, assessmentType) {
+        if (!assessmentDateString) {
           return;
         }
         let datesFormat = 'YYYY-MM-DD';
         let today = moment.utc().format(datesFormat);
-        let assessmentDate = this._convertDate(assesmentDateString);
+        let assessmentDate = this._convertDate(assessmentDateString);
         let assessmentExpDate = moment(assessmentDate).add(60, 'months');
 
         let daysUntilExpire = assessmentExpDate.diff(today, 'days');
 
         let notifMessage = '';
         if (daysUntilExpire < 1) {
-          notifMessage = 'The ' + assesmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
+          notifMessage = 'The ' + assessmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
         } else {
           let notifStartDate = moment(assessmentDate).add(57, 'months');
           if (moment(today).isAfter(notifStartDate)) {
-            notifMessage = 'The ' + assesmentType + ' will expire in ' + daysUntilExpire + ' days';
+            notifMessage = 'The ' + assessmentType + ' will expire in ' + daysUntilExpire + ' days';
           }
         }
         if (notifMessage) {
