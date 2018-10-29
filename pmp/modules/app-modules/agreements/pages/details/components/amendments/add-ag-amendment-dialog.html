@@ -4,11 +4,13 @@
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
 <link rel="import" href="../../../../../../layout/components/etools-date-input.html">
-<link rel="import" href="../../../../../../layout/components/etools-single-file.html">
+<!--<link rel="import" href="../../../../../../layout/components/etools-single-file.html">-->
 
+<link rel="import" href="../../../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../styles/shared-styles.html">
@@ -54,15 +56,25 @@
       </div>
       <div class="row-h flex-c">
         <!-- Signed Agreement -->
-        <etools-single-file id="signedAmendment"
-                            label="Signed Amendment"
-                            file="{{amendment.signed_amendment}}"
-                            internal-file="{{amendment.signed_amendment_file}}"
-                            error-message="Signed Amendment file is required"
-                            required
-                            auto-validate="[[autoValidate]]"
-                            accept=".doc,.docx,.pdf,.jpg,.png">
-        </etools-single-file>
+        <etools-upload id="signedAmendment"
+                       label="Signed Amendment"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[amendment.signed_amendment_attachment]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       on-upload-finished="_uploadFinished"
+                       required
+                       auto-validate="[[autoValidate]]"
+                       error-message="Signed Amendment file is required">
+        </etools-upload>
+        <!--<etools-single-file id="signedAmendment"-->
+                            <!--label="Signed Amendment"-->
+                            <!--file="{{amendment.signed_amendment}}"-->
+                            <!--internal-file="{{amendment.signed_amendment_file}}"-->
+                            <!--error-message="Signed Amendment file is required"-->
+                            <!--required-->
+                            <!--auto-validate="[[autoValidate]]"-->
+                            <!--accept=".doc,.docx,.pdf,.jpg,.png">-->
+        <!--</etools-single-file>-->
       </div>
 
       <div class="row-h flex-c">
@@ -124,6 +136,7 @@
             type: Boolean,
             value: false
           },
+          uploadEndpoint: String,
           amendmentTypes: {
             type: Array,
             value: []
@@ -135,8 +148,7 @@
               id: null,
               signed_date: null,
               types: [],
-              signed_amendment: null,
-              signed_amendment_file: null
+              signed_amendment_attachment: null
             }
           },
           autoValidate: {
@@ -164,6 +176,11 @@
             value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
           }
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
       }
 
       initData(authorizedOfficers, showAuthorizedOfficers, amendmentTypes) {
@@ -225,6 +242,15 @@
           return false;
         }
         return this.amendment.types.indexOf('Change authorized officer') > -1;
+      }
+
+      _uploadFinished(e) {
+        console.log(e);
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          console.log(uploadResponse);
+          this.set('amendment.signed_amendment_attachment', uploadResponse.id);
+        }
       }
 
     }
