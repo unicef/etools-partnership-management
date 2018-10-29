@@ -8,7 +8,6 @@
 
 <link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
 <link rel="import" href="../../../../../../layout/components/etools-date-input.html">
-<!--<link rel="import" href="../../../../../../layout/components/etools-single-file.html">-->
 
 <link rel="import" href="../../../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
@@ -48,6 +47,7 @@
                              value="{{amendment.signed_date}}"
                              error-message="Please select signed date"
                              no-init show-clear-btn
+                             open="{{datePickerOpen}}"
                              validator="ag_am_signed_date_validator"
                              auto-validate="[[autoValidate]]"
                              required-and-not-future-date>
@@ -66,15 +66,6 @@
                        auto-validate="[[autoValidate]]"
                        error-message="Signed Amendment file is required">
         </etools-upload>
-        <!--<etools-single-file id="signedAmendment"-->
-                            <!--label="Signed Amendment"-->
-                            <!--file="{{amendment.signed_amendment}}"-->
-                            <!--internal-file="{{amendment.signed_amendment_file}}"-->
-                            <!--error-message="Signed Amendment file is required"-->
-                            <!--required-->
-                            <!--auto-validate="[[autoValidate]]"-->
-                            <!--accept=".doc,.docx,.pdf,.jpg,.png">-->
-        <!--</etools-single-file>-->
       </div>
 
       <div class="row-h flex-c">

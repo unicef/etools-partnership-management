@@ -512,7 +512,9 @@
             changes.country_programme = this.agreement.country_programme;
           }
           if (this._objectFieldIsModified('amendments')) {
-            changes.amendments = this.agreement.amendments;
+            // keep only new amendments
+            changes.amendments = this.agreement.amendments.filter(
+                a => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
           }
           if (this._primitiveFieldIsModified('special_conditions_pca')) {
             changes.special_conditions_pca = this.agreement.special_conditions_pca;

@@ -229,11 +229,7 @@
             if (succCallback) {
               this.set('handleSuccResponseAdditionalCallback', succCallback);
             }
-            let withUpload = false; // used to set multipart prop on etools-ajax
-            if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
-              agreement.amendments = agreement.amendments.filter(a => !a.id); // send only newlly added
-              withUpload = true;
-            }
+
             this.fireEvent('global-loading', {
               message: 'Saving...',
               active: true,
@@ -244,9 +240,7 @@
             this._triggerAgreementRequest({
               method: method,
               endpoint: endpoint,
-              body: agreement,
-              multiPart: withUpload,
-              prepareMultipartData: withUpload
+              body: agreement
             });
           } else {
             this.fireEvent('toast', {

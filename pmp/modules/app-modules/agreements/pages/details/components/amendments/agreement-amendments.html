@@ -153,8 +153,8 @@
                 <span class="break-word">
                   <!-- target="_blank" is there for IE -->
                   <template is="dom-if" if="[[item.id]]" restamp>
-                    <a href$="[[item.signed_amendment_file]]"
-                       target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                    <a href$="[[item.signed_amendment_attachment]]"
+                       target="_blank" download>[[getFileNameFromURL(item.signed_amendment_attachment)]]</a>
                   </template>
                   <template is="dom-if" if="[[!item.id]]" restamp>
                     <span>[[item.signed_amendment.name]]</span>
