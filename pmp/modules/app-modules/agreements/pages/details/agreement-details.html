@@ -14,7 +14,6 @@
 <link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
 <link rel="import" href="../../../../layout/components/year-dropdown.html">
@@ -418,7 +417,12 @@
             type: Boolean,
             value: false
           },
-          uploadEndpoint: String
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          }
         };
       }
 
@@ -444,7 +448,6 @@
         // triggered by parent element on stamp
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.fireEvent('tab-content-attached');
-        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
       }
 
       disconnectedCallback() {
@@ -531,7 +534,7 @@
       }
 
       resetAttachedAgreementElem(agreement) {
-        // forces etools-single-file to redraw the element
+        // forces etools-upload to redraw the element
         if (!agreement.attachment) {
           this.set('agreement.attachment', null);
         }
