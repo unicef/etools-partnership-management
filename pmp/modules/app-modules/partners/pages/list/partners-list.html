@@ -105,14 +105,14 @@
       </div>
 
       <div class="fixed-controls">
-        <paper-menu-button id="filterMenu" disabled="[[showOnlyGovernmentType]]" ignore-select horizontal-align="right">
+        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
           <paper-button class="button" slot="dropdown-trigger">
             <iron-icon icon="filter-list"></iron-icon>
             Filters
           </paper-button>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
-              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+              <paper-icon-item on-tap="selectFilter" disabled$="[[item.disabled]]"  selected$="[[item.selected]]">
                 <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
                 <paper-item-body>[[item.filterName]]</paper-item-body>
               </paper-icon-item>
@@ -386,19 +386,23 @@
                   filterName: 'Partner Type',
                   selectedValue: this.selectedPartnerTypes,
                   disabled: this.showOnlyGovernmentType,
-                  allowEmpty: true
+                  allowEmpty: true,
+                  disableMenuOption: this.showOnlyGovernmentType
                 },
                 {
                   filterName: 'CSO Type',
-                  selectedValue: this.selectedCsoTypes
+                  selectedValue: this.selectedCsoTypes,
+                  allowEmpty: true
                 },
                 {
                   filterName: 'Risk Rating',
-                  selectedValue: this.selectedRiskRatings
+                  selectedValue: this.selectedRiskRatings,
+                  allowEmpty: true
                 },
                 {
                   filterName: 'Show hidden',
-                  selectedValue: this.showHidden
+                  selectedValue: this.showHidden,
+                  allowEmpty: true
                 }
               ];
               this.updateShownFilters(filtersValues);
