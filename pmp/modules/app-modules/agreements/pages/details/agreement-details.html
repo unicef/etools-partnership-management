@@ -11,6 +11,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
@@ -30,6 +31,7 @@
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../modules/mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
@@ -303,15 +305,15 @@
           <span class="type-warning">[[generatePCAMessage]]</span>
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
-          <etools-single-file
-              file="{{agreement.attachment_temp}}"
-              internal-file="[[agreement.attachment]]"
+          <etools-upload
               label="Signed Agreement"
+              file-url="{{agreement.attachment}}"
+              upload-endpoint="[[uploadEndpoint]]"
+              on-upload-finished="_signedAgreementUploadFinished"
               accept=".doc,.docx,.pdf,.jpg,.png"
-              hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attachment)]]"
               readonly$="[[!agreement.permissions.edit.attached_agreement]]"
               required$="[[agreement.permissions.required.attached_agreement]]">
-          </etools-single-file>
+          </etools-upload>
         </div>
       </div>
     </etools-content-panel>
@@ -415,7 +417,8 @@
           allowAoEditForSSFA: {
             type: Boolean,
             value: false
-          }
+          },
+          uploadEndpoint: String
         };
       }
 
@@ -441,6 +444,7 @@
         // triggered by parent element on stamp
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.fireEvent('tab-content-attached');
+        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
       }
 
       disconnectedCallback() {
@@ -469,12 +473,6 @@
       // Editing Agreement Type is allowed only if Agreement is new/unsaved
       _isAgreementTypeReadonly() {
         return (this.agreement && this.agreement.id);
-      }
-
-      // Refer to unicef/etools-issues#232:
-      // For Draft Status, only Change option is available. No delete option is available in Draft.
-      _hideDeleteBtn() {
-        return this._isDraft() && this.agreement && this.agreement.attachment;
       }
 
       _isNewAgreementChanged(isNew) {
@@ -523,8 +521,7 @@
           this.resetAttachedAgreementElem(agreement);
           this._initAuthorizedOfficers(agreement.authorized_officers);
         } else {
-          this.set('agreement.attachment', {});
-          this.set('agreement.attachment_tmp', '');
+          this.set('agreement.attachment', null);
           // new agreement, update status to draft and reset fields
           this._setDraftStatus(this.editMode, this.isNewAgreement);
           this._resetDropdown('#partner');
@@ -536,10 +533,7 @@
       resetAttachedAgreementElem(agreement) {
         // forces etools-single-file to redraw the element
         if (!agreement.attachment) {
-          this.set('agreement.attachment', {});
-        }
-        if (!agreement.attachment_tmp) {
-          this.set('agreement.attachment_tmp', '');
+          this.set('agreement.attachment', null);
         }
       }
 
@@ -741,6 +735,13 @@
           }
         }.bind(this));
         return valid;
+      }
+
+      _signedAgreementUploadFinished(e) {
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('agreement.attachment', response.id);
+        }
       }
 
     }

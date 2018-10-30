@@ -393,35 +393,8 @@
           agrDataToSave = this._getCurrentChanges();
           agrDataToSave.id = this.agreement.id; // we need the id
         }
-        if (this.agreement.attachment_temp instanceof File) {
-          this._uploadSignedAgreement(this.agreement.attachment_temp)
-            .then((response) => {
-              agrDataToSave.attachment = response.id;
-              this._saveAgreement(agrDataToSave);
-            })
-            .catch((err) => {
-              this.parseRequestErrorsAndShowAsToastMsgs(err);
-              return false;
-            });
-        } else {
-          this._saveAgreement(agrDataToSave);
-        }
-      }
 
-      _uploadSignedAgreement(file) {
-        let options = {
-            method: 'POST',
-            endpoint: this.getEndpoint('attachmentsUpload'),
-            body: {file: file},
-            multiPart: true,
-            prepareMultipartData: true
-          };
-          return this.sendRequest(options)
-              .then((resp) => {
-                return resp;
-              }).catch((error) => {
-                throw error;
-          });
+        this._saveAgreement(agrDataToSave);
       }
 
       validateAgreement() {
@@ -441,7 +414,6 @@
       }
 
       _prepareNewAgreementDataForSave(agreement) {
-        // we do not need all the agreement object data for the first save
         let newAgreement = {
           id: null,
           status: '',
@@ -451,7 +423,11 @@
           authorized_officers: this.authorizedOfficers
         };
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          return newAgreement;
+          return newAgreement; // SSFA has only the fields set above
+        } else {
+          if (agreement.attachment) {
+            newAgreement.attachment = agreement.attachment;
+          }
         }
 
         newAgreement = Object.assign(newAgreement, {
@@ -485,13 +461,18 @@
           changes.reference_number_year = this.agreement.reference_number_year;
         }
 
+        if (this._primitiveFieldIsModified('special_conditions_pca')) {
+          changes.special_conditions_pca = this.agreement.special_conditions_pca;
+        }
+
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           if (this._authorizedOfficersChanged()) {
             changes.authorized_officers = this.authorizedOfficers;
           }
         }
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
+                                'attachment'];
           signedByFields.forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
@@ -515,9 +496,6 @@
             // keep only new amendments
             changes.amendments = this.agreement.amendments.filter(
                 a => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
-          }
-          if (this._primitiveFieldIsModified('special_conditions_pca')) {
-            changes.special_conditions_pca = this.agreement.special_conditions_pca;
           }
         }
 
