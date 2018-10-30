@@ -108,13 +108,15 @@
           </div>
           <div class="col col-6 file-container space-left">
             <!-- PRC Review Document -->
-            <etools-single-file label="PRC Review Document"
-                                internal-file=[[intervention.prc_review_document_file]]
-                                file={{intervention.prc_review_document}}
-                                accept=".doc,.docx,.pdf,.jpg,.png"
-                                hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
-                                readonly$="[[!permissions.edit.prc_review_document]]">
-            </etools-single-file>
+            <etools-upload
+                       label="PRC Review Document"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[intervention.prc_review_attachment]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       on-upload-finished="_prcRevDocUploadFinished"
+                       auto-validate
+                       readonly$="[[!permissions.edit.prc_review_document]]">
+          </etools-upload>
           </div>
         </div>
       </template>
@@ -184,23 +186,12 @@
       <div class="row-h flex-c">
         <div class="col col-6 file-container space-left">
           <!-- Signed PD/SSFA -->
-          <!-- <etools-single-file id="signedIntervFile"
-                              label="Signed PD/SSFA"
-                              internal-file="[[intervention.signed_pd_document_file]]"
-                              file="{{intervention.signed_pd_document}}"
-                              accept=".doc,.docx,.pdf,.jpg,.png"
-                              hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.signed_pd_document_file)]]"
-                              readonly$="[[!permissions.edit.signed_pd_document]]"
-                              required$="[[permissions.required.signed_pd_document]]"
-                              auto-validate
-                              error-message="Please select Signed PD/SSFA document">
-          </etools-single-file> -->
           <etools-upload id="signedIntervFile"
                        label="Signed PD/SSFA"
                        accept=".doc,.docx,.pdf,.jpg,.png"
                        file-url="[[intervention.signed_pd_attachment]]"
                        upload-endpoint="[[uploadEndpoint]]"
-                       on-upload-finished="_uploadFinished"
+                       on-upload-finished="_signedPDUploadFinished"
                        auto-validate
                        readonly$="[[!permissions.edit.signed_pd_document]]"
                        required$="[[permissions.required.signed_pd_document]]"
@@ -356,17 +347,8 @@
         } else {
           this.set('_lockSubmitToPrc', false);
         }
-        this._refreshPrcDocumentField(intervention, '', {});
-      }
-
-      // TODO: is this still needed with etools-dropdown?
-      _refreshPrcDocumentField(intervention, path, file) {
-        // forces etools-single-file to redraw the element
-        if (!intervention.prc_review_document_file) {
-          this.set('intervention.prc_review_document_file', path);
-        }
-        if (!intervention.prc_review_document) {
-          this.set('intervention.prc_review_document', file);
+        if (!intervention.prc_review_attachment) {
+          this.set('intervention.prc_review_attachment', null);
         }
       }
 
@@ -427,8 +409,7 @@
       _resetPrcFields() {
         this.set('intervention.intervention.submission_date_prc', null);
         this.set('intervention.review_date_prc', null);
-        this.set('intervention.prc_review_document_file', null);
-        this.set('intervention.prc_review_document', null);
+        this.set('intervention.prc_review_attachment', null);
       }
 
       // update FR Number on intervention
@@ -464,10 +445,17 @@
         }
       }
 
-      _uploadFinished(e) {
+      _signedPDUploadFinished(e) {
         if (e.detail.success) {
-          const uploadResponse = JSON.parse(e.detail.success);
-          this.set('intervention.signed_pd_attachment', uploadResponse.id);
+          const response = JSON.parse(e.detail.success);
+          this.set('intervention.signed_pd_attachment', response.id);
+        }
+      }
+
+      _prcRevDocUploadFinished(e) {
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('intervention.prc_review_attachment', response.id);
         }
       }
 

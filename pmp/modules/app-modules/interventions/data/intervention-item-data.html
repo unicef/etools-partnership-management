@@ -311,12 +311,12 @@
           if (this._hasFiles(intervention.attachments, 'attachment')) {
             prepareMultipartData = true;
           }
-          // check prc_review_document doc, if no file delete the property from the object
-          if (this._fileField(intervention, 'prc_review_document')) {
-            prepareMultipartData = true;
-          } else {
-            delete intervention.prc_review_document;
-          }
+          // // check prc_review_document doc, if no file delete the property from the object
+          // if (this._fileField(intervention, 'prc_review_document')) {
+          //   prepareMultipartData = true;
+          // } else {
+          //   delete intervention.prc_review_document;
+          // }
 
           if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
             prepareMultipartData = true;
