@@ -10,6 +10,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
 <link rel="import" href="../../../../config/app-constants.html">
@@ -29,6 +30,7 @@
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
+<link rel="import" href="../../../../endpoints/endpoints.html">
 <link rel="import" href="../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
@@ -224,12 +226,12 @@
           </paper-toggle-button>
         </div>
         <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
-          <etools-single-file label="Activation Letter"
-                    internal-file="{{intervention.activation_letter_attachment}}"
-                    file="{{intervention.activation_letter_file_temp}}"
-                    hidden$="[[_isDraft(intervention.status)]]"
-                    hide-delete-btn>
-          </etools-single-file>
+          <etools-upload label="Activation Letter"
+                    file-url="{{intervention.activation_letter_attachment}}"
+                    upload-endpoint="[[uploadEndpoint]]"
+                    on-upload-finished="_activationLetterUploadFinished"
+                    hidden$="[[_isDraft(intervention.status)]]">
+          </etools-upload>
         </div>
       </div>
       <div class="row-h row-second-bg" hidden$="[[_isContingencyAndDraft(intervention.contingency_pd, intervention.status)]]">
@@ -524,7 +526,8 @@
           showInactiveIndicators: {
             type: Boolean,
             value: false
-          }
+          },
+          uploadEndpoint: String
         };
       }
 
@@ -556,6 +559,7 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         this.fireEvent('tab-content-attached');
+        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
       }
 
       disconnectedCallback() {
@@ -851,7 +855,7 @@
 
       _isContingencyAndHasActivationLetter() {
         return this.intervention.contingency_pd &&
-          (this.intervention.activation_letter_file_temp instanceof File || this.intervention.activation_letter_attachment);
+          this.intervention.activation_letter_attachment;
       }
 
       _isContingencyAndDraft(contingency, status) {
@@ -941,6 +945,13 @@
             [this.CONSTANTS.STATUSES.Draft.toLowerCase(),
               this.CONSTANTS.STATUSES.Signed.toLowerCase(),
               this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+      }
+
+      _activationLetterUploadFinished(e) {
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('intervention.activation_letter_attachment', response.id);
+        }
       }
 
     }

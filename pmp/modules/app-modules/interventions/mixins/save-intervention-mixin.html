@@ -56,20 +56,20 @@
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
 
-          if (this.intervention.activation_letter_file_temp instanceof File) {
-            this._uploadActivationLetter(this.intervention.activation_letter_file_temp)
-              .then((response) => {
+          // if (this.intervention.activation_letter_file_temp instanceof File) {
+          //   this._uploadActivationLetter(this.intervention.activation_letter_file_temp)
+          //     .then((response) => {
 
-                interventionData.activation_letter_attachment = response.id;
-                this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-              })
-              .catch((err) => {
-                this.parseRequestErrorsAndShowAsToastMsgs(err);
-                return false;
-              });
-          } else {
+          //       interventionData.activation_letter_attachment = response.id;
+          //       this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          //     })
+          //     .catch((err) => {
+          //       this.parseRequestErrorsAndShowAsToastMsgs(err);
+          //       return false;
+          //     });
+          // } else {
             this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-          }
+          //}
 
           return true;
         }
