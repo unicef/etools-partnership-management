@@ -427,7 +427,6 @@
        * for the intervention to move in signed status are required; only for draft status.
        */
       _signedPdDocHasChanged(signedDocument) {
-        console.log('_signedPdDocHasChanged');
         if (typeof signedDocument === 'undefined') {
           return;
         }
@@ -436,7 +435,7 @@
             this.intervention.status === '')) {
 
           if (!signedDocument || isNaN(signedDocument)) {
-            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});// TODO
+            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
           } else {
             // new document selected
             this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
