@@ -527,7 +527,12 @@
             type: Boolean,
             value: false
           },
-          uploadEndpoint: String
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          }
         };
       }
 
@@ -540,7 +545,7 @@
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           '_contingencyPDChanged(intervention.contingency_pd)',
           '_updateNoOfPdOutputs(intervention.result_links.*)',
-          '_updateRequired(intervention.activation_letter_file_temp)'
+          '_updateActivationLetterRequiredFields(intervention.activation_letter_attachment)'
         ];
       }
 
@@ -559,7 +564,6 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         this.fireEvent('tab-content-attached');
-        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
       }
 
       disconnectedCallback() {
@@ -615,8 +619,8 @@
         expectedResultsElem._addNewCpOutputAndRamIndicators();
       }
 
-      _updateRequired(activationLetterAtt) {
-        if (activationLetterAtt instanceof File) {
+      _updateActivationLetterRequiredFields(activationLetterAtt) {
+        if (activationLetterAtt) {
           this.set('permissions.required.start', true);
           this.set('permissions.required.end', true);
         } else {
