@@ -127,7 +127,12 @@
             type: Boolean,
             value: false
           },
-          uploadEndpoint: String,
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          },
           amendmentTypes: {
             type: Array,
             value: []
@@ -167,11 +172,6 @@
             value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
           }
         };
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
-        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
       }
 
       initData(authorizedOfficers, showAuthorizedOfficers, amendmentTypes) {
