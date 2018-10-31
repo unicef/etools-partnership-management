@@ -278,10 +278,10 @@
           </etools-info-tooltip>
         </div>
         <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
-          <etools-single-file label="Termination Notice"
-                              internal-file=[[intervention.termination_doc_attachment]]
-                              readonly>
-          </etools-single-file>
+          <etools-upload label="Termination Notice"
+                         file-url="[[intervention.termination_doc_attachment]]"
+                         readonly>
+          </etools-upload>
         </div>
         <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
           <div class="expiry-warning">
