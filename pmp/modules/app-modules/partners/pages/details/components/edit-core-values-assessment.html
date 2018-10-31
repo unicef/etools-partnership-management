@@ -21,7 +21,9 @@
     </style>
 
     <etools-dialog id="cvaDialog" dialog-title="Upload Core Values Assessment" size="md"
-                   ok-btn-text="Save" keep-dialog-open on-confirm-btn-clicked="_saveCoreValueAssessment">
+                   ok-btn-text="Save" keep-dialog-open on-confirm-btn-clicked="_saveCoreValueAssessment"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
       <div class="layout-horizontal row-padding-v">
         <etools-form-element-wrapper label="Date Last Assessed"
                                      value="[[prettyDate(item.date)]]">
@@ -34,6 +36,7 @@
                        file-url="[[item.attachment]]"
                        upload-endpoint="[[uploadEndpoint]]"
                        on-upload-finished="_uploadFinished"
+                       upload-in-progress="{{uploadInProgress}}"
                        required
                        error-message="Assessment file is required">
         </etools-upload>
@@ -65,6 +68,10 @@
             value: function() {
               return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
             }
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false
           }
         };
       }
