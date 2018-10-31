@@ -466,7 +466,7 @@
         let changes = {};
         updatableFields.forEach((fieldName) => {
           // TODO: improve this
-          if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
+          if (['shared_with', 'assessments', 'staff_members', 'planned_engagement'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
               if (fieldName === 'assessments') {
                 changes[fieldName] = partner[fieldName].filter(
