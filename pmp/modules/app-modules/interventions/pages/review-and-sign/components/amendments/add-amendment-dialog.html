@@ -53,7 +53,9 @@
                    hidden$="[[datePickerOpen]]"
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
-                   on-confirm-btn-clicked="_validateAndSaveAmendment">
+                   on-confirm-btn-clicked="_validateAndSaveAmendment"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
 
       <div class="row-h flex-c">
         <required-and-not-future-date-validator validator-name="signedDate_validator"
@@ -107,6 +109,7 @@
                        on-upload-finished="_amendmentUploadFinished"
                        required
                        auto-validate
+                       upload-in-progress="{{amdUploadInProgress}}"
                        error-message="Attachment required">
         </etools-upload>
       </div>
@@ -116,6 +119,7 @@
                        accept=".doc,.docx,.pdf,.jpg,.png"
                        file-url="[[newAmendment.internal_prc_review]]"
                        upload-endpoint="[[uploadEndpoint]]"
+                       upload-in-progress="{{prcUploadInProgress}}"
                        on-upload-finished="_prcReviewUploadFinished">
         </etools-upload>
       </div>
@@ -207,6 +211,19 @@
           _validationSelectors: {
             type: Array,
             value: ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other']
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false,
+            computed: 'setUploadInProgress(amdUploadInProgress, prcUploadInProgress)'
+          },
+          amdUploadInProgress: {
+            type: Boolean,
+            value: false
+          },
+          prcUploadInProgress: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -220,6 +237,10 @@
       connectedCallback() {
         super.connectedCallback();
         this.resetAmendment();
+      }
+
+      setUploadInProgress(amdInProgress, prcInProgress) {
+         return amdInProgress || prcInProgress;
       }
 
       resetAmendment() {
