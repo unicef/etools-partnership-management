@@ -460,28 +460,37 @@
           'shared_with',
           'staff_members',
           'assessments',
-          'core_values_assessment',
           'planned_engagement',
           'basis_for_risk_rating'
         ];
         let changes = {};
-        updatableFields.forEach(function(fieldName) {
+        updatableFields.forEach((fieldName) => {
           // TODO: improve this
           if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
-              changes[fieldName] = partner[fieldName];
-            }
-          } else if (fieldName === 'core_values_assessment') {
-            if ((partner.hasOwnProperty('core_values_assessment')) &&
-                (partner.core_values_assessment instanceof File)) {
-              changes.core_values_assessment = partner.core_values_assessment;
+              if (fieldName === 'assessments') {
+                changes[fieldName] = partner[fieldName].filter(
+                    a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
+                if (partner[fieldName].length === 0) {
+                  delete partner[fieldName];
+                } else {
+                  partner[fieldName] = partner[fieldName].map((a) => {
+                    // TODO: remove this once old upload properties are removed from backend
+                    delete a.report;
+                    delete a.report_file;
+                    return a;
+                  });
+                }
+              } else {
+                changes[fieldName] = partner[fieldName];
+              }
             }
           } else {
             if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
               changes[fieldName] = partner[fieldName];
             }
           }
-        }.bind(this));
+        });
         return changes;
       }
 

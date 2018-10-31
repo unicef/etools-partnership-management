@@ -248,52 +248,6 @@
               this.set('handleSuccResponseAdditionalCallback', callback);
             }
 
-            if (partner.core_values_assessments instanceof Array) {
-              partner.core_values_assessments =
-                  partner.core_values_assessments.filter(c => typeof c.attachment === 'number' && c.attachment > 0);
-              if (partner.core_values_assessments.length === 0) {
-                delete partner.core_values_assessments;
-              }
-            }
-
-            if (partner.assessments instanceof Array) {
-              partner.assessments = partner.assessments.filter(
-                  a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
-              if (partner.assessments.length === 0) {
-                delete partner.assessments;
-              } else {
-                partner.assessments = partner.assessments.map((a) => {
-                  return Object.assign({}, a, {report: a.report_attachment, report_attachment: null});
-                });
-              }
-            }
-
-            // let withUpload = false; // used to set multipart prop on etools-ajax
-            // if (partner.hasOwnProperty('core_values_assessments')) {
-            //   if (partner.core_values_assessments.length) {
-            //     for(let i = 0; i < partner.core_values_assessments.length; i++) {
-            //       if (partner.core_values_assessments[i].assessment instanceof File) {
-            //         withUpload = true;
-            //         break;
-            //       }
-            //     }
-            //     if (!withUpload) {
-            //     delete partner.core_values_assessments;
-            //     }
-            //   }
-            // }
-            // if (partner.hasOwnProperty('assessments')) {
-            //   if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
-            //     partner.assessments = partner.assessments.map(function(assessment) {
-            //       if (assessment.report instanceof File) {
-            //         withUpload = true;
-            //       } else {
-            //         delete assessment.report;
-            //       }
-            //       return assessment;
-            //     }, this);
-            //   }
-            // }
             this.fireEvent('global-loading', {
               message: 'Saving...',
               active: true,
@@ -302,7 +256,6 @@
             // fire in the hole
             this._triggerPartnerRequest({
               method: 'PATCH', endpoint: endpoint, body: partner
-              // multiPart: withUpload, prepareMultipartData: withUpload
             });
           } else {
             this.fireEvent('toast', {
