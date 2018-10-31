@@ -163,7 +163,7 @@
                     this.set([...filterPath, 'dateSelected'], filter.selectedValue);
                   } else if (this.selectedFilters[i].type === 'paper-toggle') {
                     this.set([...filterPath, 'value'], filter.selectedValue);
-                    this.notifyPath([...filterPath, 'value'], filter.selectedValue);
+                    this.notifyPath([...filterPath, 'value'].join('.'));
                   }
                   this._disableFilter(filter, filterPath, filterIndex);
                   break;
