@@ -433,13 +433,16 @@
         if (this.intervention &&
             (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
             this.intervention.status === '')) {
-
-          if (!signedDocument || isNaN(signedDocument)) {
-            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
-          } else {
-            // new document selected
-            this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
-          }
+          setTimeout(() => {
+            // delay micro task execution; set to make sure _signedDocChangedForDraft will run on page load
+            if (signedDocument) {
+              // new document uploaded or file url provided
+              this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
+            } else {
+              // there is no signedDocument
+              this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
+            }
+          }, 0);
         }
       }
 
