@@ -312,9 +312,6 @@
             prepareMultipartData = true;
           }
 
-          if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
-            prepareMultipartData = true;
-          }
           if (Array.isArray(intervention.result_links)) {
             intervention.result_links = intervention.result_links.filter(function(elem) {
               return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
