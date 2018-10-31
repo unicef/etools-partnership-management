@@ -10,7 +10,6 @@
 <link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../../styles/page-common-styles.html">
@@ -79,7 +78,7 @@
           <!-- Submitted to PRC? -->
           <etools-form-element-wrapper no-placeholder>
             <paper-checkbox checked="{{intervention.submitted_to_prc}}"
-                            disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
+                            disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
                             hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
               Submitted to PRC?
             </paper-checkbox>
@@ -114,8 +113,7 @@
                        file-url="[[intervention.prc_review_attachment]]"
                        upload-endpoint="[[uploadEndpoint]]"
                        on-upload-finished="_prcRevDocUploadFinished"
-                       auto-validate
-                       readonly$="[[!permissions.edit.prc_review_document]]">
+                       readonly$="[[!permissions.edit.prc_review_attachment]]">
           </etools-upload>
           </div>
         </div>
@@ -193,8 +191,8 @@
                        upload-endpoint="[[uploadEndpoint]]"
                        on-upload-finished="_signedPDUploadFinished"
                        auto-validate
-                       readonly$="[[!permissions.edit.signed_pd_document]]"
-                       required$="[[permissions.required.signed_pd_document]]"
+                       readonly$="[[!permissions.edit.signed_pd_attachment]]"
+                       required$="[[permissions.required.signed_pd_attachment]]"
                        error-message="Please select Signed PD/SSFA document">
           </etools-upload>
         </div>
@@ -303,7 +301,12 @@
             type: String,
             value: ''
           },
-          uploadEndpoint: String
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          }
         };
       }
 
@@ -311,7 +314,7 @@
         return [
           '_interventionDocTypeChanged(intervention.document_type)',
           '_signedPdDocHasChanged(intervention.signed_pd_attachment)',
-          '_updateStyles(permissions.edit.prc_review_document, _lockSubmitToPrc)'
+          '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)'
         ];
       }
 
@@ -324,11 +327,6 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         this.fireEvent('tab-content-attached');
-        this.set('uploadEndpoint', EtoolsPmpApp.Endpoints.attachmentsUpload.url);
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
       }
 
       _updateStyles() {
@@ -436,8 +434,8 @@
             (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
             this.intervention.status === '')) {
 
-          if (isNaN(signedDocument)) {
-            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});// TODO
+          if (!signedDocument || isNaN(signedDocument)) {
+            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
           } else {
             // new document selected
             this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
