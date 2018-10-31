@@ -70,7 +70,7 @@
 
     _getModifiedInterventionDetails(docType) {
       let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
-        'start', 'end'];
+        'start', 'end', 'activation_letter_attachment'];
       if (docType !== 'SSFA') {
         updatableFields.push('reference_number_year');
         updatableFields.push('contingency_pd');
