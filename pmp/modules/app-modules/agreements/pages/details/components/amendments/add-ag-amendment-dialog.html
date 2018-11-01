@@ -34,7 +34,9 @@
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
                    on-close="_handleDialogClosed"
-                   on-confirm-btn-clicked="_validateAndSaveAmendment">
+                   on-confirm-btn-clicked="_validateAndSaveAmendment"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
 
       <div class="row-h flex-c">
         <div class="col col-4">
@@ -63,6 +65,7 @@
                        upload-endpoint="[[uploadEndpoint]]"
                        on-upload-finished="_uploadFinished"
                        required
+                       upload-in-progress="{{uploadInProgress}}"
                        auto-validate="[[autoValidate]]"
                        error-message="Signed Amendment file is required">
         </etools-upload>
@@ -170,6 +173,10 @@
           _validationSelectors: {
             type: Array,
             value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false
           }
         };
       }
