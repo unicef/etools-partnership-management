@@ -374,10 +374,15 @@
 
       validate() {
         let valid = true;
-        let field = this.shadowRoot.querySelector('#signedIntervFile');
-        if (field && !field.validate()) {
-          valid = false;
-        }
+        let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
+          '#signedByUnicefDateField', '#signedIntervFile'];
+
+        fieldSelectors.forEach(function(selector) {
+          let field = this.shadowRoot.querySelector(selector);
+          if (field && !field.validate()) {
+            valid = false;
+          }
+        }.bind(this));
         return valid;
       }
 
