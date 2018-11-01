@@ -6,10 +6,10 @@
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
-<link rel="import" href="../../../../../layout/components/etools-single-file.html">
-
+<link rel="import" href="../../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
 
@@ -47,10 +47,6 @@
 
       .add-btn-lm {
         margin-left: 46px;
-      }
-
-      etools-single-file {
-        width: 100%;
       }
 
       .row-h.file-container {
@@ -117,15 +113,17 @@
             </div>
             <div class="row-h file-container">
               <!-- Report file -->
-              <etools-single-file
-                  id$="report_[[index]]"
-                  label="Report"
-                  file="{{item.report}}"
-                  internal-file="{{item.report_file}}"
-                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
-                  readonly="[[!editMode]]"
-                  accept=".doc,.docx,.pdf,.jpg,.png"
-                  error-message="Please select the report file"></etools-single-file>
+              <etools-upload id$="report_[[index]]"
+                             label="Report"
+                             accept=".doc,.docx,.pdf,.jpg,.png"
+                             data-args-index$="[[index]]"
+                             file-url="[[item.report_attachment]]"
+                             upload-endpoint="[[uploadEndpoint]]"
+                             on-upload-finished="_uploadFinished"
+                             readonly="[[!editMode]]"
+                             required
+                             error-message="Please select the report file">
+              </etools-upload>
             </div>
           </div>
         </div>
@@ -186,6 +184,12 @@
           assessmentTypes: {
             type: Array,
             statePath: 'assessmentTypes'
+          },
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
           }
         };
       }
@@ -204,17 +208,12 @@
           type: null,
           completed_date: null,
           current: false,
-          report: null,
-          report_file: ''
+          report_attachment: null
         };
       }
 
       _editModeChanged() {
         this.updateStyles();
-      }
-
-      _hideDeleteBtn(itemReportFile) {
-        return !!itemReportFile;
       }
 
       _assessmentPropertyChanged(dataPath) {
@@ -236,26 +235,22 @@
         let valid = true;
         switch (field) {
           case 'assessmentType':
-            if (_.isEmpty(type) && (!_.isEmpty(completedDate) || this._hasReport(reportFile, reportFileLength))) {
+            if (_.isEmpty(type) && (!_.isEmpty(completedDate) || reportFile)) {
               valid = false;
             }
             break;
           case 'dateSubmitted':
-            if (_.isEmpty(completedDate) && (!_.isEmpty(type) || this._hasReport(reportFile, reportFileLength))) {
+            if (_.isEmpty(completedDate) && (!_.isEmpty(type) || reportFile)) {
               valid = false;
             }
             break;
           case 'report':
-            if (!this._hasReport(reportFile, reportFileLength) && (!_.isEmpty(type) || !_.isEmpty(completedDate))) {
+            if (!reportFile && (!_.isEmpty(type) || !_.isEmpty(completedDate))) {
               valid = false;
             }
             break;
         }
         return valid;
-      }
-
-      _hasReport(report, reportFileLength) {
-        return report instanceof File || reportFileLength > 0;
       }
 
       _addNewAssessment() {
@@ -289,15 +284,15 @@
           let fieldEl = this.shadowRoot.querySelector(fieldSelector);
           let reportFileLength = 0;
 
-          if (typeof this.dataItems[index].report_file === 'string') {
-            reportFileLength = this.dataItems[index].report_file.length;
+          if (typeof this.dataItems[index].report_attachment === 'string') {
+            reportFileLength = this.dataItems[index].report_attachment.length;
           }
           if (fieldEl) {
             let fieldName = this._getFieldNameFromSelector(fieldSelector);
             let validField = this._isValid(fieldName,
                 this.dataItems[index].type,
                 this.dataItems[index].completed_date,
-                this.dataItems[index].report,
+                this.dataItems[index].report_attachment,
                 reportFileLength, fieldEl);
             fieldEl.invalid = !validField;
             if (!validField) {
@@ -312,8 +307,7 @@
       _emptyAssessment(assessment) {
         return assessment && !assessment.type &&
             assessment.completed_date === null &&
-            assessment.report_file.length === 0 &&
-            assessment.report instanceof File === false;
+            !assessment.report_attachment;
       }
 
       _getFieldNameFromSelector(fieldSelector) {
@@ -325,6 +319,14 @@
 
       _getAddBtnAdditionalClass(shownAssessmentsNumber) {
         return shownAssessmentsNumber ? 'add-btn-lm' : '';
+      }
+
+      _uploadFinished(e) {
+        if (e.detail.success) {
+          const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
+        }
       }
 
     }
