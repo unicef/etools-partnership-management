@@ -39,7 +39,9 @@
                    ok-btn-text="Terminate"
                    dialog-title="Terminate PD/SSFA"
                    on-close="_handleDialogClosed"
-                   on-confirm-btn-clicked="_triggerPdTermination">
+                   on-confirm-btn-clicked="_triggerPdTermination"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
 
       <div class="row-h flex-c">
         <etools-date-input id="terminationDate"
@@ -61,6 +63,7 @@
                        on-upload-finished="_uploadFinished"
                        required
                        auto-validate
+                       upload-in-progress="{{uploadInProgress}}"
                        error-message="Termination Notice file is required">
         </etools-upload>
       </div>
@@ -119,7 +122,11 @@
             type: Array,
             value: ['#terminationDate', '#terminationNotice']
           },
-          terminationElSource: Object
+          terminationElSource: Object,
+          uploadInProgress: {
+            type: Boolean,
+            value: false
+          }
         };
       }
       connectedCallback() {

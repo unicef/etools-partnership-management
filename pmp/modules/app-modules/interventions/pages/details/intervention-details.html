@@ -226,10 +226,12 @@
         </div>
         <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
           <etools-upload label="Activation Letter"
-                    file-url="{{intervention.activation_letter_attachment}}"
-                    upload-endpoint="[[uploadEndpoint]]"
-                    on-upload-finished="_activationLetterUploadFinished"
-                    hidden$="[[_isDraft(intervention.status)]]">
+                         file-url="{{intervention.activation_letter_attachment}}"
+                         upload-endpoint="[[uploadEndpoint]]"
+                         on-upload-finished="_activationLetterUploadFinished"
+                         hidden$="[[_isDraft(intervention.status)]]"
+                         show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
+                         on-delete-file="_activationLetterDelete">
           </etools-upload>
         </div>
       </div>
@@ -955,6 +957,14 @@
           const response = JSON.parse(e.detail.success);
           this.set('intervention.activation_letter_attachment', response.id);
         }
+      }
+
+      _activationLetterDelete(e) {
+        this.set('intervention.prc_review_attachment', null);
+      }
+
+      showActivationLetterDeleteBtn(status) {
+        return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.prc_review_attachment;
       }
 
     }
