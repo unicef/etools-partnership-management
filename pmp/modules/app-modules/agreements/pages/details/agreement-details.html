@@ -309,6 +309,7 @@
               file-url="{{agreement.attachment}}"
               upload-endpoint="[[uploadEndpoint]]"
               on-upload-finished="_signedAgreementUploadFinished"
+              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment)]]"
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
               required$="[[agreement.permissions.required.attachment]]">
@@ -745,6 +746,14 @@
           const response = JSON.parse(e.detail.success);
           this.set('agreement.attachment', response.id);
         }
+      }
+
+      /**
+       * Refer to unicef/etools-issues#232
+       * For Draft Status, only Change option is available. No delete option is available in Draft.
+       */
+      showSignedAgDeleteBtn() {
+        return this._isDraft() && !!this.originalAgreementData && !this.originalAgreementData.attachment;
       }
 
     }
