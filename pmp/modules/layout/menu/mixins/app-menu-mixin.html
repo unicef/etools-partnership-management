@@ -26,9 +26,19 @@
     }
 
     _initMenuListeners() {
+      this._toggleSmallMenu = this._toggleSmallMenu.bind(this);
+      this._resizeMainLayout = this._resizeMainLayout.bind(this);
+      this._toggleDrawer = this._toggleDrawer.bind(this);
+
       this.addEventListener('toggle-small-menu', this._toggleSmallMenu);
       this.addEventListener('resize-main-layout', this._resizeMainLayout);
       this.addEventListener('drawer', this._toggleDrawer);
+    }
+
+    disconnectedCallback() {
+      this.removeEventListener('toggle-small-menu', this._toggleSmallMenu);
+      this.removeEventListener('resize-main-layout', this._resizeMainLayout);
+      this.removeEventListener('drawer', this._toggleDrawer);
     }
 
     _initMenuSize() {

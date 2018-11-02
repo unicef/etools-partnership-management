@@ -369,11 +369,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _initListeners() {
+        this._pageNotFound = this._pageNotFound.bind(this);
+        this._updateMainPath = this._updateMainPath.bind(this);
+        this._updateQueryParams = this._updateQueryParams.bind(this);
+        this._onForbidden = this._onForbidden.bind(this);
+        this._openDataRefreshDialog = this._openDataRefreshDialog.bind(this);
+
         this.addEventListener('404', this._pageNotFound);
         this.addEventListener('update-main-path', this._updateMainPath);
         this.addEventListener('update-route-query-params', this._updateQueryParams);
         this.addEventListener('forbidden', this._onForbidden);
         this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('404', this._pageNotFound);
+        this.removeEventListener('update-main-path', this._updateMainPath);
+        this.removeEventListener('update-route-query-params', this._updateQueryParams);
+        this.removeEventListener('forbidden', this._onForbidden);
+        this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
       }
 
       _scrollToTopOnPageChange(module) {
