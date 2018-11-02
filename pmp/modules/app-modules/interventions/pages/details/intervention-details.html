@@ -964,7 +964,8 @@
       }
 
       showActivationLetterDeleteBtn(status) {
-        return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.activation_letter_attachment;
+        return this._isDraft(status) && !!this.originalIntervention
+               && !this.originalIntervention.activation_letter_attachment;
       }
 
     }
