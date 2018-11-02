@@ -112,7 +112,7 @@
           </paper-button>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
-              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+              <paper-icon-item on-tap="selectFilter" disabled$="[[item.disabled]]"  selected$="[[item.selected]]">
                 <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
                 <paper-item-body>[[item.filterName]]</paper-item-body>
               </paper-icon-item>
@@ -385,19 +385,24 @@
                 {
                   filterName: 'Partner Type',
                   selectedValue: this.selectedPartnerTypes,
-                  disabled: this.showOnlyGovernmentType
+                  disabled: this.showOnlyGovernmentType,
+                  allowEmpty: true,
+                  disableMenuOption: this.showOnlyGovernmentType
                 },
                 {
                   filterName: 'CSO Type',
-                  selectedValue: this.selectedCsoTypes
+                  selectedValue: this.selectedCsoTypes,
+                  allowEmpty: true
                 },
                 {
                   filterName: 'Risk Rating',
-                  selectedValue: this.selectedRiskRatings
+                  selectedValue: this.selectedRiskRatings,
+                  allowEmpty: true
                 },
                 {
                   filterName: 'Show hidden',
-                  selectedValue: this.showHidden
+                  selectedValue: this.showHidden,
+                  allowEmpty: true
                 }
               ];
               this.updateShownFilters(filtersValues);
@@ -518,6 +523,7 @@
         }
       }
 
+
       _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType) {
         if (showOnlyGovernmentType) {
           // lock list to government partners only
@@ -527,8 +533,10 @@
           this.set('selectedPartnerTypes', []);
         }
         this.set('selectedCsoTypes', []);
+        this.set('selectedRiskRatings', []);
         this.resetPageNumber();
         this.set('showHidden', false);
+        this._updateSelectedFiltersValues();
       }
 
       _triggerPartnerLoadingMsg() {
