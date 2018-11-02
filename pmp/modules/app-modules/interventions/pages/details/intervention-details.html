@@ -29,8 +29,8 @@
 
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
-<link rel="import" href="../../../../endpoints/endpoints.html">
 <link rel="import" href="../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
@@ -427,6 +427,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     class InterventionDetails extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
@@ -436,7 +437,8 @@
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.FrNumbersConsistency,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element) {
 
       static get is() {
@@ -528,11 +530,10 @@
             type: Boolean,
             value: false
           },
-          uploadEndpoint: {
-            type: String,
-            value: function() {
-              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
-            }
+          activLetterUploadInProgress: {
+            type: Boolean,
+            values: false,
+            observer: '_onUploadInProgressChanged'
           }
         };
       }
@@ -953,9 +954,13 @@
       }
 
       _activationLetterUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.activation_letter_attachment', response.id);
+          this.dispatch('setThereAreUnsavedUploads', true);
+        } else {
+          this.dispatch('setThereAreUnsavedUploads', false);
         }
       }
 

@@ -57,7 +57,8 @@
       permissions: null,
       in_amendment: false
     },
-    uploadsInProgress: 0
+    uploadsInProgress: 0,
+    thereAreUnsavedUploads: false
   };
 
   const reduxStoreReducer = (state, action) => {
@@ -221,6 +222,8 @@
         return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress + 1});
       case 'DECREASE_UPLOADS_IN_PROGRESS':
         return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress - 1});
+      case 'SET_THERE_ARE_UNSAVED_UPLOADS':
+        return Object.assign({}, state, {thereAreUnsavedUploads: action.thereAreUnsavedUploads});
 
       default:
         // no change
@@ -239,7 +242,8 @@
   });
 
   window.addEventListener('beforeunload', function (e) {
-    if (Number(dataReduxStore.getState().uploadsInProgress) > 0) {
+    if (Number(dataReduxStore.getState().uploadsInProgress) > 0 ||
+        dataReduxStore.getState().thereAreUnsavedUploads) {
        // Cancel the event as stated by the standard.
       e.preventDefault();
       // Chrome requires returnValue to be set.

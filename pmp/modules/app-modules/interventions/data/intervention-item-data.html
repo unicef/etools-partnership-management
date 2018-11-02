@@ -88,10 +88,12 @@
       _triggerInterventionRequest(options) {
         let self = this;
         let ajaxMethod = options.method || 'GET';
-        this.sendRequest(options).then(function(resp) {
+        return this.sendRequest(options).then(function(resp) {
           self._handleResponse(resp, ajaxMethod);
+          return true;
         }).catch(function(error) {
           self._handleErrorResponse(error, ajaxMethod);
+          return false;
         });
       }
 
@@ -286,6 +288,7 @@
       saveIntervention(intervention, callback) {
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
           this.fireEvent('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
+          return false;
         } else {
           let endpoint = null;
           let isNew = false;
@@ -329,7 +332,7 @@
           });
 
           let method = (isNew) ? 'POST' : 'PATCH';
-          this._triggerInterventionRequest({
+          return this._triggerInterventionRequest({
             method: method, endpoint: endpoint, body: intervention,
             multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
           });

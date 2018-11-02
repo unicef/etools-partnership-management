@@ -26,7 +26,7 @@
                    on-intervention-unsuspend-event="_unsuspendIntervention"
                    on-intervention-delete-event="_openDeleteConfirmation"
                    disable-actions="[[!allowSave(uploadsInProgress)]]"
-                   actions-btn-tooltip="[[getUploadInProgressTooltip(uploadsInProgress)]]">
+                   actions-btn-tooltip="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads)]]">
     </etools-status>
   </template>
   <script>
@@ -113,6 +113,10 @@
           uploadsInProgress: {
             type: Number,
             statePath: 'uploadsInProgress'
+          },
+          thereAreUnsavedUploads: {
+            type: Boolean,
+            statePath: 'thereAreUnsavedUploads'
           }
         };
       }
@@ -135,8 +139,14 @@
         return Number(uploadsInProgress) === 0;
       }
 
-      getUploadInProgressTooltip(uploadsInProgress) {
-        return uploadsInProgress ? 'Uploads in progress, you can save after they\'re finished.' : '';
+      getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads) {
+        if (uploadsInProgress) {
+          return 'Uploads in progress, you can save after they\'re finished.';
+        }
+        if (thereAreUnsavedUploads) {
+          return 'Click to Save finished uploads!';
+        }
+        return '';
       }
 
       disconnectedCallback() {

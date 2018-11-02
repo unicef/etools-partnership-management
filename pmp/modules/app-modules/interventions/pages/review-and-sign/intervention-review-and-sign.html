@@ -20,12 +20,11 @@
 
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/date-mixin.html">
-<link rel="import" href="../../../../endpoints/endpoints.html">
 
 <link rel="import" href="components/amendments/pd-amendments.html">
 <link rel="import" href="components/fund-reservations/fund-reservations.html">
@@ -239,20 +238,20 @@
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Date
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @applesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.Date,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -303,39 +302,20 @@
             type: String,
             value: ''
           },
-          uploadEndpoint: {
-            type: String,
-            value: function() {
-              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
-            }
-          },
           signedPdUploadInProgress: {
             type: Boolean,
             value: false,
-            observer: '_onSignedPDUploadInProgressChanged'
+            observer: '_onUploadInProgressChanged'
           },
           prcUploadInProgress: {
             type: Boolean,
             value: false,
-            observer: '_onPrcUploadInProgressChanged'
+            observer: '_onUploadInProgressChanged'
           }
         };
       }
 
-      static get actions() {
-        return {
-          increaseUploadsInProgress: function() {
-            return {
-              type: 'INCREASE_UPLOADS_IN_PROGRESS'
-            };
-          },
-          decreaseUploadsInProgress: function() {
-            return {
-              type: 'DECREASE_UPLOADS_IN_PROGRESS'
-            };
-          }
-        };
-      }
+
 
       static get observers() {
         return [
@@ -354,18 +334,6 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         this.fireEvent('tab-content-attached');
-      }
-
-      _onSignedPDUploadInProgressChanged(uploadInProgress) {
-        if (uploadInProgress) {
-          this.dispatch('increaseUploadsInProgress');
-        }
-      }
-
-      _onPrcUploadInProgressChanged(uploadInProgress) {
-        if (uploadInProgress) {
-          this.dispatch('increaseUploadsInProgress');
-        }
       }
 
       _updateStyles() {
@@ -490,6 +458,9 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.signed_pd_attachment', response.id);
+          this.dispatch('setThereAreUnsavedUploads', true);
+        } else {
+          this.dispatch('setThereAreUnsavedUploads', false);
         }
       }
 
@@ -502,6 +473,10 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.prc_review_attachment', response.id);
+          this.dispatch('setThereAreUnsavedUploads', true);
+        } else {
+          // covers consecutive unsaved uploads, first successfull , second errored
+          this.dispatch('setThereAreUnsavedUploads', false);
         }
       }
 

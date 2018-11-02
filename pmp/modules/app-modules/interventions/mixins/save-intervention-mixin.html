@@ -55,8 +55,8 @@
 
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
-          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-          return true;
+          let successful = this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          return successful;
         }
 
         _getModifiedFields() {
