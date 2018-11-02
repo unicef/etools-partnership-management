@@ -55,39 +55,8 @@
 
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
-
-          if (this.intervention.activation_letter_file_temp instanceof File) {
-            this._uploadActivationLetter(this.intervention.activation_letter_file_temp)
-              .then((response) => {
-
-                interventionData.activation_letter_attachment = response.id;
-                this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-              })
-              .catch((err) => {
-                this.parseRequestErrorsAndShowAsToastMsgs(err);
-                return false;
-              });
-          } else {
-            this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-          }
-
-          return true;
-        }
-
-        _uploadActivationLetter(file) {
-          let options = {
-            method: 'POST',
-            endpoint: this.getEndpoint('attachmentsUpload'),
-            body: {file: file},
-            multiPart: true,
-            prepareMultipartData: true
-          };
-          return this.sendRequest(options)
-              .then((resp) => {
-                return resp;
-              }).catch((error) => {
-                throw error;
-          });
+          let successful = this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+          return successful;
         }
 
         _getModifiedFields() {
@@ -141,10 +110,8 @@
             // review and signed element not stamped...
             // validate current data that belongs to this tab against permissions
             let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
-              'unicef_signatory', 'signed_by_unicef_date'];
-            let reviewAndSignObjFields = ['signed_pd_document'];
-            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
-                this._validateInterventionObjectFields(reviewAndSignObjFields);
+              'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment'];
+            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields);
             this.set('_forceReviewUiValidationOnAttach', true);
           }
           return valid;
@@ -196,22 +163,14 @@
           if (_.isEmpty(interventionData.attachments)) {
             delete interventionData.attachments;
           }
-
-          // if prc_review_document is null we need to delete the property otherwise the
-          // file gets deleted from the backend
-          if (this.intervention.hasOwnProperty('prc_review_document') &&
-              !(this.intervention.prc_review_document instanceof File)) {
-            delete interventionData.prc_review_document;
-            delete interventionData.prc_review_document_file;
-          }
-
           return interventionData;
         }
 
         _showErrorsWarning(validDetails, validReviewAndSign) {
           let msg = '';
-          if (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() &&
-              this.intervention.signed_pd_document instanceof File) {
+          if ((this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+              this.intervention.status === '') &&
+              this.intervention.signed_pd_attachment) {
             msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
                 '(check DETAILS and REVIEW & SIGN tabs).';
           } else {

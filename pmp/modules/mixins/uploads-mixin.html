@@ -1,0 +1,58 @@
+<link rel="import" href="../redux/etools-data-redux-store.html">
+<link rel="import" href="../endpoints/endpoints.html">
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    EtoolsPmpApp.Mixins.Uploads = baseClass => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+      static get properties() {
+        return {
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          },
+        };
+      }
+
+      static get actions() {
+        return {
+          increaseUploadsInProgress: function() {
+            return {
+              type: 'INCREASE_UPLOADS_IN_PROGRESS'
+            };
+          },
+          decreaseUploadsInProgress: function() {
+            return {
+              type: 'DECREASE_UPLOADS_IN_PROGRESS'
+            };
+          },
+          setThereAreUnsavedUploads: function(thereAre) {
+            return {
+              type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
+              thereAreUnsavedUploads: thereAre
+            };
+          }
+        };
+      }
+
+      _onUploadInProgressChanged(uploadInProgress) {
+        if (uploadInProgress) {
+          this.dispatch('increaseUploadsInProgress');
+        }
+      }
+
+   };
+
+  }());
+</script>
+

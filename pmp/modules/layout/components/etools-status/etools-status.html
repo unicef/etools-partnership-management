@@ -33,7 +33,10 @@
         </template>
       </div>
       <div class="bottom-container" hidden$="[[hideActions]]">
-        <etools-action-button actions="[[actions]]"></etools-action-button>
+        <etools-action-button disabled$="[[disableActions]]" actions="[[actions]]"
+                              title="[[actionsBtnTooltip]]"
+                              show-info-icon="[[_showInfoIcon(actionsBtnTooltip)]]">
+        </etools-action-button>
       </div>
     </etools-content-panel>
   </template>
@@ -68,6 +71,14 @@
           hideActions: {
             type: Boolean,
             value: true
+          },
+          disableActions: {
+            type: Boolean,
+            value: false
+          },
+          actionsBtnTooltip: {
+            type: String,
+            value: ''
           }
         };
       }
@@ -77,6 +88,10 @@
           '_handleStatusChanged(statuses, statuses.*)',
           '_handleActionsChanged(actions, actions.*)'
         ];
+      }
+
+      _showInfoIcon(actionsBtnTooltip) {
+        return !!actionsBtnTooltip;
       }
 
       _handleStatusChanged(statuses) {

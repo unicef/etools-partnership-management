@@ -61,16 +61,16 @@
 
     _getModifiedReviewAndSign() {
       let updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
-        'prc_review_document', 'prc_review_document_file', 'partner_authorized_officer_signatory',
-        'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document',
-        'signed_pd_document_file', 'in_amendment'];
+        'prc_review_attachment', 'partner_authorized_officer_signatory',
+        'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment',
+        'in_amendment'];
 
       return this._buildModifiedInterventionObject(updatableFields, []);
     }
 
     _getModifiedInterventionDetails(docType) {
       let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
-        'start', 'end'];
+        'start', 'end', 'activation_letter_attachment'];
       if (docType !== 'SSFA') {
         updatableFields.push('reference_number_year');
         updatableFields.push('contingency_pd');
