@@ -960,11 +960,12 @@
       }
 
       _activationLetterDelete(e) {
-        this.set('intervention.prc_review_attachment', null);
+        this.set('intervention.activation_letter_attachment', null);
       }
 
       showActivationLetterDeleteBtn(status) {
-        return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.prc_review_attachment;
+        return this._isDraft(status) && !!this.originalIntervention
+               && !this.originalIntervention.activation_letter_attachment;
       }
 
     }
