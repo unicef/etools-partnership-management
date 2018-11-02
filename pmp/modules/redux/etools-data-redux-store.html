@@ -241,7 +241,7 @@
     dataReduxStore.dispatch(JSON.parse(e.newValue));
   });
 
-  window.addEventListener('beforeunload', function (e) {
+  window.addEventListener('beforeunload', function(e) {
     if (Number(dataReduxStore.getState().uploadsInProgress) > 0 ||
         dataReduxStore.getState().thereAreUnsavedUploads) {
        // Cancel the event as stated by the standard.
