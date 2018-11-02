@@ -960,6 +960,7 @@
           this.set('intervention.activation_letter_attachment', response.id);
           this.dispatch('setThereAreUnsavedUploads', true);
         } else {
+          // covers consecutive unsaved uploads, first successfull , second errored
           this.dispatch('setThereAreUnsavedUploads', false);
         }
       }
