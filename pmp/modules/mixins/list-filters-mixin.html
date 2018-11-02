@@ -133,7 +133,9 @@
       if (Array.isArray(filters) && filters.length > 0) {
         filters.forEach((filter) => {
           // check available filters
-          const filterObj = this.listFilterOptions.find(f => f.filterName === filter.filterName);
+          const filterObj = this.listFilterOptions instanceof Array
+            ? this.listFilterOptions.find(f => f.filterName === filter.filterName)
+            : null;
           if (!filterObj) {
             return;
           }
