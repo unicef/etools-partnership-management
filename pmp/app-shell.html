@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
 <link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
+<link rel="import" href="../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <!-- import global config and dexie db config -->
 <link rel="import" href="modules/config/config.html">
@@ -64,6 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
 <link rel="import" href="modules/mixins/ie11-mixin.html">
+<link rel="import" href="modules/mixins/utils-mixin.html">
 
 <!-- import static data elements -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
@@ -157,7 +159,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <environment-flags></environment-flags>
 
     <app-location
-        route="{{route}}"
+        route="{{appLocRoute}}"
         url-space-regex="^[[rootPath]]">
     </app-location>
 
@@ -165,7 +167,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         route="{{route}}"
         pattern="[[rootPath]]:module"
         data="{{routeData}}"
-        tail="{{subroute}}">
+        tail="{{subroute}}"
+        on-route-changed="routeChanged">
     </app-route>
 
     <app-drawer-layout id="layout" responsive-width="850px"
@@ -271,6 +274,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.IE11
+     * @appliesMixin EtoolsPmpApp.Mixins.Utils
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.AppMenu,
@@ -282,7 +286,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsPmpApp.Mixins.AmendmentModeUIMixin,
       EtoolsPmpApp.Mixins.UserData,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.IE11
+      EtoolsPmpApp.Mixins.IE11,
+      EtoolsPmpApp.Mixins.Utils
     ], Polymer.Element);
 
     /**
@@ -308,7 +313,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_moduleChanged'
           },
-          route: Object,
+          route: {
+            type: Object
+          },
           routeData: Object,
           subroute: Object,
           // This shouldn't be neccessary, but the Analyzer isn't picking up
@@ -331,6 +338,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           _appModuleMainElUrlTmpl: {
             type: String,
             value: 'modules/app-modules/##module##/##main-el-name##-module.html'
+          },
+          appLocRoute: {
+            type: Object,
+            observer: 'appLocationChanged'
+          },
+          uploadsInProgress: {
+            type: Number,
+            statePath: 'uploadsInProgress'
+          },
+          thereAreUnsavedUploads: {
+            type: Boolean,
+            statePath: 'thereAreUnsavedUploads'
           }
         };
       }
@@ -366,6 +385,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             loadingSource: 'main-page'
           });
         }
+      }
+
+      appLocationChanged(appLocRoute) {
+        if (this.route) {
+          if (appLocRoute.path === this.route.path &&
+              this.objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
+            return;
+          }
+        }
+        console.log('app location changed', this.route);
+
+        if (this.uploadsInProgress || this.thereAreUnsavedUploads) {
+          let msg = 'Are you sure you want to leave the page?';
+
+          if (this.uploadsInProgress) {
+            msg += 'There are uploads in progress and they will be lost!';
+          }
+          if (this.thereAreUnsavedUploads) {
+            msg += 'There are unsaved uploaded files and they will be lost!';
+          }
+          alert(msg); // TODO show dialog with YES/ Cancel and handle confirm/dismiss
+        } else {
+          this.route = JSON.parse(JSON.stringify(appLocRoute));
+        }
+
+      }
+
+      routeChanged(route) {
+        if (this.appLocRoute.path === this.route.path &&
+           this.objectsAreTheSame(this.appLocRoute.__queryParams, route.__queryParams)) {
+            return;
+        }
+        console.log('route changed', this.appLocRoute, route, this.route);
+        this.appLocRoute = JSON.parse(JSON.stringify(this.route));
       }
 
       _initListeners() {
