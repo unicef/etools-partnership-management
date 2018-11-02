@@ -56,7 +56,8 @@
     pageData: {
       permissions: null,
       in_amendment: false
-    }
+    },
+    uploadsInProgress: 0
   };
 
   const reduxStoreReducer = (state, action) => {
@@ -216,6 +217,10 @@
       case 'SET_IN_AMENDMENT_MODE_STATE':
         pageDataInAmendment = Object.assign({}, state.pageData, {in_amendment: action.in_amendment});
         return Object.assign({}, state, {pageData: pageDataInAmendment});
+      case 'INCREASE_UPLOADS_IN_PROGRESS':
+        return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress + 1});
+      case 'DECREASE_UPLOADS_IN_PROGRESS':
+        return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress - 1});
 
       default:
         // no change

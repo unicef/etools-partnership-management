@@ -110,7 +110,8 @@
                 on-upload-finished="_prcRevDocUploadFinished"
                 readonly$="[[!permissions.edit.prc_review_attachment]]"
                 show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, permissions.edit.prc_review_attachment)]]"
-                on-delete-file="_prcRevDocDelete">
+                on-delete-file="_prcRevDocDelete"
+                upload-in-progress="{{prcUploadInProgress}}">
             </etools-upload>
           </div>
         </div>
@@ -192,7 +193,8 @@
                          auto-validate
                          readonly$="[[!permissions.edit.signed_pd_attachment]]"
                          required$="[[permissions.required.signed_pd_attachment]]"
-                         error-message="Please select Signed PD/SSFA document">
+                         error-message="Please select Signed PD/SSFA document"
+                         upload-in-progress="{{signedPdUploadInProgress}}">
           </etools-upload>
         </div>
         <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
@@ -306,6 +308,31 @@
             value: function() {
               return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
             }
+          },
+          signedPdUploadInProgress: {
+            type: Boolean,
+            value: false,
+            observer: '_onSignedPDUploadInProgressChanged'
+          },
+          prcUploadInProgress: {
+            type: Boolean,
+            value: false,
+            observer: '_onPrcUploadInProgressChanged'
+          }
+        };
+      }
+
+      static get actions() {
+        return {
+          increaseUploadsInProgress: function() {
+            return {
+              type: 'INCREASE_UPLOADS_IN_PROGRESS'
+            };
+          },
+          decreaseUploadsInProgress: function() {
+            return {
+              type: 'DECREASE_UPLOADS_IN_PROGRESS'
+            };
           }
         };
       }
@@ -327,6 +354,18 @@
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         this.fireEvent('tab-content-attached');
+      }
+
+      _onSignedPDUploadInProgressChanged(uploadInProgress) {
+        if (uploadInProgress) {
+          this.dispatch('increaseUploadsInProgress');
+        }
+      }
+
+      _onPrcUploadInProgressChanged(uploadInProgress) {
+        if (uploadInProgress) {
+          this.dispatch('increaseUploadsInProgress');
+        }
       }
 
       _updateStyles() {
@@ -447,6 +486,7 @@
       }
 
       _signedPDUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.signed_pd_attachment', response.id);
@@ -458,6 +498,7 @@
       }
 
       _prcRevDocUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.prc_review_attachment', response.id);
