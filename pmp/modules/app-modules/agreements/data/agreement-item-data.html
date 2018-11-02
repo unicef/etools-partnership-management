@@ -230,13 +230,6 @@
               this.set('handleSuccResponseAdditionalCallback', succCallback);
             }
             let withUpload = false; // used to set multipart prop on etools-ajax
-            if (agreement.hasOwnProperty('attached_agreement')) {
-              if (agreement.attached_agreement instanceof File) {
-                withUpload = true;
-              } else {
-                delete agreement.attached_agreement;
-              }
-            }
             if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
               agreement.amendments = agreement.amendments.filter(a => !a.id); // send only newlly added
               withUpload = true;
