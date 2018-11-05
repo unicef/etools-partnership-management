@@ -288,7 +288,7 @@
       saveIntervention(intervention, callback) {
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
           this.fireEvent('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
-          return false;
+          return Promise.resolve(false);
         } else {
           let endpoint = null;
           let isNew = false;

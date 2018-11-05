@@ -339,10 +339,9 @@
       _savePartner(newPartnerData) {
         let partnerData = this.shadowRoot.querySelector('#partnerData');
         if (partnerData) {
-          let success = partnerData.savePartner(newPartnerData);
-          if (success) {
+          partnerData.savePartner(newPartnerData).then(() => {
             this.dispatch('setThereAreUnsavedUploads', false);
-          }
+          });
         }
       }
 
