@@ -419,7 +419,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         if (this.uploadsInProgress || this.thereAreUnsavedUploads) {
           this._openLeavePageDialog();
-          //alert(msg); // TODO show dialog with YES/ Cancel and handle confirm/dismiss
         } else {
           this.route = JSON.parse(JSON.stringify(appLocRoute));
         }
@@ -635,7 +634,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
        _createLeavePageDialog() {
         let msg = document.createElement('span');
-        msg.innerText = 'Are you sure you want to leave this page? There are in progress or unsaved uploads and they will be lost!';
+        msg.innerText = 'Are you sure you want to leave this page? There are in progress or ' +
+                        'unsaved uploads and they will be lost!';
         let conf = {
           title: 'Are you sure you want to leave this page?',
           size: 'md',
@@ -652,11 +652,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _onLeavePageConfirmation(e) {
-        if (e.detail.confirmed) {//stay on page
+        if (e.detail.confirmed) { // stay on page
          // revert url
          this.appLocRoute = JSON.parse(JSON.stringify(this.route));
          this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-        } else {//leave
+        } else { // leave
           this.dispatch('resetUploadsInProgress');
           this.dispatch('setThereAreUnsavedUploads', false);
           this.route = JSON.parse(JSON.stringify(this.appLocRoute));
