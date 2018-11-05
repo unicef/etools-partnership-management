@@ -11,6 +11,7 @@
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../redux/etools-data-redux-store.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
@@ -157,6 +158,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
@@ -166,7 +168,8 @@
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsPmpApp.Mixins.AjaxErrorsParser
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
     /**
@@ -261,6 +264,17 @@
         };
       }
 
+      static get actions() {
+        return {
+          setThereAreUnsavedUploads: function(thereAre) {
+              return {
+                type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
+                thereAreUnsavedUploads: thereAre
+              };
+          }
+        };
+      }
+
       static get observers() {
         return [
           '_pageChanged(listActive, tabsActive, newAgreementActive)',
@@ -330,7 +344,10 @@
         if (!agreementData.id) {
           agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
         }
-        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
+        let success = this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
+        if (success) {
+          this.dispatch('setThereAreUnsavedUploads', false);
+        }
       }
 
       _updateAgreementStatus(e) {
