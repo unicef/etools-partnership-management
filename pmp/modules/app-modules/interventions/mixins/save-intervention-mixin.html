@@ -55,7 +55,7 @@
           this.fireEvent('clear-server-errors');
           this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
           if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-            return false;
+            return Promise.resolve(false);
           }
 
           let interventionDetailsAreValid = this._validateInterventionDetails();
@@ -64,16 +64,18 @@
 
           if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
             this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-            return false;
+            return Promise.resolve(false);
           }
 
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
-          let successful = this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-          if (successful) {
-            this.dispatch('setThereAreUnsavedUploads', false);
-          }
-          return successful;
+          return this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved)
+              .then(() => {
+                  this.dispatch('setThereAreUnsavedUploads', false);
+                  return true;
+               }
+              )
+              .catch(() => { return false; });
         }
 
         _getModifiedFields() {
