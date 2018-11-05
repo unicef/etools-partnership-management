@@ -345,8 +345,10 @@
           agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
         }
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved)
-            .then(() => {
-              this.dispatch('setThereAreUnsavedUploads', false);
+            .then((successfull) => {
+              if (successfull) {
+                this.dispatch('setThereAreUnsavedUploads', false);
+              }
             });
       }
 
