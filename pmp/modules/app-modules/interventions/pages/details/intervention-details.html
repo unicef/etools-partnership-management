@@ -229,6 +229,7 @@
                          file-url="{{intervention.activation_letter_attachment}}"
                          upload-endpoint="[[uploadEndpoint]]"
                          on-upload-finished="_activationLetterUploadFinished"
+                         on-upload-started="_onUploadStarted"
                          hidden$="[[_isDraft(intervention.status)]]"
                          show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
                          on-delete-file="_activationLetterDelete">
@@ -529,11 +530,6 @@
           showInactiveIndicators: {
             type: Boolean,
             value: false
-          },
-          activLetterUploadInProgress: {
-            type: Boolean,
-            values: false,
-            observer: '_onUploadInProgressChanged'
           }
         };
       }

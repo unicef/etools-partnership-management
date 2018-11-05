@@ -654,7 +654,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _onLeavePageConfirmation(e) {
         if (e.detail.confirmed) {//stay on page
          // revert url
-
          this.appLocRoute = JSON.parse(JSON.stringify(this.route));
          this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
         } else {//leave

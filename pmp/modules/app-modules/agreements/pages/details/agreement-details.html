@@ -310,7 +310,7 @@
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
               required$="[[agreement.permissions.required.attachment]]"
-              upload-in-progress="{{uploadInProgress}}">
+              on-upload-started="_onUploadStarted">
           </etools-upload>
         </div>
       </div>
@@ -421,11 +421,6 @@
             value: function() {
               return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
             }
-          },
-          uploadInProgress: {
-            type: Boolean,
-            value: false,
-            observer: '_onUploadInProgressChanged'
           }
         };
       }

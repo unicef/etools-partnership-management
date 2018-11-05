@@ -45,10 +45,9 @@
         };
       }
 
-      _onUploadInProgressChanged(uploadInProgress) {
-        if (uploadInProgress) {
-          this.dispatch('increaseUploadsInProgress');
-        }
+      _onUploadStarted(e) {
+        e.stopImmediatePropagation();
+        this.dispatch('increaseUploadsInProgress');
       }
 
    };
