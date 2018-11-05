@@ -70,14 +70,14 @@
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
           return this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved)
-              .then((successfull) => {
-                  if (successfull) {
-                    this.dispatch('setThereAreUnsavedUploads', false);
-                    return true;
-                  } else {
-                    return false;
-                  }
-               });
+                     .then((successfull) => {
+                        if (successfull) {
+                          this.dispatch('setThereAreUnsavedUploads', false);
+                          return true;
+                        } else {
+                          return false;
+                        }
+                    });
         }
 
         _getModifiedFields() {
