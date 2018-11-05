@@ -285,9 +285,22 @@
         this._showAgreementsPageLoadingMessage();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeListeners();
+      }
+
       _initListeners() {
+        this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
+        this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
+
         this.addEventListener('agreement-save-error', this._agreementSaveErrors);
         this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+      }
+
+      _removeListeners() {
+        this.removeEventListener('agreement-save-error', this._agreementSaveErrors);
+        this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
       }
 
       _showNewAgreementAddButton(listActive, permissions) {

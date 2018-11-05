@@ -21,11 +21,16 @@
 
     ready() {
       super.ready();
-      this._initMenuListeners();
+      this._initListeners();
       this._initMenuSize();
     }
 
-    _initMenuListeners() {
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this._removeListeners();
+    }
+
+    _initListeners() {
       this._toggleSmallMenu = this._toggleSmallMenu.bind(this);
       this._resizeMainLayout = this._resizeMainLayout.bind(this);
       this._toggleDrawer = this._toggleDrawer.bind(this);
@@ -35,7 +40,7 @@
       this.addEventListener('drawer', this._toggleDrawer);
     }
 
-    disconnectedCallback() {
+    _removeListeners() {
       this.removeEventListener('toggle-small-menu', this._toggleSmallMenu);
       this.removeEventListener('resize-main-layout', this._resizeMainLayout);
       this.removeEventListener('drawer', this._toggleDrawer);

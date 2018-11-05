@@ -80,17 +80,22 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.editQprDialog) {
-          document.querySelector('body').removeChild(this.editQprDialog);
-        }
+        this._removeEditQprDialog();
       }
 
       _createEditQprDialog() {
         this.editQprDialog = document.createElement('edit-qpr-dialog');
         this.editQprDialog.set('toastMsgLoadingSource', this);
-        this.editQprDialog.addEventListener('reporting-requirements-saved',
-            this._onReportingRequirementsSaved.bind(this));
+        this._onReportingRequirementsSaved = this._onReportingRequirementsSaved.bind(this);
+        this.editQprDialog.addEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved);
         document.querySelector('body').appendChild(this.editQprDialog);
+      }
+
+      _removeEditQprDialog() {
+        if (this.editQprDialog) {
+          this.editQprDialog.removeEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved);
+          document.querySelector('body').removeChild(this.editQprDialog);
+        }
       }
 
       openQuarterlyRepRequirementsDialog() {
