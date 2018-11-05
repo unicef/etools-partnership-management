@@ -655,7 +655,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (e.detail.confirmed) { // stay on page
          // revert url
          this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+
          this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+         this.shadowRoot.querySelector('app-sidebar-menu')
+             .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
         } else { // leave
           this.dispatch('resetUploadsInProgress');
           this.dispatch('setThereAreUnsavedUploads', false);
