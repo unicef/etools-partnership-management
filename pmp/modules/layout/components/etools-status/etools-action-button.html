@@ -78,11 +78,18 @@
         padding-left:5px;
       }
 
+      .green {
+        color: var(--etools-status-icon-completed-color, green);
+      }
+      .red {
+        color: var(--error-color, red);
+      }
+
     </style>
 
     <template is="dom-if" if="[[primaryAction]]">
       <paper-button raised disabled$="[[disabled]]">
-        <iron-icon icon="info-outline" hidden$="[[!showInfoIcon]]"></iron-icon>
+        <iron-icon icon="info-outline" hidden$="[[!showInfoIcon]]" class$="[[infoIconClass]]"></iron-icon>
         <div on-tap="_handlePrimaryClick" class="main-btn-part"> [[primaryAction.label]]</div>
 
         <template is="dom-if" if="[[secondaryActions.length]]">
@@ -137,6 +144,10 @@
           showInfoIcon: {
             type: Boolean,
             value: false
+          },
+          infoIconClass: {
+            type: Boolean,
+            value: ''
           }
         };
       }

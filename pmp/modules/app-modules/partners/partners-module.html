@@ -13,6 +13,7 @@
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
+<link rel="import" href="../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="../../layout/page-content-header/page-content-header.html">
 <link rel="import" href="../../layout/page-content-header/page-content-header-slotted-styles.html">
@@ -168,12 +169,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl,
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
       EtoolsPmpApp.Mixins.ModuleRouting,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
     /**
@@ -232,6 +235,17 @@
           },
           currentModule: String,
           originalPartnerData: Object
+        };
+      }
+
+       static get actions() {
+        return {
+          setThereAreUnsavedUploads: function(thereAre) {
+              return {
+                type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
+                thereAreUnsavedUploads: thereAre
+              };
+          }
         };
       }
 
@@ -325,7 +339,10 @@
       _savePartner(newPartnerData) {
         let partnerData = this.shadowRoot.querySelector('#partnerData');
         if (partnerData) {
-          partnerData.savePartner(newPartnerData);
+          let success = partnerData.savePartner(newPartnerData);
+          if (success) {
+            this.dispatch('setThereAreUnsavedUploads', false);
+          }
         }
       }
 

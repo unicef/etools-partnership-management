@@ -4,6 +4,7 @@
 <link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 
+<link rel="import" href="../../../redux/etools-data-redux-store.html">
 <link rel="import" href="etools-status-styles.html">
 <link rel="import" href="etools-action-button.html">
 
@@ -33,9 +34,10 @@
         </template>
       </div>
       <div class="bottom-container" hidden$="[[hideActions]]">
-        <etools-action-button disabled$="[[disableActions]]" actions="[[actions]]"
-                              title="[[actionsBtnTooltip]]"
-                              show-info-icon="[[_showInfoIcon(actionsBtnTooltip)]]">
+        <etools-action-button disabled$="[[!allowSave(uploadsInProgress)]]" actions="[[actions]]"
+                              title="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads)]]"
+                              show-info-icon="[[showInfoIcon]]"
+                              info-icon-class="[[infoIconClass]]">
         </etools-action-button>
       </div>
     </etools-content-panel>
@@ -48,8 +50,9 @@
      * Etools item(partner/agreement/intervention/report etc.) status display element
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
-    class EtoolsStatus extends Polymer.Element {
+    class EtoolsStatus extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(Polymer.Element) {
 
       static get is() {
         return 'etools-status';
@@ -72,13 +75,17 @@
             type: Boolean,
             value: true
           },
-          disableActions: {
+          uploadsInProgress: {
+            type: Number,
+            statePath: 'uploadsInProgress'
+          },
+          thereAreUnsavedUploads: {
+            type: Boolean,
+            statePath: 'thereAreUnsavedUploads'
+          },
+          showInfoIcon: {
             type: Boolean,
             value: false
-          },
-          actionsBtnTooltip: {
-            type: String,
-            value: ''
           }
         };
       }
@@ -89,6 +96,26 @@
           '_handleActionsChanged(actions, actions.*)'
         ];
       }
+
+      allowSave(uploadsInProgress) {
+        return Number(uploadsInProgress) === 0;
+      }
+
+      getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads) {
+        if (uploadsInProgress) {
+          this.showInfoIcon = true;
+          this.infoIconClass = 'red';
+          return 'Uploads in progress, you can save after they\'re finished.';
+        }
+        if (thereAreUnsavedUploads) {
+          this.showInfoIcon = true;
+          this.infoIconClass = 'green';
+          return 'Click to Save finished uploads!';
+        }
+        this.showInfoIcon = false;
+        return '';
+      }
+
 
       _showInfoIcon(actionsBtnTooltip) {
         return !!actionsBtnTooltip;

@@ -208,6 +208,7 @@
       saveAgreement(agreement, succCallback) {
         if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
           this.fireEvent('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
+          return false;
         } else {
           let endpoint = null;
           let isNew = false;
@@ -237,16 +238,18 @@
             });
             // fire in the hole
             let method = (isNew) ? 'POST' : 'PATCH';
-            this._triggerAgreementRequest({
+            let success = this._triggerAgreementRequest({
               method: method,
               endpoint: endpoint,
               body: agreement
             });
+            return success;
           } else {
             this.fireEvent('toast', {
               text: 'There is nothing to save. No change detected on this agreement.',
               showCloseBtn: true
             });
+            return false;
           }
         }
       }

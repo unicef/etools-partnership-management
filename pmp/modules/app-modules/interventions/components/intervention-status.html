@@ -6,7 +6,6 @@
 <link rel="import" href="../../../config/app-constants.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status.html">
 <link rel="import" href="../../../layout/components/etools-status/etools-status-common-mixin.html">
-<link rel="import" href="../../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="./pd-termination.html">
@@ -24,9 +23,7 @@
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
                    on-intervention-unsuspend-event="_unsuspendIntervention"
-                   on-intervention-delete-event="_openDeleteConfirmation"
-                   disable-actions="[[!allowSave(uploadsInProgress)]]"
-                   actions-btn-tooltip="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads)]]">
+                   on-intervention-delete-event="_openDeleteConfirmation">
     </etools-status>
   </template>
   <script>
@@ -38,13 +35,11 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsStatusCommon
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     class InterventionStatus extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.EtoolsStatusCommon,
-      EtoolsPmpApp.Mixins.Constants,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      EtoolsPmpApp.Mixins.Constants
     ], Polymer.Element) {
 
       static get is() {
@@ -109,15 +104,7 @@
             value: 'Are you sure you want to delete this PD/SSFA?'
           },
 
-          _terminationDialog: Object,
-          uploadsInProgress: {
-            type: Number,
-            statePath: 'uploadsInProgress'
-          },
-          thereAreUnsavedUploads: {
-            type: Boolean,
-            statePath: 'thereAreUnsavedUploads'
-          }
+          _terminationDialog: Object
         };
       }
 
@@ -133,20 +120,6 @@
 
         // has to be run async for shadycss to load
         setTimeout(this.setPossibleStatuses.bind(this), 0);
-      }
-
-      allowSave(uploadsInProgress) {
-        return Number(uploadsInProgress) === 0;
-      }
-
-      getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads) {
-        if (uploadsInProgress) {
-          return 'Uploads in progress, you can save after they\'re finished.';
-        }
-        if (thereAreUnsavedUploads) {
-          return 'Click to Save finished uploads!';
-        }
-        return '';
       }
 
       disconnectedCallback() {
