@@ -160,6 +160,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-location
         route="{{appLocRoute}}"
+        path="{{appLocPath}}"
+        __query="{{appLocQueryStr}}"
         url-space-regex="^[[rootPath]]">
     </app-location>
 
@@ -355,7 +357,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           leavePageDialog: {
             type: Object
-          }
+          },
+          appLocQueryStr: String,
+          appLocPath: String
         };
       }
 
@@ -463,12 +467,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _updateQueryParams(e) {
-        this.set('route.__queryParams', e.detail);
+        this.set('appLocQueryStr', e.detail);
       }
 
       _updatePath(path) {
-        this.set('route.__queryParams', null);
-        this.set('route.path', this.rootPath + path);
+        this.set('appLocPath', this.rootPath + path);
+        this.set('appLocQueryStr', '');
       }
 
       _pageNotFound() {
