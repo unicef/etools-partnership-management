@@ -659,6 +659,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else {//leave
           this.dispatch('resetUploadsInProgress');
           this.dispatch('setThereAreUnsavedUploads', false);
+          this.route = JSON.parse(JSON.stringify(appLocRoute));
         }
       }
 
