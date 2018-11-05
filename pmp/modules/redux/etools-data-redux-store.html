@@ -220,6 +220,8 @@
         return Object.assign({}, state, {pageData: pageDataInAmendment});
       case 'INCREASE_UPLOADS_IN_PROGRESS':
         return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress + 1});
+      case 'RESET_UPLOADS_IN_PROGRESS':
+        return Object.assign({}, state, {uploadsInProgress: 0});
       case 'DECREASE_UPLOADS_IN_PROGRESS':
         return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress - 1});
       case 'SET_THERE_ARE_UNSAVED_UPLOADS':

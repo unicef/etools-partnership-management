@@ -275,6 +275,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.IE11
      * @appliesMixin EtoolsPmpApp.Mixins.Utils
+     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.AppMenu,
@@ -287,7 +288,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsPmpApp.Mixins.UserData,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.IE11,
-      EtoolsPmpApp.Mixins.Utils
+      EtoolsPmpApp.Mixins.Utils,
+      EtoolsMixins.DynamicDialogMixin
     ], Polymer.Element);
 
     /**
@@ -350,6 +352,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           thereAreUnsavedUploads: {
             type: Boolean,
             statePath: 'thereAreUnsavedUploads'
+          },
+          leavePageDialog: {
+            type: Object
+          }
+        };
+      }
+
+       static get actions() {
+        return {
+          resetUploadsInProgress: function() {
+            return {
+              type: 'RESET_UPLOADS_IN_PROGRESS'
+            };
+          },
+          setThereAreUnsavedUploads: function(thereAre) {
+            return {
+              type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
+              thereAreUnsavedUploads: thereAre
+            };
           }
         };
       }
@@ -370,6 +391,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
         this._initListeners();
         this.requestUserData();
+        this._createLeavePageDialog();
         window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
 
         this.addIE11StyleTweaks();
@@ -394,18 +416,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return;
           }
         }
-        console.log('app location changed', this.route);
 
         if (this.uploadsInProgress || this.thereAreUnsavedUploads) {
-          let msg = 'Are you sure you want to leave the page?';
-
-          if (this.uploadsInProgress) {
-            msg += 'There are uploads in progress and they will be lost!';
-          }
-          if (this.thereAreUnsavedUploads) {
-            msg += 'There are unsaved uploaded files and they will be lost!';
-          }
-          alert(msg); // TODO show dialog with YES/ Cancel and handle confirm/dismiss
+          this._openLeavePageDialog();
+          //alert(msg); // TODO show dialog with YES/ Cancel and handle confirm/dismiss
         } else {
           this.route = JSON.parse(JSON.stringify(appLocRoute));
         }
@@ -417,7 +431,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            this.objectsAreTheSame(this.appLocRoute.__queryParams, route.__queryParams)) {
             return;
         }
-        console.log('route changed', this.appLocRoute, route, this.route);
         this.appLocRoute = JSON.parse(JSON.stringify(this.route));
       }
 
@@ -617,6 +630,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateLastPartnersModuleActivePage(module) {
         if (module && ['partners', 'government-partners'].indexOf(module) > -1) {
           this.set('_lastActivePartnersModule', module);
+        }
+      }
+
+       _createLeavePageDialog() {
+        let msg = document.createElement('span');
+        msg.innerText = 'Are you sure you want to leave this page? There are in progress or unsaved uploads and they will be lost!';
+        let conf = {
+          title: 'Are you sure you want to leave this page?',
+          size: 'md',
+          okBtnText: 'Stay',
+          cancelBtnText: 'Leave',
+          closeCallback: this._onLeavePageConfirmation.bind(this),
+          content: msg
+        };
+        this.leavePageDialog = this.createDynamicDialog(conf);
+      }
+
+       _openLeavePageDialog() {
+        this.leavePageDialog.opened = true;
+      }
+
+      _onLeavePageConfirmation(e) {
+        if (e.detail.confirmed) {//stay on page
+         // revert url
+
+         this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+         this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+        } else {//leave
+          this.dispatch('resetUploadsInProgress');
+          this.dispatch('setThereAreUnsavedUploads', false);
         }
       }
 
