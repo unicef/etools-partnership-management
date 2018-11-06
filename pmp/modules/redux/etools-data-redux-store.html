@@ -222,12 +222,14 @@
       case 'INCREASE_UPLOADS_IN_PROGRESS':
         return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress + 1});
       case 'DECREASE_UPLOADS_IN_PROGRESS':
-        return Object.assign({}, state, {uploadsInProgress: state.uploadsInProgress - 1});
+        let newValI = state.uploadsInProgress > 0 ? state.uploadsInProgress - 1 : 0 ;
+        return Object.assign({}, state, {uploadsInProgress: newValI});
       case 'RESET_UPLOADS_IN_PROGRESS':
         return Object.assign({}, state, {uploadsInProgress: 0});
 
       case 'DECREASE_UNSAVED_UPLOADS':
-        return Object.assign({}, state, {unsavedUploads: state.unsavedUploads - 1});
+        let newValU = state.unsavedUploads > 0 ? state.unsavedUploads - 1 : 0 ;
+        return Object.assign({}, state, {unsavedUploads: newValU});
       case 'INCREASE_UNSAVED_UPLOADS':
         return Object.assign({}, state, {unsavedUploads: state.unsavedUploads + 1});
       case 'RESET_UNSAVED_UPLOADS':

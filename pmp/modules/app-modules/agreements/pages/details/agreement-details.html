@@ -310,7 +310,8 @@
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
               required$="[[agreement.permissions.required.attachment]]"
-              on-upload-started="_onUploadStarted">
+              on-upload-started="_onUploadStarted"
+              on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
       </div>
