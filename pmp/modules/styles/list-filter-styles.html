@@ -107,11 +107,20 @@
       }
 
       #filterMenu paper-icon-item[selected] {
+        font-weight: normal !important;
         background: var(--esmm-list-item-selected-color, #dcdcdc);
         --paper-item-icon: {
           margin-right: 16px;
         }
       }
+
+      paper-icon-item {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-wrap;
+        min-height: 48px;
+      }
+
     </style>
   </template>
 </dom-module>
