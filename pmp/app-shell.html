@@ -654,7 +654,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _onLeavePageConfirmation(e) {
-        if (e.detail.confirmed) { // leave on page
+        if (e.detail.confirmed) { // leave
           this.dispatch('resetUploadsInProgress');
           this.dispatch('resetUnsavedUploads');
           this.route = JSON.parse(JSON.stringify(this.appLocRoute));
