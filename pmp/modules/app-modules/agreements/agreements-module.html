@@ -266,10 +266,9 @@
 
       static get actions() {
         return {
-          setThereAreUnsavedUploads: function(thereAre) {
+          resetUnsavedUploads: function() {
               return {
-                type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
-                thereAreUnsavedUploads: thereAre
+                type: 'RESET_UNSAVED_UPLOADS'
               };
           }
         };
@@ -347,7 +346,7 @@
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved)
             .then((successfull) => {
               if (successfull) {
-                this.dispatch('setThereAreUnsavedUploads', false);
+                this.dispatch('resetUnsavedUploads');
               }
             });
       }

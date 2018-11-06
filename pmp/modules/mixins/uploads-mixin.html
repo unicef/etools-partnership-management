@@ -36,10 +36,14 @@
               type: 'DECREASE_UPLOADS_IN_PROGRESS'
             };
           },
-          setThereAreUnsavedUploads: function(thereAre) {
+          increaseUnsavedUploads: function() {
             return {
-              type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
-              thereAreUnsavedUploads: thereAre
+              type: 'INCREASE_UNSAVED_UPLOADS'
+            };
+          },
+          decreaseUnsavedUploads: function() {
+            return {
+              type: 'DECREASE_UNSAVED_UPLOADS'
             };
           }
         };

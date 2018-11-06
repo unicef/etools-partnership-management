@@ -351,9 +351,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Number,
             statePath: 'uploadsInProgress'
           },
-          thereAreUnsavedUploads: {
+          unsavedUploads: {
             type: Boolean,
-            statePath: 'thereAreUnsavedUploads'
+            statePath: 'unsavedUploads'
           },
           leavePageDialog: {
             type: Object
@@ -370,10 +370,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               type: 'RESET_UPLOADS_IN_PROGRESS'
             };
           },
-          setThereAreUnsavedUploads: function(thereAre) {
+          resetUnsavedUploads: function() {
             return {
-              type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
-              thereAreUnsavedUploads: thereAre
+              type: 'RESET_UNSAVED_UPLOADS'
             };
           }
         };
@@ -421,7 +420,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
 
-        if (this.uploadsInProgress || this.thereAreUnsavedUploads) {
+        if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
           this._openLeavePageDialog();
         } else {
           this.route = JSON.parse(JSON.stringify(appLocRoute));
@@ -638,13 +637,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
        _createLeavePageDialog() {
         let msg = document.createElement('span');
-        msg.innerText = 'Are you sure you want to leave this page? There are in progress or ' +
-                        'unsaved uploads and they will be lost!';
+        msg.innerText = 'Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!';
         let conf = {
           title: 'Are you sure you want to leave this page?',
           size: 'md',
-          okBtnText: 'Stay',
-          cancelBtnText: 'Leave',
+          okBtnText: 'Leave',
+          cancelBtnText: 'Stay',
           closeCallback: this._onLeavePageConfirmation.bind(this),
           content: msg
         };
@@ -656,17 +654,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _onLeavePageConfirmation(e) {
-        if (e.detail.confirmed) { // stay on page
-         // revert url
-         this.appLocRoute = JSON.parse(JSON.stringify(this.route));
-
-         this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-         this.shadowRoot.querySelector('app-sidebar-menu')
-             .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
-        } else { // leave
+        if (e.detail.confirmed) { // leave on page
           this.dispatch('resetUploadsInProgress');
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('resetUnsavedUploads');
           this.route = JSON.parse(JSON.stringify(this.appLocRoute));
+        } else { // stay
+           // revert url
+          this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+
+          this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+          this.shadowRoot.querySelector('app-sidebar-menu')
+              .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
         }
       }
 

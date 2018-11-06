@@ -744,9 +744,7 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('agreement.attachment', response.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
@@ -760,6 +758,7 @@
 
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
     }

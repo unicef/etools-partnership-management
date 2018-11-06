@@ -954,15 +954,13 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.activation_letter_attachment', response.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          // covers consecutive unsaved uploads, first successfull , second errored
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _activationLetterDelete(e) {
         this.set('intervention.activation_letter_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       showActivationLetterDeleteBtn(status) {

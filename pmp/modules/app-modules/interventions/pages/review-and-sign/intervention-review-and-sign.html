@@ -451,14 +451,13 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.signed_pd_attachment', response.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _signedPDDocDelete(e) {
         this.set('intervention.signed_pd_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       _prcRevDocUploadFinished(e) {
@@ -466,15 +465,13 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.prc_review_attachment', response.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          // covers consecutive unsaved uploads, first successfull , second errored
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _prcRevDocDelete(e) {
         this.set('intervention.prc_review_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       showPrcReviewDeleteBtn(status) {

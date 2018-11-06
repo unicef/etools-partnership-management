@@ -328,9 +328,7 @@
           const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
           const uploadResponse = JSON.parse(e.detail.success);
           this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
