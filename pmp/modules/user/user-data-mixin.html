@@ -92,11 +92,7 @@
                   active: true,
                   loadingSource: 'country-update'
                 };
-                this.fireEvent('global-loading', {
-                  detail: eventPayload,
-                  bubbles: true,
-                  composed: true
-                });
+                this.fireEvent('global-loading', eventPayload);
                 this.refresh();
               }
             } else {
