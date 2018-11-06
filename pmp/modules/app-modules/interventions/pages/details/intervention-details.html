@@ -232,7 +232,8 @@
                          on-upload-started="_onUploadStarted"
                          hidden$="[[_isDraft(intervention.status)]]"
                          show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
-                         on-delete-file="_activationLetterDelete">
+                         on-delete-file="_activationLetterDelete"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
       </div>

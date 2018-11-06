@@ -54,6 +54,11 @@
         this.dispatch('increaseUploadsInProgress');
       }
 
+      _onChangeUnsavedFile(e) {
+        e.stopImmediatePropagation();
+        this.dispatch('decreaseUnsavedUploads');
+      }
+
    };
 
   }());

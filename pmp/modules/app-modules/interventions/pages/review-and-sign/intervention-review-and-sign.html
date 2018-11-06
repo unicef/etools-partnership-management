@@ -110,7 +110,8 @@
                 readonly$="[[!permissions.edit.prc_review_attachment]]"
                 show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, permissions.edit.prc_review_attachment)]]"
                 on-delete-file="_prcRevDocDelete"
-                on-upload-started="_onUploadStarted">
+                on-upload-started="_onUploadStarted"
+                on-change-unsaved-file="_onChangeUnsavedFile">
             </etools-upload>
           </div>
         </div>
@@ -193,7 +194,8 @@
                          readonly$="[[!permissions.edit.signed_pd_attachment]]"
                          required$="[[permissions.required.signed_pd_attachment]]"
                          error-message="Please select Signed PD/SSFA document"
-                         on-upload-started="_onUploadStarted">
+                         on-upload-started="_onUploadStarted"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
         <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
