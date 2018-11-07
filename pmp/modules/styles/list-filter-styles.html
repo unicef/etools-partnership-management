@@ -78,10 +78,10 @@
       #filterMenu {
         max-width: 126px;
         padding: 0;
-        /*--paper-menu-button-content: {*/
-          /*overflow-y: auto;*/
-          /*overflow-x: hidden !important;*/
-        /*}*/
+        --paper-menu-button-content: {
+          overflow-y: auto;
+          overflow-x: hidden !important;
+        }
       }
 
       #filterMenu .button {
@@ -95,7 +95,7 @@
       }
 
       #filterMenu paper-listbox {
-        min-width: 200px;
+        min-width: 250px;
       }
 
       #filterMenu paper-icon-item {
@@ -119,6 +119,8 @@
         @apply --layout-center;
         @apply --layout-wrap;
         min-height: 48px;
+        box-sizing: border-box;
+        width: 100%;
       }
 
     </style>
