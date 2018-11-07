@@ -240,11 +240,10 @@
 
        static get actions() {
         return {
-          setThereAreUnsavedUploads: function(thereAre) {
-              return {
-                type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
-                thereAreUnsavedUploads: thereAre
-              };
+          resetUnsavedUploads: function() {
+            return {
+              type: 'RESET_UNSAVED_UPLOADS'
+            };
           }
         };
       }
@@ -341,7 +340,7 @@
         if (partnerData) {
           partnerData.savePartner(newPartnerData).then((successfull) => {
             if (successfull) {
-              this.dispatch('setThereAreUnsavedUploads', false);
+              this.dispatch('resetUnsavedUploads');
             }
           });
         }

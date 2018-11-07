@@ -123,7 +123,8 @@
                              readonly="[[!editMode]]"
                              required
                              error-message="Please select the report file"
-                             upload-in-progress="{{uploadInProgress}}">
+                             on-upload-started="_onUploadStarted"
+                             on-change-unsaved-file="_onChangeUnsavedFile">
               </etools-upload>
             </div>
           </div>
@@ -191,11 +192,6 @@
             value: function() {
               return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
             }
-          },
-          uploadInProgress: {
-            type: Boolean,
-            value: false,
-            observer: '_onUploadInProgressChanged'
           }
         };
       }
@@ -333,9 +329,7 @@
           const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
           const uploadResponse = JSON.parse(e.detail.success);
           this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
@@ -344,5 +338,4 @@
     window.customElements.define(AssessmentsItems.is, AssessmentsItems);
   </script>
 </dom-module>
-
 

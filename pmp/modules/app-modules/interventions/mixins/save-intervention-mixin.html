@@ -38,11 +38,11 @@
 
         static get actions() {
           return {
-            setThereAreUnsavedUploads: function(thereAre) {
-                return {
-                  type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
-                  thereAreUnsavedUploads: thereAre
-                };
+
+            resetUnsavedUploads: function() {
+              return {
+                type: 'RESET_UNSAVED_UPLOADS'
+              };
             }
           };
         }
@@ -72,7 +72,7 @@
           return this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved)
                      .then((successfull) => {
                         if (successfull) {
-                          this.dispatch('setThereAreUnsavedUploads', false);
+                          this.dispatch('resetUnsavedUploads');
                           return true;
                         } else {
                           return false;

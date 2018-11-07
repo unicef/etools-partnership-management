@@ -36,23 +36,29 @@
               type: 'DECREASE_UPLOADS_IN_PROGRESS'
             };
           },
-          setThereAreUnsavedUploads: function(thereAre) {
+          increaseUnsavedUploads: function() {
             return {
-              type: 'SET_THERE_ARE_UNSAVED_UPLOADS',
-              thereAreUnsavedUploads: thereAre
+              type: 'INCREASE_UNSAVED_UPLOADS'
+            };
+          },
+          decreaseUnsavedUploads: function() {
+            return {
+              type: 'DECREASE_UNSAVED_UPLOADS'
             };
           }
         };
       }
 
-      _onUploadInProgressChanged(uploadInProgress) {
-        if (uploadInProgress) {
-          this.dispatch('increaseUploadsInProgress');
-        }
+      _onUploadStarted(e) {
+        e.stopImmediatePropagation();
+        this.dispatch('increaseUploadsInProgress');
       }
 
+      _onChangeUnsavedFile(e) {
+        e.stopImmediatePropagation();
+        this.dispatch('decreaseUnsavedUploads');
+      }
    };
 
   }());
 </script>
-

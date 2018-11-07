@@ -310,7 +310,8 @@
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
               required$="[[agreement.permissions.required.attachment]]"
-              upload-in-progress="{{uploadInProgress}}">
+              on-upload-started="_onUploadStarted"
+              on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
       </div>
@@ -421,11 +422,6 @@
             value: function() {
               return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
             }
-          },
-          uploadInProgress: {
-            type: Boolean,
-            value: false,
-            observer: '_onUploadInProgressChanged'
           }
         };
       }
@@ -749,9 +745,7 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('agreement.attachment', response.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
@@ -765,6 +759,7 @@
 
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
     }

@@ -229,9 +229,11 @@
                          file-url="{{intervention.activation_letter_attachment}}"
                          upload-endpoint="[[uploadEndpoint]]"
                          on-upload-finished="_activationLetterUploadFinished"
+                         on-upload-started="_onUploadStarted"
                          hidden$="[[_isDraft(intervention.status)]]"
                          show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
-                         on-delete-file="_activationLetterDelete">
+                         on-delete-file="_activationLetterDelete"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
       </div>
@@ -529,11 +531,6 @@
           showInactiveIndicators: {
             type: Boolean,
             value: false
-          },
-          activLetterUploadInProgress: {
-            type: Boolean,
-            values: false,
-            observer: '_onUploadInProgressChanged'
           }
         };
       }
@@ -958,15 +955,13 @@
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.activation_letter_attachment', response.id);
-          this.dispatch('setThereAreUnsavedUploads', true);
-        } else {
-          // covers consecutive unsaved uploads, first successfull , second errored
-          this.dispatch('setThereAreUnsavedUploads', false);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _activationLetterDelete(e) {
         this.set('intervention.activation_letter_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       showActivationLetterDeleteBtn(status) {

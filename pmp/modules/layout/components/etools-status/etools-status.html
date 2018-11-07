@@ -35,9 +35,8 @@
       </div>
       <div class="bottom-container" hidden$="[[hideActions]]">
         <etools-action-button disabled$="[[!allowSave(uploadsInProgress)]]" actions="[[actions]]"
-                              title="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads)]]"
-                              show-info-icon="[[showInfoIcon]]"
-                              info-icon-class="[[infoIconClass]]">
+                             title="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, unsavedUploads)]]"
+                              show-info-icon="[[showInfoIcon]]">
         </etools-action-button>
       </div>
     </etools-content-panel>
@@ -79,9 +78,9 @@
             type: Number,
             statePath: 'uploadsInProgress'
           },
-          thereAreUnsavedUploads: {
+          unsavedUploads: {
             type: Boolean,
-            statePath: 'thereAreUnsavedUploads'
+            statePath: 'unsavedUploads'
           },
           showInfoIcon: {
             type: Boolean,
@@ -101,15 +100,14 @@
         return Number(uploadsInProgress) === 0;
       }
 
-      getUploadInProgressOrUnsavedTooltip(uploadsInProgress, thereAreUnsavedUploads) {
-        if (uploadsInProgress) {
+      getUploadInProgressOrUnsavedTooltip(uploadsInProgress, unsavedUploads) {
+        if (Number(uploadsInProgress) > 0) {
           this.showInfoIcon = true;
-          this.infoIconClass = 'red';
           return 'Uploads in progress, you can save after they\'re finished.';
         }
-        if (thereAreUnsavedUploads) {
+
+        if (Number(unsavedUploads) > 0) {
           this.showInfoIcon = true;
-          this.infoIconClass = 'green';
           return 'Click to Save finished uploads!';
         }
         this.showInfoIcon = false;
