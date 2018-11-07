@@ -417,7 +417,7 @@
       ready() {
         super.ready();
         if (this.newInterventionActive) {
-          this._prepareNewInterventionObj();
+          this._setNewInterventionObj();
         }
         let dialog = document.createElement('div');
         dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
@@ -657,13 +657,13 @@
           return;
         }
         this.set('_redirectToNewIntervPageInProgress', true);
-        this._prepareNewInterventionObj();
+        this._setNewInterventionObj();
         this.set('selectedInterventionId', null);
         this.fireEvent('update-main-path', {path: 'interventions/new/details'});
         this._handleInterventionSelectionLoadingMsg();
       }
 
-      _prepareNewInterventionObj() {
+      _setNewInterventionObj() {
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
       }
 
