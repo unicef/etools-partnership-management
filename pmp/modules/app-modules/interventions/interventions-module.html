@@ -323,7 +323,7 @@
               document_type: undefined,
               country_programme: undefined,
               number: undefined,
-              reference_number_year: new Date().getFullYear(),
+              reference_number_year: null,
               prc_review_attachment: null,
               signed_pd_attachment: null,
               title: undefined,
@@ -417,7 +417,7 @@
       ready() {
         super.ready();
         if (this.newInterventionActive) {
-          this.set('intervention', this._getNewInterventionObjModel());
+          this._prepareNewInterventionObj();
         }
         let dialog = document.createElement('div');
         dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
@@ -478,6 +478,9 @@
         if (!_.isEmpty(intervention)) {
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
+          if (isNewIntervention) {
+            this.set('intervention.reference_number_year', new Date().getFullYear());
+          }
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
           setTimeout(() => {
@@ -654,14 +657,15 @@
           return;
         }
         this.set('_redirectToNewIntervPageInProgress', true);
-        this.set('intervention', this._getNewInterventionObjModel());
+        this._prepareNewInterventionObj();
         this.set('selectedInterventionId', null);
         this.fireEvent('update-main-path', {path: 'interventions/new/details'});
         this._handleInterventionSelectionLoadingMsg();
       }
 
-      _getNewInterventionObjModel() {
-        return JSON.parse(JSON.stringify(this.newInterventionModel));
+      _prepareNewInterventionObj() {
+        const newPDObj = JSON.parse(JSON.stringify(this.newInterventionModel));
+        this.set('intervention', newPDObj);
       }
 
       _visibleTabContent(activePage, expectedPage, newInterventionActive) {
