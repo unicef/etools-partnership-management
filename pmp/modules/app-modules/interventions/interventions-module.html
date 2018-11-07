@@ -664,8 +664,7 @@
       }
 
       _prepareNewInterventionObj() {
-        const newPDObj = JSON.parse(JSON.stringify(this.newInterventionModel));
-        this.set('intervention', newPDObj);
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
       }
 
       _visibleTabContent(activePage, expectedPage, newInterventionActive) {
