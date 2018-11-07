@@ -303,6 +303,16 @@
           unicefDateValidatorErrorMessage: {
             type: String,
             value: ''
+          },
+          signedPdUploadInProgress: {
+            type: Boolean,
+            value: false,
+            observer: '_onUploadInProgressChanged'
+          },
+          prcUploadInProgress: {
+            type: Boolean,
+            value: false,
+            observer: '_onUploadInProgressChanged'
           }
         };
       }
