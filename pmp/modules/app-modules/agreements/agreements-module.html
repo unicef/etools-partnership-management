@@ -204,7 +204,6 @@
               agreement_type: null,
               agreement_number: undefined,
               reference_number_year: new Date().getFullYear(),
-              attached_agreement: undefined,
               start: undefined,
               end: undefined,
               signed_by_unicef_date: null,
@@ -458,8 +457,7 @@
         newAgreement = Object.assign(newAgreement, {
           signed_by_unicef_date: agreement.signed_by_unicef_date,
           signed_by_partner_date: agreement.signed_by_partner_date,
-          partner_manager: agreement.partner_manager,
-          attached_agreement: agreement.attached_agreement
+          partner_manager: agreement.partner_manager
         });
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           newAgreement.start = agreement.start;
@@ -493,11 +491,6 @@
           }
         }
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          if ((this.agreement.hasOwnProperty('attached_agreement')) &&
-              (this.agreement.attached_agreement instanceof File)) {
-            changes.attached_agreement = this.agreement.attached_agreement;
-          }
-
           let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date'];
           signedByFields.forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
