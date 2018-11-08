@@ -53,19 +53,7 @@
           if (typeof currentModule === 'undefined') {
             return;
           }
-          this._clearRouteQueryParamsIfNeeded(previousPage);
           this._resetTabAttachedFlagIfNeeded(currentModule, previousPage);
-        }
-
-        /*
-         *Avoid Reports page query string lingering on other intervention tabs
-         */
-        _clearRouteQueryParamsIfNeeded(previousPage) {
-          if (previousPage === 'reports') {
-            //* Info:Clearing the query params in the subroute doesn't work,
-            //  has to be in the parent route
-            this.fireEvent('update-route-query-params');
-          }
         }
 
         /**

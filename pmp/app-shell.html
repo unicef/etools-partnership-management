@@ -345,7 +345,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           appLocRoute: {
             type: Object,
-            observer: 'appLocationChanged'
+            observer: 'appLocRouteChanged'
           },
           uploadsInProgress: {
             type: Number,
@@ -412,11 +412,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      appLocationChanged(appLocRoute) {
+      /*
+       * When navigating using tabs, the routeChanged is triggered first
+       * and then the appLocRouteChanged method is triggered to update the url in the browser.
+       * When navigating using updateAppState the url is set first (appLocRouteChanged is triggered)
+       * and then routeChanged
+       */
+      appLocRouteChanged(appLocRoute) {
         if (this.route) {
-          if (appLocRoute.path === this.route.path &&
-              this.objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
-            return;
+          if (appLocRoute.path === this.route.path) {
+            if (this.objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
+              return;
+            } else {
+              if (this.isInterventionReports(this.appLocRoute.path)) {
+                return;
+              }
+            }
           }
         }
 
@@ -428,18 +439,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       }
 
-      routeChanged(route) {
+      routeChanged(e) {
         if (this.appLocRoute.path === this.route.path &&
-           this.objectsAreTheSame(this.appLocRoute.__queryParams, route.__queryParams)) {
+           this.objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
             return;
         }
-        this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+
+        /* Setting this.appLocRoute = JSON.parse(JSON.stringify(this.route)),
+         * makes appLocRouteChanged be triggered twice,
+         * first with changes to the path , without the changes to the query string, which ruins everything
+         */
+        this.setProperties({
+             'appLocQueryParams': this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
+             'appLocPath': this.route.path
+            });;
+      }
+
+      isInterventionReports(path) {
+        let pattern = new RegExp('\\/pmp\\/interventions\\/\\d*\\/reports', 'i');
+        return pattern.test(path);
       }
 
       _initListeners() {
         this.addEventListener('404', this._pageNotFound);
         this.addEventListener('update-main-path', this._updateMainPath);
-        this.addEventListener('update-route-query-params', this._updateQueryParams);
         this.addEventListener('forbidden', this._onForbidden);
         this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
       }
