@@ -258,14 +258,29 @@
         this._initIndicatorDialogListeners();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeIndicatorDialogListeners();
+      }
+
       _updateScroll() {
        this.$.indicatorDialog.scrollDown();
       }
 
       _initIndicatorDialogListeners() {
-        this.addEventListener('start-spinner', this._startSpinner.bind(this));
-        this.addEventListener('stop-spinner', this._stopSpinner.bind(this));
-        this.addEventListener('show-toast', this._showToast.bind(this));
+        this._startSpinner = this._startSpinner.bind(this);
+        this._stopSpinner = this._stopSpinner.bind(this);
+        this._showToast = this._showToast.bind(this);
+
+        this.addEventListener('start-spinner', this._startSpinner);
+        this.addEventListener('stop-spinner', this._stopSpinner);
+        this.addEventListener('show-toast', this._showToast);
+      }
+
+      _removeIndicatorDialogListeners() {
+        this.removeEventListener('start-spinner', this._startSpinner);
+        this.removeEventListener('stop-spinner', this._stopSpinner);
+        this.removeEventListener('show-toast', this._showToast);
       }
 
       _clusterToggleIsDisabled(indicator) {

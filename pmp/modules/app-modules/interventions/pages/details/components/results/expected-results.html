@@ -171,26 +171,33 @@
         // init PD output or SSFA expected result add/edit element
         this.createLowerResultNameDialog();
 
+        this._createIndicatorDialog();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeIndicatorDialog();
+        this.removeCpOutputRamIndicatorsDialog();
+        this.removeLowerResultNameDialog();
+        this.removeDeactivateIndicatorDialog();
+      }
+
+      _createIndicatorDialog() {
         // init indicator dialog data
         this.indicatorDialog = document.createElement('indicator-dialog');
         this.indicatorDialog.setAttribute('id', 'indicatorDialog');
 
         // attach close handler
-        this.indicatorDialog.addEventListener('indicator-dialog-close', function(event) {
-          this.indicatorDialogDataReceived(event.detail);
-        }.bind(this));
-
+        this.indicatorDialogDataReceived = this.indicatorDialogDataReceived.bind(this);
+        this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
         document.querySelector('body').appendChild(this.indicatorDialog);
       }
 
-      disconnectedCallback() {
-        super.disconnectedCallback();
+      _removeIndicatorDialog() {
         if (this.indicatorDialog) {
+          this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
           document.querySelector('body').removeChild(this.indicatorDialog);
         }
-        this.removeCpOutputRamIndicatorsDialog();
-        this.removeLowerResultNameDialog();
-        this.removeDeactivateIndicatorDialog();
       }
 
       removeDeactivateIndicatorDialog() {
@@ -230,7 +237,8 @@
       /**
        * Add/update indicators data
        */
-      indicatorDialogDataReceived(data) {
+      indicatorDialogDataReceived(event) {
+        const data = event.detail;
         try {
           let actionParams = data.actionParams;
           let indicator = data.indicatorData;
