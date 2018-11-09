@@ -39,9 +39,20 @@
 
         ready() {
           super.ready();
-          this.addEventListener('clear-server-errors', this._clearServerErrors.bind(this));
-          this.addEventListener('set-server-errors', this._setServerErrors.bind(this));
-          this.addEventListener('reload-list', this._reloadListData.bind(this));
+          this._clearServerErrors = this._clearServerErrors.bind(this);
+          this._setServerErrors = this._setServerErrors.bind(this);
+          this._reloadListData = this._reloadListData.bind(this);
+
+          this.addEventListener('clear-server-errors', this._clearServerErrors);
+          this.addEventListener('set-server-errors', this._setServerErrors);
+          this.addEventListener('reload-list', this._reloadListData);
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this.removeEventListener('clear-server-errors', this._clearServerErrors);
+          this.removeEventListener('set-server-errors', this._setServerErrors);
+          this.removeEventListener('reload-list', this._reloadListData);
         }
 
         _clearServerErrors() {

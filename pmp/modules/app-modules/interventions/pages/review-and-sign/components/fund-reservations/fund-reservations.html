@@ -172,13 +172,10 @@
       disconnectedCallback() {
         super.disconnectedCallback();
         // remove update frs el on fr el detached
-        if (this.frsDialogEl) {
-          document.querySelector('body').removeChild(this.frsDialogEl);
-        }
+        this._removeFrsDialogEl();
+
         // remove confirmations frs dialog on fr element detached
-        if (this.frsConfirmationsDialog) {
-          this.removeDialog(this.frsConfirmationsDialog);
-        }
+        this._removeFrsConfirmationsDialog();
       }
 
       _createFrsDialogEl() {
@@ -187,9 +184,17 @@
         this.frsDialogEl.setAttribute('id', 'frNumbersUpdateEl');
 
         // attach frs update handler (on modal/dialog close)
-        this.frsDialogEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler.bind(this));
+        this.frNumbersUpdateHandler = this.frNumbersUpdateHandler.bind(this);
+        this.frsDialogEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler);
 
         document.querySelector('body').appendChild(this.frsDialogEl);
+      }
+
+      _removeFrsDialogEl() {
+        if (this.frsDialogEl) {
+          this.frsDialogEl.removeEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler);
+          document.querySelector('body').removeChild(this.frsDialogEl);
+        }
       }
 
       _createFrsConfirmationsDialog() {
@@ -197,8 +202,16 @@
         this._frsConfirmationsDialogMessage = document.createElement('span');
         this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
 
+        this._frsInconsistenciesConfirmationHandler = this._frsInconsistenciesConfirmationHandler.bind(this);
         this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
-            this._frsInconsistenciesConfirmationHandler.bind(this), this._frsConfirmationsDialogMessage);
+            this._frsInconsistenciesConfirmationHandler, this._frsConfirmationsDialogMessage);
+      }
+
+      _removeFrsConfirmationsDialog() {
+        if (this.frsConfirmationsDialog) {
+          this.frsConfirmationsDialog.removeEventListener('close', this._frsInconsistenciesConfirmationHandler);
+          this.removeDialog(this.frsConfirmationsDialog);
+        }
       }
 
       _updateFrsInconsistenciesDialogMessage(warning) {

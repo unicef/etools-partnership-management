@@ -205,17 +205,24 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.addAmendmentDialog) {
-          this.removeDialog(this.addAmendmentDialog);
-        }
+        this._removeAddAmendmentDialog();
       }
 
       _createAddAmendmentDialog() {
         this.addAmendmentDialog = document.createElement('add-amendment-dialog');
         this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
         this.addAmendmentDialog.toastEventSource = this;
-        this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
+
+        this.newAmendmentAdded = this.newAmendmentAdded.bind(this);
+        this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded);
         document.querySelector('body').appendChild(this.addAmendmentDialog);
+      }
+
+      _removeAddAmendmentDialog() {
+        if (this.addAmendmentDialog) {
+          this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded);
+          document.querySelector('body').removeChild(this.addAmendmentDialog);
+        }
       }
 
       _getReadonlyAmendmentTypes(types) {

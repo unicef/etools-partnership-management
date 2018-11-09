@@ -90,6 +90,10 @@
 
         removeCpOutputRamIndicatorsDialog() {
           if (this.cpOutputRamIndicatorsEditElem) {
+            this.cpOutputRamIndicatorsEditElem.removeEventListener('new-expected-result-added',
+                this._handleNewResultAdded);
+            this.cpOutputRamIndicatorsEditElem.removeEventListener('expected-result-updated',
+                this._handleResultUpdated);
             document.querySelector('body').removeChild(this.cpOutputRamIndicatorsEditElem);
           }
         }
@@ -103,11 +107,12 @@
 
             this.cpOutputRamIndicatorsEditElem.set('toastEventSource', this);
 
+            this._handleNewResultAdded = this._handleNewResultAdded.bind(this);
             this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
-                this._handleNewResultAdded.bind(this));
+                this._handleNewResultAdded);
 
-            this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated',
-                this._handleResultUpdated.bind(this));
+            this._handleResultUpdated = this._handleResultUpdated.bind(this);
+            this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated', this._handleResultUpdated);
 
             document.querySelector('body').appendChild(this.cpOutputRamIndicatorsEditElem);
           }

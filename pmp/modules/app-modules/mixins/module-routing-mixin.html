@@ -46,7 +46,14 @@
 
         ready() {
           super.ready();
-          this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached.bind(this));
+
+          this._requestedTabContentHasBeenAttached = this._requestedTabContentHasBeenAttached.bind(this);
+          this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this.removeEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
         }
 
         _activePageChanged(currentModule, previousPage) {
