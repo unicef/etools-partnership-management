@@ -672,7 +672,7 @@
        * Go to details page once the new intervention has been saved
        */
       _newInterventionSaved(intervention) {
-        this.fireEvent('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
+        this.set('route.path',  '/' + intervention.id + '/details');
       }
 
       _showAddNewIntervBtn(listActive, permissions) {
