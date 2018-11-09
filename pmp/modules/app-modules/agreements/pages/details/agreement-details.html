@@ -321,7 +321,7 @@
                             class="content-section"
                             data-items="{{agreement.amendments}}"
                             agreement-type="[[agreement.agreement_type]]"
-                            edit-mode$="[[agreement.permissions.edit.amendments]]"
+                            edit-mode="[[agreement.permissions.edit.amendments]]"
                             show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
                             authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                             selected-ao="{{authorizedOfficers}}">
