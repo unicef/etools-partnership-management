@@ -194,10 +194,6 @@
           paginator: {
             type: Object
           },
-          _filtersInitialized: {
-            type: Boolean,
-            value: false
-          },
           _initComplete: {
             type: Boolean,
             value: false
@@ -210,7 +206,7 @@
         return [
           '_initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size, _initComplete)',
-          '_init(active, _filtersInitialized)',
+          '_init(active)',
           '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
             'queryParams.cp_output, queryParams.section, queryParams.status.length, queryParams.report_type, ' +
             'queryParams.unicef_focal_points.length)'
@@ -227,7 +223,8 @@
       }
 
       _initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes) {
-        if (!partners || !cpOutputs || !sections || !unicefUsersData || !reportStatuses || !reportTypes) {
+        if (!partners || partners.length === 0 || !cpOutputs || !sections ||
+            !unicefUsersData || unicefUsersData.length === 0 || !reportStatuses || !reportTypes) {
           return;
         }
         // init list filter options
@@ -311,67 +308,68 @@
             minWidth: '400px'
           }
         ]);
-        this.set('_filtersInitialized', true);
+        this._updateSelectedFiltersValues();
       }
 
       // update selected filters(prezent in URL) at page refresh
       _updateSelectedFiltersValues() {
-        let filtersValues = [
-          {
-            filterName: 'Report Status',
-            selectedValue: this.queryParams.status
-          },
-          {
-            filterName: 'Report Type',
-            selectedValue: this.queryParams.report_type
-          },
-          {
-            filterName: 'Partner',
-            selectedValue: this.queryParams.external_partner_id
-          },
-          {
-            filterName: 'CP Output',
-            selectedValue: this.queryParams.cp_output
-          },
-          {
-            filterName: 'Section',
-            selectedValue: this.queryParams.section
-          },
-          {
-            filterName: 'UNICEF focal points',
-            selectedValue: this.queryParams.unicef_focal_points
-          }
-        ];
-        this.updateShownFilters(filtersValues);
+        this._updateFiltersValsDebouncer = Polymer.Debouncer.debounce(this._updateFiltersValsDebouncer,
+            Polymer.Async.timeOut.after(100),
+            () => {
+              let filtersValues = [
+                {
+                  filterName: 'Report Status',
+                  selectedValue: this.queryParams.status
+                },
+                {
+                  filterName: 'Report Type',
+                  selectedValue: this.queryParams.report_type
+                },
+                {
+                  filterName: 'Partner',
+                  selectedValue: this.queryParams.external_partner_id
+                },
+                {
+                  filterName: 'CP Output',
+                  selectedValue: this.queryParams.cp_output
+                },
+                {
+                  filterName: 'Section',
+                  selectedValue: this.queryParams.section
+                },
+                {
+                  filterName: 'UNICEF focal points',
+                  selectedValue: this.queryParams.unicef_focal_points
+                }
+              ];
+              this.updateShownFilters(filtersValues);
+            });
       }
 
-      _init(active, _filtersInitialized) {
-        if (!active || !_filtersInitialized) {
+      _init(active) {
+        if (!active) {
           return;
         }
         let urlQueryParams = this.urlParams;
         this.set('_initComplete', false);
-        this._initSelectedFilters = Polymer.Debouncer.debounce(this._initSelectedFilters,
-            Polymer.Async.timeOut.after(0),
-            () => {
-              this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
-              this.set('queryParams.external_partner_id',
-                  urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
-              this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
-              this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
-              this.set('queryParams.status',
-                  urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status);
-              this.set('queryParams.unicef_focal_points',
-                  urlQueryParams.unicef_focal_points ? urlQueryParams.unicef_focal_points.split('|') : []);
-              this.set('queryParams.report_type', urlQueryParams.report_type ? urlQueryParams.report_type : null);
 
-              this.set('paginator.page', urlQueryParams.page ? Number(urlQueryParams.page) : 1);
-              this.set('paginator.page_size',
-                  urlQueryParams.page_size ? Number(urlQueryParams.page_size) : this.CONSTANTS.DEFAULT_LIST_SIZE);
+        this.setProperties({
+          'queryParams.pd_ref_title': urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '',
+          'queryParams.external_partner_id':
+              urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null,
+          'queryParams.cp_output': urlQueryParams.cp_output ? urlQueryParams.cp_output : null,
+          'queryParams.section': urlQueryParams.section ? urlQueryParams.section : null,
+          'queryParams.status': urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status,
+          'queryParams.unicef_focal_points': urlQueryParams.unicef_focal_points
+              ? urlQueryParams.unicef_focal_points.split('|') : [],
+          'queryParams.report_type': urlQueryParams.report_type ? urlQueryParams.report_type : null,
+          'paginator.page': urlQueryParams.page ? Number(urlQueryParams.page) : 1,
+          'paginator.page_size':
+              urlQueryParams.page_size ? Number(urlQueryParams.page_size) : this.CONSTANTS.DEFAULT_LIST_SIZE
+        });
 
-              this._updateSelectedFiltersValues();
-              this.set('_initComplete', true);
-            });
+        this._updateSelectedFiltersValues();
+        this.set('_initComplete', true);
       }
 
       _updateURL(queryParamsData, pageNr, pageSize, _initComplete) {
