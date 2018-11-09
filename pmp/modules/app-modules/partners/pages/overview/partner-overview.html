@@ -270,24 +270,7 @@
 
       static get properties() {
         return {
-          user: Object,
-          permissions: Object,
-
-          partner: {
-            type: Object,
-            value: {},
-            notify: true,
-            observer: '_partnerChanged'
-          },
-          contentVisible: {
-            type: Boolean,
-            value: false
-          },
-          coreValuesAssessmentFiles: {
-            type: Array,
-            value: [],
-            notify: true
-          }
+          partner: Object
         };
       }
 
@@ -299,14 +282,6 @@
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
         this.fireEvent('tab-content-attached');
-      }
-
-      _partnerChanged(partner) {
-        if (typeof partner === 'object' && Object.keys(partner).length > 0) {
-          this.contentVisible = true;
-        } else {
-          this.contentVisible = false;
-        }
       }
 
       _getMinReqAudits(plannedEngagement) {

@@ -554,7 +554,7 @@
       }
 
       _partnerReceived(partner) {
-        if (!partner.id) {
+        if (!partner || !partner.id) {
           return;
         }
         let requestOptions = this._getEngagementsRequestOptions(partner.id);

@@ -85,12 +85,14 @@
       }
 
       _triggerAgreementRequest(options) {
-        let self = this;
         let ajaxMethod = options.method || 'GET';
-        this.sendRequest(options).then(function(resp) {
-          self._handleSuccResponse(resp, ajaxMethod);
-        }).catch(function(error) {
-          self.handleErrorResponse(error, ajaxMethod, true);
+        this.sendRequest(options).then((resp) => {
+          this._handleSuccResponse(resp, ajaxMethod);
+        }).catch((error) => {
+          if (error instanceof EtoolsRequestError === false) {
+            this.logError('handleErrorResponse', 'agreement-item-data', error);
+          }
+          this.handleErrorResponse(error, ajaxMethod, true);
         });
       }
 
