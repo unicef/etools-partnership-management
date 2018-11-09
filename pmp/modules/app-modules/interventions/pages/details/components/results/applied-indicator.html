@@ -185,10 +185,25 @@
         this._initAppliedIndicatorListeners();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeAppliedIndicatorListeners();
+      }
+
       _initAppliedIndicatorListeners() {
-        this.addEventListener('edit', this._editIndicator.bind(this));
-        this.addEventListener('delete', this._deleteIndicator.bind(this));
+        this._editIndicator = this._editIndicator.bind(this);
+        this._deleteIndicator = this._deleteIndicator.bind(this);
+        this._deactivateIndicator = this._deactivateIndicator.bind(this);
+
+        this.addEventListener('edit', this._editIndicator);
+        this.addEventListener('delete', this._deleteIndicator);
         this.addEventListener('deactivate', this._deactivateIndicator);
+      }
+
+      _removeAppliedIndicatorListeners() {
+        this.removeEventListener('edit', this._editIndicator);
+        this.removeEventListener('delete', this._deleteIndicator);
+        this.removeEventListener('deactivate', this._deactivateIndicator);
       }
 
       _showDeactivate(inAmendment, indicIsActive) {

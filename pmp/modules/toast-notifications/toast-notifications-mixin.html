@@ -36,7 +36,17 @@
 
         ready() {
           super.ready();
+          this.queueToast = this.queueToast.bind(this);
           this.addEventListener('toast', this.queueToast);
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this.removeEventListener('toast', this.queueToast);
+          if (this._toast) {
+            this._toast.removeEventListener('toast-confirm', this._toggleToast);
+            this._toast.removeEventListener('toast-closed', this.dequeueToast);
+          }
         }
 
         queueToast(e) {
@@ -62,7 +72,8 @@
 
         _createToastElement() {
           this._toast = document.createElement('etools-toast');
-          this._toast.addEventListener('toast-confirm', this._toggleToast.bind(this, this._toast));
+          this._toggleToast = this._toggleToast.bind(this);
+          this._toast.addEventListener('toast-confirm', this._toggleToast);
           document.querySelector('body').appendChild(this._toast);
           if (!this.isIE) {
             this._toast.set('fitInto', this.$.appHeadLayout);
@@ -79,7 +90,8 @@
               messageWrapper.style.whiteSpace = 'pre-wrap';
             }
             // add close listener
-            this._toast.addEventListener('toast-closed', this.dequeueToast.bind(this));
+            this.dequeueToast = this.dequeueToast.bind(this);
+            this._toast.addEventListener('toast-closed', this.dequeueToast);
           });
         }
 
@@ -91,9 +103,9 @@
           }
         }
 
-        _toggleToast(toast) {
-          if (toast) {
-            toast.toggle();
+        _toggleToast() {
+          if (this._toast) {
+            this._toast.toggle();
           }
         }
 

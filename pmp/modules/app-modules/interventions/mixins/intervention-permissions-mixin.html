@@ -95,10 +95,23 @@
           this._initPermissionsListeners();
         }
 
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this._removePermissionsListeners();
+        }
+
         _initPermissionsListeners() {
-          this.addEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft.bind(this));
-          this.addEventListener('restore-original-permissions',
-              this._restoreInterventionOriginalDataAndPermissions.bind(this));
+          this._signedDocChangedForDraft = this._signedDocChangedForDraft.bind(this);
+          this._restoreInterventionOriginalDataAndPermissions =
+              this._restoreInterventionOriginalDataAndPermissions.bind(this);
+
+          this.addEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft);
+          this.addEventListener('restore-original-permissions', this._restoreInterventionOriginalDataAndPermissions);
+        }
+
+        _removePermissionsListeners() {
+          this.removeEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft);
+          this.removeEventListener('restore-original-permissions', this._restoreInterventionOriginalDataAndPermissions);
         }
 
         _getNewIntervRequiredFields() {

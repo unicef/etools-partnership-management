@@ -114,7 +114,9 @@
         this._handleStickyScroll();
         this._createStatusChangeWarningDialog();
         this._createDeleteConfirmationDialog();
-        this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm.bind(this));
+
+        this._triggerInterventionDeleteOnConfirm = this._triggerInterventionDeleteOnConfirm.bind(this);
+        this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm);
 
         this._createTerminationDialog();
 
@@ -124,6 +126,8 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
+
+        this.deleteConfirmDialog.removeEventListener('close', this._triggerInterventionDeleteOnConfirm);
         if (this._terminationDialog) {
           document.querySelector('body').removeChild(this._terminationDialog);
         }

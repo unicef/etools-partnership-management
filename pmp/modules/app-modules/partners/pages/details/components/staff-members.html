@@ -209,9 +209,7 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.addEditDialog) {
-          document.querySelector('body').removeChild(this.addEditDialog);
-        }
+        this._removeAddEditDialog();
       }
       getIsIEClass() {
         return this.isIEBrowser() ? 'ie' : '';
@@ -230,10 +228,17 @@
       }
 
       _createAddEditDialog() {
+        this._savePartnerContact = this._savePartnerContact.bind(this);
         this.addEditDialog = document.createElement('add-edit-staff-members');
-        this.addEditDialog.addEventListener('save-partner-contact',
-            this._savePartnerContact.bind(this));
+        this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact);
         document.querySelector('body').appendChild(this.addEditDialog);
+      }
+
+      _removeAddEditDialog() {
+        if (this.addEditDialog) {
+          this.addEditDialog.removeEventListener('save-partner-contact', this._savePartnerContact);
+          document.querySelector('body').removeChild(this.addEditDialog);
+        }
       }
 
       _addPartnerContact() {

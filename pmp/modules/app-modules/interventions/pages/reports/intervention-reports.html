@@ -109,7 +109,7 @@
                 return;
               }
               let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
-              this.updateAppState('interventions/' + interventionId + '/reports', qs);
+              this.updateAppState('interventions/' + interventionId + '/reports', qs, true);
               this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
             });
       }

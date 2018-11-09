@@ -405,26 +405,13 @@
         ];
       }
 
-      _initInterventionsModuleListeners() {
-        this.addEventListener('intervention-save-error', this._interventionSaveErrors.bind(this));
-        this.addEventListener('tab-content-attached', this._interventionPageAttached.bind(this));
-        this.addEventListener('trigger-intervention-loading-msg',
-            this._handleInterventionSelectionLoadingMsg.bind(this));
-        this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions.bind(this));
-        this.addEventListener('new-amendment-added', this._amendmentAddedHandler.bind(this));
-      }
-
       ready() {
         super.ready();
         if (this.newInterventionActive) {
           this._setNewInterventionObj();
         }
-        let dialog = document.createElement('div');
-        dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
-        dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
-        this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
-            this._finalizeAmendmentConfirmationCallback.bind(this), dialog);
 
+        this._createFinalizeAmendConfirmDialog();
         this._initInterventionsModuleListeners();
       }
 
@@ -437,7 +424,45 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
+        this._removeFinalizeAmendConfirmDialog();
+        this._removeInterventionsModuleListeners();
+      }
+
+      _initInterventionsModuleListeners() {
+        this._interventionSaveErrors = this._interventionSaveErrors.bind(this);
+        this._interventionPageAttached = this._interventionPageAttached.bind(this);
+        this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
+        this._refreshInterventionPermissions = this._refreshInterventionPermissions.bind(this);
+        this._amendmentAddedHandler = this._amendmentAddedHandler.bind(this);
+
+        this.addEventListener('intervention-save-error', this._interventionSaveErrors);
+        this.addEventListener('tab-content-attached', this._interventionPageAttached);
+        this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+        this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions);
+        this.addEventListener('new-amendment-added', this._amendmentAddedHandler);
+      }
+
+      _removeInterventionsModuleListeners() {
+        this.removeEventListener('intervention-save-error', this._interventionSaveErrors);
+        this.removeEventListener('tab-content-attached', this._interventionPageAttached);
+        this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+        this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions);
+        this.removeEventListener('new-amendment-added', this._amendmentAddedHandler);
+      }
+
+      _createFinalizeAmendConfirmDialog() {
+        this._finalizeAmendmentConfirmationCallback = this._finalizeAmendmentConfirmationCallback.bind(this);
+        let dialog = document.createElement('div');
+        dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
+        dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
+        this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
+            this._finalizeAmendmentConfirmationCallback, dialog);
+      }
+
+      _removeFinalizeAmendConfirmDialog() {
         if (this.finalizeAmendmentConfirmationDialog) {
+          this.finalizeAmendmentConfirmationDialog.removeEventListener('close',
+              this._finalizeAmendmentConfirmationCallback);
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
       }
@@ -675,7 +700,7 @@
        * Go to details page once the new intervention has been saved
        */
       _newInterventionSaved(intervention) {
-        this.fireEvent('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
+        this.set('route.path', '/' + intervention.id + '/details');
       }
 
       _showAddNewIntervBtn(listActive, permissions) {
