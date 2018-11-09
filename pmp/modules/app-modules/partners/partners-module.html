@@ -274,14 +274,26 @@
       disconnectedCallback() {
         super.disconnectedCallback();
         this._removeNewPartnerDialogFromDom();
+        this._removeListeners();
       }
 
       _initListeners() {
+        this._partnerSaveError = this._partnerSaveError.bind(this);
+        this._savePartnerContact = this._savePartnerContact.bind(this);
+        this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
+        this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
+
         this.addEventListener('partner-save-error', this._partnerSaveError);
-        this.addEventListener('create-partner', this._createPartner);
         this.addEventListener('save-partner-contact', this._savePartnerContact);
         this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
         this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+      }
+
+      _removeListeners() {
+        this.removeEventListener('partner-save-error', this._partnerSaveError);
+        this.removeEventListener('save-partner-contact', this._savePartnerContact);
+        this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
+        this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
       }
 
       _savePartnerContact(e) {
@@ -303,13 +315,13 @@
         this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
         document.querySelector('body').appendChild(this.newPartnerDialog);
 
-        this.newPartnerDialog.addEventListener('create-partner', (event) => {
-          this.fireEvent('create-partner', event.detail);
-        }, false);
+        this._createPartner = this._createPartner.bind(this);
+        this.newPartnerDialog.addEventListener('create-partner', this._createPartner);
       }
 
       _removeNewPartnerDialogFromDom() {
         if (this.newPartnerDialog) {
+          this.newPartnerDialog.removeEventListener('create-partner', this._createPartner);
           document.querySelector('body').removeChild(this.newPartnerDialog);
         }
       }

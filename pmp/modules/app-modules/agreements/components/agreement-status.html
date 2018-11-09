@@ -120,10 +120,17 @@
 
         this._createStatusChangeWarningDialog();
         this._createDeleteConfirmationDialog();
-        this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm.bind(this));
+
+        this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
+        this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm);
 
         // has to be run async for shadycss to load
         setTimeout(this.setPossibleStatuses.bind(this), 0);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm);
       }
 
       setPossibleStatuses() {

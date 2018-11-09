@@ -69,7 +69,13 @@
 
     connectedCallback() {
       super.connectedCallback();
-      this.addEventListener('sort-changed', this._sortOrderChanged.bind(this));
+      this._sortOrderChanged = this._sortOrderChanged.bind(this);
+      this.addEventListener('sort-changed', this._sortOrderChanged);
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this.removeEventListener('sort-changed', this._sortOrderChanged);
     }
 
     // When the list data rows are changing check and close any details opened
