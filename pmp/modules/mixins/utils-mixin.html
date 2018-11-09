@@ -113,8 +113,34 @@
         }
       }
 
+      // For simple objects, no nesting
+      objectsAreTheSame(obj1, obj2) {
+        if (obj1 === obj2) {
+          return true;
+        }
+        if (!obj1 || !obj2) {
+          return false;
+        }
+        let props1 = Object.keys(obj1);
+        let props2 = Object.keys(obj2);
+
+        if (props1.length !== props2.length) {
+          return false;
+        }
+        if (props1.length === 0) {
+          return true;
+        }
+
+        let areDiff = false;
+        props1.forEach((p) => {
+          if( obj1[p] !== obj2[p]) {
+            areDiff = true;
+          }
+        });
+        return !areDiff;
+      }
+
     };
 
   }());
 </script>
-

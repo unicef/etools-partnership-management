@@ -403,7 +403,7 @@
         }
 
         if (_.isEmpty(urlQueryParams)) {
-          urlQueryParams.status = 'draft|signed';
+          urlQueryParams.status = 'draft|signed|suspended';
         }
         this.set('initComplete', false);
         this.setProperties(

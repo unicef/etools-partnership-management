@@ -606,10 +606,12 @@
       _finalizeAmendmentConfirmationCallback() {
         if (event.detail.confirmed) {
           this.set('intervention.in_amendment', false);
-          if (!this._validateAndSaveIntervention(null)) {
-            // if validation fails restore in_amendment flag
-            this.set('intervention.in_amendment', true);
-          }
+          this._validateAndSaveIntervention(null).then((successfull) => {
+              if (!successfull) {
+                // if save fails restore in_amendment flag
+                this.set('intervention.in_amendment', true);
+              }
+            });
         }
       }
 

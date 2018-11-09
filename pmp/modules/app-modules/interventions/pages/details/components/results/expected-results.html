@@ -277,7 +277,7 @@
           this.indicatorDialog.setTitle('Edit Indicator');
         }
         this.indicatorDialog.toastEventSource = this;
-        this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
+        this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams, this.interventionStatus);
         this.indicatorDialog.openIndicatorDialog();
         this.indicatorDialog.resetValidationsAndStyle(undefined, true);
       }

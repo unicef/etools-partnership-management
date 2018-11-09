@@ -20,12 +20,11 @@
 
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/date-mixin.html">
-<link rel="import" href="../../../../endpoints/endpoints.html">
 
 <link rel="import" href="components/amendments/pd-amendments.html">
 <link rel="import" href="components/fund-reservations/fund-reservations.html">
@@ -110,7 +109,9 @@
                 on-upload-finished="_prcRevDocUploadFinished"
                 readonly$="[[!permissions.edit.prc_review_attachment]]"
                 show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, permissions.edit.prc_review_attachment)]]"
-                on-delete-file="_prcRevDocDelete">
+                on-delete-file="_prcRevDocDelete"
+                on-upload-started="_onUploadStarted"
+                on-change-unsaved-file="_onChangeUnsavedFile">
             </etools-upload>
           </div>
         </div>
@@ -192,7 +193,9 @@
                          auto-validate
                          readonly$="[[!permissions.edit.signed_pd_attachment]]"
                          required$="[[permissions.required.signed_pd_attachment]]"
-                         error-message="Please select Signed PD/SSFA document">
+                         error-message="Please select Signed PD/SSFA document"
+                         on-upload-started="_onUploadStarted"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
         <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
@@ -237,20 +240,20 @@
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Date
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @applesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.Date,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -300,12 +303,6 @@
           unicefDateValidatorErrorMessage: {
             type: String,
             value: ''
-          },
-          uploadEndpoint: {
-            type: String,
-            value: function() {
-              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
-            }
           }
         };
       }
@@ -369,10 +366,15 @@
 
       validate() {
         let valid = true;
-        let field = this.shadowRoot.querySelector('#signedIntervFile');
-        if (field && !field.validate()) {
-          valid = false;
-        }
+        let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
+          '#signedByUnicefDateField', '#signedIntervFile'];
+
+        fieldSelectors.forEach(function(selector) {
+          let field = this.shadowRoot.querySelector(selector);
+          if (field && !field.validate()) {
+            valid = false;
+          }
+        }.bind(this));
         return valid;
       }
 
@@ -447,25 +449,31 @@
       }
 
       _signedPDUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.signed_pd_attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _signedPDDocDelete(e) {
         this.set('intervention.signed_pd_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       _prcRevDocUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.prc_review_attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _prcRevDocDelete(e) {
         this.set('intervention.prc_review_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       showPrcReviewDeleteBtn(status) {

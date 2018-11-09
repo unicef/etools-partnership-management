@@ -103,10 +103,12 @@
 
       _triggerPartnerRequest(options) {
         let ajaxMethod = options.method || 'GET';
-        this.sendRequest(options).then((resp) => {
+        return this.sendRequest(options).then((resp) => {
           this._handleSuccResponse(resp, ajaxMethod);
+          return true;
         }).catch((error) => {
           this._handleErrorResponse(error, ajaxMethod);
+          return false;
         });
       }
 
@@ -224,6 +226,7 @@
       savePartner(partner, callback) {
         if (typeof partner === 'object' && Object.keys(partner).length === 0) {
           this.fireEvent('toast', {text: 'Invalid partner data!', showCloseBtn: true});
+          return Promise.resolve(false);
         } else {
           let endpoint = null;
           let partnerId = partner.id;
@@ -241,7 +244,7 @@
                 text: 'Update cannot be made. Invalid partner ID.',
                 showCloseBtn: true
               });
-              return;
+              return Promise.resolve(false);
             }
             // set additional callback if any
             if (callback) {
@@ -254,7 +257,7 @@
               loadingSource: this.ajaxLoadingMsgSource
             });
             // fire in the hole
-            this._triggerPartnerRequest({
+            return this._triggerPartnerRequest({
               method: 'PATCH', endpoint: endpoint, body: partner
             });
           } else {
@@ -262,6 +265,7 @@
               text: 'There is nothing to save. No change detected on this partner.',
               showCloseBtn: true
             });
+            return Promise.resolve(false);
           }
         }
       }

@@ -29,8 +29,8 @@
 
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
-<link rel="import" href="../../../../endpoints/endpoints.html">
 <link rel="import" href="../../mixins/fr-numbers-consistency-mixin.html">
 
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
@@ -229,9 +229,11 @@
                          file-url="{{intervention.activation_letter_attachment}}"
                          upload-endpoint="[[uploadEndpoint]]"
                          on-upload-finished="_activationLetterUploadFinished"
+                         on-upload-started="_onUploadStarted"
                          hidden$="[[_isDraft(intervention.status)]]"
                          show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
-                         on-delete-file="_activationLetterDelete">
+                         on-delete-file="_activationLetterDelete"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
       </div>
@@ -427,6 +429,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     class InterventionDetails extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
@@ -436,7 +439,8 @@
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.FrNumbersConsistency,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element) {
 
       static get is() {
@@ -527,12 +531,6 @@
           showInactiveIndicators: {
             type: Boolean,
             value: false
-          },
-          uploadEndpoint: {
-            type: String,
-            value: function() {
-              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
-            }
           }
         };
       }
@@ -953,18 +951,22 @@
       }
 
       _activationLetterUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('intervention.activation_letter_attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
       _activationLetterDelete(e) {
-        this.set('intervention.prc_review_attachment', null);
+        this.set('intervention.activation_letter_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
       showActivationLetterDeleteBtn(status) {
-        return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.prc_review_attachment;
+        return this._isDraft(status) && !!this.originalIntervention
+               && !this.originalIntervention.activation_letter_attachment;
       }
 
     }

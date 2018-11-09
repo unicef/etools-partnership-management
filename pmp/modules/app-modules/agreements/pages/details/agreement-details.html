@@ -27,11 +27,11 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 
 <link rel="import" href="../../../../config/app-constants.html">
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../modules/mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
 <link rel="import" href="components/amendments/agreement-amendments.html">
@@ -309,7 +309,9 @@
               on-delete-file="_signedAgFileDelete"
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
-              required$="[[agreement.permissions.required.attachment]]">
+              required$="[[agreement.permissions.required.attachment]]"
+              on-upload-started="_onUploadStarted"
+              on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
         </div>
       </div>
@@ -320,7 +322,7 @@
                             class="content-section"
                             data-items="{{agreement.amendments}}"
                             agreement-type="[[agreement.agreement_type]]"
-                            edit-mode$="[[agreement.permissions.edit.amendments]]"
+                            edit-mode="[[agreement.permissions.edit.amendments]]"
                             show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
                             authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                             selected-ao="{{authorizedOfficers}}">
@@ -334,16 +336,16 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.StaffMembersData
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -739,9 +741,11 @@
       }
 
       _signedAgreementUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('agreement.attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
@@ -755,6 +759,7 @@
 
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
     }
