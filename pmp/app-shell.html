@@ -402,8 +402,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _updatePath(path) {
-        this.set('route.__queryParams', null);
-        this.set('route.path', this.rootPath + path);
+        this.setProperties({
+          'route.path': this.rootPath + path,
+          'route.__queryParams': null
+        });
       }
 
       _pageNotFound() {

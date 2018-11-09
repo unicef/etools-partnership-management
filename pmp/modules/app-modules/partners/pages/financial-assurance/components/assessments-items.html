@@ -10,8 +10,8 @@
 
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../endpoints/endpoints.html">
-<link rel="import" href="../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../mixins/repeatable-data-sets-mixin.html">
+<link rel="import" href="../../../../../mixins/uploads-mixin.html">
 
 <link rel="import" href="../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
@@ -122,7 +122,9 @@
                              on-upload-finished="_uploadFinished"
                              readonly="[[!editMode]]"
                              required
-                             error-message="Please select the report file">
+                             error-message="Please select the report file"
+                             on-upload-started="_onUploadStarted"
+                             on-change-unsaved-file="_onChangeUnsavedFile">
               </etools-upload>
             </div>
           </div>
@@ -141,14 +143,14 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.RepeatableDataSets,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -322,10 +324,12 @@
       }
 
       _uploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
         if (e.detail.success) {
           const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
           const uploadResponse = JSON.parse(e.detail.success);
           this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
+          this.dispatch('increaseUnsavedUploads');
         }
       }
 
@@ -334,5 +338,4 @@
     window.customElements.define(AssessmentsItems.is, AssessmentsItems);
   </script>
 </dom-module>
-
 
