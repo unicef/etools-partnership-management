@@ -114,7 +114,8 @@
             <template is="dom-if" if="[[!isCluster]]">
               <non-cluster-indicator id="nonClusterIndicatorEl"
                                      indicator="{{indicator}}"
-                                     location-options="[[locationOptions]]"></non-cluster-indicator>
+                                     location-options="[[locationOptions]]"
+                                     intervention-status="[[interventionStatus]]"></non-cluster-indicator>
             </template>
             <template is="dom-if" if="[[isCluster]]">
               <cluster-indicator id="clusterIndicatorEl"
@@ -186,7 +187,7 @@
               },
               section: null,
               baseline: {},
-              target: {},
+              target: {d: 1},
               means_of_verification: null,
               locations: [],
               disaggregation: [],
@@ -241,6 +242,9 @@
           spinnerText: {
             type: String,
             value: 'Saving...'
+          },
+          interventionStatus: {
+            type: String
           }
         };
       }
@@ -281,8 +285,9 @@
         this.$.indicatorDialog.dialogTitle = title;
       }
 
-      setIndicatorData(data, actionParams) {
+      setIndicatorData(data, actionParams, interventionStatus) {
         this.set('actionParams', actionParams);
+        this.set('interventionStatus', interventionStatus);
 
         if (!data) { // new indicator
           this.isCluster = false;
