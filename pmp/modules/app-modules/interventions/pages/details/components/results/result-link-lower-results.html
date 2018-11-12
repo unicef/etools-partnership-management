@@ -211,7 +211,12 @@
 
       ready() {
         super.ready();
-        this.addEventListener('delete-confirm', this._updateInterventionLocAndClusters.bind(this));
+        this._updateInterventionLocAndClusters = this._updateInterventionLocAndClusters.bind(this);
+        this.addEventListener('delete-confirm', this._updateInterventionLocAndClusters);
+      }
+
+      disconnectedCallback() {
+        this.removeEventListener('delete-confirm', this._updateInterventionLocAndClusters);
       }
 
       _dataItemsChanged(dataItemsMutation) {

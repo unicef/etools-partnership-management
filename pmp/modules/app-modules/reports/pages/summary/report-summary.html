@@ -6,10 +6,9 @@
 <link rel="import"
       href="../../../../../../bower_components/etools-currency-amount-input/mixins/etools-currency-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
-
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -88,10 +87,10 @@
         </div>
       </div>
       <div class="row-h"  hidden$="[[isPrpSRReport(report.report_type)]]">
-        <etools-single-file label="Attachment"
-                            attachments="[[attachments]]"
-                            readonly>
-        </etools-single-file>
+        <etools-upload label="Attachment"
+                       file-url="[[reportAttachment.path]]"
+                       readonly>
+        </etools-upload>
       </div>
     </div>
 
@@ -125,11 +124,6 @@
           reportAttachment: {
             type: Object
           },
-          attachments: {
-            type: Array,
-            value: [],
-            computed: '_prepareAttachmentData(reportAttachment)'
-          },
           sentBkCommentsDialog: {
             type: Object
           }
@@ -157,21 +151,9 @@
         }
       }
 
-
       _createSentBkCommentsDialog() {
         this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
         document.querySelector('body').appendChild(this.sentBkCommentsDialog);
-      }
-
-      _prepareAttachmentData(reportAttachment) {
-        if (!reportAttachment) {
-          return [];
-        }
-        if (reportAttachment instanceof Array && reportAttachment[0].path) {
-          return reportAttachment[0];
-        } else {
-          return [reportAttachment];
-        }
       }
 
       /**

@@ -64,6 +64,7 @@
         disconnectedCallback() {
           super.disconnectedCallback();
           if (this.warningDialog) {
+            this.warningDialog.removeEventListener('close', this._statusChangeConfirmationCallback);
             this.removeDialog(this.warningDialog);
           }
           if (this.deleteConfirmDialog) {
@@ -93,11 +94,11 @@
         }
 
         _setResizeHandler() {
-          window.onresize = function() {
+          window.onresize = () => {
             this.updateStyles();
             this._resetScrollHandler();
             this._setScrollHandler();
-          }.bind(this);
+          };
         }
 
         _resetResizeHandler() {
@@ -171,8 +172,9 @@
         _createStatusChangeWarningDialog() {
           this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this._statusChangeConfirmationCallback = this._statusChangeConfirmationCallback.bind(this);
           this.warningDialog = this.createDialog(this.sectionName + ' status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+              this._statusChangeConfirmationCallback, this.statusChangeWarningDialogContent);
         }
 
         _showStatusChangeConfirmationDialog() {
