@@ -7,9 +7,9 @@
 <link rel="import" href="../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../../styles/page-common-styles.html">
@@ -20,7 +20,7 @@
 
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../config/app-constants.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
@@ -35,11 +35,6 @@
       :host {
         @apply --layout-vertical;
         width: 100%;
-
-        --etools-file-upload-button: {
-          /* overrides previus color, possibly from pd-attachements */
-          color: var(--etools-file-main-btn-color);
-        };
       }
 
       paper-input {
@@ -77,7 +72,7 @@
           <!-- Submitted to PRC? -->
           <etools-form-element-wrapper no-placeholder>
             <paper-checkbox checked="{{intervention.submitted_to_prc}}"
-                            disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
+                            disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
                             hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
               Submitted to PRC?
             </paper-checkbox>
@@ -106,13 +101,18 @@
           </div>
           <div class="col col-6 file-container space-left">
             <!-- PRC Review Document -->
-            <etools-single-file label="PRC Review Document"
-                                internal-file=[[intervention.prc_review_document_file]]
-                                file={{intervention.prc_review_document}}
-                                accept=".doc,.docx,.pdf,.jpg,.png"
-                                hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
-                                readonly$="[[!permissions.edit.prc_review_document]]">
-            </etools-single-file>
+            <etools-upload
+                label="PRC Review Document"
+                accept=".doc,.docx,.pdf,.jpg,.png"
+                file-url="[[intervention.prc_review_attachment]]"
+                upload-endpoint="[[uploadEndpoint]]"
+                on-upload-finished="_prcRevDocUploadFinished"
+                readonly$="[[!permissions.edit.prc_review_attachment]]"
+                show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, permissions.edit.prc_review_attachment)]]"
+                on-delete-file="_prcRevDocDelete"
+                on-upload-started="_onUploadStarted"
+                on-change-unsaved-file="_onChangeUnsavedFile">
+            </etools-upload>
           </div>
         </div>
       </template>
@@ -147,7 +147,7 @@
         <div class="col col-6">
           <!-- Signed by UNICEF Authorized Officer -->
           <etools-form-element-wrapper no-placeholder>
-              Signed by UNICEF Authorized Officer
+            Signed by UNICEF Authorized Officer
           </etools-form-element-wrapper>
         </div>
         <div class="col col-3">
@@ -182,29 +182,33 @@
       <div class="row-h flex-c">
         <div class="col col-6 file-container space-left">
           <!-- Signed PD/SSFA -->
-          <etools-single-file id="signedIntervFile"
-                              label="Signed PD/SSFA"
-                              internal-file="[[intervention.signed_pd_document_file]]"
-                              file="{{intervention.signed_pd_document}}"
-                              accept=".doc,.docx,.pdf,.jpg,.png"
-                              hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.signed_pd_document_file)]]"
-                              readonly$="[[!permissions.edit.signed_pd_document]]"
-                              required$="[[permissions.required.signed_pd_document]]"
-                              auto-validate
-                              error-message="Please select Signed PD/SSFA document">
-          </etools-single-file>
+          <etools-upload id="signedIntervFile"
+                         label="Signed PD/SSFA"
+                         accept=".doc,.docx,.pdf,.jpg,.png"
+                         file-url="[[intervention.signed_pd_attachment]]"
+                         upload-endpoint="[[uploadEndpoint]]"
+                         on-upload-finished="_signedPDUploadFinished"
+                         show-delete-btn="[[showSignedPDDeleteBtn(intervention.status, permissions.edit.signed_pd_attachment)]]"
+                         on-delete-file="_signedPDDocDelete"
+                         auto-validate
+                         readonly$="[[!permissions.edit.signed_pd_attachment]]"
+                         required$="[[permissions.required.signed_pd_attachment]]"
+                         error-message="Please select Signed PD/SSFA document"
+                         on-upload-started="_onUploadStarted"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
+          </etools-upload>
         </div>
         <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
           <div class="col col-3">
             <paper-input label="Days from Submission to Signed"
-                             value="[[intervention.days_from_submission_to_signed]]"
-                             placeholder="&#8212;" readonly>
+                         value="[[intervention.days_from_submission_to_signed]]"
+                         placeholder="&#8212;" readonly>
             </paper-input>
           </div>
           <div class="col col-3">
             <paper-input label="Days from Review to Signed"
-                             value="[[intervention.days_from_review_to_signed]]"
-                             placeholder="&#8212;" readonly>
+                         value="[[intervention.days_from_review_to_signed]]"
+                         placeholder="&#8212;" readonly>
             </paper-input>
           </div>
         </template>
@@ -236,20 +240,20 @@
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Date
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @applesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
       EtoolsPmpApp.Mixins.Date,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Common,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -265,6 +269,7 @@
 
       static get properties() {
         return {
+          originalIntervention: Object,
           intervention: {
             type: Object,
             notify: true,
@@ -305,8 +310,8 @@
       static get observers() {
         return [
           '_interventionDocTypeChanged(intervention.document_type)',
-          '_signedPdDocHasChanged(intervention.signed_pd_document)',
-          '_updateStyles(permissions.edit.prc_review_document, _lockSubmitToPrc)'
+          '_signedPdDocHasChanged(intervention.signed_pd_attachment)',
+          '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)'
         ];
       }
 
@@ -321,17 +326,13 @@
         this.fireEvent('tab-content-attached');
       }
 
-      disconnectedCallback() {
-        super.disconnectedCallback();
-      }
-
       _updateStyles() {
         this.updateStyles();
       }
 
       _isDraft(status) {
         return status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
-               status === '';
+            status === '';
       }
 
       _interventionChanged(intervention) {
@@ -341,17 +342,8 @@
         } else {
           this.set('_lockSubmitToPrc', false);
         }
-        this._refreshPrcDocumentField(intervention, '', {});
-      }
-
-      // TODO: is this still needed with etools-dropdown?
-      _refreshPrcDocumentField(intervention, path, file) {
-        // forces etools-single-file to redraw the element
-        if (!intervention.prc_review_document_file) {
-          this.set('intervention.prc_review_document_file', path);
-        }
-        if (!intervention.prc_review_document) {
-          this.set('intervention.prc_review_document', file);
+        if (!intervention.prc_review_attachment) {
+          this.set('intervention.prc_review_attachment', null);
         }
       }
 
@@ -417,8 +409,7 @@
       _resetPrcFields() {
         this.set('intervention.intervention.submission_date_prc', null);
         this.set('intervention.review_date_prc', null);
-        this.set('intervention.prc_review_document_file', null);
-        this.set('intervention.prc_review_document', null);
+        this.set('intervention.prc_review_attachment', null);
       }
 
       // update FR Number on intervention
@@ -442,15 +433,55 @@
           return;
         }
         if (this.intervention &&
-            this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
-          if (signedDocument instanceof File ||
-              (_.isString(signedDocument) && !_.isEmpty(signedDocument))) {
-            // new document selected
-            this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
-          } else {
-            this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
-          }
+            (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+                this.intervention.status === '')) {
+          setTimeout(() => {
+            // delay micro task execution; set to make sure _signedDocChangedForDraft will run on page load
+            if (signedDocument) {
+              // new document uploaded or file url provided
+              this.fireEvent('signed-doc-change-for-draft', {docSelected: true});
+            } else {
+              // there is no signedDocument
+              this.fireEvent('signed-doc-change-for-draft', {docSelected: false});
+            }
+          }, 0);
         }
+      }
+
+      _signedPDUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('intervention.signed_pd_attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
+        }
+      }
+
+      _signedPDDocDelete(e) {
+        this.set('intervention.signed_pd_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
+      }
+
+      _prcRevDocUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('intervention.prc_review_attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
+        }
+      }
+
+      _prcRevDocDelete(e) {
+        this.set('intervention.prc_review_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
+      }
+
+      showPrcReviewDeleteBtn(status) {
+        return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.prc_review_attachment;
+      }
+
+      showSignedPDDeleteBtn(status) {
+        return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.signed_pd_attachment;
       }
 
     }

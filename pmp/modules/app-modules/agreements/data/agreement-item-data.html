@@ -87,10 +87,12 @@
       _triggerAgreementRequest(options) {
         let self = this;
         let ajaxMethod = options.method || 'GET';
-        this.sendRequest(options).then(function(resp) {
+        return this.sendRequest(options).then(function(resp) {
           self._handleSuccResponse(resp, ajaxMethod);
+          return true;
         }).catch(function(error) {
           self.handleErrorResponse(error, ajaxMethod, true);
+          return false;
         });
       }
 
@@ -208,6 +210,7 @@
       saveAgreement(agreement, succCallback) {
         if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
           this.fireEvent('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
+          return Promise.resolve(false);
         } else {
           let endpoint = null;
           let isNew = false;
@@ -229,11 +232,7 @@
             if (succCallback) {
               this.set('handleSuccResponseAdditionalCallback', succCallback);
             }
-            let withUpload = false; // used to set multipart prop on etools-ajax
-            if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
-              agreement.amendments = agreement.amendments.filter(a => !a.id); // send only newlly added
-              withUpload = true;
-            }
+
             this.fireEvent('global-loading', {
               message: 'Saving...',
               active: true,
@@ -241,18 +240,17 @@
             });
             // fire in the hole
             let method = (isNew) ? 'POST' : 'PATCH';
-            this._triggerAgreementRequest({
+            return this._triggerAgreementRequest({
               method: method,
               endpoint: endpoint,
-              body: agreement,
-              multiPart: withUpload,
-              prepareMultipartData: withUpload
+              body: agreement
             });
           } else {
             this.fireEvent('toast', {
               text: 'There is nothing to save. No change detected on this agreement.',
               showCloseBtn: true
             });
+            return Promise.resolve(false);
           }
         }
       }

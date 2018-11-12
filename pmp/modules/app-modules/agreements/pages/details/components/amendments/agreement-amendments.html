@@ -153,8 +153,8 @@
                 <span class="break-word">
                   <!-- target="_blank" is there for IE -->
                   <template is="dom-if" if="[[item.id]]" restamp>
-                    <a href$="[[item.signed_amendment_file]]"
-                       target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                    <a href$="[[item.signed_amendment_attachment]]"
+                       target="_blank" download>[[getFileNameFromURL(item.signed_amendment_attachment)]]</a>
                   </template>
                   <template is="dom-if" if="[[!item.id]]" restamp>
                     <span>[[item.signed_amendment.name]]</span>
@@ -256,18 +256,24 @@
       }
 
       _createAddAgAmendmentDialog() {
+        this.saveNewAmendment = this.saveNewAmendment.bind(this);
         this._addAgAmendmentDialog = document.createElement('add-ag-amendment-dialog');
         this._addAgAmendmentDialog.setAttribute('id', 'addAgAmendmentDialog');
         this._addAgAmendmentDialog.toastEventSource = this;
-        this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment.bind(this));
+        this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment);
         document.querySelector('body').appendChild(this._addAgAmendmentDialog);
+      }
+
+      _removeAddAgAmendmentDialog() {
+        if (this._addAgAmendmentDialog) {
+          this._addAgAmendmentDialog.removeEventListener('update-amendment-and-ao', this.saveNewAmendment);
+          document.querySelector('body').removeChild(this._addAgAmendmentDialog);
+        }
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this._addAgAmendmentDialog) {
-          document.querySelector('body').removeChild(this._addAgAmendmentDialog);
-        }
+        this._removeAddAgAmendmentDialog();
       }
 
       _openAddAgAmendmentDialog() {

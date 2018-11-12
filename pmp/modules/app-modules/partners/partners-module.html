@@ -13,6 +13,7 @@
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
+<link rel="import" href="../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="../../layout/page-content-header/page-content-header.html">
 <link rel="import" href="../../layout/page-content-header/page-content-header-slotted-styles.html">
@@ -168,12 +169,14 @@
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl,
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
       EtoolsPmpApp.Mixins.ModuleRouting,
-      EtoolsPmpApp.Mixins.EventHelper
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
     /**
@@ -235,6 +238,16 @@
         };
       }
 
+       static get actions() {
+        return {
+          resetUnsavedUploads: function() {
+            return {
+              type: 'RESET_UNSAVED_UPLOADS'
+            };
+          }
+        };
+      }
+
       static get observers() {
         return [
           '_pageChanged(listActive, tabsActive, routeData, currentModule)',
@@ -261,14 +274,26 @@
       disconnectedCallback() {
         super.disconnectedCallback();
         this._removeNewPartnerDialogFromDom();
+        this._removeListeners();
       }
 
       _initListeners() {
+        this._partnerSaveError = this._partnerSaveError.bind(this);
+        this._savePartnerContact = this._savePartnerContact.bind(this);
+        this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
+        this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
+
         this.addEventListener('partner-save-error', this._partnerSaveError);
-        this.addEventListener('create-partner', this._createPartner);
         this.addEventListener('save-partner-contact', this._savePartnerContact);
         this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
         this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+      }
+
+      _removeListeners() {
+        this.removeEventListener('partner-save-error', this._partnerSaveError);
+        this.removeEventListener('save-partner-contact', this._savePartnerContact);
+        this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
+        this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
       }
 
       _savePartnerContact(e) {
@@ -290,13 +315,13 @@
         this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
         document.querySelector('body').appendChild(this.newPartnerDialog);
 
-        this.newPartnerDialog.addEventListener('create-partner', (event) => {
-          this.fireEvent('create-partner', event.detail);
-        }, false);
+        this._createPartner = this._createPartner.bind(this);
+        this.newPartnerDialog.addEventListener('create-partner', this._createPartner);
       }
 
       _removeNewPartnerDialogFromDom() {
         if (this.newPartnerDialog) {
+          this.newPartnerDialog.removeEventListener('create-partner', this._createPartner);
           document.querySelector('body').removeChild(this.newPartnerDialog);
         }
       }
@@ -325,7 +350,11 @@
       _savePartner(newPartnerData) {
         let partnerData = this.shadowRoot.querySelector('#partnerData');
         if (partnerData) {
-          partnerData.savePartner(newPartnerData);
+          partnerData.savePartner(newPartnerData).then((successfull) => {
+            if (successfull) {
+              this.dispatch('resetUnsavedUploads');
+            }
+          });
         }
       }
 
@@ -460,28 +489,37 @@
           'shared_with',
           'staff_members',
           'assessments',
-          'core_values_assessment',
           'planned_engagement',
           'basis_for_risk_rating'
         ];
         let changes = {};
-        updatableFields.forEach(function(fieldName) {
+        updatableFields.forEach((fieldName) => {
           // TODO: improve this
-          if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
+          if (['shared_with', 'assessments', 'staff_members', 'planned_engagement'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
-              changes[fieldName] = partner[fieldName];
-            }
-          } else if (fieldName === 'core_values_assessment') {
-            if ((partner.hasOwnProperty('core_values_assessment')) &&
-                (partner.core_values_assessment instanceof File)) {
-              changes.core_values_assessment = partner.core_values_assessment;
+              if (fieldName === 'assessments') {
+                changes[fieldName] = partner[fieldName].filter(
+                    a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
+                if (partner[fieldName].length === 0) {
+                  delete partner[fieldName];
+                } else {
+                  partner[fieldName] = partner[fieldName].map((a) => {
+                    // TODO: remove this once old upload properties are removed from backend
+                    delete a.report;
+                    delete a.report_file;
+                    return a;
+                  });
+                }
+              } else {
+                changes[fieldName] = partner[fieldName];
+              }
             }
           } else {
             if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
               changes[fieldName] = partner[fieldName];
             }
           }
-        }.bind(this));
+        });
         return changes;
       }
 

@@ -10,6 +10,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../scripts/lodash.html">
 <link rel="import" href="../../../../config/app-constants.html">
@@ -28,6 +29,7 @@
 
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../mixins/fr-numbers-consistency-mixin.html">
 
@@ -35,7 +37,6 @@
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
 <link rel="import" href="../../../../layout/components/year-dropdown.html">
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
 
 <link rel="import" href="components/agreement-selector.html">
 
@@ -224,12 +225,16 @@
           </paper-toggle-button>
         </div>
         <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
-          <etools-single-file label="Activation Letter"
-                    internal-file="{{intervention.activation_letter_attachment}}"
-                    file="{{intervention.activation_letter_file_temp}}"
-                    hidden$="[[_isDraft(intervention.status)]]"
-                    hide-delete-btn>
-          </etools-single-file>
+          <etools-upload label="Activation Letter"
+                         file-url="{{intervention.activation_letter_attachment}}"
+                         upload-endpoint="[[uploadEndpoint]]"
+                         on-upload-finished="_activationLetterUploadFinished"
+                         on-upload-started="_onUploadStarted"
+                         hidden$="[[_isDraft(intervention.status)]]"
+                         show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
+                         on-delete-file="_activationLetterDelete"
+                         on-change-unsaved-file="_onChangeUnsavedFile">
+          </etools-upload>
         </div>
       </div>
       <div class="row-h row-second-bg" hidden$="[[_isContingencyAndDraft(intervention.contingency_pd, intervention.status)]]">
@@ -276,10 +281,10 @@
           </etools-info-tooltip>
         </div>
         <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
-          <etools-single-file label="Termination Notice"
-                              internal-file=[[intervention.termination_doc_attachment]]
-                              readonly>
-          </etools-single-file>
+          <etools-upload label="Termination Notice"
+                         file-url="[[intervention.termination_doc_attachment]]"
+                         readonly>
+          </etools-upload>
         </div>
         <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
           <div class="expiry-warning">
@@ -424,6 +429,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
      * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     class InterventionDetails extends EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
@@ -433,7 +439,8 @@
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.MissingDropdownOptions,
       EtoolsPmpApp.Mixins.FrNumbersConsistency,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element) {
 
       static get is() {
@@ -537,7 +544,7 @@
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           '_contingencyPDChanged(intervention.contingency_pd)',
           '_updateNoOfPdOutputs(intervention.result_links.*)',
-          '_updateRequired(intervention.activation_letter_file_temp)'
+          '_updateActivationLetterRequiredFields(intervention.activation_letter_attachment)'
         ];
       }
 
@@ -611,8 +618,8 @@
         expectedResultsElem._addNewCpOutputAndRamIndicators();
       }
 
-      _updateRequired(activationLetterAtt) {
-        if (activationLetterAtt instanceof File) {
+      _updateActivationLetterRequiredFields(activationLetterAtt) {
+        if (activationLetterAtt) {
           this.set('permissions.required.start', true);
           this.set('permissions.required.end', true);
         } else {
@@ -851,7 +858,7 @@
 
       _isContingencyAndHasActivationLetter() {
         return this.intervention.contingency_pd &&
-          (this.intervention.activation_letter_file_temp instanceof File || this.intervention.activation_letter_attachment);
+          this.intervention.activation_letter_attachment;
       }
 
       _isContingencyAndDraft(contingency, status) {
@@ -941,6 +948,25 @@
             [this.CONSTANTS.STATUSES.Draft.toLowerCase(),
               this.CONSTANTS.STATUSES.Signed.toLowerCase(),
               this.CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+      }
+
+      _activationLetterUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('intervention.activation_letter_attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
+        }
+      }
+
+      _activationLetterDelete(e) {
+        this.set('intervention.activation_letter_attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
+      }
+
+      showActivationLetterDeleteBtn(status) {
+        return this._isDraft(status) && !!this.originalIntervention
+               && !this.originalIntervention.activation_letter_attachment;
       }
 
     }
