@@ -408,7 +408,7 @@
       ready() {
         super.ready();
         if (this.newInterventionActive) {
-          this.set('intervention', this._getNewInterventionObjModel());
+          this._setNewInterventionObj();
         }
 
         this._createFinalizeAmendConfirmDialog();
@@ -503,6 +503,9 @@
         if (!_.isEmpty(intervention)) {
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
+          if (isNewIntervention) {
+            this.set('intervention.reference_number_year', new Date().getFullYear());
+          }
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
           setTimeout(() => {
@@ -679,14 +682,14 @@
           return;
         }
         this.set('_redirectToNewIntervPageInProgress', true);
-        this.set('intervention', this._getNewInterventionObjModel());
+        this._setNewInterventionObj();
         this.set('selectedInterventionId', null);
         this.fireEvent('update-main-path', {path: 'interventions/new/details'});
         this._handleInterventionSelectionLoadingMsg();
       }
 
-      _getNewInterventionObjModel() {
-        return JSON.parse(JSON.stringify(this.newInterventionModel));
+      _setNewInterventionObj() {
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
       }
 
       _visibleTabContent(activePage, expectedPage, newInterventionActive) {
@@ -697,7 +700,7 @@
        * Go to details page once the new intervention has been saved
        */
       _newInterventionSaved(intervention) {
-        this.fireEvent('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
+        this.set('route.path', '/' + intervention.id + '/details');
       }
 
       _showAddNewIntervBtn(listActive, permissions) {

@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
 <link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
+<link rel="import" href="../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <!-- import global config and dexie db config -->
 <link rel="import" href="modules/config/config.html">
@@ -64,6 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
 <link rel="import" href="modules/mixins/ie11-mixin.html">
+<link rel="import" href="modules/mixins/utils-mixin.html">
 
 <!-- import static data elements -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
@@ -157,7 +159,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <environment-flags></environment-flags>
 
     <app-location
-        route="{{route}}"
+        route="{{appLocRoute}}"
+        path="{{appLocPath}}"
+        query-params="{{appLocQueryParams}}"
         url-space-regex="^[[rootPath]]">
     </app-location>
 
@@ -165,7 +169,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         route="{{route}}"
         pattern="[[rootPath]]:module"
         data="{{routeData}}"
-        tail="{{subroute}}">
+        tail="{{subroute}}"
+        on-route-changed="routeChanged">
     </app-route>
 
     <app-drawer-layout id="layout" responsive-width="850px"
@@ -271,6 +276,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.IE11
+     * @appliesMixin EtoolsPmpApp.Mixins.Utils
+     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.AppMenu,
@@ -282,7 +289,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsPmpApp.Mixins.AmendmentModeUIMixin,
       EtoolsPmpApp.Mixins.UserData,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.IE11
+      EtoolsPmpApp.Mixins.IE11,
+      EtoolsPmpApp.Mixins.Utils,
+      EtoolsMixins.DynamicDialogMixin
     ], Polymer.Element);
 
     /**
@@ -308,7 +317,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_moduleChanged'
           },
-          route: Object,
+          route: {
+            type: Object
+          },
           routeData: Object,
           subroute: Object,
           // This shouldn't be neccessary, but the Analyzer isn't picking up
@@ -331,6 +342,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           _appModuleMainElUrlTmpl: {
             type: String,
             value: 'modules/app-modules/##module##/##main-el-name##-module.html'
+          },
+          appLocRoute: {
+            type: Object,
+            observer: 'appLocRouteChanged'
+          },
+          uploadsInProgress: {
+            type: Number,
+            statePath: 'uploadsInProgress'
+          },
+          unsavedUploads: {
+            type: Boolean,
+            statePath: 'unsavedUploads'
+          },
+          leavePageDialog: {
+            type: Object
+          },
+          appLocQueryParams: Object,
+          appLocPath: String
+        };
+      }
+
+       static get actions() {
+        return {
+          resetUploadsInProgress: function() {
+            return {
+              type: 'RESET_UPLOADS_IN_PROGRESS'
+            };
+          },
+          resetUnsavedUploads: function() {
+            return {
+              type: 'RESET_UNSAVED_UPLOADS'
+            };
           }
         };
       }
@@ -351,6 +394,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
         this._initListeners();
         this.requestUserData();
+        this._createLeavePageDialog();
         window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
 
         this.addIE11StyleTweaks();
@@ -368,6 +412,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
+      /*
+       * When navigating using tabs, the routeChanged is triggered first
+       * and then the appLocRouteChanged method is triggered to update the url in the browser.
+       * When navigating using updateAppState the url is set first (appLocRouteChanged is triggered)
+       * and then routeChanged
+       */
+      appLocRouteChanged(appLocRoute) {
+        if (this.route) {
+          if (appLocRoute.path === this.route.path) {
+            if (this.objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
+              return;
+            } else {
+              if (this.isInterventionReports(this.appLocRoute.path)) {
+                return;
+              }
+            }
+          }
+        }
+
+        if (Number(this.uploadsInProgress) > 0 || Number(this.unsavedUploads) > 0) {
+          this._openLeavePageDialog();
+        } else {
+          this.route = JSON.parse(JSON.stringify(appLocRoute));
+        }
+
+      }
+
+      routeChanged(e) {
+        if (this.appLocRoute.path === this.route.path &&
+           this.objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
+            return;
+        }
+
+        /* Setting this.appLocRoute = JSON.parse(JSON.stringify(this.route)),
+         * makes appLocRouteChanged be triggered twice,
+         * first with changes to the path , without the changes to the query string, which ruins everything
+         */
+        this.setProperties({
+             'appLocQueryParams': this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
+             'appLocPath': this.route.path
+            });
+      }
+
+      isInterventionReports(path) {
+        let pattern = new RegExp('\\/pmp\\/interventions\\/\\d*\\/reports', 'i');
+        return pattern.test(path);
+      }
+
       _initListeners() {
         this._pageNotFound = this._pageNotFound.bind(this);
         this._updateMainPath = this._updateMainPath.bind(this);
@@ -377,7 +469,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         this.addEventListener('404', this._pageNotFound);
         this.addEventListener('update-main-path', this._updateMainPath);
-        this.addEventListener('update-route-query-params', this._updateQueryParams);
         this.addEventListener('forbidden', this._onForbidden);
         this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
       }
@@ -417,13 +508,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _updateQueryParams(e) {
-        this.set('route.__queryParams', e.detail);
+        this.set('appLocQueryParams', e.detail);
       }
 
       _updatePath(path) {
         this.setProperties({
-          'route.path': this.rootPath + path,
-          'route.__queryParams': null
+          appLocQueryParams: {},
+          appLocPath: this.rootPath + path
         });
       }
 
@@ -585,6 +676,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateLastPartnersModuleActivePage(module) {
         if (module && ['partners', 'government-partners'].indexOf(module) > -1) {
           this.set('_lastActivePartnersModule', module);
+        }
+      }
+
+       _createLeavePageDialog() {
+        let msg = document.createElement('span');
+        msg.innerText = 'Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!';
+        let conf = {
+          title: 'Are you sure you want to leave this page?',
+          size: 'md',
+          okBtnText: 'Leave',
+          cancelBtnText: 'Stay',
+          closeCallback: this._onLeavePageConfirmation.bind(this),
+          content: msg
+        };
+        this.leavePageDialog = this.createDynamicDialog(conf);
+      }
+
+       _openLeavePageDialog() {
+        this.leavePageDialog.opened = true;
+      }
+
+      _onLeavePageConfirmation(e) {
+        if (e.detail.confirmed) { // leave
+          this.dispatch('resetUploadsInProgress');
+          this.dispatch('resetUnsavedUploads');
+          this.route = JSON.parse(JSON.stringify(this.appLocRoute));
+        } else { // stay
+           // revert url
+          this.appLocRoute = JSON.parse(JSON.stringify(this.route));
+
+          this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+          this.shadowRoot.querySelector('app-sidebar-menu')
+              .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
         }
       }
 

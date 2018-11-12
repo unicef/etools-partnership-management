@@ -64,7 +64,8 @@
         }
 
         _handleQueryParams(params) {
-          if (params !== null && Object.keys(params).length) {
+          if (params !== null && Object.keys(params).length &&
+              this.routeData.tab !== 'reports') {
             this.set('preservedListQueryParams', params);
           }
         }

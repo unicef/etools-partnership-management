@@ -352,11 +352,10 @@
       }
 
       _saveAgreement(agreementData) {
-        // let agreementData = event.detail;
         if (!agreementData.id) {
           agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
         }
-        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved)
+        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this))
             .then((successfull) => {
               if (successfull) {
                 this.dispatch('resetUnsavedUploads');
@@ -371,7 +370,7 @@
 
       // Go to details page once the new agreement has been saved
       _newAgreementSaved(agreement) {
-        this.fireEvent('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+        this.set('route.path', '/' + agreement.id + '/details');
       }
 
       _agreementSaveErrors(e) {

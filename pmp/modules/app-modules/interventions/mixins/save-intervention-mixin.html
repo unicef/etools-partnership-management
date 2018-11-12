@@ -69,7 +69,7 @@
 
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
-          return this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved)
+          return this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved.bind(this))
                      .then((successfull) => {
                         if (successfull) {
                           this.dispatch('resetUnsavedUploads');
@@ -82,12 +82,12 @@
 
         _getModifiedFields() {
           let interventionData;
+          let modifiedDetails = this._getModifiedInterventionDetails();
+          let modifiedReviewAndSign = this._getModifiedReviewAndSign();
           if (this._isNewIntervention()) {
-            interventionData = Object.assign({}, this.intervention);
+            interventionData = Object.assign({}, modifiedDetails, modifiedReviewAndSign);
             interventionData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
           } else {
-            let modifiedDetails = this._getModifiedInterventionDetails();
-            let modifiedReviewAndSign = this._getModifiedReviewAndSign();
             interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
           }
           return interventionData;
