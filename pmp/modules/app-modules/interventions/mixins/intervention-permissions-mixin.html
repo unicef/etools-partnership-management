@@ -43,12 +43,12 @@
     submission_date: false,
     submission_date_prc: false,
     review_date_prc: false,
-    prc_review_document: false,
+    prc_review_attachment: false,
     partner_authorized_officer_signatory: false,
     signed_by_partner_date: false,
     unicef_signatory: false,
     signed_by_unicef_date: false,
-    signed_pd_document: false,
+    signed_pd_attachment: false,
 
     // review & sign - Amendments
     amendments: false,
@@ -95,10 +95,23 @@
           this._initPermissionsListeners();
         }
 
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this._removePermissionsListeners();
+        }
+
         _initPermissionsListeners() {
-          this.addEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft.bind(this));
-          this.addEventListener('restore-original-permissions',
-              this._restoreInterventionOriginalDataAndPermissions.bind(this));
+          this._signedDocChangedForDraft = this._signedDocChangedForDraft.bind(this);
+          this._restoreInterventionOriginalDataAndPermissions =
+              this._restoreInterventionOriginalDataAndPermissions.bind(this);
+
+          this.addEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft);
+          this.addEventListener('restore-original-permissions', this._restoreInterventionOriginalDataAndPermissions);
+        }
+
+        _removePermissionsListeners() {
+          this.removeEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft);
+          this.removeEventListener('restore-original-permissions', this._restoreInterventionOriginalDataAndPermissions);
         }
 
         _getNewIntervRequiredFields() {
@@ -108,7 +121,7 @@
         _getDraftToSignedRequiredFields(intervention) {
           let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
             'partner_authorized_officer_signatory', 'signed_by_partner_date',
-            'signed_by_unicef_date', 'signed_pd_document'];
+            'signed_by_unicef_date', 'signed_pd_attachment'];
           if (!intervention.contingency_pd) {
             fields.push('start', 'end');
           }

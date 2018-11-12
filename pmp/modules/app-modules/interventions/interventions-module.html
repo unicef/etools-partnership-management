@@ -188,6 +188,7 @@
           <intervention-review-and-sign id="interventionReviewAndSign"
                                         name="review-and-sign"
                                         intervention="{{intervention}}"
+                                        original-intervention="[[originalIntervention]]"
                                         agreement="[[agreement]]">
           </intervention-review-and-sign>
         </template>
@@ -323,9 +324,8 @@
               country_programme: undefined,
               number: undefined,
               reference_number_year: new Date().getFullYear(),
-              prc_review_document_file: null,
-              signed_pd_document_file: null,
-              signed_pd_document: null,
+              prc_review_attachment: undefined,
+              signed_pd_attachment: undefined,
               title: undefined,
               status: '',
               start: null,
@@ -334,7 +334,6 @@
               submission_date_prc: undefined,
               review_date_prc: undefined,
               submission_date: undefined,
-              prc_review_document: undefined,
               signed_by_unicef_date: undefined,
               signed_by_partner_date: undefined,
               unicef_signatory: undefined,
@@ -359,7 +358,7 @@
               amendments: [],
               attachments: [],
               distributions: [],
-              activation_letter_file_temp: null
+              activation_letter_attachment: null
             }
           },
           newInterventionActive: {
@@ -406,26 +405,13 @@
         ];
       }
 
-      _initInterventionsModuleListeners() {
-        this.addEventListener('intervention-save-error', this._interventionSaveErrors.bind(this));
-        this.addEventListener('tab-content-attached', this._interventionPageAttached.bind(this));
-        this.addEventListener('trigger-intervention-loading-msg',
-            this._handleInterventionSelectionLoadingMsg.bind(this));
-        this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions.bind(this));
-        this.addEventListener('new-amendment-added', this._amendmentAddedHandler.bind(this));
-      }
-
       ready() {
         super.ready();
         if (this.newInterventionActive) {
-          this.set('intervention', this._getNewInterventionObjModel());
+          this._setNewInterventionObj();
         }
-        let dialog = document.createElement('div');
-        dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
-        dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
-        this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
-            this._finalizeAmendmentConfirmationCallback.bind(this), dialog);
 
+        this._createFinalizeAmendConfirmDialog();
         this._initInterventionsModuleListeners();
       }
 
@@ -438,7 +424,45 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
+        this._removeFinalizeAmendConfirmDialog();
+        this._removeInterventionsModuleListeners();
+      }
+
+      _initInterventionsModuleListeners() {
+        this._interventionSaveErrors = this._interventionSaveErrors.bind(this);
+        this._interventionPageAttached = this._interventionPageAttached.bind(this);
+        this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
+        this._refreshInterventionPermissions = this._refreshInterventionPermissions.bind(this);
+        this._amendmentAddedHandler = this._amendmentAddedHandler.bind(this);
+
+        this.addEventListener('intervention-save-error', this._interventionSaveErrors);
+        this.addEventListener('tab-content-attached', this._interventionPageAttached);
+        this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+        this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions);
+        this.addEventListener('new-amendment-added', this._amendmentAddedHandler);
+      }
+
+      _removeInterventionsModuleListeners() {
+        this.removeEventListener('intervention-save-error', this._interventionSaveErrors);
+        this.removeEventListener('tab-content-attached', this._interventionPageAttached);
+        this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+        this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions);
+        this.removeEventListener('new-amendment-added', this._amendmentAddedHandler);
+      }
+
+      _createFinalizeAmendConfirmDialog() {
+        this._finalizeAmendmentConfirmationCallback = this._finalizeAmendmentConfirmationCallback.bind(this);
+        let dialog = document.createElement('div');
+        dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
+        dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
+        this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
+            this._finalizeAmendmentConfirmationCallback, dialog);
+      }
+
+      _removeFinalizeAmendConfirmDialog() {
         if (this.finalizeAmendmentConfirmationDialog) {
+          this.finalizeAmendmentConfirmationDialog.removeEventListener('close',
+              this._finalizeAmendmentConfirmationCallback);
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
       }
@@ -479,6 +503,9 @@
         if (!_.isEmpty(intervention)) {
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
+          if (isNewIntervention) {
+            this.set('intervention.reference_number_year', new Date().getFullYear());
+          }
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
           setTimeout(() => {
@@ -582,10 +609,12 @@
       _finalizeAmendmentConfirmationCallback() {
         if (event.detail.confirmed) {
           this.set('intervention.in_amendment', false);
-          if (!this._validateAndSaveIntervention(null)) {
-            // if validation fails restore in_amendment flag
-            this.set('intervention.in_amendment', true);
-          }
+          this._validateAndSaveIntervention(null).then((successfull) => {
+              if (!successfull) {
+                // if save fails restore in_amendment flag
+                this.set('intervention.in_amendment', true);
+              }
+            });
         }
       }
 
@@ -653,14 +682,14 @@
           return;
         }
         this.set('_redirectToNewIntervPageInProgress', true);
-        this.set('intervention', this._getNewInterventionObjModel());
+        this._setNewInterventionObj();
         this.set('selectedInterventionId', null);
         this.fireEvent('update-main-path', {path: 'interventions/new/details'});
         this._handleInterventionSelectionLoadingMsg();
       }
 
-      _getNewInterventionObjModel() {
-        return JSON.parse(JSON.stringify(this.newInterventionModel));
+      _setNewInterventionObj() {
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
       }
 
       _visibleTabContent(activePage, expectedPage, newInterventionActive) {
@@ -671,7 +700,7 @@
        * Go to details page once the new intervention has been saved
        */
       _newInterventionSaved(intervention) {
-        this.fireEvent('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
+        this.set('route.path', '/' + intervention.id + '/details');
       }
 
       _showAddNewIntervBtn(listActive, permissions) {

@@ -76,6 +76,7 @@
       disconnectedCallback() {
         super.disconnectedCallback();
         // remove delete confirmation dialog when the element is detached
+        this.deleteDialog.removeEventListener('close', this._onDeleteConfirmation);
         this.removeDialog(this.deleteDialog);
       }
       /**
@@ -199,8 +200,9 @@
       _createDeleteConfirmationDialog() {
         let deleteConfirmationContent = document.createElement('div');
         deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
+        this._onDeleteConfirmation = this._onDeleteConfirmation.bind(this);
         this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
-            'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
+            'No', this._onDeleteConfirmation, deleteConfirmationContent);
       }
 
       /**

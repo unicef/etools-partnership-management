@@ -46,26 +46,21 @@
 
         ready() {
           super.ready();
-          this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached.bind(this));
+
+          this._requestedTabContentHasBeenAttached = this._requestedTabContentHasBeenAttached.bind(this);
+          this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this.removeEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
         }
 
         _activePageChanged(currentModule, previousPage) {
           if (typeof currentModule === 'undefined') {
             return;
           }
-          this._clearRouteQueryParamsIfNeeded(previousPage);
           this._resetTabAttachedFlagIfNeeded(currentModule, previousPage);
-        }
-
-        /*
-         *Avoid Reports page query string lingering on other intervention tabs
-         */
-        _clearRouteQueryParamsIfNeeded(previousPage) {
-          if (previousPage === 'reports') {
-            //* Info:Clearing the query params in the subroute doesn't work,
-            //  has to be in the parent route
-            this.fireEvent('update-route-query-params');
-          }
         }
 
         /**
