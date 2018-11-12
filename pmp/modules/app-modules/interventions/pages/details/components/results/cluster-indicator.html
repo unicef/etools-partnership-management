@@ -395,6 +395,8 @@
           this._resetRatioLabels();
         } else if (prpClusterIndic.blueprint.display_type === 'percentage') {
           this._resetDenominator(100);
+        } else if (prpClusterIndic.blueprint.display_type === 'ratio') {
+          this.indicator.target.d = prpClusterIndicator.target.d;
         }
       }
 
