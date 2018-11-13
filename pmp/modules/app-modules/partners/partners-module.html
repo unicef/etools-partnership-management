@@ -498,13 +498,13 @@
           if (['shared_with', 'assessments', 'staff_members', 'planned_engagement'].indexOf(fieldName) > -1) {
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
               if (fieldName === 'assessments') {
-                changes[fieldName] = partner[fieldName].filter(
-                    a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
-                if (partner[fieldName].length === 0) {
-                  delete partner[fieldName];
+                changes[fieldName] = [...this._getNewOrWithReportChangedAssessments(partner[fieldName]),
+                    ...this._getModIgnoringAttachChanges(partner[fieldName])];
+                if (changes[fieldName].length === 0) {
+                  delete changes[fieldName];
                 } else {
-                  partner[fieldName] = partner[fieldName].map((a) => {
-                    // TODO: remove this once old upload properties are removed from backend
+                  // TODO: remove this once old upload properties are removed from backend
+                  changes[fieldName] = changes[fieldName].map((a) => {
                     delete a.report;
                     delete a.report_file;
                     return a;
@@ -521,6 +521,35 @@
           }
         });
         return changes;
+      }
+
+      /**
+       * Get all new assessments or those with report attachment changed
+       */
+      _getNewOrWithReportChangedAssessments(assessmentsList) {
+        return assessmentsList.filter(
+            a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
+      }
+
+      /**
+       * Get all assessments with data changed ignoring attachment changes
+       */
+      _getModIgnoringAttachChanges(assessmentsList) {
+        const alreadySavedAssessments = assessmentsList.filter(
+            a => typeof a.report_attachment === 'string' && a.report_attachment !== '');
+        const modifiedAssessments = [];
+        if (alreadySavedAssessments.length > 0) {
+          alreadySavedAssessments.forEach((a) => {
+            // get original assessment data
+            const originalA = this.originalPartnerData.assessments.find(oA => oA.id === a.id);
+            // check for new updates
+            if (originalA && JSON.stringify(originalA) !== JSON.stringify(a)) {
+              delete a.report_attachment; // to avoid BE valid report file ID check
+              modifiedAssessments.push(a);
+            }
+          });
+        }
+        return modifiedAssessments;
       }
 
       _handleTabSelectAction(e) {
