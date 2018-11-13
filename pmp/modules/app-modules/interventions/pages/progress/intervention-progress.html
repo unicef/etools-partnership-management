@@ -465,26 +465,26 @@
         return date ? ('(' + this._convertToDisplayFormat(date) + ')') : '';
       }
 
-      _convertToDisplayFormat(str) {
-        return moment(this._IEacceptableTryParseDate(str)).format('D MMM YYYY');
+      _convertToDisplayFormat(strDt) {
+        return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
       }
 
-      _IEacceptableTryParseDate(strDt) {
-        //expected dt fromat : 01-Sep-2018
+      _EdgeAcceptableDateParse(strDt) {
+        // expected dt fromat : 01-Sep-2018
         let dtArr = strDt.split('-');
         let date;
         if (dtArr && dtArr.length) {
           let numericMonth = dtArr[1];
 
-          if (isNaN(dtArr[1])) {
-            numericMonth = this.getShortStrMonths().indexOf(stArr[1]);
+          if (isNaN(numericMonth)) {
+            numericMonth = this.getShortStrMonths().indexOf(numericMonth);
           }
 
           date = new Date(dtArr[2], numericMonth, dtArr[0]);
         }
 
         if (!date) {
-          date = new Date(str + 'Z');
+          date = new Date(strDt + 'Z');
         }
 
         return date;
