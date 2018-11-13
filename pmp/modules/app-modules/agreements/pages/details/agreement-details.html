@@ -11,9 +11,9 @@
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../layout/components/etools-cp-structure.html">
 <link rel="import" href="../../../../layout/components/year-dropdown.html">
@@ -27,10 +27,11 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 
 <link rel="import" href="../../../../config/app-constants.html">
-<link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../modules/mixins/missing-dropdown-options-mixin.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../partners/mixins/staff-members-data-mixin.html">
 
 <link rel="import" href="components/amendments/agreement-amendments.html">
@@ -45,10 +46,6 @@
         width: 100%;
         --esmm-list-wrapper: {
           max-height: 400px;
-        };
-        --etools-file-upload-button: {
-          /* overrides previus color, possibly from pd-attachements */
-          color: var(--etools-file-main-btn-color);
         };
       }
 
@@ -303,15 +300,19 @@
           <span class="type-warning">[[generatePCAMessage]]</span>
         </div>
         <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
-          <etools-single-file
-              file="{{agreement.attachment_temp}}"
-              internal-file="[[agreement.attachment]]"
+          <etools-upload
               label="Signed Agreement"
+              file-url="{{agreement.attachment}}"
+              upload-endpoint="[[uploadEndpoint]]"
+              on-upload-finished="_signedAgreementUploadFinished"
+              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment)]]"
+              on-delete-file="_signedAgFileDelete"
               accept=".doc,.docx,.pdf,.jpg,.png"
-              hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attachment)]]"
-              readonly$="[[!agreement.permissions.edit.attached_agreement]]"
-              required$="[[agreement.permissions.required.attached_agreement]]">
-          </etools-single-file>
+              readonly$="[[!agreement.permissions.edit.attachment]]"
+              required$="[[agreement.permissions.required.attachment]]"
+              on-upload-started="_onUploadStarted"
+              on-change-unsaved-file="_onChangeUnsavedFile">
+          </etools-upload>
         </div>
       </div>
     </etools-content-panel>
@@ -321,7 +322,7 @@
                             class="content-section"
                             data-items="{{agreement.amendments}}"
                             agreement-type="[[agreement.agreement_type]]"
-                            edit-mode$="[[agreement.permissions.edit.amendments]]"
+                            edit-mode="[[agreement.permissions.edit.amendments]]"
                             show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
                             authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                             selected-ao="{{authorizedOfficers}}">
@@ -335,16 +336,16 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.StaffMembersData
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.StaffMembersData,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.Constants
+      EtoolsPmpApp.Mixins.Constants,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -415,6 +416,12 @@
           allowAoEditForSSFA: {
             type: Boolean,
             value: false
+          },
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
           }
         };
       }
@@ -471,12 +478,6 @@
         return (this.agreement && this.agreement.id);
       }
 
-      // Refer to unicef/etools-issues#232:
-      // For Draft Status, only Change option is available. No delete option is available in Draft.
-      _hideDeleteBtn() {
-        return this._isDraft() && this.agreement && this.agreement.attachment;
-      }
-
       _isNewAgreementChanged(isNew) {
         this._setDraftStatus(this.editMode, isNew);
       }
@@ -520,12 +521,10 @@
             cpField.resetCpDropdownInvalidState();
           }
           this.set('enableEditForAuthorizedOfficers', false);
-
           this.resetAttachedAgreementElem(agreement);
           this._initAuthorizedOfficers(agreement.authorized_officers);
         } else {
-          this.set('agreement.attached_agreement', {});
-          this.set('agreement.attached_agreement_file', '');
+          this.set('agreement.attachment', null);
           // new agreement, update status to draft and reset fields
           this._setDraftStatus(this.editMode, this.isNewAgreement);
           this._resetDropdown('#partner');
@@ -535,12 +534,9 @@
       }
 
       resetAttachedAgreementElem(agreement) {
-        // forces etools-single-file to redraw the element
-        if (!agreement.attached_agreement) {
-          this.set('agreement.attached_agreement', {});
-        }
-        if (!agreement.attached_agreement_file) {
-          this.set('agreement.attached_agreement_file', '');
+        // forces etools-upload to redraw the element
+        if (!agreement.attachment) {
+          this.set('agreement.attachment', null);
         }
       }
 
@@ -742,6 +738,28 @@
           }
         }.bind(this));
         return valid;
+      }
+
+      _signedAgreementUploadFinished(e) {
+        this.dispatch('decreaseUploadsInProgress');
+        if (e.detail.success) {
+          const response = JSON.parse(e.detail.success);
+          this.set('agreement.attachment', response.id);
+          this.dispatch('increaseUnsavedUploads');
+        }
+      }
+
+      /**
+       * Refer to unicef/etools-issues#232
+       * For Draft Status, only Change option is available. No delete option is available in Draft.
+       */
+      showSignedAgDeleteBtn() {
+        return this._isDraft() && !!this.originalAgreementData && !this.originalAgreementData.attachment;
+      }
+
+      _signedAgFileDelete() {
+        this.set('agreement.attachment', null);
+        this.dispatch('decreaseUnsavedUploads');
       }
 
     }

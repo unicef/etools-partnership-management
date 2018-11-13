@@ -11,6 +11,7 @@
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../redux/etools-data-redux-store.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
@@ -157,6 +158,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
     const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
@@ -166,7 +168,8 @@
       EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
       EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsPmpApp.Mixins.AjaxErrorsParser
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     ], Polymer.Element);
 
     /**
@@ -204,7 +207,6 @@
               agreement_type: null,
               agreement_number: undefined,
               reference_number_year: new Date().getFullYear(),
-              attached_agreement: undefined,
               start: undefined,
               end: undefined,
               signed_by_unicef_date: null,
@@ -219,7 +221,7 @@
                 edit: {
                   agreement_type: true,
                   amendments: false,
-                  attached_agreement: true,
+                  attachment: true,
                   authorized_officers: true,
                   country_programme: true,
                   end: true,
@@ -240,7 +242,7 @@
                   signed_by_unicef_date: false
                 }
               },
-              attachment: null
+              attachment: undefined
             }
           },
           csvDownloadUrl: {
@@ -259,6 +261,16 @@
             value: 'agreements'
           },
           authorizedOfficers: Array
+        };
+      }
+
+      static get actions() {
+        return {
+          resetUnsavedUploads: function() {
+            return {
+              type: 'RESET_UNSAVED_UPLOADS'
+            };
+          }
         };
       }
 
@@ -286,9 +298,22 @@
         this._showAgreementsPageLoadingMessage();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeListeners();
+      }
+
       _initListeners() {
+        this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
+        this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
+
         this.addEventListener('agreement-save-error', this._agreementSaveErrors);
         this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
+      }
+
+      _removeListeners() {
+        this.removeEventListener('agreement-save-error', this._agreementSaveErrors);
+        this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
       }
 
       _showNewAgreementAddButton(listActive, permissions) {
@@ -327,11 +352,15 @@
       }
 
       _saveAgreement(agreementData) {
-        // let agreementData = event.detail;
         if (!agreementData.id) {
           agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
         }
-        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
+        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this))
+            .then((successfull) => {
+              if (successfull) {
+                this.dispatch('resetUnsavedUploads');
+              }
+            });
       }
 
       _updateAgreementStatus(e) {
@@ -341,7 +370,7 @@
 
       // Go to details page once the new agreement has been saved
       _newAgreementSaved(agreement) {
-        this.fireEvent('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+        this.set('route.path', '/' + agreement.id + '/details');
       }
 
       _agreementSaveErrors(e) {
@@ -394,35 +423,8 @@
           agrDataToSave = this._getCurrentChanges();
           agrDataToSave.id = this.agreement.id; // we need the id
         }
-        if (this.agreement.attachment_temp instanceof File) {
-          this._uploadSignedAgreement(this.agreement.attachment_temp)
-            .then((response) => {
-              agrDataToSave.attachment = response.id;
-              this._saveAgreement(agrDataToSave);
-            })
-            .catch((err) => {
-              this.parseRequestErrorsAndShowAsToastMsgs(err);
-              return false;
-            });
-        } else {
-          this._saveAgreement(agrDataToSave);
-        }
-      }
 
-      _uploadSignedAgreement(file) {
-        let options = {
-            method: 'POST',
-            endpoint: this.getEndpoint('attachmentsUpload'),
-            body: {file: file},
-            multiPart: true,
-            prepareMultipartData: true
-          };
-          return this.sendRequest(options)
-              .then((resp) => {
-                return resp;
-              }).catch((error) => {
-                throw error;
-          });
+        this._saveAgreement(agrDataToSave);
       }
 
       validateAgreement() {
@@ -442,7 +444,6 @@
       }
 
       _prepareNewAgreementDataForSave(agreement) {
-        // we do not need all the agreement object data for the first save
         let newAgreement = {
           id: null,
           status: '',
@@ -452,14 +453,17 @@
           authorized_officers: this.authorizedOfficers
         };
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          return newAgreement;
+          return newAgreement; // SSFA has only the fields set above
+        } else {
+          if (agreement.attachment) {
+            newAgreement.attachment = agreement.attachment;
+          }
         }
 
         newAgreement = Object.assign(newAgreement, {
           signed_by_unicef_date: agreement.signed_by_unicef_date,
           signed_by_partner_date: agreement.signed_by_partner_date,
-          partner_manager: agreement.partner_manager,
-          attached_agreement: agreement.attached_agreement
+          partner_manager: agreement.partner_manager
         });
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           newAgreement.start = agreement.start;
@@ -487,18 +491,18 @@
           changes.reference_number_year = this.agreement.reference_number_year;
         }
 
+        if (this._primitiveFieldIsModified('special_conditions_pca')) {
+          changes.special_conditions_pca = this.agreement.special_conditions_pca;
+        }
+
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           if (this._authorizedOfficersChanged()) {
             changes.authorized_officers = this.authorizedOfficers;
           }
         }
         if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          if ((this.agreement.hasOwnProperty('attached_agreement')) &&
-              (this.agreement.attached_agreement instanceof File)) {
-            changes.attached_agreement = this.agreement.attached_agreement;
-          }
-
-          let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
+                                'attachment'];
           signedByFields.forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
@@ -519,10 +523,9 @@
             changes.country_programme = this.agreement.country_programme;
           }
           if (this._objectFieldIsModified('amendments')) {
-            changes.amendments = this.agreement.amendments;
-          }
-          if (this._primitiveFieldIsModified('special_conditions_pca')) {
-            changes.special_conditions_pca = this.agreement.special_conditions_pca;
+            // keep only new amendments
+            changes.amendments = this.agreement.amendments.filter(
+                a => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
           }
         }
 

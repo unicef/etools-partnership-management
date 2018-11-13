@@ -70,6 +70,9 @@
         if (filter.type === 'datepicker') {
           this.set(['listFilterOptions', selectedIdx, 'dateSelected'], '');
         }
+        if (filter.type === 'paper-toggle') {
+          this.set(['listFilterOptions', selectedIdx, 'value'], false);
+        }
         this.set(['listFilterOptions', selectedIdx, 'selected'], false);
       }
     }
@@ -98,6 +101,12 @@
       this.set(filterPath, filterVal);
     }
 
+    toggleValueChanged(e) {
+      let filterPath = e.target.getAttribute('data-filter-path');
+      let filterVal = e.target.checked;
+      this.set(filterPath, filterVal);
+    }
+
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event) {
       if (!event.detail.jsonDate) {
@@ -108,7 +117,15 @@
       this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     }
 
-    _validateFilterSelectedValue(value) {
+    _validateFilterSelectedValue(value, type, allowEmptyEsmm) {
+      if (type === 'paper-toggle') {
+        return typeof value === 'boolean';
+      }
+
+      if ((Array.isArray(value) && value.length === 0) && allowEmptyEsmm) {
+        return true;
+      }
+
       return value && ((typeof value === 'string' && value !== '')
           || (Array.isArray(value) && value.length > 0));
     }
@@ -121,15 +138,17 @@
       if (Array.isArray(filters) && filters.length > 0) {
         filters.forEach((filter) => {
           // check available filters
-          const filterObj = this.listFilterOptions.find(f => f.filterName === filter.filterName);
+          const filterObj = this.listFilterOptions instanceof Array
+            ? this.listFilterOptions.find(f => f.filterName === filter.filterName)
+            : null;
           if (!filterObj) {
             return;
           }
-          if (this._validateFilterSelectedValue(filter.selectedValue)) {
+          const filterIndex = this.listFilterOptions.findIndex(f => f.filterName === filter.filterName);
+          if (this._validateFilterSelectedValue(filter.selectedValue, filterObj.type, filter.allowEmpty)) {
             if (!this._isAlreadySelected(filterObj)) {
               // filter not selected => select filter
               this.push('selectedFilters', filterObj);
-              const filterIndex = this.listFilterOptions.findIndex(f => f.filterName === filter.filterName);
               this.set(['listFilterOptions', filterIndex, 'selected'], true);
             }
 
@@ -144,8 +163,11 @@
                   } else if (this.selectedFilters[i].type === 'datepicker') {
                     // update datepicker selection
                     this.set([...filterPath, 'dateSelected'], filter.selectedValue);
+                  } else if (this.selectedFilters[i].type === 'paper-toggle') {
+                    this.set([...filterPath, 'value'], filter.selectedValue);
+                    this.notifyPath([...filterPath, 'value'].join('.'));
                   }
-                  this._disableFilter(filter, filterPath);
+                  this._disableFilter(filter, filterPath, filterIndex);
                   break;
                 }
               }
@@ -160,10 +182,17 @@
       }
     }
 
-    _disableFilter(filterUpdateData, filterPath) {
+    _disableFilter(filterUpdateData, filterPath, mainFiltersListIndex) {
       if (filterUpdateData.hasOwnProperty('disabled') && filterPath !== '') {
         this.set([...filterPath, 'disabled'], filterUpdateData.disabled);
       }
+
+      if (typeof filterUpdateData.disableMenuOption !== 'boolean') {
+        return;
+      }
+
+      this.set(['listFilterOptions', mainFiltersListIndex, 'disabled'], filterUpdateData.disableMenuOption);
+      this.notifyPath('listFilterOptions.' + mainFiltersListIndex + '.disabled');
     }
 
     /**

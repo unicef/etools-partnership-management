@@ -5,6 +5,11 @@
 <link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
@@ -67,46 +72,55 @@
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
 
-        <etools-dropdown-multi
-            class="filter"
-            label="Partner Type"
-            placeholder="Select"
-            disabled$="[[showOnlyGovernmentType]]"
-            options="[[partnerTypes]]"
-            selected-values="{{selectedPartnerTypes}}"
-            hide-search
-            min-width="350px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <!-- esmm multi -->
+            <etools-dropdown-multi
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="Select"
+                disabled$="[[filter.disabled]]"
+                options="[[filter.selectionOptions]]"
+                selected-values="[[filter.alreadySelected]]"
+                data-filter-path$="[[filter.path]]"
+                on-etools-selected-items-changed="esmmValueChanged"
+                trigger-value-change-event
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
+                horizontal-align="left"
+                no-dynamic-align>
+            </etools-dropdown-multi>
+          </template>
 
-        <etools-dropdown-multi
-            class="filter"
-            label="CSO Type"
-            placeholder="Select"
-            options="[[csoTypes]]"
-            selected-values="{{selectedCsoTypes}}"
-            hide-search
-            min-width="350px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
+          <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
+            <div id="hiddenToggle" class="filter">
+              [[filter.filterName]]
+              <paper-toggle-button checked="[[filter.value]]"
+                                   data-filter-path$="[[filter.path]]"
+                                   on-checked-changed="toggleValueChanged"></paper-toggle-button>
+            </div>
+          </template>
 
-        <etools-dropdown-multi
-            class="filter"
-            label="Risk Rating"
-            placeholder="Select"
-            options="[[riskRatings]]"
-            selected-values="{{selectedRiskRatings}}"
-            hide-search
-            min-width="160px"
-            horizontal-align="left"
-            no-dynamic-align></etools-dropdown-multi>
-
-        <div id="hiddenToggle" class="filter">
-          Show hidden
-          <paper-toggle-button checked="{{showHidden}}"></paper-toggle-button>
-        </div>
-
+        </template>
       </div>
+
+      <div class="fixed-controls">
+        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+          <paper-button class="button" slot="dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>
+            Filters
+          </paper-button>
+          <paper-listbox slot="dropdown-content" multi>
+            <template is="dom-repeat" items="[[listFilterOptions]]">
+              <paper-icon-item on-tap="selectFilter" disabled$="[[item.disabled]]"  selected$="[[item.selected]]">
+                <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+                <paper-item-body>[[item.filterName]]</paper-item-body>
+              </paper-icon-item>
+            </template>
+          </paper-listbox>
+        </paper-menu-button>
+      </div>
+
     </div>
 
     <div id="list" elevation="1" class="paper-material hidden">
@@ -290,6 +304,7 @@
 
       static get observers() {
         return [
+          '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings)',
           'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
           'selectedRiskRatings.length, showHidden)',
           '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
@@ -309,6 +324,89 @@
           loadingSource: 'partners-page'
         });
         this.listAttachedCallback(this.active, 'Loading...', 'partners-list');
+      }
+
+      _initFiltersMenuList(partnerTypes, csoTypes, riskRatings) {
+        if (!partnerTypes || !csoTypes || !riskRatings) {
+          // this is just to be safe, the method should only get triggered once when redux data is loaded
+          return;
+        }
+        // init list filter options
+        this.initListFiltersData([
+          {
+            filterName: 'Partner Type',
+            type: 'esmm', // etools-dropdown-multi
+            selectionOptions: partnerTypes,
+            alreadySelected: [],
+            path: 'selectedPartnerTypes',
+            selected: true,
+            minWidth: '350px',
+            hideSearch: true,
+            disabled: this.showOnlyGovernmentType || partnerTypes.length === 0
+          },
+          {
+            filterName: 'CSO Type',
+            type: 'esmm', // etools-dropdown-multi
+            selectionOptions: csoTypes,
+            alreadySelected: [],
+            path: 'selectedCsoTypes',
+            selected: true,
+            minWidth: '350px',
+            hideSearch: false,
+            disabled: csoTypes.length === 0
+          },
+          {
+            filterName: 'Risk Rating',
+            type: 'esmm', // etools-dropdown-multi
+            selectionOptions: riskRatings,
+            alreadySelected: [],
+            path: 'selectedRiskRatings',
+            selected: true,
+            minWidth: '160px',
+            hideSearch: false,
+            disabled: riskRatings.length === 0
+          },
+          {
+            filterName: 'Show hidden',
+            type: 'paper-toggle', // paper-toggle
+            value: this.showHidden,
+            path: 'showHidden',
+            selected: true
+          }
+        ]);
+        this._updateSelectedFiltersValues();
+      }
+
+      _updateSelectedFiltersValues() {
+        this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
+            Polymer.Async.timeOut.after(20),
+            () => {
+              let filtersValues = [
+                {
+                  filterName: 'Partner Type',
+                  selectedValue: this.selectedPartnerTypes,
+                  disabled: this.showOnlyGovernmentType,
+                  allowEmpty: true,
+                  disableMenuOption: this.showOnlyGovernmentType
+                },
+                {
+                  filterName: 'CSO Type',
+                  selectedValue: this.selectedCsoTypes,
+                  allowEmpty: true
+                },
+                {
+                  filterName: 'Risk Rating',
+                  selectedValue: this.selectedRiskRatings,
+                  allowEmpty: true
+                },
+                {
+                  filterName: 'Show hidden',
+                  selectedValue: this.showHidden,
+                  allowEmpty: true
+                }
+              ];
+              this.updateShownFilters(filtersValues);
+            });
       }
 
       _getSelectedPartnerTypes(selectedPartnerTypes) {
@@ -338,6 +436,7 @@
         let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
         this.set('sortOrder', result);
         this.set('initComplete', true);
+        this._updateSelectedFiltersValues();
       }
 
       // Updates URL state with new query string, and launches query
@@ -424,6 +523,7 @@
         }
       }
 
+
       _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType) {
         if (showOnlyGovernmentType) {
           // lock list to government partners only
@@ -433,8 +533,11 @@
           this.set('selectedPartnerTypes', []);
         }
         this.set('selectedCsoTypes', []);
+        this.set('selectedRiskRatings', []);
+        this.set('q', '');
         this.resetPageNumber();
         this.set('showHidden', false);
+        this._updateSelectedFiltersValues();
       }
 
       _triggerPartnerLoadingMsg() {

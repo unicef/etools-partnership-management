@@ -14,8 +14,6 @@
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 
-<link rel="import" href="../../../../layout/components/etools-single-file.html">
-
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html"/>
 <link rel="import" href="../../../../config/config.html"/>
 <link rel="import" href="../../../../mixins/ajax-server-errors-mixin.html">
@@ -554,7 +552,7 @@
       }
 
       _partnerReceived(partner) {
-        if (!partner.id) {
+        if (!partner || !partner.id) {
           return;
         }
         let requestOptions = this._getEngagementsRequestOptions(partner.id);

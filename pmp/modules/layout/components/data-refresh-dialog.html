@@ -50,19 +50,19 @@
           <div class="row-h row-indent">
             <div class="col col-6">
               <paper-checkbox checked="{{partnersSelected}}">
-                Partners data
+                Partners/Government
               </paper-checkbox>
             </div>
             <div class="col col-6">
               <paper-checkbox checked="{{interventionsSelected}}">
-                PD/SSFA data
+                PD/SSFA
               </paper-checkbox>
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
               <paper-checkbox checked="{{agreementsSelected}}">
-                Agreements data
+                Agreements
               </paper-checkbox>
             </div>
             <div class="col col-6">
@@ -166,17 +166,17 @@
         }
         this.fireEvent('global-loading', {message: 'Refreshing data...', active: true});
 
-        if (this.allSelected) {
-          this.fireEvent('update-main-path', {path: ''});
-          this.refresh();
-          return;
-        }
-
-        // clear only data sets
         let afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
         let restampLandingPage = this.page === afterDataRefreshLandingPage ||
             (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
+        if (this.allSelected) {
+          this.refresh();
+          this.fireEvent('update-main-path', {path: afterDataRefreshLandingPage});
+          return;
+        }
+
+        // clear only data sets
         let self = this;
         EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
           function() {
@@ -229,8 +229,11 @@
       }
 
       _getAfterRefreshLandingPage() {
+        if (this.allSelected) {
+          return this.page;
+        }
         if (this.partnersSelected) {
-          return 'partners';
+          return this.page === 'government-partners' ? 'government-partners' : 'partners';
         }
         if (this.agreementsSelected) {
           return 'agreements';

@@ -11,7 +11,6 @@
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
-
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
 <link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
@@ -500,25 +499,29 @@
         super.disconnectedCallback();
 
         if (this.reportRatingDialog) {
+          this.reportRatingDialog.removeEventListener('report-accepted', this._updateReportDetailsObj);
           document.querySelector('body').removeChild(this.reportRatingDialog);
         }
         if (this.reportRejectDialog) {
+          this.reportRejectDialog.removeEventListener('report-rejected', this._updateReportDetailsObj);
           document.querySelector('body').removeChild(this.reportRejectDialog);
         }
       }
 
       _createReportStatusUpdateDialogs() {
+        this._updateReportDetailsObj = this._updateReportDetailsObj.bind(this);
+
         this.reportRatingDialog = document.createElement('report-rating-dialog');
         this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
         this.reportRatingDialog.set('toastEventSource', this);
-        this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj.bind(this));
+        this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj);
 
         document.querySelector('body').appendChild(this.reportRatingDialog);
 
         this.reportRejectDialog = document.createElement('report-reject-dialog');
         this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
         this.reportRejectDialog.set('toastEventSource', this);
-        this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj.bind(this));
+        this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj);
 
         document.querySelector('body').appendChild(this.reportRejectDialog);
       }

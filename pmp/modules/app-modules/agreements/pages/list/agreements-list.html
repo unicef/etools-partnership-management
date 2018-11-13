@@ -69,7 +69,7 @@
         </paper-input>
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)">
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <!-- esmm multi -->
             <etools-dropdown-multi
                 class="filter"
@@ -403,7 +403,7 @@
         }
 
         if (_.isEmpty(urlQueryParams)) {
-          urlQueryParams.status = 'draft|signed';
+          urlQueryParams.status = 'draft|signed|suspended';
         }
         this.set('initComplete', false);
         this.setProperties(
