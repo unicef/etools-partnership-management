@@ -96,14 +96,17 @@
         return value ? value : defaultValue;
       }
 
-       _formatIndicatorValue(displayType, value) {
+       _formatIndicatorValue(displayType, value, percentize) {
         if (value == null) {
           return value;
         }
 
          switch (displayType) {
           case 'percentage':
-            return this._formatNumber(value, '-', 2, '\,') + '%';
+          {
+            let val = percentize ? Math.floor(value * 100) : value;
+            return this._formatNumber(val, '-', 2, '\,') + '%';
+          }
           case 'ratio':
             return this._formatNumber(value, '-', 2, '\,') + ':1';
           case 'number':
