@@ -499,7 +499,7 @@
             if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
               if (fieldName === 'assessments') {
                 changes[fieldName] = [...this._getNewOrWithReportChangedAssessments(partner[fieldName]),
-                    ...this._getModAsIgnoringAttachChanges(partner[fieldName])];
+                    ...this._getModIgnoringAttachChanges(partner[fieldName])];
                 if (changes[fieldName].length === 0) {
                   delete changes[fieldName];
                 } else {
@@ -534,7 +534,7 @@
       /**
        * Get all assessments with data changed ignoring attachment changes
        */
-      _getModAsIgnoringAttachChanges(assessmentsList) {
+      _getModIgnoringAttachChanges(assessmentsList) {
         const alreadySavedAssessments = assessmentsList.filter(
             a => typeof a.report_attachment === 'string' && a.report_attachment !== '');
         const modifiedAssessments = [];
