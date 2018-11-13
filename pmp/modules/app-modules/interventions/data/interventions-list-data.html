@@ -167,6 +167,9 @@
         }).catch(function(error) {
           self.logError('Error querying interventions: ' + error, 'interventions-list-data');
           self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+          if (error.name === 'DatabaseClosedError') {
+            window.location.reload(true);
+          }
         });
       }
 
