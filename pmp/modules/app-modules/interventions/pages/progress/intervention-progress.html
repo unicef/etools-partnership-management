@@ -426,18 +426,16 @@
         let resultStatusDateStr = '';
         let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
         if (latestIndReport) {
-          let d = this._convertToDefaultDateFormat(latestIndReport.submission_date);
+          let d = this._convertToDisplayFormat(latestIndReport.submission_date);
           resultStatusDateStr = '(' + this.prettyDate(d) + ')';
         }
         return resultStatusDateStr;
       }
 
       _getPdDuration(start, end) {
-        start = this._convertToDefaultDateFormat(start);
-        end = this._convertToDefaultDateFormat(end);
-        let startDate = this.getDateDisplayValue(start) || 'N/A';
-        let endDate = this.getDateDisplayValue(end) || 'N/A';
-        return startDate + ' - ' + endDate;
+        start = this._convertToDisplayFormat(start) || 'N/A';
+        end = this._convertToDisplayFormat(end) || 'N/A';
+        return start + ' - ' + end;
       }
 
       _getTimeProgress(start, end) {
@@ -464,11 +462,32 @@
       }
 
       _getOverallPdStatusDate(date) {
-        return date ? ('(' + this.prettyDate(this._convertToDefaultDateFormat(date)) + ')') : '';
+        return date ? ('(' + this._convertToDisplayFormat(date) + ')') : '';
       }
 
-      _convertToDefaultDateFormat(str) {
-        return moment.utc(new Date(str + 'Z')).format('YYYY-MM-DD');
+      _convertToDisplayFormat(strDt) {
+        return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+      }
+
+      _EdgeAcceptableDateParse(strDt) {
+        // expected dt fromat : 01-Sep-2018
+        let dtArr = strDt.split('-');
+        let date;
+        if (dtArr && dtArr.length) {
+          let numericMonth = dtArr[1];
+
+          if (isNaN(numericMonth)) {
+            numericMonth = this.getShortStrMonths().indexOf(numericMonth);
+          }
+
+          date = new Date(dtArr[2], numericMonth, dtArr[0]);
+        }
+
+        if (!date) {
+          date = new Date(strDt + 'Z');
+        }
+
+        return date;
       }
 
     }
