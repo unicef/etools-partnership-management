@@ -218,6 +218,10 @@
             active: false,
             loadingSource: 'partners-list'
           });
+
+          if (error.name === 'DatabaseClosedError') {
+            window.location.reload(true);
+          }
         });
       }
     }
