@@ -246,8 +246,7 @@
           },
           interventionStatus: {
             type: String
-          },
-          dropdownsFitInto: Object
+          }
         };
       }
 
@@ -258,10 +257,6 @@
       ready() {
         super.ready();
         this._initIndicatorDialogListeners();
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
       }
 
       disconnectedCallback() {
