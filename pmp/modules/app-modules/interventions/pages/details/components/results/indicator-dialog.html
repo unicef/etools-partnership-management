@@ -101,7 +101,8 @@
                                required
                                auto-validate
                                error-message="Please select section(s)"
-                               disable-on-focus-handling>
+                               disable-on-focus-handling
+                               fit-into="etools-dialog">
               </etools-dropdown>
             </div>
           </div>
@@ -245,7 +246,8 @@
           },
           interventionStatus: {
             type: String
-          }
+          },
+          dropdownsFitInto: Object
         };
       }
 
@@ -256,6 +258,11 @@
       ready() {
         super.ready();
         this._initIndicatorDialogListeners();
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        // this.set('dropdownsFitInto', this.$.indicatorDialog.shadowRoot.querySelector('#dialogContent'));
       }
 
       disconnectedCallback() {
