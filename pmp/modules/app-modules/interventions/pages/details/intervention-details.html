@@ -572,17 +572,15 @@
         }
       }
       _showRefYear(pdType, status) {
-        if (pdType === 'SSFA') {
-          if (this.intervention) {
-            this.intervention.reference_number_year = null;
+        if (this.intervention) {
+          if (pdType === 'SSFA') {
+            this.set('intervention.reference_number_year', null);
+            return false; // no ref year for SSFA
+          } else if (!this.intervention.reference_number_year) {
+            this.set('intervention.reference_number_year', new Date().getFullYear());
           }
-          return false;
         }
-        if (['', 'draft'].indexOf(status) < 0) {
-          return false;
-        }
-
-        return true;
+        return ['', 'draft'].indexOf(status) >= 0;
       }
 
       _updateNoOfPdOutputs() {
