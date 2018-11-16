@@ -208,7 +208,7 @@
         let self = this;
         let requestParams = {
           method: 'POST',
-          endpoint: this.getEndpoint('addGetDisaggregations'),
+          endpoint: this.getEndpoint('disaggregations'),
           body: this._getBody()
         };
         this.sendRequest(requestParams).then(function(response) {

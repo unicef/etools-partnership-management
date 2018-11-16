@@ -64,6 +64,7 @@
   const reduxStoreReducer = (state, action) => {
     /* eslint-disable indent */
     let partnersDdDataCopy;
+    let filtered;
     let disaggregsCopy;
     let agreementsCopy;
     let csoPartnerCopy;
@@ -190,6 +191,15 @@
       case 'ADD_DISAGGREGATION':
         disaggregsCopy = state.disaggregations.slice(0);
         disaggregsCopy.push(action.disaggregation);
+        return Object.assign({}, state, {disaggregations: disaggregsCopy});
+
+      case 'PATCH_DISAGGREGATION':
+        disaggregsCopy = state.disaggregations.slice(0);
+
+        const dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
+        if (dIndex > 0) {
+          disaggregsCopy.splice(dIndex, 1, action.disaggregation);
+        }
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
 
       case 'SET_CURRENT_USER':
