@@ -102,11 +102,14 @@
             <div class="header-text">Section / Cluster</div>
             <div>[[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]</div>
             <div class="divider"></div>
-            <div class="header-text">Disaggregation</div>
-            <template is="dom-repeat" items="[[disaggregationNames]]">
-              <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
-            </template>
-            <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">—</div>
+
+            <div hidden$="[[indicator.cluster_indicator_id]]">
+              <div class="header-text">Disaggregation</div>
+              <template is="dom-repeat" items="[[disaggregationNames]]">
+                <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
+              </template>
+              <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">—</div>
+            </div>
           </div>
           <div class="col-8 padd-left">
             <div class="header-text">Locations</div>
@@ -185,10 +188,25 @@
         this._initAppliedIndicatorListeners();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeAppliedIndicatorListeners();
+      }
+
       _initAppliedIndicatorListeners() {
-        this.addEventListener('edit', this._editIndicator.bind(this));
-        this.addEventListener('delete', this._deleteIndicator.bind(this));
+        this._editIndicator = this._editIndicator.bind(this);
+        this._deleteIndicator = this._deleteIndicator.bind(this);
+        this._deactivateIndicator = this._deactivateIndicator.bind(this);
+
+        this.addEventListener('edit', this._editIndicator);
+        this.addEventListener('delete', this._deleteIndicator);
         this.addEventListener('deactivate', this._deactivateIndicator);
+      }
+
+      _removeAppliedIndicatorListeners() {
+        this.removeEventListener('edit', this._editIndicator);
+        this.removeEventListener('delete', this._deleteIndicator);
+        this.removeEventListener('deactivate', this._deactivateIndicator);
       }
 
       _showDeactivate(inAmendment, indicIsActive) {

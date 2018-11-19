@@ -111,12 +111,18 @@
 
         this.deleteWarningDialogContent = document.createElement('div');
         this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
+        this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
         this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
-            this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
+            this._dialogConfirmationCallback, this.deleteWarningDialogContent);
         this.warningDialog.updateStyles({'--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'});
 
         this._handleStickyScroll();
         setTimeout(this.setPossibleStatuses.bind(this), 0);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback);
       }
 
       setPossibleStatuses() {

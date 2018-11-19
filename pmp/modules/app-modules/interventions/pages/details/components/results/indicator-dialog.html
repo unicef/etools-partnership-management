@@ -101,7 +101,8 @@
                                required
                                auto-validate
                                error-message="Please select section(s)"
-                               disable-on-focus-handling>
+                               disable-on-focus-handling
+                               fit-into="etools-dialog">
               </etools-dropdown>
             </div>
           </div>
@@ -114,7 +115,8 @@
             <template is="dom-if" if="[[!isCluster]]">
               <non-cluster-indicator id="nonClusterIndicatorEl"
                                      indicator="{{indicator}}"
-                                     location-options="[[locationOptions]]"></non-cluster-indicator>
+                                     location-options="[[locationOptions]]"
+                                     intervention-status="[[interventionStatus]]"></non-cluster-indicator>
             </template>
             <template is="dom-if" if="[[isCluster]]">
               <cluster-indicator id="clusterIndicatorEl"
@@ -186,7 +188,7 @@
               },
               section: null,
               baseline: {},
-              target: {},
+              target: {d: 1},
               means_of_verification: null,
               locations: [],
               disaggregation: [],
@@ -241,6 +243,9 @@
           spinnerText: {
             type: String,
             value: 'Saving...'
+          },
+          interventionStatus: {
+            type: String
           }
         };
       }
@@ -254,14 +259,29 @@
         this._initIndicatorDialogListeners();
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeIndicatorDialogListeners();
+      }
+
       _updateScroll() {
        this.$.indicatorDialog.scrollDown();
       }
 
       _initIndicatorDialogListeners() {
-        this.addEventListener('start-spinner', this._startSpinner.bind(this));
-        this.addEventListener('stop-spinner', this._stopSpinner.bind(this));
-        this.addEventListener('show-toast', this._showToast.bind(this));
+        this._startSpinner = this._startSpinner.bind(this);
+        this._stopSpinner = this._stopSpinner.bind(this);
+        this._showToast = this._showToast.bind(this);
+
+        this.addEventListener('start-spinner', this._startSpinner);
+        this.addEventListener('stop-spinner', this._stopSpinner);
+        this.addEventListener('show-toast', this._showToast);
+      }
+
+      _removeIndicatorDialogListeners() {
+        this.removeEventListener('start-spinner', this._startSpinner);
+        this.removeEventListener('stop-spinner', this._stopSpinner);
+        this.removeEventListener('show-toast', this._showToast);
       }
 
       _clusterToggleIsDisabled(indicator) {
@@ -281,8 +301,9 @@
         this.$.indicatorDialog.dialogTitle = title;
       }
 
-      setIndicatorData(data, actionParams) {
+      setIndicatorData(data, actionParams, interventionStatus) {
         this.set('actionParams', actionParams);
+        this.set('interventionStatus', interventionStatus);
 
         if (!data) { // new indicator
           this.isCluster = false;

@@ -103,10 +103,12 @@
 
       _triggerPartnerRequest(options) {
         let ajaxMethod = options.method || 'GET';
-        this.sendRequest(options).then((resp) => {
+        return this.sendRequest(options).then((resp) => {
           this._handleSuccResponse(resp, ajaxMethod);
+          return true;
         }).catch((error) => {
           this._handleErrorResponse(error, ajaxMethod);
+          return false;
         });
       }
 
@@ -172,6 +174,9 @@
       }
 
       _handleErrorResponse(response, ajaxMethod) {
+        if (response instanceof EtoolsRequestError === false) {
+          this.logError('_handleErrorResponse', 'partner-item-data', response);
+        }
         if (this._skipDefaultErrorHandler) {
           this.fireEvent('global-loading', {
             active: false,
@@ -224,6 +229,7 @@
       savePartner(partner, callback) {
         if (typeof partner === 'object' && Object.keys(partner).length === 0) {
           this.fireEvent('toast', {text: 'Invalid partner data!', showCloseBtn: true});
+          return Promise.resolve(false);
         } else {
           let endpoint = null;
           let partnerId = partner.id;
@@ -241,53 +247,28 @@
                 text: 'Update cannot be made. Invalid partner ID.',
                 showCloseBtn: true
               });
-              return;
+              return Promise.resolve(false);
             }
             // set additional callback if any
             if (callback) {
               this.set('handleSuccResponseAdditionalCallback', callback);
             }
-            let withUpload = false; // used to set multipart prop on etools-ajax
-            if (partner.hasOwnProperty('core_values_assessments')) {
-              if (partner.core_values_assessments.length) {
-                for(let i = 0; i < partner.core_values_assessments.length; i++) {
-                  if (partner.core_values_assessments[i].assessment instanceof File) {
-                    withUpload = true;
-                    break;
-                  }
-                }
-                if (!withUpload) {
-                delete partner.core_values_assessments;
-                }
-              }
-            }
-            if (partner.hasOwnProperty('assessments')) {
-              if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
-                partner.assessments = partner.assessments.map(function(assessment) {
-                  if (assessment.report instanceof File) {
-                    withUpload = true;
-                  } else {
-                    delete assessment.report;
-                  }
-                  return assessment;
-                }, this);
-              }
-            }
+
             this.fireEvent('global-loading', {
               message: 'Saving...',
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
             // fire in the hole
-            this._triggerPartnerRequest({
-              method: 'PATCH', endpoint: endpoint, body: partner,
-              multiPart: withUpload, prepareMultipartData: withUpload
+            return this._triggerPartnerRequest({
+              method: 'PATCH', endpoint: endpoint, body: partner
             });
           } else {
             this.fireEvent('toast', {
               text: 'There is nothing to save. No change detected on this partner.',
               showCloseBtn: true
             });
+            return Promise.resolve(false);
           }
         }
       }

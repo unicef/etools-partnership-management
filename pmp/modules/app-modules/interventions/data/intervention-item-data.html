@@ -88,10 +88,12 @@
       _triggerInterventionRequest(options) {
         let self = this;
         let ajaxMethod = options.method || 'GET';
-        this.sendRequest(options).then(function(resp) {
+        return this.sendRequest(options).then(function(resp) {
           self._handleResponse(resp, ajaxMethod);
+          return true;
         }).catch(function(error) {
           self._handleErrorResponse(error, ajaxMethod);
+          return false;
         });
       }
 
@@ -286,6 +288,7 @@
       saveIntervention(intervention, callback) {
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
           this.fireEvent('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
+          return Promise.resolve(false);
         } else {
           let endpoint = null;
           let isNew = false;
@@ -311,22 +314,7 @@
           if (this._hasFiles(intervention.attachments, 'attachment')) {
             prepareMultipartData = true;
           }
-          // check prc_review_document doc, if no file delete the property from the object
-          if (this._fileField(intervention, 'prc_review_document')) {
-            prepareMultipartData = true;
-          } else {
-            delete intervention.prc_review_document;
-          }
-          // check signed_pd_document doc, if no file delete the property from the object
-          if (this._fileField(intervention, 'signed_pd_document')) {
-            prepareMultipartData = true;
-          } else {
-            delete intervention.signed_pd_document;
-          }
 
-          if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
-            prepareMultipartData = true;
-          }
           if (Array.isArray(intervention.result_links)) {
             intervention.result_links = intervention.result_links.filter(function(elem) {
               return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
@@ -344,7 +332,7 @@
           });
 
           let method = (isNew) ? 'POST' : 'PATCH';
-          this._triggerInterventionRequest({
+          return this._triggerInterventionRequest({
             method: method, endpoint: endpoint, body: intervention,
             multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
           });

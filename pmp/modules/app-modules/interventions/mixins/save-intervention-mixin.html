@@ -3,6 +3,7 @@
 <link rel="import" href="../../../mixins/array-helper-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../redux/etools-data-redux-store.html">
 
 <link rel="import" href="../../../scripts/lodash.html">
 <link rel="import" href="../../../config/app-constants.html">
@@ -23,6 +24,7 @@
    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    * @appliesMixin EtoolsPmpApp.Mixins.Constants
    * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+   * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
   EtoolsPmpApp.Mixins.SaveIntervention = Polymer.dedupingMixin(
       superClass => class extends EtoolsMixinFactory.combineMixins([
@@ -30,8 +32,20 @@
         EtoolsPmpApp.Mixins.ArrayHelper,
         EtoolsPmpApp.Mixins.ModifiedInterventionFields,
         EtoolsPmpApp.Mixins.Constants,
-        EtoolsPmpApp.Mixins.AjaxErrorsParser
+        EtoolsPmpApp.Mixins.AjaxErrorsParser,
+        EtoolsPmpApp.Mixins.EtoolsDataReduxStore
       ], superClass) {
+
+        static get actions() {
+          return {
+
+            resetUnsavedUploads: function() {
+              return {
+                type: 'RESET_UNSAVED_UPLOADS'
+              };
+            }
+          };
+        }
 
         _validateAndSaveIntervention(event) {
           if (event) {
@@ -41,7 +55,7 @@
           this.fireEvent('clear-server-errors');
           this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
           if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-            return false;
+            return Promise.resolve(false);
           }
 
           let interventionDetailsAreValid = this._validateInterventionDetails();
@@ -50,54 +64,30 @@
 
           if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
             this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-            return false;
+            return Promise.resolve(false);
           }
 
           let interventionData = this._getModifiedFields();
           interventionData = this._prepareDataForSave(interventionData);
-
-          if (this.intervention.activation_letter_file_temp instanceof File) {
-            this._uploadActivationLetter(this.intervention.activation_letter_file_temp)
-              .then((response) => {
-
-                interventionData.activation_letter_attachment = response.id;
-                this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-              })
-              .catch((err) => {
-                this.parseRequestErrorsAndShowAsToastMsgs(err);
-                return false;
-              });
-          } else {
-            this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-          }
-
-          return true;
-        }
-
-        _uploadActivationLetter(file) {
-          let options = {
-            method: 'POST',
-            endpoint: this.getEndpoint('attachmentsUpload'),
-            body: {file: file},
-            multiPart: true,
-            prepareMultipartData: true
-          };
-          return this.sendRequest(options)
-              .then((resp) => {
-                return resp;
-              }).catch((error) => {
-                throw error;
-          });
+          return this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved.bind(this))
+                     .then((successfull) => {
+                        if (successfull) {
+                          this.dispatch('resetUnsavedUploads');
+                          return true;
+                        } else {
+                          return false;
+                        }
+                    });
         }
 
         _getModifiedFields() {
           let interventionData;
+          let modifiedDetails = this._getModifiedInterventionDetails();
+          let modifiedReviewAndSign = this._getModifiedReviewAndSign();
           if (this._isNewIntervention()) {
-            interventionData = Object.assign({}, this.intervention);
+            interventionData = Object.assign({}, modifiedDetails, modifiedReviewAndSign);
             interventionData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
           } else {
-            let modifiedDetails = this._getModifiedInterventionDetails();
-            let modifiedReviewAndSign = this._getModifiedReviewAndSign();
             interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
           }
           return interventionData;
@@ -141,10 +131,8 @@
             // review and signed element not stamped...
             // validate current data that belongs to this tab against permissions
             let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
-              'unicef_signatory', 'signed_by_unicef_date'];
-            let reviewAndSignObjFields = ['signed_pd_document'];
-            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
-                this._validateInterventionObjectFields(reviewAndSignObjFields);
+              'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment'];
+            valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields);
             this.set('_forceReviewUiValidationOnAttach', true);
           }
           return valid;
@@ -196,22 +184,14 @@
           if (_.isEmpty(interventionData.attachments)) {
             delete interventionData.attachments;
           }
-
-          // if prc_review_document is null we need to delete the property otherwise the
-          // file gets deleted from the backend
-          if (this.intervention.hasOwnProperty('prc_review_document') &&
-              !(this.intervention.prc_review_document instanceof File)) {
-            delete interventionData.prc_review_document;
-            delete interventionData.prc_review_document_file;
-          }
-
           return interventionData;
         }
 
         _showErrorsWarning(validDetails, validReviewAndSign) {
           let msg = '';
-          if (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() &&
-              this.intervention.signed_pd_document instanceof File) {
+          if ((this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
+              this.intervention.status === '') &&
+              this.intervention.signed_pd_attachment) {
             msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
                 '(check DETAILS and REVIEW & SIGN tabs).';
           } else {

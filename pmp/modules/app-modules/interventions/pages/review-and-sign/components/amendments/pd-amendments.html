@@ -96,10 +96,13 @@
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                  <a href$="[[item.signed_amendment_attachment]]" target="_blank" download>
+                    [[getFileNameFromURL(item.signed_amendment_attachment)]]
+                  </a>
                 </span>
               </span>
               <span class="col-data flex-c">
+                <span hidden$="[[item.internal_prc_review]]" class="placeholder-style">&#8212;</span>
                 <iron-icon icon="attachment" class="attachment" hidden$="[[!item.internal_prc_review]]"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
@@ -109,6 +112,8 @@
                 </span>
               </span>
               <div class="col-data flex-c break-word">
+                <span hidden$="[[_showOtherInput(item.types, item.types.length, index)]]"
+                      class="placeholder-style">&#8212;</span>
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
                   <div class="other-description">
                     [[item.other_description]]
@@ -200,17 +205,24 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.addAmendmentDialog) {
-          this.removeDialog(this.addAmendmentDialog);
-        }
+        this._removeAddAmendmentDialog();
       }
 
       _createAddAmendmentDialog() {
         this.addAmendmentDialog = document.createElement('add-amendment-dialog');
         this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
         this.addAmendmentDialog.toastEventSource = this;
-        this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
+
+        this.newAmendmentAdded = this.newAmendmentAdded.bind(this);
+        this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded);
         document.querySelector('body').appendChild(this.addAmendmentDialog);
+      }
+
+      _removeAddAmendmentDialog() {
+        if (this.addAmendmentDialog) {
+          this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded);
+          document.querySelector('body').removeChild(this.addAmendmentDialog);
+        }
       }
 
       _getReadonlyAmendmentTypes(types) {

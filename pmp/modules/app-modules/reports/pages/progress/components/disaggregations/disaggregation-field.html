@@ -81,7 +81,8 @@
 
       ready() {
         super.ready();
-        this.addEventListener('field.input', this._handleInput.bind(this));
+        this._handleInput = this._handleInput.bind(this);
+        this.addEventListener('field.input', this._handleInput);
       }
 
       connectedCallback() {
@@ -89,13 +90,10 @@
         this.fireEvent('register-field', this);
       }
 
-      // Cant deregister fields in lifecycle hooks due to:
-      // https://github.com/Polymer/polymer/issues/1159
-      // :( :( :(
-      //
-      // disconnectedCallback() {
-      //   super.disconnectedCallback();
-      // }
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('field.input', this._handleInput);
+      }
 
       validate() {
         return this.$.field.validate();
