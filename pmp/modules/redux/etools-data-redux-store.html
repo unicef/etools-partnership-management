@@ -64,7 +64,6 @@
   const reduxStoreReducer = (state, action) => {
     /* eslint-disable indent */
     let partnersDdDataCopy;
-    let filtered;
     let disaggregsCopy;
     let agreementsCopy;
     let csoPartnerCopy;
@@ -74,6 +73,7 @@
     let pageDataInAmendment;
     let newUploadInProgress;
     let newUnsavedUploads;
+    let dIndex;
 
     switch (action.type) {
       case 'SET_FILE_TYPES':
@@ -196,7 +196,7 @@
       case 'PATCH_DISAGGREGATION':
         disaggregsCopy = state.disaggregations.slice(0);
 
-        const dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
+        dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
         if (dIndex > 0) {
           disaggregsCopy.splice(dIndex, 1, action.disaggregation);
         }
