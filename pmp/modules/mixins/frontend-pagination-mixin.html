@@ -42,7 +42,6 @@
         if (this._anyUndefined([pageNumber, pageSize, listData])) {
           return;
         }
-        // console.log(this.value.totalResults);
         pageNumber = parseInt(pageNumber);
         pageSize = parseInt(pageSize);
         let startingIndex = (pageNumber - 1) * pageSize;

@@ -14,29 +14,35 @@
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../mixins/frontend-pagination-mixin.html">
 <link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
   <template>
-    <style include="grid-layout-styles data-table-styles list-filter-styles">
+    <style include="grid-layout-styles data-table-styles paper-material-styles">
       [hidden] {
         display: none !important;
       }
 
-      .card {
+      #filters {
         background-color: white;
-        height: 500px;
-        margin: 16px auto;
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+        padding: 8px 24px;
+        margin-bottom: 24px;
+        box-sizing: border-box;
+        min-height: 62px;
+        height: auto;
+      }
+
+      .qFilter {
+        max-width: 200px;
       }
 
     </style>
 
-    <div id="filters" class="card" elevation="1">
+    <div id="filters" class="paper-material" elevation="1">
       <paper-input id="query"
-                   class="filter"
+                   class="qFilter"
                    type="search"
                    autocomplete="off"
                    value="{{q}}"
