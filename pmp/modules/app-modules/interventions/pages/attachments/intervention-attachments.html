@@ -1,7 +1,11 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../../../../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
@@ -12,83 +16,111 @@
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/file-styles.html">
 
 <dom-module id="intervention-attachments">
   <template>
-    <style include="page-common-styles grid-layout-styles shared-styles file-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles">
       :host {
-        @apply --layout-vertical;
-        width: 100%;
-
-        --etools-file-label: {
-          display: none;
-        };
+        display: block;
 
         --ecp-content: {
           padding: 0;
           overflow: hidden;
         };
       }
-
-      #attachments {
-        --etools-file-upload-button-paper-btn: {
-          font-weight: bold;
-          padding: 5px 10px;
-          background-color: var(--primary-color);
-        };
-
-        --etools-file-upload-button: {
-          color: var(--light-primary-text-color, #FFFFFF) !important;
-          max-width: 150px;
-          margin-left: 24px;
-        };
-
-        --etools-file-area-with-type: {
-          padding: 16px 24px;
-        };
-      }
-
-      #no-attach-warning {
-        display: block;
-        position: relative;
-        top: -10px;
-        padding-left: 24px;
-        padding-bottom: 24px;
-      }
-
-      #no-attach-warning p {
-        margin: 0;
-      }
-
-      etools-file[multiple] {
-        --etools-file-filename-container: {
-          width: calc(100% - 255px);
-        };
-        --etools-file-readonly-filename-container: {
-          width: calc(100% - 255px);
-        };
-      }
-
     </style>
 
-    <etools-content-panel class="content-section" panel-title="Attachments">
-      <etools-file id="attachments"
-                   files="{{attachments}}"
-                   file-model="[[fileModel]]"
-                   file-types=[[fileTypes]]
-                   label="Attachments"
-                   multiple use-delete-events activate-file-types
-                   hide-delete-btn show-upload-btn-above show-upload-date
-                   on-delete-file="_deleteAttachment"
-                   readonly$=[[!editMode]]
-                   no-file-attached-msg=""
-                   toast-fit-into="[[toastFitInto]]"
-                   target="_blank">
-      </etools-file>
-      <div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>
-        <p>There are no attachments added.</p>
+    <!--<etools-content-panel class="content-section" panel-title="Attachments">-->
+      <!--<etools-file id="attachments"-->
+                   <!--files="{{attachments}}"-->
+                   <!--file-model="[[fileModel]]"-->
+                   <!--file-types=[[fileTypes]]-->
+                   <!--label="Attachments"-->
+                   <!--multiple use-delete-events activate-file-types-->
+                   <!--hide-delete-btn show-upload-btn-above show-upload-date-->
+                   <!--on-delete-file="_deleteAttachment"-->
+                   <!--readonly$=[[!editMode]]-->
+                   <!--no-file-attached-msg=""-->
+                   <!--toast-fit-into="[[toastFitInto]]"-->
+                   <!--target="_blank">-->
+      <!--</etools-file>-->
+      <!--<div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>-->
+        <!--<p>There are no attachments added.</p>-->
+      <!--</div>-->
+    <!--</etools-content-panel>-->
+
+    <etools-content-panel class="content-section" panel-title="Attachments ([[attachments.length]])">
+      <div slot="panel-btns">
+        <paper-toggle-button id="showInactive"
+                             checked="{{showArchived}}">
+          Show archived
+        </paper-toggle-button>
+        <div class="separator" hidden$="[[!editMode]]">
+        </div>
+        <paper-icon-button icon="add-box"
+                           disabled="[[!editMode]]"
+                           hidden$="[[!editMode]]"
+                           title="Add"
+                           on-tap="_addAttachment">
+        </paper-icon-button>
       </div>
+
+      <template is="dom-if" if="[[_showAttachmentsList(attachments.length)]]">
+        <etools-data-table-header no-collapse no-title>
+          <etools-data-table-column class="col-2">
+            Date Uploaded
+          </etools-data-table-column>
+          <etools-data-table-column class="col-3">
+            Document Type
+          </etools-data-table-column>
+          <etools-data-table-column class="col-4">
+            File Attachment
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Archived
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+            <!-- Actions -->
+          </etools-data-table-column>
+        </etools-data-table-header>
+
+        <template is="dom-repeat" items="{{attachments}}">
+          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
+            <div slot="row-data" class$="p-relative">
+              <span class="col-data col-2">
+                [[prettyDate(item.created)]]
+              </span>
+              <span class="col-data col-3">
+                [[_getAttachmentType(item.type)]]
+              </span>
+              <span class="col-data col-4">
+                <iron-icon icon="attachment" class="attachment"></iron-icon>
+                <span class="break-word file-label">
+                  <!-- target="_blank" is there for IE -->
+                  <a href$="[[item.attachment]]" target="_blank" download>
+                    [[getFileNameFromURL(item.attachment)]]
+                  </a>
+                </span>
+              </span>
+              <span class="col-data col-2 center-align">
+                <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
+              </span>
+              <span class="col-data flex-c">
+                <icons-actions hidden$="[[!editMode]]"
+                               on-edit="_editAttachment">
+                              </icons-actions>
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
+      </template>
+
+      <template is="dom-if" if="[[!_showAttachmentsList(attachments.length)]]">
+        <div class="row-h">
+          <p>There are no attachments added.</p>
+        </div>
+      </template>
+
     </etools-content-panel>
 
   </template>
@@ -129,24 +161,22 @@
           editMode: {
             type: Boolean
           },
-          intervention: {
-            type: Object
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
           },
           attachments: {
             type: Array,
-            value: [],
-            notify: true,
-            observer: '_attachmentsChanged'
+            value: []
           },
           fileTypes: {
             type: Array,
             statePath: 'fileTypes'
           },
-          fileModel: {
-            type: Object,
-            value: null
-          },
-          toastFitInto: Object
+          showArchived: {
+            type: Boolean,
+            value: false
+          }
         };
       }
 
@@ -158,9 +188,6 @@
 
       connectedCallback() {
         super.connectedCallback();
-
-        this.toastFitInto = document.querySelector('app-shell')
-            .shadowRoot.querySelector('app-header-layout');
         /**
          * Disable loading message for attachments tab elements load,
          * triggered by parent element on stamp or by tap event on tabs
@@ -169,73 +196,8 @@
         this.fireEvent('tab-content-attached');
       }
 
-      _attachmentsChanged(attachments) {
-        if (Array.isArray(attachments) &&
-            attachments.length > 0 && !this._hasPath(attachments[0])) {
-          // this should run only one time when attachments(intervention.attachments) are provided
-          this.set('attachments', attachments.map(function(attachment) {
-            return {
-              id: attachment.id,
-              created: attachment.created,
-              intervention: attachment.intervention,
-              type: attachment.type,
-              attachment_file: attachment.attachment_file ? attachment.attachment_file : null,
-              attachment: null,
-              file_name: this._getFileName(attachment),
-              path: this._getPath(attachment)
-            };
-          }.bind(this)));
-        }
-      }
-
-      _getPath(attachment) {
-        if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
-          return attachment.attachment_file;
-        }
-        if (typeof attachment.attachment === 'string' && attachment.attachment !== '') {
-          return attachment.attachment;
-        }
-        return null;
-      }
-
-      _getFileName(attachment) {
-        if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
-          return this.getFileNameFromURL(attachment.attachment_file);
-        }
-        if (typeof attachment.attachment === 'string' && attachment.attachment !== '') {
-          return this.getFileNameFromURL(attachment.attachment);
-        }
-        return null;
-      }
-
-      _hasPath(file) {
-        return typeof file.path === 'string' && file.path !== '';
-      }
-
-      _hideNoAttachmentsWarning(length) {
+      _showAttachmentsList(length) {
         return length > 0;
-      }
-
-      _deleteAttachment(event) {
-        try {
-          let attachment = this.get('attachments.' + event.detail.index);
-          if (attachment) {
-            if (attachment.id) {
-              // delete from serve using endpoint
-              // TODO: use an endpoint(once is implemented on backend) to delete attachments
-              this.fireEvent('toast', {
-                text: 'Delete file not implemented yet for already saved attachments!',
-                showCloseBtn: true
-              });
-            } else {
-              // file not saved yet(only selected), delete from local data
-              this.splice('attachments', event.detail.index, 1);
-            }
-          }
-        } catch (err) {
-          this.logError('An error occurred on deleting attachment no: #' + (event.detail.index + 1),
-              'intervention-attachments', err);
-        }
       }
 
       _checkEmptyFileTypesData(fileTypes, active) {
@@ -249,6 +211,31 @@
             showCloseBtn: true
           });
         }
+      }
+
+      _interventionIdChanged(id) {
+        if (!id || isNaN(id)) {
+          this.set('attachments', []);
+          return;
+        }
+        // get attachments
+        // TODO
+      }
+
+      _addAttachment() {
+        // TODO
+      }
+
+      _editAttachment() {
+        // TODO
+      }
+
+      _getAttachmentType(type) {
+        // TODO
+      }
+
+      _isVisible(active, showArchived) {
+        // TODO
       }
     }
 
