@@ -56,9 +56,9 @@
 
     <etools-content-panel class="content-section" panel-title$="Attachments ([[attachments.length]])">
       <div slot="panel-btns" class="cp-header-actions-bar">
-        <paper-toggle-button id="showInactive"
-                             checked="{{showInactive}}">
-          Show inactive
+        <paper-toggle-button id="showArchived"
+                             checked="{{showArchived}}">
+          Show archived
         </paper-toggle-button>
         <div class="separator" hidden$="[[!editMode]]">
         </div>
@@ -90,7 +90,7 @@
         </etools-data-table-header>
 
         <template is="dom-repeat" items="[[attachments]]">
-          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
+          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
             <div slot="row-data">
               <span class="col-data col-2">
                 [[prettyDate(item.created)]]
@@ -102,14 +102,14 @@
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.attachment]]" target="_blank" download>
-                    [[getFileNameFromURL(item.attachment)]]
+                  <a href$="[[item.attachment_document]]" target="_blank" download>
+                    [[getFileNameFromURL(item.attachment_document)]]
                   </a>
                 </span>
               </span>
               <span class="col-data col-2">
-                <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
-                <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
+                <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
+                <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
               </span>
               <span class="col-data flex-c p-relative">
                 <icons-actions item-id$="[[item.id]]"
@@ -191,7 +191,7 @@
             type: Array,
             statePath: 'fileTypes'
           },
-          showInactive: {
+          showArchived: {
             type: Boolean,
             value: false
           },
@@ -325,8 +325,8 @@
         return attachmentType ? attachmentType.name : '—';
       }
 
-      _isVisible(active, showInactive) {
-        return active || showInactive;
+      _isVisible(active, showArchived) {
+        return active || showArchived;
       }
 
       _canDeleteAttachments(status) {

@@ -57,7 +57,7 @@
         <etools-upload id="attachment-upload"
                        label="Attachment"
                        accept=".doc,.docx,.pdf,.jpg,.png"
-                       file-url="[[attachment.attachment]]"
+                       file-url="[[attachment.attachment_document]]"
                        upload-endpoint="[[uploadEndpoint]]"
                        on-upload-finished="_attachmentUploadFinished"
                        required
@@ -71,8 +71,8 @@
       <div class="row-h flex-c">
         <!-- Submitted to PRC? -->
         <etools-form-element-wrapper no-placeholder>
-          <paper-checkbox checked="{{attachment.active}}">
-            Active
+          <paper-checkbox checked="[[!attachment.active]]" on-change="_archivedChanged">
+            Archived
           </paper-checkbox>
         </etools-form-element-wrapper>
       </div>
@@ -129,8 +129,8 @@
           newAttachmentModel: {
             type: Object,
             value: {
-              active: false,
-              attachment: null,
+              active: true,
+              attachment_document: null,
               type: null
             }
           },
@@ -198,7 +198,7 @@
         const isNewAttachment = !attachment.id;
         if (!isNewAttachment) {
           delete attachment.attachment;
-          // TODO: remove attachment_document and attachment_file after API refactoring/cleanup
+          // TODO: remove attachment and attachment_file after API refactoring/cleanup
           delete attachment.attachment_document;
           delete attachment.attachment_file;
         }
@@ -212,7 +212,6 @@
         this.startSpinner();
         this.sendRequest(options)
             .then((resp) => {
-              this._handleResponse(resp, isNewAttachment);
               this._handleResponse(resp, isNewAttachment);
               this.stopSpinner();
             }).catch((error) => {
@@ -233,11 +232,15 @@
       _attachmentUploadFinished(e) {
         if (e.detail.success) {
           const uploadResponse = JSON.parse(e.detail.success);
-          this.set('attachment.attachment', uploadResponse.id);
+          this.set('attachment.attachment_document', uploadResponse.id);
         }
       }
       _readonlyAttachment(id) {
         return id && Number(id) > 0;
+      }
+
+      _archivedChanged(e) {
+        this.set('attachment.active', !e.target.checked);
       }
 
     }
