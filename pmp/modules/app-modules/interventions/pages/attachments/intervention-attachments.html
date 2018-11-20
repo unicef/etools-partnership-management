@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -12,14 +13,21 @@
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../layout/components/icons-actions.html">
+<link rel="import" href="../../../../config/app-constants.html">
 
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/etools-cp-header-actions-bar-styles.html">
+
+<link rel="import" href="components/attachment-dialog.html">
 
 <dom-module id="intervention-attachments">
   <template>
-    <style include="page-common-styles grid-layout-styles shared-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles data-table-styles etools-cp-header-actions-bar-styles">
       :host {
         display: block;
 
@@ -28,32 +36,29 @@
           overflow: hidden;
         };
       }
+
+      .attachment {
+        margin-right: 8px;
+      }
+
+      iron-icon {
+        color: var(--dark-icon-color);
+      }
+
+      icons-actions {
+        visibility: hidden;
+      }
+
+      etools-data-table-row:hover icons-actions {
+        visibility: visible;
+      }
     </style>
 
-    <!--<etools-content-panel class="content-section" panel-title="Attachments">-->
-      <!--<etools-file id="attachments"-->
-                   <!--files="{{attachments}}"-->
-                   <!--file-model="[[fileModel]]"-->
-                   <!--file-types=[[fileTypes]]-->
-                   <!--label="Attachments"-->
-                   <!--multiple use-delete-events activate-file-types-->
-                   <!--hide-delete-btn show-upload-btn-above show-upload-date-->
-                   <!--on-delete-file="_deleteAttachment"-->
-                   <!--readonly$=[[!editMode]]-->
-                   <!--no-file-attached-msg=""-->
-                   <!--toast-fit-into="[[toastFitInto]]"-->
-                   <!--target="_blank">-->
-      <!--</etools-file>-->
-      <!--<div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>-->
-        <!--<p>There are no attachments added.</p>-->
-      <!--</div>-->
-    <!--</etools-content-panel>-->
-
-    <etools-content-panel class="content-section" panel-title="Attachments ([[attachments.length]])">
-      <div slot="panel-btns">
+    <etools-content-panel class="content-section" panel-title$="Attachments ([[attachments.length]])">
+      <div slot="panel-btns" class="cp-header-actions-bar">
         <paper-toggle-button id="showInactive"
-                             checked="{{showArchived}}">
-          Show archived
+                             checked="{{showInactive}}">
+          Show inactive
         </paper-toggle-button>
         <div class="separator" hidden$="[[!editMode]]">
         </div>
@@ -84,9 +89,9 @@
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template is="dom-repeat" items="{{attachments}}">
-          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
-            <div slot="row-data" class$="p-relative">
+        <template is="dom-repeat" items="[[attachments]]">
+          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
+            <div slot="row-data">
               <span class="col-data col-2">
                 [[prettyDate(item.created)]]
               </span>
@@ -102,12 +107,16 @@
                   </a>
                 </span>
               </span>
-              <span class="col-data col-2 center-align">
+              <span class="col-data col-2">
+                <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
                 <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
               </span>
-              <span class="col-data flex-c">
-                <icons-actions hidden$="[[!editMode]]"
-                               on-edit="_editAttachment">
+              <span class="col-data flex-c p-relative">
+                <icons-actions item-id$="[[item.id]]"
+                               hidden$="[[!editMode]]"
+                               show-delete="[[_canDeleteAttachments(interventionStatus)]]"
+                               on-edit="_editAttachment"
+                               on-delete="_deleteAttachment">
                               </icons-actions>
               </span>
             </div>
@@ -131,14 +140,20 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.Constants
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Common,
+      EtoolsPmpApp.Mixins.Constants,
       EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
@@ -165,6 +180,9 @@
             type: Number,
             observer: '_interventionIdChanged'
           },
+          interventionStatus: {
+            type: String
+          },
           attachments: {
             type: Array,
             value: []
@@ -173,10 +191,11 @@
             type: Array,
             statePath: 'fileTypes'
           },
-          showArchived: {
+          showInactive: {
             type: Boolean,
             value: false
-          }
+          },
+          attachmentDialog: Object
         };
       }
 
@@ -188,12 +207,52 @@
 
       connectedCallback() {
         super.connectedCallback();
+        this._createAttachmentDialog();
         /**
          * Disable loading message for attachments tab elements load,
          * triggered by parent element on stamp or by tap event on tabs
          */
         this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
         this.fireEvent('tab-content-attached');
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeAttachmentDialog();
+      }
+
+      _createAttachmentDialog() {
+        this.attachmentDialog = document.createElement('attachment-dialog');
+        this.attachmentDialog.setAttribute('id', 'addAmendmentDialog');
+        this.attachmentDialog.toastEventSource = this;
+        this.attachmentDialog.fileTypes = this.fileTypes;
+
+        this.newAttachmentAdded = this.newAttachmentAdded.bind(this);
+        this.newAttachmentUpdated = this.newAttachmentUpdated.bind(this);
+        this.attachmentDialog.addEventListener('attachment-added', this.newAttachmentAdded);
+        this.attachmentDialog.addEventListener('attachment-updated', this.newAttachmentUpdated);
+        document.querySelector('body').appendChild(this.attachmentDialog);
+      }
+
+      _removeAttachmentDialog() {
+        if (this.attachmentDialog) {
+          this.attachmentDialog.removeEventListener('attachment-added', this.newAttachmentAdded);
+          this.attachmentDialog.removeEventListener('attachment-updated', this.newAttachmentUpdated);
+          document.querySelector('body').removeChild(this.attachmentDialog);
+        }
+      }
+
+      newAttachmentAdded(e) {
+        this.push('attachments', e.detail);
+      }
+
+      newAttachmentUpdated(e) {
+        const attachments = JSON.parse(JSON.stringify(this.attachments));
+        const editedAttachmentIdx = attachments.findIndex(a => a.id === e.detail.id);
+        if (editedAttachmentIdx > -1) {
+          attachments.splice(editedAttachmentIdx, 1, e.detail);
+        }
+        this.set('attachments', attachments);
       }
 
       _showAttachmentsList(length) {
@@ -219,23 +278,59 @@
           return;
         }
         // get attachments
-        // TODO
+        this.fireEvent('global-loading', {
+          message: 'Loading...',
+          active: true,
+          loadingSource: 'pd-attachments'
+        });
+        this.sendRequest({
+          endpoint: this.getEndpoint('pdAttachments', {pdId: id})
+        }).then((response) => {
+          this.set('attachments', response);
+        }).catch((error) => {
+          this.logError('Error during pd attachments fetch.', 'pd-attachments', error);
+          this.parseRequestErrorsAndShowAsToastMsgs(error);
+        }).then(() => {
+          this.fireEvent('global-loading', {
+            active: false,
+            loadingSource: 'pd-attachments'
+          });
+        });
       }
 
       _addAttachment() {
-        // TODO
+        if (this.attachmentDialog) {
+          this.attachmentDialog.interventionId = this.interventionId;
+          this.attachmentDialog.initAttachment();
+          this.attachmentDialog.opened = true;
+        }
       }
 
-      _editAttachment() {
+      _editAttachment(e) {
+        if (this.attachmentDialog) {
+          this.attachmentDialog.interventionId = this.interventionId;
+          const editedAttachment = this.attachments.find(a => a.id === Number(e.target.getAttribute('item-id')));
+          this.attachmentDialog.initAttachment(editedAttachment);
+          this.attachmentDialog.opened = true;
+        }
+      }
+
+      _deleteAttachment(e) {
         // TODO
       }
 
       _getAttachmentType(type) {
-        // TODO
+        const fileTypes = this.fileTypes instanceof Array === false ? [] : this.fileTypes;
+        const attachmentType = fileTypes.find(t => t.id === type);
+        return attachmentType ? attachmentType.name : '—';
       }
 
-      _isVisible(active, showArchived) {
-        // TODO
+      _isVisible(active, showInactive) {
+        return active || showInactive;
+      }
+
+      _canDeleteAttachments(status) {
+        return status === this.CONSTANTS.STATUSES.Draft.toLowerCase();
       }
     }
 
