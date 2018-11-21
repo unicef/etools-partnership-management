@@ -175,9 +175,6 @@
         }).catch(function(error) {
           self.logError('Error querying agreements: ', 'agreements-list-data', error, true);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
-          if (error.name === 'DatabaseClosedError') {
-            window.location.reload(true);
-          }
         });
       }
     }
