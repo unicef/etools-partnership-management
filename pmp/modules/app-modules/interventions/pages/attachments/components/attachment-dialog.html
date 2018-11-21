@@ -197,9 +197,9 @@
       _saveAttachment(attachment) {
         const isNewAttachment = !attachment.id;
         if (!isNewAttachment) {
-          delete attachment.attachment;
-          // TODO: remove attachment and attachment_file after API refactoring/cleanup
           delete attachment.attachment_document;
+          // TODO: remove attachment and attachment_file after API refactoring/cleanup
+          delete attachment.attachment;
           delete attachment.attachment_file;
         }
         const endpointName = !isNewAttachment ? 'updatePdAttachment' : 'pdAttachments';

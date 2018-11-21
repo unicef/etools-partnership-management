@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-dialog/dynamic-dialog-mixin.html">
 
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
@@ -116,7 +117,7 @@
                                hidden$="[[!editMode]]"
                                show-delete="[[_canDeleteAttachments(interventionStatus)]]"
                                on-edit="_editAttachment"
-                               on-delete="_deleteAttachment">
+                               on-delete="_confirmAttachmentDelete">
                               </icons-actions>
               </span>
             </div>
@@ -140,6 +141,7 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsMixins.DynamicDialogMixin
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
@@ -149,6 +151,7 @@
      */
     const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
       EtoolsLogsMixin,
+      EtoolsMixins.DynamicDialogMixin,
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.AjaxErrorsParser,
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
@@ -195,7 +198,9 @@
             type: Boolean,
             value: false
           },
-          attachmentDialog: Object
+          attachmentDialog: Object,
+          attDeleteConfirmDialog: Object,
+          attMarkedToBeDeleted: Object
         };
       }
 
@@ -208,6 +213,7 @@
       connectedCallback() {
         super.connectedCallback();
         this._createAttachmentDialog();
+        this._createDeleteConfirmation();
         /**
          * Disable loading message for attachments tab elements load,
          * triggered by parent element on stamp or by tap event on tabs
@@ -219,6 +225,29 @@
       disconnectedCallback() {
         super.disconnectedCallback();
         this._removeAttachmentDialog();
+        this._removeDeleteConfirmationDialog();
+      }
+
+      _createDeleteConfirmation() {
+        this.deleteAttachment = this.deleteAttachment.bind(this);
+        const warnDeleteAttachment = document.createElement('span');
+        warnDeleteAttachment.innerHTML = 'Are you sure you want to delete this attachment?';
+        // this.attDeleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteAttachment);
+        this.attDeleteConfirmDialog = this.createDynamicDialog({
+          title: null,
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'No',
+          closeCallback: this.deleteAttachment,
+          content: warnDeleteAttachment
+        });
+      }
+
+      _removeDeleteConfirmationDialog() {
+        if (this.attDeleteConfirmDialog) {
+          this.attDeleteConfirmDialog.removeEventListener('close', this.deleteAttachment);
+          document.querySelector('body').removeChild(this.attDeleteConfirmDialog);
+        }
       }
 
       _createAttachmentDialog() {
@@ -246,13 +275,21 @@
         this.push('attachments', e.detail);
       }
 
-      newAttachmentUpdated(e) {
+      _updateAttachments(attachment, deleteAction) {
         const attachments = JSON.parse(JSON.stringify(this.attachments));
-        const editedAttachmentIdx = attachments.findIndex(a => a.id === e.detail.id);
-        if (editedAttachmentIdx > -1) {
-          attachments.splice(editedAttachmentIdx, 1, e.detail);
+        const attachmentIdx = attachments.findIndex(a => a.id === attachment.id);
+        if (attachmentIdx > -1) {
+          if (deleteAction) {
+            attachments.splice(attachmentIdx, 1);
+          } else {
+            attachments.splice(attachmentIdx, 1, attachment);
+          }
         }
         this.set('attachments', attachments);
+      }
+
+      newAttachmentUpdated(e) {
+        this._updateAttachments(e.detail);
       }
 
       _showAttachmentsList(length) {
@@ -315,8 +352,37 @@
         }
       }
 
-      _deleteAttachment(e) {
-        // TODO
+      _confirmAttachmentDelete(e) {
+        this.attMarkedToBeDeleted = this.attachments.find(a => a.id === Number(e.target.getAttribute('item-id')));
+        if (this.attMarkedToBeDeleted) {
+          this.attDeleteConfirmDialog.opened = true;
+        }
+      }
+
+      deleteAttachment(e) {
+        if (e.detail.confirmed && this.attMarkedToBeDeleted && this.attMarkedToBeDeleted.id) {
+          // delete from server
+          this.fireEvent('global-loading', {
+            message: 'Loading...',
+            active: true,
+            loadingSource: 'pd-attachments-delete'
+          });
+          this.sendRequest({
+            method: 'DELETE',
+            endpoint: this.getEndpoint('updatePdAttachment', {attId: this.attMarkedToBeDeleted.id})
+          }).then((response) => {
+            this._updateAttachments(this.attMarkedToBeDeleted, true);
+          }).catch((error) => {
+            this.logError('Error during pd attachment delete.', 'pd-attachments', error);
+            this.parseRequestErrorsAndShowAsToastMsgs(error);
+          }).then(() => {
+            this.fireEvent('global-loading', {
+              active: false,
+              loadingSource: 'pd-attachments-delete'
+            });
+            this.attMarkedToBeDeleted = null;
+          });
+        }
       }
 
       _getAttachmentType(type) {
