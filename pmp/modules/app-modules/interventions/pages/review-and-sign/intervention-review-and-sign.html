@@ -378,22 +378,6 @@
         return valid;
       }
 
-      resetValidation() {
-        let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
-          '#signedByUnicefDateField', '#signedIntervFile'];
-
-        fieldSelectors.forEach(function(selector) {
-          let field = this.shadowRoot.querySelector(selector);
-          console.log(field);
-
-          field.set('invalid', false);
-          // if (field && !field.validate()) {
-          //   valid = true;
-          // }
-        }.bind(this));
-        return true;
-      }
-
       _showSubmittedToPrcFields(submittedToPrc) {
         return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
       }
