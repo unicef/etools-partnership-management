@@ -68,7 +68,7 @@
             Active
           </etools-data-table-column>
         </etools-data-table-header>
-        <template is="dom-repeat" items="[[filteredDisaggregations]]">
+        <template is="dom-repeat" items="[[dataItems]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
               <span class="col-data col-4">
@@ -90,7 +90,7 @@
         <etools-data-table-footer
             page-size="[[pagination.pageSize]]"
             page-number="[[pagination.pageNumber]]"
-            total-results="[[totalResults]]"
+            total-results="[[pagination.totalResults]]"
             on-page-size-changed="_pageSizeChanged"
             on-page-number-changed="_pageNumberChanged">
         </etools-data-table-footer>
@@ -148,7 +148,6 @@
           },
           filteredDisaggregations: {
             type: Array,
-            notify: true,
             computed: '_filterData(disaggregations, q)'
           },
           q: {
@@ -175,8 +174,8 @@
 
       static get observers() {
         return [
-          '_paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)',
-          '_disagregationsChanged(disaggregations, environmentFlags)'
+          '_paginationChanged(pagination.pageNumber, pagination.pageSize, filteredDisaggregations)',
+          '_disagregationsChanged(filteredDisaggregations, environmentFlags)'
         ];
       }
 
@@ -249,7 +248,7 @@
           this.dataItems = [];
           return;
         }
-        this.set('pagination.totalResults', this.disaggregations.length);
+        this.set('pagination.totalResults', disaggregs.length);
       }
 
       _openModal() {
