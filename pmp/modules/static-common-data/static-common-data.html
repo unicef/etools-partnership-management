@@ -61,7 +61,7 @@
           },
           pmpDataEndpointNamesForPrpSections: {
             type: Array,
-            value: ['addGetDisaggregations']
+            value: ['disaggregations']
           },
           prpStaticDataEndpointsNames: {
             type: Array,
@@ -126,7 +126,7 @@
             return this._handleUnicefUsersResponse;
           case 'userCountryDetails':
             return this._handleUserCountryDataResponse;
-          case 'addGetDisaggregations':
+          case 'disaggregations':
             return this._handleDisaggregationsResponse;
           case 'getPRPCountries':
             return this._handlePRPCountryDataResponse;
