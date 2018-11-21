@@ -229,7 +229,6 @@
         };
 
         this.sendRequest(requestParams).then(function(response) {
-          self.disaggregation = response;
           self.dispatch('patchDisaggregation', response);
           self.broadcastPatchDisaggregToOtherTabs(response);
         }).catch(function(error) {
