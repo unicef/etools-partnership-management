@@ -170,8 +170,11 @@
     lowerResultsDelete: {
       template: '/api/v2/reports/lower_results/<%=id%>/'
     },
-    addGetDisaggregations: {
+    disaggregations: {
       url: '/api/v2/reports/disaggregations/'
+    },
+    patchDisaggregations: {
+      template: '/api/v2/reports/disaggregations/<%=id%>/'
     },
     interventionProgress: {
       template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/?external=1',
