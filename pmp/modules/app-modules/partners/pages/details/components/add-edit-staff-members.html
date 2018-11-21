@@ -34,6 +34,7 @@
                   value="{{item.title}}"
                   placeholder="&#8212;"
                   maxlength="30"
+                  required
                   invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                   error-message="Position is required"></paper-input>
         </div>

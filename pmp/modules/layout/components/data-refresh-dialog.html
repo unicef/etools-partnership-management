@@ -6,6 +6,7 @@
 <link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
 
 <link rel="import" href="../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/grid-layout-styles.html">
 
@@ -87,7 +88,10 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const DataRefreshDialogMixin = EtoolsMixinFactory.combineMixins([
-        EtoolsLogsMixin, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.EventHelper
+        EtoolsLogsMixin,
+        EtoolsPageRefreshMixin,
+        EtoolsPmpApp.Mixins.EventHelper,
+        EtoolsPmpApp.Mixins.EtoolsDataReduxStore
       ], Polymer.Element);
     /**
      * @polymer
@@ -128,6 +132,21 @@
         };
       }
 
+      static get actions() {
+        return {
+          resetUploadsInProgress: function() {
+            return {
+              type: 'RESET_UPLOADS_IN_PROGRESS'
+            };
+          },
+          resetUnsavedUploads: function() {
+            return {
+              type: 'RESET_UNSAVED_UPLOADS'
+            };
+          }
+        };
+      }
+
       static get observers() {
         return [
           '_singleSectionChanged(interventionsSelected, partnersSelected, agreementsSelected)',
@@ -164,6 +183,10 @@
         if (!closingReason.detail.confirmed) {
           return;
         }
+
+        this.dispatch('resetUploadsInProgress');
+        this.dispatch('resetUnsavedUploads');
+
         this.fireEvent('global-loading', {message: 'Refreshing data...', active: true});
 
         let afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
