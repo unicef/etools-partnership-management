@@ -378,6 +378,22 @@
         return valid;
       }
 
+      resetValidation() {
+        let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
+          '#signedByUnicefDateField', '#signedIntervFile'];
+
+        fieldSelectors.forEach(function(selector) {
+          let field = this.shadowRoot.querySelector(selector);
+          console.log(field);
+
+          field.set('invalid', false);
+          // if (field && !field.validate()) {
+          //   valid = true;
+          // }
+        }.bind(this));
+        return true;
+      }
+
       _showSubmittedToPrcFields(submittedToPrc) {
         return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
       }
@@ -432,9 +448,9 @@
         if (typeof signedDocument === 'undefined') {
           return;
         }
+        // this functionality is available only after pd is saved and in draft status
         if (this.intervention &&
-            (this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase() ||
-                this.intervention.status === '')) {
+            this.intervention.status === this.CONSTANTS.STATUSES.Draft.toLowerCase()) {
           setTimeout(() => {
             // delay micro task execution; set to make sure _signedDocChangedForDraft will run on page load
             if (signedDocument) {
