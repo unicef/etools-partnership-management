@@ -20,7 +20,15 @@
             value: function() {
               return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
             }
-          }
+          },
+          uploadsInProgress: {
+            type: Number,
+            statePath: 'uploadsInProgress'
+          },
+          unsavedUploads: {
+            type: Boolean,
+            statePath: 'unsavedUploads'
+          },
         };
       }
 
@@ -44,6 +52,16 @@
           decreaseUnsavedUploads: function() {
             return {
               type: 'DECREASE_UNSAVED_UPLOADS'
+            };
+          },
+          resetUploadsInProgress: function() {
+            return {
+              type: 'RESET_UPLOADS_IN_PROGRESS'
+            };
+          },
+          resetUnsavedUploads: function() {
+            return {
+              type: 'RESET_UNSAVED_UPLOADS'
             };
           }
         };
