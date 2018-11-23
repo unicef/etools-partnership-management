@@ -151,7 +151,7 @@
                                    form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
                                    hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
                 <div slot="field" id="unicef-cash-val" class="right-align">
-                  <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
+                  <template is="dom-if" if="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
                     <etools-form-element-wrapper no-label-float
                                                  id="unicef-cash"
@@ -159,7 +159,7 @@
                     </etools-form-element-wrapper>
                   </template>
                   <template is="dom-if"
-                            if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
+                            if="[[!_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                     <!-- editable unicef cash -->
                     <etools-currency-amount-input id="unicefCash"
                                                   value="{{plannedBudget.unicef_cash_local}}"
