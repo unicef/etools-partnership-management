@@ -201,6 +201,9 @@
           // TODO: remove attachment and attachment_file after API refactoring/cleanup
           delete attachment.attachment;
           delete attachment.attachment_file;
+        } else if (!this.interventionId || isNaN(this.interventionId)) {
+          this.logWarn('You need a valid PD id to be able to save the attachment!', 'attachment-dialog');
+          return;
         }
         const endpointName = !isNewAttachment ? 'updatePdAttachment' : 'pdAttachments';
         const endpointParams = !isNewAttachment ? {attId: attachment.id} : {pdId: this.interventionId};

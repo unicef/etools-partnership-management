@@ -56,7 +56,7 @@
     </style>
 
     <etools-content-panel class="content-section" panel-title$="Attachments ([[attachments.length]])">
-      <div slot="panel-btns" class="cp-header-actions-bar">
+      <div slot="panel-btns" class="cp-header-actions-bar" hidden$="[[newIntervention]]">
         <paper-toggle-button id="showArchived"
                              checked="{{showArchived}}">
           Show archived
@@ -127,7 +127,8 @@
 
       <template is="dom-if" if="[[!_showAttachmentsList(attachments.length)]]">
         <div class="row-h">
-          <p>There are no attachments added.</p>
+          <p hidden$="[[newIntervention]]">There are no attachments added.</p>
+          <p hidden$="[[!newIntervention]]">You must save this PD/SSFA before you can add attachments.</p>
         </div>
       </template>
 
@@ -195,6 +196,10 @@
             statePath: 'fileTypes'
           },
           showArchived: {
+            type: Boolean,
+            value: false
+          },
+          newIntervention: {
             type: Boolean,
             value: false
           },
