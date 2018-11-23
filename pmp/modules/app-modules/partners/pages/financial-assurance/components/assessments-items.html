@@ -56,6 +56,9 @@
       .no-assessments-warning {
         padding-top: 0;
       }
+      .keep-constant-width {
+        width: 36px;
+      }
 
     </style>
 
@@ -73,11 +76,12 @@
         <div class="row-h item-container">
           <div class="item-actions-container">
 
-            <div class="actions">
+            <div class="actions keep-constant-width">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
                                  disabled$="[[!editMode]]"
+                                 hidden$="[[item.id]]"
                                  icon="cancel">
               </paper-icon-button>
             </div>
@@ -330,6 +334,23 @@
           const uploadResponse = JSON.parse(e.detail.success);
           this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
           this.dispatch('increaseUnsavedUploads');
+        }
+      }
+
+      // Overwrites _onDeleteConfirmation from repeatable-data-sets-mixin
+      _onDeleteConfirmation(e) {
+        this.deleteDialog.opened = false;
+        if (event.detail.confirmed === true) {
+
+          if (this.uploadsInProgress || this.unsavedUploads) {
+            this.dispatch('resetUploadsInProgress');
+            this.dispatch('resetUnsavedUploads');
+          }
+
+          this._deleteElement();
+          this.elToDeleteIndex = -1;
+        } else {
+          this.elToDeleteIndex = -1;
         }
       }
 
