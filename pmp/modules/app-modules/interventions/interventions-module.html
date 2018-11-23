@@ -197,9 +197,9 @@
           <intervention-attachments id="intervAttachments"
                                     name="attachments"
                                     active="[[_isAttachementsTabActive(routeData.tab)]]"
-                                    intervention="[[intervention]]"
-                                    file-model="[[_getAttachmentModel(intervention.id)]]"
-                                    attachments="{{intervention.attachments}}"
+                                    intervention-id="[[intervention.id]]"
+                                    intervention-status="[[intervention.status]]"
+                                    new-intervention="[[newInterventionActive]]"
                                     edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
           </intervention-attachments>
         </template>
@@ -665,15 +665,6 @@
           return true;
         }
         return false;
-      }
-
-      _getAttachmentModel(interventionId) {
-        return {
-          id: null,
-          created: null,
-          intervention: interventionId ? interventionId : null,
-          type: null
-        };
       }
 
       _goToNewInterventionPage() {

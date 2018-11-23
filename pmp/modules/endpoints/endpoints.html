@@ -72,6 +72,12 @@
     interventionDelete: {
       template: '/api/v2/interventions/delete/<%=id%>/'
     },
+    pdAttachments: {
+      template: '/api/v2/interventions/<%=pdId%>/attachments/'
+    },
+    updatePdAttachment: {
+      template: '/api/v2/interventions/attachments/<%=attId%>/'
+    },
     dropdownsPmp: {
       url: '/api/v2/dropdowns/pmp',
       exp: 6 * 60 * 60 * 1000, // 6h
