@@ -82,8 +82,10 @@
 
     <template is="dom-if" if="[[primaryAction]]">
       <paper-button raised disabled$="[[disabled]]">
-        <iron-icon icon="info-outline" hidden$="[[!showInfoIcon]]"></iron-icon>
-        <div on-tap="_handlePrimaryClick" class="main-btn-part"> [[primaryAction.label]]</div>
+        <div on-tap="_handlePrimaryClick" class="main-btn-part">
+          <iron-icon icon="info-outline" hidden$="[[!showInfoIcon]]"></iron-icon>
+          [[primaryAction.label]]
+        </div>
 
         <template is="dom-if" if="[[secondaryActions.length]]">
           <paper-menu-button horizontal-align="right">
