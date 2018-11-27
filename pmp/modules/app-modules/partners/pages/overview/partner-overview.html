@@ -193,7 +193,7 @@
               </div>
               <div class="col col-2 right-align">
                 <etools-info-tooltip
-                    class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]]"
+                    class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
                     icon-first
                     custom-icon
                     hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
@@ -215,7 +215,7 @@
                                      icon-first
                                      custom-icon
                                      hide-tooltip="[[!frsConsistencyWarningIsActive(partnership.multi_curr_flag)]]">
-                  <span slot="field" class$="[[getFrsValueNAClass(partnership.multi_curr_flag, 'true')]]">
+                  <span slot="field" class$="[[getFrsValueNAClass(partnership.multi_curr_flag, 'true')]] partner-overview">
                     <span class="amount-currency">[[partnership.fr_currency]]</span>
                     <span>[[getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, 'true')]]</span>
                   </span>
