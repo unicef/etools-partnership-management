@@ -280,7 +280,7 @@
           Special Conditions PCA
         </paper-toggle-button>
       </div>
-      <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
+      <div class$="[[_getTBorderClassIfApplicableAndOther(agreement.agreement_type)]]">
         <div class="generate-pca col col-3"
              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
           <paper-input-container
@@ -469,8 +469,8 @@
         }
       }
 
-      _getTBorderClassIfApplicable(agreementType) {
-        return agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA ? 't-border' : '';
+      _getTBorderClassIfApplicableAndOther(agreementType) {
+        return (agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA ? 't-border' : '') + ' row-h flex-c';
       }
 
       // Editing Agreement Type is allowed only if Agreement is new/unsaved
