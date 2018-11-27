@@ -125,6 +125,7 @@
     dateIsBetween(start, end, current) {
       let startDate = (start instanceof Date) ? start : new Date(start);
       let endDate = (end instanceof Date) ? end : new Date(end);
+
       if (!this.isValidDate(startDate) || !this.isValidDate(endDate)) {
         throw new Error('Both start and end dates must valid.');
       }
@@ -156,7 +157,7 @@
      _EdgeAcceptableDateParse(strDt) {
         // expected dt fromat : 01-Sep-2018
 
-        let date = new Date (strDt + 'Z');
+        let date = new Date(strDt + 'Z');
         if (this.isValidDate(date)) {
           return date;
         }

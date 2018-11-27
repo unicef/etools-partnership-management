@@ -471,28 +471,6 @@
         return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
       }
 
-      _EdgeAcceptableDateParse(strDt) {
-        // expected dt fromat : 01-Sep-2018
-
-        let date = new Date (strDt + 'Z');
-        if (this.isValidDate(date)) {
-          return date;
-        }
-
-        let dtArr = strDt.split('-');
-        if (dtArr && dtArr.length) {
-          let numericMonth = dtArr[1];
-
-          if (isNaN(numericMonth)) {
-            numericMonth = this.getShortStrMonths().indexOf(numericMonth);
-          }
-
-          date = new Date(dtArr[2], numericMonth, dtArr[0]);
-        }
-
-        return date;
-      }
-
     }
 
     window.customElements.define(InterventionProgress.is, InterventionProgress);
