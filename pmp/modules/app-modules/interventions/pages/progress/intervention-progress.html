@@ -439,19 +439,21 @@
       }
 
       _getTimeProgress(start, end) {
-        let todayDateStr = this.getTodayDateStr();
+        let today = new Date();
+        let startDt = this._EdgeAcceptableDateParse(start);
+        let endDt = this._EdgeAcceptableDateParse(end);
         try {
-          if (this.dateIsBetween(start, end, todayDateStr)) {
-            let intervalTotalDays = this.dateDiff(start, end);
-            let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
+          if (this.dateIsBetween(startDt, endDt, today)) {
+            let intervalTotalDays = this.dateDiff(startDt, endDt);
+            let intervalDaysCompleted = this.dateDiff(startDt, today);
             return intervalDaysCompleted * 100 / intervalTotalDays;
           }
         } catch (err) {
           this.logWarn('Time progress compute error', 'intervention-progress', err);
         }
         // if end date is valid and is past date or today's date, progress should be 100%
-        if (this.isValidDate(new Date(end)) &&
-            (this.dateIsAfter(todayDateStr, end) || todayDateStr === end)) {
+        if (this.isValidDate(endDt) &&
+            (this.dateIsAfter(today, endDt) || today === endDt)) {
           return 100;
         }
         return 0;
@@ -467,27 +469,6 @@
 
       _convertToDisplayFormat(strDt) {
         return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
-      }
-
-      _EdgeAcceptableDateParse(strDt) {
-        // expected dt fromat : 01-Sep-2018
-        let dtArr = strDt.split('-');
-        let date;
-        if (dtArr && dtArr.length) {
-          let numericMonth = dtArr[1];
-
-          if (isNaN(numericMonth)) {
-            numericMonth = this.getShortStrMonths().indexOf(numericMonth);
-          }
-
-          date = new Date(dtArr[2], numericMonth, dtArr[0]);
-        }
-
-        if (!date) {
-          date = new Date(strDt + 'Z');
-        }
-
-        return date;
       }
 
     }
