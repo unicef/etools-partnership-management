@@ -64,7 +64,7 @@
     <div class="row-h add-btn-wrapper">
       <paper-button hidden$="[[!editMode]]"
                     on-tap="_addNewAssessment"
-                    class$="secondary-btn [[_getAddBtnAdditionalClass(dataItems.length)]]">
+                    class$="[[_getAddBtnAdditionalClass(dataItems.length)]]">
         ADD OTHER ASSESSMENT
       </paper-button>
     </div>
@@ -323,7 +323,7 @@
       }
 
       _getAddBtnAdditionalClass(shownAssessmentsNumber) {
-        return shownAssessmentsNumber ? 'add-btn-lm' : '';
+        return (shownAssessmentsNumber ? 'add-btn-lm' : '') + ' secondary-btn';
       }
 
       _uploadFinished(e) {

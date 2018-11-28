@@ -80,21 +80,22 @@
     /*
      * Diff between 2 dates
      */
-    dateDiff(firstDateString, secondDateString, unit) {
+    dateDiff(firstDate, secondDate, unit) {
       if (!unit) {
         unit = 'days';
       }
-      if (typeof firstDateString === 'string' && firstDateString !== '' &&
-          typeof secondDateString === 'string' && secondDateString !== '') {
-        let firstDate = new Date(firstDateString);
-        let secondDate = new Date(secondDateString);
-
-        if (this.isValidDate(firstDate) && this.isValidDate(secondDate)) {
-          let mFirstDate = moment.utc(firstDate);
-          let mSecondDate = moment.utc(secondDate);
-          return mSecondDate.diff(mFirstDate, unit);
-        }
+      if (typeof firstDate === 'string' && firstDate !== '' &&
+          typeof secondDate === 'string' && secondDate !== '') {
+         firstDate = new Date(firstDate);
+         secondDate = new Date(secondDate);
       }
+
+      if (this.isValidDate(firstDate) && this.isValidDate(secondDate)) {
+        let mFirstDate = moment.utc(firstDate);
+        let mSecondDate = moment.utc(secondDate);
+        return mSecondDate.diff(mFirstDate, unit);
+      }
+
       return null;
     }
 
@@ -122,12 +123,13 @@
     }
 
     dateIsBetween(start, end, current) {
-      let startDate = new Date(start);
-      let endDate = new Date(end);
+      let startDate = (start instanceof Date) ? start : new Date(start);
+      let endDate = (end instanceof Date) ? end : new Date(end);
+
       if (!this.isValidDate(startDate) || !this.isValidDate(endDate)) {
         throw new Error('Both start and end dates must valid.');
       }
-      let date = new Date(current);
+      let date = (current instanceof Date) ? current : new Date(current);
       let currentDate = this.isValidDate(date) ? moment() : moment(date);
       return currentDate.isBetween(moment(startDate), moment(endDate), null, '[]');
     }
@@ -151,6 +153,28 @@
     getShortStrMonths() {
       return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     }
+
+     _EdgeAcceptableDateParse(strDt) {
+        // expected dt fromat : 01-Sep-2018
+
+        let date = new Date(strDt + 'Z');
+        if (this.isValidDate(date)) {
+          return date;
+        }
+
+        let dtArr = strDt.split('-');
+        if (dtArr && dtArr.length) {
+          let numericMonth = dtArr[1];
+
+          if (isNaN(numericMonth)) {
+            numericMonth = this.getShortStrMonths().indexOf(numericMonth);
+          }
+
+          date = new Date(dtArr[2], numericMonth, dtArr[0]);
+        }
+
+        return date;
+      }
 
   });
 </script>
