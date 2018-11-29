@@ -453,7 +453,7 @@
         }
         // if end date is valid and is past date or today's date, progress should be 100%
         if (this.isValidDate(endDt) &&
-            (this.dateIsAfter(today, endDt) || this.datesAreEqual(datetoday === endDt))) {
+            (this.dateIsAfter(today, endDt) || this.datesAreEqual(today === endDt))) {
           return 100;
         }
         return 0;
