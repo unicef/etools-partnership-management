@@ -151,16 +151,17 @@
       }
 
       _getStatusCssClass(status, index) {
+        let cls = '';
         if (status.completed && !status.icon) {
-          return 'completed';
+          cls = 'completed';
         }
         if (status.completed && status.icon) {
-          return 'custom';
+          cls = 'custom';
         }
         if (index === 0) {
-          return 'pending';
+          cls = 'pending';
         }
-        return '';
+        return cls + ' etools-status';
       }
 
       _getTrueIndex(index) {

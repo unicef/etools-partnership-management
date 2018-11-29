@@ -113,9 +113,10 @@
       }
 
       _getPlaceholderClass(value) {
-        return (typeof value === 'string' && value.trim() !== '')
+        let cssclass = ((typeof value === 'string' && value.trim() !== '')
             ? ''
-            : (this.noPlaceholder ? '' : 'placeholder');
+            : (this.noPlaceholder ? '' : 'placeholder'));
+        return cssclass + ' etools-form-element-wrapper';
       }
 
       _getDisplayValue(value) {
