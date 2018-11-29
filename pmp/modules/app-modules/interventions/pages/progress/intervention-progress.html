@@ -440,8 +440,8 @@
 
       _getTimeProgress(start, end) {
         let today = new Date();
-        let startDt = this._EdgeAcceptableDateParse(start);
-        let endDt = this._EdgeAcceptableDateParse(end);
+        let startDt = this.EdgeAcceptableDateParse(start);
+        let endDt = this.EdgeAcceptableDateParse(end);
         try {
           if (this.dateIsBetween(startDt, endDt, today)) {
             let intervalTotalDays = this.dateDiff(startDt, endDt);
@@ -453,7 +453,7 @@
         }
         // if end date is valid and is past date or today's date, progress should be 100%
         if (this.isValidDate(endDt) &&
-            (this.dateIsAfter(today, endDt) || today === endDt)) {
+            (this.dateIsAfter(today, endDt) || this.datesAreEqual(datetoday === endDt))) {
           return 100;
         }
         return 0;
@@ -468,7 +468,7 @@
       }
 
       _convertToDisplayFormat(strDt) {
-        return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+        return moment(this.EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
       }
 
     }
