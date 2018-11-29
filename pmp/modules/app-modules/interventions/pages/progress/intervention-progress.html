@@ -440,8 +440,8 @@
 
       _getTimeProgress(start, end) {
         let today = new Date();
-        let startDt = this.EdgeAcceptableDateParse(start);
-        let endDt = this.EdgeAcceptableDateParse(end);
+        let startDt = this._EdgeAcceptableDateParse(start);
+        let endDt = this._EdgeAcceptableDateParse(end);
         try {
           if (this.dateIsBetween(startDt, endDt, today)) {
             let intervalTotalDays = this.dateDiff(startDt, endDt);
@@ -468,7 +468,7 @@
       }
 
       _convertToDisplayFormat(strDt) {
-        return moment(this.EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+        return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
       }
 
     }
