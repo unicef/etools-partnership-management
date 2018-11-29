@@ -15,6 +15,7 @@
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../../styles/etools-cp-header-actions-bar-styles.html">
+<link rel="import" href="../../../../../mixins/ie11-mixin.html">
 <link rel="import" href="add-edit-staff-members.html">
 
 <dom-module id="staff-members">
@@ -45,10 +46,12 @@
         color: var(--dark-secondary-text-color);
       }
       span.col-data {
-        word-break: break-all;
+        word-break: break-word;
         word-wrap: break-word;
       }
-
+      div.ie span.col-data {
+        word-break: break-all;
+      }
 
     </style>
 
@@ -93,7 +96,7 @@
 
         <template is="dom-repeat" items="{{dataItems}}">
           <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
-            <div slot="row-data" class="p-relative">
+            <div slot="row-data" class$="p-relative [[getIsIEClass()]]">
               <span class="col-data col-2">
                 [[_displayValue(item.title)]]
               </span>
@@ -138,8 +141,9 @@
      * @polymer
      * @customElement
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.IE11
      */
-    class StaffMembers extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
+    class StaffMembers extends EtoolsPmpApp.Mixins.EventHelper(EtoolsPmpApp.Mixins.IE11(Polymer.Element)) {
 
       static get properties() {
         return {
@@ -188,7 +192,9 @@
         super.disconnectedCallback();
         this._removeAddEditDialog();
       }
-
+      getIsIEClass() {
+        return this.isIEBrowser() ? 'ie' : '';
+      }
       dataItemsChanged() {
         this._sortInactiveLast();
       }
