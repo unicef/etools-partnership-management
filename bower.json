@@ -64,7 +64,8 @@
     "lodash": "^4.17.5",
     "moment-element": "^3.0.0",
     "etools-dialog": "^2.1.0",
-    "etools-dropdown": "^2.1.1"
+    "etools-dropdown": "^2.1.1",
+    "etools-behaviors": "2.0.2"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
