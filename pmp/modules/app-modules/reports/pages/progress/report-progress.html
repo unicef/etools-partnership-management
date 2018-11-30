@@ -241,7 +241,7 @@
       }
 
       _getClusterIndicatorClass(indicatorReport) {
-        return (indicatorReport && indicatorReport.is_cluster_indicator) ? 'cluster-indicator' : '';
+        return ((indicatorReport && indicatorReport.is_cluster_indicator) ? 'cluster-indicator' : '') + ' report-progress';
       }
 
       _noReportDataToShow(cpOutputs) {

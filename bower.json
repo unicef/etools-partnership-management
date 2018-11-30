@@ -14,14 +14,13 @@
     "dexie": "^2.0.1",
     "etools-ajax": "3.0.0",
     "etools-app-selector": "2.1.0",
-    "etools-behaviors": "2.0.0",
+    "etools-behaviors": "2.0.2",
     "etools-content-panel": "2.0.0",
     "etools-currency-amount-input": "2.0.0",
     "etools-data-table": "2.0.3",
     "etools-datepicker": "2.1.2",
     "etools-dialog": "2.1.2",
     "etools-dropdown": "2.1.1",
-    "etools-file": "2.0.1",
     "etools-info-tooltip": "2.0.1",
     "etools-loading": "3.0.0",
     "etools-piwik-analytics": "2.0.1",
@@ -36,6 +35,7 @@
     "iron-pages": "PolymerElements/iron-pages#^2.0.0",
     "iron-selector": "PolymerElements/iron-selector#^2.0.1",
     "lodash": "^4.17.5",
+    "moment-element": "^3.0.0",
     "paper-button": "PolymerElements/paper-button#^2.0.0",
     "paper-checkbox": "^2.0.2",
     "paper-dropdown-menu": "^2.0.2",
@@ -64,7 +64,8 @@
     "lodash": "^4.17.5",
     "moment-element": "^3.0.0",
     "etools-dialog": "^2.1.0",
-    "etools-dropdown": "^2.1.1"
+    "etools-dropdown": "^2.1.1",
+    "etools-behaviors": "2.0.2"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"

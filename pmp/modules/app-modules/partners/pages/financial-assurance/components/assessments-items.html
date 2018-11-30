@@ -17,13 +17,12 @@
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../../../styles/file-styles.html">
 <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
 
 <dom-module id="assessments-items">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles buttons-styles">
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -65,7 +64,7 @@
     <div class="row-h add-btn-wrapper">
       <paper-button hidden$="[[!editMode]]"
                     on-tap="_addNewAssessment"
-                    class$="secondary-btn [[_getAddBtnAdditionalClass(dataItems.length)]]">
+                    class$="[[_getAddBtnAdditionalClass(dataItems.length)]]">
         ADD OTHER ASSESSMENT
       </paper-button>
     </div>
@@ -324,7 +323,7 @@
       }
 
       _getAddBtnAdditionalClass(shownAssessmentsNumber) {
-        return shownAssessmentsNumber ? 'add-btn-lm' : '';
+        return (shownAssessmentsNumber ? 'add-btn-lm' : '') + ' secondary-btn';
       }
 
       _uploadFinished(e) {
