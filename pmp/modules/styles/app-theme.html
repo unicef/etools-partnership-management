@@ -168,9 +168,8 @@
         color: var(--secondary-text-color, #737373);
       };
 
-      /* Hide x btn on Edge,
-         because paper-input's internal value is not updated
-         when it's cleared by click on x btn
+      /* In Edge, paper-input's internal value is not updated
+         when it's cleared by click on x btn, so we're hiding the btn
       */
       --paper-input-container-ms-clear: {
           display: none;
