@@ -119,7 +119,7 @@
 
     _validateFilterSelectedValue(value, type, allowEmptyEsmm) {
       if (type === 'paper-toggle') {
-        return typeof value === 'boolean';
+        return ['true', 'false'].indexOf(String(value)) > -1;
       }
 
       if ((Array.isArray(value) && value.length === 0) && allowEmptyEsmm) {

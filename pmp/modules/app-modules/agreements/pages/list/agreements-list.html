@@ -108,7 +108,7 @@
           <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
               <div id="hiddenToggle" class="filter">
                 [[filter.filterName]]
-                <paper-toggle-button checked="[[filter.value]]"
+                <paper-toggle-button checked="[[filter.selectedValue]]"
                                      data-filter-path$="[[filter.path]]"
                                      on-checked-changed="toggleValueChanged"></paper-toggle-button>
               </div>
@@ -396,7 +396,7 @@
           {
             filterName: 'Special Conditions PCA',
             type: 'paper-toggle',
-            value: this.isSpecialConditionsPca,
+            selectedValue: this.isSpecialConditionsPca,
             path: 'isSpecialConditionsPca',
             selected: false
           }
@@ -437,7 +437,7 @@
               selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
               startDate: urlQueryParams.start ? urlQueryParams.start : '',
               endDate: urlQueryParams.end ? urlQueryParams.end : '',
-              isSpecialConditionsPca: urlQueryParams.special_conditions_pca ? true : false
+              isSpecialConditionsPca: urlQueryParams.special_conditions_pca
             }
         );
 
@@ -479,6 +479,10 @@
                 {
                   filterName: 'Ends Before',
                   selectedValue: this.endDate
+                },
+                {
+                  filterName: 'Special Conditions PCA',
+                  selectedValue: this.isSpecialConditionsPca
                 }
               ];
               this.updateShownFilters(filtersValues);
@@ -538,7 +542,7 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           sort: this.sortOrder,
-          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : 'false'
+          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : ''
         });
       }
 
