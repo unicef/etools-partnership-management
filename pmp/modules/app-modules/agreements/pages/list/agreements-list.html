@@ -538,7 +538,7 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           sort: this.sortOrder,
-          special_conditions_pca: this.isSpecialConditionsPca
+          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : 'false'
         });
       }
 
@@ -553,7 +553,7 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           search: this.q,
-          special_conditions_pca: this.isSpecialConditionsPca
+          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : 'false'
         };
         return this._buildCsvExportUrl(params, endpointUrl);
       }
