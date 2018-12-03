@@ -398,7 +398,7 @@
             type: 'paper-toggle',
             value: this.isSpecialConditionsPca,
             path: 'isSpecialConditionsPca',
-            selected: false,
+            selected: false
           }
         ]);
         this._updateSelectedFiltersValues();
@@ -538,7 +538,7 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           sort: this.sortOrder,
-          special_conditions_pca:  this.isSpecialConditionsPca
+          special_conditions_pca: this.isSpecialConditionsPca
         });
       }
 
@@ -553,7 +553,7 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           search: this.q,
-          special_conditions_pca:  this.isSpecialConditionsPca
+          special_conditions_pca: this.isSpecialConditionsPca
         };
         return this._buildCsvExportUrl(params, endpointUrl);
       }
