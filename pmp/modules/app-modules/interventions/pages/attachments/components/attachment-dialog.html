@@ -71,8 +71,8 @@
       <div class="row-h flex-c">
         <!-- Submitted to PRC? -->
         <etools-form-element-wrapper no-placeholder>
-          <paper-checkbox checked="[[!attachment.active]]" on-change="_archivedChanged">
-            Archived
+          <paper-checkbox checked="[[!attachment.active]]" on-change="_invalidChanged">
+            Invalid
           </paper-checkbox>
         </etools-form-element-wrapper>
       </div>
@@ -242,7 +242,7 @@
         return id && Number(id) > 0;
       }
 
-      _archivedChanged(e) {
+      _invalidChanged(e) {
         this.set('attachment.active', !e.target.checked);
       }
 
