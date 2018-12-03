@@ -89,7 +89,7 @@
 
       query(field, order, searchString, agreementTypes,
             agreementStatuses, selectedPartnerNames, startDate,
-            endDate, cpStructures, pageNumber, pageSize, showQueryLoading) {
+            endDate, cpStructures, isSpecialConditionsPca, pageNumber, pageSize, showQueryLoading) {
         // If an active query transaction exists, abort it and start
         // a new one
         if (this.currentQuery) {
@@ -144,6 +144,10 @@
             }
 
             if (!_.isEmpty(cpStructures) && cpStructures.indexOf(String(agreement.country_programme)) === -1) {
+              return false;
+            }
+
+            if (isSpecialConditionsPca && !agreement.special_conditions_pca) {
               return false;
             }
 
