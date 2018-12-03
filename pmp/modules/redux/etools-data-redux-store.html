@@ -197,7 +197,7 @@
         disaggregsCopy = state.disaggregations.slice(0);
 
         dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
-        if (dIndex > 0) {
+        if (dIndex >= 0) {
           disaggregsCopy.splice(dIndex, 1, action.disaggregation);
         }
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
