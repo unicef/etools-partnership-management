@@ -17,6 +17,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
@@ -105,12 +106,25 @@
             </etools-date-input>
           </template>
 
-          <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
+          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
               <div id="hiddenToggle" class="filter">
-                [[filter.filterName]]
-                <paper-toggle-button checked="[[filter.selectedValue]]"
-                                     data-filter-path$="[[filter.path]]"
-                                     on-checked-changed="toggleValueChanged"></paper-toggle-button>
+                <etools-dropdown
+                  class="filter"
+                  label="[[filter.filterName]]"
+                  placeholder="Select"
+                  disabled$="[[!filter.selectionOptions.length]]"
+                  options="[[filter.selectionOptions]]"
+                  option-value="[[filter.optionValue]]"
+                  option-label="[[filter.optionLabel]]"
+                  selected="{{filter.alreadySelected}}"
+                  on-selected-changed="filterValueChanged"
+                  data-filter-path$="[[filter.path]]"
+                  hide-search="[[filter.hideSearch]]"
+                  min-width="[[filter.minWidth]]"
+                  horizontal-align="left"
+                  no-dynamic-align
+                  enable-none-option>
+              </etools-dropdown>
               </div>
             </template>
 
@@ -305,8 +319,8 @@
             value: ['agreement_number', 'partner_name', 'start', 'end']
           },
           isSpecialConditionsPca: {
-            type: Boolean,
-            value: false
+            type: String,
+            value: null
           }
         };
       }
@@ -395,11 +409,17 @@
           },
           {
             filterName: 'Special Conditions PCA',
-            type: 'paper-toggle',
-            selectedValue: this.isSpecialConditionsPca,
+            type: 'dropdown',
+            singleSelection: true,
+            selectionOptions: [{value: 'true' , label: 'Yes'}, {value: 'false', label: 'No'}],
+            optionValue: 'value',
+            optionLabel: 'label',
+            alreadySelected: null,
             path: 'isSpecialConditionsPca',
-            selected: false
-          }
+            minWidth: '350px',
+            hideSearch: true,
+            allowEmpty: true
+          },
         ]);
         this._updateSelectedFiltersValues();
       }
@@ -522,7 +542,7 @@
                   this.startDate,
                   this.endDate,
                   this.selectedCPStructures,
-                  this.isSpecialConditionsPca,
+                  this._getIsSpecialConditionsPca(),
                   this.paginator.page,
                   this.paginator.page_size,
                   forceNoLoading ? false : this.showQueryLoading
@@ -543,7 +563,7 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           sort: this.sortOrder,
-          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : ''
+          special_conditions_pca: this._getIsSpecialConditionsPca()
         });
       }
 
@@ -558,9 +578,16 @@
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
           search: this.q,
-          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : 'false'
+          special_conditions_pca: this._getIsSpecialConditionsPca()
         };
         return this._buildCsvExportUrl(params, endpointUrl);
+      }
+
+      _getIsSpecialConditionsPca() {
+        if (this.isSpecialConditionsPca === null || typeof this.isSpecialConditionsPca === 'undefined') {
+          return '';
+        }
+        return this.isSpecialConditionsPca;
       }
 
       _arrayFilterChanged(filterVal, oldFilterVals) {
