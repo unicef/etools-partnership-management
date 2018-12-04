@@ -11,6 +11,7 @@
 <link rel="import" href="../../../../../../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../../../../../../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
@@ -103,6 +104,15 @@
                                show-clear-btn>
             </etools-date-input>
           </template>
+
+          <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
+              <div id="hiddenToggle" class="filter">
+                [[filter.filterName]]
+                <paper-toggle-button checked="[[filter.selectedValue]]"
+                                     data-filter-path$="[[filter.path]]"
+                                     on-checked-changed="toggleValueChanged"></paper-toggle-button>
+              </div>
+            </template>
 
         </template>
       </div>
@@ -293,6 +303,10 @@
           _sortableFieldNames: {
             type: Array,
             value: ['agreement_number', 'partner_name', 'start', 'end']
+          },
+          isSpecialConditionsPca: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -304,7 +318,8 @@
           '_initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes)',
           '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
           'selectedPartners, selectedCPStructures.length,' +
-          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded,' +
+          'initComplete, isSpecialConditionsPca)',
           '_init(active)'
         ];
       }
@@ -377,6 +392,13 @@
             selected: true,
             minWidth: '350px',
             hideSearch: true
+          },
+          {
+            filterName: 'Special Conditions PCA',
+            type: 'paper-toggle',
+            selectedValue: this.isSpecialConditionsPca,
+            path: 'isSpecialConditionsPca',
+            selected: false
           }
         ]);
         this._updateSelectedFiltersValues();
@@ -414,7 +436,8 @@
               selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
               selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
               startDate: urlQueryParams.start ? urlQueryParams.start : '',
-              endDate: urlQueryParams.end ? urlQueryParams.end : ''
+              endDate: urlQueryParams.end ? urlQueryParams.end : '',
+              isSpecialConditionsPca: urlQueryParams.special_conditions_pca
             }
         );
 
@@ -456,6 +479,11 @@
                 {
                   filterName: 'Ends Before',
                   selectedValue: this.endDate
+                },
+                {
+                  filterName: 'Special Conditions PCA',
+                  selectedValue: this.isSpecialConditionsPca,
+                  allowEmpty: true
                 }
               ];
               this.updateShownFilters(filtersValues);
@@ -494,6 +522,7 @@
                   this.startDate,
                   this.endDate,
                   this.selectedCPStructures,
+                  this.isSpecialConditionsPca,
                   this.paginator.page,
                   this.paginator.page_size,
                   forceNoLoading ? false : this.showQueryLoading
@@ -513,7 +542,8 @@
           start: this.startDate,
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
-          sort: this.sortOrder
+          sort: this.sortOrder,
+          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : ''
         });
       }
 
@@ -527,7 +557,8 @@
           start: this.startDate,
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
-          search: this.q
+          search: this.q,
+          special_conditions_pca: this.isSpecialConditionsPca ? 'true' : 'false'
         };
         return this._buildCsvExportUrl(params, endpointUrl);
       }
