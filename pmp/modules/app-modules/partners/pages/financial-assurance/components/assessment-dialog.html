@@ -144,7 +144,7 @@
 
       validate() {
         let isValid = true;
-        this._validationSelectors.forEach(selector => {
+        this._validationSelectors.forEach((selector) => {
           let el = this.shadowRoot.querySelector(selector);
           if (el && !el.validate()) {
             isValid = false;
@@ -163,7 +163,7 @@
 
 
       resetValidations() {
-        this._validationSelectors.forEach(selector => {
+        this._validationSelectors.forEach((selector) => {
           let el = this.shadowRoot.querySelector(selector);
           if (el) {
             el.invalid = false;
