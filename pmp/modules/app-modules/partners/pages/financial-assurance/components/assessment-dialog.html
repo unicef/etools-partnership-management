@@ -1,0 +1,187 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../../bower_components/etools-upload/etools-upload.html">
+
+<link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
+<link rel="import" href="../../../../../layout/components/etools-date-input.html">
+<link rel="import" href="../../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../styles/required-field-styles.html">
+
+<dom-module id="assessment-dialog">
+  <template>
+    <style include="grid-layout-styles required-field-starred-styles">
+      :host {
+        display: block
+      }
+
+      .padd-left {
+        padding-left: 48px !important;
+      }
+    </style>
+
+    <etools-dialog no-padding
+        keep-dialog-open
+        id="assessmentDialog"
+        opened="{{opened}}"
+        size="md"
+        ok-btn-text="Save"
+        dialog-title="Assessment"
+        on-confirm-btn-clicked="_validateAndSaveAssessment"
+        disable-confirm-btn="[[uploadInProgress]]"
+        disable-dismiss-btn="[[uploadInProgress]]">
+
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <etools-dropdown id="assessmentType"
+                            label="Assessment Type"
+                            placeholder="&#8212;"
+                            options="[[assessmentTypes]]"
+                            selected="{{assessment.type}}"
+                            error-message="Please select Assessment Type"
+                            hide-search
+                            required
+                            auto-validate></etools-dropdown>
+          </div>
+          <div class="col col-5 padd-left">
+            <required-and-not-future-date-validator validator-name="dateSubmittedValidator"
+                                                    field-selector="#dateSubmitted">
+            </required-and-not-future-date-validator>
+            <etools-date-input id="dateSubmitted"
+                              label="Date of Assessment"
+                              value="{{assessment.completed_date}}"
+                              auto-validate
+                              required-and-not-future-date
+                              validator="dateSubmittedValidator"
+                              no-init show-clear-btn
+                              required>
+            </etools-date-input>
+          </div>
+        </div>
+        <div class="row-h">
+          <etools-upload id="report"
+                        label="Report"
+                        accept=".doc,.docx,.pdf,.jpg,.png"
+                        file-url="[[assessment.report_attachment]]"
+                        upload-endpoint="[[uploadEndpoint]]"
+                        on-upload-finished="_uploadFinished"
+                        required
+                        error-message="Please select the report file"
+                        on-upload-started="_onUploadStarted">
+          </etools-upload>
+        </div>
+        <div class="row-h">
+          <paper-checkbox checked="{{assessment.archived}}">
+            Archived
+          </paper-checkbox>
+        </div>
+
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     * @extends {Polymer.Element}
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    class AssessmentDialog extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(Polymer.Element) {
+
+      static get is() {
+        return 'assessment-dialog';
+      }
+
+      static get properties() {
+        return {
+          assessment: {
+            type: Object
+          },
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          },
+          opened: {
+            type: Boolean,
+            notify: true
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false
+          },
+          assessmentModel: {
+            type: Object,
+            value: {
+              type: null,
+              completed_date: null,
+              current: false,
+              report_attachment: null
+            }
+          },
+          assessmentTypes: {
+            type: Array,
+            statePath: 'assessmentTypes'
+          },
+          _validationSelectors: {
+            type: Array,
+            value: [
+              '#assessmentType', '#dateSubmitted', '#report'
+            ]
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+
+
+      }
+
+      validate() {
+        let isValid = true;
+        this._validationSelectors.forEach(selector => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el && !el.validate()) {
+            isValid = false;
+          }
+        });
+
+        return isValid;
+      }
+
+      _validateAndSaveAssessment() {
+        if (!this.validate()) {
+          return;
+        }
+        this._saveAssessment(Object.assign({}, this.attachment));
+      }
+
+
+      resetValidations() {
+        this._validationSelectors.forEach(selector => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el) {
+            el.invalid = false;
+          }
+        });
+      }
+
+      initAssessment(assessment) {
+        if (!assessment) {
+          assessment = JSON.parse(JSON.stringify(this.assessmentModel));
+        }
+
+        this.assessment = assessment;
+        this.resetValidations();
+      }
+
+    }
+
+    window.customElements.define(AssessmentDialog.is, AssessmentDialog);
+  </script>
+</dom-module>
