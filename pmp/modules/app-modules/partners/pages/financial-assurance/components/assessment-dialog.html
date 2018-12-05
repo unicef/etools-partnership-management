@@ -3,7 +3,10 @@
 <link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../../bower_components/etools-upload/etools-upload.html">
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
+<link rel="import" href="../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../redux/etools-data-redux-store.html">
@@ -14,7 +17,7 @@
   <template>
     <style include="grid-layout-styles required-field-starred-styles">
       :host {
-        display: block
+        display: block;
       }
 
       .padd-left {
@@ -68,8 +71,10 @@
                         upload-endpoint="[[uploadEndpoint]]"
                         on-upload-finished="_uploadFinished"
                         required
+                        readonly="[[_hasId(assessment.id)]]"
+                        show-change="[[!_hasId(assessment.id)]]"
                         error-message="Please select the report file"
-                        on-upload-started="_onUploadStarted">
+                        allow-multiline-filename>
           </etools-upload>
         </div>
         <div class="row-h">
@@ -88,8 +93,21 @@
      * @polymer
      * @extends {Polymer.Element}
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
-    class AssessmentDialog extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(Polymer.Element) {
+    const AssessmentDialogMixins = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
+    ], Polymer.Element)
+
+     /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AssessmentDialogMixins
+     */
+    class AssessmentDialog extends AssessmentDialogMixins {
 
       static get is() {
         return 'assessment-dialog';
@@ -138,8 +156,13 @@
 
       ready() {
         super.ready();
+      }
 
-
+      _uploadFinished(e) {
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set('assessment.report_attachment', uploadResponse.id);
+        }
       }
 
       validate() {
@@ -158,9 +181,40 @@
         if (!this.validate()) {
           return;
         }
-        this._saveAssessment(Object.assign({}, this.attachment));
+        this._saveAssessment();
       }
 
+      _saveAssessment() {
+        const isNew = !this.assessment.id;
+        let options = {
+          method : isNew ? 'POST' : 'PATCH',
+          endpoint: this.getEndpoint('TODO'),
+          body: this.assessment
+        }
+        this.sendRequest(options)
+            .then((resp) => {
+              this._handleResponse(resp, isNewAttachment);
+              this.stopSpinner();
+            }).catch((error) => {
+              this._handleErrorResponse(error);
+              this.stopSpinner();
+            });
+
+      }
+
+      _handleResponse(response) {
+        this.set('opened', false);
+      }
+      _handleErrorResponse(error) {
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+      }
+      startSpinner() {
+        this.$.assessmentDialog.startSpinner();
+      }
+
+      stopSpinner() {
+        this.$.assessmentDialog.stopSpinner();
+      }
 
       resetValidations() {
         this._validationSelectors.forEach((selector) => {
@@ -178,6 +232,10 @@
 
         this.assessment = assessment;
         this.resetValidations();
+      }
+
+      _hasId(id) {
+        return !!id;
       }
 
     }
