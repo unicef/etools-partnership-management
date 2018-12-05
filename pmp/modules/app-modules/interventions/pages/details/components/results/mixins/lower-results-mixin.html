@@ -30,9 +30,22 @@
       this._initLowerResultsListeners();
     }
 
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this._removeLowerResultsListeners();
+    }
+
     _initLowerResultsListeners() {
-      this.addEventListener('add-new-lower-result', this._handleAddNewLowerResult.bind(this));
-      this.addEventListener('edit-lower-result', this._handleEditLowerResult.bind(this));
+      this._handleAddNewLowerResult = this._handleAddNewLowerResult.bind(this);
+      this._handleEditLowerResult = this._handleEditLowerResult.bind(this);
+
+      this.addEventListener('add-new-lower-result', this._handleAddNewLowerResult);
+      this.addEventListener('edit-lower-result', this._handleEditLowerResult);
+    }
+
+    _removeLowerResultsListeners() {
+      this.removeEventListener('add-new-lower-result', this._handleAddNewLowerResult);
+      this.removeEventListener('edit-lower-result', this._handleEditLowerResult);
     }
 
     createLowerResultNameDialog() {
@@ -41,14 +54,16 @@
         this.lowerResultNameEditElem = document.createElement('pd-lower-result-name');
         this.lowerResultNameEditElem.setAttribute('id', 'pdLowerResultName');
         this.lowerResultNameEditElem.set('toastEventSource', this);
-        this.lowerResultNameEditElem.addEventListener('lower-result-saved',
-            this._lowerResultSaved.bind(this));
+
+        this._lowerResultSaved = this._lowerResultSaved.bind(this);
+        this.lowerResultNameEditElem.addEventListener('lower-result-saved', this._lowerResultSaved);
         document.querySelector('body').appendChild(this.lowerResultNameEditElem);
       }
     }
 
     removeLowerResultNameDialog() {
       if (this.lowerResultNameEditElem) {
+        this.lowerResultNameEditElem.removeEventListener('lower-result-saved', this._lowerResultSaved);
         document.querySelector('body').removeChild(this.lowerResultNameEditElem);
       }
     }

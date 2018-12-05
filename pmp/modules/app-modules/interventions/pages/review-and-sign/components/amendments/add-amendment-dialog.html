@@ -4,35 +4,26 @@
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-upload/etools-upload.html">
 
-<link rel="import" href="../../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../../../config/app-constants.html">
 
-<link rel="import" href="../../../../../../layout/components/etools-single-file.html">
 <link rel="import" href="../../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../../layout/components/etools-warn-message.html">
 <link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
 
 <link rel="import" href="../../../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../../../styles/file-styles.html">
 <link rel="import" href="../../../../../../styles/buttons-styles.html">
 <link rel="import" href="../../../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../../../styles/required-field-styles.html">
 
 <dom-module id="add-amendment-dialog">
   <template>
-    <style include="grid-layout-styles buttons-styles file-styles shared-styles required-field-starred-styles">
-
-      :host {
-        --etools-file-upload-button: {
-          /* overrides previus color, possibly from pd-attachements */
-          color: var(--etools-file-main-btn-color);
-        };
-      }
+    <style include="grid-layout-styles buttons-styles shared-styles required-field-starred-styles">
 
       paper-input#other {
         width: 100%;
@@ -53,7 +44,9 @@
                    hidden$="[[datePickerOpen]]"
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
-                   on-confirm-btn-clicked="_validateAndSaveAmendment">
+                   on-confirm-btn-clicked="_validateAndSaveAmendment"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
 
       <div class="row-h flex-c">
         <required-and-not-future-date-validator validator-name="signedDate_validator"
@@ -67,6 +60,7 @@
                            open="{{datePickerOpen}}"
                            validator="signedDate_validator"
                            auto-validate
+                           required
                            no-init show-clear-btn>
         </etools-date-input>
       </div>
@@ -77,8 +71,8 @@
                                placeholder="&#8212;"
                                options="[[filteredAmendmentTypes]]"
                                selected-values="{{newAmendment.types}}"
-                               required
                                hide-search
+                               required auto-validate
                                error-message="Type is required">
         </etools-dropdown-multi>
       </div>
@@ -99,23 +93,27 @@
       </div>
       <div class="row-h flex-c">
         <!-- Signed Agreement -->
-        <etools-single-file id="signed-agreement-upload"
-                            label="Signed Agreement"
-                            internal-file="[[newAmendment.signed_amendment_file]]"
-                            file="{{newAmendment.signed_amendment}}"
-                            accept=".doc,.docx,.pdf,.jpg,.png"
-                            error-message="Attachment required"
-                            required
-                            auto-validate>
-        </etools-single-file>
+        <etools-upload id="signed-agreement-upload"
+                       label="Signed Amendment"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[newAmendment.signed_amendment_attachment]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       on-upload-finished="_amendmentUploadFinished"
+                       required
+                       auto-validate
+                       upload-in-progress="{{amdUploadInProgress}}"
+                       error-message="Attachment required">
+        </etools-upload>
       </div>
       <div class="row-h flex-c">
-        <etools-single-file id="prc-review-upload"
-                            label="Internal / PRC Reviews"
-                            internal-file="[[newAmendment.internal_prc_review_file]]"
-                            file="{{newAmendment.internal_prc_review}}"
-                            accept=".doc,.docx,.pdf,.jpg,.png">
-        </etools-single-file>
+        <etools-upload id="prc-review-upload"
+                       label="Internal / PRC Reviews"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[newAmendment.internal_prc_review]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       upload-in-progress="{{prcUploadInProgress}}"
+                       on-upload-finished="_prcReviewUploadFinished">
+        </etools-upload>
       </div>
     </etools-dialog>
 
@@ -191,12 +189,33 @@
               'types': [],
               'other_description': null,
               'signed_date': null,
-              'signed_amendment': null,
-              'signed_amendment_file': '',
+              'signed_amendment_attachment': null,
               'amendment_number': null,
-              'internal_prc_review': null,
-              'internal_prc_review_file': null
+              'internal_prc_review': null
             }
+          },
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          },
+          _validationSelectors: {
+            type: Array,
+            value: ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other']
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false,
+            computed: 'setUploadInProgress(amdUploadInProgress, prcUploadInProgress)'
+          },
+          amdUploadInProgress: {
+            type: Boolean,
+            value: false
+          },
+          prcUploadInProgress: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -207,9 +226,13 @@
         ];
       }
 
-      ready() {
-        super.ready();
+      connectedCallback() {
+        super.connectedCallback();
         this.resetAmendment();
+      }
+
+      setUploadInProgress(amdInProgress, prcInProgress) {
+         return amdInProgress || prcInProgress;
       }
 
       resetAmendment() {
@@ -236,6 +259,10 @@
         } else {
           this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
         }
+        const typesDropdw = this.shadowRoot.querySelector('#amendment-types');
+        if (typesDropdw) {
+          typesDropdw.set('invalid', false); // to fix eager validation
+        }
       }
 
       _showOtherInput() {
@@ -244,53 +271,16 @@
       }
 
       isValidAmendment() {
-        let isValid1 = this._validateAmendmentTypes();
-        let isValid2 = this._validateOtherInput();
-        let isValid3 = this._validateSignedDate();
-        let isValid4 = this._validateFileUpload(this.newAmendment);
-
-        return (isValid1 && isValid2 && isValid3 && isValid4);
-      }
-
-      _validateOtherInput() {
-        let valid = true;
-        if (this._showOtherInput()) {
-          let otherEl = this.shadowRoot.querySelector('#other');
-          if (otherEl && !otherEl.validate()) {
-            valid = false;
-          }
-        }
-        return valid;
-      }
-
-      _validateAmendmentTypes() {
-        let valid = true;
-        let typeEl = this.shadowRoot.querySelector('#amendment-types');
-        if (typeEl && !typeEl.validate()) {
-          valid = false;
-        }
-        return valid;
-      }
-
-      _validateFileUpload(amendment) {
-        let valid = true;
-        let fileUplodEl = this.shadowRoot.querySelector('#signed-agreement-upload');
-        if (fileUplodEl) {
-          valid = !!amendment.signed_amendment;
-          fileUplodEl.invalid = !valid;
-        }
-        return valid;
-      }
-
-      _validateSignedDate() {
         let isValid = true;
-
-        let signedDateEl = this.shadowRoot.querySelector('#signed-date');
-        if (signedDateEl) {
-          if (!signedDateEl.validate()) {
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (selector === '#other' && !this._showOtherInput()) {
+            return;
+          }
+          if (el && !el.validate()) {
             isValid = false;
           }
-        }
+        });
         return isValid;
       }
 
@@ -300,22 +290,12 @@
       }
 
       _resetAmendmentValidations() {
-        let typeEl = this.shadowRoot.querySelector('#amendment-types');
-        if (typeEl) {
-          typeEl.invalid = false;
-        }
-        let signedDateEl = this.shadowRoot.querySelector('#signed-date');
-        if (signedDateEl) {
-          signedDateEl.invalid = false;
-        }
-        let fileUpload = this.shadowRoot.querySelector('#signed-agreement-upload');
-        if (fileUpload) {
-          fileUpload.invalid = false;
-        }
-        let otherField = this.shadowRoot.querySelector('#other');
-        if (otherField) {
-          otherField.invalid = false;
-        }
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el) {
+            el.set('invalid', false);
+          }
+        });
       }
 
       _getSelectedAmendmentTypeWarning(types) {
@@ -348,74 +328,50 @@
         if (!this.isValidAmendment()) {
           return;
         }
-        this.startSpinner();
-
-        delete this.newAmendment.internal_prc_review_file;
-
-        if (this.newAmendment.internal_prc_review) {
-
-          this._uploadPrcReviewAttachment(this.newAmendment.internal_prc_review)
-          .then(response => this._saveAmendment(this.newAmendment, response.id))
-          .catch(err => this._handleErrorResponse(err, true));
-
-        } else {
-          delete this.newAmendment.internal_prc_review;
-          this._saveAmendment(this.newAmendment);
-        }
-
+        this._saveAmendment(this.newAmendment);
       }
 
-      _saveAmendment(newAmendment, prcRevAttachmentId) {
-        if (prcRevAttachmentId) {
-          newAmendment.internal_prc_review = prcRevAttachmentId;
+      _saveAmendment(newAmendment) {
+        if (!newAmendment.internal_prc_review) {
+          delete newAmendment.internal_prc_review;
         }
-
         let options = {
           method: 'POST',
           endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId}),
-          body: newAmendment,
-          multiPart: true,
-          prepareMultipartData: true
+          body: newAmendment
         };
-
+        this.startSpinner();
         this.sendRequest(options)
             .then((resp) => {
               this._handleResponse(resp);
+              this.stopSpinner();
             }).catch((error) => {
               this._handleErrorResponse(error);
-        });
-      }
-
-      _uploadPrcReviewAttachment(file) {
-        let options = {
-          method: 'POST',
-          endpoint: this.getEndpoint('attachmentsUpload'),
-          body: {file: file},
-          multiPart: true,
-          prepareMultipartData: true
-        };
-        return this.sendRequest(options)
-            .then((resp) => {
-              return resp;
-            }).catch((error) => {
-              throw new Error('Error uploading Internal PRC Review Attachment');
+              this.stopSpinner();
         });
       }
 
       _handleResponse(response) {
         this.set('opened', false);
         this.fireEvent('amendment-added', response);
-        this.stopSpinner();
       }
 
-      _handleErrorResponse(error, doNotParseError) {
-        this.stopSpinner();
-        if (doNotParseError) {
-          this.showErrorAsToastMsg(error.message, this.toastEventSource);
-        } else {
-          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
-        }
+      _handleErrorResponse(error) {
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+      }
 
+      _amendmentUploadFinished(e) {
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set('newAmendment.signed_amendment_attachment', uploadResponse.id);
+        }
+      }
+
+      _prcReviewUploadFinished(e) {
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set('newAmendment.internal_prc_review', uploadResponse.id);
+        }
       }
     }
 

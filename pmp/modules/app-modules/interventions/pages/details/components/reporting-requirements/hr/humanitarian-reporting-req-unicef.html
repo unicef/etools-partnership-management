@@ -106,17 +106,22 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.editHruDialog) {
-          document.querySelector('body').removeChild(this.editHruDialog);
-        }
+        this._removeEditHruDialog();
       }
 
       _createEditHruDialog() {
+        this._reportingRequirementsSaved = this._reportingRequirementsSaved.bind(this);
         this.editHruDialog = document.createElement('edit-hru-dialog');
         this.editHruDialog.set('toastMsgLoadingSource', this);
-        this.editHruDialog.addEventListener('reporting-requirements-saved',
-            this._reportingRequirementsSaved.bind(this));
+        this.editHruDialog.addEventListener('reporting-requirements-saved', this._reportingRequirementsSaved);
         document.querySelector('body').appendChild(this.editHruDialog);
+      }
+
+      _removeEditHruDialog() {
+        if (this.editHruDialog) {
+          this.editHruDialog.removeEventListener('reporting-requirements-saved', this._reportingRequirementsSaved);
+          document.querySelector('body').removeChild(this.editHruDialog);
+        }
       }
 
       _reportingRequirementsSaved(e) {

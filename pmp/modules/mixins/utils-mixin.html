@@ -96,14 +96,17 @@
         return value ? value : defaultValue;
       }
 
-       _formatIndicatorValue(displayType, value) {
+       _formatIndicatorValue(displayType, value, percentize) {
         if (value == null) {
           return value;
         }
 
          switch (displayType) {
           case 'percentage':
-            return this._formatNumber(value, '-', 2, '\,') + '%';
+          {
+            let val = percentize ? Math.floor(value * 100) : value;
+            return this._formatNumber(val, '-', 2, '\,') + '%';
+          }
           case 'ratio':
             return this._formatNumber(value, '-', 2, '\,') + ':1';
           case 'number':
@@ -113,8 +116,34 @@
         }
       }
 
+      // For simple objects, no nesting
+      objectsAreTheSame(obj1, obj2) {
+        if (obj1 === obj2) {
+          return true;
+        }
+        if (!obj1 && !obj2) {
+          return true;
+        }
+        let props1 = obj1 ? Object.keys(obj1) : {};
+        let props2 = obj2 ? Object.keys(obj2) : {};
+
+        if (props1.length !== props2.length) {
+          return false;
+        }
+        if (props1.length === 0) {
+          return true;
+        }
+
+        let areDiff = false;
+        props1.forEach((p) => {
+          if( obj1[p] !== obj2[p]) {
+            areDiff = true;
+          }
+        });
+        return !areDiff;
+      }
+
     };
 
   }());
 </script>
-

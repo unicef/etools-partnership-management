@@ -4,11 +4,12 @@
 <link rel="import" href="../../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../../../bower_components/etools-upload/etools-upload.html">
 
 <link rel="import" href="../../../../../../validators/required-and-not-future-date-validator.html">
 <link rel="import" href="../../../../../../layout/components/etools-date-input.html">
-<link rel="import" href="../../../../../../layout/components/etools-single-file.html">
 
+<link rel="import" href="../../../../../../endpoints/endpoints.html">
 <link rel="import" href="../../../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../../../styles/shared-styles.html">
@@ -33,7 +34,9 @@
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
                    on-close="_handleDialogClosed"
-                   on-confirm-btn-clicked="_validateAndSaveAmendment">
+                   on-confirm-btn-clicked="_validateAndSaveAmendment"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
 
       <div class="row-h flex-c">
         <div class="col col-4">
@@ -46,6 +49,8 @@
                              value="{{amendment.signed_date}}"
                              error-message="Please select signed date"
                              no-init show-clear-btn
+                             required
+                             open="{{datePickerOpen}}"
                              validator="ag_am_signed_date_validator"
                              auto-validate="[[autoValidate]]"
                              required-and-not-future-date>
@@ -54,15 +59,17 @@
       </div>
       <div class="row-h flex-c">
         <!-- Signed Agreement -->
-        <etools-single-file id="signedAmendment"
-                            label="Signed Amendment"
-                            file="{{amendment.signed_amendment}}"
-                            internal-file="{{amendment.signed_amendment_file}}"
-                            error-message="Signed Amendment file is required"
-                            required
-                            auto-validate="[[autoValidate]]"
-                            accept=".doc,.docx,.pdf,.jpg,.png">
-        </etools-single-file>
+        <etools-upload id="signedAmendment"
+                       label="Signed Amendment"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[amendment.signed_amendment_attachment]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       on-upload-finished="_uploadFinished"
+                       required
+                       upload-in-progress="{{uploadInProgress}}"
+                       auto-validate="[[autoValidate]]"
+                       error-message="Signed Amendment file is required">
+        </etools-upload>
       </div>
 
       <div class="row-h flex-c">
@@ -124,6 +131,12 @@
             type: Boolean,
             value: false
           },
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          },
           amendmentTypes: {
             type: Array,
             value: []
@@ -135,8 +148,7 @@
               id: null,
               signed_date: null,
               types: [],
-              signed_amendment: null,
-              signed_amendment_file: null
+              signed_amendment_attachment: null
             }
           },
           autoValidate: {
@@ -162,6 +174,10 @@
           _validationSelectors: {
             type: Array,
             value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -225,6 +241,13 @@
           return false;
         }
         return this.amendment.types.indexOf('Change authorized officer') > -1;
+      }
+
+      _uploadFinished(e) {
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set('amendment.signed_amendment_attachment', uploadResponse.id);
+        }
       }
 
     }

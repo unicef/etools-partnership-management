@@ -111,6 +111,7 @@
             <paper-input label="Baseline"
                          value="{{indicator.baseline.v}}"
                          type="number"
+                         allowed-pattern="[0-9\.]"
                          placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
@@ -163,7 +164,7 @@
               value="{{indicator.baseline.d}}"
               type="number"
               min="1"
-              allowed-pattern="[0-9\.]"
+              allowed-pattern="[1-9\.]"
               placeholder="Denominator" disabled="[[baselineIsUnknown]]">
           </paper-input>
         </div>
@@ -183,8 +184,9 @@
                        min="1"
                        required
                        auto-validate
-                       allowed-pattern="[0-9\.]"
-                       placeholder="Denominator">
+                       allowed-pattern="[1-9\.]"
+                       placeholder="Denominator"
+                       readonly$="[[isReadonlyDenominator(interventionStatus)]]">
           </paper-input>
         </div>
       </template>
@@ -216,7 +218,8 @@
                              required
                              auto-validate
                              error-message="Please select locations"
-                             disable-on-focus-handling>
+                             disable-on-focus-handling
+                             fit-into="etools-dialog">
       </etools-dropdown-multi>
     </div>
   </template>
@@ -254,6 +257,9 @@
           },
           baselineIsUnknown: {
             type: Boolean
+          },
+          interventionStatus: {
+            type: String
           }
         };
       }
@@ -282,6 +288,13 @@
           this.baselineIsUnknown = !(indicator.baseline) || this._isEmptyExcept0(indicator.baseline.v);
           this.readonly = true;
         }
+      }
+
+      isReadonlyDenominator(interventionStatus) {
+        if (['', 'draft', 'signed'].indexOf(interventionStatus) > 0) {
+          return false;
+        }
+        return true;
       }
 
       _readonlyChanged(newVal, oldVal) {

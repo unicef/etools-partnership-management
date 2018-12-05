@@ -14,12 +14,13 @@
 <link rel="import" href="../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../styles/etools-cp-header-actions-bar-styles.html">
 <link rel="import" href="../../../../../mixins/ie11-mixin.html">
 <link rel="import" href="add-edit-staff-members.html">
 
 <dom-module id="staff-members">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles data-table-styles">
+    <style include="grid-layout-styles shared-styles data-table-styles etools-cp-header-actions-bar-styles">
       [hidden] {
         display: none !important;
       }
@@ -29,29 +30,8 @@
         width: 100%;
       }
 
-      paper-icon-button[disabled] {
-        visibility: hidden;
-      }
-
       etools-content-panel {
         margin-top: 24px;
-      }
-
-      paper-toggle-button {
-        --paper-toggle-button-label-color: white;
-        --paper-toggle-button-checked-bar-color: white;
-        padding-right: 10px;
-        font-size: 16px;
-      }
-
-      div[slot="panel-btns"] {
-        @apply --layout-horizontal;
-      }
-
-      .separator {
-        border-left: solid 1px var(--light-secondary-text-color);
-        padding-right: 10px;
-        margin: 6px 0 6px 10px;
       }
 
       icons-actions {
@@ -77,7 +57,7 @@
 
     <etools-content-panel class="content-section" panel-title="Partner Contacts ([[dataItems.length]])"
                           show-expand-btn>
-      <div slot="panel-btns">
+      <div slot="panel-btns" class="cp-header-actions-bar">
         <paper-toggle-button id="showInactive"
                 checked="{{showInactive}}">
           Show Inactive
@@ -133,6 +113,7 @@
                 [[_displayValue(item.email)]]
               </span>
               <span class="col-data col-2 center-align">
+                <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
                 <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
               </span>
               <icons-actions item$="[[item]]"
@@ -209,9 +190,7 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.addEditDialog) {
-          document.querySelector('body').removeChild(this.addEditDialog);
-        }
+        this._removeAddEditDialog();
       }
       getIsIEClass() {
         return this.isIEBrowser() ? 'ie' : '';
@@ -230,10 +209,17 @@
       }
 
       _createAddEditDialog() {
+        this._savePartnerContact = this._savePartnerContact.bind(this);
         this.addEditDialog = document.createElement('add-edit-staff-members');
-        this.addEditDialog.addEventListener('save-partner-contact',
-            this._savePartnerContact.bind(this));
+        this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact);
         document.querySelector('body').appendChild(this.addEditDialog);
+      }
+
+      _removeAddEditDialog() {
+        if (this.addEditDialog) {
+          this.addEditDialog.removeEventListener('save-partner-contact', this._savePartnerContact);
+          document.querySelector('body').removeChild(this.addEditDialog);
+        }
       }
 
       _addPartnerContact() {
