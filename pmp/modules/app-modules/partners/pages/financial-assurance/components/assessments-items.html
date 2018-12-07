@@ -101,28 +101,25 @@
           <etools-data-table-column class="col-2">
             Date of Assessment
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-5">
             Report
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Archived
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
-            <!-- Actions -->
-          </etools-data-table-column>
         </etools-data-table-header>
 
 
         <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.archived, showArchived)]]">
-                <div slot="row-data">
+            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
+                <div slot="row-data" class="p-relative">
                   <span class="col-data col-3">
                     [[item.type]]
                   </span>
                   <span class="col-data col-2">
-                    [[prettyDate(item.created)]]
+                    [[prettyDate(item.completed_date)]]
                   </span>
-                  <span class="col-data col-4">
+                  <span class="col-data col-5">
                     <iron-icon icon="attachment" class="attachment"></iron-icon>
                     <span class="break-word file-label">
                       <!-- target="_blank" is there for IE -->
@@ -135,13 +132,11 @@
                     <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                     <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
                   </span>
-                  <span class="col-data flex-c p-relative">
-                    <icons-actions item-id$="[[item.id]]"
-                                   hidden$="[[!editMode]]"
-                                   on-edit="_editAssessment"
-                                   show-delete="[[showDelete]]">
-                    </icons-actions>
-                  </span>
+                  <icons-actions item-id$="[[item.id]]"
+                                  hidden$="[[!editMode]]"
+                                  on-edit="_editAssessment"
+                                  show-delete="[[showDelete]]">
+                  </icons-actions>
                 </div>
               </etools-data-table-row>
 
@@ -186,6 +181,9 @@
 
       static get properties() {
         return {
+          partnerId: {
+            type: Number
+          },
           open: {
             type: Boolean,
             value: true,
@@ -212,20 +210,56 @@
 
       ready() {
         super.ready();
-        this._createAddAssessmentDialog();
+        this._createAssessmentDialog();
       }
 
-      _createAddAssessmentDialog() {
+       disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeAssessmentDialog();
+      }
+
+      _createAssessmentDialog() {
         this.assessmentDialog = document.createElement('assessment-dialog');
         this.assessmentDialog.setAttribute('id', 'assessmentDialog');
         this.assessmentDialog.toastEventSource = this;
 
+        this.newAssessmentAdded = this.newAssessmentAdded.bind(this);
+        this.assessmentUpdated = this.assessmentUpdated.bind(this);
+        this.assessmentDialog.addEventListener('assessment-added', this.newAssessmentAdded);
+        this.assessmentDialog.addEventListener('assessment-updated', this.assessmentUpdated);
+
         document.querySelector('body').appendChild(this.assessmentDialog);
+      }
+
+      _removeAssessmentDialog() {
+        if (this.assessmentDialog) {
+          this.assessmentDialog.removeEventListener('assessment-added', this.newAssessmentAdded);
+          this.assessmentDialog.removeEventListener('assessment-updated', this.assessmentUpdated);
+          document.querySelector('body').removeChild(this.assessmentDialog);
+        }
+      }
+
+      newAssessmentAdded(e) {
+        this.push('dataItems', e.detail);
+      }
+
+      assessmentUpdated(e) {
+        const updatedAss = e.detail;
+        const assessments = JSON.parse(JSON.stringify(this.dataItems));
+        let idx = this.dataItems.findIndex(a => a.id === updatedAss.id);
+        if (idx > -1) {
+          assessments.splice(idx, 1, updatedAss);
+        }
+        this.set('dataItems', assessments);
+      }
+
+      newAssessmentUpdated() {
+
       }
 
       _openAddAssessmentDialog() {
         if (this.assessmentDialog) {
-          this.assessmentDialog.initAssessment();
+          this.assessmentDialog.initAssessment(null, this.partnerId);
           this.assessmentDialog.opened = true;
         }
       }
@@ -251,8 +285,8 @@
         }
       }
 
-      _isVisible(archived, showInvalid) {
-        return !archived || showInvalid;
+      _isVisible(active, showArchived) {
+        return active || showArchived;
       }
 
       _emptyList(length) {

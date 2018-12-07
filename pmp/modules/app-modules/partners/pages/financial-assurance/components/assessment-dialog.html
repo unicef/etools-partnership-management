@@ -7,6 +7,7 @@
 
 <link rel="import" href="../../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../redux/etools-data-redux-store.html">
@@ -78,7 +79,7 @@
           </etools-upload>
         </div>
         <div class="row-h">
-          <paper-checkbox checked="{{assessment.archived}}">
+          <paper-checkbox checked="[[!assessment.active]]" on-change="_archivedChanged">
             Archived
           </paper-checkbox>
         </div>
@@ -95,11 +96,13 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const AssessmentDialogMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.Endpoints,
-      EtoolsPmpApp.Mixins.AjaxErrorsParser
+      EtoolsPmpApp.Mixins.AjaxErrorsParser,
+      EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element)
 
      /**
@@ -138,7 +141,9 @@
               type: null,
               completed_date: null,
               current: false,
-              report_attachment: null
+              report_attachment: null,
+              active: true,
+              partner: null
             }
           },
           assessmentTypes: {
@@ -188,12 +193,12 @@
         const isNew = !this.assessment.id;
         let options = {
           method : isNew ? 'POST' : 'PATCH',
-          endpoint: this.getEndpoint('TODO'),
-          body: this.assessment
+          endpoint: this._pickEndpoint(isNew, this.assessment.id),
+          body: this._getBody(isNew)
         }
         this.sendRequest(options)
             .then((resp) => {
-              this._handleResponse(resp, isNewAttachment);
+              this._handleResponse(resp, isNew);
               this.stopSpinner();
             }).catch((error) => {
               this._handleErrorResponse(error);
@@ -201,9 +206,28 @@
             });
 
       }
+      _getBody(isNew) {
+        if (!this.assessment) {
+          return null;
+        }
+        if (!isNew) {
+          delete this.assessment.report;
+          delete this.assessment.report_attachment;
+        }
+        return this.assessment;
+      }
 
-      _handleResponse(response) {
+      _pickEndpoint(isNew, assessId) {
+        let endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
+        let endpointParam = isNew ?  undefined :
+                            {assessmentId: assessId};
+
+        return this.getEndpoint(endpointName, endpointParam);
+      }
+
+      _handleResponse(response, isNew) {
         this.set('opened', false);
+        this.fireEvent(isNew ? 'assessment-added' : 'assessment-updated', response);
       }
       _handleErrorResponse(error) {
         this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
@@ -225,9 +249,10 @@
         });
       }
 
-      initAssessment(assessment) {
+      initAssessment(assessment, partnerId) {
         if (!assessment) {
           assessment = JSON.parse(JSON.stringify(this.assessmentModel));
+          assessment.partner = partnerId;
         }
 
         this.assessment = assessment;
@@ -237,6 +262,11 @@
       _hasId(id) {
         return !!id;
       }
+
+       _archivedChanged(e) {
+        this.set('assessment.active', !e.target.checked);
+      }
+
 
     }
 
