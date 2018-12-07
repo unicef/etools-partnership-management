@@ -41,44 +41,81 @@
 
     // select a filter from ADD FILTER menu
     selectFilter(e) {
-      const selectedOption = e.model.item;
-      const selectedIdx = e.model.index;
-      if (!this._isAlreadySelected(selectedOption)) {
+      const selectedFilter = e.model.item;
+      const selectedIdx = e.model.index; // the index in this.listFilterOptions
+      if (!this._isAlreadySelected(selectedFilter)) {
         // add
-        this.push('selectedFilters', selectedOption);
+        this.push('selectedFilters', selectedFilter);
         this.set(['listFilterOptions', selectedIdx, 'selected'], true);
       } else {
         // remove
-        const filterIndex = this.selectedFilters.findIndex(f => f.filterName === selectedOption.filterName);
-        this._clearFilterSelection(selectedOption, selectedIdx);
+        const filterIndex = this.selectedFilters.findIndex(f => f.filterName === selectedFilter.filterName);
+        this._clearFilterSelection(selectedFilter, filterIndex);
         this.splice('selectedFilters', filterIndex, 1);
       }
     }
 
     _clearFilterSelection(filter, selectedIdx) {
       if (filter) {
-        // reset selected values
-        if (filter.singleSelection) {
-          this.set(filter.path, null);
-        } else {
-          this.set(filter.path, (filter.type === 'esmm') ? [] : (filter.type === 'datepicker' ? '' : null));
-        }
+        this._clearSelectedValueInFilter(filter, selectedIdx);
+        this._deselectFilter(selectedIdx);
+      }
+    }
+
+    _clearSelectedValueInFilter(filter, idx) {
+       // reset selected values  TODO - is this needed??
+       //  if (filter.singleSelection) {
+       //     this.set(filter.path, null);
+       //   } else {
+       //     this.set(filter.path, (filter.type === 'esmm') ? [] : (filter.type === 'datepicker' ? '' : null));
+       //   }
         // reset selected values from filters list
-        if (filter.type === 'esmm') {
-          this.set(['listFilterOptions', selectedIdx, 'alreadySelected'], filter.singleSelection ? null : []);
-        }
-        if (filter.type === 'datepicker') {
-          this.set(['listFilterOptions', selectedIdx, 'dateSelected'], '');
-        }
-        if (filter.type === 'paper-toggle') {
-          this.set(['listFilterOptions', selectedIdx, 'value'], false);
-        }
-        this.set(['listFilterOptions', selectedIdx, 'selected'], false);
+
+      switch (filter.type) {
+        case 'esmm':
+        case 'dropdown':
+          this.set(['selectedFilters', idx, 'alreadySelected'], filter.singleSelection ? null : []);
+          break;
+        case 'datepicker':
+          this.set(['selectedFilters', idx, 'dateSelected'], '');
+        case 'paper-toggle':
+          this.set(['selectedFilters', idx, 'value'], false);
+          this.notifyPath(['selectedFilters', idx, 'value'].join('.'));
+        default:
+          break;
+      }
+    }
+
+    _updateSelectedValueInFilter(filterType, idx, newSelectedValue) {
+      switch (filterType) {
+        case 'esmm':
+        case 'dropdown':
+          this.set(['selectedFilters', idx, 'alreadySelected'], newSelectedValue);
+          break;
+        case 'datepicker':
+          this.set(['selectedFilters', idx, 'dateSelected'], newSelectedValue);
+        case 'paper-toggle':
+          this.set(['selectedFilters', idx, 'value'], newSelectedValue);
+          this.notifyPath(['selectedFilters', idx, 'value'].join('.'));
+        default:
+          break;
+      }
+    }
+
+
+    _deselectFilter(selectedIdx) {
+      this.set(['listFilterOptions', selectedIdx, 'selected'], false);
+    }
+
+    clearAllFilters() {
+      for (let i = 0; i < this.listFilterOptions.length; i++) {
+        this._clearSelectedValueInFilter(this.listFilterOptions[i], i);
       }
     }
 
     // filter value changed, update filter path with the new value
     filterValueChanged(event) {
+      console.log('filterValueChanged');
       let filterPath = event.target.getAttribute('data-filter-path');
       let filterVal = event.target.selected;
       this.set(filterPath, filterVal);
@@ -96,6 +133,7 @@
 
     // 'esmm' (etools-dropdown-multi) filter value changed
     esmmValueChanged(e) {
+      console.log('esmmValuesChanged');
       let filterPath = e.target.getAttribute('data-filter-path');
       let filterVal = e.detail.selectedItems.map(v => v[e.target.optionValue]);
       this.set(filterPath, filterVal);
@@ -129,60 +167,53 @@
       return value && ((typeof value === 'string' && value !== '')
           || (Array.isArray(value) && value.length > 0));
     }
-    // update shown filters
-    updateShownFilters(filters) {
+    // update shown filters aka selectedFilters
+    updateShownFilters(filtersToShow) {
       let i;
-      if (!filters) {
-        filters = [];
+      if (!filtersToShow) {
+        filtersToShow = [];
       }
-      if (Array.isArray(filters) && filters.length > 0) {
-        filters.forEach((filter) => {
-          // check available filters
-          const filterObj = this.listFilterOptions instanceof Array
-            ? this.listFilterOptions.find(f => f.filterName === filter.filterName)
-            : null;
-          if (!filterObj) {
-            return;
-          }
-          const filterIndex = this.listFilterOptions.findIndex(f => f.filterName === filter.filterName);
-          if (this._validateFilterSelectedValue(filter.selectedValue, filterObj.type, filter.allowEmpty)) {
-            if (!this._isAlreadySelected(filterObj)) {
-              // filter not selected => select filter
-              this.push('selectedFilters', filterObj);
-              this.set(['listFilterOptions', filterIndex, 'selected'], true);
-            }
 
-            // search it in selected filters lists and update selected value
-            if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
-              for (i = 0; i < this.selectedFilters.length; i++) {
-                if (this.selectedFilters[i].filterName === filter.filterName) {
-                  let filterPath = ['selectedFilters', i];
-                  if (this.selectedFilters[i].type === 'esmm' || this.selectedFilters[i].type === 'dropdown') {
-                    // update esmm dropdown selection
-                    this.set([...filterPath, 'alreadySelected'], filter.selectedValue);
-                  } else if (this.selectedFilters[i].type === 'datepicker') {
-                    // update datepicker selection
-                    this.set([...filterPath, 'dateSelected'], filter.selectedValue);
-                  } else if (this.selectedFilters[i].type === 'paper-toggle') {
-                    this.set([...filterPath, 'value'], filter.selectedValue);
-                    this.notifyPath([...filterPath, 'value'].join('.'));
-                  }
-                  this._disableFilter(filter, filterPath, filterIndex);
-                  break;
-                }
+      if (!(Array.isArray(filtersToShow) && filtersToShow.length > 0)) {
+        return;
+      }
+
+      filtersToShow.forEach((filterToShow) => {
+        // check available filters
+        const filterObj = this.listFilterOptions instanceof Array
+          ? this.listFilterOptions.find(f => f.filterName === filterToShow.filterName)
+          : null;
+        if (!filterObj) {
+          return;
+        }
+        const filterIndex = this.listFilterOptions.findIndex(f => f.filterName === filterToShow.filterName);
+
+        // filter not selected => select filter
+        if (!this._isAlreadySelected(filterObj)) {
+          this.push('selectedFilters', filterObj);
+          this.set(['listFilterOptions', filterIndex, 'selected'], true);
+        }
+
+        if (this._validateFilterSelectedValue(filterToShow.selectedValue, filterObj.type, filterToShow.allowEmpty)) {
+          // search it in selected filters lists and update selected value
+          if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
+            for (i = 0; i < this.selectedFilters.length; i++) {
+              if (this.selectedFilters[i].filterName === filterToShow.filterName) {
+
+                this._updateSelectedValueInFilter(this.selectedFilters[i].type, i, filterToShow.selectedValue);
+
+                //this._disableFilter(filterToShow, ['selectedFilters', i], filterIndex);
+
+                break;
               }
             }
-          } else {
-            // just add filter in selected filters list if it's selected property is true
-            if (filterObj.selected && !this._isAlreadySelected(filterObj)) {
-              this.push('selectedFilters', filterObj);
-            }
           }
-        });
-      }
+        }
+      });
     }
 
-    _disableFilter(filterUpdateData, filterPath, mainFiltersListIndex) {
+     //TODO = does this method work?
+      _disableFilter(filterUpdateData, filterPath, mainFiltersListIndex) {
       if (filterUpdateData.hasOwnProperty('disabled') && filterPath !== '') {
         this.set([...filterPath, 'disabled'], filterUpdateData.disabled);
       }
@@ -216,6 +247,7 @@
           ? data.map(d => parseInt(d, 10))
           : [];
     }
+
 
   };
 </script>
