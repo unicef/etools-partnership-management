@@ -147,8 +147,10 @@
               return false;
             }
 
-            if (isSpecialConditionsPca && !agreement.special_conditions_pca) {
-              return false;
+            if ([null, undefined, ''].indexOf(isSpecialConditionsPca) < 0) {
+              if (agreement.special_conditions_pca !== (isSpecialConditionsPca === 'true')) {
+                return false;
+              }
             }
 
             if (searchString && searchString.length &&
