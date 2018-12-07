@@ -103,7 +103,7 @@
       EtoolsPmpApp.Mixins.Endpoints,
       EtoolsPmpApp.Mixins.AjaxErrorsParser,
       EtoolsPmpApp.Mixins.EventHelper
-    ], Polymer.Element)
+    ], Polymer.Element);
 
      /**
      * @polymer
@@ -192,10 +192,10 @@
       _saveAssessment() {
         const isNew = !this.assessment.id;
         let options = {
-          method : isNew ? 'POST' : 'PATCH',
+          method: isNew ? 'POST' : 'PATCH',
           endpoint: this._pickEndpoint(isNew, this.assessment.id),
           body: this._getBody(isNew)
-        }
+        };
         this.sendRequest(options)
             .then((resp) => {
               this._handleResponse(resp, isNew);
@@ -219,7 +219,7 @@
 
       _pickEndpoint(isNew, assessId) {
         let endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
-        let endpointParam = isNew ?  undefined :
+        let endpointParam = isNew ? undefined :
                             {assessmentId: assessId};
 
         return this.getEndpoint(endpointName, endpointParam);
