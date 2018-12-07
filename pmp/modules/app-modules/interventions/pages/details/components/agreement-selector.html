@@ -41,7 +41,7 @@
         <div class="col col-3">
           <etools-form-element-wrapper label="Agreement"
                                        required
-                                       value="[[selectedAgreement.agreement_number]]">
+                                       value="[[selectedAgreement.agreement_number_status]]">
           </etools-form-element-wrapper>
         </div>
       </template>
@@ -72,7 +72,7 @@
                            placeholder="&#8212;"
                            options="[[filteredAgreements]]"
                            option-value="id"
-                           option-label="agreement_number"
+                           option-label="agreement_number_status"
                            selected="{{agreementId}}"
                            required$="[[permissions.required.agreement]]"
                            auto-validate
