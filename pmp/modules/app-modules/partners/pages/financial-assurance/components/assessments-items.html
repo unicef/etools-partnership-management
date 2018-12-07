@@ -4,30 +4,25 @@
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-<link rel="import" href="../../../../../../../bower_components/etools-upload/etools-upload.html">
 <link rel="import" href="../../../../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../../../../bower_components/etools-data-table/etools-data-table.html">
 
-<link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../endpoints/endpoints.html">
-<link rel="import" href="../../../../../mixins/uploads-mixin.html">
 <link rel="import" href="../../../../../mixins/common-mixin.html">
 
 <link rel="import" href="../../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../../styles/etools-cp-header-actions-bar-styles.html">
-<link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
 <link rel="import" href="../../../../../layout/components/icons-actions.html">
 <link rel="import" href="assessment-dialog.html">
 
 <dom-module id="assessments-items">
   <template strip-whitespace>
     <style
-        include="data-table-styles grid-layout-styles shared-styles buttons-styles etools-cp-header-actions-bar-styles">
+        include="data-table-styles grid-layout-styles shared-styles etools-cp-header-actions-bar-styles">
       [hidden] {
         display: none !important;
       }
@@ -40,26 +35,13 @@
         box-sizing: border-box;
       }
 
-      .assessments {
-        padding-bottom: 24px;
-        @apply --layout-vertical-reverse;
-      }
-
-      .add-btn-wrapper {
-        padding-top: 24px;
-      }
-
-      .add-btn-lm {
-        margin-left: 46px;
-      }
-
-
       .no-assessments-warning {
         padding-top: 0;
       }
 
       iron-icon {
         color: var(--dark-icon-color);
+        margin-right: 8px;
       }
 
       icons-actions {
@@ -121,9 +103,9 @@
                   </span>
                   <span class="col-data col-5">
                     <iron-icon icon="attachment" class="attachment"></iron-icon>
-                    <span class="break-word file-label">
+                    <span class="break-word">
                       <!-- target="_blank" is there for IE -->
-                      <a href$="[[item.attachment_document]]" target="_blank" download>
+                      <a href$="[[item.report_attachment]]" target="_blank" download>
                         [[getFileNameFromURL(item.report_attachment)]]
                       </a>
                     </span>
@@ -157,12 +139,10 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      * @appliesMixin   EtoolsPmpApp.Mixins.Common
      */
     const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.Uploads,
       EtoolsPmpApp.Mixins.Common
     ], Polymer.Element);
 
