@@ -40,42 +40,42 @@
         <div class="row-h flex-c">
           <div class="col col-4">
             <etools-dropdown id="assessmentType"
-                            label="Assessment Type"
-                            placeholder="&#8212;"
-                            options="[[assessmentTypes]]"
-                            selected="{{assessment.type}}"
-                            error-message="Please select Assessment Type"
-                            hide-search
-                            required
-                            auto-validate></etools-dropdown>
+                             label="Assessment Type"
+                             placeholder="&#8212;"
+                             options="[[assessmentTypes]]"
+                             selected="{{assessment.type}}"
+                             error-message="Please select Assessment Type"
+                             hide-search
+                             required
+                             auto-validate></etools-dropdown>
           </div>
           <div class="col col-5 padd-left">
             <required-and-not-future-date-validator validator-name="dateSubmittedValidator"
                                                     field-selector="#dateSubmitted">
             </required-and-not-future-date-validator>
             <etools-date-input id="dateSubmitted"
-                              label="Date of Assessment"
-                              value="{{assessment.completed_date}}"
-                              auto-validate
-                              required-and-not-future-date
-                              validator="dateSubmittedValidator"
-                              no-init show-clear-btn
-                              required>
+                               label="Date of Assessment"
+                               value="{{assessment.completed_date}}"
+                               auto-validate
+                               required-and-not-future-date
+                               validator="dateSubmittedValidator"
+                               no-init show-clear-btn
+                               required>
             </etools-date-input>
           </div>
         </div>
         <div class="row-h">
           <etools-upload id="report"
-                        label="Report"
-                        accept=".doc,.docx,.pdf,.jpg,.png"
-                        file-url="[[assessment.report_attachment]]"
-                        upload-endpoint="[[uploadEndpoint]]"
-                        on-upload-finished="_uploadFinished"
-                        required
-                        readonly="[[_hasId(assessment.id)]]"
-                        show-change="[[!_hasId(assessment.id)]]"
-                        error-message="Please select the report file"
-                        allow-multiline-filename>
+                         label="Report"
+                         accept=".doc,.docx,.pdf,.jpg,.png"
+                         file-url="[[assessment.report_attachment]]"
+                         upload-endpoint="[[uploadEndpoint]]"
+                         on-upload-finished="_uploadFinished"
+                         required
+                         readonly="[[_hasId(assessment.id)]]"
+                         show-change="[[!_hasId(assessment.id)]]"
+                         error-message="Please select the report file"
+                         allow-multiline-filename>
           </etools-upload>
         </div>
         <div class="row-h">
@@ -123,9 +123,7 @@
           },
           uploadEndpoint: {
             type: String,
-            value: function() {
-              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
-            }
+            value: () => EtoolsPmpApp.Endpoints.attachmentsUpload.url
           },
           opened: {
             type: Boolean,
