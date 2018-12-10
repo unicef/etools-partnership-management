@@ -79,27 +79,24 @@
           <etools-data-table-column class="col-3">
             Document Type
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
-            File Attachment
+          <etools-data-table-column class="col-6">
+            Document
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1 center-align">
             Invalid
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
-            <!-- Actions -->
           </etools-data-table-column>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="[[attachments]]">
           <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInvalid)]]">
-            <div slot="row-data">
+            <div slot="row-data" class="p-relative">
               <span class="col-data col-2">
                 [[prettyDate(item.created)]]
               </span>
               <span class="col-data col-3">
                 [[_getAttachmentType(item.type)]]
               </span>
-              <span class="col-data col-4">
+              <span class="col-data col-6">
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
@@ -108,18 +105,16 @@
                   </a>
                 </span>
               </span>
-              <span class="col-data col-2">
+              <span class="col-data col-1 center-align">
                 <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                 <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
               </span>
-              <span class="col-data flex-c p-relative">
-                <icons-actions item-id$="[[item.id]]"
-                               hidden$="[[!editMode]]"
-                               show-delete="[[_canDeleteAttachments(interventionStatus)]]"
-                               on-edit="_editAttachment"
-                               on-delete="_confirmAttachmentDelete">
-                              </icons-actions>
-              </span>
+              <icons-actions item-id$="[[item.id]]"
+                              hidden$="[[!editMode]]"
+                              show-delete="[[_canDeleteAttachments(interventionStatus)]]"
+                              on-edit="_editAttachment"
+                              on-delete="_confirmAttachmentDelete">
+              </icons-actions>
             </div>
           </etools-data-table-row>
         </template>
