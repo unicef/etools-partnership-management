@@ -73,9 +73,7 @@
         </paper-icon-button>
       </div>
 
-      <div
-          hidden$="[[_emptyList(dataItems.length)]]">
-
+      <div hidden$="[[_emptyList(dataItems.length)]]">
         <etools-data-table-header no-collapse no-title>
           <etools-data-table-column class="col-3">
             Assessment Type
@@ -91,36 +89,35 @@
           </etools-data-table-column>
         </etools-data-table-header>
 
-
         <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
-                <div slot="row-data" class="p-relative">
-                  <span class="col-data col-3">
-                    [[item.type]]
-                  </span>
-                  <span class="col-data col-2">
-                    [[prettyDate(item.completed_date)]]
-                  </span>
-                  <span class="col-data col-6">
-                    <iron-icon icon="attachment" class="attachment"></iron-icon>
-                    <span class="break-word">
-                      <!-- target="_blank" is there for IE -->
-                      <a href$="[[item.report_attachment]]" target="_blank" download>
-                        [[getFileNameFromURL(item.report_attachment)]]
-                      </a>
-                    </span>
-                  </span>
-                  <span class="col-data col-1 center-align">
-                    <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
-                    <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
-                  </span>
-                  <icons-actions item-id$="[[item.id]]"
-                                  hidden$="[[!editMode]]"
-                                  on-edit="_editAssessment"
-                                  show-delete="[[showDelete]]">
-                  </icons-actions>
-                </div>
-              </etools-data-table-row>
+          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
+            <div slot="row-data" class="p-relative">
+              <span class="col-data col-3">
+                [[item.type]]
+              </span>
+              <span class="col-data col-2">
+                [[prettyDate(item.completed_date)]]
+              </span>
+              <span class="col-data col-6">
+                <iron-icon icon="attachment" class="attachment"></iron-icon>
+                <span class="break-word">
+                  <!-- target="_blank" is there for IE -->
+                  <a href$="[[item.report_attachment]]" target="_blank" download>
+                    [[getFileNameFromURL(item.report_attachment)]]
+                  </a>
+                </span>
+              </span>
+              <span class="col-data col-1 center-align">
+                <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
+                <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
+              </span>
+              <icons-actions item-id$="[[item.id]]"
+                              hidden$="[[!editMode]]"
+                              on-edit="_editAssessment"
+                              show-delete="[[showDelete]]">
+              </icons-actions>
+            </div>
+          </etools-data-table-row>
 
         </template>
       </div>
