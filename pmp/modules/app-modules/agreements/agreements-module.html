@@ -452,6 +452,7 @@
           reference_number_year: agreement.reference_number_year,
           authorized_officers: this.authorizedOfficers
         };
+
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
           return newAgreement; // SSFA has only the fields set above
         } else {
@@ -465,13 +466,16 @@
           signed_by_partner_date: agreement.signed_by_partner_date,
           partner_manager: agreement.partner_manager
         });
+
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
           newAgreement.start = agreement.start;
           newAgreement.end = agreement.end;
           delete newAgreement.authorized_officers;
         }
+
         if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
           newAgreement.country_programme = agreement.country_programme;
+          newAgreement.special_conditions_pca = agreement.special_conditions_pca;
         }
         return newAgreement;
       }
