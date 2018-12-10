@@ -415,15 +415,13 @@
       </monitoring-visits-list>
     </etools-content-panel>
 
-    <etools-content-panel
-        panel-title="Other Assessments([[partner.assessments.length]])"
-        class="content-section">
+    <assessments-items id="assessmentsList"
+                       class="content-section"
+                       data-items="{{partner.assessments}}"
+                       edit-mode="[[editMode]]"
+                       partner-id="[[partner.id]]"></assessments-items>
 
-      <assessments-items id="assessmentsList"
-                         data-items="{{partner.assessments}}"
-                         edit-mode="[[editMode]]"></assessments-items>
 
-    </etools-content-panel>
 
   </template>
 
