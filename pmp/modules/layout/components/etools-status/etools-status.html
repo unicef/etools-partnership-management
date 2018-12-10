@@ -154,11 +154,9 @@
         let cls = '';
         if (status.completed && !status.icon) {
           cls = 'completed';
-        }
-        if (status.completed && status.icon) {
+        } else if (status.completed && status.icon) {
           cls = 'custom';
-        }
-        if (index === 0) {
+        } else if (index === 0) {
           cls = 'pending';
         }
         return cls + ' etools-status';
