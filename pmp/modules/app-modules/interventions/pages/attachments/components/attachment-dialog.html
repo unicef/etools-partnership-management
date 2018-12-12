@@ -1,0 +1,250 @@
+<link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../../../../../bower_components/etools-upload/etools-upload.html">
+
+<link rel="import" href="../../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../../../mixins/event-helper-mixin.html">
+<link rel="import" href="../../../../../layout/components/etools-form-element-wrapper.html">
+
+<link rel="import" href="../../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../../styles/required-field-styles.html">
+
+<dom-module id="attachment-dialog">
+  <template>
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
+      etools-dialog > .row-h {
+        padding-top: 0;
+      }
+    </style>
+
+    <etools-dialog no-padding
+                   keep-dialog-open
+                   id="attachmentDialog"
+                   opened="{{opened}}"
+                   size="md"
+                   ok-btn-text="Save"
+                   dialog-title="Attachment"
+                   on-confirm-btn-clicked="_validateAndSaveAttachment"
+                   disable-confirm-btn="[[uploadInProgress]]"
+                   disable-dismiss-btn="[[uploadInProgress]]">
+
+      <div class="row-h col-5">
+        <!-- Document Type -->
+        <etools-dropdown id="document-types"
+                         label="Document Type"
+                         placeholder="&#8212;"
+                         options="[[fileTypes]]"
+                         option-value="id"
+                         option-label="name"
+                         selected="{{attachment.type}}"
+                         hide-search
+                         required auto-validate
+                         error-message="Document type is required">
+        </etools-dropdown>
+      </div>
+      <div class="row-h flex-c">
+        <!-- Attachment -->
+        <etools-upload id="attachment-upload"
+                       label="Attachment"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       file-url="[[attachment.attachment_document]]"
+                       upload-endpoint="[[uploadEndpoint]]"
+                       on-upload-finished="_attachmentUploadFinished"
+                       required
+                       auto-validate
+                       upload-in-progress="{{uploadInProgress}}"
+                       error-message="Attachment required"
+                       readonly="[[_readonlyAttachment(attachment.id)]]"
+                       allow-multiline-filename>
+        </etools-upload>
+      </div>
+
+      <div class="row-h flex-c">
+        <etools-form-element-wrapper no-placeholder>
+          <paper-checkbox checked="[[!attachment.active]]" on-change="_invalidChanged">
+            Invalid
+          </paper-checkbox>
+        </etools-form-element-wrapper>
+      </div>
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+     */
+    const AttachmentDialogMixin = EtoolsMixinFactory.combineMixins([
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.EventHelper,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
+    ], Polymer.Element);
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AttachmentDialogMixin
+     */
+    class AttachmentDialog extends AttachmentDialogMixin {
+      static get is() {
+        return 'attachment-dialog';
+      }
+
+      static get properties() {
+        return {
+          toastEventSource: {
+            type: Object
+          },
+          opened: {
+            type: Boolean,
+            notify: true,
+            observer: '_resetFields'
+          },
+          interventionId: {
+            type: Number
+          },
+          fileTypes: {
+            type: Array,
+            value: []
+          },
+          attachment: {
+            type: Object
+          },
+          newAttachmentModel: {
+            type: Object,
+            value: {
+              active: true,
+              attachment_document: null,
+              type: null
+            }
+          },
+          uploadEndpoint: {
+            type: String,
+            value: function() {
+              return EtoolsPmpApp.Endpoints.attachmentsUpload.url;
+            }
+          },
+          _validationSelectors: {
+            type: Array,
+            value: ['#document-types', '#attachment-upload']
+          },
+          uploadInProgress: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      initAttachment(attachment) {
+        this.set('attachment', JSON.parse(JSON.stringify(!attachment ? this.newAttachmentModel : attachment)));
+      }
+
+      startSpinner() {
+        this.$.attachmentDialog.startSpinner();
+      }
+
+      stopSpinner() {
+        this.$.attachmentDialog.stopSpinner();
+      }
+
+      isValidAttachment() {
+        let isValid = true;
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el && !el.validate()) {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+
+      _resetAttachmentValidations() {
+        this._validationSelectors.forEach((selector) => {
+          let el = this.shadowRoot.querySelector(selector);
+          if (el) {
+            el.set('invalid', false);
+          }
+        });
+      }
+
+      _resetFields() {
+        this._resetAttachmentValidations();
+      }
+
+      _validateAndSaveAttachment() {
+        if (!this.isValidAttachment()) {
+          return;
+        }
+        this._saveAttachment(Object.assign({}, this.attachment));
+      }
+
+      _saveAttachment(attachment) {
+        const isNewAttachment = !attachment.id;
+        if (!isNewAttachment) {
+          delete attachment.attachment_document;
+          // TODO: remove attachment and attachment_file after API refactoring/cleanup
+          delete attachment.attachment;
+          delete attachment.attachment_file;
+        } else if (!this.interventionId || isNaN(this.interventionId)) {
+          this.logWarn('You need a valid PD id to be able to save the attachment!', 'attachment-dialog');
+          return;
+        }
+        const endpointName = !isNewAttachment ? 'updatePdAttachment' : 'pdAttachments';
+        const endpointParams = !isNewAttachment ? {attId: attachment.id} : {pdId: this.interventionId};
+        let options = {
+          method: !isNewAttachment ? 'PATCH' : 'POST',
+          endpoint: this.getEndpoint(endpointName, endpointParams),
+          body: attachment
+        };
+        this.startSpinner();
+        this.sendRequest(options)
+            .then((resp) => {
+              this._handleResponse(resp, isNewAttachment);
+              this.stopSpinner();
+            }).catch((error) => {
+              this._handleErrorResponse(error);
+              this.stopSpinner();
+            });
+      }
+
+      _handleResponse(response, isNewAttachment) {
+        this.set('opened', false);
+        this.fireEvent(isNewAttachment ? 'attachment-added' : 'attachment-updated', response);
+      }
+
+      _handleErrorResponse(error) {
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+      }
+
+      _attachmentUploadFinished(e) {
+        if (e.detail.success) {
+          const uploadResponse = JSON.parse(e.detail.success);
+          this.set('attachment.attachment_document', uploadResponse.id);
+        }
+      }
+      _readonlyAttachment(id) {
+        return id && Number(id) > 0;
+      }
+
+      _invalidChanged(e) {
+        this.set('attachment.active', !e.target.checked);
+      }
+
+    }
+
+    window.customElements.define(AttachmentDialog.is, AttachmentDialog);
+  </script>
+</dom-module>
+

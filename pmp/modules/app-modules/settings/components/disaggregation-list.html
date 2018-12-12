@@ -4,23 +4,51 @@
 <link rel="import" href="../../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../environment-flags/environment-flags-mixin.html">
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../user/user-permissions-mixin.html">
+<link rel="import" href="../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../mixins/frontend-pagination-mixin.html">
 <link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
   <template>
-    <style include="grid-layout-styles data-table-styles">
+    <style include="grid-layout-styles data-table-styles paper-material-styles">
       [hidden] {
         display: none !important;
       }
+
+      #filters {
+        background-color: var(--primary-background-color, #FFFFFF);
+        padding: 8px 24px;
+        margin-bottom: 24px;
+        box-sizing: border-box;
+      }
+
+      .qFilter {
+        max-width: 200px;
+      }
+
     </style>
+
+    <div id="filters" class="paper-material" elevation="1">
+      <paper-input id="query"
+                   class="qFilter"
+                   type="search"
+                   autocomplete="off"
+                   value="{{q}}"
+                   placeholder="Search">
+        <iron-icon icon="search" slot="prefix"></iron-icon>
+      </paper-input>
+    </div>
 
     <etools-content-panel panel-title="Disaggregations">
       <template is="dom-if" if="[[userIsPme(currentUser)]]">
@@ -29,13 +57,16 @@
                            on-tap="_addDisaggregation">
         </paper-icon-button>
       </template>
-      <div hidden$="[[_emptyList(disaggregations)]]">
+      <div hidden$="[[_emptyList(filteredDisaggregations)]]">
         <etools-data-table-header no-collapse no-title>
           <etools-data-table-column class="col-4" field="name">
             Name
           </etools-data-table-column>
-          <etools-data-table-column class="col-8" field="disaggregation_values">
+          <etools-data-table-column class="col-6" field="disaggregation_values">
             Disaggregation Groups
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="disaggregation_active">
+            Active
           </etools-data-table-column>
         </etools-data-table-header>
         <template is="dom-repeat" items="[[dataItems]]">
@@ -44,8 +75,14 @@
               <span class="col-data col-4">
                 [[item.name]]
               </span>
-              <span class="col-data col-8">
+              <span class="col-data col-6">
                 [[_displayGroups(item.disaggregation_values)]]
+              </span>
+              <span class="col-data col-2">
+                <paper-toggle-button id="showActive-[[item.id]]"
+                                     checked="{{item.active}}" on-tap="_toggleActive">
+
+                </paper-toggle-button>
               </span>
             </div>
           </etools-data-table-row>
@@ -59,7 +96,7 @@
             on-page-number-changed="_pageNumberChanged">
         </etools-data-table-footer>
       </div>
-      <div class="row-padding" hidden$="[[!_emptyList(disaggregations)]]">
+      <div class="row-padding" hidden$="[[!_emptyList(filteredDisaggregations)]]">
         <p>The are no disaggregations defined.</p>
       </div>
     </etools-content-panel>
@@ -78,6 +115,8 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
+     * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
     const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
@@ -86,7 +125,9 @@
       EtoolsAjaxRequestMixin,
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.EventHelper,
-      EtoolsPmpApp.Mixins.FrontendPagination
+      EtoolsPmpApp.Mixins.FrontendPagination,
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
     ], Polymer.Element);
 
     /**
@@ -107,14 +148,37 @@
           },
           disaggregationModal: {
             type: Object
+          },
+          filteredDisaggregations: {
+            type: Array,
+            computed: '_filterData(disaggregations, q)'
+          },
+          q: {
+           type: String,
+           value: ''
+          },
+          totalResults: {
+            type: Number,
+            computed: '_computeResults(filteredDisaggregations)'
+          }
+        };
+      }
+
+      static get actions() {
+        return {
+          patchDisaggregation: function(disaggreg) {
+            return {
+              type: 'PATCH_DISAGGREGATION',
+              disaggregation: disaggreg
+            };
           }
         };
       }
 
       static get observers() {
         return [
-          '_paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)',
-          '_disagregationsChanged(disaggregations, environmentFlags)'
+          '_paginationChanged(pagination.pageNumber, pagination.pageSize, filteredDisaggregations)',
+          '_disagregationsChanged(filteredDisaggregations, environmentFlags)'
         ];
       }
 
@@ -134,6 +198,51 @@
         }
       }
 
+      broadcastPatchDisaggregToOtherTabs(disaggregation) {
+        localStorage.setItem('update-redux',
+            JSON.stringify(DisaggregationList.actions.patchDisaggregation(disaggregation)));
+        localStorage.removeItem('update-redux');
+      }
+
+      _filterData(disaggregations, q) {
+        if (!(disaggregations instanceof Array && disaggregations.length > 0)) {
+          return [];
+        }
+
+        let filteredDisaggregations = JSON.parse(JSON.stringify(disaggregations));
+        filteredDisaggregations = filteredDisaggregations.filter(e => this._applyQFilter(e, q));
+        return filteredDisaggregations;
+      }
+
+      _applyQFilter(d, q) {
+        if (!q || q === '') {
+          return true;
+        }
+        q = q.toLowerCase();
+        return String(d.name).toLowerCase().search(q) > -1;
+      }
+
+      _toggleActive(e) {
+        let self = this;
+        let requestParams = {
+          method: 'PATCH',
+          endpoint: this.getEndpoint('patchDisaggregations', {id: e.model.item.id}),
+          body: {active: e.model.item.active}
+        };
+
+        this.sendRequest(requestParams).then(function(response) {
+          self.dispatch('patchDisaggregation', response);
+          self.broadcastPatchDisaggregToOtherTabs(response);
+        }).catch(function(error) {
+          self.shadowRoot.querySelector('#showActive-' + e.model.item.id).checked = !e.model.item.active;
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+        });
+      }
+
+      _computeResults(filteredDis) {
+        return filteredDis.length;
+      }
+
       _emptyList() {
         return !this.disaggregations || !this.disaggregations.length;
       }
@@ -143,7 +252,7 @@
           this.dataItems = [];
           return;
         }
-        this.set('pagination.totalResults', this.disaggregations.length);
+        this.set('pagination.totalResults', disaggregs.length);
       }
 
       _openModal() {

@@ -292,6 +292,7 @@
               return;
             }
             this.setInterventionPermissions(false, this.originalIntervention.permissions);
+            this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
             // update validation errors
             let details = this.shadowRoot.querySelector('#interventionDetails');
             if (details && typeof details.validate === 'function') {

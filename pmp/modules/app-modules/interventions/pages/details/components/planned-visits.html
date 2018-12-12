@@ -38,6 +38,7 @@
       }
 
       etools-form-element-wrapper {
+        text-align: center;
         --paper-input-container: {
           text-align: center;
         };
@@ -241,7 +242,7 @@
       }
 
       _getAddBtnPadding(itemsLength) {
-        return !itemsLength ? '' : 'padd-left-when-items';
+        return (!itemsLength ? '' : 'padd-left-when-items') + ' planned-visits';
       }
       _getNoPVMsgPadding(itemsLength) {
         return (!itemsLength && this.editMode) ? 'no-top-padd' : '';

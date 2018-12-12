@@ -66,6 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/mixins/event-helper-mixin.html">
 <link rel="import" href="modules/mixins/ie11-mixin.html">
 <link rel="import" href="modules/mixins/utils-mixin.html">
+<link rel="import" href="modules/mixins/uploads-mixin.html">
 
 <!-- import static data elements -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
@@ -278,6 +279,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.IE11
      * @appliesMixin EtoolsPmpApp.Mixins.Utils
      * @appliesMixin EtoolsMixins.DynamicDialogMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Uploads
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.AppMenu,
@@ -291,7 +293,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.IE11,
       EtoolsPmpApp.Mixins.Utils,
-      EtoolsMixins.DynamicDialogMixin
+      EtoolsMixins.DynamicDialogMixin,
+      EtoolsPmpApp.Mixins.Uploads
     ], Polymer.Element);
 
     /**
@@ -347,34 +350,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Object,
             observer: 'appLocRouteChanged'
           },
-          uploadsInProgress: {
-            type: Number,
-            statePath: 'uploadsInProgress'
-          },
-          unsavedUploads: {
-            type: Boolean,
-            statePath: 'unsavedUploads'
-          },
           leavePageDialog: {
             type: Object
           },
           appLocQueryParams: Object,
           appLocPath: String
-        };
-      }
-
-       static get actions() {
-        return {
-          resetUploadsInProgress: function() {
-            return {
-              type: 'RESET_UPLOADS_IN_PROGRESS'
-            };
-          },
-          resetUnsavedUploads: function() {
-            return {
-              type: 'RESET_UNSAVED_UPLOADS'
-            };
-          }
         };
       }
 

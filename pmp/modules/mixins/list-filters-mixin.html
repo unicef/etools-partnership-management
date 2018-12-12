@@ -77,6 +77,31 @@
       }
     }
 
+    clearAllFilterValues() {
+      for (let i = 0; i < this.selectedFilters.length; i++) {
+        if (!this.selectedFilters[i].disabled) {
+          this.clearSelectedValuesInFilter(this.selectedFilters[i], i);
+        }
+      }
+    }
+
+    clearSelectedValuesInFilter(filter, idx) {
+      switch (filter.type) {
+        case 'esmm':
+        case 'dropdown':
+          this.set(['selectedFilters', idx, 'alreadySelected'], filter.singleSelection ? null : []);
+          break;
+        case 'datepicker':
+          this.set(['selectedFilters', idx, 'dateSelected'], '');
+          break;
+        case 'paper-toggle':
+          this.set(['selectedFilters', idx, 'value'], false);
+          this.notifyPath(['selectedFilters', idx, 'value'].join('.'));
+          break;
+        default:
+          break;
+      }
+    }
     // filter value changed, update filter path with the new value
     filterValueChanged(event) {
       let filterPath = event.target.getAttribute('data-filter-path');
@@ -119,7 +144,7 @@
 
     _validateFilterSelectedValue(value, type, allowEmptyEsmm) {
       if (type === 'paper-toggle') {
-        return typeof value === 'boolean';
+        return ['true', 'false'].indexOf(String(value)) > -1;
       }
 
       if ((Array.isArray(value) && value.length === 0) && allowEmptyEsmm) {

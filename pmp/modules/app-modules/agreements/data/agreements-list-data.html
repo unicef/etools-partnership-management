@@ -89,7 +89,7 @@
 
       query(field, order, searchString, agreementTypes,
             agreementStatuses, selectedPartnerNames, startDate,
-            endDate, cpStructures, pageNumber, pageSize, showQueryLoading) {
+            endDate, cpStructures, isSpecialConditionsPca, pageNumber, pageSize, showQueryLoading) {
         // If an active query transaction exists, abort it and start
         // a new one
         if (this.currentQuery) {
@@ -147,6 +147,12 @@
               return false;
             }
 
+            if ([null, undefined, ''].indexOf(isSpecialConditionsPca) < 0) {
+              if (agreement.special_conditions_pca !== (isSpecialConditionsPca === 'true')) {
+                return false;
+              }
+            }
+
             if (searchString && searchString.length &&
                 agreement.agreement_number.toLowerCase().indexOf(searchString) < 0 &&
                 agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
@@ -175,9 +181,6 @@
         }).catch(function(error) {
           self.logError('Error querying agreements: ', 'agreements-list-data', error, true);
           self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
-          if (error.name === 'DatabaseClosedError') {
-            window.location.reload(true);
-          }
         });
       }
     }
