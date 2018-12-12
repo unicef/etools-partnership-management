@@ -147,7 +147,6 @@
     // 'esmm' (etools-dropdown-multi) filter value changed
     esmmValueChanged(e) {
       let filterPath = e.target.getAttribute('data-filter-path');
-      console.log('esmm ' + filterPath);
       let filterVal = e.detail.selectedItems.map(v => v[e.target.optionValue]);
       this.set(filterPath, filterVal);
     }
@@ -190,7 +189,6 @@
 
     // update shown filters
     updateShownFilters(filtersToUpdate) {
-      let i;
       if (!filtersToUpdate) {
         filtersToUpdate = [];
       }
