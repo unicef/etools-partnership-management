@@ -305,7 +305,7 @@
               file-url="{{agreement.attachment}}"
               upload-endpoint="[[uploadEndpoint]]"
               on-upload-finished="_signedAgreementUploadFinished"
-              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment, originalAgreementData.attachment)]]"
+              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment)]]"
               on-delete-file="_signedAgFileDelete"
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
@@ -470,8 +470,7 @@
       }
 
       _getTBorderClassIfApplicable(agreementType) {
-        // * agreement-details class is added for browsers that use shaddy dom
-        return (agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA ? 't-border' : '') + ' agreement-details';
+        return agreementType !== this.CONSTANTS.AGREEMENT_TYPES.SSFA ? 't-border' : '';
       }
 
       // Editing Agreement Type is allowed only if Agreement is new/unsaved
@@ -755,7 +754,7 @@
        * For Draft Status, only Change option is available. No delete option is available in Draft.
        */
       showSignedAgDeleteBtn() {
-        return this._isDraft() && !!this.originalAgreementData && !this.originalAgreementData.attachment;
+        return this._isDraft() && !!this.agreement && !this.agreement.attachment;
       }
 
       _signedAgFileDelete() {
