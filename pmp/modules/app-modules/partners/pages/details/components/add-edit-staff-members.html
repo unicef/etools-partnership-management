@@ -35,7 +35,7 @@
                   placeholder="&#8212;"
                   maxlength="30"
                   required
-                  invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                  invalid="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                   error-message="Position is required"></paper-input>
         </div>
         <div class="col col-6">
@@ -54,7 +54,7 @@
                          placeholder="&#8212;"
                          maxlength="30"
                          required
-                         invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                         invalid="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                          error-message="First name is required">
             </paper-input>
         </div>
@@ -65,7 +65,7 @@
                          placeholder="&#8212;"
                          maxlength="30"
                          required
-                         invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                         invalid="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                          error-message="Last name is required">
             </paper-input>
         </div>
@@ -79,7 +79,7 @@
                        readonly$="[[!_isNewStaffMember(item)]]"
                        maxlength="50"
                        required
-                       invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                       invalid="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
                        error-message="A valid & unused email address is required">
             <iron-icon slot="prefix" icon="communication:email"></iron-icon>
           </paper-input>
@@ -195,7 +195,7 @@
 
       validate() {
         let valid = true;
-        let fields = ['#firstName', '#lastName', '#email'];
+        let fields = ['#firstName', '#lastName', '#email', '#title'];
         let elements = [];
         for (let i = 0; i < fields.length; i++) {
            elements[i] = this.$.staffMemberDialog.querySelector(fields[i]);
