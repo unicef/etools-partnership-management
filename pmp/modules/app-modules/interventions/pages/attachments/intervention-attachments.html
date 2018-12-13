@@ -57,15 +57,15 @@
 
     <etools-content-panel class="content-section" panel-title$="Attachments ([[attachments.length]])">
       <div slot="panel-btns" class="cp-header-actions-bar" hidden$="[[newIntervention]]">
-        <paper-toggle-button id="showArchived"
-                             checked="{{showArchived}}">
-          Show archived
+        <paper-toggle-button id="showInvalid"
+                             checked="{{showInvalid}}">
+          Show invalid
         </paper-toggle-button>
-        <div class="separator" hidden$="[[!editMode]]">
+        <div class="separator" hidden$="[[!permissions.edit.attachments]]">
         </div>
         <paper-icon-button icon="add-box"
-                           disabled="[[!editMode]]"
-                           hidden$="[[!editMode]]"
+                           disabled="[[!permissions.edit.attachments]]"
+                           hidden$="[[!permissions.edit.attachments]]"
                            title="Add"
                            on-tap="_addAttachment">
         </paper-icon-button>
@@ -79,27 +79,24 @@
           <etools-data-table-column class="col-3">
             Document Type
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
-            File Attachment
+          <etools-data-table-column class="col-6">
+            Document
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Archived
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
-            <!-- Actions -->
+          <etools-data-table-column class="col-1 center-align">
+            Invalid
           </etools-data-table-column>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="[[attachments]]">
-          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
-            <div slot="row-data">
+          <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInvalid)]]">
+            <div slot="row-data" class="p-relative">
               <span class="col-data col-2">
                 [[prettyDate(item.created)]]
               </span>
               <span class="col-data col-3">
                 [[_getAttachmentType(item.type)]]
               </span>
-              <span class="col-data col-4">
+              <span class="col-data col-6">
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <span class="break-word file-label">
                   <!-- target="_blank" is there for IE -->
@@ -108,18 +105,17 @@
                   </a>
                 </span>
               </span>
-              <span class="col-data col-2">
+              <span class="col-data col-1 center-align">
                 <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                 <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
               </span>
-              <span class="col-data flex-c p-relative">
-                <icons-actions item-id$="[[item.id]]"
-                               hidden$="[[!editMode]]"
-                               show-delete="[[_canDeleteAttachments(interventionStatus)]]"
-                               on-edit="_editAttachment"
-                               on-delete="_confirmAttachmentDelete">
-                              </icons-actions>
-              </span>
+              <icons-actions item-id$="[[item.id]]"
+                              hidden$="[[!permissions.edit.attachments]]"
+                              show-delete="[[_canDeleteAttachments(interventionStatus)]]"
+                              show-edit="[[_canEditAttachments(interventionStatus)]]"
+                              on-edit="_editAttachment"
+                              on-delete="_confirmAttachmentDelete">
+              </icons-actions>
             </div>
           </etools-data-table-row>
         </template>
@@ -177,8 +173,9 @@
           active: {
             type: Boolean
           },
-          editMode: {
-            type: Boolean
+          permissions: {
+            type: Object,
+            statePath: 'pageData.permissions'
           },
           interventionId: {
             type: Number,
@@ -195,7 +192,7 @@
             type: Array,
             statePath: 'fileTypes'
           },
-          showArchived: {
+          showInvalid: {
             type: Boolean,
             value: false
           },
@@ -396,12 +393,17 @@
         return attachmentType ? attachmentType.name : '—';
       }
 
-      _isVisible(active, showArchived) {
-        return active || showArchived;
+      _isVisible(active, showInvalid) {
+        return active || showInvalid;
       }
 
       _canDeleteAttachments(status) {
         return status === this.CONSTANTS.STATUSES.Draft.toLowerCase();
+      }
+
+      _canEditAttachments(status) {
+        return status !== this.CONSTANTS.STATUSES.Closed.toLowerCase() &&
+            status !== this.CONSTANTS.STATUSES.Terminated.toLowerCase();
       }
     }
 

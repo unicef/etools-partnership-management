@@ -18,10 +18,6 @@
 <dom-module id="attachment-dialog">
   <template>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
-      etools-dropdown {
-        width: auto;
-      }
-
       etools-dialog > .row-h {
         padding-top: 0;
       }
@@ -38,7 +34,7 @@
                    disable-confirm-btn="[[uploadInProgress]]"
                    disable-dismiss-btn="[[uploadInProgress]]">
 
-      <div class="row-h flex-c">
+      <div class="row-h col-5">
         <!-- Document Type -->
         <etools-dropdown id="document-types"
                          label="Document Type"
@@ -64,15 +60,15 @@
                        auto-validate
                        upload-in-progress="{{uploadInProgress}}"
                        error-message="Attachment required"
-                       readonly="[[_readonlyAttachment(attachment.id)]]">
+                       readonly="[[_readonlyAttachment(attachment.id)]]"
+                       allow-multiline-filename>
         </etools-upload>
       </div>
 
       <div class="row-h flex-c">
-        <!-- Submitted to PRC? -->
         <etools-form-element-wrapper no-placeholder>
-          <paper-checkbox checked="[[!attachment.active]]" on-change="_archivedChanged">
-            Archived
+          <paper-checkbox checked="[[!attachment.active]]" on-change="_invalidChanged">
+            Invalid
           </paper-checkbox>
         </etools-form-element-wrapper>
       </div>
@@ -242,7 +238,7 @@
         return id && Number(id) > 0;
       }
 
-      _archivedChanged(e) {
+      _invalidChanged(e) {
         this.set('attachment.active', !e.target.checked);
       }
 

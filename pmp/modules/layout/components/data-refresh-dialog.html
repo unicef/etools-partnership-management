@@ -194,8 +194,8 @@
             (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
         if (this.allSelected) {
-          this.refresh();
           this.fireEvent('update-main-path', {path: afterDataRefreshLandingPage});
+          this.refresh();
           return;
         }
 

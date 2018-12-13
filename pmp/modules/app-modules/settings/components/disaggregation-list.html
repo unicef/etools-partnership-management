@@ -11,6 +11,7 @@
 <link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../user/user-permissions-mixin.html">
 <link rel="import" href="../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../mixins/ajax-errors-parser-mixin.html">
 <link rel="import" href="../../../endpoints/endpoints-mixin.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -78,7 +79,7 @@
                 [[_displayGroups(item.disaggregation_values)]]
               </span>
               <span class="col-data col-2">
-                <paper-toggle-button id="showActive"
+                <paper-toggle-button id="showActive-[[item.id]]"
                                      checked="{{item.active}}" on-tap="_toggleActive">
 
                 </paper-toggle-button>
@@ -115,6 +116,7 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.FrontendPagination
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
      */
     const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.Endpoints,
@@ -124,7 +126,8 @@
       EtoolsPmpApp.Mixins.EnvironmentFlags,
       EtoolsPmpApp.Mixins.EventHelper,
       EtoolsPmpApp.Mixins.FrontendPagination,
-      EtoolsPmpApp.Mixins.Endpoints
+      EtoolsPmpApp.Mixins.Endpoints,
+      EtoolsPmpApp.Mixins.AjaxErrorsParser
     ], Polymer.Element);
 
     /**
@@ -231,6 +234,7 @@
           self.dispatch('patchDisaggregation', response);
           self.broadcastPatchDisaggregToOtherTabs(response);
         }).catch(function(error) {
+          self.shadowRoot.querySelector('#showActive-' + e.model.item.id).checked = !e.model.item.active;
           self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
         });
       }
