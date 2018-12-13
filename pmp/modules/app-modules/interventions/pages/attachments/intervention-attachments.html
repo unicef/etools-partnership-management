@@ -61,11 +61,11 @@
                              checked="{{showInvalid}}">
           Show invalid
         </paper-toggle-button>
-        <div class="separator" hidden$="[[!editMode]]">
+        <div class="separator" hidden$="[[!permissions.edit.attachments]]">
         </div>
         <paper-icon-button icon="add-box"
-                           disabled="[[!editMode]]"
-                           hidden$="[[!editMode]]"
+                           disabled="[[!permissions.edit.attachments]]"
+                           hidden$="[[!permissions.edit.attachments]]"
                            title="Add"
                            on-tap="_addAttachment">
         </paper-icon-button>
@@ -110,8 +110,9 @@
                 <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
               </span>
               <icons-actions item-id$="[[item.id]]"
-                              hidden$="[[!editMode]]"
+                              hidden$="[[!permissions.edit.attachments]]"
                               show-delete="[[_canDeleteAttachments(interventionStatus)]]"
+                              show-edit="[[_canEditAttachments(interventionStatus)]]"
                               on-edit="_editAttachment"
                               on-delete="_confirmAttachmentDelete">
               </icons-actions>
@@ -172,8 +173,9 @@
           active: {
             type: Boolean
           },
-          editMode: {
-            type: Boolean
+          permissions: {
+            type: Object,
+            statePath: 'pageData.permissions'
           },
           interventionId: {
             type: Number,
@@ -397,6 +399,11 @@
 
       _canDeleteAttachments(status) {
         return status === this.CONSTANTS.STATUSES.Draft.toLowerCase();
+      }
+
+      _canEditAttachments(status) {
+        return status !== this.CONSTANTS.STATUSES.Closed.toLowerCase() &&
+            status !== this.CONSTANTS.STATUSES.Terminated.toLowerCase();
       }
     }
 
