@@ -240,7 +240,7 @@
       _editAssessment(e) {
         let assessment = this.dataItems
             .find(a => a.id === Number(e.target.getAttribute('item-id')));
-        this.assessmentDialog.initAssessment(assessment);
+        this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
         this.assessmentDialog.opened = true;
       }
 
