@@ -757,7 +757,7 @@
       showSignedAgDeleteBtn() {
         return this.isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
             && !this.originalAgreementData.attachment);
-  }
+      }
 
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
