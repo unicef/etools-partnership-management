@@ -310,7 +310,7 @@
 
       static get observers() {
         return [
-          '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings)',
+          '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, showOnlyGovernmentType)',
           'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
           'selectedRiskRatings.length, showHidden)',
           '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
