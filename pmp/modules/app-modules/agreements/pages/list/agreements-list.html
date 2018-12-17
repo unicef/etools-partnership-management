@@ -80,7 +80,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 data-filter-path$="[[filter.path]]"
                 on-etools-selected-items-changed="esmmValueChanged"
                 trigger-value-change-event
@@ -105,8 +105,8 @@
             </etools-date-input>
           </template>
 
-          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
-              <div id="hiddenToggle" class="filter">
+          <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
+              <div class="filter">
                 <etools-dropdown
                   class="filter"
                   label="[[filter.filterName]]"
@@ -116,7 +116,8 @@
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
                   selected="{{filter.alreadySelected}}"
-                  on-selected-changed="filterValueChanged"
+                  trigger-value-change-event
+                  on-etools-selected-item-changed="filterValueChanged"
                   data-filter-path$="[[filter.path]]"
                   hide-search="[[filter.hideSearch]]"
                   min-width="[[filter.minWidth]]"
@@ -414,7 +415,7 @@
           },
           {
             filterName: 'Special Conditions PCA',
-            type: 'dropdown',
+            type: 'etools-dropdown',
             singleSelection: true,
             selectionOptions: [{value: 'true', label: 'Yes'}, {value: 'false', label: 'No'}],
             optionValue: 'value',
