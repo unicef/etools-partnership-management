@@ -305,7 +305,7 @@
               file-url="{{agreement.attachment}}"
               upload-endpoint="[[uploadEndpoint]]"
               on-upload-finished="_signedAgreementUploadFinished"
-              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment, originalAgreementData.attachment)]]"
+              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment, originalAgreementData.attachment, isNewAgreement)]]"
               on-delete-file="_signedAgFileDelete"
               accept=".doc,.docx,.pdf,.jpg,.png"
               readonly$="[[!agreement.permissions.edit.attachment]]"
@@ -755,7 +755,8 @@
        * For Draft Status, only Change option is available. No delete option is available in Draft.
        */
       showSignedAgDeleteBtn() {
-        return this._isDraft() && !!this.originalAgreementData && !this.originalAgreementData.attachment;
+        return this.isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
+            && !this.originalAgreementData.attachment);
       }
 
       _signedAgFileDelete() {
