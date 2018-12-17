@@ -358,7 +358,7 @@
         let urlQueryParams = this.urlParams;
         this.set('_initComplete', false);
 
-        this.queryParams.status = ['Sub', 'Ove', 'Sen'];
+        urlQueryParams.status = 'Sub|Ove|Sen';
 
         this.setProperties({
           'queryParams.pd_ref_title': urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '',
