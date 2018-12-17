@@ -81,7 +81,7 @@
                 placeholder="Select"
                 disabled$="[[filter.disabled]]"
                 options="[[filter.selectionOptions]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 data-filter-path$="[[filter.path]]"
                 on-etools-selected-items-changed="esmmValueChanged"
                 trigger-value-change-event
@@ -95,9 +95,9 @@
           <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
             <div id="hiddenToggle" class="filter">
               [[filter.filterName]]
-              <paper-toggle-button checked="[[filter.value]]"
+              <paper-toggle-button id="toggleFilter" checked="{{filter.selectedValue}}"
                                    data-filter-path$="[[filter.path]]"
-                                   on-checked-changed="toggleValueChanged"></paper-toggle-button>
+                                   on-iron-change="toggleValueChanged"></paper-toggle-button>
             </div>
           </template>
 
@@ -310,7 +310,7 @@
 
       static get observers() {
         return [
-          '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings)',
+          '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, showOnlyGovernmentType)',
           'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
           'selectedRiskRatings.length, showHidden)',
           '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
@@ -375,7 +375,7 @@
           {
             filterName: 'Show hidden',
             type: 'paper-toggle',
-            value: this.showHidden,
+            selectedValue: this.showHidden,
             path: 'showHidden',
             selected: true
           }

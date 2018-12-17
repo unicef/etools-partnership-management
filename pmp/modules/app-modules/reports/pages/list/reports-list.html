@@ -51,7 +51,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected="[[filter.alreadySelected]]"
+                selected="{{filter.alreadySelected}}"
                 on-selected-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
                 hide-search="[[filter.hideSearch]]"
@@ -70,7 +70,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -91,6 +91,12 @@
             <iron-icon icon="filter-list"></iron-icon>
             Filters
           </paper-button>
+          <div slot="dropdown-content" class="clear-all-filters">
+            <paper-button on-tap="clearAllFilterValues"
+                  class="secondary-btn">
+                    CLEAR ALL
+            </paper-button>
+         </div>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
               <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">

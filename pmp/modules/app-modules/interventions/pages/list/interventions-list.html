@@ -87,7 +87,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -103,7 +103,7 @@
                                class="filter date"
                                label="[[filter.filterName]]"
                                placeholder="&#8212;"
-                               value="[[filter.dateSelected]]"
+                               value="{{filter.dateSelected}}"
                                on-date-has-changed="_filterDateHasChanged"
                                data-filter-path$="[[filter.path]]"
                                fire-date-has-changed no-init show-clear-btn>
