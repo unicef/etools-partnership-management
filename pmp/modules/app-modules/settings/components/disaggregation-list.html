@@ -80,7 +80,9 @@
               </span>
               <span class="col-data col-2">
                 <paper-toggle-button id="showActive-[[item.id]]"
-                                     checked="{{item.active}}" on-tap="_toggleActive">
+                                     disabled="[[!userIsPme(currentUser)]]"
+                                     checked="{{item.active}}"
+                                     on-tap="_toggleActive">
 
                 </paper-toggle-button>
               </span>
