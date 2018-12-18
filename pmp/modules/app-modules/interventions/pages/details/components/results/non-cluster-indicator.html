@@ -186,7 +186,7 @@
                        auto-validate
                        allowed-pattern="[1-9\.]"
                        placeholder="Denominator"
-                       readonly$="[[isReadonlyDenominator(interventionStatus)]]">
+                       readonly$="[[isReadonlyDenominator(interventionStatus, indicator.id)]]">
           </paper-input>
         </div>
       </template>
@@ -290,9 +290,9 @@
         }
       }
 
-      isReadonlyDenominator(interventionStatus) {
-        if (['', 'draft', 'signed'].indexOf(interventionStatus) > 0) {
-          return false;
+      isReadonlyDenominator(interventionStatus, indicId) {
+        if (interventionStatus && interventionStatus.toLowerCase() === 'active') {
+          return (indicId ? true : false);
         }
         return true;
       }

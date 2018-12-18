@@ -203,7 +203,7 @@
               || indicator.baseline.v === undefined) {
             indicator.baseline = {v: null, d: 1};
           }
-          if (indicator.indicator) {
+          if (indicator.indicator) { // is new non-cluster indic
             if (indicator.indicator.unit === 'number') {
               this._updateBaselineTargetD(indicator, 1);
               this._resetRatioLabels(indicator);
@@ -211,6 +211,9 @@
               this._updateBaselineTargetD(indicator, 100);
               this._resetLabel(indicator);
             }
+          }
+          if (this.interventionStatus.toLowerCase() === 'active' && indicator.id) {
+            delete indicator.target;
           }
         }
 
