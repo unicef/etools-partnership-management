@@ -212,9 +212,6 @@
               this._resetLabel(indicator);
             }
           }
-          if (this.interventionStatus.toLowerCase() === 'active' && indicator.id) {
-            delete indicator.target;
-          }
         }
 
         _updateBaselineTargetD(indicator, d) {

@@ -294,7 +294,7 @@
         if (interventionStatus && interventionStatus.toLowerCase() === 'active') {
           return (indicId ? true : false);
         }
-        return true;
+        return false;
       }
 
       _readonlyChanged(newVal, oldVal) {
