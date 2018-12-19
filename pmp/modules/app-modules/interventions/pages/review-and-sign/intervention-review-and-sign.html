@@ -15,7 +15,6 @@
 <link rel="import" href="../../../../styles/page-common-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/file-styles.html">
 <link rel="import" href="../../../../styles/required-field-styles.html">
 
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
@@ -31,7 +30,7 @@
 
 <dom-module id="intervention-review-and-sign">
   <template strip-whitespace>
-    <style include="page-common-styles grid-layout-styles shared-styles file-styles required-field-starred-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -99,7 +98,7 @@
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
-          <div class="col col-6 file-container space-left">
+          <div class="col col-6">
             <!-- PRC Review Document -->
             <etools-upload
                 label="PRC Review Document"
@@ -180,7 +179,7 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <div class="col col-6 file-container space-left">
+        <div class="col col-6">
           <!-- Signed PD/SSFA -->
           <etools-upload id="signedIntervFile"
                          label="Signed PD/SSFA"

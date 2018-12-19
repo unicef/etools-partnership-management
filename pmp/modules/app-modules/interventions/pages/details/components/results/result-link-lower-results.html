@@ -247,11 +247,12 @@
       }
 
       getColumnLength(column, thereAreIndicators) {
+        // * result-link-lower-results class is added for browsers that use shaddy dom
         switch (column) {
           case 'result':
-            return thereAreIndicators ? 'col-4' : 'col-8';
+            return (thereAreIndicators ? 'col-4' : 'col-8') + ' result-link-lower-results';
           case 'indicator':
-            return thereAreIndicators ? 'col-8' : 'col-4';
+            return (thereAreIndicators ? 'col-8' : 'col-4') + ' result-link-lower-results';
         }
       }
 

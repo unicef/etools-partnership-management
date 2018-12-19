@@ -16,6 +16,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../layout/components/etools-date-input.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
@@ -79,7 +80,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 data-filter-path$="[[filter.path]]"
                 on-etools-selected-items-changed="esmmValueChanged"
                 trigger-value-change-event
@@ -104,6 +105,29 @@
             </etools-date-input>
           </template>
 
+          <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
+              <div class="filter">
+                <etools-dropdown
+                  class="filter"
+                  label="[[filter.filterName]]"
+                  placeholder="Select"
+                  disabled$="[[!filter.selectionOptions.length]]"
+                  options="[[filter.selectionOptions]]"
+                  option-value="[[filter.optionValue]]"
+                  option-label="[[filter.optionLabel]]"
+                  selected="{{filter.alreadySelected}}"
+                  trigger-value-change-event
+                  on-etools-selected-item-changed="filterValueChanged"
+                  data-filter-path$="[[filter.path]]"
+                  hide-search="[[filter.hideSearch]]"
+                  min-width="[[filter.minWidth]]"
+                  horizontal-align="left"
+                  no-dynamic-align
+                  enable-none-option>
+              </etools-dropdown>
+              </div>
+            </template>
+
         </template>
       </div>
 
@@ -113,6 +137,12 @@
             <iron-icon icon="filter-list"></iron-icon>
             Filters
           </paper-button>
+          <div slot="dropdown-content" class="clear-all-filters">
+              <paper-button on-tap="clearAllFilterValues"
+                    class="secondary-btn">
+                      CLEAR ALL
+              </paper-button>
+          </div>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
               <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
@@ -293,6 +323,10 @@
           _sortableFieldNames: {
             type: Array,
             value: ['agreement_number', 'partner_name', 'start', 'end']
+          },
+          isSpecialConditionsPca: {
+            type: String,
+            value: null
           }
         };
       }
@@ -304,7 +338,8 @@
           '_initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes)',
           '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
           'selectedPartners, selectedCPStructures.length,' +
-          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+          'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded,' +
+          'initComplete, isSpecialConditionsPca)',
           '_init(active)'
         ];
       }
@@ -377,6 +412,19 @@
             selected: true,
             minWidth: '350px',
             hideSearch: true
+          },
+          {
+            filterName: 'Special Conditions PCA',
+            type: 'etools-dropdown',
+            singleSelection: true,
+            selectionOptions: [{value: 'true', label: 'Yes'}, {value: 'false', label: 'No'}],
+            optionValue: 'value',
+            optionLabel: 'label',
+            alreadySelected: null,
+            path: 'isSpecialConditionsPca',
+            minWidth: '350px',
+            hideSearch: true,
+            allowEmpty: true
           }
         ]);
         this._updateSelectedFiltersValues();
@@ -414,7 +462,8 @@
               selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
               selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
               startDate: urlQueryParams.start ? urlQueryParams.start : '',
-              endDate: urlQueryParams.end ? urlQueryParams.end : ''
+              endDate: urlQueryParams.end ? urlQueryParams.end : '',
+              isSpecialConditionsPca: urlQueryParams.special_conditions_pca
             }
         );
 
@@ -456,6 +505,11 @@
                 {
                   filterName: 'Ends Before',
                   selectedValue: this.endDate
+                },
+                {
+                  filterName: 'Special Conditions PCA',
+                  selectedValue: this.isSpecialConditionsPca,
+                  allowEmpty: true
                 }
               ];
               this.updateShownFilters(filtersValues);
@@ -494,6 +548,7 @@
                   this.startDate,
                   this.endDate,
                   this.selectedCPStructures,
+                  this._getIsSpecialConditionsPca(),
                   this.paginator.page,
                   this.paginator.page_size,
                   forceNoLoading ? false : this.showQueryLoading
@@ -513,7 +568,8 @@
           start: this.startDate,
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
-          sort: this.sortOrder
+          sort: this.sortOrder,
+          special_conditions_pca: this._getIsSpecialConditionsPca()
         });
       }
 
@@ -527,9 +583,17 @@
           start: this.startDate,
           end: this.endDate,
           cpStructures: this.selectedCPStructures,
-          search: this.q
+          search: this.q,
+          special_conditions_pca: this._getIsSpecialConditionsPca()
         };
         return this._buildCsvExportUrl(params, endpointUrl);
+      }
+
+      _getIsSpecialConditionsPca() {
+        if (this.isSpecialConditionsPca === null || typeof this.isSpecialConditionsPca === 'undefined') {
+          return '';
+        }
+        return this.isSpecialConditionsPca;
       }
 
       _arrayFilterChanged(filterVal, oldFilterVals) {

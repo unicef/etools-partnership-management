@@ -199,8 +199,7 @@
                                     active="[[_isAttachementsTabActive(routeData.tab)]]"
                                     intervention-id="[[intervention.id]]"
                                     intervention-status="[[intervention.status]]"
-                                    new-intervention="[[newInterventionActive]]"
-                                    edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
+                                    new-intervention="[[newInterventionActive]]">
           </intervention-attachments>
         </template>
 
@@ -532,16 +531,6 @@
           this.saved.justSaved = false;
         }
         this.saved.interventionId = intervention.id;
-      }
-
-      _isAttachmentsTabReadonly(permissions, intervention) {
-        if (typeof permissions === 'undefined' || typeof intervention === 'undefined') {
-          return false;
-        }
-        if (!this._hasEditPermissions(permissions, intervention)) {
-          return true;
-        }
-        return (['suspended', 'terminated'].indexOf(intervention.status) > -1);
       }
 
       _isPrpTab(tabName) {

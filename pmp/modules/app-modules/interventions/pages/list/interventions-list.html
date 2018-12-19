@@ -87,7 +87,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -103,7 +103,7 @@
                                class="filter date"
                                label="[[filter.filterName]]"
                                placeholder="&#8212;"
-                               value="[[filter.dateSelected]]"
+                               value="{{filter.dateSelected}}"
                                on-date-has-changed="_filterDateHasChanged"
                                data-filter-path$="[[filter.path]]"
                                fire-date-has-changed no-init show-clear-btn>
@@ -120,6 +120,12 @@
             <iron-icon icon="filter-list"></iron-icon>
             Filters
           </paper-button>
+          <div slot="dropdown-content" class="clear-all-filters">
+              <paper-button on-tap="clearAllFilterValues"
+                    class="secondary-btn">
+                      CLEAR ALL
+              </paper-button>
+          </div>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
               <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
@@ -221,7 +227,7 @@
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
               <etools-info-tooltip
-                  class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]]"
+                  class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
                   icon-first
                   custom-icon
                   hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">

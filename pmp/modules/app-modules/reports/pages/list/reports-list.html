@@ -51,7 +51,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected="[[filter.alreadySelected]]"
+                selected="{{filter.alreadySelected}}"
                 on-selected-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
                 hide-search="[[filter.hideSearch]]"
@@ -70,7 +70,7 @@
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="[[filter.alreadySelected]]"
+                selected-values="{{filter.alreadySelected}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -91,6 +91,12 @@
             <iron-icon icon="filter-list"></iron-icon>
             Filters
           </paper-button>
+          <div slot="dropdown-content" class="clear-all-filters">
+            <paper-button on-tap="clearAllFilterValues"
+                  class="secondary-btn">
+                    CLEAR ALL
+            </paper-button>
+         </div>
           <paper-listbox slot="dropdown-content" multi>
             <template is="dom-repeat" items="[[listFilterOptions]]">
               <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
@@ -186,7 +192,7 @@
               external_partner_id: null,
               cp_output: null,
               section: null,
-              status: ['Sub', 'Ove', 'Sen'],
+              status: [],
               report_type: null,
               unicef_focal_points: []
             }
@@ -271,12 +277,12 @@
           },
           {
             filterName: 'Report Type',
-            type: 'esmm', // etools-dropdown-multi
+            type: 'esmm',
             singleSelection: true,
             selectionOptions: reportTypes,
             optionValue: 'value',
             optionLabel: 'label',
-            alreadySelected: [],
+            alreadySelected: null,
             path: 'queryParams.report_type',
             selected: true,
             minWidth: '300px',
@@ -352,6 +358,10 @@
         }
         let urlQueryParams = this.urlParams;
         this.set('_initComplete', false);
+
+        if (_.isEmpty(urlQueryParams)) {
+          urlQueryParams.status = 'Sub|Ove|Sen';
+        }
 
         this.setProperties({
           'queryParams.pd_ref_title': urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '',

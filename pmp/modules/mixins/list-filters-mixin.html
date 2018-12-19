@@ -42,40 +42,89 @@
     // select a filter from ADD FILTER menu
     selectFilter(e) {
       const selectedOption = e.model.item;
-      const selectedIdx = e.model.index;
+      const idxInFilterOptions = e.model.index;
       if (!this._isAlreadySelected(selectedOption)) {
         // add
-        this.push('selectedFilters', selectedOption);
-        this.set(['listFilterOptions', selectedIdx, 'selected'], true);
+        this.push('selectedFilters', JSON.parse(JSON.stringify(selectedOption)));
+        this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
       } else {
         // remove
-        const filterIndex = this.selectedFilters.findIndex(f => f.filterName === selectedOption.filterName);
-        this._clearFilterSelection(selectedOption, selectedIdx);
-        this.splice('selectedFilters', filterIndex, 1);
+        const idxInSelFilters = this.selectedFilters.findIndex(f => f.filterName === selectedOption.filterName);
+        this._clearFilterSelection(selectedOption, idxInFilterOptions, idxInSelFilters);
+
+        // *Remove from dom only after esmmValueChanged has gotten the chance to execute
+        setTimeout(() => { this.splice('selectedFilters', idxInSelFilters, 1); }, 400);
       }
     }
 
-    _clearFilterSelection(filter, selectedIdx) {
-      if (filter) {
-        // reset selected values
-        if (filter.singleSelection) {
-          this.set(filter.path, null);
-        } else {
-          this.set(filter.path, (filter.type === 'esmm') ? [] : (filter.type === 'datepicker' ? '' : null));
+    _clearFilterSelection(filter, idxInFilterOptions, idxInSelFilters) {
+      if (!filter) {
+        return;
+      }
+
+      this.clearSelectedValueInFilter(filter, ['listFilterOptions', idxInFilterOptions]);
+      this.clearSelectedValueInFilter(filter, ['selectedFilters', idxInSelFilters]);
+
+      this.deselectFilter(idxInFilterOptions);
+    }
+
+    /*
+     * Remove filter from Ui
+     */
+    deselectFilter(idx) {
+      this.set(['listFilterOptions', idx, 'selected'], false);
+    }
+
+    clearAllFilterValues() {
+      for (let i = 0; i < this.selectedFilters.length; i++) {
+        if (!this.selectedFilters[i].disabled) {
+          this.clearSelectedValueInFilter(this.selectedFilters[i], ['selectedFilters', i]);
         }
-        // reset selected values from filters list
-        if (filter.type === 'esmm') {
-          this.set(['listFilterOptions', selectedIdx, 'alreadySelected'], filter.singleSelection ? null : []);
-        }
-        if (filter.type === 'datepicker') {
-          this.set(['listFilterOptions', selectedIdx, 'dateSelected'], '');
-        }
-        if (filter.type === 'paper-toggle') {
-          this.set(['listFilterOptions', selectedIdx, 'value'], false);
-        }
-        this.set(['listFilterOptions', selectedIdx, 'selected'], false);
       }
     }
+
+    /*
+     * filterPath can be ['selectedFilters', idx] or
+     * ['listFilterOptions', idx]
+     */
+    clearSelectedValueInFilter(filter, filterPath) {
+      switch (filter.type) {
+        case 'esmm':
+        case 'dropdown':
+        case 'etools-dropdown':
+          this.set([...filterPath, 'alreadySelected'], filter.singleSelection ? null : []);
+          break;
+        case 'datepicker':
+          this.set([...filterPath, 'dateSelected'], '');
+          break;
+        case 'paper-toggle':
+          this.set([...filterPath, 'selectedValue'], false);
+          this.notifyPath([...filterPath, 'selectedValue'].join('.'));
+          break;
+        default:
+          break;
+      }
+    }
+
+    updateSelectedValueInFilter(filterType, filterPath, selectedValue) {
+      switch (filterType) {
+        case 'esmm':
+        case 'dropdown':
+        case 'etools-dropdown':
+          this.set([...filterPath, 'alreadySelected'], selectedValue);
+          break;
+        case 'datepicker':
+          this.set([...filterPath, 'dateSelected'], selectedValue);
+          break;
+        case 'paper-toggle':
+          this.set([...filterPath, 'selectedValue'], selectedValue);
+          this.notifyPath([...filterPath, 'selectedValue'].join('.'));
+          break;
+        default:
+          break;
+      }
+    }
+
 
     // filter value changed, update filter path with the new value
     filterValueChanged(event) {
@@ -88,7 +137,8 @@
      * Check filter type. Filter type can be:
      *  - 'dropdown'(dropdown created using polymer catalog elements)
      *  - 'esmm' (etools-dropdown-multi)
-     *  - 'datepicker' (etools-datepicker)
+     *  - 'etools-dropdown' - etools-dropdown single selection
+     *  - 'datepicker' (etools-datepicker)update
      */
     filterTypeIs(expectedType, checkedTypeValue) {
       return expectedType === checkedTypeValue;
@@ -109,17 +159,18 @@
 
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event) {
-      if (!event.detail.jsonDate) {
+      let filterPath = event.target.getAttribute('data-filter-path');
+      if (!event.detail.jsonDate || !event.detail.prettyDate) {
+        this.set(filterPath, '');
         return;
       }
-      let filterPath = event.target.getAttribute('data-filter-path');
       let selectedDate = new Date(event.detail.jsonDate);
       this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     }
 
-    _validateFilterSelectedValue(value, type, allowEmptyEsmm) {
+    _validFilterSelectedValue(value, type, allowEmptyEsmm) {
       if (type === 'paper-toggle') {
-        return typeof value === 'boolean';
+        return ['true', 'false'].indexOf(String(value)) > -1;
       }
 
       if ((Array.isArray(value) && value.length === 0) && allowEmptyEsmm) {
@@ -129,70 +180,80 @@
       return value && ((typeof value === 'string' && value !== '')
           || (Array.isArray(value) && value.length > 0));
     }
-    // update shown filters
-    updateShownFilters(filters) {
-      let i;
-      if (!filters) {
-        filters = [];
-      }
-      if (Array.isArray(filters) && filters.length > 0) {
-        filters.forEach((filter) => {
-          // check available filters
-          const filterObj = this.listFilterOptions instanceof Array
-            ? this.listFilterOptions.find(f => f.filterName === filter.filterName)
-            : null;
-          if (!filterObj) {
-            return;
-          }
-          const filterIndex = this.listFilterOptions.findIndex(f => f.filterName === filter.filterName);
-          if (this._validateFilterSelectedValue(filter.selectedValue, filterObj.type, filter.allowEmpty)) {
-            if (!this._isAlreadySelected(filterObj)) {
-              // filter not selected => select filter
-              this.push('selectedFilters', filterObj);
-              this.set(['listFilterOptions', filterIndex, 'selected'], true);
-            }
 
-            // search it in selected filters lists and update selected value
-            if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
-              for (i = 0; i < this.selectedFilters.length; i++) {
-                if (this.selectedFilters[i].filterName === filter.filterName) {
-                  let filterPath = ['selectedFilters', i];
-                  if (this.selectedFilters[i].type === 'esmm' || this.selectedFilters[i].type === 'dropdown') {
-                    // update esmm dropdown selection
-                    this.set([...filterPath, 'alreadySelected'], filter.selectedValue);
-                  } else if (this.selectedFilters[i].type === 'datepicker') {
-                    // update datepicker selection
-                    this.set([...filterPath, 'dateSelected'], filter.selectedValue);
-                  } else if (this.selectedFilters[i].type === 'paper-toggle') {
-                    this.set([...filterPath, 'value'], filter.selectedValue);
-                    this.notifyPath([...filterPath, 'value'].join('.'));
-                  }
-                  this._disableFilter(filter, filterPath, filterIndex);
-                  break;
-                }
-              }
-            }
-          } else {
-            // just add filter in selected filters list if it's selected property is true
-            if (filterObj.selected && !this._isAlreadySelected(filterObj)) {
-              this.push('selectedFilters', filterObj);
-            }
-          }
-        });
-      }
+    _findInListFilterOptions(filterName) {
+      return this.listFilterOptions instanceof Array
+          ? this.listFilterOptions.find(f => f.filterName === filterName)
+          : null;
     }
 
-    _disableFilter(filterUpdateData, filterPath, mainFiltersListIndex) {
-      if (filterUpdateData.hasOwnProperty('disabled') && filterPath !== '') {
-        this.set([...filterPath, 'disabled'], filterUpdateData.disabled);
+    // update shown filters
+    updateShownFilters(filtersToUpdate) {
+      if (!filtersToUpdate) {
+        filtersToUpdate = [];
       }
-
-      if (typeof filterUpdateData.disableMenuOption !== 'boolean') {
+      if (!Array.isArray(filtersToUpdate) || filtersToUpdate.length === 0) {
         return;
       }
 
-      this.set(['listFilterOptions', mainFiltersListIndex, 'disabled'], filterUpdateData.disableMenuOption);
-      this.notifyPath('listFilterOptions.' + mainFiltersListIndex + '.disabled');
+      filtersToUpdate.forEach((filterToUpdate) => {
+        // check available filters
+        const filterObj = this._findInListFilterOptions(filterToUpdate.filterName);
+
+        if (!filterObj) {
+          return;
+        }
+        const idxInFilterOptions = this.listFilterOptions.findIndex(f => f.filterName === filterToUpdate.filterName);
+
+        if ((filterObj.selected || this.filterHasSelectedValue(filterToUpdate.selectedValue, filterObj.type)) &&
+             !this._isAlreadySelected(filterObj)) {
+          // filter not selected => select filter
+          this.push('selectedFilters', JSON.parse(JSON.stringify(filterObj)));
+          this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
+        }
+
+       if (this._validFilterSelectedValue(filterToUpdate.selectedValue, filterObj.type, filterObj.allowEmpty)) {
+
+          // search it in selected filters lists and update selected value
+          if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
+            let idxInSelFilters = this.selectedFilters.findIndex(f => f.filterName === filterToUpdate.filterName);
+
+            if (idxInSelFilters > -1) {
+              this.updateSelectedValueInFilter(filterObj.type, ['selectedFilters', idxInSelFilters],
+                                               filterToUpdate.selectedValue);
+              this._disableFilterIfNeccessary(filterToUpdate, idxInSelFilters, idxInFilterOptions);
+            }
+          }
+        }
+      });
+    }
+
+    filterHasSelectedValue(selectedValue, filterType) {
+      switch (filterType) {
+        case 'esmm':
+        case 'dropdown':
+        case 'etools-dropdown':
+          return selectedValue && ((typeof selectedValue === 'string' && selectedValue !== '')
+            || (Array.isArray(selectedValue) && selectedValue.length > 0));
+        case 'datepicker':
+          return !!selectedValue;
+        case 'paper-toggle':
+          return ['true', 'false'].indexOf(String(selectedValue)) > -1;
+        default:
+          return false;
+      }
+    }
+    _disableFilterIfNeccessary(filter, idxInSelFilters, idxInFilterOptions) {
+      if (filter.hasOwnProperty('disabled')) {
+        this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
+      }
+
+      if (typeof filter.disableMenuOption !== 'boolean') {
+        return;
+      }
+
+      this.set(['listFilterOptions', idxInFilterOptions, 'disabled'], filter.disableMenuOption);
+      this.notifyPath('listFilterOptions.' + idxInFilterOptions + '.disabled');
     }
 
     /**
