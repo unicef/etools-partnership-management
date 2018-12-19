@@ -164,7 +164,7 @@
               value="{{indicator.baseline.d}}"
               type="number"
               min="1"
-              allowed-pattern="[1-9\.]"
+              allowed-pattern="[0-9\.]"
               placeholder="Denominator" disabled="[[baselineIsUnknown]]">
           </paper-input>
         </div>
@@ -184,9 +184,9 @@
                        min="1"
                        required
                        auto-validate
-                       allowed-pattern="[1-9\.]"
+                       allowed-pattern="[0-9\.]"
                        placeholder="Denominator"
-                       readonly$="[[isReadonlyDenominator(interventionStatus)]]">
+                       readonly$="[[isReadonlyDenominator(interventionStatus, indicator.id)]]">
           </paper-input>
         </div>
       </template>
@@ -290,11 +290,11 @@
         }
       }
 
-      isReadonlyDenominator(interventionStatus) {
-        if (['', 'draft', 'signed'].indexOf(interventionStatus) > 0) {
-          return false;
+      isReadonlyDenominator(interventionStatus, indicId) {
+        if (interventionStatus && interventionStatus.toLowerCase() === 'active') {
+          return (indicId ? true : false);
         }
-        return true;
+        return false;
       }
 
       _readonlyChanged(newVal, oldVal) {
