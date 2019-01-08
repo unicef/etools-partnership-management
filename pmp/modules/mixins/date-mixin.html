@@ -69,7 +69,7 @@
      */
     openDatePicker(event) {
       // this is in place here so that the filters dropdown would close if you click the label of another dropdown
-      if (Polymer.IronOverlayManager._overlays.length > 0) {
+      if (Polymer && Polymer.IronOverlayManager && Polymer.IronOverlayManager._overlays.length > 0) {
         document.dispatchEvent(new CustomEvent('tap', {detail: {sourceEvent: event}}));
       }
 
