@@ -88,6 +88,11 @@ documentContainer.innerHTML = `<dom-module id="nav-menu-styles">
       #minimize-menu {
         cursor: pointer;
       }
+      
+      #menu-header-top-icon {
+        width: 36px;
+        height: 36px;
+      }
   
       .divider {
         margin: 8px 0;
