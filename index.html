@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
@@ -12,12 +12,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Polymer Starter Kit">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <title>eTools | PMP</title>
-    <meta name="description" content="UNICEF Partnership Management Portal">
+    <title>Etools Frontend Template</title>
+    <meta name="generator" content="PWA Starter Kit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Etools Frontend Template description">
 
     <!--
       The `<base>` tag below is present to support two advanced deployment options:
@@ -26,10 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Instead of manually editing the `<base>` tag yourself, you should generally either:
       a) Add a `basePath` property to the build configuration in your `polymer.json`.
       b) Use the `--base-path` command-line option for `polymer build`.
-
-      Note: If you intend to serve from a non-root path, see [polymer-root-path] below.
     -->
-    <base href="/pmp/">
+    <base href="/pmp_poly3/">
 
     <link rel="icon" href="images/favicon.ico">
 
@@ -37,16 +33,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="manifest" href="manifest.json">
 
     <!-- See https://goo.gl/qRE0vM -->
-    <meta name="theme-color" content="#0099ff">
+    <meta name="theme-color" content="#3f51b5">
 
     <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="eTools - Partnership Management Portal">
+    <meta name="application-name" content="My App">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="eTools - Partnership Management Portal">
+    <meta name="apple-mobile-web-app-title" content="My App">
 
     <!-- Homescreen icons -->
     <link rel="apple-touch-icon" href="images/manifest/icon-48x48.png">
@@ -60,52 +56,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-TileColor" content="#3f51b5">
     <meta name="msapplication-tap-highlight" content="no">
 
-    <script>
-      'use strict';
-      /**
-      * [polymer-root-path]
-      *
-      * By default, we set `Polymer.rootPath` to the server root path (`/`).
-      * Leave this line unchanged if you intend to serve your app from the root
-      * path (e.g., with URLs like `my.domain/` and `my.domain/view1`).
-      *
-      * If you intend to serve your app from a non-root path (e.g., with URLs
-      * like `my.domain/my-app/` and `my.domain/my-app/view1`), edit this line
-      * to indicate the path from which you'll be serving, including leading
-      * and trailing slashes (e.g., `/my-app/`).
-      */
-      const BASE_URL = '/pmp/';
-      window.Polymer = {rootPath: BASE_URL};
+    <!-- Default twitter cards -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@username">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="my-app">
+    <meta property="og:image" content="images/manifest/icon-144x144.png" />
 
+    <!-- Performance tip: hint to the browser to start the handshake for the fonts site -->
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <script>
       // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          // check express.js to see how service-worker.js file path is set
           navigator.serviceWorker.register('service-worker.js', {
-            scope: Polymer.rootPath
-          }, function(err) {
-            console.log('ServiceWorker registration failed: ', err); // eslint-disable-line
+            scope: '/pmp_poly3/',
           });
         });
       }
 
-      (function() {
-        // Load webcomponents-loader.js to check and load any polyfills your browser needs
-        const webcomponentsLoaderScript = document.createElement('script');
-        webcomponentsLoaderScript.async = true;
-        webcomponentsLoaderScript.src = BASE_URL + 'bower_components/webcomponentsjs/webcomponents-loader.js';
-        document.head.appendChild(webcomponentsLoaderScript);
-
-        // Load application shell
-        const appShellImport = document.createElement('link');
-        appShellImport.rel = 'import';
-        appShellImport.href = BASE_URL + 'pmp/app-shell.html';
-        document.head.appendChild(appShellImport);
-      })();
+      // Redux assumes `process.env.NODE_ENV` exists in the ES module build.
+      // https://github.com/reactjs/redux/issues/2907
+      window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
     <!-- Add any global styles for body, document, etc. -->
     <style>
+      /*@font-face {*/
+        /*font-family: 'Pacifico';*/
+        /*font-style: normal;*/
+        /*font-weight: 400;*/
+        /*src: local('Pacifico Regular'), local('Pacifico-Regular'), url(https://fonts.gstatic.com/s/pacifico/v12/Q_Z9mv4hySLTMoMjnk_rCXYhjbSpvc47ee6xR_80Hnw.woff2) format('woff2');*/
+        /*!* THe browser draws the text immediately in the fallback font if the font*/
+           /*isn't loaded, then swaps it with the webfont when it eventually loads*/
+           /*See: https://developers.google.com/web/updates/2016/02/font-display*/
+        /**!*/
+        /*font-display: swap;*/
+      /*}*/
+
       body {
         margin: 0;
         font-family: 'Roboto', 'Noto', sans-serif;
@@ -113,9 +101,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 400;
         line-height: 1.5;
         min-height: 100vh;
-        /* we can not use app-theme color variables here, IE11 can not apply them */
         background-color: #eeeeee;
         color: rgba(0, 0, 0, 0.87);
+        -webkit-font-smoothing: antialiased;
       }
       * {
         outline: none;
@@ -123,16 +111,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
   </head>
   <body>
-    <app-shell></app-shell>
+    <app-shell appTitle="my app"></app-shell>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
-    <!-- Built with love using Polymer Starter Kit -->
-
-    <!-- Start of etools Zendesk Widget script -->
-
-    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=69eb3f61-7900-4d7e-a3e2-9f4b3b28b2ac"> </script>
-
-    <!-- End of etools Zendesk Widget script -->
+    <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <!-- Built with love using PWA Starter Kit -->
+    <script type="module" src="src/components/app-shell/app-shell.js"></script>
   </body>
 </html>

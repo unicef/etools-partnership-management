@@ -1,56 +1,69 @@
 {
   "entrypoint": "index.html",
-  "shell": "pmp/app-shell.html",
-  "fragments": [
-    "pmp/modules/app-modules/partners/partners-module.html",
-    "pmp/modules/app-modules/partners/pages/list/partners-list.html",
-    "pmp/modules/app-modules/partners/pages/overview/partner-overview.html",
-    "pmp/modules/app-modules/partners/pages/details/partner-details.html",
-    "pmp/modules/app-modules/partners/pages/financial-assurance/partner-financial-assurance.html",
-
-    "pmp/modules/app-modules/agreements/agreements-module.html",
-    "pmp/modules/app-modules/agreements/pages/list/agreements-list.html",
-    "pmp/modules/app-modules/agreements/pages/details/agreement-details.html",
-
-    "pmp/modules/app-modules/interventions/interventions-module.html",
-    "pmp/modules/app-modules/interventions/pages/list/interventions-list.html",
-    "pmp/modules/app-modules/interventions/pages/overview/intervention-overview.html",
-    "pmp/modules/app-modules/interventions/pages/details/intervention-details.html",
-    "pmp/modules/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.html",
-    "pmp/modules/app-modules/interventions/pages/attachments/intervention-attachments.html",
-    "pmp/modules/app-modules/interventions/pages/reports/intervention-reports.html",
-    "pmp/modules/app-modules/interventions/pages/progress/intervention-progress.html",
-
-    "pmp/modules/app-modules/reports/reports-module.html",
-    "pmp/modules/app-modules/reports/pages/list/reports-list.html",
-    "pmp/modules/app-modules/reports/pages/progress/report-progress.html",
-    "pmp/modules/app-modules/reports/pages/summary/report-summary.html",
-
-    "pmp/modules/app-modules/settings/settings-module.html",
-    "pmp/modules/app-modules/not-found/not-found.html"
-  ],
+  "shell": "src/components/app-shell/app-shell.js",
   "sources": [
-    "pmp/**/*",
-    "images/**/*",
-    "bower.json"
+    "images/**/*"
   ],
   "extraDependencies": [
     "manifest.json",
-    "bower_components/webcomponentsjs/*.js"
+    "node_modules/@webcomponents/webcomponentsjs/**",
+    "push-manifest.json"
   ],
-  "lint": {
-    "rules": ["polymer-2"],
-    "ignoreWarnings": []
-  },
   "builds": [
     {
-      "preset": "es6-bundled",
-      "name": "pmp/es6-bundled",
-      "browserCapabilities": ["es2015"]
+      "name": "esm-bundled",
+      "browserCapabilities": [
+        "es2015",
+        "modules"
+      ],
+      "js": {
+        "minify": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
     },
     {
-      "preset": "es5-bundled",
-      "name": "pmp/es5-bundled"
+      "name": "es6-bundled",
+      "browserCapabilities": [
+        "es2015"
+      ],
+      "js": {
+        "compile": "es2015",
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    },
+    {
+      "name": "es5-bundled",
+      "js": {
+        "compile": "es5",
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
     }
-  ]
+  ],
+  "moduleResolution": "node",
+  "npm": true
 }

@@ -1,6 +1,11 @@
-bower_components/
-build/
 node_modules/
-.idea/
+build/
+bower_components/
+dist/
 .vscode/
-package-lock.json
+.tmp/
+.idea/
+*.sublime-project
+*.sublime-workspace
+src/**/*.js
+
