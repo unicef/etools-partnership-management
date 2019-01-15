@@ -1,12 +1,15 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/social-icons.js';
+import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-icons/maps-icons.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 
 import './styles/nav-menu-styles.js';
+import {pmpMainIcon} from '../../styles/pmp-custom-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 
 /**
@@ -25,19 +28,17 @@ class AppMenu extends GestureEventListeners(PolymerElement) {
 
       <div class="menu-header">
       <span id="app-name">
-        Frontend <br>
-        Template
+        Partnership <br>
+        Management
       </span>
 
         <span class="ripple-wrapper main">
-        <iron-icon id="menu-header-top-icon"
-                   icon="assignment-ind"
-                   on-tap="_toggleSmallMenu"></iron-icon>
+        <span id="menu-header-top-icon" on-tap="_toggleSmallMenu">${pmpMainIcon}</span>
         <paper-ripple class="circle" center></paper-ripple>
       </span>
 
         <paper-tooltip for="menu-header-top-icon" position="right">
-          Frontend Template
+          Partnership Management
         </paper-tooltip>
 
         <span class="ripple-wrapper">
@@ -54,21 +55,55 @@ class AppMenu extends GestureEventListeners(PolymerElement) {
                        selectable="a"
                        role="navigation">
 
-          <a class="nav-menu-item" menu-name="page-one" href$="[[rootPath]]page-one">
-            <iron-icon id="page1-icon" icon="accessibility"></iron-icon>
-            <paper-tooltip for="page1-icon" position="right">
-              Page One
+          <a class="nav-menu-item" menu-name="partners" href$="[[rootPath]]partners/list">
+            <iron-icon id="partners-icon" icon="social:people"></iron-icon>
+            <paper-tooltip for="partners-icon" position="right">
+              Partners
             </paper-tooltip>
-            <div class="name">Page One</div>
+            <div class="name">Partners</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="page-two" href$="[[rootPath]]page-two">
-            <iron-icon id="page2-icon" icon="extension"></iron-icon>
-            <paper-tooltip for="page2-icon" position="right">
-              Page Two
+          <a class="nav-menu-item" menu-name="agreements" href$="[[rootPath]]agreements/list">
+            <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
+            <paper-tooltip for="agreements-icon" position="right">
+              Agreements
             </paper-tooltip>
-            <div class="name">Page Two</div>
+            <div class="name">Agreements</div>
           </a>
+          
+          <a class="nav-menu-item" menu-name="interventions" href$="[[rootPath]]interventions/list">
+            <iron-icon id="interventions-icon" icon="description"></iron-icon>
+            <paper-tooltip for="interventions-icon" position="right">
+              PD/SSFA
+            </paper-tooltip>
+            <div class="name">PD/SSFA</div>
+          </a>
+          
+          <a class="nav-menu-item" menu-name="government-partners" href$="[[rootPath]]government-partners/list">
+            <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
+            <paper-tooltip for="gov-icon" position="right">
+              Government
+            </paper-tooltip>
+            <div class="name">Government</div>
+          </a>
+          
+          <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+            <a class="nav-menu-item" menu-name="reports" href$="[[rootPath]]reports/list">
+              <iron-icon id="reports-icon" icon="assignment"></iron-icon>
+              <paper-tooltip for="reports-icon" position="right">
+                Reports
+              </paper-tooltip>
+              <div class="name">Reports</div>
+            </a>
+          
+            <a class="nav-menu-item" menu-name="settings" href$="[[rootPath]]settings">
+              <iron-icon id="settings-icon" icon="settings"></iron-icon>
+              <paper-tooltip for="settings-icon" position="right">
+                Settings
+              </paper-tooltip>
+              <div class="name">Settings</div>
+            </a>
+          </template>
           
         </iron-selector>
 

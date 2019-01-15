@@ -11,6 +11,8 @@ import {store, RootState} from "../../../store";
 import {isProductionServer, isStagingServer} from '../../../config/config.js';
 import {updateDrawerState} from "../../../actions/app";
 
+import 'etools-app-selector/etools-app-selector.js'
+
 /**
  * page header element
  * @polymer
@@ -76,7 +78,7 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
         <div class="titlebar content-align">
-          <!--<etools-app-selector id="selector"></etools-app-selector>-->
+          <etools-app-selector></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
           <dom-if if="[[_isStaging]]">
             <template>

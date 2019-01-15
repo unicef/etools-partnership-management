@@ -89,11 +89,6 @@ documentContainer.innerHTML = `<dom-module id="nav-menu-styles">
         cursor: pointer;
       }
   
-      #menu-header-top-icon {
-        --iron-icon-height: 36px;
-        --iron-icon-width: 36px;
-      }
-  
       .divider {
         margin: 8px 0;
         border-bottom: 1px solid var(--dark-divider-color);
