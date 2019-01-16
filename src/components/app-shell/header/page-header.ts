@@ -107,7 +107,6 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
   public static get properties() {
     return {
       // This shouldn't be neccessary, but the polymer lint isn't picking up
-      // Polymer.Element#importPath
       rootPath: String,
       _isStaging: Boolean
     };
@@ -120,8 +119,6 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
     super.connectedCallback();
     this._setBgColor();
     this._isStaging = isStagingServer();
-
-    console.log(this.rootPath);
   }
 
   // @ts-ignore
