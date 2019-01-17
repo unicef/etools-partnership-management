@@ -4,6 +4,9 @@ import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+import 'etools-profile-dropdown/etools-profile-dropdown.js';
+
+// import '../layout/components/countries-dropdown.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store";
@@ -87,8 +90,8 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
           </dom-if>
         </div>
         <div class="content-align">
-          <!--<countries-dropdown id="countries" countries="[[countries]]"-->
-                              <!--current-country="[[profile.country]]"></countries-dropdown>-->
+          <countries-dropdown id="countries" countries="[[countries]]"
+                              current-country="[[profile.country]]"></countries-dropdown>
 
           <!--<etools-profile-dropdown-->
               <!--sections="[[allSections]]"-->
@@ -109,12 +112,25 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
       // This shouldn't be neccessary, but the polymer lint isn't picking up
       // Polymer.Element#importPath
       rootPath: String,
-      _isStaging: Boolean
+      _isStaging: Boolean,
+      allSections: Object,
+        // computed: '_convertCollection(sections)'
+      allOffices: Object,
+        // computed: '_convertCollection(offices)'
+      allUsers: Object,
+        // computed: '_convertUsers(users)'
+      originalProfile: Object,
+        // observer: '_handleProfileLoaded',
+        // statePath: 'currentUser'
     };
   }
 
   // @ts-ignore
   private _isStaging: boolean = false;
+  public allSections: Object = {};
+  public allOffices: Object = {};
+  public allUsers: Object = {};
+  public originalProfile: Object = {};
 
   public connectedCallback() {
     super.connectedCallback();
@@ -139,6 +155,30 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
     if (!isProductionServer()) {
       this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
     }
+  }
+
+  public _saveProfile(e) {
+    let modifiedFields = this._getModifiedFields(this.originalProfile, e.detail.profile);
+    this.saveProfile(modifiedFields);
+  }
+
+  public _handleProfileLoaded(profileData) {
+    this.set('profile', JSON.parse(JSON.stringify(profileData)));
+  }
+
+  public _convertUsers(data) {
+    return data.map((d) => {
+      return {
+        value: parseInt(d.id, 10),
+        label: d.name
+      };
+    });
+  }
+
+  public _convertCollection(data) {
+    return data.map((item) => {
+      return {label: item.name, value: item.id};
+    });
   }
 }
 
