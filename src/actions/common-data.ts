@@ -38,6 +38,7 @@ export const UPDATE_PRP_COUNTRIES = 'UPDATE_PRP_COUNTRIES';
 export const UPDATE_SECTIONS = 'UPDATE_SECTIONS';
 export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
+export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: object[]
@@ -143,6 +144,10 @@ export interface CommonDataActionUpdateUserCountryData extends Action<'UPDATE_US
   countryData: object
 };
 
+export interface CommonDataActionUpdateEnvFlags extends Action<'UPDATE_ENV_FLAGS'> {
+  envFlags: object
+};
+
 export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonDataActionUpdateDisaggregations |
     CommonDataActionUpdateFileTypes | CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers |
     CommonDataActionUpdateDonors | CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
@@ -153,7 +158,7 @@ export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonD
     CommonDataActionUpdateInterventionAmendmentTypes | CommonDataActionUpdateLocationTypes |
     CommonDataActionUpdatePartnerRiskRatings | CommonDataActionUpdateLocations | CommonDataActionUpdateOffices |
     CommonDataActionUpdateSections | CommonDataActionUpdateUnicefUsers | CommonDataActionUpdateUserCountryData |
-    CommonDataActionUpdatePRPCountries;
+    CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags;
 
 // @ts-ignore - for now
 type ThunkResult = ThunkAction<void, RootState, undefined, CommonDataAction>;
@@ -364,5 +369,13 @@ export const updateUserCountryData: ActionCreator<CommonDataActionUpdateUserCoun
       return {
         type: UPDATE_USER_COUNTRY_DATA,
         countryData
+      };
+    };
+
+export const updateEnvFlags: ActionCreator<CommonDataActionUpdateEnvFlags> =
+    (envFlags: object) => {
+      return {
+        type: UPDATE_ENV_FLAGS,
+        envFlags
       };
     };

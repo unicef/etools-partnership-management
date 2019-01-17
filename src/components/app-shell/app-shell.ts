@@ -47,6 +47,8 @@ import './menu/app-menu.js';
 import './header/page-header.js'
 import './footer/page-footer.js'
 
+import '../environment-flags/environment-flags';
+
 import './app-theme.js';
 
 // Gesture events like tap and track generated from touch will not be
@@ -68,7 +70,9 @@ class AppShell extends connect(store)(AppMenuMixin(CommonData(PolymerElement)) a
     // language=HTML
     return html`
     ${AppShellStyles}
-   
+    
+    <environment-flags></environment-flags>
+    
     <app-drawer-layout id="layout" responsive-width="850px"
                        fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
       <!-- Drawer content -->

@@ -3,6 +3,8 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 
 // @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
+// @ts-ignore
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {RootState, store} from "../../store";
 
 import pmpEndpoints from './endpoints.js';
@@ -11,9 +13,11 @@ import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../con
 /**
  * @polymer
  * @mixinFunction
+ * @appliesMixin EtoolsAjaxRequestMixin
+ * @appliesMixin EtoolsLogsMixin
  */
-export const EndpointsMixin = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(EtoolsAjaxRequestMixin(baseClass)) {
+const EndpointsMixin = dedupingMixin((baseClass: any) =>
+    class extends connect(store)(EtoolsAjaxRequestMixin(EtoolsLogsMixin(baseClass))) {
 
       // TODO: polymer 3 - remove properties from here
       static get properties() {
@@ -79,7 +83,6 @@ export const EndpointsMixin = dedupingMixin((baseClass: any) =>
         if (data && Object.keys(data).length > 0) {
           for(let k in data) {
             let replacePattern = /<%=${k}%>/gi;
-            console.log(replacePattern);
             tmpl = tmpl.replace(replacePattern, (data as any)[k]);
           }
         }
