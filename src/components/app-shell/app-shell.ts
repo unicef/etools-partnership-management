@@ -40,8 +40,17 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
+// @ts-ignore
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+// @ts-ignore
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
+import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
+import EnvironmentFlags from "../environment-flags/environment-flags-mixin.js";
+import ScrollControl from "../mixins/scroll-control-mixin.js";
+import AmendmentModeUIMixin from "../amendment-mode/amendment-mode-UI-mixin.js";
 
 import './menu/app-menu.js';
 import './header/page-header.js'
@@ -60,10 +69,23 @@ setRootPath('/pmp_poly3/');
 /**
  * @customElement
  * @polymer
+ * @appliesMixin EtoolsLogsMixin
  * @appliesMixin AppMenuMixin
  * @appliesMixin CommonData
+ * @appliesMixin ToastNotifications
+ * @appliesMixin EnvironmentFlags
+ * @appliesMixin ScrollControl
+ * @appliesMixin AmendmentModeUIMixin
  */
-class AppShell extends connect(store)(AppMenuMixin(CommonData(PolymerElement)) as any) {
+class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
+  EtoolsLogsMixin,
+  AppMenuMixin,
+  CommonData,
+  ToastNotifications,
+  EnvironmentFlags,
+  ScrollControl,
+  AmendmentModeUIMixin
+], PolymerElement) as any) {
 
   public static get template() {
     // main template

@@ -25,8 +25,6 @@ const ToastNotifications = dedupingMixin((baseClass: any) =>
         this.queueToast = this.queueToast.bind(this);
         // @ts-ignore
         this.addEventListener('toast', this.queueToast);
-
-        this._toastAfterRenderSetup();
       }
 
       public disconnectedCallback() {

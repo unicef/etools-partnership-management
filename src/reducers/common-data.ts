@@ -27,6 +27,7 @@ import {
   UPDATE_FILE_TYPES,
   UPDATE_PRP_COUNTRIES,
   UPDATE_ENV_FLAGS,
+  UPDATE_IN_AMENDMENT_MODE_STATE,
   CommonDataAction
 } from '../actions/common-data';
 
@@ -134,7 +135,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
   // let indexP;
   // let index;
   // let pageDataWithPermsUpdated;
-  // let pageDataInAmendment;
   // let newUploadInProgress;
   // let newUnsavedUploads;
   // let dIndex;
@@ -403,16 +403,16 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     //     pageData: pageDataWithPermsUpdated
     //   };
 
-    // case UPDATE_IN_AMENDMENT_MODE_STATE:
-    //   pageDataInAmendment = {
-    //     ...state.pageData,
-    //     in_amendment: action.in_amendment
-    //   };
-    //
-    //   return {
-    //     ...state,
-    //     pageData: pageDataInAmendment
-    //   };
+    case UPDATE_IN_AMENDMENT_MODE_STATE:
+      let pageDataInAmendment = {
+        ...state.pageData,
+        in_amendment: action.inAmendment
+      };
+
+      return {
+        ...state,
+        pageData: pageDataInAmendment
+      };
 
     // case INCREASE_UPLOADS_IN_PROGRESS:
     //   return {
