@@ -133,6 +133,11 @@ class AppShell extends connect(store)(AppMenuMixin(CommonData(PolymerElement)) a
   protected _isActivePage(_page: string, expectedPageName: string): boolean {
     return _page === expectedPageName;
   }
+
+  // dev purpose - to be removed in the future
+  public logStoreState() {
+    console.log(store.getState());
+  }
 }
 
 window.customElements.define('app-shell', AppShell);
