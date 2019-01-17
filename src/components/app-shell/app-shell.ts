@@ -14,17 +14,22 @@ import { setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import {installRouter} from "pwa-helpers/router.js";
-import {navigate} from "../../actions/app.js";
 
 // This element is connected to the Redux store.
 import { store, RootState } from '../../store.js';
 
 // These are the actions needed by this element.
 import {
-  // navigate,
-  // updateOffline,
+  navigate,
   updateDrawerState
 } from '../../actions/app.js';
+
+// Lazy loading CommonData reducer.
+import commonData from '../../reducers/common-data.js';
+store.addReducers({
+  // @ts-ignore
+  commonData
+});
 
 // These are the elements needed by this element.
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
@@ -36,6 +41,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import {AppShellStyles} from './app-shell-styles';
 
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
+import CommonData from '../common-data-mixins/common-data.js'
 
 import './menu/app-menu.js';
 import './header/page-header.js'
@@ -49,7 +55,13 @@ setPassiveTouchGestures(true);
 
 setRootPath('/pmp_poly3/');
 
-class AppShell extends connect(store)(AppMenuMixin(PolymerElement) as any) {
+/**
+ * @customElement
+ * @polymer
+ * @appliesMixin AppMenuMixin
+ * @appliesMixin CommonData
+ */
+class AppShell extends connect(store)(AppMenuMixin(CommonData(PolymerElement)) as any) {
 
   public static get template() {
     // main template
@@ -104,6 +116,10 @@ class AppShell extends connect(store)(AppMenuMixin(PolymerElement) as any) {
 
   public connectedCallback() {
     super.connectedCallback();
+
+    // trigger common data load requests
+    this.loadCommonData();
+
     installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
     installMediaQueryWatcher(`(min-width: 460px)`,
         () => store.dispatch(updateDrawerState(false)));
@@ -116,6 +132,11 @@ class AppShell extends connect(store)(AppMenuMixin(PolymerElement) as any) {
 
   protected _isActivePage(_page: string, expectedPageName: string): boolean {
     return _page === expectedPageName;
+  }
+
+  // dev purpose - to be removed in the future
+  public logStoreState() {
+    console.log(store.getState());
   }
 }
 

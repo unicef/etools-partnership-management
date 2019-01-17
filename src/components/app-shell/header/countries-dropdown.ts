@@ -118,8 +118,8 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
     };
   }
 
-  public currentCountry: Object = {};
-  public countries: Array = [];
+  public currentCountry: object = {};
+  public countries: object[] = [];
   public countrySelectorVisible: Boolean = false;
 
   public connectedCallback() {
@@ -140,7 +140,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
 
   }
 
-  public _countrySelected(e) {
+  protected _countrySelected(e) {
     if (!e.detail.selectedItem) {
       return;
     }
@@ -151,7 +151,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
     }
   }
 
-  public _triggerCountryChangeRequest(countryId) {
+  protected _triggerCountryChangeRequest(countryId) {
     let self = this;
     this.fireEvent('global-loading', {
       message: 'Please wait while country data is changing...',
@@ -170,18 +170,18 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
     });
   }
 
-  public _handleResponse() {
+  protected _handleResponse() {
     this.fireEvent('update-main-path', {path: 'partners'});
     this.refresh();
   }
 
-  public _countrySelectorUpdate(countries) {
+  protected _countrySelectorUpdate(countries) {
     if (Array.isArray(countries) && (countries.length > 1)) {
       this.countrySelectorVisible = true;
     }
   }
 
-  public _handleError(error) {
+  protected _handleError(error) {
     this.logError('Country change failed!', 'countries-dropdown', error);
     // TODO: this should be a larger alert.
     this.$.countrySelector.set('selected', this.currentCountry.id);

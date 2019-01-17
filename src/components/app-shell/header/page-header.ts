@@ -90,16 +90,16 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
           </dom-if>
         </div>
         <div class="content-align">
-          <countries-dropdown id="countries" countries="[[countries]]"
-                              current-country="[[profile.country]]"></countries-dropdown>
+          <!--<countries-dropdown id="countries" countries="[[countries]]"-->
+                              <!--current-country="[[profile.country]]"></countries-dropdown>-->
 
-          <!--<etools-profile-dropdown-->
-              <!--sections="[[allSections]]"-->
-              <!--offices="[[allOffices]]"-->
-              <!--users="[[allUsers]]"-->
-              <!--profile="{{profile}}"-->
-              <!--on-save-profile="_saveProfile"-->
-              <!--on-sign-out="_signOut"></etools-profile-dropdown>-->
+          <etools-profile-dropdown
+              sections="[[allSections]]"
+              offices="[[allOffices]]"
+              users="[[allUsers]]"
+              profile="{{profile}}"
+              on-save-profile="_saveProfile"
+              on-sign-out="_signOut"></etools-profile-dropdown>
 
           <!--<paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>-->
         </div>
@@ -110,34 +110,42 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
   public static get properties() {
     return {
       // This shouldn't be neccessary, but the polymer lint isn't picking up
-      // Polymer.Element#importPath
       rootPath: String,
       _isStaging: Boolean,
-      allSections: Object,
-        // computed: '_convertCollection(sections)'
-      allOffices: Object,
-        // computed: '_convertCollection(offices)'
-      allUsers: Object,
-        // computed: '_convertUsers(users)'
-      originalProfile: Object,
-        // observer: '_handleProfileLoaded',
-        // statePath: 'currentUser'
+      allSections: {
+        type: Object,
+        notify: true,
+        computed: '_convertCollection(sections)'
+      },
+      allOffices: {
+        type: Object,
+        notify: true,
+        computed: '_convertCollection(offices)'
+      },
+      allUsers: {
+        type: Object,
+        notify: true,
+        computed: '_convertUsers(users)'
+      },
+      originalProfile: {
+        type: Object,
+        observer: '_handleProfileLoaded',
+        statePath: 'currentUser'
+      }
     };
   }
 
   // @ts-ignore
   private _isStaging: boolean = false;
-  public allSections: Object = {};
-  public allOffices: Object = {};
-  public allUsers: Object = {};
-  public originalProfile: Object = {};
+  public allSections: object = {};
+  public allOffices: object = {};
+  public allUsers: object = {};
+  public originalProfile: object = {};
 
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
     this._isStaging = isStagingServer();
-
-    console.log(this.rootPath);
   }
 
   // @ts-ignore

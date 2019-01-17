@@ -11,9 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import { Reducer } from 'redux';
 import {
   UPDATE_PAGE,
-  UPDATE_DRAWER_STATE
+  UPDATE_DRAWER_STATE,
+  AppAction
 } from '../actions/app.js';
-import { RootAction } from '../store.js';
 
 export interface AppState {
   page: string;
@@ -25,7 +25,7 @@ const INITIAL_STATE: AppState = {
   drawerOpened: false
 };
 
-const app: Reducer<AppState, RootAction> = (state = INITIAL_STATE, action) => {
+const app: Reducer<AppState, AppAction> = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case UPDATE_PAGE:
       return {

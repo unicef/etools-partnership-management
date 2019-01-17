@@ -8,6 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
+
 declare global {
   interface Window {
     process?: Object;
@@ -29,12 +30,16 @@ import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 import app, { AppState } from './reducers/app.js';
 import { AppAction } from './actions/app.js';
 
+import { CommonDataState } from './reducers/common-data.js';
+import { CommonDataAction } from "./actions/common-data.js";
+
 // Overall state extends static states and partials lazy states.
 export interface RootState {
   app?: AppState;
+  commonData?: CommonDataState;
 }
 
-export type RootAction = AppAction | any; // could be more than one action AppAction | OtherAppAction ...
+export type RootAction = AppAction | CommonDataAction;
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
@@ -57,7 +62,27 @@ export const store = createStore(
 
 // Initially loaded reducers.
 store.addReducers({
+  // @ts-ignore
   app
+});
+
+window.addEventListener('storage', function(e) {
+  if (e.key !== 'update-redux' || !e.newValue) {
+    return;
+  }
+  store.dispatch(JSON.parse(e.newValue));
+});
+
+window.addEventListener('beforeunload', function(e) {
+  const state = store.getState();
+  const uploadsInprogressNumber: number = (state as any).commonData.uploadsInProgress;
+  const unsavedUploadsNumber: number = (state as any).commonData.unsavedUploads;
+  if (uploadsInprogressNumber > 0 || unsavedUploadsNumber > 0) {
+    // Cancel the event as stated by the standard.
+    e.preventDefault();
+    // Chrome requires returnValue to be set.
+    e.returnValue = 'Are you sure? Uploads in progress will be lost!';
+  }
 });
 
 /**
