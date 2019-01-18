@@ -8,7 +8,7 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory.js';
 import {EtoolsLogsMixin} from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import {EtoolsPageRefreshMixin} from 'etools-behaviors/etools-page-refresh-mixin.js';
-import {EndpointsMixin} from "../../endpoints/endpoints-mixin.js";
+import EndpointsMixin from "../../endpoints/endpoints-mixin.js";
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store.js";

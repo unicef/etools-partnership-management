@@ -2,8 +2,6 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 // @ts-ignore
 import EventHelperMixin from './event-helper-mixin.js';
 
-
-
 /**
  * @polymer
  * @mixinFunction
@@ -167,6 +165,5 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
       }
 
     });
-
 
 export default AjaxErrorsParserMixin;
