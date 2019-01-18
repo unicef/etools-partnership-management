@@ -7,15 +7,15 @@ import * as commonDataActions from '../../actions/common-data.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-
-// TODO: polymer 3 - integrate environments flags mixin
+import EnvironmentFlags from "../environment-flags/environment-flags-mixin";
 
 /**
  * @polymer
  * @mixinFunction
  */
 const CommonData = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(EtoolsMixinFactory.combineMixins([EndpointsMixin], baseClass) as typeof baseClass) {
+    class extends connect(store)(EtoolsMixinFactory.combineMixins(
+        [EndpointsMixin, EnvironmentFlags], baseClass) as typeof baseClass) {
 
       public static get properties() {
         return {
@@ -48,14 +48,14 @@ const CommonData = dedupingMixin((baseClass: any) =>
       }
 
       protected _handlePrpData() {
-        // this._waitForEnvFlagsToLoad().then(() => {
-        //   if (this.showPrpReports()) {
-        //     this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
-        //     if (this.prpServerIsOn()) {
-        //       this._getStaticData(this.commonDataEndpoints.prp);
-        //     }
-        //   }
-        // });
+        this._waitForEnvFlagsToLoad().then(() => {
+          if (this.showPrpReports()) {
+            this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
+            if (this.prpServerIsOn()) {
+              this._getStaticData(this.commonDataEndpoints.prp);
+            }
+          }
+        });
       }
 
       protected _makeRequest(endpointName: string, successHandler: any, errorHandler: any) {
@@ -90,8 +90,8 @@ const CommonData = dedupingMixin((baseClass: any) =>
             return this._handleUserCountryDataResponse;
           case 'disaggregations':
             return this._handleDisaggregationsResponse;
-            //   case 'getPRPCountries':
-            //     return this._handlePRPCountryDataResponse;
+          case 'getPRPCountries':
+            return this._handlePRPCountryDataResponse;
           default:
             return null;
         }
