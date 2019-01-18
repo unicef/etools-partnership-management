@@ -1,4 +1,5 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// @ts-ignore
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
 // @ts-ignore
@@ -28,19 +29,25 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       }
 
       public stateChanged(state: RootState) {
+        // @ts-ignore
         this.prpCountries = state.commonData!.PRPCountryData;
+        // @ts-ignore
         this.currentUser = state.commonData!.currentUser;
       }
 
       protected _getPrpCountryId() {
+        // @ts-ignore
         let currentCountry = this.currentUser.countries_available.find((country: object) => {
+          // @ts-ignore
           return (country as any).id === this.currentUser.country.id;
         });
+        // @ts-ignore
         let prpCountry = this.prpCountries.find((prpCountry: object) => {
           return (prpCountry as any).business_area_code === currentCountry.business_area_code;
         });
 
         if (!prpCountry) {
+          // @ts-ignore
           let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.country.name + ' country data was ' +
               'not found in the available PRP countries by business_area_code!';
           throw new Error(countryNotFoundInPrpWarning);
@@ -132,6 +139,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       }
 
       public requestToken(endpoint: object) {
+        // @ts-ignore
         return this.sendRequest({
           endpoint: endpoint
         });
@@ -206,6 +214,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       fireRequest(endpoint: any, endpointTemplateData: object,
                   requestAdditionalOptions: object, activeReqKey: string) {
         if (!endpoint) {
+          // @ts-ignore
           this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
           return;
         }
@@ -214,6 +223,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         this.addTokenToRequestOptions(endpoint, endpointTemplateData)
             .then(function (requestOptions: any) {
               let options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
+              // @ts-ignore
               return self.sendRequest(options, activeReqKey);
             })
             .then(function (endpointResponse: any) {

@@ -169,16 +169,19 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
   public _setBgColor() {
     // If not production environment, changing header color to red
     if (!isProductionServer()) {
+      // @ts-ignore
       this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
     }
   }
 
   public _saveProfile(e: any) {
     let modifiedFields = this._getModifiedFields(this.originalProfile, e.detail.profile);
+    // @ts-ignore
     this.saveProfile(modifiedFields);
   }
 
   public _handleProfileLoaded(profileData: any) {
+    // @ts-ignore
     this.set('profile', JSON.parse(JSON.stringify(profileData)));
   }
 
@@ -199,6 +202,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
 
   protected _getModifiedFields(originalData: any, newData: any) {
     let modifiedFields = {};
+    // @ts-ignore
     this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
         // @ts-ignore

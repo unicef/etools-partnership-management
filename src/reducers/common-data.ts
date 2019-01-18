@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Reducer} from 'redux';
 import {
   UPDATE_COUNTRY_PROGRAMMES,
@@ -128,7 +129,7 @@ const INITIAL_STATE: CommonDataState = {
   envFlags: null
 };
 
-const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action) => {
+const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
   // let partnersDdDataCopy;
   // let disaggregsCopy;
   // let agreementsCopy;

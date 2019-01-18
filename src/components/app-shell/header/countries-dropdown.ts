@@ -7,8 +7,8 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import {EtoolsLogsMixin} from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
-import {EtoolsPageRefreshMixin} from 'etools-behaviors/etools-page-refresh-mixin.js';
-import {EndpointsMixin} from "../../endpoints/endpoints-mixin.js";
+import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
+import EndpointsMixin from "../../endpoints/endpoints-mixin.js";
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store.js";
@@ -121,7 +121,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
 
   public currentCountry: object = {};
   public countries: object[] = [];
-  public countrySelectorVisible: Boolean = false;
+  public countrySelectorVisible: boolean = false;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -154,13 +154,16 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
 
   protected _triggerCountryChangeRequest(countryId: any) {
     let self = this;
+    // @ts-ignore
     this.fireEvent('global-loading', {
       message: 'Please wait while country data is changing...',
       active: true,
       loadingSource: 'country-change'
     });
 
+    // @ts-ignore
     this.sendRequest({
+      // @ts-ignore
       endpoint: this.getEndpoint('changeCountry'),
       method: 'POST',
       body: {country: countryId}
@@ -172,7 +175,9 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   }
 
   protected _handleResponse() {
+    // @ts-ignore
     this.fireEvent('update-main-path', {path: 'partners'});
+    // @ts-ignore
     this.refresh();
   }
 
@@ -183,11 +188,14 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   }
 
   protected _handleError(error: any) {
+    // @ts-ignore
     this.logError('Country change failed!', 'countries-dropdown', error);
     // TODO: this should be a larger alert.
     // @ts-ignore
     this.$.countrySelector.set('selected', this.currentCountry.id);
+    // @ts-ignore
     this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
+    // @ts-ignore
     this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});
   }
 

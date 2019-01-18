@@ -5,6 +5,8 @@ import UserDataMixin from "./user-data-mixin.js";
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
 import AjaxErrorsParserMixin from "../mixins/ajax-errors-parser-mixin.js";
 import {isEmptyObject} from "../utils/utils";
+import {store} from "../../store";
+import {setCurrentUser} from "../../actions/common-data.js";
 
 
 
@@ -66,6 +68,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
 
       protected _handleResponse(response: any) {
         this.dispatch('setCurrentUser', response);
+        // store.dispatch(setCurrentUser(response));
         this._hideProfileSaveLoadingMsg();
       }
 
