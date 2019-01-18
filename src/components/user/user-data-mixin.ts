@@ -13,8 +13,6 @@ import UserPermisionsMixin from "./user-permissions-mixin.js";
 import {updateCurrentUser} from "../../actions/common-data";
 import {isEmptyObject} from "../utils/utils";
 
-
-
 /**
  * @polymer
  * @mixinFunction
