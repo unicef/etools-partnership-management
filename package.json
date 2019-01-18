@@ -30,15 +30,16 @@
     "@polymer/paper-tooltip": "^3.0.1",
     "@polymer/polymer": "^3.1.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-    "etools-app-selector": "github:unicef-polymer/etools-app-selector#upgrade-to-polymer3",
-    "etools-dropdown": "github:unicef-polymer/etools-dropdown#upgrade-to-polymer3",
-    "etools-behaviors": "github:unicef-polymer/etools-behaviors#upgrade-to-polymer3",
     "etools-ajax": "github:unicef-polymer/etools-ajax#update-to-polymer3",
+    "etools-app-selector": "github:unicef-polymer/etools-app-selector#upgrade-to-polymer3",
+    "etools-behaviors": "github:unicef-polymer/etools-behaviors#upgrade-to-polymer3",
+    "etools-dropdown": "github:unicef-polymer/etools-dropdown#upgrade-to-polymer3",
     "etools-profile-dropdown": "github:unicef-polymer/etools-profile-dropdown#upgrade-to-polymer3",
     "pwa-helpers": "^0.9.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
     "@polymer/test-fixture": "^4.0.2",

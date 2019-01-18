@@ -1,17 +1,16 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 // @ts-ignore
-import EventHelperMixin from 'event-helper-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory";
+import EventHelperMixin from './event-helper-mixin.js';
 
 
 
 /**
  * @polymer
  * @mixinFunction
+ * @appliesMixin EventHelperMixin
  */
 const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
-    class extends (EtoolsMixinFactory.combineMixins([EventHelperMixin], baseClass) as typeof baseClass) {
+    class extends EventHelperMixin(baseClass) {
       static get properties() {
         return {
           globalMessage: String,

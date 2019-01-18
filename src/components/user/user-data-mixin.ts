@@ -8,7 +8,7 @@ import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from "../endpoints/endpoints-mixin.js";
 // @ts-ignore
-import UserPermisionsMixin from "user-permissions-mixin.js";
+import UserPermisionsMixin from "./user-permissions-mixin.js";
 import {updateCurrentUser} from "../../actions/common-data";
 import {isEmptyObject} from "../utils/utils";
 
@@ -17,6 +17,9 @@ import {isEmptyObject} from "../utils/utils";
 /**
  * @polymer
  * @mixinFunction
+ * @appliesMixin EtoolsPageRefreshMixin
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin UserPermisionsMixin
  */
 const UserDataMixin = dedupingMixin((baseClass: any) =>
     class extends connect(store)(EtoolsMixinFactory.combineMixins([
@@ -51,7 +54,7 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
           // TODO: check response to make sure it contains a valid user
           this._setUserData(res);
           // this.dispatch('setCurrentUser', res);
-          this.store.dispatch(updateCurrentUser(res));
+          store.dispatch(updateCurrentUser(res));
           this.checkDexieCountryIsUserCountry(res);
         }).catch((error: any) => {
           this._resetUserAndPermissions();
@@ -97,10 +100,6 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
         return this.userGroups.find((grp: any) =>{
           return grp.name === groupName;
         });
-
-        // return _.find(this.userGroups, function(grp) {
-        //   return grp.name === groupName;
-        // });
       }
 
       protected _resetUserAndPermissions() {

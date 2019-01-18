@@ -1,29 +1,37 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'etools-profile-dropdown/etools-profile-dropdown.js';
-
-// import '../layout/components/countries-dropdown.js';
-
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store";
-
 import {isProductionServer, isStagingServer} from '../../../config/config.js';
 import {updateDrawerState} from "../../../actions/app";
-
+// @ts-ignore
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import 'etools-profile-dropdown/etools-profile-dropdown.js';
 import 'etools-app-selector/etools-app-selector.js'
+// import '../layout/components/countries-dropdown.js';
+import EventHelperMixin from "../../mixins/event-helper-mixin";
+import ProfileOperations from "../../user/profile-operations-mixin";
 
 /**
- * page header element
+ * page header mixin
+ * @polymer
+ * @mixinFunction
+ * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+ * @appliesMixin EtoolsPmpApp.Mixins.ProfileOperations
+ */
+const PageHeaderMixins = EtoolsMixinFactory.combineMixins([
+    GestureEventListeners, ProfileOperations, EventHelperMixin], PolymerElement);
+
+/**
  * @polymer
  * @customElement
- * @appliesMixin GestureEventListeners
+ * @appliesMixin PageHeaderMixins
  */
-class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
+class PageHeader extends connect(store)(PageHeaderMixins) {
 
   public static get template() {
     // main template
@@ -156,7 +164,6 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
 
   public menuBtnClicked() {
     store.dispatch(updateDrawerState(true));
-    // fireEvent(this, 'drawer');
   }
 
   public _setBgColor() {
@@ -194,6 +201,7 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
     let modifiedFields = {};
     this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
+        // @ts-ignore
         modifiedFields[field] = newData[field];
       }
     });

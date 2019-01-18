@@ -1,6 +1,4 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../store";
 
 
 /**
@@ -8,7 +6,7 @@ import {store} from "../../store";
  * @mixinFunction
  */
 const UserPermisionsMixin = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(baseClass) {
+    class extends baseClass {
 
       public getAllPermissions() {
         return {
@@ -56,10 +54,6 @@ const UserPermisionsMixin = dedupingMixin((baseClass: any) =>
         return !! user.groups.find((grp: any) => {
           return grp.name === 'PME';
         });
-
-        // return !!_.find(user.groups, (grp) => {
-        //   return grp.name === 'PME';
-        // });
       }
 
     });

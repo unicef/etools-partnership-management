@@ -8,30 +8,25 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory.js';
 import {EtoolsLogsMixin} from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import {EtoolsPageRefreshMixin} from 'etools-behaviors/etools-page-refresh-mixin.js';
-// @ts-ignore
-import {EtoolsAjaxRequestMixin} from  'etools-ajax/etools-ajax-request-mixin.js';
+import {EndpointsMixin} from "../../endpoints/endpoints-mixin.js";
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store.js";
 
-// <link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
-// <link rel="import" href="../../../../bower_components/etools-behaviors/etools-page-refresh-mixin.html">
-// <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
-// <link rel="import" href="../../endpoints/endpoints-mixin.html">
 // <link rel="import" href="../../mixins/event-helper-mixin.html">
 
 /**
- * countries dropdown element
+ * countries dropdown mixin
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EtoolsAjaxRequestMixin
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
  */
 const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
-    EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin], PolymerElement);
+    EtoolsLogsMixin, EndpointsMixin, EtoolsPageRefreshMixin], PolymerElement);
 
 /**
  * @polymer
@@ -116,8 +111,10 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   public static get properties() {
     return {
       currentCountry: Object,
-      countries: Array,
-        // observer: '_countrySelectorUpdate'
+      countries: {
+        type: Array,
+        observer: '_countrySelectorUpdate'
+      },
       countrySelectorVisible: Boolean
     };
   }
@@ -140,8 +137,6 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
     if (!state) {
       return;
     }
-
-
 
   }
 

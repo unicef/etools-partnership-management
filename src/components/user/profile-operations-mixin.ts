@@ -1,6 +1,6 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 // @ts-ignore
-import UserDataMixin from "user-data-mixin.js";
+import UserDataMixin from "./user-data-mixin.js";
 // @ts-ignore
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
 import AjaxErrorsParserMixin from "../mixins/ajax-errors-parser-mixin.js";
@@ -11,6 +11,8 @@ import {isEmptyObject} from "../utils/utils";
 /**
  * @polymer
  * @mixinFunction
+ * @appliesMixin UserDataMixin
+ * @appliesMixin AjaxErrorsParserMixin
  */
 const ProfileOperations = dedupingMixin((baseClass: any) =>
     class extends (EtoolsMixinFactory.combineMixins([
