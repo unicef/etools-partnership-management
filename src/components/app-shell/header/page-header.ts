@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
@@ -165,17 +166,17 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
     }
   }
 
-  public _saveProfile(e) {
+  public _saveProfile(e: any) {
     let modifiedFields = this._getModifiedFields(this.originalProfile, e.detail.profile);
     this.saveProfile(modifiedFields);
   }
 
-  public _handleProfileLoaded(profileData) {
+  public _handleProfileLoaded(profileData: any) {
     this.set('profile', JSON.parse(JSON.stringify(profileData)));
   }
 
-  public _convertUsers(data) {
-    return data.map((d) => {
+  public _convertUsers(data: any) {
+    return data.map((d: any) => {
       return {
         value: parseInt(d.id, 10),
         label: d.name
@@ -183,10 +184,35 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
     });
   }
 
-  public _convertCollection(data) {
-    return data.map((item) => {
+  public _convertCollection(data: any) {
+    return data.map((item: any) => {
       return {label: item.name, value: item.id};
     });
+  }
+
+  protected _getModifiedFields(originalData: any, newData: any) {
+    let modifiedFields = {};
+    this.editableFields.forEach(function(field: any) {
+      if (originalData[field] !== newData[field]) {
+        modifiedFields[field] = newData[field];
+      }
+    });
+
+    return modifiedFields;
+  }
+
+  protected _signOut() {
+    this._clearDexieDbs();
+    this._clearLocalStorage();
+    window.location.href = window.location.origin + '/saml2/logout';
+  }
+
+  protected _clearDexieDbs() {
+    window.EtoolsPmpApp.DexieDb.delete();
+  }
+
+  protected _clearLocalStorage() {
+    localStorage.clear();
   }
 }
 

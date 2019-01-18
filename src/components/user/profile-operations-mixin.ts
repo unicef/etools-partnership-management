@@ -1,8 +1,10 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-
+// @ts-ignore
 import UserDataMixin from "user-data-mixin.js";
+// @ts-ignore
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
 import AjaxErrorsParserMixin from "../mixins/ajax-errors-parser-mixin.js";
+import {isEmptyObject} from "../utils/utils";
 
 
 
@@ -25,7 +27,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
       public profileSaveLoadingMsgSource: string = 'profile-modal';
 
 
-      protected _dispatchSaveProfileRequest(profile) {
+      protected _dispatchSaveProfileRequest(profile: any) {
         let self = this;
         let config = {
           endpoint: this.getEndpoint(this.endpointName),
@@ -33,16 +35,16 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
           body: profile
         };
 
-        this.sendRequest(config).then(function(resp) {
+        this.sendRequest(config).then(function(resp: any) {
           self._handleResponse(resp);
-        }).catch(function(error) {
+        }).catch(function(error: any) {
           self.parseRequestErrorsAndShowAsToastMsgs(error);
           self._hideProfileSaveLoadingMsg();
         });
       }
 
-      public saveProfile(profile) {
-        if (_.isEmpty(profile)) {
+      public saveProfile(profile: any) {
+        if (isEmptyObject(profile)) {
           // empty profile means no changes found
           this.fireEvent('toast', {
             text: 'There is nothing to save. No change detected on your profile.',
@@ -60,7 +62,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
         this._dispatchSaveProfileRequest(profile);
       }
 
-      protected _handleResponse(response) {
+      protected _handleResponse(response: any) {
         this.dispatch('setCurrentUser', response);
         this._hideProfileSaveLoadingMsg();
       }

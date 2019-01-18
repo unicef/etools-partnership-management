@@ -2,10 +2,14 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import 'etools-dropdown/etools-dropdown.js';
 
+// @ts-ignore
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory.js';
+// @ts-ignore
 import {EtoolsLogsMixin} from 'etools-behaviors/etools-logs-mixin.js';
+// @ts-ignore
 import {EtoolsPageRefreshMixin} from 'etools-behaviors/etools-page-refresh-mixin.js';
-import {EtoolsAjaxRequestMixin} from 'etools-ajax/etools-ajax-request-mixin.js';
+// @ts-ignore
+import {EtoolsAjaxRequestMixin} from  'etools-ajax/etools-ajax-request-mixin.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store.js";
@@ -125,6 +129,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   public connectedCallback() {
     super.connectedCallback();
     setTimeout( () => {
+      // @ts-ignore
       let fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
       this.$.countrySelector.set('fitInto', fitInto);
     }, 0);
@@ -140,18 +145,19 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
 
   }
 
-  protected _countrySelected(e) {
+  protected _countrySelected(e: any) {
     if (!e.detail.selectedItem) {
       return;
     }
     let selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
+    // @ts-ignore
     if (selectedCountryId !== this.currentCountry.id) {
       // send post request to change_coutry endpoint
       this._triggerCountryChangeRequest(selectedCountryId);
     }
   }
 
-  protected _triggerCountryChangeRequest(countryId) {
+  protected _triggerCountryChangeRequest(countryId: any) {
     let self = this;
     this.fireEvent('global-loading', {
       message: 'Please wait while country data is changing...',
@@ -165,7 +171,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
       body: {country: countryId}
     }).then(function() {
       self._handleResponse();
-    }).catch(function(error) {
+    }).catch(function(error: any) {
       self._handleError(error);
     });
   }
@@ -175,15 +181,16 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
     this.refresh();
   }
 
-  protected _countrySelectorUpdate(countries) {
+  protected _countrySelectorUpdate(countries: any) {
     if (Array.isArray(countries) && (countries.length > 1)) {
       this.countrySelectorVisible = true;
     }
   }
 
-  protected _handleError(error) {
+  protected _handleError(error: any) {
     this.logError('Country change failed!', 'countries-dropdown', error);
     // TODO: this should be a larger alert.
+    // @ts-ignore
     this.$.countrySelector.set('selected', this.currentCountry.id);
     this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
     this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});

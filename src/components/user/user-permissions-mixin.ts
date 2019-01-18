@@ -49,14 +49,17 @@ const UserPermisionsMixin = dedupingMixin((baseClass: any) =>
         };
       }
 
-      public userIsPme(user) {
+      public userIsPme(user: any) {
         if (!user || !Array.isArray(user.groups)) {
           return false;
         }
-        //TODO:remove lodash
-        return !!_.find(user.groups, (grp) => {
+        return !! user.groups.find((grp: any) => {
           return grp.name === 'PME';
         });
+
+        // return !!_.find(user.groups, (grp) => {
+        //   return grp.name === 'PME';
+        // });
       }
 
     });

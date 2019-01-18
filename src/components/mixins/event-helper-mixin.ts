@@ -8,7 +8,7 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
  */
 const EventHelperMixin = dedupingMixin((baseClass: any) =>
     class extends baseClass {
-      public fireEvent(eventName, eventDetail) {
+      public fireEvent(eventName: any, eventDetail: any) {
         this.dispatchEvent(new CustomEvent(eventName, {
           detail: eventDetail,
           bubbles: true,

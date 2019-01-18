@@ -47,15 +47,13 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
       public requestUserData() {
         this.sendRequest({
           endpoint: this.getEndpoint(this.endpointName)
-          // @ts-ignore
-        }).then((res) => {
+        }).then((res: any) => {
           // TODO: check response to make sure it contains a valid user
           this._setUserData(res);
           // this.dispatch('setCurrentUser', res);
           this.store.dispatch(updateCurrentUser(res));
           this.checkDexieCountryIsUserCountry(res);
-          // @ts-ignore
-        }).catch((error) => {
+        }).catch((error: any) => {
           this._resetUserAndPermissions();
           this.logError('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
@@ -63,15 +61,14 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
           }
         });
       }
-// @ts-ignore
-      public checkDexieCountryIsUserCountry(user) {
+
+      public checkDexieCountryIsUserCountry(user: any) {
         let country = {
           id: user.country.id,
           name: user.country.name
         };
         window.EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.where('cacheKey').equals('currentCountry').toArray()
-        // @ts-ignore
-            .then((response) => {
+            .then((response: any) => {
               if (response.length > 0) {
                 if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
                   let eventPayload = {
@@ -87,18 +84,17 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
               }
             });
       }
-// @ts-ignore
-      public addCountryInIndexedDb(country) {
+
+      public addCountryInIndexedDb(country: any) {
         let dataToCache = {
           cacheKey: 'currentCountry',
           data: country
         };
         window.EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.put(dataToCache);
       }
-// @ts-ignore
-      protected _findGroup(groupName) {
-        // @ts-ignore
-        return this.userGroups.find((grp) =>{
+
+      protected _findGroup(groupName: any) {
+        return this.userGroups.find((grp: any) =>{
           return grp.name === groupName;
         });
 
@@ -111,43 +107,38 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
         this._setUser(undefined);
         this._setPermissions(undefined);
       }
-// @ts-ignore
-      protected _setUserData(data) {
+
+      protected _setUserData(data: any) {
         let _user = data;
         let _permissions = {};
         this._setUser(_user);
         let permissionsList = this.getAllPermissions();
         if (!isEmptyObject(data)) {
           this._setUserGroups(_user.groups);
-          // @ts-ignore
-          permissionsList.defaultPermissions.forEach(function(perm) {
+          permissionsList.defaultPermissions.forEach(function(perm: any) {
             // @ts-ignore
             _permissions[perm] = true;
           });
           if (this._findGroup('UNICEF User')) {
-            // @ts-ignore
-            permissionsList.unicefUserPermissions.forEach(function(perm) {
+            permissionsList.unicefUserPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('Partnership Manager')) {
-            // @ts-ignore
-            permissionsList.partnershipManagerPermissions.forEach(function(perm) {
+            permissionsList.partnershipManagerPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('PME')) {
-            // @ts-ignore
-            permissionsList.PMEPermissions.forEach(function(perm) {
+            permissionsList.PMEPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('ICT')) {
-            // @ts-ignore
-            permissionsList.ICTPermissions.forEach(function(perm) {
+            permissionsList.ICTPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });

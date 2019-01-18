@@ -22,7 +22,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
       public globalMessage: string = 'An error occurred. Please try again later.';
       public httpStatus413Msg: string = 'The uploaded file is too large!';
 
-      public tryGetResponseError(response) {
+      public tryGetResponseError(response: any) {
         if (response.status === 413) {
           return this.httpStatus413Msg;
         }
@@ -32,9 +32,11 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return response.response || this.globalMessage;
       }
 
-      protected _getErrorsArray(errors, prepareForToastMsg) {
+      protected _getErrorsArray(errors: any, prepareForToastMsg: any) {
+        //@ts-ignore
         let errorsArray = [];
         if (!errors) {
+          //@ts-ignore
           return errorsArray;
         }
 
@@ -52,7 +54,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         }
 
         if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
-          errors.errors.forEach(function(err) {
+          errors.errors.forEach(function(err: any) {
             if (typeof err === 'object') {
               let errKeys = Object.keys(err);
               if (errKeys.length > 0) {
@@ -87,6 +89,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
             }
             if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
               let parentErr = 'Field ' + errField + ': ';
+              //@ts-ignore
               let nestedErrs = this._getErrorsArray(errors[errField]);
               if (nestedErrs.length === 1) {
                 parentErr += nestedErrs[0];
@@ -115,11 +118,12 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return errorsArray;
       }
 
-      protected _markNestedErrors(errs) {
+      protected _markNestedErrors(errs: any) {
+        // @ts-ignore
         return errs.map(er => ' ' + er);
       }
 
-      protected _isArrayOfStrings(arr) {
+      protected _isArrayOfStrings(arr: any) {
         let allStrings = true;
         let i;
         for (i = 0; i < arr.length; i++) {
@@ -131,7 +135,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return allStrings;
       }
 
-      public formatServerErrorAsText(errors) {
+      public formatServerErrorAsText(errors: any) {
         let errorsArray = this._getErrorsArray(errors, false);
         if (errorsArray && errorsArray.length) {
           return errorsArray.join('\n');
@@ -139,7 +143,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return errors;
       }
 
-      public parseRequestErrorsAndShowAsToastMsgs(error, source, redirectOn404) {
+      public parseRequestErrorsAndShowAsToastMsgs(error: any, source: any, redirectOn404: any) {
         if (redirectOn404 && error.status === 404) {
           if (!source) {
             source = this;
@@ -154,7 +158,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         this.showErrorAsToastMsg(errorsString, source);
       }
 
-      public showErrorAsToastMsg(errorsString, source) {
+      public showErrorAsToastMsg(errorsString: any, source: any) {
         if (errorsString) {
           if (!source) {
             source = this;
