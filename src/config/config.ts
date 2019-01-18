@@ -4,8 +4,10 @@ import Dexie from 'dexie';
  * For db versioning check: http://dexie.org/docs/Tutorial/Design
  */
 declare global {
-  interface Window { EtoolsPmpApp: any; EtoolsRequestCacheDb: any; }
+  interface Window { EtoolsPmpApp: any; EtoolsRequestCacheDb: any; EtoolsLogsLevel: any; }
 }
+
+window.EtoolsLogsLevel = 'INFO';
 window.EtoolsPmpApp = window.EtoolsPmpApp || {};
 
 window.EtoolsPmpApp.DexieDb = new Dexie('pmpApp');
