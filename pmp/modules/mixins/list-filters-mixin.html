@@ -39,7 +39,7 @@
       return !!selectedOpt;
     }
 
-    // select a filter from ADD FILTER menu
+    // select/deselect a filter from ADD FILTER menu
     selectFilter(e) {
       const selectedOption = e.model.item;
       const idxInFilterOptions = e.model.index;
@@ -52,8 +52,32 @@
         const idxInSelFilters = this.selectedFilters.findIndex(f => f.filterName === selectedOption.filterName);
         this._clearFilterSelection(selectedOption, idxInFilterOptions, idxInSelFilters);
 
-        // *Remove from dom only after esmmValueChanged has gotten the chance to execute
-        setTimeout(() => { this.splice('selectedFilters', idxInSelFilters, 1); }, 400);
+        this._triggerUrlUpdateAndFiltering(this.listFilterOptions[idxInFilterOptions]);
+
+        /* Once the shown filter will be removed from dom,
+         * the filterValueChanged won't execute,
+         * so we're triggering manually the url and filtering update above
+         */
+        this.removeFromShownFilters(idxInSelFilters);
+      }
+    }
+
+    _triggerUrlUpdateAndFiltering(optionsFilter) {
+      this.set(optionsFilter.path, this._getEmptyValueByFilterType(optionsFilter));
+    }
+
+    _getEmptyValueByFilterType(filter) {
+      switch (filter.type) {
+        case 'esmm':
+        case 'dropdown':
+        case 'etools-dropdown':
+          return filter.singleSelection ? null : [];
+        case 'datepicker':
+          return '';
+        case 'paper-toggle':
+          return false;
+        default:
+          return null;
       }
     }
 
@@ -65,13 +89,14 @@
       this.clearSelectedValueInFilter(filter, ['listFilterOptions', idxInFilterOptions]);
       this.clearSelectedValueInFilter(filter, ['selectedFilters', idxInSelFilters]);
 
-      this.deselectFilter(idxInFilterOptions);
+      this.untickFilter(idxInFilterOptions);
     }
 
-    /*
-     * Remove filter from Ui
-     */
-    deselectFilter(idx) {
+    removeFromShownFilters(idxInSelFilters) {
+      this.splice('selectedFilters', idxInSelFilters, 1);
+    }
+
+    untickFilter(idx) {
       this.set(['listFilterOptions', idx, 'selected'], false);
     }
 
