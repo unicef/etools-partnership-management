@@ -10,20 +10,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // import { LitElement, html, property, PropertyValues } from '@polymer/lit-element';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
+import {afterNextRender} from "@polymer/polymer/lib/utils/render-status";
+import '@polymer/polymer/lib/elements/dom-if.js'
 import { setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
-import {installRouter} from "pwa-helpers/router.js";
+// import {installRouter} from "pwa-helpers/router.js";
 
 // This element is connected to the Redux store.
 import { store, RootState } from '../../store.js';
 
 // These are the actions needed by this element.
 import {
-  navigate,
+  // navigate,
   updateDrawerState
 } from '../../actions/app.js';
 
+import {updateReduxInAmendment} from '../../actions/common-data.js';
 // Lazy loading CommonData reducer.
 import commonData from '../../reducers/common-data.js';
 store.addReducers({
@@ -37,6 +41,8 @@ import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@polymer/app-route/app-location.js';
+import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
@@ -44,6 +50,8 @@ import {AppShellStyles} from './app-shell-styles';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+// @ts-ignore
+import {LoadingMixin} from 'etools-loading/etools-loading-mixin.js';
 
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
@@ -70,6 +78,7 @@ setRootPath('/pmp_poly3/');
 /**
  * @customElement
  * @polymer
+ * @appliesMixin GestureEventListeners
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin AppMenuMixin
  * @appliesMixin CommonData
@@ -78,8 +87,10 @@ setRootPath('/pmp_poly3/');
  * @appliesMixin ScrollControl
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
+ * @appliesMixin LoadingMixin
  */
 class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
+  GestureEventListeners,
   EtoolsLogsMixin,
   AppMenuMixin,
   CommonData,
@@ -88,6 +99,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   ScrollControl,
   AmendmentModeUIMixin,
   UserDataMixin,
+  LoadingMixin,
   // EventHelper,
   // Utils,
   // DynamicDialogMixin,
@@ -102,20 +114,20 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     
     <environment-flags></environment-flags>
     
-    <!--<app-location-->
-        <!--route="{{appLocRoute}}"-->
-        <!--path="{{appLocPath}}"-->
-        <!--query-params="{{appLocQueryParams}}"-->
-        <!--url-space-regex="^[[rootPath]]">-->
-    <!--</app-location>-->
+    <app-location
+        route="{{appLocRoute}}"
+        path="{{appLocPath}}"
+        query-params="{{appLocQueryParams}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
 
-    <!--<app-route-->
-        <!--route="{{route}}"-->
-        <!--pattern="[[rootPath]]:module"-->
-        <!--data="{{routeData}}"-->
-        <!--tail="{{subroute}}"-->
-        <!--on-route-changed="routeChanged">-->
-    <!--</app-route>-->
+    <app-route
+        route="{{route}}"
+        pattern="[[rootPath]]:module"
+        data="{{routeData}}"
+        tail="{{subroute}}"
+        on-route-changed="routeChanged">
+    </app-route>
     
     <app-drawer-layout id="layout" responsive-width="850px"
                        fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
@@ -139,11 +151,47 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
         <!-- Main content -->
         <main role="main" id="page-container" class$="main-content [[_getPageContainerClass(amendmentModeActive)]]">
         
+          <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
+            <partners-module id="partners" class="main-page"
+                             show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+                             current-module="[[_lastActivePartnersModule]]"
+                             route="{{subroute}}"
+                             permissions="[[permissions]]">
+            </partners-module>
+          </template>
+
+          <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
+            <agreements-module id="agreements" class="main-page"
+                               route="{{subroute}}"
+                               permissions="[[permissions]]">
+            </agreements-module>
+          </template>
+
+          <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
+            <interventions-module id="interventions" class="main-page"
+                                  route="{{subroute}}"
+                                  permissions="[[permissions]]">
+            </interventions-module>
+          </template>
+
+          <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
+            <reports-module id="reports" class="main-page"
+                            route="{{subroute}}"
+                            permissions="[[permissions]]">
+            </reports-module>
+          </template>
+
+          <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
+            <not-found class="main-page"></not-found>
+          </template>
+
+          <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
+            <settings-module id="settings" class="main-page"></settings-module>
+          </template>
         
           <!--<page-one class="page" active$="[[_isActivePage(_page, 'page-one')]]"></page-one>-->
           <!--<page-two class="page" active$="[[_isActivePage(_page, 'page-two')]]"></page-two>-->
-          <page-not-found class="page" active$="[[_isActivePage(_page, 'page-not-found')]]"></page-not-found>
-        
+          <!--<page-not-found class="page" active$="[[_isActivePage(_page, 'page-not-found')]]"></page-not-found>-->
         
         </main>
 
@@ -214,7 +262,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       },
       _appModuleMainElUrlTmpl: {
         type: String,
-        value: 'modules/app-modules/##module##/##main-el-name##-module.html'
+        value: '../app-modules/##module##/##main-el-name##-module.js'
       },
       appLocRoute: {
         type: Object,
@@ -245,8 +293,6 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     super.ready();
 
     this._initListeners();
-    // TODO - polymer 3
-    // this.requestUserData();
     this._createLeavePageDialog();
     window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
 
@@ -256,11 +302,10 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
        * This will be triggered once at page load or, after page load, on menu option tap event.
        * The loading message is disabled by *-module.html elements ready callback (in both cases)
        */
-      // TODO: polymer 3
-      // this.fireEvent('global-loading', {
-      //   active: true,
-      //   loadingSource: 'main-page'
-      // });
+      this.fireEvent('global-loading', {
+        active: true,
+        loadingSource: 'main-page'
+      });
     }
   }
 
@@ -268,11 +313,10 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     super.connectedCallback();
 
     this.requestUserData();
-
     // trigger common data load requests
     this.loadCommonData();
 
-    installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
+    // installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
     installMediaQueryWatcher(`(min-width: 460px)`,
         () => store.dispatch(updateDrawerState(false)));
 
@@ -282,10 +326,6 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   public stateChanged(state: RootState) {
     this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
-  }
-
-  protected _isActivePage(_page: string, expectedPageName: string): boolean {
-    return _page === expectedPageName;
   }
 
   // dev purpose - to be removed in the future
@@ -403,8 +443,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   private _pageNotFound() {
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-    // TODO: polymer 3
-    // this.fireEvent('toast', {text: 'An error occurred.', showCloseBtn: true});
+    this.fireEvent('toast', {text: 'An error occurred.', showCloseBtn: true});
   }
 
   private _openDataRefreshDialog() {
@@ -468,9 +507,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     // set last partners active page... needed to make a difference between partners and government-partners
     this._updateLastPartnersModuleActivePage(module);
     // clear loading messages queue
-    // TODO: polymer 3
-    // this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-    this.updateReduxInAmendment(false);
+    this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+    store.dispatch(updateReduxInAmendment(false));
   }
 
   // @ts-ignore
@@ -493,20 +531,21 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       return;
     }
     // resolve element import url
-    // let appModuleMainElId = this._getAppModuleMainElId(module);
-    // let resolvedPageUrl = this.resolveUrl(this._getModuleMainElUrl(appModuleMainElId));
+    let appModuleMainElId = this._getAppModuleMainElId(module);
+    let pageUrl = this._getModuleMainElUrl(appModuleMainElId);
 
     // import main module element if needed
-    // let moduleMainEl = this._getModuleMainElement(appModuleMainElId);
-    // let isPolymerElement = moduleMainEl instanceof Polymer.Element;
-    // if (!isPolymerElement) {
-    //   // moduleMainEl is null => make the import
-    //   Polymer.importHref(
-    //       resolvedPageUrl,
-    //       this._successfulImportCallback.bind(this, appModuleMainElId),
-    //       this._pageNotFound.bind(this),
-    //       true);
-    // }
+    let moduleMainEl = this._getModuleMainElement(appModuleMainElId);
+    let isPolymerElement = moduleMainEl instanceof PolymerElement;
+    console.log(pageUrl);
+    if (!isPolymerElement) {
+      // moduleMainEl is null => make the import
+      import(pageUrl).then(() => {
+        this._successfulImportCallback(appModuleMainElId);
+      }).catch(() => {
+        this._pageNotFound();
+      });
+    }
   }
 
   // @ts-ignore
@@ -528,8 +567,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     // @ts-ignore
     let moduleMainEl = this._getModuleMainElement(moduleId);
     // make sure to redirect to list page if necessary
-    // TODO - polymer 3
-    // Polymer.RenderStatus.afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
+    afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
   }
 
   // @ts-ignore
