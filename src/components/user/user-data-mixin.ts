@@ -1,5 +1,4 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-// @ts-ignore
 import {connect} from "pwa-helpers/connect-mixin";
 import {store} from "../../store";
 
@@ -7,8 +6,8 @@ import {store} from "../../store";
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
 // @ts-ignore
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
+import EventHelper from '../mixins/event-helper-mixin.js';
 import EndpointsMixin from "../endpoints/endpoints-mixin.js";
-// @ts-ignore
 import UserPermisionsMixin from "./user-permissions-mixin.js";
 import {updateCurrentUser} from "../../actions/common-data";
 import {isEmptyObject} from "../utils/utils";
@@ -16,13 +15,14 @@ import {isEmptyObject} from "../utils/utils";
 /**
  * @polymer
  * @mixinFunction
+ * @appliesMixin EventHelper
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserPermisionsMixin
  */
 const UserDataMixin = dedupingMixin((baseClass: any) =>
     class extends connect(store)(EtoolsMixinFactory.combineMixins([
-        EtoolsPageRefreshMixin,EndpointsMixin, UserPermisionsMixin], baseClass) as typeof baseClass) {
+      EventHelper, EtoolsPageRefreshMixin, EndpointsMixin, UserPermisionsMixin], baseClass) as typeof baseClass) {
 
       static get properties() {
         return {
@@ -44,25 +44,20 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
         };
       }
 
-      public endpointName : string = 'myProfile';
+      public endpointName: string = 'myProfile';
 
       public requestUserData() {
-        // @ts-ignore
         this.sendRequest({
-          // @ts-ignore
           endpoint: this.getEndpoint(this.endpointName)
         }).then((res: any) => {
           // TODO: check response to make sure it contains a valid user
           this._setUserData(res);
-          // this.dispatch('setCurrentUser', res);
           store.dispatch(updateCurrentUser(res));
           this.checkDexieCountryIsUserCountry(res);
         }).catch((error: any) => {
           this._resetUserAndPermissions();
-          // @ts-ignore
           this.logError('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
-            // @ts-ignore
             this.fireEvent('forbidden', {bubbles: true, composed: true});
           }
         });
@@ -82,9 +77,7 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
                     active: true,
                     loadingSource: 'country-update'
                   };
-                  // @ts-ignore
                   this.fireEvent('global-loading', eventPayload);
-                  // @ts-ignore
                   this.refresh();
                 }
               } else {
@@ -102,53 +95,47 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
       }
 
       protected _findGroup(groupName: any) {
-        // @ts-ignore
-        return this.userGroups.find((grp: any) =>{
+        return this.userGroups.find((grp: any) => {
           return grp.name === groupName;
         });
       }
 
       protected _resetUserAndPermissions() {
-        // @ts-ignore
         this._setUser(undefined);
-        // @ts-ignore
         this._setPermissions(undefined);
       }
 
       protected _setUserData(data: any) {
         let _user = data;
         let _permissions = {};
-        // @ts-ignore
         this._setUser(_user);
-        // @ts-ignore
         let permissionsList = this.getAllPermissions();
         if (!isEmptyObject(data)) {
-          // @ts-ignore
           this._setUserGroups(_user.groups);
-          permissionsList.defaultPermissions.forEach(function(perm: any) {
+          permissionsList.defaultPermissions.forEach(function (perm: any) {
             // @ts-ignore
             _permissions[perm] = true;
           });
           if (this._findGroup('UNICEF User')) {
-            permissionsList.unicefUserPermissions.forEach(function(perm: any) {
+            permissionsList.unicefUserPermissions.forEach(function (perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('Partnership Manager')) {
-            permissionsList.partnershipManagerPermissions.forEach(function(perm: any) {
+            permissionsList.partnershipManagerPermissions.forEach(function (perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('PME')) {
-            permissionsList.PMEPermissions.forEach(function(perm: any) {
+            permissionsList.PMEPermissions.forEach(function (perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('ICT')) {
-            permissionsList.ICTPermissions.forEach(function(perm: any) {
+            permissionsList.ICTPermissions.forEach(function (perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });

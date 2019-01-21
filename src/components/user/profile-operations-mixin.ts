@@ -1,26 +1,27 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-// @ts-ignore
-import UserDataMixin from "./user-data-mixin.js";
+import {connect} from "pwa-helpers/connect-mixin";
+import {store} from "../../store";
+import {isEmptyObject} from "../utils/utils";
 // @ts-ignore
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
+
 import AjaxErrorsParserMixin from "../mixins/ajax-errors-parser-mixin.js";
-import {isEmptyObject} from "../utils/utils";
-import {store} from "../../store";
-import {setCurrentUser} from "../../actions/common-data.js";
-
-
+import EndpointsMixin from "../endpoints/endpoints-mixin.js";
+import UserDataMixin from "./user-data-mixin.js";
+import {updateCurrentUser} from "../../actions/common-data.js";
 
 /**
  * @polymer
  * @mixinFunction
+ * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 const ProfileOperations = dedupingMixin((baseClass: any) =>
-    class extends (EtoolsMixinFactory.combineMixins([
-        UserDataMixin, AjaxErrorsParserMixin], baseClass) as typeof baseClass) {
+    class extends connect(store)(EtoolsMixinFactory.combineMixins([
+      EndpointsMixin, UserDataMixin, AjaxErrorsParserMixin], baseClass) as typeof baseClass) {
 
-      static get properties() {
+      public static get properties() {
         return {
           _saveActionInProgress: Boolean,
           profileSaveLoadingMsgSource: String,
@@ -39,9 +40,9 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
           body: profile
         };
 
-        this.sendRequest(config).then(function(resp: any) {
+        this.sendRequest(config).then(function (resp: any) {
           self._handleResponse(resp);
-        }).catch(function(error: any) {
+        }).catch(function (error: any) {
           self.parseRequestErrorsAndShowAsToastMsgs(error);
           self._hideProfileSaveLoadingMsg();
         });
@@ -67,8 +68,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
       }
 
       protected _handleResponse(response: any) {
-        this.dispatch('setCurrentUser', response);
-        // store.dispatch(setCurrentUser(response));
+        store.dispatch(updateCurrentUser(response));
         this._hideProfileSaveLoadingMsg();
       }
 

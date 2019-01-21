@@ -1,11 +1,10 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 
-
 /**
  * @polymer
  * @mixinFunction
  */
-const UserPermisionsMixin = dedupingMixin((baseClass: any) =>
+const UserPermissionsMixin = dedupingMixin((baseClass: any) =>
     class extends baseClass {
 
       public getAllPermissions() {
@@ -58,6 +57,5 @@ const UserPermisionsMixin = dedupingMixin((baseClass: any) =>
 
     });
 
-
-
-export default UserPermisionsMixin;
+// @ts-ignore
+export default UserPermissionsMixin;

@@ -7,9 +7,8 @@
  Code distributed by Google as part of the polymer project is also
  subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-// @ts-ignore
+
 import {Action, ActionCreator} from 'redux';
-// @ts-ignore
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../store.js';
 
@@ -42,7 +41,6 @@ export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_IN_AMENDMENT_MODE_STATE = 'UPDATE_IN_AMENDMENT_MODE_STATE';
 export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
-export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: object[]
@@ -160,10 +158,6 @@ export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURREN
   user: object
 };
 
-export interface CommonDataActionSetCurrentUser extends Action<'SET_CURRENT_USER'> {
-  user: object
-};
-
 export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonDataActionUpdateDisaggregations |
     CommonDataActionUpdateFileTypes | CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers |
     CommonDataActionUpdateDonors | CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
@@ -175,7 +169,7 @@ export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonD
     CommonDataActionUpdatePartnerRiskRatings | CommonDataActionUpdateLocations | CommonDataActionUpdateOffices |
     CommonDataActionUpdateSections | CommonDataActionUpdateUnicefUsers | CommonDataActionUpdateUserCountryData |
     CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags | CommonDataActionUpdateInAmendmentMode |
-    CommonDataActionUpdateCurrentUser | CommonDataActionSetCurrentUser;
+    CommonDataActionUpdateCurrentUser;
 
 // @ts-ignore - for now
 type ThunkResult = ThunkAction<void, RootState, undefined, CommonDataAction>;
@@ -409,14 +403,6 @@ export const updateCurrentUser: ActionCreator<CommonDataActionUpdateCurrentUser>
     (user: object) => {
       return{
         type: UPDATE_CURRENT_USER,
-        user
-      }
-    };
-
-export const setCurrentUser: ActionCreator<CommonDataActionSetCurrentUser> =
-    (user: object) => {
-      return {
-        type: SET_CURRENT_USER,
         user
       }
     };

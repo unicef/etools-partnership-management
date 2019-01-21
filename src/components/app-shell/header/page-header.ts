@@ -15,13 +15,15 @@ import 'etools-app-selector/etools-app-selector.js'
 // import '../layout/components/countries-dropdown.js';
 import EventHelperMixin from "../../mixins/event-helper-mixin";
 import ProfileOperations from "../../user/profile-operations-mixin";
+import {isJsonStrMatch} from "../../utils/utils";
 
 /**
  * page header mixin
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
- * @appliesMixin EtoolsPmpApp.Mixins.ProfileOperations
+ * @appliesMixin GestureEventListeners
+ * @appliesMixin EventHelper
+ * @appliesMixin ProfileOperations
  */
 const PageHeaderMixins = EtoolsMixinFactory.combineMixins([
     GestureEventListeners, ProfileOperations, EventHelperMixin], PolymerElement);
@@ -121,6 +123,12 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
       // This shouldn't be neccessary, but the polymer lint isn't picking up
       rootPath: String,
       _isStaging: Boolean,
+
+      countries: Array,
+      offices: Array,
+      sections: Array,
+      users: Array,
+
       allSections: {
         type: Object,
         notify: true,
@@ -136,20 +144,42 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
         notify: true,
         computed: '_convertUsers(users)'
       },
-      originalProfile: {
-        type: Object,
-        observer: '_handleProfileLoaded',
-        statePath: 'currentUser'
-      }
+
+      profile: Object,
+
+      editableFields: {
+        type: Array,
+        value: [
+          'office',
+          'section',
+          'job_title',
+          'phone_number',
+          'oic',
+          'supervisor'
+        ]
+      },
+
+      userProfileDialog: Object
     };
   }
 
   // @ts-ignore
   private _isStaging: boolean = false;
+
+  public sections: object[] = [];
   public allSections: object = {};
+
+  public offices: object[] = [];
   public allOffices: object = {};
+
+  public users: object[] = [];
   public allUsers: object = {};
-  public originalProfile: object = {};
+
+  public profile: object | null = null;
+
+  public static get observers() {
+    return ['_updateCountriesList(profile.countries_available)'];
+  }
 
   public connectedCallback() {
     super.connectedCallback();
@@ -157,9 +187,26 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     this._isStaging = isStagingServer();
   }
 
-  // @ts-ignore
   public stateChanged(state: RootState) {
-    // TODO
+    if (!state.commonData) {
+      return;
+    }
+    if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
+      this.offices = [...state.commonData.offices];
+    }
+    if (!isJsonStrMatch(state.commonData.sections, this.sections)) {
+      this.sections = [...state.commonData.sections];
+    }
+    if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
+      this.users = [...state.commonData.unicefUsersData];
+    }
+    if (state.commonData.currentUser !== null &&
+        !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
+      this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
+      if (this.profile && (this.profile as any).countries_available) {
+        this.countries = this._updateCountriesList((this.profile as any).countries_available);
+      }
+    }
   }
 
   public menuBtnClicked() {
@@ -174,15 +221,36 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     }
   }
 
-  public _saveProfile(e: any) {
-    let modifiedFields = this._getModifiedFields(this.originalProfile, e.detail.profile);
-    // @ts-ignore
-    this.saveProfile(modifiedFields);
+  private _updateCountriesList(countries: any[]) {
+    if (!countries) {
+      return;
+    }
+
+    const countriesList: any[] = countries.map((arrayItem) => {
+      return {
+        id: arrayItem.id,
+        name: arrayItem.name
+      };
+    });
+
+    countriesList.sort((a: string, b: string) => {
+      if((a as any).name < (b as any).name) { return -1; }
+      if((a as any).name > (b as any).name) { return 1; }
+      return 0;
+    });
+
+    return countriesList;
   }
 
-  public _handleProfileLoaded(profileData: any) {
+  // @ts-ignore
+  private _openDataRefreshDialog() {
+    this.fireEvent('open-data-refresh-dialog');
+  }
+
+  public _saveProfile(e: any) {
+    let modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
     // @ts-ignore
-    this.set('profile', JSON.parse(JSON.stringify(profileData)));
+    this.saveProfile(modifiedFields);
   }
 
   public _convertUsers(data: any) {
@@ -194,7 +262,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     });
   }
 
-  public _convertCollection(data: any) {
+  protected _convertCollection(data: any) {
     return data.map((item: any) => {
       return {label: item.name, value: item.id};
     });
@@ -202,7 +270,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
 
   protected _getModifiedFields(originalData: any, newData: any) {
     let modifiedFields = {};
-    // @ts-ignore
     this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
         // @ts-ignore

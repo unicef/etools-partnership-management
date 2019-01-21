@@ -1,5 +1,4 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-// @ts-ignore
 import EventHelperMixin from './event-helper-mixin.js';
 
 /**
@@ -51,11 +50,11 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         }
 
         if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
-          errors.errors.forEach(function(err: any) {
+          errors.errors.forEach(function (err: any) {
             if (typeof err === 'object') {
               let errKeys = Object.keys(err);
               if (errKeys.length > 0) {
-                errKeys.forEach(function(k) {
+                errKeys.forEach(function (k) {
                   errorsArray.push(err[k]); // will work only for strings
                 });
               }
@@ -140,7 +139,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return errors;
       }
 
-      public parseRequestErrorsAndShowAsToastMsgs(error: any, source: any, redirectOn404: any) {
+      public parseRequestErrorsAndShowAsToastMsgs(error: any, source?: any, redirectOn404?: any) {
         if (redirectOn404 && error.status === 404) {
           if (!source) {
             source = this;
