@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Reducer} from 'redux';
 import {
   UPDATE_COUNTRY_PROGRAMMES,
@@ -28,6 +29,7 @@ import {
   UPDATE_PRP_COUNTRIES,
   UPDATE_ENV_FLAGS,
   UPDATE_IN_AMENDMENT_MODE_STATE,
+  UPDATE_CURRENT_USER,
   CommonDataAction
 } from '../actions/common-data';
 
@@ -127,7 +129,7 @@ const INITIAL_STATE: CommonDataState = {
   envFlags: null
 };
 
-const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action) => {
+const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
   // let partnersDdDataCopy;
   // let disaggregsCopy;
   // let agreementsCopy;
@@ -350,11 +352,11 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     //     disaggregations: action.disaggregsCopy
     //   };
 
-    // case UPDATE_CURRENT_USER:
-    //   return {
-    //     ...state,
-    //     currentUser: action.user
-    //   };
+    case UPDATE_CURRENT_USER:
+      return {
+        ...state,
+        currentUser: action.user
+      };
 
     case UPDATE_LOCATION_TYPES:
       return {

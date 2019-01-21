@@ -1,6 +1,7 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import './etools-toast'
 
 /**
  * @polymer
@@ -43,7 +44,7 @@ const ToastNotifications = dedupingMixin((baseClass: any) =>
         e.stopPropagation();
         let detail = e.detail;
         if (!this._toast) {
-          this._createToastElement();
+          this.createToastNotificationElement();
         }
 
         if (!this._toastQueue.length) {
@@ -63,7 +64,7 @@ const ToastNotifications = dedupingMixin((baseClass: any) =>
         }
       }
 
-      protected _createToastElement() {
+      public createToastNotificationElement() {
         this._toast = document.createElement('etools-toast');
         this._toggleToast = this._toggleToast.bind(this);
         // @ts-ignore
@@ -74,11 +75,15 @@ const ToastNotifications = dedupingMixin((baseClass: any) =>
       }
 
       protected _toastAfterRenderSetup() {
-        // alter message wrapper css
-        // @ts-ignore
-        let messageWrapper = this._toast.getMessageWrapper();
-        if (messageWrapper) {
-          messageWrapper.style.whiteSpace = 'pre-wrap';
+        if (this._toast !== null) {
+          // alter message wrapper css
+          setTimeout(() => {
+            // @ts-ignore
+            let messageWrapper = this._toast.getMessageWrapper();
+            if (messageWrapper) {
+              messageWrapper.style.whiteSpace = 'pre-wrap';
+            }
+          }, 0);
         }
         // add close listener
         this.dequeueToast = this.dequeueToast.bind(this);

@@ -75,6 +75,9 @@ window.addEventListener('storage', function(e) {
 
 window.addEventListener('beforeunload', function(e) {
   const state = store.getState();
+  if (!(state as any).commonData) {
+    return;
+  }
   const uploadsInprogressNumber: number = (state as any).commonData.uploadsInProgress;
   const unsavedUploadsNumber: number = (state as any).commonData.unsavedUploads;
   if (uploadsInprogressNumber > 0 || unsavedUploadsNumber > 0) {

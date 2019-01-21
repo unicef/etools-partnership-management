@@ -9,6 +9,7 @@ import {RootState, store} from "../../store";
 
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config.js';
+import {isJsonStrMatch} from "../utils/utils";
 
 /**
  * @polymer
@@ -28,8 +29,12 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       }
 
       public stateChanged(state: RootState) {
-        this.prpCountries = state.commonData!.PRPCountryData;
-        this.currentUser = state.commonData!.currentUser;
+        if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.PRPCountryData)) {
+          this.PRPCountryData = [...state.commonData!.PRPCountryData];
+        }
+        if (!isJsonStrMatch(state.commonData!.currentUser, this.currentUser)) {
+          this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser));
+        }
       }
 
       protected _getPrpCountryId() {
@@ -81,7 +86,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         }
 
         if (data && Object.keys(data).length > 0) {
-          for(let k in data) {
+          for (let k in data) {
             let replacePattern = /<%=${k}%>/gi;
             tmpl = tmpl.replace(replacePattern, (data as any)[k]);
           }
@@ -147,7 +152,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         return (getTokenEndpoints as any)[tokenKey];
       }
 
-      addTokenToRequestOptions(endpointName: string, data: object) {
+      public addTokenToRequestOptions(endpointName: string, data: object) {
         let options: any = {};
         try {
           options.endpoint = this.getEndpoint(endpointName, data);
@@ -185,7 +190,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         return defer.promise;
       }
 
-      _addAdditionalRequestOptions(options: any, requestAdditionalOptions: any) {
+      protected _addAdditionalRequestOptions(options: any, requestAdditionalOptions: any) {
         if (requestAdditionalOptions) {
           Object.keys(requestAdditionalOptions).forEach(function (key) {
             switch (key) {
@@ -203,8 +208,8 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         return options;
       }
 
-      fireRequest(endpoint: any, endpointTemplateData: object,
-                  requestAdditionalOptions: object, activeReqKey: string) {
+      public fireRequest(endpoint: any, endpointTemplateData: object,
+                         requestAdditionalOptions: object, activeReqKey: string) {
         if (!endpoint) {
           this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
           return;

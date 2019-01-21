@@ -51,6 +51,7 @@ import ToastNotifications from '../toast-notifications/toast-notification-mixin.
 import EnvironmentFlags from "../environment-flags/environment-flags-mixin.js";
 import ScrollControl from "../mixins/scroll-control-mixin.js";
 import AmendmentModeUIMixin from "../amendment-mode/amendment-mode-UI-mixin.js";
+import UserDataMixin from "../user/user-data-mixin";
 
 import './menu/app-menu.js';
 import './header/page-header.js'
@@ -76,6 +77,7 @@ setRootPath('/pmp_poly3/');
  * @appliesMixin EnvironmentFlags
  * @appliesMixin ScrollControl
  * @appliesMixin AmendmentModeUIMixin
+ * @appliesMixin UserDataMixin
  */
 class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
@@ -85,7 +87,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   EnvironmentFlags,
   ScrollControl,
   AmendmentModeUIMixin,
-  // UserData,
+  UserDataMixin,
   // EventHelper,
   // Utils,
   // DynamicDialogMixin,
@@ -265,12 +267,16 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   public connectedCallback() {
     super.connectedCallback();
 
+    this.requestUserData();
+
     // trigger common data load requests
     this.loadCommonData();
 
     installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
     installMediaQueryWatcher(`(min-width: 460px)`,
         () => store.dispatch(updateDrawerState(false)));
+
+    this.createToastNotificationElement();
   }
 
   public stateChanged(state: RootState) {

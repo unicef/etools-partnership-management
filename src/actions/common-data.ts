@@ -40,6 +40,7 @@ export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_IN_AMENDMENT_MODE_STATE = 'UPDATE_IN_AMENDMENT_MODE_STATE';
+export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: object[]
@@ -153,6 +154,10 @@ export interface CommonDataActionUpdateInAmendmentMode extends Action<'UPDATE_IN
   inAmendment: object
 };
 
+export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURRENT_USER'> {
+  user: object
+};
+
 export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonDataActionUpdateDisaggregations |
     CommonDataActionUpdateFileTypes | CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers |
     CommonDataActionUpdateDonors | CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
@@ -163,7 +168,8 @@ export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonD
     CommonDataActionUpdateInterventionAmendmentTypes | CommonDataActionUpdateLocationTypes |
     CommonDataActionUpdatePartnerRiskRatings | CommonDataActionUpdateLocations | CommonDataActionUpdateOffices |
     CommonDataActionUpdateSections | CommonDataActionUpdateUnicefUsers | CommonDataActionUpdateUserCountryData |
-    CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags | CommonDataActionUpdateInAmendmentMode;
+    CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags | CommonDataActionUpdateInAmendmentMode |
+    CommonDataActionUpdateCurrentUser;
 
 // @ts-ignore - for now
 type ThunkResult = ThunkAction<void, RootState, undefined, CommonDataAction>;
@@ -391,4 +397,12 @@ export const updateReduxInAmendment: ActionCreator<CommonDataActionUpdateInAmend
         type: UPDATE_IN_AMENDMENT_MODE_STATE,
         inAmendment
       };
+    };
+
+export const updateCurrentUser: ActionCreator<CommonDataActionUpdateCurrentUser> =
+    (user: object) => {
+      return{
+        type: UPDATE_CURRENT_USER,
+        user
+      }
     };

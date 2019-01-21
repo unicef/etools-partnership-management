@@ -50,8 +50,7 @@ class EtoolsToast extends PolymerElement {
       </style>
       <paper-toast id="toast"
                    class="toast-general-style"
-                   on-iron-overlay-closed="toastClosed"
-                   fit-into="[[fitInto]]">
+                   on-iron-overlay-closed="toastClosed">
         <paper-button id="confirmBtn"
                       on-tap="confirmToast"
                       class="toast-dismiss-btn-general-style">
@@ -63,7 +62,6 @@ class EtoolsToast extends PolymerElement {
 
   static get properties() {
     return {
-      fitInto: Object
     };
   }
 
