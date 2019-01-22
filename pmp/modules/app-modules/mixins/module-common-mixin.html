@@ -109,7 +109,7 @@
           e.stopImmediatePropagation();
           try {
             let listElem = this.shadowRoot.querySelector('#list');
-            if (listElem && !listElem.classList.contains('hidden')) {
+            if (listElem) {
               listElem._filterListData(true);
             }
           } catch (err) {
