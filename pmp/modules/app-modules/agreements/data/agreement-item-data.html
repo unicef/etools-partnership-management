@@ -122,9 +122,9 @@
           this.set('handleSuccResponseAdditionalCallback', null);
         }
         if (ajaxMethod !== 'GET') {
-           //'agreement_number_status' is not retrieved from API
+           // 'agreement_number_status' is not retrieved from API
           response.agreement_number_status =
-             this._computeAgrementNumberstatus(response.agreement_number,
+             this._computeAgrementNumberStatus(response.agreement_number,
                   response.status);
 
           this.dispatch('addEditAgreement', this._getMinimalAgreementData(response));
@@ -165,7 +165,7 @@
         return minimalAgrData;
       }
 
-      _computeAgrementNumberstatus(agrNumber, status) {
+      _computeAgrementNumberStatus(agrNumber, status) {
         let capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1);
 
         return agrNumber + ' [' + capitalizedStatus +']';
