@@ -109,7 +109,7 @@
           e.stopImmediatePropagation();
           try {
             let listElem = this.shadowRoot.querySelector('#list');
-            if (listElem) {
+            if (listElem && listElem._filterListData) {
               listElem._filterListData(true);
             }
           } catch (err) {
