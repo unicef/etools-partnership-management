@@ -3,14 +3,18 @@ import EventHelperMixin from '../../mixins/event-helper-mixin.js';
 import { ListQueryParams } from '../../../typings/route.types.js';//TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
+
+// @ts-ignore
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
   /**
    * Module main elements common functionality
    * @polymer
    * @mixinFunction
+   * @appliesMixin EtoolsLogsMixin
    * @appliesMixin EventHelperMixin
    */
   const ModuleMainElCommonFunctionalityMixin = dedupingMixin(
-    (superClass: any) => class extends EventHelperMixin(superClass) {
+    (superClass: any) => class extends (EtoolsLogsMixin(EventHelperMixin(superClass)) as any) {
       static get properties() {
         return {
           /* Gets updated by app-route */
