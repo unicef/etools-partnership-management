@@ -1,4 +1,3 @@
-import {  html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 const documentContainer = document.createElement('template');
