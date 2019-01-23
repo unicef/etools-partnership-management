@@ -1,4 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import "@polymer/paper-button/paper-button.js"
 import { connect } from 'pwa-helpers/connect-mixin.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
@@ -12,6 +13,7 @@ import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import Constants from '../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
+import '../../layout/etools-error-messages-box.js'
 
 
 class AgreementsModule extends connect(store)(EtoolsLogsMixin
