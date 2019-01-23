@@ -283,7 +283,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
   protected _signOut() {
     this._clearDexieDbs();
     this._clearLocalStorage();
-    window.location.href = window.location.origin + '/saml2/logout';
+    window.location.href = window.location.origin + '/logout';
   }
 
   protected _clearDexieDbs() {

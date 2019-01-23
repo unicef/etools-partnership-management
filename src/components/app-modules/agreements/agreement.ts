@@ -1,7 +1,7 @@
 export class Agreement {
   id: number | undefined = undefined;
   authorized_officers: object[] = [];
-  amendments: object[] = []
+  amendments: object[] = [];
   agreement_type: string | null = null;
   agreement_number: string | undefined = undefined;
   reference_number_year: number = new Date().getFullYear();
@@ -67,7 +67,7 @@ class AgreementPermissionFields  {
   }
 
   _setRequiredPermissionsForNewAgreement() {
-    this.agreement_type = true,
+    this.agreement_type = true;
     this.amendments = false;
     this.attachment = false;
     this.authorized_officers = false;
