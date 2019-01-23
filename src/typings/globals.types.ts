@@ -21,4 +21,10 @@ export type UserPermissions = {
   viewPartnerDetails: boolean
 }
 
+export interface EtoolsTab {
+  tab: string;
+  tabLabel: string;
+  hidden: boolean;
+}
+
 
