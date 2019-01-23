@@ -1,26 +1,42 @@
 import {IPermission} from '../../../typings/globals.types';
 export class Agreement {
-  id: number | undefined = undefined;
-  authorized_officers: object[] = [];
-  amendments: object[] = [];
-  agreement_type: string | null = null;
-  agreement_number: string | undefined = undefined;
-  reference_number_year: number = new Date().getFullYear();
-  start: string | undefined = undefined;
-  end: string | undefined = undefined;
-  signed_by_unicef_date: string | null = null;
-  signed_by_partner_date: string | null = null;
-  status: string | undefined = undefined;
-  partner: number | null = null;
-  country_programme: number | undefined = undefined;
-  signed_by: string | null = null;
-  partner_manager: number | null = null;
-  special_conditions_pca: boolean = false;
-  permissions: IPermission<AgreementPermissionFields> = {
+  id?: number | null = undefined;
+  authorized_officers?: [] = [];
+  amendments?: Amendment[] = [];
+  agreement_type?: string | null = null;
+  agreement_number?: string = undefined;
+  reference_number_year?: number = new Date().getFullYear();
+  start?: string = undefined;
+  end?: string = undefined;
+  signed_by_unicef_date?: string | null = null;
+  signed_by_partner_date?: string | null = null;
+  status?: string = undefined;
+  partner?: number | null = null;
+  country_programme?: number = undefined;
+  signed_by?: string | null = null;
+  partner_manager?: number | null = null;
+  partner_name?: string = undefined;
+  special_conditions_pca?: boolean = false;
+  permissions?: IPermission<AgreementPermissionFields> = {
     edit: new AgreementPermissionFields(true),
     required: new AgreementPermissionFields(false)
   };
-  attachment: string | undefined = undefined;
+  attachment?: string = undefined;
+
+  [key: string] : any;
+}
+
+export class Amendment {
+  constructor(signed_date: string, types: []) {
+    this.id = null;
+    this.signed_date = signed_date;
+    this.types = types;
+  }
+
+  id: number | null;
+  signed_date: string;
+  types: [];
+  signed_amendment_attachment: number | string | null= null;
 }
 
 class AgreementPermissionFields  {
