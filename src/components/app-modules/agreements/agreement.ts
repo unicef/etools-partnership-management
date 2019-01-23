@@ -1,3 +1,4 @@
+import {IPermission} from '../../../typings/globals.types';
 export class Agreement {
   id: number | undefined = undefined;
   authorized_officers: object[] = [];
@@ -20,11 +21,6 @@ export class Agreement {
     required: new AgreementPermissionFields(false)
   };
   attachment: string | undefined = undefined;
-}
-
-interface IPermission<T> {
-   edit: T;
-   required: T;
 }
 
 class AgreementPermissionFields  {

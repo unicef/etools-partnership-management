@@ -39,9 +39,10 @@ store.addReducers({
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-header-layout/app-header-layout.js';
+import '@polymer/app-route/app-location.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '@polymer/app-route/app-location.js';
+
 import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
@@ -111,9 +112,9 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     // language=HTML
     return html`
     ${AppShellStyles}
-    
+
     <environment-flags></environment-flags>
-    
+
     <app-location
         route="{{appLocRoute}}"
         path="{{appLocPath}}"
@@ -128,11 +129,11 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
         tail="{{subroute}}"
         on-route-changed="routeChanged">
     </app-route>
-    
+
     <app-drawer-layout id="layout" responsive-width="850px"
                        fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" transition-duration="350" 
+      <app-drawer id="drawer" slot="drawer" transition-duration="350"
                   opened="[[_drawerOpened]]"
                   swipe-open="[[narrow]]" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
@@ -150,7 +151,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
 
         <!-- Main content -->
         <main role="main" id="page-container" class$="main-content [[_getPageContainerClass(amendmentModeActive)]]">
-        
+
           <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
             <partners-module id="partners" class="main-page"
                              show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
@@ -188,15 +189,15 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
           <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
             <settings-module id="settings" class="main-page"></settings-module>
           </template>
-        
+
           <!--<page-one class="page" active$="[[_isActivePage(_page, 'page-one')]]"></page-one>-->
           <!--<page-two class="page" active$="[[_isActivePage(_page, 'page-two')]]"></page-two>-->
           <!--<page-not-found class="page" active$="[[_isActivePage(_page, 'page-not-found')]]"></page-not-found>-->
-        
+
         </main>
 
         <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
-        
+
         <div id="floating-footer"
              hidden$="[[!amendmentModeActive]]">
           <strong> AMENDMENT MODE </strong>
@@ -207,7 +208,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
 
       </app-header-layout>
     </app-drawer-layout>
-    
+
     <!-- TODO: polymer 3 - refactor, migrate, uncomment -->
     <!--<data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>-->
 
@@ -219,7 +220,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
         <!--user="[[user]]"-->
         <!--toast="[[currentToastMessage]]">-->
     <!--</etools-piwik-analytics>-->
-    
+
     `;
   }
 
