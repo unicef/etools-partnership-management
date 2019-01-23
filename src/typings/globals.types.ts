@@ -7,4 +7,10 @@ export interface IPermission<T> {
   required: T;
 }
 
+export interface EtoolsTab {
+  tab: string;
+  tabLabel: string;
+  hidden: boolean;
+}
+
 

@@ -18,7 +18,8 @@ import EventHelper from "../../mixins/event-helper-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 
-
+import '../../layout/page-content-header';
+import '../../layout/page-content-header-slotted-styles';
 
 
 
