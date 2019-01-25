@@ -1,33 +1,70 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/app-route/app-route.js';
 import "@polymer/paper-button/paper-button.js"
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store} from '../../../store.js';
+// @ts-ignore
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import { store, RootState } from '../../../store.js';
-import '@polymer/app-route/app-route.js';
-import { Agreement, Amendment } from './agreement.js';
 import AjaxErrorsParserMixin from '../../mixins/ajax-errors-parser-mixin.js';
 import ScrollControl from '../../mixins/scroll-control-mixin.js';
-
+import EventHelper from '../../mixins/event-helper-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import Constants from '../../config/app-constants.js';
+import Constants from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
-import '../../layout/etools-error-messages-box.js'
+
 import {UserPermissions} from '../../../typings/globals.types';
+import {Agreement, Amendment} from './agreement.js';
+
+import '../../layout/etools-error-messages-box.js'
+import '../../layout/page-content-header';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
+import {pageLayoutStyles} from '../../styles/page-layout-styles'
+import {SharedStyles} from "../../styles/shared-styles";
+import '../../styles/'
+import '../../styles/'
+import '../../styles/'
+import '../../styles/'
+import {buttonsStyles} from "../../styles/buttons-styles";
 
 
-class AgreementsModule extends connect(store)(EtoolsLogsMixin
-  (ScrollControl
-  (ModuleRoutingMixin
-  (ModuleMainElCommonFunctionalityMixin
-  (Constants
-  (EndpointsMixin
-  (AjaxErrorsParserMixin
-  (PolymerElement)))))))) {
+/**
+ * @polymer
+ * @mixinFunction
+ * @appliesMixin EtoolsLogsMixin
+ * @appliesMixin EventHelper
+ * @appliesMixin ScrollControl
+ * @appliesMixin ModuleRoutingMixin
+ * @appliesMixin ModuleMainElCommonFunctionalityMixin
+ * @appliesMixin Constants
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin AjaxErrorsParserMixin
+ */
+const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
+  EtoolsLogsMixin,
+  EventHelper,
+  ScrollControl,
+  ModuleRoutingMixin,
+  ModuleMainElCommonFunctionalityMixin,
+  Constants,
+  EndpointsMixin,
+  AjaxErrorsParserMixin,
+], PolymerElement);
+
+/**
+ * @polymer
+ * @customElement
+ * @appliesMixin AgreementsModuleRequiredMixins
+ */
+class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
+
   public static get template() {
+    // language=HTML
     return html`
-      <style include="page-layout-styles shared-styles buttons-styles page-content-header-slotted-styles">
+      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      <style>
         :host {
           display: block;
         }
@@ -123,7 +160,7 @@ class AgreementsModule extends connect(store)(EtoolsLogsMixin
 
   static get actions() {
     return {
-      resetUnsavedUploads: function() {
+      resetUnsavedUploads: function () {
         return {
           type: 'RESET_UNSAVED_UPLOADS'
         };
@@ -294,8 +331,10 @@ class AgreementsModule extends connect(store)(EtoolsLogsMixin
       return false;
     }
     if (!agreementDetailsEl._validateAgreement()) {
-      this.fireEvent('toast', {text: 'Document can not be saved ' +
-          'because of missing data in Details tab', showCloseBtn: true});
+      this.fireEvent('toast', {
+        text: 'Document can not be saved ' +
+            'because of missing data in Details tab', showCloseBtn: true
+      });
       return false;
     }
     return true;
@@ -364,7 +403,7 @@ class AgreementsModule extends connect(store)(EtoolsLogsMixin
     }
     if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
       let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
-                            'attachment'];
+        'attachment'];
       signedByFields.forEach((fieldName: string) => {
         if (this._primitiveFieldIsModified(fieldName)) {
           changes[fieldName] = this.agreement[fieldName];
@@ -411,7 +450,7 @@ class AgreementsModule extends connect(store)(EtoolsLogsMixin
     if (!this.originalAgreementData.authorized_officers) {
       return null;
     }
-    return this.originalAgreementData.authorized_officers.map(function(off: any) {
+    return this.originalAgreementData.authorized_officers.map(function (off: any) {
       return off.id.toString();
     });
   }

@@ -20,6 +20,10 @@ import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 
 import '../../layout/page-content-header';
 import '../../layout/page-content-header-slotted-styles';
+import '../../layout/etools-tabs';
+import '../../layout/etools-error-messages-box';
+
+
 
 
 

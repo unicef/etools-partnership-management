@@ -1,19 +1,22 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import "@polymer/lib/elements/dom-repeat.js"
-import "@iron-flex-layout/iron-flex-layout.js"
-import "@polymer/paper-button/paper-button.js"
-import "etools-content-panel/etools-content-panel.js"
-import "../../styles/buttons-styles.js"
-
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
+import "@polymer/lib/elements/dom-repeat.js";
+import "@iron-flex-layout/iron-flex-layout.js";
+import "@polymer/paper-button/paper-button.js";
+import "etools-content-panel/etools-content-panel.js";
+import {buttonsStyles} from '../styles/buttons-styles.js';
 
 /**
  * @polymer
  * @customElement
+ * @appliesMixin GestureEventListeners
  */
-class EtoolsErrorMessagesBox extends PolymerElement {
+class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   public static get template() {
+    // language=HTML
     return html`
-      <style include="buttons-styles">
+      ${buttonsStyles}
+      <style>
         [hidden] {
           display: none !important;
         }
@@ -104,10 +107,7 @@ class EtoolsErrorMessagesBox extends PolymerElement {
   }
 
   _errorsLengthChanged(errors: []) {
-    if (!errors || (errors && !errors.length)) {
-      return true;
-    }
-    return false;
+    return !errors || (errors && !errors.length);
   }
 
   _resetErrors() {

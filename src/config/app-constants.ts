@@ -56,6 +56,6 @@ const Constants = (superClass: any) => class extends superClass {
       }
     };
   }
-}
+};
 
 export default Constants;

@@ -1,6 +1,9 @@
 import '@polymer/polymer/polymer-element.js';
+import '@polymer/polymer/lib/elements/custom-style';
 import '@polymer/paper-styles/typography.js';
 import '@polymer/paper-styles/color.js';
+
+import {appMixins} from "../styles/app-mixins.js";
 
 const documentContainer = document.createElement('template');
 documentContainer.innerHTML = `
@@ -179,6 +182,8 @@ documentContainer.innerHTML = `
       }
      
     </style>
-  </custom-style>`;
+  </custom-style>
+  
+  ${appMixins}`;
 
 document.head.appendChild(documentContainer.content);
