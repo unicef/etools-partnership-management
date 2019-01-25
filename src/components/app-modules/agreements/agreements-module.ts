@@ -9,7 +9,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import AjaxErrorsParserMixin from '../../mixins/ajax-errors-parser-mixin.js';
 import ScrollControl from '../../mixins/scroll-control-mixin.js';
-import EventHelper from '../../mixins/event-helper-mixin.js';
+import EventHelperMixin from '../../mixins/event-helper-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import Constants from '../../../config/app-constants.js';
@@ -30,7 +30,7 @@ import {buttonsStyles} from "../../styles/buttons-styles";
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelper
+ * @appliesMixin EventHelperMixin
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
@@ -40,7 +40,7 @@ import {buttonsStyles} from "../../styles/buttons-styles";
  */
 const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  EventHelper,
+  EventHelperMixin,
   ScrollControl,
   ModuleRoutingMixin,
   ModuleMainElCommonFunctionalityMixin,
