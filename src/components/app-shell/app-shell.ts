@@ -69,6 +69,7 @@ import './footer/page-footer.js'
 import '../environment-flags/environment-flags';
 
 import './app-theme.js';
+import UtilsMixin from '../mixins/utils-mixin.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -89,6 +90,7 @@ setRootPath('/pmp_poly3/');
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
  * @appliesMixin LoadingMixin
+ * @appliesMixin UtilsMixin
  */
 class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   GestureEventListeners,
@@ -102,7 +104,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   UserDataMixin,
   LoadingMixin,
   // EventHelper,
-  // Utils,
+  UtilsMixin,
   // DynamicDialogMixin,
   // Uploads
 ], PolymerElement) as any) {

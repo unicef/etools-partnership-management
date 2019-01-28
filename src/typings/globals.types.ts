@@ -1,3 +1,5 @@
+export declare const _: any;
+
 export type GenericObject = {
   [key: string]: any
 }
@@ -27,4 +29,11 @@ export interface EtoolsTab {
   hidden: boolean;
 }
 
+export interface DomRepeatEvent extends CustomEvent {//TODO- should be in polymer declarations
+  model: any;
+}
+
+export interface PolymerElEvent extends CustomEvent {//TODO - should be in polymer type declarions
+  target: any;
+}
 
