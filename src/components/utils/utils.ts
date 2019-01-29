@@ -8,6 +8,9 @@ export const isArray = (a: any) => {
 };
 
 export const isEmptyObject = (a: any) => {
+  if (!a) {
+    return true;
+  }
   return isObject(a) && Object.keys(a).length === 0;
 };
 

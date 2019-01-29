@@ -18,11 +18,11 @@ const DateMixin = dedupingMixin((baseClass: any) =>
       return (!date) ? (placeholder ? placeholder : ''): this._utcDate(date, format);
     }
 
-    public _utcDate(date, format: string) {
+    public _utcDate(date: any, format: string) {
       return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
     }
 
-    public _convertDate(dateString: string, noZTimezoneOffset) {
+    public _convertDate(dateString: string, noZTimezoneOffset?: boolean) {
       if (typeof dateString === 'string' && dateString !== '') {
         dateString = (dateString.indexOf('T') === -1) ? (dateString + 'T00:00:00') : dateString;
         /**
