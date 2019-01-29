@@ -158,7 +158,7 @@ const ModuleRoutingMixin = dedupingMixin(
         return new Promise((resolve, reject) => {
           let customElement = this.shadowRoot.querySelector(fileName);
           if (customElement instanceof PolymerElement === false) {
-            let pageUrl = baseUrl + fileName + '.html';
+            let pageUrl = '../agreements/'+ baseUrl + fileName + '.js'; //TODO
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {

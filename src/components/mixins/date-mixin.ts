@@ -2,7 +2,7 @@ import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import {Polymer} from "@polymer/polymer/polymer-legacy";
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import moment from "moment";
+import * as moment from 'moment';
 
 
 /**
