@@ -42,6 +42,7 @@
     "etools-dropdown": "git+https://github.com/unicef-polymer/etools-dropdown#upgrade-to-polymer3",
     "etools-loading": "git+https://github.com/unicef-polymer/etools-loading#upgrade-to-polymer3",
     "etools-profile-dropdown": "git+https://github.com/unicef-polymer/etools-profile-dropdown#upgrade-to-polymer3",
+    "etools-content-panel": "git+https://github.com/unicef-polymer/etools-content-panel#update-to-polymer3",
     "moment": "^2.24.0",
     "pwa-helpers": "^0.9.0",
     "redux": "^4.0.0",

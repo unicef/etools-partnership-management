@@ -69,6 +69,8 @@ import './footer/page-footer.js'
 import '../environment-flags/environment-flags';
 
 import './app-theme.js';
+import UtilsMixin from '../mixins/utils-mixin.js';
+import EventHelperMixin from '../mixins/event-helper-mixin.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -89,6 +91,7 @@ setRootPath('/pmp_poly3/');
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
  * @appliesMixin LoadingMixin
+ * @appliesMixin UtilsMixin
  */
 class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   GestureEventListeners,
@@ -101,8 +104,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   AmendmentModeUIMixin,
   UserDataMixin,
   LoadingMixin,
-  // EventHelper,
-  // Utils,
+  EventHelperMixin,
+  UtilsMixin,
   // DynamicDialogMixin,
   // Uploads
 ], PolymerElement) as any) {
@@ -543,7 +546,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       // moduleMainEl is null => make the import
       import(pageUrl).then(() => {
         this._successfulImportCallback(appModuleMainElId);
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err);
         this._pageNotFound();
       });
     }
