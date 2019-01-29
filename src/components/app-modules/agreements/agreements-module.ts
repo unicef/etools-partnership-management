@@ -3,7 +3,6 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import "@polymer/paper-button/paper-button.js"
-import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store} from '../../../store.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
@@ -14,7 +13,7 @@ import ScrollControl from '../../mixins/scroll-control-mixin.js';
 import EventHelperMixin from '../../mixins/event-helper-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import Constants from '../../../config/app-constants.js';
+import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
 import {UserPermissions} from '../../../typings/globals.types';
@@ -36,7 +35,6 @@ import {buttonsStyles} from "../../styles/buttons-styles";
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
- * @appliesMixin Constants
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
@@ -46,7 +44,6 @@ const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
   ScrollControl,
   ModuleRoutingMixin,
   ModuleMainElCommonFunctionalityMixin,
-  Constants,
   EndpointsMixin,
   AjaxErrorsParserMixin,
 ], PolymerElement);
@@ -56,7 +53,7 @@ const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
-class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
+class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   public static get template() {
     // language=HTML
@@ -296,12 +293,12 @@ class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
 
   _saveAgreement(agreementData: Agreement) {
     if (!agreementData.id) {
-      agreementData.status = this.CONSTANTS.STATUSES.Draft.toLowerCase();
+      agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
     this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this))
         .then((successfull: boolean) => {
           if (successfull) {
-            this.dispatch('resetUnsavedUploads');
+            store.dispatch('resetUnsavedUploads'); //TODO
           }
         });
   }
@@ -399,7 +396,7 @@ class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
       authorized_officers: this.authorizedOfficers
     };
 
-    if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
+    if (agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA) {
       return newAgreement; // SSFA has only the fields set above
     } else {
       if (agreement.attachment) {
@@ -413,13 +410,13 @@ class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
       partner_manager: agreement.partner_manager
     });
 
-    if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.MOU) {
       newAgreement.start = agreement.start;
       newAgreement.end = agreement.end;
       delete newAgreement.authorized_officers;
     }
 
-    if (agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
+    if (agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
       newAgreement.country_programme = agreement.country_programme;
       newAgreement.special_conditions_pca = agreement.special_conditions_pca;
     }
@@ -445,12 +442,12 @@ class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
       changes.special_conditions_pca = this.agreement.special_conditions_pca;
     }
 
-    if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU) {
       if (this._authorizedOfficersChanged()) {
         changes.authorized_officers = this.authorizedOfficers;
       }
     }
-    if (this.agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.SSFA) {
+    if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
       let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
         'attachment'];
       signedByFields.forEach((fieldName: string) => {
@@ -460,7 +457,7 @@ class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
       });
     }
 
-    if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.MOU) {
+    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.MOU) {
       ['start', 'end'].forEach((fieldName: string) => {
         if (this._primitiveFieldIsModified(fieldName)) {
           changes[fieldName] = this.agreement[fieldName];
@@ -468,7 +465,7 @@ class AgreementsModule extends connect(store)(AgreementsModuleRequiredMixins) {
       });
     }
 
-    if (this.agreement.agreement_type === this.CONSTANTS.AGREEMENT_TYPES.PCA) {
+    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
       if (this._primitiveFieldIsModified('country_programme')) {
         changes.country_programme = this.agreement.country_programme;
       }

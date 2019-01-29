@@ -1,11 +1,4 @@
-
-const Constants = (superClass: any) => class extends superClass {
-
-  static get properties() {
-    return {
-      CONSTANTS: {
-        type: Object,
-        value: {
+const CONSTANTS = {
           PD_EXPORT_TYPES: {
               PdResult: 'PD Result',
               PdBudget: 'PD Budget',
@@ -52,10 +45,7 @@ const Constants = (superClass: any) => class extends superClass {
             SPECIAL: 'SPECIAL', // Special Report
             SR: 'SR' // Special Report, value frm PRP
           }
-        }
-      }
-    };
-  }
-};
+        };
 
-export default Constants;
+
+export default CONSTANTS;

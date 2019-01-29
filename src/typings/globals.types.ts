@@ -37,3 +37,11 @@ export interface PolymerElEvent extends CustomEvent {//TODO - should be in polym
   target: any;
 }
 
+export class Paginator {
+  page: number = 1;
+  page_size: number = 10;
+  count: number | null = null;
+  visible_range: [] = [];
+}
+
+

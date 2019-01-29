@@ -2,10 +2,6 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store} from '../../../../../store.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import CommonMixin from '../../../../mixins/common-mixin';
-import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
-import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-input/paper-input';
@@ -17,14 +13,24 @@ import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import 'etools-data-table/etools-data-table.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
+import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
+import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
+import CommonMixin from '../../../../mixins/common-mixin';
+import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
 import { isEmptyObject } from '../../../../utils/utils.js';
+
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import '../../data/agreements-list-data.js';
 
 /**
      * @polymer
@@ -45,16 +51,37 @@ import { isEmptyObject } from '../../../../utils/utils.js';
       EventHelperMixin,
     ], PolymerElement);
 
+   let _agreementsLastNavigated: string = '';
 /**
  * @polymer
  * @customElement
  * @appliesMixin AgreementsListRequiredMixins
  */
 class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
-  _agreementsLastNavigated: string = '';
+
 
   static get template() {
     return html`
+      ${SharedStyles} ${listFilterStyles} ${gridLayoutStyles}
+      <style include="paper-material-styles">
+
+        .ag-ref {
+          @apply --text-btn-style;
+          text-transform: none;
+        }
+
+      </style>
+
+      <template is="dom-if" if="[[stampListData]]">
+        <agreements-list-data id="agreements"
+                              filtered-agreements="{{filteredAgreements}}"
+                              total-results="{{paginator.count}}"
+                              list-data-path="filteredAgreements"
+                              on-agreements-loaded="_requiredDataHasBeenLoaded"
+                              fire-data-loaded>
+        </agreements-list-data>
+      </template>
+
       <div id="filters" class="paper-material" elevation="1">
 
         <div id="filters-fields">
@@ -487,10 +514,10 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
 
       let qs = this._buildQueryString();
 
-      this._updateUrlAndDislayedData('agreements/list', this._agreementsLastNavigated, qs,
+      this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs,
           this._filterListData.bind(this));
 
-      this._agreementsLastNavigated = qs || this._agreementsLastNavigated;//TODO -test
+      _agreementsLastNavigated = qs || _agreementsLastNavigated;//TODO -test
     }
   }
 

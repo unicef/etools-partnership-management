@@ -72,6 +72,10 @@ import './app-theme.js';
 import UtilsMixin from '../mixins/utils-mixin.js';
 import EventHelperMixin from '../mixins/event-helper-mixin.js';
 
+// import global config and dexie db config
+import '../../config/config.js';
+import '../../config/dexie-db-config.js';
+
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
