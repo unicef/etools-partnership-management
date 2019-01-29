@@ -1,5 +1,5 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store} from '../../../../../store.js';
+import {store, RootState} from '../../../../../store.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import { PolymerElement, html } from '@polymer/polymer';
@@ -25,7 +25,7 @@ import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
-import { isEmptyObject } from '../../../../utils/utils.js';
+import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
@@ -63,7 +63,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
   static get template() {
     return html`
       ${SharedStyles} ${listFilterStyles} ${gridLayoutStyles}
-      <style include="paper-material-styles">
+      <style include="paper-material-styles data-table-styles ap-mixins">
 
         .ag-ref {
           @apply --text-btn-style;
@@ -333,6 +333,24 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
       'initComplete, isSpecialConditionsPca)',
       '_init(active)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    if (!state.commonData) {
+        return;
+    }
+    if (!isJsonStrMatch(state.commonData!.partnersDropdownData, this.partnersDropdownData)) {
+      this.partnersDropdownData = [...state.commonData!.partnersDropdownData];
+    }
+    if (!isJsonStrMatch(state.commonData!.agreementStatuses, this.agreementStatuses)) {
+      this.agreementStatuses = [...state.commonData!.agreementStatuses];
+    }
+    if (!isJsonStrMatch(state.commonData!.agreementTypes, this.agreementTypes)) {
+      this.agreementTypes = [...state.commonData!.agreementTypes];
+    }
+    if (!isJsonStrMatch(state.commonData!.countryProgrammes, this.countryProgrammes)) {
+      this.countryProgrammes = [...state.commonData!.countryProgrammes];
+    }
   }
 
   _initFiltersMenuList(partnersDropdownData: [], agreementStatuses: [], agreementTypes: [], countryProgrammes: []) {

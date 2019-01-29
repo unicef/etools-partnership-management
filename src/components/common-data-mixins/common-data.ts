@@ -8,6 +8,7 @@ import * as commonDataActions from '../../actions/common-data.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import EnvironmentFlags from "../environment-flags/environment-flags-mixin";
+import { isEmptyObject } from '../utils/utils';
 
 /**
  * @polymer
@@ -115,7 +116,7 @@ const CommonData = dedupingMixin((baseClass: any) =>
       }
 
       protected _handleDropdownsPmpResponse(response: any) {
-        if (this._validReqResponseData(response)) {
+        if (!isEmptyObject(response)) {
           // set file types value
           if (this._validReqResponseData(response.file_types)) {
             store.dispatch(commonDataActions.updateFileTypes((response as any).file_types));
@@ -144,10 +145,10 @@ const CommonData = dedupingMixin((baseClass: any) =>
       }
 
       protected _handleDropdownsStaticResponse(response: any) {
-        if (this._validReqResponseData(response)) {
+        if (!isEmptyObject(response)) {
           // set intervention_doc_type values
           if (this._validReqResponseData(response.intervention_doc_type)) {
-            this.dispatch('setInterventionDocTypes', response.intervention_doc_type);
+            store.dispatch(commonDataActions.updateInterventionDocTypes(response.intervention_doc_type));
           }
           // set intervention_status values
           if (this._validReqResponseData(response.intervention_status)) {

@@ -7,7 +7,7 @@ import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
 import Dexie from 'dexie';
-import * as moment from 'moment';
+import moment from 'moment';
 import { isEmptyObject } from '../../../utils/utils';
 
 /**
