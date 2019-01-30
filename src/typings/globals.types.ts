@@ -37,3 +37,9 @@ export interface PolymerElEvent extends CustomEvent {//TODO - should be in polym
   target: any;
 }
 
+export type Pagination = {
+  pageSize: number,
+  pageNumber: number,
+  totalResults: number
+}
+

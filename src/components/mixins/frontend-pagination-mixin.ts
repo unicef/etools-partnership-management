@@ -1,4 +1,5 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import {Pagination} from '../../typings/globals.types.js';
 
 const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
   class extends baseClass {
@@ -10,10 +11,10 @@ const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-    public pagination: object = {
+    public pagination: Pagination = {
       pageSize: 10,
       pageNumber: 1,
-      totalResults: null
+      totalResults: 0
     }
 
     public _pageSizeChanged(ev: any) {
