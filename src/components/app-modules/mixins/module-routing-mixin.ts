@@ -96,8 +96,8 @@ const ModuleRoutingMixin = dedupingMixin(
        * @param {function} appendBasePathAdditionalFolder
        * @return {string}
        */
-      _getFileBaseUrl(page: string, appendBasePathAdditionalFolder: object) {
-        let baseUrl = 'pages/' + page + '/';
+      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder: object) {
+        let baseUrl = currentModule + '/pages/' + page + '/';
         if (typeof appendBasePathAdditionalFolder === 'function') {
           // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
           baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
@@ -140,7 +140,8 @@ const ModuleRoutingMixin = dedupingMixin(
         if (page && page !== this.activePage) {
           // import main page element
           let importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
-          let baseUrl = this._getFileBaseUrl(page, appendBasePathAdditionalFolder);
+          let baseUrl = this._getFileBaseUrl(fileImportDetails.filenamePrefix + 's',
+                        page, appendBasePathAdditionalFolder);
           let fileName = importFilenamePrefix + page;
           this.importPageElement(fileName, baseUrl).then(() => {
             this._handleSuccessfulImport(page, successfulImportCallback);
@@ -158,10 +159,17 @@ const ModuleRoutingMixin = dedupingMixin(
         return new Promise((resolve, reject) => {
           let customElement = this.shadowRoot.querySelector(fileName);
           if (customElement instanceof PolymerElement === false) {
-            let pageUrl = '../agreements/'+ baseUrl + fileName + '.js'; //TODO
+
+            /* Imports are resolved relative to the current module, in this case module-routing-mixin,
+             * So non-absolute paths will be relative to
+             * `http://localhost:8082/pmp/pmp/modules/app-modules/mixins/`
+             */
+            let pageUrl = '../' + baseUrl + fileName + '.js';
+
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {
+              console.error(err);
               reject(err);
             });
           } else {
