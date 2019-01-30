@@ -44,10 +44,3 @@ export class Paginator {
   visible_range: [] = [];
 }
 
-
-export type Pagination = {
-  pageSize: number,
-  pageNumber: number,
-  totalResults: number
-}
-

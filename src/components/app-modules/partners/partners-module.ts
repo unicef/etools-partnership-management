@@ -22,6 +22,7 @@ import '../../layout/page-content-header';
 import '../../layout/page-content-header-slotted-styles';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
+import {UserPermissions} from "../../../typings/globals.types";
 
 
 
@@ -163,14 +164,14 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
   }
 
-  public _savePartnerContact(e) {
+  public _savePartnerContact(e: CustomEvent) {
     this._savePartner({
       id: this.partner.id,
       staff_members: [e.detail]
     });
   }
 
-  public _saveCoreValuesAssessment(e) {
+  public _saveCoreValuesAssessment(e: CustomEvent) {
     this._savePartner({
       id: this.partner.id,
       core_values_assessments: [e.detail]
@@ -193,7 +194,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _pageChanged(listActive, tabsActive, routeData, currentModule) {
+  public _pageChanged(listActive: any, tabsActive: any, routeData: any, currentModule: any) {
     // Using isActiveModule will prevent wrong page import
     if (!this.isActiveModule(this.currentModule) || (!listActive && !tabsActive)) {
       return;
@@ -210,14 +211,14 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     this.setActivePage(listActive, routeData.tab, fileImportDetails);
   }
 
-  public _hasEditPermissions(permissions) {
+  public _hasEditPermissions(permissions: UserPermissions) {
     return permissions && permissions.editPartnerDetails === true;
   }
 
-  public _savePartner(newPartnerData) {
+  public _savePartner(newPartnerData: any) {
     let partnerData = this.shadowRoot.querySelector('#partnerData');
     if (partnerData) {
-      partnerData.savePartner(newPartnerData).then((successfull) => {
+      partnerData.savePartner(newPartnerData).then((successfull: any) => {
         if (successfull) {
           this.dispatch('resetUnsavedUploads');
         }
@@ -225,7 +226,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _deletePartner(e) {
+  public _deletePartner(e: CustomEvent) {
     e.stopImmediatePropagation();
     this.fireEvent('global-loading', {
       active: true,
@@ -253,7 +254,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     });
   }
 
-  public _observeRouteDataId(id) {
+  public _observeRouteDataId(id: any) {
     // Using isActiveModule will prevent wrong partner details request
     // (with an id from other app module, like reports)
     if (!this.isActiveModule(this.currentModule) || typeof id === 'undefined') {
@@ -264,7 +265,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _partnerSaveError(event) {
+  public _partnerSaveError(event: CustomEvent) {
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
@@ -273,7 +274,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _showNewPartnerBtn(listActive, permissions) {
+  public _showNewPartnerBtn(listActive: any, permissions: any) {
     return listActive && this._hasEditPermissions(permissions);
   }
 
@@ -281,7 +282,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     this.newPartnerDialog.openNewPartnerDialog();
   }
 
-  public _createPartner(event) {
+  public _createPartner(event: CustomEvent) {
     let partnerData = this.shadowRoot.querySelector('#partnerData');
     if (partnerData) {
       partnerData.createPartner(event.detail, this._newPartnerCreated,
@@ -289,20 +290,20 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _newPartnerCreated(partner) {
+  public _newPartnerCreated(partner: any) {
     this.fireEvent('update-main-path', {
       path: 'partners/' + partner.id + '/details'
     });
   }
 
-  public _handleCreatePartnerError(errorDetails) {
+  public _handleCreatePartnerError(errorDetails: any) {
     this.fireEvent('toast', {
       text: errorDetails,
       showCloseBtn: true
     });
   }
 
-  public _partnerChanged(partner) {
+  public _partnerChanged(partner: any) {
     if (!_.isEmpty(partner)) {
       // dismiss partner details pages loading
       this.fireEvent('global-loading', {
@@ -332,7 +333,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     return valid;
   }
 
-  public _validateAndTriggerPartnerSave(event) {
+  public _validateAndTriggerPartnerSave(event: CustomEvent) {
     event.stopImmediatePropagation();
     if (!this._hasEditPermissions(this.permissions)) {
       return;
@@ -350,7 +351,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _cleanUpdateData(partner) {
+  public _cleanUpdateData(partner: any) {
     let updatableFields = [
       'alternate_name',
       'shared_with',
@@ -393,7 +394,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   /**
    * Get all new assessments or those with report attachment changed
    */
-  public _getNewOrWithReportChangedAssessments(assessmentsList) {
+  public _getNewOrWithReportChangedAssessments(assessmentsList: any) {
     return assessmentsList.filter(
         a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
   }
@@ -401,7 +402,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   /**
    * Get all assessments with data changed ignoring attachment changes
    */
-  public _getModIgnoringAttachChanges(assessmentsList) {
+  public _getModIgnoringAttachChanges(assessmentsList: any) {
     const alreadySavedAssessments = assessmentsList.filter(
         a => typeof a.report_attachment === 'string' && a.report_attachment !== '');
     const modifiedAssessments = [];
@@ -419,7 +420,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     return modifiedAssessments;
   }
 
-  public _handleTabSelectAction(e) {
+  public _handleTabSelectAction(e: CustomEvent) {
     this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
   }
 

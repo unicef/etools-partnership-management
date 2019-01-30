@@ -7,6 +7,7 @@ import pmpEdpoints from '../../../../endpoints/endpoints.js';
 import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
+import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 
 
 
@@ -17,11 +18,11 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
  * @appliesMixin pmpEdpoints
  * @appliesMixin EtoolsPmpApp.Mixins.ListFilters
  * @appliesMixin CommonMixin
- * @appliesMixin EtoolsPmpApp.Mixins.ListsCommon
+ * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  * @appliesMixin EventHelperMixin
  */
 const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency, pmpEdpoints, EventHelperMixin, PaginationMixin, CommonMixin
+  EtoolsCurrency, pmpEdpoints, EventHelperMixin, PaginationMixin, CommonMixin, ListsCommonMixin
 ]);
 

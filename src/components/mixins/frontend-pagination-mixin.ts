@@ -1,5 +1,5 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {Pagination} from '../../typings/globals.types.js';
+import {Paginator} from '../../typings/globals.types.js';
 
 const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
   class extends baseClass {
@@ -11,28 +11,24 @@ const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-    public pagination: Pagination = {
-      pageSize: 10,
-      pageNumber: 1,
-      totalResults: 0
-    }
+    public pagination = new Paginator();
 
-    public _pageSizeChanged(ev: any) {
+    public _pageSizeChanged(ev: CustomEvent) {
       this.set('pagination.pageNumber', 1);
       this.set('pagination.pageSize', parseInt(ev.detail.value));
     }
 
-    public _pageNumberChanged(ev: any) {
+    public _pageNumberChanged(ev: CustomEvent) {
       this.set('pagination.pageNumber', parseInt(ev.detail.value));
     }
 
-    public _paginationChanged(pageNumber: any, pageSize: any, listData: any) {
+    public _paginationChanged(pageNumber: number, pageSize: number, listData: any) {
 
       if (this._anyUndefined([pageNumber, pageSize, listData])) {
         return;
       }
-      pageNumber = parseInt(pageNumber);
-      pageSize = parseInt(pageSize);
+      pageNumber = parseInt(String(pageNumber));
+      pageSize = parseInt(String(pageSize));
       let startingIndex = (pageNumber - 1) * pageSize;
       this.dataItems = listData.slice(startingIndex, startingIndex + pageSize);
     }
