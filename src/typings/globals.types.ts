@@ -44,4 +44,3 @@ export class Paginator {
   visible_range: [] = [];
 }
 
-
