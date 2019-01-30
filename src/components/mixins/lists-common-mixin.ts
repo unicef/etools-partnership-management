@@ -3,10 +3,11 @@ import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EventHelperMixin from './event-helper-mixin';
 import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
+import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 
 const ListsCommonMixin =  dedupingMixin(
   (baseClass: any) => class extends EtoolsMixinFactory.combineMixins([
-    //AppNavigationHelper,
+    AppNavigationHelperMixin,
     EventHelperMixin], baseClass) {
     [x: string]: any;
 

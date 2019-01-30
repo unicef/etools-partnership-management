@@ -114,9 +114,9 @@ _removeAutomaticDataRefreshLoop() {
 }
 
 _setAutomaticDataRefreshLoop(newEndpoint: any) {
-  this._refreshInterval = setInterval(function() {
+  this._refreshInterval = setInterval(() => {
     this._requestListData();
-  }.bind(this), newEndpoint.exp);
+  }, newEndpoint.exp);
 }
 };
 

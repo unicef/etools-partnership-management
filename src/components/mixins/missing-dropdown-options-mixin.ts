@@ -1,13 +1,15 @@
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import EndpointsMixin from '../endpoints/endpoints-mixin';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+ * @appliesMixin Endpoints
  */
 const MissingDropdownOptionsMixin = (baseClass: any) =>
-    class extends  window.EtoolsPmpApp.Mixins.Endpoints(EtoolsLogsMixin(baseClass)) {
+    class extends EndpointsMixin(EtoolsLogsMixin(baseClass)) {
       public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
         let self = this;
         setTimeout(function() {
