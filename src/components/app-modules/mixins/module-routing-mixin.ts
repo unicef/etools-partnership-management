@@ -162,7 +162,7 @@ const ModuleRoutingMixin = dedupingMixin(
 
             /* Imports are resolved relative to the current module, in this case module-routing-mixin,
              * So non-absolute paths will be relative to
-             * `http://localhost:8082/pmp/pmp/modules/app-modules/mixins/`
+             * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
             let pageUrl = '../' + baseUrl + fileName + '.js';
 
