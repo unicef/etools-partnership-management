@@ -25,6 +25,7 @@ import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-s
 import {pageLayoutStyles} from '../../styles/page-layout-styles'
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
+import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 
 
 /**
@@ -204,16 +205,6 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     };
   }
 
-  static get actions() {
-    return {
-      resetUnsavedUploads: function () {
-        return {
-          type: 'RESET_UNSAVED_UPLOADS'
-        };
-      }
-    };
-  }
-
   static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, newAgreementActive)',
@@ -298,7 +289,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this))
         .then((successfull: boolean) => {
           if (successfull) {
-            store.dispatch('resetUnsavedUploads'); //TODO
+            store.dispatch({type: RESET_UNSAVED_UPLOADS});
           }
         });
   }

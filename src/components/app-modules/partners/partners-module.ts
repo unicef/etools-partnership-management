@@ -23,6 +23,7 @@ import '../../layout/page-content-header-slotted-styles';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
 import {UserPermissions} from "../../../typings/globals.types";
+import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 
 
 
@@ -106,16 +107,6 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     };
   }
 
-  public static get actions() {
-    return {
-      resetUnsavedUploads: function() {
-        return {
-          type: 'RESET_UNSAVED_UPLOADS'
-        };
-      }
-    };
-  }
-
   public static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, routeData, currentModule)',
@@ -194,7 +185,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
   }
 
-  public _pageChanged(listActive: any, tabsActive: any, routeData: any, currentModule: any) {
+  public _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any, _currentModule: string) {
     // Using isActiveModule will prevent wrong page import
     if (!this.isActiveModule(this.currentModule) || (!listActive && !tabsActive)) {
       return;
@@ -220,7 +211,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     if (partnerData) {
       partnerData.savePartner(newPartnerData).then((successfull: any) => {
         if (successfull) {
-          this.dispatch('resetUnsavedUploads');
+          store.dispatch({type: RESET_UNSAVED_UPLOADS});
         }
       });
     }

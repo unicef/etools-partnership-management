@@ -75,6 +75,7 @@ import EventHelperMixin from '../mixins/event-helper-mixin.js';
 // import global config and dexie db config
 import '../../config/config.js';
 import '../../config/dexie-db-config.js';
+import { RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -642,8 +643,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   // @ts-ignore
   private _onLeavePageConfirmation(e: CustomEvent) {
     if (e.detail.confirmed) { // leave
-      this.dispatch('resetUploadsInProgress');
-      this.dispatch('resetUnsavedUploads');
+      store.dispatch({type: RESET_UNSAVED_UPLOADS});
+      store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
       this.route = JSON.parse(JSON.stringify(this.appLocRoute));
     } else { // stay
       // revert url
