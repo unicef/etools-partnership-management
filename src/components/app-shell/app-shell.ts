@@ -157,7 +157,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
         </app-header>
 
         <!-- Main content -->
-        <main role="main" id="page-container" class$="main-content [[_getPageContainerClass(amendmentModeActive)]]">
+        <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
 
           <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
             <partners-module id="partners" class="main-page"

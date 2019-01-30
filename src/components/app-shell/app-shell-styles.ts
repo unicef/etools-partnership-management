@@ -14,11 +14,6 @@ export const AppShellStyles = html`
       position: relative;
     }
 
-    .main-content {
-      @apply --layout-flex;
-      padding: 24px;
-    }
-
     .page {
       display: none;
     }
