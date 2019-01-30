@@ -2,7 +2,7 @@ import {IPermission} from '../../../typings/globals.types';
 export class Agreement {
   id?: number | null = undefined;
   authorized_officers?: [] = [];
-  amendments?: Amendment[] = [];
+  amendments?: AgreementAmendment[] = [];
   agreement_type?: string | null = null;
   agreement_number?: string = undefined;
   reference_number_year?: number = new Date().getFullYear();
@@ -26,7 +26,7 @@ export class Agreement {
   [key: string] : any;
 }
 
-export class Amendment {
+export class AgreementAmendment {
   constructor(signed_date: string, types: []) {
     this.id = null;
     this.signed_date = signed_date;

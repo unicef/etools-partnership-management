@@ -17,7 +17,7 @@ import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
 import {UserPermissions} from '../../../typings/globals.types';
-import {Agreement, Amendment} from './agreement.js';
+import {Agreement, AgreementAmendment} from './agreement.js';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box.js'
 import '../../layout/page-content-header';
@@ -463,7 +463,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       if (this._objectFieldIsModified('amendments')) {
         // keep only new amendments
         changes.amendments = this.agreement.amendments.filter(
-            (a: Amendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
+            (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
       }
     }
 
