@@ -1,28 +1,32 @@
 import {IPermission} from '../../../typings/globals.types';
 import { StaffMember } from '../../../typings/partner.types';
-export class Agreement {
+
+export class MinimalAgreement {
   id?: number | null = undefined;
-  authorized_officers: Array<StaffMember> = [];
-  amendments?: AgreementAmendment[] = [];
-  agreement_type?: string | null = null;
   agreement_number?: string = undefined;
-  reference_number_year?: number = new Date().getFullYear();
-  start?: string = undefined;
-  end?: string = undefined;
+  agreement_number_status?: string = undefined;
+  agreement_type?: string | null = null;
+  end?: string | null= undefined;
+  partner?: number | null = null;
+  partner_name?: string | null= undefined;
   signed_by_unicef_date?: string | null = null;
   signed_by_partner_date?: string | null = null;
-  status?: string = undefined;
-  partner?: number | null = null;
-  country_programme?: number = undefined;
   signed_by?: string | null = null;
+  start?: string | null = undefined;
+  status?: string = undefined;
+}
+export class Agreement extends MinimalAgreement {
+  authorized_officers: Array<StaffMember> = [];
+  amendments: AgreementAmendment[] = [];
+  reference_number_year: number = new Date().getFullYear();
+  country_programme?: number = undefined;
   partner_manager?: number | null = null;
-  partner_name?: string = undefined;
   special_conditions_pca?: boolean = false;
-  permissions?: IPermission<AgreementPermissionFields> = {
+  permissions: IPermission<AgreementPermissionFields> = {
     edit: new AgreementPermissionFields(true),
     required: new AgreementPermissionFields(false)
   };
-  attachment?: string = undefined;
+  attachment?: string;
 
   [key: string] : any;
 }

@@ -2,32 +2,32 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-input/paper-input-container.js';
+
 
 import 'etools-content-panel/etools-content-panel.js';
+import 'etools-upload/etools-upload.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
-import 'etools-upload/etools-upload.js';
+
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import { DECREASE_UPLOADS_IN_PROGRESS } from '../../../../../actions/upload-status';
 import { store } from '../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
-import '../../../../layout/components/etools-form-element-wrapper.js';
-import '../../../../layout/components/etools-date-input.js';
-import '../../../../layout/components/etools-cp-structure.js';
-import '../../../../layout/components/year-dropdown.js';
+import '../../../../layout/etools-form-element-wrapper.js';
+import '../../../../layout/etools-cp-structure.js';
+import '../../../../layout/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import UploadMixin from '../../../../mixins/uploads-mixin';
 import { Agreement } from '../../agreement.types.js';
 
-import '../../../../config/app-constants.js';
-import '../../../../../modules/mixins/missing-dropdown-options-mixin.js';
+import '../../../../mixins/missing-dropdown-options-mixin.js';
 import '../../../../mixins/common-mixin.js';
 import '../../../../endpoints/endpoints.js';
 import '../../../../mixins/event-helper-mixin.js';
@@ -40,8 +40,8 @@ import {buttonsStyles} from '../../../../styles/buttons-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 
-import 'components/amendments/agreement-amendments.js';
-import 'components/generate-PCA-dialog.js';
+import './components/amendments/agreement-amendments.js';
+import './components/generate-PCA-dialog.js';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
 import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
 

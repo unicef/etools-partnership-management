@@ -14,7 +14,7 @@ import {SharedStyles} from '../../../../../../styles/shared-styles.js';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles.js';
 import '../../../../../../mixins/event-helper-mixin.js';
 import '../../../../../../mixins/common-mixin.js';
-import 'add-ag-amendment-dialog.js';
+import './add-ag-amendment-dialog.js';
 
 
 /**

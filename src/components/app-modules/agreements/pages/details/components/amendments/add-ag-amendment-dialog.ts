@@ -47,7 +47,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
       amendment: Object,
       amendmentModel: {
         type: Object,
-        value: new AgreementAmendment()
+        value: () => new AgreementAmendment()
       },
       autoValidate: {
         type: Boolean,
