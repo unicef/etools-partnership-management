@@ -12,6 +12,7 @@ import 'etools-content-panel/etools-content-panel.js';
 import 'etools-upload/etools-upload.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
+import 'etools-date-time/datepicker-lite';
 
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';

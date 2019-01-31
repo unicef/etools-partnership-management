@@ -3,9 +3,15 @@ import { PolymerElement, html } from '@polymer/polymer';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import 'etools-dialog/etools-dialog.js';
+import 'etools-dropdown/etools-dropdown-multi.js';
+import 'etools-upload/etools-upload.js';
 import EventHelperMixin from '../../../../../../mixins/event-helper-mixin';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
-import { AgreementAmendment } from '../../../../agreement';
+import { AgreementAmendment } from '../../../../agreement.types';
+import { SharedStyles } from '../../../../../../styles/shared-styles';
+import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
+import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 
 /**
  * @polymer
@@ -20,7 +26,85 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
 
   static get template() {
     return html`
+      ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
 
+      <etools-dialog no-padding
+                    keep-dialog-open
+                    id="add-ag-amendment"
+                    opened="{{opened}}"
+                    size="md"
+                    hidden$="[[datePickerOpen]]"
+                    ok-btn-text="Save"
+                    dialog-title="Add Amendment"
+                    on-close="_handleDialogClosed"
+                    on-confirm-btn-clicked="_validateAndSaveAmendment"
+                    disable-confirm-btn="[[uploadInProgress]]"
+                    disable-dismiss-btn="[[uploadInProgress]]">
+
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Signed Date -->
+            <required-and-not-future-date-validator validator-name="ag_am_signed_date_validator"
+                                                    field-selector="#signedDate">
+            </required-and-not-future-date-validator>
+            <etools-date-input id="signedDate"
+                              label="Signed Date"
+                              value="{{amendment.signed_date}}"
+                              error-message="Please select signed date"
+                              no-init show-clear-btn
+                              required
+                              open="{{datePickerOpen}}"
+                              validator="ag_am_signed_date_validator"
+                              auto-validate="[[autoValidate]]"
+                              required-and-not-future-date>
+            </etools-date-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <!-- Signed Agreement -->
+          <etools-upload id="signedAmendment"
+                        label="Signed Amendment"
+                        accept=".doc,.docx,.pdf,.jpg,.png"
+                        file-url="[[amendment.signed_amendment_attachment]]"
+                        upload-endpoint="[[uploadEndpoint]]"
+                        on-upload-finished="_uploadFinished"
+                        required
+                        upload-in-progress="{{uploadInProgress}}"
+                        auto-validate="[[autoValidate]]"
+                        error-message="Signed Amendment file is required">
+          </etools-upload>
+        </div>
+
+        <div class="row-h flex-c">
+          <etools-dropdown-multi id="amendmentTypes"
+                                label="Amendment Types"
+                                options="[[amendmentTypes]]"
+                                selected-values="{{amendment.types}}"
+                                hide-search
+                                error-message="Please select amendment type"
+                                required
+                                auto-validate="[[autoValidate]]"
+                                trigger-value-change-event
+                                on-etools-selected-items-changed="_onAmendmentTypesSelected">
+          </etools-dropdown-multi>
+        </div>
+
+        <template is="dom-if" if="[[_showAuthorizedOfficersField(showAuthorizedOfficers, _aoTypeSelected)]]" restamp>
+          <div class="row-h flex-c">
+            <etools-dropdown-multi id="officers"
+                                  label="Authorized Officers"
+                                  placeholder="&#8212;"
+                                  options="[[authorizedOfficersOptions]]"
+                                  option-value="id"
+                                  option-label="name"
+                                  selected-values="{{authorizedOfficers}}"
+                                  error-message="Please enter Partner Authorized Officer(s)"
+                                  required auto-validate>
+            </etools-dropdown-multi>
+          </div>
+        </template>
+
+      </etools-dialog>
     `;
   }
 
@@ -36,9 +120,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
       },
       uploadEndpoint: {
         type: String,
-        value: function() {
-          return pmpEndpoints.attachmentsUpload.url;
-        }
+        value: () => pmpEndpoints.attachmentsUpload.url
       },
       amendmentTypes: {
         type: Array,
@@ -80,7 +162,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
     };
   }
 
-  initData(authorizedOfficers: any, showAuthorizedOfficers: boolean, amendmentTypes: []) {
+  initData(authorizedOfficers: any, showAuthorizedOfficers: any, amendmentTypes: any) {
     this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));
     this.set('amendmentTypes', amendmentTypes);
     this.set('authorizedOfficersOptions',

@@ -54,7 +54,7 @@
     "etools-currency-amount-input": "git+https://github.com/unicef-polymer/etools-currency-amount-input#upgrade-to-polymer3",
     "etools-info-tooltip": "git+https://github.com/unicef-polymer/etools-info-tooltip#upgrade-to-polymer3",
     "etools-upload": "git+https://github.com/unicef-polymer/etools-upload#polymer-3",
-    "etools-date-time": "git+https://github.com/unicef-polymer/etools-date-time",
+    "etools-date-time": "git+https://github.com/unicef-polymer/etools-date-time#input-style-version",
     "moment": "^2.24.0",
     "pwa-helpers": "^0.9.0",
     "redux": "^4.0.0",
