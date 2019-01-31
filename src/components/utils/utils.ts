@@ -12,7 +12,7 @@ export const isEmptyObject = (a: any) => {
     return true;
   }
   if (isArray(a) && a.length === 0) {
-    return true
+    return true;
   }
   return isObject(a) && Object.keys(a).length === 0;
 };

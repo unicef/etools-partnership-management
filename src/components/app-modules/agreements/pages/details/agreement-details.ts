@@ -46,6 +46,7 @@ import './components/generate-PCA-dialog.js';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
 import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
 import { isJsonStrMatch } from '../../../../utils/utils';
+import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
 
 /**
      * @polymer
@@ -438,9 +439,11 @@ import { isJsonStrMatch } from '../../../../utils/utils';
       }
 
       stateChanged(state: RootState) {
-        if (!isJsonStrMatch(this.partnersDropdownData, state.commonData!.partnersDropdownData)) {
-          this.partnersDropdownData = state.commonData!.partnersDropdownData;
+        if (!state.partners) {
+          return;
         }
+
+        this.partnersDropdownData = partnersForDropdownsSelector(state);
 
         if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
           this.agreementTypes = state.commonData!.agreementTypes;

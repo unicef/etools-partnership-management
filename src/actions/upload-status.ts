@@ -1,4 +1,3 @@
-import {Action} from 'redux';
 
 export const RESET_UNSAVED_UPLOADS = 'RESET_UNSAVED_UPLOADS';
 export const RESET_UPLOADS_IN_PROGRESS = 'RESET_UPLOADS_IN_PROGRESS';
