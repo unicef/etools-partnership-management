@@ -87,7 +87,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
 
         if (data && Object.keys(data).length > 0) {
           for (let k in data) {
-            let replacePattern = /<%=${k}%>/gi;
+            let replacePattern = new RegExp('<%=' + k + '%>', 'gi');
             tmpl = tmpl.replace(replacePattern, (data as any)[k]);
           }
         }
