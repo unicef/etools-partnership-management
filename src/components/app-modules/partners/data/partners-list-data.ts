@@ -1,0 +1,204 @@
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import {store} from '../../../../store.js';
+
+import ListDataMixin from '../../../mixins/list-data-mixin';
+import EventHelperMixin from '../../../mixins/event-helper-mixin';
+
+import Dexie from 'dexie';
+import {isEmptyObject} from "../../../utils/utils";
+
+/**
+ * @polymer
+ * @mixinFunction
+ * @appliesMixin EtoolsLogsMixin
+ * @appliesMixin ListDataMixin
+ * @appliesMixin EventHelperMixin
+ */
+const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
+  EtoolsLogsMixin,
+  ListDataMixin,
+  EventHelperMixin
+], PolymerElement);
+
+/**
+ * @polymer
+ * @customElement
+ * @appliesMixin PartnersListDataRequiredMixins
+ */
+class PartnersListData extends PartnersListDataRequiredMixins {
+  static get properties() {
+    return {
+      endpointName: String,
+      dataLoadedEventName: String,
+      filteredPartners: {
+        type: Array,
+        readOnly: true,
+        notify: true
+      },
+      totalResults: {
+        type: Number,
+        readOnly: true,
+        notify: true
+      },
+      currentQuery: {
+        type: Object,
+        value: null
+      },
+      partnersDropdownData: {
+        type: Array,
+        notify: true
+      },
+      partnersFilteredDropdownData: {
+        type: Array,
+        notify: true
+      },
+      prepareDropdownData: Boolean
+    };
+  }
+
+  public endpointName: string = 'partners';
+  public dataLoadedEventName: string = 'partners-loaded';
+  public prepareDropdownData: boolean = false;
+
+  static get actions() {
+    return {
+      setPartnersDropdown: function(partnersDropdownData) {
+        return {
+          type: 'SET_PARTNERS_DROPDOWN',
+          partnersDropdownData: partnersDropdownData
+        };
+      },
+      setPartners: function(partnersData) {
+        return {
+          type: 'SET_PARTNERS',
+          partnersData: partnersData
+        };
+      },
+      setCivilSocietyOrganizationPartners: function(csoPartners) {
+        return {
+          type: 'SET_CSO_PARTNERS',
+          csoPartners: csoPartners
+        };
+      }
+    };
+  }
+
+  public _handleMyResponse(res: any) {
+    this._handleResponse(res);
+    if (res && res.length) {
+      store.dispatch('setPartners', res);
+      let preparedData = [];
+      let civilSocietyOrganizationPartners = [];
+      res.forEach(function(p) {
+        if (!p.hidden && p.partner_type === 'Civil Society Organization') {
+          civilSocietyOrganizationPartners.push(p);
+        }
+        if (!p.hidden) {
+          preparedData.push({
+            value: p.id,
+            label: p.name
+          });
+        }
+      });
+      store.dispatch('setPartnersDropdown', preparedData);
+      store.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
+    }
+  }
+
+  public query(field, order, searchString, partnerTypes, csoTypes, riskRatings,
+               pageNumber, pageSize, showHidden, showQueryLoading) {
+
+    // If an active query transaction exists, abort it and start
+    // a new one
+    if (this.currentQuery) {
+      this.currentQuery.abort();
+    }
+
+    let self = this;
+
+    if (showQueryLoading) {
+      this.fireEvent('global-loading', {
+        message: 'Loading...',
+        active: true,
+        loadingSource: 'partners-list'
+      });
+    }
+
+    let partnersDexieTable = window.EtoolsPmpApp.DexieDb.partners;
+    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function() {
+      self.currentQuery = Dexie.currentTransaction;
+
+      let queryResult = partnersDexieTable;
+      if (field) {
+        // note: null values don't appear in result set of sort
+        queryResult = queryResult.orderBy(field);
+      }
+      if (order === 'desc') {
+        queryResult = queryResult.reverse();
+      }
+
+      queryResult = queryResult.filter(function(partner) {
+        if (!isEmptyObject(partnerTypes) && partnerTypes.indexOf(partner.partner_type) === -1) {
+          return false;
+        }
+
+        if (!isEmptyObject(csoTypes) && csoTypes.indexOf(partner.cso_type) === -1) {
+          return false;
+        }
+
+        if (!isEmptyObject(riskRatings) && riskRatings.indexOf(partner.rating) === -1) {
+          return false;
+        }
+
+        if (searchString && searchString.length) {
+          let vnMatch = true;
+          if (partner.vendor_number) {
+            vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
+          }
+          if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
+              partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+              vnMatch) {
+            return false;
+          }
+        }
+
+        if (!showHidden && partner.hidden) {
+          return false;
+        }
+
+        return true;
+      });
+
+      // This special Dexie function allows the work of counting
+      // the number of query results to be done in a parallel process,
+      // instead of blocking the main query
+      Dexie.ignoreTransaction(function() {
+        queryResult.count(function(count) {
+          self._setTotalResults(count);
+        });
+      });
+
+      return queryResult
+          .offset((pageNumber - 1) * pageSize)
+          .limit(pageSize)
+          .toArray();
+
+    }).then(function(result) {
+      self._setFilteredPartners(result);
+      self.fireEvent('global-loading', {
+        active: false,
+        loadingSource: 'partners-list'
+      });
+    }).catch(function(error) {
+      self.logError('Error querying partners!', 'partners-list-data', error, true);
+      self.fireEvent('global-loading', {
+        active: false,
+        loadingSource: 'partners-list'
+      });
+    });
+  }
+}
+
+window.customElements.define('partners-list-data', PartnersListData);

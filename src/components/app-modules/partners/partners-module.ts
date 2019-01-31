@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/polymer/lib/elements/dom-if';
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
@@ -9,6 +9,7 @@ import {connect} from "pwa-helpers/connect-mixin";
 import {store} from "../../../store";
 import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
 
+import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 // @ts-ignore
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory";
 // @ts-ignore
@@ -16,7 +17,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import ScrollControl from "../../mixins/scroll-control-mixin";
 import EventHelper from "../../mixins/event-helper-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
-import ModuleRoutingMixin from '../mixins/module-routing-mixin';
+
 
 import '../../layout/page-content-header';
 import '../../layout/page-content-header-slotted-styles';
@@ -25,9 +26,9 @@ import '../../layout/etools-error-messages-box';
 import {UserPermissions} from "../../../typings/globals.types";
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 
-
-
-
+import {pageLayoutStyles} from '../../styles/page-layout-styles';
+import {SharedStyles} from "../../styles/shared-styles";
+import {buttonsStyles} from "../../styles/buttons-styles";
 
 /**
  * @polymer
@@ -55,7 +56,127 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     // main template
     // language=HTML
     return html`
-      <h1>Partners pages will load from here...</h1>
+        ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles}
+        <style import="page-content-header-slotted-styles">
+          :host {
+              display: block;
+          }
+        </style>
+        
+        <app-route
+          route="{{route}}"
+          pattern="/list"
+          query-params="{{listPageQueryParams}}"
+          active="{{listActive}}"></app-route>
+        
+        <app-route
+          route="{{route}}"
+          pattern="/:id/:tab"
+          active="{{tabsActive}}"
+          data="{{routeData}}"></app-route>
+          
+        <page-content-header with-tabs-visible="[[tabsActive]]">
+          <div slot="page-title">
+            <template is="dom-if" if="[[listActive]]">
+              <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
+              <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
+            </template>
+            <template is="dom-if" if="[[tabsActive]]">
+              <span>[[partner.name]]</span>
+            </template>
+          </div>
+
+          <div slot="title-row-actions" class="content-header-actions">
+            <div class="action" hidden$="[[!listActive]]">
+              <a target="_blank" href$="[[csvDownloadUrl]]">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </a>
+            </div>
+            <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
+              <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+                <iron-icon icon="add"></iron-icon>
+                Import Partner
+              </paper-button>
+            </div>
+          </div>
+
+          <template is="dom-if" if="[[_showPageTabs(activePage)]]">
+            <etools-tabs slot="tabs"
+                         tabs="[[partnerTabs]]"
+                         active-tab="{{routeData.tab}}"
+                         on-iron-select="_handleTabSelectAction"></etools-tabs>
+          </template>
+        </page-content-header>
+        
+        <div id="main">
+          <div id="pageContent">
+
+            <etools-error-messages-box id="errorsBox"
+                                       title="Errors Saving Partner"
+                                       errors="{{serverErrors}}"></etools-error-messages-box>
+            <iron-pages id="partnersPages"
+                        selected="{{activePage}}"
+                        attr-for-selected="name"
+                        role="main">
+    
+              <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+                <partners-list id="list"
+                               name="list"
+                               show-only-government-type="[[showOnlyGovernmentType]]"
+                               current-module="[[currentModule]]"
+                               active="[[listActive]]"
+                               csv-download-url="{{csvDownloadUrl}}"
+                               url-params="[[preservedListQueryParams]]">
+                </partners-list>
+              </template>
+    
+              <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
+                <partner-overview name="overview" partner="[[partner]]"></partner-overview>
+              </template>
+    
+              <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
+                <partner-details id="partnerDetails"
+                                 name="details"
+                                 partner="[[partner]]"
+                                 edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+              </template>
+    
+              <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
+                <partner-financial-assurance id="financialAssurance"
+                                             partner="[[partner]]"
+                                             edit-mode="[[_hasEditPermissions(permissions)]]"
+                                             name="financial-assurance">
+                </partner-financial-assurance>
+              </template>
+    
+            </iron-pages>
+
+          </div> <!-- page content end -->
+
+          <!-- sidebar content start -->
+          <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
+            <div id="sidebar">
+              <partner-status
+                  on-save-partner="_validateAndTriggerPartnerSave"
+                  on-delete-partner="_deletePartner"
+                  active="[[!listActive]]"
+                  partner="[[partner]]"
+                  edit-mode$="[[_hasEditPermissions(permissions)]]">
+              </partner-status>
+            </div> <!-- sidebar content end -->
+          </template>
+        </div> <!-- main container end -->
+        
+        <partner-item-data id="partnerData"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}"
+                       error-event-name="partner-save-error">
+        </partner-item-data>
+        
+        
     `;
   }
 
