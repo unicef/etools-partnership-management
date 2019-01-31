@@ -26,6 +26,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles'
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
+import './data/agreement-item-data.js';
 
 
 /**
@@ -163,6 +164,12 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
         </template>
 
       </div> <!-- main page content end -->
+
+      <agreement-item-data id="agreementData"
+                         agreement="{{agreement}}"
+                         agreement-id="[[selectedAgreementId]]"
+                         error-event-name="agreement-save-error">
+    </agreement-item-data>
     `;
   }
 

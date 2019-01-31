@@ -16,7 +16,7 @@ import 'etools-dropdown/etools-dropdown.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import { DECREASE_UPLOADS_IN_PROGRESS } from '../../../../../actions/upload-status';
-import { store } from '../../../../../store';
+import { store, RootState } from '../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
 import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-cp-structure.js';
@@ -44,6 +44,7 @@ import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
 import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
+import { isJsonStrMatch } from '../../../../utils/utils';
 
 /**
      * @polymer
@@ -433,6 +434,16 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
           '_partnerChanged(agreement.partner)',
           '_handleSpecialConditionsPca(agreement.special_conditions_pca, agreement.agreement_type)'
         ];
+      }
+
+      stateChanged(state: RootState) {
+        if (!isJsonStrMatch(this.partnersDropdownData, state.commonData!.partnersDropdownData)) {
+          this.partnersDropdownData = state.commonData!.partnersDropdownData;
+        }
+
+        if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
+          this.agreementTypes = state.commonData!.agreementTypes;
+        }
       }
 
       ready() {

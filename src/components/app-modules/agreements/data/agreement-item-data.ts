@@ -1,5 +1,5 @@
 
-import { store } from '../../../../../store.js';
+import { store } from '../../../../store.js';
 import { PolymerElement } from '@polymer/polymer';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
