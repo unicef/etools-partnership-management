@@ -5,6 +5,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EventHelper from "../../../mixins/event-helper-mixin.js";
+import { MinimalStaffMember } from '../../../../typings/partner.types.js';
 
 /**
  * @polymer
@@ -62,16 +63,13 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends StaffMe
 
   public _handleStaffMembersResponse(res: any) {
     if (res instanceof Array && res.length) {
-      let preparedStaffMembers = res.map(function(staffMember) {
-        return {
-          id: staffMember.id,
-          name: staffMember.first_name + ' ' + staffMember.last_name,
-          active: staffMember.active
-        };
-      }).filter(function(staffMember) {
-        return staffMember.active;
+      let activeStaffMembers = res.map(function(sMember) {
+        return new MinimalStaffMember(sMember.id, sMember.first_name,
+           sMember.last_name, sMember.active);
+      }).filter(function(sMember) {
+        return sMember.active;
       });
-      this.set('staffMembers', preparedStaffMembers);
+      this.set('staffMembers', activeStaffMembers);
     }
     this.fireEvent('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
   }

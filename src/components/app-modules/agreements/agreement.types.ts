@@ -1,7 +1,8 @@
 import {IPermission} from '../../../typings/globals.types';
+import { StaffMember } from '../../../typings/partner.types';
 export class Agreement {
   id?: number | null = undefined;
-  authorized_officers?: [] = [];
+  authorized_officers: Array<StaffMember> = [];
   amendments?: AgreementAmendment[] = [];
   agreement_type?: string | null = null;
   agreement_number?: string = undefined;
@@ -27,16 +28,10 @@ export class Agreement {
 }
 
 export class AgreementAmendment {
-  constructor(signed_date: string, types: []) {
-    this.id = null;
-    this.signed_date = signed_date;
-    this.types = types;
-  }
-
-  id: number | null;
-  signed_date: string;
-  types: [];
-  signed_amendment_attachment: number | string | null= null;
+  id: number | null = null;
+  signed_date: string | null = null;
+  types: [] = [];
+  signed_amendment_attachment: number | string | null = null;
 }
 
 class AgreementPermissionFields  {

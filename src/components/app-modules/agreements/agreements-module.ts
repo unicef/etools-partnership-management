@@ -17,7 +17,7 @@ import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
 import {UserPermissions} from '../../../typings/globals.types';
-import {Agreement, AgreementAmendment} from './agreement.js';
+import {Agreement, AgreementAmendment} from './agreement.types.js';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box.js'
 import '../../layout/page-content-header';
