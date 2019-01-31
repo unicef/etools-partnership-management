@@ -3,13 +3,15 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import orderBy from 'lodash-es/orderBy';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import 'etools-dropdown/etools-dropdown.js'
 import { store, RootState } from '../../store.js';
 import {SharedStyles} from '../styles/shared-styles.js'
 import {requiredFieldStarredStyles} from '../styles/required-field-styles.js'
-import { isJsonStrMatch } from '../utils/utils.js';
+import { isJsonStrMatch, isEmptyObject } from '../utils/utils.js';
+import { CpStructure } from '../../typings/globals.types.js';
 
 
 
@@ -98,13 +100,13 @@ import { isJsonStrMatch } from '../utils/utils.js';
       }
 
       stateChanged(state: RootState) {
-        if (isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
+        if (!isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
           this.countryProgrammes = state.commonData!.countryProgrammes;
         }
       }
 
-      _getCurrentCountryProgramme(cpOptions) {
-        if (_.isEmpty(cpOptions)) {
+      _getCurrentCountryProgramme(cpOptions: Array<CpStructure>) {
+        if (isEmptyObject(cpOptions)) {
           return null;
         }
 
@@ -113,12 +115,12 @@ import { isJsonStrMatch } from '../utils/utils.js';
           return cpOptions[0];
         } else {
           // more than 1 cp available, use first one found that is active, not special and not future
-          return cpOptions.find(cp => cp.active && !cp.future && !cp.special);
+          return cpOptions.find((cp: CpStructure) => cp.active && !cp.future && !cp.special);
         }
       }
 
       setDefaultSelectedCpStructure() {
-        if (_.isEmpty(this.sortedCountryProgrammes)) {
+        if (isEmptyObject(this.sortedCountryProgrammes)) {
           return;
         }
 
@@ -127,7 +129,7 @@ import { isJsonStrMatch } from '../utils/utils.js';
         this.set('selectedCp', currentCP ? currentCP.id : null);
       }
 
-      _countryProgrammesChanged(countryProgrammes, appModuleItem) {
+      _countryProgrammesChanged(_countryProgrammes: Array<CpStructure>, appModuleItem: any) {
         this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer,
             timeOut.after(10),
             () => {
@@ -146,7 +148,7 @@ import { isJsonStrMatch } from '../utils/utils.js';
       }
 
       _prepareCpsForDisplay() {
-        let displayableCps = _.orderBy(this.countryProgrammes,
+        let displayableCps = orderBy(this.countryProgrammes,
                                       ['future', 'active', 'special'],
                                       ['desc', 'desc', 'asc']);
 
@@ -178,11 +180,11 @@ import { isJsonStrMatch } from '../utils/utils.js';
       // }
 
       _hasExpiredCpAssigned(cpId: string) {
-        if (cpId || !_.isEmpty(this.countryProgrammes)) {
+        if (cpId || !isEmptyObject(this.countryProgrammes)) {
           return false;
         }
 
-        return this.countryProgrammes.some((cp) => {
+        return this.countryProgrammes.some((cp: CpStructure) => {
           return parseInt(cp.id, 10) === parseInt(cpId, 10) && cp.expired;
         });
 

@@ -156,7 +156,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                             readonly>
                 </paper-input>
               </div>
-              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
+              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
                 <div class="col col-3">
                   <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
                                               value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
@@ -184,15 +184,14 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                                             value="[[agreement.partner_name]]">
                 </etools-form-element-wrapper>
               </div>
-              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]" restamp>
+              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
                 <div class="col col-3">
-                  <etools-date-input id="startDateField"
+                  <datepicker-lite id="startDateField"
                                     label="Start date"
                                     value="{{agreement.start}}"
                                     readonly$="[[!agreement.permissions.edit.start]]"
-                                    no-init show-clear-btn
                                     required$="[[agreement.permissions.required.start]]">
-                  </etools-date-input>
+                  </datepicker-lite>
                 </div>
                 <div class="col col-3">
                   <etools-date-input id="endDateField"
@@ -204,7 +203,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                   </etools-date-input>
                 </div>
               </template>
-              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]" restamp>
+              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
                 <div class="col col-6">
                   <etools-cp-structure
                       id="cpStructure"
@@ -218,7 +217,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
               </template>
             </div>
 
-            <div hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
+            <div hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
               <div class="row-h flex-c">
                 <div class="col col-6">
                   <!-- Signed By Partner -->
@@ -239,12 +238,12 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                 </div>
                 <div class="col col-3">
                   <!-- Signed By Partner Date -->
-                  <etools-date-input id="signedByPartnerDateField"
+                  <datepicker-lite id="signedByPartnerDateField"
                                     label="Signed By Partner Date"
                                     value="{{agreement.signed_by_partner_date}}"
                                     readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                                    no-init show-clear-btn disable-future-dates>
-                  </etools-date-input>
+                                    max-date="[[getCurrentDate()]]">
+                  </datepicker-lite>
                 </div>
               </div>
               <div class="row-h flex-c">
@@ -255,17 +254,17 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
 
                 <div class="col col-3">
                   <!-- Signed By UNICEF Date -->
-                  <etools-date-input id="signedByUnicefDateField"
+                  <datepicker-lite id="signedByUnicefDateField"
                                     label="Signed By UNICEF Date"
                                     value="{{agreement.signed_by_unicef_date}}"
                                     readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                                    no-init show-clear-btn disable-future-dates>
-                  </etools-date-input>
+                                    max-date="[[getCurrentDate()]]">
+                  </datepicker-lite>
                 </div>
               </div>
             </div>
 
-            <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]">
+            <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
               <!-- Partner Authorized Officers (partner staff members) -->
               <etools-dropdown-multi id="officers"
                                     label="Partner Authorized Officers"
@@ -306,7 +305,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
 
             <div class="row-h flex-c">
               <paper-toggle-button checked="{{agreement.special_conditions_pca}}"
-                                  hidden$="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]"
+                                  hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
                                   disabled$="[[!agreement.permissions.edit.special_conditions_pca]]">
                 Special Conditions PCA
               </paper-toggle-button>
@@ -330,7 +329,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                   hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
                 <span class="type-warning">[[generatePCAMessage]]</span>
               </div>
-              <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
+              <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
                 <etools-upload
                     label="Signed Agreement"
                     file-url="{{agreement.attachment}}"
@@ -354,7 +353,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                                   data-items="{{agreement.amendments}}"
                                   agreement-type="[[agreement.agreement_type]]"
                                   edit-mode="[[agreement.permissions.edit.amendments]]"
-                                  show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
+                                  show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
                                   authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                   selected-ao="{{authorizedOfficers}}">
             </agreement-amendments>
@@ -775,6 +774,10 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
         this.dispatch('decreaseUnsavedUploads');
+      }
+
+      _getCurrentDate() {
+        return new Date();
       }
     }
 
