@@ -17,7 +17,7 @@ import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
 import {UserPermissions} from '../../../typings/globals.types';
-import {Agreement, Amendment} from './agreement.js';
+import {Agreement, AgreementAmendment} from './agreement.js';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box.js'
 import '../../layout/page-content-header';
@@ -25,6 +25,7 @@ import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-s
 import {pageLayoutStyles} from '../../styles/page-layout-styles'
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
+import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 
 
 /**
@@ -204,16 +205,6 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     };
   }
 
-  static get actions() {
-    return {
-      resetUnsavedUploads: function () {
-        return {
-          type: 'RESET_UNSAVED_UPLOADS'
-        };
-      }
-    };
-  }
-
   static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, newAgreementActive)',
@@ -298,7 +289,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this))
         .then((successfull: boolean) => {
           if (successfull) {
-            store.dispatch('resetUnsavedUploads'); //TODO
+            store.dispatch({type: RESET_UNSAVED_UPLOADS});
           }
         });
   }
@@ -472,7 +463,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       if (this._objectFieldIsModified('amendments')) {
         // keep only new amendments
         changes.amendments = this.agreement.amendments.filter(
-            (a: Amendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
+            (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
       }
     }
 

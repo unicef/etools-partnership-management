@@ -140,9 +140,12 @@ const ModuleRoutingMixin = dedupingMixin(
         if (page && page !== this.activePage) {
           // import main page element
           let importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
+
           let baseUrl = this._getFileBaseUrl(fileImportDetails.filenamePrefix + 's',
                         page, appendBasePathAdditionalFolder);
+
           let fileName = importFilenamePrefix + page;
+
           this.importPageElement(fileName, baseUrl).then(() => {
             this._handleSuccessfulImport(page, successfulImportCallback);
           }).catch((err) => {
