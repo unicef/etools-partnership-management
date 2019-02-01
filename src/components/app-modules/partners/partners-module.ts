@@ -23,12 +23,15 @@ import '../../layout/page-content-header';
 import '../../layout/page-content-header-slotted-styles';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles.js';
+
 import {UserPermissions} from "../../../typings/globals.types";
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
+
 
 /**
  * @polymer
@@ -56,8 +59,8 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     // main template
     // language=HTML
     return html`
-        ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles}
-        <style import="page-content-header-slotted-styles">
+        ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+        <style>
           :host {
               display: block;
           }
