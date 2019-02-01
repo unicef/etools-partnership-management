@@ -44,9 +44,9 @@ export const listFilterStyles = html`
 
     #filters-fields .filter.date {
       --paper-input-container: {
-        width: 160px;
+        width: 180px;
       };
-      min-width: 160px;
+      min-width: 180px;
     }
 
     #filters-fields > *:not(:last-child) {
@@ -130,5 +130,5 @@ export const listFilterStyles = html`
       padding-right: 16px;
       border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
     }
-    
+
   </style>`;

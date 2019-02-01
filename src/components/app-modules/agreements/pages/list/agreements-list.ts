@@ -13,6 +13,7 @@ import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import 'etools-data-table/etools-data-table.js';
+import 'etools-date-time/datepicker-lite.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
@@ -117,17 +118,15 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
             </template>
 
             <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-              <etools-date-input id$="datepicker_[[filter.path]]"
+              <datepicker-lite id$="datepicker_[[filter.path]]"
                                 class="filter date"
                                 label="[[filter.filterName]]"
                                 placeholder="Select"
                                 value="{{filter.dateSelected}}"
-                                on-date-has-changed="_filterDateHasChanged"
+                                on-date-changed="_filterDateHasChanged"
                                 data-filter-path$="[[filter.path]]"
-                                fire-date-has-changed
-                                no-init
-                                show-clear-btn>
-              </etools-date-input>
+                                fire-date-changed-event>
+              </datepicker-lite>
             </template>
 
             <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
@@ -374,7 +373,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
       },
       {
         filterName: 'Ends Before',
-        type: 'datepicker', // etools-datepicker
+        type: 'datepicker',
         dateSelected: '',
         path: 'endDate',
         selected: false
@@ -393,7 +392,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
       },
       {
         filterName: 'Starts After',
-        type: 'datepicker', // etools-datepicker
+        type: 'datepicker',
         dateSelected: '',
         path: 'startDate',
         selected: false
