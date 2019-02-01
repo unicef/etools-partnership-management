@@ -1,6 +1,6 @@
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {store} from "../../../../../store";
+import {store, RootState} from "../../../../../store";
 import { PolymerElement, html } from '@polymer/polymer';
 
 import '@polymer/iron-icon/iron-icon';
@@ -11,7 +11,7 @@ import '@polymer/paper-button/paper-button';
 import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
-// <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
@@ -33,6 +33,7 @@ import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
 import {appMixins} from '../../../../styles/app-mixins.js';
 
 import '../../data/partners-list-data.js';
+import { isJsonStrMatch } from '../../../../utils/utils';
 
 
 
@@ -80,7 +81,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
           text-transform: none;
         }
       </style>
-      
+
       <template is="dom-if" if="[[stampListData]]">
         <partners-list-data id="partners"
                             filtered-partners="{{filteredPartners}}"
@@ -90,10 +91,10 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
                             fire-data-loaded>
         </partners-list-data>
       </template>
-      
+
       <div id="filters" class="paper-material" elevation="1">
         <div id="filters-fields">
-  
+
           <paper-input id="query"
                        class="filter"
                        type="search"
@@ -102,7 +103,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
                        placeholder="Search">
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
-  
+
           <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
             <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
               <!-- esmm multi -->
@@ -122,7 +123,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
                   no-dynamic-align>
               </etools-dropdown-multi>
             </template>
-  
+
             <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
               <div id="hiddenToggle" class="filter">
                 [[filter.filterName]]
@@ -131,10 +132,10 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
                                      on-iron-change="toggleValueChanged"></paper-toggle-button>
               </div>
             </template>
-  
+
           </template>
         </div>
-  
+
         <div class="fixed-controls">
           <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
             <paper-button class="button" slot="dropdown-trigger">
@@ -158,7 +159,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
           </paper-menu-button>
         </div>
       </div>
-      
+
       <div id="list" elevation="1" class="paper-material hidden">
 
         <etools-data-table-header
@@ -177,7 +178,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
             Risk Rating
           </etools-data-table-column>
         </etools-data-table-header>
-  
+
         <template id="rows" is="dom-repeat"
                   items="[[filteredPartners]]" as="partner"
                   initial-count="10" on-dom-change="_listDataChanged">
@@ -193,19 +194,19 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
                 </span>
               <span class="col-data flex-3">
                   <span>[[_computeName(partner.name, partner.short_name)]]</span>
-  
+
                   <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
                     <span class="marked-for-deletion">
                       <iron-icon icon="delete"></iron-icon>
                     </span>
                   </span>
-  
+
                   <span class="sm-status-wrapper" hidden$="[[!partner.blocked]]">
                     <span class="blocked">
                       <iron-icon icon="block"></iron-icon>
                     </span>
                   </span>
-  
+
                 </span>
               <span class="col-data flex-2">
                   [[_computeType(partner.cso_type, partner.partner_type)]]
@@ -238,7 +239,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
             </div>
           </etools-data-table-row>
         </template>
-  
+
         <etools-data-table-footer
             page-size="{{paginator.page_size}}"
             page-number="{{paginator.page}}"
@@ -246,7 +247,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
             visible-range="{{paginator.visible_range}}">
         </etools-data-table-footer>
       </div>
-    
+
     `;
   }
 
@@ -301,6 +302,21 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
       'paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    if (!state.commonData) {
+      return;
+    }
+    if (!isJsonStrMatch(this.partnerTypes, state.commonData!.partnerTypes)) {
+      this.partnerTypes = state.commonData!.partnerTypes;
+    }
+    if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
+      this.csoTypes = state.commonData!.csoTypes;
+    }
+    if (!isJsonStrMatch(this.riskRatings, state.commonData!.partnerRiskRatings)) {
+      this.riskRatings = state.commonData!.partnerRiskRatings;
+    }
   }
 
   public connectedCallback() {
