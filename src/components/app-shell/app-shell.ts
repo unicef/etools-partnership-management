@@ -33,7 +33,9 @@ import commonData from '../../reducers/common-data.js';
 store.addReducers({
   // @ts-ignore
   commonData,
-  uploadStatus
+  uploadStatus,
+  partners,
+  agreements
 });
 
 // These are the elements needed by this element.
@@ -69,6 +71,7 @@ import './footer/page-footer.js'
 
 import '../environment-flags/environment-flags';
 import '../app-modules/partners/data/partners-list-data.js';
+import '../app-modules/agreements/data/agreements-list-data.js';
 
 import './app-theme.js';
 import UtilsMixin from '../mixins/utils-mixin.js';
@@ -79,6 +82,8 @@ import '../../config/config.js';
 import '../../config/dexie-db-config.js';
 import { RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
 import uploadStatus from '../../reducers/upload-status.js';
+import agreements from '../../reducers/agreements.js';
+import partners from '../../reducers/partners.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -224,7 +229,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     <!--<data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>-->
 
     <partners-list-data></partners-list-data>
-    <!--<agreements-list-data></agreements-list-data>-->
+    <agreements-list-data></agreements-list-data>
 
     <!--<etools-piwik-analytics-->
         <!--page="[[subroute.prefix]]"-->

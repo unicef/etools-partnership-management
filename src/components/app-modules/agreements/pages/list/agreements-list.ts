@@ -32,6 +32,7 @@ import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import '../../data/agreements-list-data.js';
+import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
 
 /**
      * @polymer
@@ -335,12 +336,8 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
   }
 
   stateChanged(state: RootState) {
-    if (!state.commonData) {
-        return;
-    }
-    if (!isJsonStrMatch(state.commonData!.partnersDropdownData, this.partnersDropdownData)) {
-      this.partnersDropdownData = [...state.commonData!.partnersDropdownData];
-    }
+    this.partnersDropdownData = partnersDropdownDataSelector(state);
+
     if (!isJsonStrMatch(state.commonData!.agreementStatuses, this.agreementStatuses)) {
       this.agreementStatuses = [...state.commonData!.agreementStatuses];
     }

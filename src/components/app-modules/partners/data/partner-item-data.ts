@@ -113,7 +113,7 @@ class PartnerItemData extends connect(store)(PartnerItemDataRequiredMixins) {
       });
     }
     if (ajaxMethod === 'DELETE') {
-      store.dispatch('deletePartner', this.deletedPartnerId);
+      store.dispatch('deletePartner', this.deletedPartnerId); // TODO
       this._deletePartnerFromDexie(this.deletedPartnerId);
     }
   }

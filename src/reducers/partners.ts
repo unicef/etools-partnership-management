@@ -1,7 +1,6 @@
 
 import {createSelector} from 'reselect';
 import * as a from '../actions/partners';
-import { isEmptyObject } from '../components/utils/utils';
 import { RootState } from '../store';
 
 export class PartnersState {
@@ -41,7 +40,7 @@ export const csoPartnersSelector = createSelector(
   }
 );
 
-export const partnersForDropdownsSelector = createSelector(
+export const partnersDropdownDataSelector = createSelector(
   notHiddenPartnersSelector,
   (partners: any) => {
     return partners.map((p: any) => {
