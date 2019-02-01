@@ -10,6 +10,7 @@ import EventHelperMixin from '../../../mixins/event-helper-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import { Agreement, MinimalAgreement } from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
+import { addEditAgreement } from '../../../../actions/agreements.js';
 
 
 /**
@@ -115,7 +116,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
           this._computeAgrementNumberStatus(response.agreement_number,
               response.status);
 
-      store.dispatch('addEditAgreement', this._getMinimalAgreementData(response));
+      store.dispatch(addEditAgreement(this._getMinimalAgreementData(response)));
 
       let self = this;
       // update the agreement list in dexieDB
