@@ -6,7 +6,7 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 import CONSTANTS from '../../../../../../../config/app-constants';
-import { AgreementAmendment } from '../../../../agreement';
+import { AgreementAmendment } from '../../../../agreement.types';
 import CommonMixin from '../../../../../../mixins/common-mixin';
 import EventHelperMixin from '../../../../../../mixins/event-helper-mixin';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
@@ -14,7 +14,10 @@ import {SharedStyles} from '../../../../../../styles/shared-styles.js';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles.js';
 import '../../../../../../mixins/event-helper-mixin.js';
 import '../../../../../../mixins/common-mixin.js';
-import 'add-ag-amendment-dialog.js';
+import './add-ag-amendment-dialog.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../../../store';
+import { isJsonStrMatch } from '../../../../../../utils/utils';
 
 
 /**
@@ -23,7 +26,7 @@ import 'add-ag-amendment-dialog.js';
  * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  */
-class AgreementAmendments extends EventHelperMixin(CommonMixin(PolymerElement)) {
+class AgreementAmendments extends connect(store)(EventHelperMixin(CommonMixin(PolymerElement))) {
 
   static get template() {
     return html`
@@ -211,6 +214,12 @@ class AgreementAmendments extends EventHelperMixin(CommonMixin(PolymerElement)) 
         value: false
       }
     };
+  }
+
+  stateChanged(state: RootState) {
+    if (!isJsonStrMatch(this._amendmentTypes, state.commonData!.agreementAmendmentTypes)) {
+      this._amendmentTypes = state.commonData!.agreementAmendmentTypes;
+    }
   }
 
   ready() {

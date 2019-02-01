@@ -2,32 +2,33 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-input/paper-input-container.js';
+
 
 import 'etools-content-panel/etools-content-panel.js';
+import 'etools-upload/etools-upload.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
-import 'etools-upload/etools-upload.js';
+import 'etools-date-time/datepicker-lite';
+
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import { DECREASE_UPLOADS_IN_PROGRESS } from '../../../../../actions/upload-status';
-import { store } from '../../../../../store';
+import { store, RootState } from '../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
-import '../../../../layout/components/etools-form-element-wrapper.js';
-import '../../../../layout/components/etools-date-input.js';
-import '../../../../layout/components/etools-cp-structure.js';
-import '../../../../layout/components/year-dropdown.js';
+import '../../../../layout/etools-form-element-wrapper.js';
+import '../../../../layout/etools-cp-structure.js';
+import '../../../../layout/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import UploadMixin from '../../../../mixins/uploads-mixin';
 import { Agreement } from '../../agreement.types.js';
 
-import '../../../../config/app-constants.js';
-import '../../../../../modules/mixins/missing-dropdown-options-mixin.js';
+import '../../../../mixins/missing-dropdown-options-mixin.js';
 import '../../../../mixins/common-mixin.js';
 import '../../../../endpoints/endpoints.js';
 import '../../../../mixins/event-helper-mixin.js';
@@ -40,10 +41,12 @@ import {buttonsStyles} from '../../../../styles/buttons-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 
-import 'components/amendments/agreement-amendments.js';
-import 'components/generate-PCA-dialog.js';
+import './components/amendments/agreement-amendments.js';
+import './components/generate-PCA-dialog.js';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
 import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
+import { isJsonStrMatch } from '../../../../utils/utils';
+import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
 
 /**
      * @polymer
@@ -153,7 +156,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
                             readonly>
                 </paper-input>
               </div>
-              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]">
+              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
                 <div class="col col-3">
                   <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
                                               value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
@@ -181,15 +184,14 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
                                             value="[[agreement.partner_name]]">
                 </etools-form-element-wrapper>
               </div>
-              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]" restamp>
+              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
                 <div class="col col-3">
-                  <etools-date-input id="startDateField"
+                  <datepicker-lite id="startDateField"
                                     label="Start date"
                                     value="{{agreement.start}}"
                                     readonly$="[[!agreement.permissions.edit.start]]"
-                                    no-init show-clear-btn
                                     required$="[[agreement.permissions.required.start]]">
-                  </etools-date-input>
+                  </datepicker-lite>
                 </div>
                 <div class="col col-3">
                   <etools-date-input id="endDateField"
@@ -201,7 +203,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
                   </etools-date-input>
                 </div>
               </template>
-              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]" restamp>
+              <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
                 <div class="col col-6">
                   <etools-cp-structure
                       id="cpStructure"
@@ -215,7 +217,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
               </template>
             </div>
 
-            <div hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
+            <div hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
               <div class="row-h flex-c">
                 <div class="col col-6">
                   <!-- Signed By Partner -->
@@ -236,12 +238,12 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
                 </div>
                 <div class="col col-3">
                   <!-- Signed By Partner Date -->
-                  <etools-date-input id="signedByPartnerDateField"
+                  <datepicker-lite id="signedByPartnerDateField"
                                     label="Signed By Partner Date"
                                     value="{{agreement.signed_by_partner_date}}"
                                     readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                                    no-init show-clear-btn disable-future-dates>
-                  </etools-date-input>
+                                    max-date="[[getCurrentDate()]]">
+                  </datepicker-lite>
                 </div>
               </div>
               <div class="row-h flex-c">
@@ -252,17 +254,17 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
 
                 <div class="col col-3">
                   <!-- Signed By UNICEF Date -->
-                  <etools-date-input id="signedByUnicefDateField"
+                  <datepicker-lite id="signedByUnicefDateField"
                                     label="Signed By UNICEF Date"
                                     value="{{agreement.signed_by_unicef_date}}"
                                     readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                                    no-init show-clear-btn disable-future-dates>
-                  </etools-date-input>
+                                    max-date="[[getCurrentDate()]]">
+                  </datepicker-lite>
                 </div>
               </div>
             </div>
 
-            <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]">
+            <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
               <!-- Partner Authorized Officers (partner staff members) -->
               <etools-dropdown-multi id="officers"
                                     label="Partner Authorized Officers"
@@ -303,7 +305,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
 
             <div class="row-h flex-c">
               <paper-toggle-button checked="{{agreement.special_conditions_pca}}"
-                                  hidden$="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.PCA)]]"
+                                  hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
                                   disabled$="[[!agreement.permissions.edit.special_conditions_pca]]">
                 Special Conditions PCA
               </paper-toggle-button>
@@ -327,7 +329,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
                   hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
                 <span class="type-warning">[[generatePCAMessage]]</span>
               </div>
-              <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.SSFA)]]">
+              <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
                 <etools-upload
                     label="Signed Agreement"
                     file-url="{{agreement.attachment}}"
@@ -351,7 +353,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
                                   data-items="{{agreement.amendments}}"
                                   agreement-type="[[agreement.agreement_type]]"
                                   edit-mode="[[agreement.permissions.edit.amendments]]"
-                                  show-authorized-officers="[[!_typeMatches(agreement.agreement_type, CONSTANTS.AGREEMENT_TYPES.MOU)]]"
+                                  show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
                                   authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                   selected-ao="{{authorizedOfficers}}">
             </agreement-amendments>
@@ -433,6 +435,18 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
           '_partnerChanged(agreement.partner)',
           '_handleSpecialConditionsPca(agreement.special_conditions_pca, agreement.agreement_type)'
         ];
+      }
+
+      stateChanged(state: RootState) {
+        if (!state.partners) {
+          return;
+        }
+
+        this.partnersDropdownData = partnersForDropdownsSelector(state);
+
+        if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
+          this.agreementTypes = state.commonData!.agreementTypes;
+        }
       }
 
       ready() {
@@ -760,6 +774,10 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
         this.dispatch('decreaseUnsavedUploads');
+      }
+
+      _getCurrentDate() {
+        return new Date();
       }
     }
 

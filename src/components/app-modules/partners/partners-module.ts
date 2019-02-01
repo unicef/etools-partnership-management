@@ -31,6 +31,7 @@ import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
+import { isEmptyObject } from '../../utils/utils';
 
 
 /**
@@ -65,19 +66,19 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
               display: block;
           }
         </style>
-        
+
         <app-route
           route="{{route}}"
           pattern="/list"
           query-params="{{listPageQueryParams}}"
           active="{{listActive}}"></app-route>
-        
+
         <app-route
           route="{{route}}"
           pattern="/:id/:tab"
           active="{{tabsActive}}"
           data="{{routeData}}"></app-route>
-          
+
         <page-content-header with-tabs-visible="[[tabsActive]]">
           <div slot="page-title">
             <template is="dom-if" if="[[listActive]]">
@@ -113,7 +114,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
                          on-iron-select="_handleTabSelectAction"></etools-tabs>
           </template>
         </page-content-header>
-        
+
         <div id="main">
           <div id="pageContent">
 
@@ -124,7 +125,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
                         selected="{{activePage}}"
                         attr-for-selected="name"
                         role="main">
-    
+
               <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
                 <partners-list id="list"
                                name="list"
@@ -135,18 +136,18 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
                                url-params="[[preservedListQueryParams]]">
                 </partners-list>
               </template>
-    
+
               <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
                 <partner-overview name="overview" partner="[[partner]]"></partner-overview>
               </template>
-    
+
               <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
                 <partner-details id="partnerDetails"
                                  name="details"
                                  partner="[[partner]]"
                                  edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
               </template>
-    
+
               <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
                 <partner-financial-assurance id="financialAssurance"
                                              partner="[[partner]]"
@@ -154,7 +155,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
                                              name="financial-assurance">
                 </partner-financial-assurance>
               </template>
-    
+
             </iron-pages>
 
           </div> <!-- page content end -->
@@ -172,14 +173,14 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
             </div> <!-- sidebar content end -->
           </template>
         </div> <!-- main container end -->
-        
+
         <partner-item-data id="partnerData"
                        partner-id="[[selectedPartnerId]]"
                        partner="{{partner}}"
                        error-event-name="partner-save-error">
         </partner-item-data>
-        
-        
+
+
     `;
   }
 
@@ -419,7 +420,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   }
 
   public _partnerChanged(partner: any) {
-    if (!_.isEmpty(partner)) {
+    if (!isEmptyObject(partner)) {
       // dismiss partner details pages loading
       this.fireEvent('global-loading', {
         active: false,

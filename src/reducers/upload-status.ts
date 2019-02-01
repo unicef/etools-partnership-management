@@ -6,7 +6,7 @@ export class UploadStatusState {
   unsavedUploads: number = 0;
 }
 
-const INITIAL_STATE: UploadStatusState = new UploadStatusState();
+const INITIAL_STATE = new UploadStatusState();
 
 const uploadStatus: Reducer<UploadStatusState, Action<string>> = (state = INITIAL_STATE, action: any) => {
   switch(action.type) {

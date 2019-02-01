@@ -7,7 +7,7 @@ const PaginationMixin = (baseClass: any) => class extends (baseClass) {
     return {
       paginator: {
         type: Object,
-        value: new Paginator(),
+        value: () => new Paginator(),
         notify: true
       }
     };

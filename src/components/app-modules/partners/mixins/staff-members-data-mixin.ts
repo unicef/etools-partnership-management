@@ -15,19 +15,20 @@ import { MinimalStaffMember } from '../../../../typings/partner.types.js';
  * @appliesMixin EventHelper
  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
  */
-const StaffMembersDataRequiredMixinsList = EtoolsMixinFactory.combineMixins([
+const StaffMembersDataRequiredMixinsList = [
   EtoolsLogsMixin,
   EtoolsAjaxRequestMixin,
   EventHelper,
   EndpointsMixin
-]);
+];
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin StaffMembersDataRequiredMixinsList
  */
-const StaffMembersData = dedupingMixin((baseClass: any) => class extends StaffMembersDataRequiredMixinsList(baseClass) {
+const StaffMembersData = dedupingMixin((baseClass: any) => class extends
+   EtoolsMixinFactory.combineMixins(StaffMembersDataRequiredMixinsList, baseClass) {
   static get properties() {
     return {
       staffMembers: Array,
@@ -64,8 +65,8 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends StaffMe
   public _handleStaffMembersResponse(res: any) {
     if (res instanceof Array && res.length) {
       let activeStaffMembers = res.map(function(sMember) {
-        return new MinimalStaffMember(sMember.id, sMember.first_name,
-           sMember.last_name, sMember.active);
+         return new MinimalStaffMember(sMember.id, sMember.first_name,
+            sMember.last_name, sMember.active);
       }).filter(function(sMember) {
         return sMember.active;
       });

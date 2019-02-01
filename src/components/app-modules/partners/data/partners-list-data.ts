@@ -8,6 +8,13 @@ import EventHelperMixin from '../../../mixins/event-helper-mixin';
 
 import Dexie from 'dexie';
 import {isEmptyObject} from "../../../utils/utils";
+import { setPartners } from '../../../../actions/partners.js';
+import partners from '../../../../reducers/partners.js';
+
+store.addReducers({
+  partners
+});
+
 
 /**
  * @polymer
@@ -62,48 +69,27 @@ class PartnersListData extends PartnersListDataRequiredMixins {
   public dataLoadedEventName: string = 'partners-loaded';
   public prepareDropdownData: boolean = false;
 
-  static get actions() {
-    return {
-      setPartnersDropdown: function(partnersDropdownData) {
-        return {
-          type: 'SET_PARTNERS_DROPDOWN',
-          partnersDropdownData: partnersDropdownData
-        };
-      },
-      setPartners: function(partnersData) {
-        return {
-          type: 'SET_PARTNERS',
-          partnersData: partnersData
-        };
-      },
-      setCivilSocietyOrganizationPartners: function(csoPartners) {
-        return {
-          type: 'SET_CSO_PARTNERS',
-          csoPartners: csoPartners
-        };
-      }
-    };
-  }
-
-  public _handleMyResponse(res: any) {
+   public _handleMyResponse(res: any) {
     this._handleResponse(res);
     if (res && res.length) {
-      store.dispatch('setPartners', res);
-      let preparedData = [];
-      let civilSocietyOrganizationPartners = [];
-      res.forEach(function(p) {
-        if (!p.hidden && p.partner_type === 'Civil Society Organization') {
-          civilSocietyOrganizationPartners.push(p);
-        }
-        if (!p.hidden) {
-          preparedData.push({
-            value: p.id,
-            label: p.name
-          });
-        }
-      });
-      store.dispatch('setPartnersDropdown', preparedData);
-      store.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
+      store.dispatch(setPartners(res));
+      // let preparedData = [];
+      // let civilSocietyOrganizationPartners = [];
+      // res.forEach(function(p) {
+      //   if (!p.hidden && p.partner_type === 'Civil Society Organization') {
+      //     civilSocietyOrganizationPartners.push(p);
+      //   }
+      //   if (!p.hidden) {
+      //     preparedData.push({
+      //       value: p.id,
+      //       label: p.name
+      //     });
+      //   }
+      // });
+
+      //TODO - replaced by selector- to test
+      // store.dispatch('setPartnersDropdown', preparedData);
+      // store.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
     }
   }
 

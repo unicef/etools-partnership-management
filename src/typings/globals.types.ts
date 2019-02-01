@@ -44,3 +44,16 @@ export class Paginator {
   visible_range: [] = [];
 }
 
+export type CpStructure = {
+  id: string,
+  name: string,
+  expired: boolean,
+  future: boolean,
+  active: boolean,
+  special: boolean,
+  invalid: boolean,
+  from_date: string,
+  to_date: string,
+  wbs: string
+}
+
