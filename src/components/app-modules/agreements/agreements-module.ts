@@ -27,6 +27,8 @@ import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
+import './pages/components/agreement-status.js';
+
 
 
 /**
