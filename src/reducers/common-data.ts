@@ -46,7 +46,6 @@ export interface CommonDataState {
   offices: object[];
   partners: object[];
   agreementsDropdownData: object[];
-  agreementsList: object[];
   agencyChoices: object[];
   agreementAmendmentTypes: object[];
   csoTypes: object[];
@@ -84,7 +83,6 @@ const INITIAL_STATE: CommonDataState = {
   offices: [],
   partners: [],
   agreementsDropdownData: [],
-  agreementsList: [],
   agencyChoices: [],
   agreementAmendmentTypes: [],
   csoTypes: [],
