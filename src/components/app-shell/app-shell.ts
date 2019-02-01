@@ -12,7 +12,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
 import {afterNextRender} from "@polymer/polymer/lib/utils/render-status";
-import '@polymer/polymer/lib/elements/dom-if.js'
 import { setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';

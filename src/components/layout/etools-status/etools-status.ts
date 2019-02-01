@@ -1,5 +1,5 @@
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../../../store';
+import { store, RootState } from '../../../store';
 import { PolymerElement, html } from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
@@ -13,7 +13,7 @@ import './etools-action-button.js';
  * @polymer
  * @customElement
  */
-class EtoolsStatus extends connect(store)((PolymerElement)) {
+class EtoolsStatus extends connect(store)(PolymerElement) {
 
   static get template() {
     return html`
@@ -85,6 +85,15 @@ class EtoolsStatus extends connect(store)((PolymerElement)) {
       '_handleStatusChanged(statuses, statuses.*)',
       '_handleActionsChanged(actions, actions.*)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    if (this.uploadsInProgress !== state.uploadStatus!.uploadsInProgress) {
+      this.uploadsInProgress = state.uploadStatus!.uploadsInProgress;
+    }
+    if (this.unsavedUploads !== state.uploadStatus!.unsavedUploads) {
+      this.unsavedUploads = state.uploadStatus!.unsavedUploads;
+    }
   }
 
   allowSave(uploadsInProgress: string) {

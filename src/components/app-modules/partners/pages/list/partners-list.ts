@@ -30,7 +30,6 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
-import {appMixins} from '../../../../styles/app-mixins.js';
 
 import '../../data/partners-list-data.js';
 import { isJsonStrMatch } from '../../../../utils/utils';

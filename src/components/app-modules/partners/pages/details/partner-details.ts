@@ -1,9 +1,9 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import '@polymer/polymer/lib/elements/dom-repeat.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-input/paper-input';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
@@ -11,9 +11,8 @@ import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-// <link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 import 'etools-data-table/etools-data-table.js';
-// <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
+import '../../../../layout/etools-form-element-wrapper.js';
 
 import '../../../../layout/etools-error-messages-box.js'
 // <link rel="import" href="../../../../layout/components/icons-actions.html">
@@ -24,9 +23,10 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
-import PartnersListData from '../../data/partners-list-data.js';
 import moment from "moment";
-import { isEmptyObject } from '../../../../utils/utils.js';
+import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../store.js';
 
 
 
@@ -52,7 +52,7 @@ let _partnersLastNavigated = '';
  * @customElement
  * @appliesMixin PartnersListRequiredMixins
  */
-class PartnerDetails extends PartnersListRequiredMixins {
+class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
 
   static get template() {
     // language=HTML
@@ -94,7 +94,7 @@ class PartnerDetails extends PartnersListRequiredMixins {
             }
 
         </style>
-        
+
         <etools-content-panel class="content-section" panel-title="Partner Details">
           <div class="row-h flex-c">
             <div class="col col-4">
@@ -138,17 +138,17 @@ class PartnerDetails extends PartnersListRequiredMixins {
           </div>
           <div class="row-h flex-c">
             <div class="col col-4">
-    
+
               <etools-form-element-wrapper label="Phone Number" value="[[partner.phone_number]]">
                 <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
               </etools-form-element-wrapper>
             </div>
             <div class="col col-4">
-    
+
               <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
                 <iron-icon icon="communication:email" slot="prefix"></iron-icon>
               </etools-form-element-wrapper>
-    
+
             </div>
             <div class="col col-4"></div>
           </div>
@@ -161,7 +161,7 @@ class PartnerDetails extends PartnersListRequiredMixins {
                     [[getRiskRatingValue(partner.rating)]]
                   </span>
                 </etools-form-element-wrapper>
-    
+
             </div>
             <div class="col col-4">
               <!-- Type of assessment -->
@@ -173,11 +173,11 @@ class PartnerDetails extends PartnersListRequiredMixins {
               <etools-form-element-wrapper label="Date of Report" value="[[prettyDate(partner.last_assessment_date)]]">
                 <iron-icon icon="date-range" slot="prefix"></iron-icon>
               </etools-form-element-wrapper>
-    
+
             </div>
           </div>
         </etools-content-panel>
-        
+
         <etools-content-panel class="content-section" panel-title="Core Values Assessments">
           <div slot="panel-btns" id="show-archived">
               <paper-toggle-button id="showArchived"
@@ -231,13 +231,13 @@ class PartnerDetails extends PartnersListRequiredMixins {
             There are no Core Value Assessments.
           </div>
         </etools-content-panel>
-        
+
         <staff-members id="staffMembersList"
                     data-items="[[partner.staff_members]]"
                     edit-mode="[[editMode]]">
         </staff-members>
-        
-    
+
+
     `;
   }
 
@@ -259,7 +259,7 @@ class PartnerDetails extends PartnersListRequiredMixins {
       },
       sharedPartenerValues: {
         type: Array,
-        statePath: 'agencyChoices'
+        statePath: 'sharedPartenerValues'
       },
       showCoreValuesAssessmentAttachment: Boolean,
       _partnerComputedType: {
@@ -279,6 +279,19 @@ class PartnerDetails extends PartnersListRequiredMixins {
   public showCoreValuesAssessmentAttachment: boolean = false;
   public showArchivedAssessments: boolean = false;
   public showDelete: boolean = false;
+
+  stateChanged(state: RootState) {
+    if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
+      this.csoTypes = state.commonData!.csoTypes;
+    }
+    if (!isJsonStrMatch(this.csoTypes, state.commonData!.partnerTypes)) {
+      this.partnerTypes = state.commonData!.partnerTypes;
+    }
+    if (!isJsonStrMatch(this.sharedPartenerValues, state.commonData!.agencyChoices)) {
+      this.sharedPartenerValues = state.commonData!.agencyChoices;
+    }
+  }
+
 
   public connectedCallback() {
     super.connectedCallback();

@@ -14,7 +14,19 @@ const partners = (state = INITIAL_STATE, action: any) => {
     case a.SET_PARTNERS:
       return {
         list: action.partners
+      };
+    case a.DELETE_PARTNER: {
+      let partnersCopy = state.list.slice(0);
+      let index = partnersCopy.findIndex((p: any) => p.id === action.partnerId);
+      if (index > -1) {
+        partnersCopy.splice(index, 1);
       }
+
+      return {
+        list: partnersCopy
+      };
+    }
+
     default:
       return state;
   }

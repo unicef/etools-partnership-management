@@ -7,8 +7,8 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import EventHelperMixin from '../../../mixins/event-helper-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
-import {store} from "pwa-helpers/demo/store";
-import {connect} from "pwa-helpers/connect-mixin";
+import {store} from "../../../../store.js";
+import { deletePartner } from '../../../../actions/partners.js';
 
 
 /**
@@ -26,14 +26,14 @@ const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
   EventHelperMixin,
   AjaxServerErrorsMixin
-]);
+], PolymerElement);
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin PartnerItemDataRequiredMixins
  */
-class PartnerItemData extends connect(store)(PartnerItemDataRequiredMixins) {
+class PartnerItemData extends PartnerItemDataRequiredMixins {
 
   static get properties() {
     return {
@@ -71,7 +71,7 @@ class PartnerItemData extends connect(store)(PartnerItemDataRequiredMixins) {
     };
   }
 
-  public _partnerIdChanged(newId: any) {
+  _partnerIdChanged(newId: any) {
     if (newId) {
       // set an empty partner
       this._setPartner({});
@@ -85,7 +85,7 @@ class PartnerItemData extends connect(store)(PartnerItemDataRequiredMixins) {
     }
   }
 
-  public _triggerPartnerRequest(options: any) {
+  _triggerPartnerRequest(options: any) {
     let ajaxMethod = options.method || 'GET';
     return this.sendRequest(options).then((resp: any) => {
       this._handleSuccResponse(resp, ajaxMethod);
@@ -113,7 +113,7 @@ class PartnerItemData extends connect(store)(PartnerItemDataRequiredMixins) {
       });
     }
     if (ajaxMethod === 'DELETE') {
-      store.dispatch('deletePartner', this.deletedPartnerId); // TODO
+      store.dispatch(deletePartner(this.deletedPartnerId));
       this._deletePartnerFromDexie(this.deletedPartnerId);
     }
   }
