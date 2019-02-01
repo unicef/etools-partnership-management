@@ -9,11 +9,12 @@ import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin
 import CONSTANTS from '../../../../config/app-constants';
 import { RootState } from '../../../../store.js';
 import { isJsonStrMatch } from '../../../utils/utils.js';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 
 /**
  * @polymer
- * @customElement
+ * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EventHelperMixin
  * @appliesMixin EndpointsMixin
@@ -21,14 +22,20 @@ import { isJsonStrMatch } from '../../../utils/utils.js';
  * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EnvironmentFlags
  */
-class InterventionItemData extends EtoolsMixinFactory.combineMixins([
+const InterventionItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   EventHelperMixin,
   EndpointsMixin,
   AjaxServerErrorsMixin,
   EnvironmentFlags,
-], PolymerElement) {
+], PolymerElement)
 
+/**
+ * @polymer
+ * @customElement
+ * @appliesMixin InterventionItemDataRequiredMixins
+ */
+class InterventionItemData extends connect(store)(InterventionItemDataRequiredMixins) {
 
   static get properties() {
     return {
