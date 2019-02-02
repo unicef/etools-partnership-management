@@ -1,6 +1,5 @@
-import {PolymerElement} from "@polymer/polymer";
+import {PolymerElement} from "@polymer/polymer/polymer-element.js";
 
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
@@ -15,14 +14,12 @@ import { deletePartner } from '../../../../actions/partners.js';
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin EventHelperMixin
  */
 const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  EtoolsAjaxRequestMixin,
   EndpointsMixin,
   EventHelperMixin,
   AjaxServerErrorsMixin
@@ -70,7 +67,6 @@ class PartnerItemData extends PartnerItemDataRequiredMixins {
       }
     };
   }
-
   _partnerIdChanged(newId: any) {
     if (newId) {
       // set an empty partner
@@ -259,4 +255,4 @@ class PartnerItemData extends PartnerItemDataRequiredMixins {
 
 }
 
-export default PartnerItemData;
+window.customElements.define('partner-item-data', PartnerItemData);;

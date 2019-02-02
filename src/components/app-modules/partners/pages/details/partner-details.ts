@@ -37,7 +37,6 @@ import { store, RootState } from '../../../../../store.js';
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  * @appliesMixin EventHelperMixin
- * @appliesMixin EtoolsMixinFactory
  */
 const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
   CommonMixin,
@@ -423,7 +422,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
 
 }
 
-window.customElements.define('partners-details', PartnerDetails);
+window.customElements.define('partner-details', PartnerDetails);
 
 
 
