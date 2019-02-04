@@ -16,7 +16,9 @@ import '@polymer/paper-styles/element-styles/paper-material-styles';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
@@ -70,7 +72,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
     // language=HTML
     return html`
       ${SharedStyles} ${listFilterStyles} ${partnerStatusStyles}
-      <style include="data-table-styles iron-flex iron-flex-factors paper-material-styles appMixins">
+      <style include="data-table-styles iron-flex iron-flex-factors paper-material-styles">
         .sm-status-wrapper {
         padding-left: 10px;
         }

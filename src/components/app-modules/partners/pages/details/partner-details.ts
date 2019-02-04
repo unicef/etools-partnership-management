@@ -5,6 +5,7 @@ import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
@@ -28,9 +29,6 @@ import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 
-
-
-
 /**
  * @polymer
  * @mixinFunction
@@ -43,8 +41,6 @@ const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
   RiskRatingMixin,
   EventHelperMixin
 ], PolymerElement);
-
-let _partnersLastNavigated = '';
 
 /**
  * @polymer
@@ -306,6 +302,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
   public disconnectedCallback() {
     super.disconnectedCallback();
     if (this.editCVADialog) {
+      // @ts-ignore
       document.querySelector('body').removeChild(this.editCVADialog);
     }
   }
@@ -320,10 +317,12 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
   public _createEditCoreValuesAssessmentsDialog() {
     this.editCVADialog = document.createElement('edit-core-values-assessment');
     this.editCVADialog.parent = this;
+    // @ts-ignore
     document.querySelector('body').appendChild(this.editCVADialog);
   }
 
   public _editCoreValuesAssessment(e: CustomEvent) {
+    // @ts-ignore
     this.editCVADialog.item = JSON.parse(e.target.getAttribute('item'));
     this.editCVADialog.open();
   }
@@ -353,10 +352,13 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
   }
 
   public _sortCvaDescByDate() {
+    // @ts-ignore
     if (!this.partner.core_values_assessments || this.partner.core_values_assessments.length <= 1) {
       return;
     }
+    // @ts-ignore
     this.partner.core_values_assessments.sort((a: any, b: any) => {
+      // @ts-ignore
       return new Date(b.date) - new Date(a.date);
     });
   }
