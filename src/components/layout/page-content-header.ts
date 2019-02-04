@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 /**
@@ -9,7 +9,9 @@ class PageContentHeader extends PolymerElement {
   static get is() {
     return 'page-content-header';
   }
+
   static get template() {
+    // language=HTML
     return html`
       <style>
         *[hidden] {
@@ -78,6 +80,7 @@ class PageContentHeader extends PolymerElement {
       </div>
     `;
   }
+
   static get properties() {
     return {
       withTabsVisible: {
