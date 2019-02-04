@@ -232,4 +232,4 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
 
 }
 
-window.customElements.define('add-ag-amendment-aialog', AddAgAmendmentDialog);
+window.customElements.define('add-ag-amendment-dialog', AddAgAmendmentDialog);
