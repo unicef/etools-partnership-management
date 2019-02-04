@@ -88,7 +88,8 @@ import partners from '../../reducers/partners.js';
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
 
-setRootPath('/pmp_poly3/');
+import {BASE_URL} from '../../config/config';
+setRootPath(BASE_URL);
 
 /**
  * @customElement

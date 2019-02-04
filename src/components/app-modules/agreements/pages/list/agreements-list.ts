@@ -65,7 +65,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
   static get template() {
     return html`
       ${SharedStyles} ${listFilterStyles} ${gridLayoutStyles}
-      <style include="paper-material-styles data-table-styles ap-mixins">
+      <style include="paper-material-styles data-table-styles">
 
         .ag-ref {
           @apply --text-btn-style;

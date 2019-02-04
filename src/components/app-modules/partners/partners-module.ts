@@ -33,7 +33,6 @@ import {buttonsStyles} from "../../styles/buttons-styles";
 import { isEmptyObject } from '../../utils/utils';
 import './data/partner-item-data.js'
 
-
 /**
  * @polymer
  * @mixinFunction
@@ -295,6 +294,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   public _createNewPartnerDialog() {
     this.newPartnerDialog = document.createElement('new-partner-dialog');
     this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
+    // @ts-ignore
     document.querySelector('body').appendChild(this.newPartnerDialog);
 
     this._createPartner = this._createPartner.bind(this);
@@ -304,6 +304,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   public _removeNewPartnerDialogFromDom() {
     if (this.newPartnerDialog) {
       this.newPartnerDialog.removeEventListener('create-partner', this._createPartner);
+      // @ts-ignore
       document.querySelector('body').removeChild(this.newPartnerDialog);
     }
   }
@@ -474,7 +475,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
       'planned_engagement',
       'basis_for_risk_rating'
     ];
-    let changes = {};
+    let changes: any = {};
     updatableFields.forEach((fieldName) => {
       // TODO: improve this
       if (['shared_with', 'assessments', 'staff_members', 'planned_engagement'].indexOf(fieldName) > -1) {
@@ -486,7 +487,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
               delete changes[fieldName];
             } else {
               // TODO: remove this once old upload properties are removed from backend
-              changes[fieldName] = changes[fieldName].map((a) => {
+              changes[fieldName] = changes[fieldName].map((a: any) => {
                 delete a.report;
                 delete a.report_file;
                 return a;
@@ -510,7 +511,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
    */
   public _getNewOrWithReportChangedAssessments(assessmentsList: any) {
     return assessmentsList.filter(
-        a => typeof a.report_attachment === 'number' && a.report_attachment > 0);
+        (a:any) => typeof a.report_attachment === 'number' && a.report_attachment > 0);
   }
 
   /**
@@ -518,12 +519,12 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
    */
   public _getModIgnoringAttachChanges(assessmentsList: any) {
     const alreadySavedAssessments = assessmentsList.filter(
-        a => typeof a.report_attachment === 'string' && a.report_attachment !== '');
-    const modifiedAssessments = [];
+        (a: any) => typeof a.report_attachment === 'string' && a.report_attachment !== '');
+    const modifiedAssessments: any[] = [];
     if (alreadySavedAssessments.length > 0) {
-      alreadySavedAssessments.forEach((a) => {
+      alreadySavedAssessments.forEach((a: any) => {
         // get original assessment data
-        const originalA = this.originalPartnerData.assessments.find(oA => oA.id === a.id);
+        const originalA = this.originalPartnerData.assessments.find((oA: any) => oA.id === a.id);
         // check for new updates
         if (originalA && JSON.stringify(originalA) !== JSON.stringify(a)) {
           delete a.report_attachment; // to avoid BE valid report file ID check
