@@ -1,7 +1,6 @@
 
 import {createSelector} from 'reselect';
 import * as a from '../actions/partners';
-import { isEmptyObject } from '../components/utils/utils';
 import { RootState } from '../store';
 
 export class PartnersState {
@@ -15,7 +14,19 @@ const partners = (state = INITIAL_STATE, action: any) => {
     case a.SET_PARTNERS:
       return {
         list: action.partners
+      };
+    case a.DELETE_PARTNER: {
+      let partnersCopy = state.list.slice(0);
+      let index = partnersCopy.findIndex((p: any) => p.id === action.partnerId);
+      if (index > -1) {
+        partnersCopy.splice(index, 1);
       }
+
+      return {
+        list: partnersCopy
+      };
+    }
+
     default:
       return state;
   }
@@ -41,7 +52,7 @@ export const csoPartnersSelector = createSelector(
   }
 );
 
-export const partnersForDropdownsSelector = createSelector(
+export const partnersDropdownDataSelector = createSelector(
   notHiddenPartnersSelector,
   (partners: any) => {
     return partners.map((p: any) => {

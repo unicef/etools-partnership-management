@@ -9,12 +9,6 @@ import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import Dexie from 'dexie';
 import {isEmptyObject} from "../../../utils/utils";
 import { setPartners } from '../../../../actions/partners.js';
-import partners from '../../../../reducers/partners.js';
-
-store.addReducers({
-  partners
-});
-
 
 /**
  * @polymer

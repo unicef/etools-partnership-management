@@ -1,5 +1,4 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/dom-if.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store.js";
 

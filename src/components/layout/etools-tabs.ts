@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/dom-if';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 

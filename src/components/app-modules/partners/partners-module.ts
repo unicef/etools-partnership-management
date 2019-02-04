@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import '@polymer/polymer/lib/elements/dom-if';
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
@@ -32,6 +31,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
 import { isEmptyObject } from '../../utils/utils';
+import './data/partner-item-data.js'
 
 
 /**
@@ -179,8 +179,6 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
                        partner="{{partner}}"
                        error-event-name="partner-save-error">
         </partner-item-data>
-
-
     `;
   }
 

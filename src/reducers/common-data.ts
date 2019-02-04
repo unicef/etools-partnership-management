@@ -46,8 +46,6 @@ export interface CommonDataState {
   offices: object[];
   partners: object[];
   agreementsDropdownData: object[];
-  partnersDropdownData: object[];
-  agreementsList: object[];
   agencyChoices: object[];
   agreementAmendmentTypes: object[];
   csoTypes: object[];
@@ -69,8 +67,6 @@ export interface CommonDataState {
   donors: object[];
   partnerRiskRatings: object[];
   pageData: object;
-  uploadsInProgress: number;
-  unsavedUploads: number;
   envFlags: object | null;
 }
 
@@ -87,8 +83,6 @@ const INITIAL_STATE: CommonDataState = {
   offices: [],
   partners: [],
   agreementsDropdownData: [],
-  partnersDropdownData: [],
-  agreementsList: [],
   agencyChoices: [],
   agreementAmendmentTypes: [],
   csoTypes: [],
@@ -124,8 +118,6 @@ const INITIAL_STATE: CommonDataState = {
     permissions: null,
     in_amendment: false
   },
-  uploadsInProgress: 0,
-  unsavedUploads: 0,
   envFlags: null
 };
 
@@ -137,8 +129,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
   // let indexP;
   // let index;
   // let pageDataWithPermsUpdated;
-  // let newUploadInProgress;
-  // let newUnsavedUploads;
   // let dIndex;
 
   switch (action.type) {
@@ -415,44 +405,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         ...state,
         pageData: pageDataInAmendment
       };
-
-    // case INCREASE_UPLOADS_IN_PROGRESS:
-    //   return {
-    //     ...state,
-    //     uploadsInProgress: state.uploadsInProgress + 1
-    //   };
-
-    // case DECREASE_UPLOADS_IN_PROGRESS:
-    // newUploadInProgress = state.uploadsInProgress > 0 ? state.uploadsInProgress - 1 : 0;
-    // return {
-    //   ...state,
-    //   uploadsInProgress: newUploadInProgress
-    // };
-
-    // case RESET_UPLOADS_IN_PROGRESS:
-    //   return {
-    //     ...state,
-    //     uploadsInProgress: 0
-    //   };
-
-    // case DECREASE_UNSAVED_UPLOADS:
-    //   newUnsavedUploads = state.unsavedUploads > 0 ? state.unsavedUploads - 1 : 0;
-    //   return {
-    //     ...state,
-    //     unsavedUploads: newUnsavedUploads
-    //   };
-
-    // case INCREASE_UNSAVED_UPLOADS:
-    //   return {
-    //     ...state,
-    //     unsavedUploads: state.unsavedUploads + 1
-    //   };
-    //
-    // case RESET_UNSAVED_UPLOADS:
-    //   return {
-    //     ...state,
-    //     unsavedUploads: 0
-    //   };
 
     default:
       return state;

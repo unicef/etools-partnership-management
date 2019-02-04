@@ -9,6 +9,7 @@ import {store} from '../../../../store.js';
 import Dexie from 'dexie';
 import moment from 'moment';
 import { isEmptyObject } from '../../../utils/utils';
+import { setAgreements } from '../../../../actions/agreements';
 
 /**
  * @polymer
@@ -61,20 +62,9 @@ const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
         };
       }
 
-      static get actions() {
-        return {
-          setAgreements: function(agreements) {
-            return {
-              type: 'SET_AGREEMENTS',
-              agreementsList: agreements
-            };
-          }
-        };
-      }
-
       _handleMyResponse(res: any) {
         this._handleResponse(res);
-        store.dispatch('setAgreements', res);
+        store.dispatch(setAgreements(res));
       }
 
       query(field, order, searchString, agreementTypes,

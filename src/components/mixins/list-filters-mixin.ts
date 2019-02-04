@@ -183,11 +183,11 @@ import moment from 'moment';
   // change event for a etoold-datepicker filter
   _filterDateHasChanged(event: PolymerElEvent) {
     let filterPath = event.target.getAttribute('data-filter-path');
-    if (!event.detail.jsonDate || !event.detail.prettyDate) {
+    if (!event.detail.date) {
       this.set(filterPath, '');
       return;
     }
-    let selectedDate = new Date(event.detail.jsonDate);
+    let selectedDate = event.detail.date;
     this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
   }
 

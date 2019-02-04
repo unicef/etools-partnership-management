@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -38,7 +37,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
   public static get template() {
     // main template
     // language=HTML
-    return html`        
+    return html`
       <style>
         app-toolbar {
           padding: 0 16px 0 0;
@@ -88,7 +87,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
           }
         }
       </style>
-      
+
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
         <div class="titlebar content-align">

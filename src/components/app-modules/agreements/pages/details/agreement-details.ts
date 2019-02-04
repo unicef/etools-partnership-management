@@ -16,7 +16,7 @@ import 'etools-date-time/datepicker-lite';
 
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import { DECREASE_UPLOADS_IN_PROGRESS } from '../../../../../actions/upload-status';
+import { DECREASE_UPLOADS_IN_PROGRESS, DECREASE_UNSAVED_UPLOADS, INCREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status';
 import { store, RootState } from '../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
 import '../../../../layout/etools-form-element-wrapper.js';
@@ -46,7 +46,7 @@ import './components/generate-PCA-dialog.js';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
 import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
 import { isJsonStrMatch } from '../../../../utils/utils';
-import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
+import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
 
 /**
      * @polymer
@@ -88,7 +88,6 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
             }
 
             paper-input,
-            etools-date-input,
             etools-cp-structure {
               width: 100%;
             }
@@ -194,13 +193,12 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
                   </datepicker-lite>
                 </div>
                 <div class="col col-3">
-                  <etools-date-input id="endDateField"
+                  <datepicker-lite id="endDateField"
                                     label="End date"
                                     value="{{agreement.end}}"
                                     readonly$="[[!agreement.permissions.edit.end]]"
-                                    no-init show-clear-btn
                                     required$="[[agreement.permissions.required.end]]">
-                  </etools-date-input>
+                  </datepicker-lite>
                 </div>
               </template>
               <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
@@ -442,7 +440,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
           return;
         }
 
-        this.partnersDropdownData = partnersForDropdownsSelector(state);
+        this.partnersDropdownData = partnersDropdownDataSelector(state);
 
         if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
           this.agreementTypes = state.commonData!.agreementTypes;
@@ -758,7 +756,7 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
         if (e.detail.success) {
           const response = JSON.parse(e.detail.success);
           this.set('agreement.attachment', response.id);
-          this.dispatch('increaseUnsavedUploads');
+          store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
         }
       }
 
@@ -766,17 +764,17 @@ import { partnersForDropdownsSelector } from '../../../../../reducers/partners';
        * Refer to unicef/etools-issues#232
        * For Draft Status, only Change option is available. No delete option is available in Draft.
        */
-      showSignedAgDeleteBtn() {
+      showSignedAgDeleteBtn(_status: string, _editAttPermission: boolean, _originalAtt: string, _isNewAgreement: boolean) {
         return this.isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
             && !this.originalAgreementData.attachment);
       }
 
       _signedAgFileDelete() {
         this.set('agreement.attachment', null);
-        this.dispatch('decreaseUnsavedUploads');
+        store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
       }
 
-      _getCurrentDate() {
+      getCurrentDate() {
         return new Date();
       }
     }
