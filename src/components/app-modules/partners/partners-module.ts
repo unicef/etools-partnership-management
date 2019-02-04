@@ -31,7 +31,9 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from "../../styles/shared-styles";
 import {buttonsStyles} from "../../styles/buttons-styles";
 import { isEmptyObject } from '../../utils/utils';
-import './data/partner-item-data.js'
+
+import './data/partner-item-data.js';
+import './components/new-partner-dialog.js';
 
 /**
  * @polymer

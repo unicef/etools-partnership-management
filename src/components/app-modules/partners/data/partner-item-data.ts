@@ -1,7 +1,11 @@
 import {PolymerElement} from "@polymer/polymer/polymer-element.js";
 
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+// @ts-ignore
+import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import EventHelperMixin from '../../../mixins/event-helper-mixin.js';
@@ -30,7 +34,7 @@ const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin PartnerItemDataRequiredMixins
  */
-class PartnerItemData extends PartnerItemDataRequiredMixins {
+class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   static get properties() {
     return {
@@ -118,8 +122,8 @@ class PartnerItemData extends PartnerItemDataRequiredMixins {
     window.EtoolsPmpApp.DexieDb.partners.where('id')
         .equals(parseInt(id, 10))
         .delete()
-        .then(deleteCount => this._handlePartnerDeleteFromDexieSuccess(deleteCount))
-        .catch(dexieDeleteErr => this._handlePartnerDeleteFromDexieErr(dexieDeleteErr))
+        .then((deleteCount: number) => this._handlePartnerDeleteFromDexieSuccess(deleteCount))
+        .catch((dexieDeleteErr: any) => this._handlePartnerDeleteFromDexieErr(dexieDeleteErr))
         .then(() => {
           // disable loading
           this.fireEvent('global-loading', {

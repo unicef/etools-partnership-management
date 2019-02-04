@@ -73,6 +73,7 @@ import '../app-modules/partners/data/partners-list-data.js';
 import '../app-modules/agreements/data/agreements-list-data.js';
 
 import './app-theme.js';
+import '../styles/app-mixins.js';
 import UtilsMixin from '../mixins/utils-mixin.js';
 import EventHelperMixin from '../mixins/event-helper-mixin.js';
 
