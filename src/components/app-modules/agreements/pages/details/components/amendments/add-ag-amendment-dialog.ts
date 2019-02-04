@@ -6,6 +6,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
+import 'etools-date-time/datepicker-lite.js';
 import EventHelperMixin from '../../../../../../mixins/event-helper-mixin';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import { AgreementAmendment } from '../../../../agreement.types';
@@ -47,17 +48,17 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
             <required-and-not-future-date-validator validator-name="ag_am_signed_date_validator"
                                                     field-selector="#signedDate">
             </required-and-not-future-date-validator>
-            <etools-date-input id="signedDate"
+            <datepicker-lite id="signedDate"
                               label="Signed Date"
                               value="{{amendment.signed_date}}"
                               error-message="Please select signed date"
-                              no-init show-clear-btn
                               required
                               open="{{datePickerOpen}}"
                               validator="ag_am_signed_date_validator"
                               auto-validate="[[autoValidate]]"
-                              required-and-not-future-date>
-            </etools-date-input>
+                              max-date="[[getCurrentDate()]]"
+                              required>
+            </datepicker-lite>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -228,6 +229,10 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
       const uploadResponse = JSON.parse(e.detail.success);
       this.set('amendment.signed_amendment_attachment', uploadResponse.id);
     }
+  }
+
+  getCurrentDate() {
+    return new Date();
   }
 
 }
