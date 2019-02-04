@@ -4,7 +4,7 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import { Intervention, InterventionPermissionsFields } from '../../../../typings/intervention.types';
 import CONSTANTS from '../../../../config/app-constants';
-import store from '../../../../store.js';
+import {store} from '../../../../store.js';
 import { setPageDataPermissions } from '../../../../actions/page-data';
 
 /**

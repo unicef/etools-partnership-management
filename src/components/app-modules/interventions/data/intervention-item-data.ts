@@ -1,6 +1,8 @@
 import { PolymerElement } from '@polymer/polymer';
-import store from '../../../store.js';
+import {store} from '../../../../store.js';
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
