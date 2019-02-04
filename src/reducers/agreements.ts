@@ -3,7 +3,7 @@ import { MinimalAgreement } from '../components/app-modules/agreements/agreement
 
 
 export class AgreementsState {
-  list: [] = [];
+  list: Array<MinimalAgreement> = [];
 }
 
 const INITIAL_STATE = new AgreementsState();
@@ -13,7 +13,7 @@ const agreements = (state = INITIAL_STATE, action: any) => {
     case a.SET_AGREEMENTS:
       return {
         ...state,
-        list: agreements
+        list: action.agreements
       };
      case a.ADD_EDIT_AGREEMENT: {
       let agreementsCopy: Array<MinimalAgreement> = state.list.slice(0);
