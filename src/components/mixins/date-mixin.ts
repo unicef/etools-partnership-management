@@ -1,5 +1,4 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {Polymer} from "@polymer/polymer/polymer-legacy";
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import moment from 'moment';
@@ -10,7 +9,7 @@ import moment from 'moment';
  * @appliesMixin EtoolsLogsMixin
  */
 const DateMixin = dedupingMixin((baseClass: any) =>
-  class extends EtoolsLogsMixin(baseClass) {
+  class extends (EtoolsLogsMixin(baseClass) as any) {
 
     public prettyDate(dateString: string, format: string, placeholder: string) {
       let date = this._convertDate(dateString);
@@ -67,11 +66,6 @@ const DateMixin = dedupingMixin((baseClass: any) =>
      * Make sure you also have the data-selector attribute set on the input field.
      */
     public openDatePicker(event: any) {
-      // this is in place here so that the filters dropdown would close if you click the label of another dropdown
-      if (Polymer && Polymer.IronOverlayManager && Polymer.IronOverlayManager._overlays.length > 0) {
-        document.dispatchEvent(new CustomEvent('tap', {detail: {sourceEvent: event}}));
-      }
-
       let id = event.target.getAttribute('data-selector');
       if (id) {
         let datePicker = this.shadowRoot.querySelector('#' + id);
@@ -136,7 +130,7 @@ const DateMixin = dedupingMixin((baseClass: any) =>
       let date = (current instanceof Date) ? current : new Date(current);
 
       let currentDate = this.isValidDate(date) ? moment() : moment(date);
-      return currentDate.isBetween(moment(startDate), moment(endDate), null, '[]');
+      return currentDate.isBetween(moment(startDate), moment(endDate), 'day', '[]');
     }
 
     public isValidDate(date: any) {
@@ -190,7 +184,6 @@ const DateMixin = dedupingMixin((baseClass: any) =>
           date1.getMonth() === date2.getMonth() &&
           date1.getFullYear() === date2.getFullYear());
     }
-
 
   });
 
