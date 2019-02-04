@@ -18,16 +18,18 @@ import DateMixin from '../../../../mixins/date-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import EventHelperMixin from '../../../../mixins/ajevent-helper-mixin.js';
+import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 
 import {pageLayoutStyles} from '../../../../styles/page-layout-styles';
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../styles/shared-styles.js';
+import { SharedStyles } from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
 import assign from 'lodash-es/assign.js';
 import moment from 'moment';
+import {connect} from "pwa-helpers/connect-mixin";
+import {store} from "../../../../../store";
 
 
 // <link rel="import" href="../../../shared/components/monitoring-visits-list.html">
@@ -60,7 +62,7 @@ const PartnerFinancialAssuranceMixins = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin PartnerFinancialAssuranceMixins
  */
-class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins{
+class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
   static get template() {
     // language=HTML
     return html`
@@ -586,7 +588,6 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins{
   public _toggleRadio(e: CustomEvent) {
     const checked = e.target.checked;
     const quarter = e.target.getAttribute('data-idx');
-    //heeeeeeeeeeeeeeeeee
     let spotChecksMr = assign({
       q1: 0,
       q2: 0,
