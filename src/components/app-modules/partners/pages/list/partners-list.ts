@@ -310,13 +310,13 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
       return;
     }
     if (!isJsonStrMatch(this.partnerTypes, state.commonData!.partnerTypes)) {
-      this.partnerTypes = state.commonData!.partnerTypes;
+      this.partnerTypes = [...state.commonData!.partnerTypes];
     }
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
-      this.csoTypes = state.commonData!.csoTypes;
+      this.csoTypes = [...state.commonData!.csoTypes];
     }
     if (!isJsonStrMatch(this.riskRatings, state.commonData!.partnerRiskRatings)) {
-      this.riskRatings = state.commonData!.partnerRiskRatings;
+      this.riskRatings = [...state.commonData!.partnerRiskRatings];
     }
   }
 

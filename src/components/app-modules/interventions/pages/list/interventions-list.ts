@@ -18,7 +18,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../../../../../store.js';
+import { store, RootState } from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
@@ -31,7 +31,7 @@ import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
 import { listFilterStyles } from '../../../../styles/list-filter-styles';
 import { frWarningsStyles } from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
-import { isEmptyObject } from '../../../../utils/utils.js';
+import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -420,6 +420,37 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
           'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    if (!isJsonStrMatch(this.cpOutputs, state.commonData!.cpOutputs)) {
+      this.cpOutputs = [...state.commonData!.cpOutputs];
+    }
+    if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
+      this.documentTypes = [...state.commonData!.interventionDocTypes];
+    }
+    if (!isJsonStrMatch(this.interventionStatuses, state.commonData!.interventionStatuses)) {
+      this.interventionStatuses = [...state.commonData!.interventionStatuses];
+    }
+    if (!isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
+      this.countryProgrammes = [...state.commonData!.countryProgrammes];
+    }
+    if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
+      this.sections = [...state.commonData!.sections];
+    }
+    if (!isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)) {
+      this.unicefUsersData = [...state.commonData!.unicefUsersData];
+    }
+    if (!isJsonStrMatch(this.offices, state.commonData!.offices)) {
+      this.offices = [...state.commonData!.offices];
+    }
+    if (!isJsonStrMatch(this.donors, state.commonData!.donors)) {
+      this.donors = [...state.commonData!.donors];
+    }
+    if (!isJsonStrMatch(this.grants, state.commonData!.grants)) {
+      this.grants = [...state.commonData!.grants];
+    }
+
   }
 
   ready() {

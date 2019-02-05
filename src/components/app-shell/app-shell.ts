@@ -26,7 +26,6 @@ import {
   updateDrawerState
 } from '../../actions/app.js';
 
-import {updateReduxInAmendment} from '../../actions/common-data.js';
 // Lazy loading CommonData reducer.
 import commonData from '../../reducers/common-data.js';
 store.addReducers({
@@ -34,7 +33,8 @@ store.addReducers({
   commonData,
   uploadStatus,
   partners,
-  agreements
+  agreements,
+  pageData
 });
 
 // These are the elements needed by this element.
@@ -90,6 +90,8 @@ import partners from '../../reducers/partners.js';
 setPassiveTouchGestures(true);
 
 import {BASE_URL} from '../../config/config';
+import { setInAmendment } from '../../actions/page-data.js';
+import pageData from '../../reducers/page-data.js';
 setRootPath(BASE_URL);
 
 /**
@@ -526,7 +528,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     this._updateLastPartnersModuleActivePage(module);
     // clear loading messages queue
     this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-    store.dispatch(updateReduxInAmendment(false));
+    store.dispatch(setInAmendment(false));
   }
 
   // @ts-ignore

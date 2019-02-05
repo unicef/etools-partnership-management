@@ -63,22 +63,24 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
     let foundValues;
     if (multiple) {
       // case for intervention properties values like: offices, sections, cp outputs (array of values)
-      foundValues = intervention[prop].filter(function(propVal) {
+      foundValues = intervention[prop].filter(function(propVal: any) {
         return filterValues.indexOf(String(propVal)) > -1;
       });
       return foundValues && foundValues.length > 0;
     } else {
       // case for intervention properties values like: status, doc type (primitive types)
-      foundValues = filterValues.filter(function(selectedFilter) {
+      foundValues = filterValues.filter(function(selectedFilter: any) {
         return String(selectedFilter) === String(intervention[prop]);
       });
       return !!foundValues[0];
     }
   }
 
-  query(field, order, searchString, documentTypes, cpOutputs, donors, grants,
-        statuses, sections, unicefFocalPoints, offices, cpStructures, startDate,
-        endDate, pageNumber, pageSize, showQueryLoading) {
+  query(field: string, order: string, searchString: string, documentTypes: string[],
+        cpOutputs: string[], donors: string[], grants: string[],
+        statuses: string[], sections: string[], unicefFocalPoints: string[],
+        offices: string[], cpStructures: string[], startDate: string,
+        endDate: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
     // a new one
