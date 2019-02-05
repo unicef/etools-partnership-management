@@ -12,8 +12,8 @@ import { MinimalStaffMember } from '../../../../typings/partner.types.js';
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin EventHelper
- * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+ * @appliesMixin EventHelperMixin
+ * @appliesMixin EndpointsMixin
  */
 const StaffMembersDataRequiredMixinsList = [
   EtoolsLogsMixin,

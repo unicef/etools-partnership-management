@@ -21,7 +21,6 @@ import { connect } from 'pwa-helpers/connect-mixin';
  * @appliesMixin EventHelperMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
- * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EnvironmentFlags
  */
 const InterventionItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([

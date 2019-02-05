@@ -57,3 +57,7 @@ export type CpStructure = {
   wbs: string
 }
 
+export type CountryData = {
+  local_currency_code: string;
+}
+

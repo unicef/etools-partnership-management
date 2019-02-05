@@ -1,3 +1,12 @@
+export class Partner {
+  id?: string | number ;
+}
+
+export type DropdownPartner = {
+  id: string;
+  name: string
+}
+
 export class MinimalStaffMember {
   name: string = '';
 

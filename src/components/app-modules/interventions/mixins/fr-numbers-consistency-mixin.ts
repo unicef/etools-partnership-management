@@ -177,7 +177,7 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
     }
   }
 
-  getFrsCurrency(frsCurrencyMatch: boolean, frs: any) {
+  getFrsCurrency(frsCurrencyMatch: boolean, frs: Fr[]) {
     return frsCurrencyMatch ? frs[0].currency : 'N/A';
   }
 
@@ -186,7 +186,7 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
     return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
   }
 
-  allCurrenciesMatch(frsCurrencyMatch: boolean, frs: any, plannedBudgetCurrency: string) {
+  allCurrenciesMatch(frsCurrencyMatch: boolean, frs: Fr[], plannedBudgetCurrency: string) {
     return frsCurrencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
   }
 

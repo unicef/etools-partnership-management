@@ -17,6 +17,7 @@ import { SharedStyles } from '../../../../../styles/shared-styles.js';
 // <link rel="import" href="../../../../../layout/components/icons-actions.html">
 
 import './assesment-dialog.js';
+import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -35,6 +36,7 @@ const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @appliesMixin AssessmentsItemsRequiredMixins
  */
 class AssesmentItems extends AssessmentsItemsRequiredMixins {
+  [x: string]: any;
 
   static get template() {
     // language=HTML
@@ -44,7 +46,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
         [hidden] {
           display: none !important;
         }
-        
+
         :host {
           display: block;
           width: 100%;
@@ -52,26 +54,26 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
           -moz-box-sizing: border-box;
           box-sizing: border-box;
         }
-        
+
         .no-assessments-warning {
           padding-top: 0;
         }
-        
+
         iron-icon {
           color: var(--dark-icon-color);
           margin-right: 8px;
         }
-        
+
         icons-actions {
           visibility: hidden;
         }
-        
+
         etools-data-table-row:hover icons-actions {
           visibility: visible;
         }
-      
+
       </style>
-      
+
       <etools-content-panel
         panel-title="Other Assessments ([[dataItems.length]])"
         class="content-section">
@@ -106,7 +108,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
               Archived
             </etools-data-table-column>
           </etools-data-table-header>
-  
+
           <template is="dom-repeat" items="{{dataItems}}">
             <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
               <div slot="row-data" class="p-relative">
@@ -136,7 +138,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
                 </icons-actions>
               </div>
             </etools-data-table-row>
-  
+
           </template>
         </div>
 
@@ -145,7 +147,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
         </div>
 
       </etools-content-panel>
-      
+
     `;
   }
 
@@ -209,11 +211,11 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
     }
   }
 
-  newAssessmentAdded(e) {
+  newAssessmentAdded(e: CustomEvent) {
     this.push('dataItems', e.detail);
   }
 
-  assessmentUpdated(e) {
+  assessmentUpdated(e: CustomEvent) {
     const updatedAss = e.detail;
     const assessments = JSON.parse(JSON.stringify(this.dataItems));
     let idx = this.dataItems.findIndex(a => a.id === updatedAss.id);
@@ -230,7 +232,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
     }
   }
 
-  _editAssessment(e) {
+  _editAssessment(e: PolymerElEvent) {
     let assessment = this.dataItems
         .find(a => a.id === Number(e.target.getAttribute('item-id')));
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));

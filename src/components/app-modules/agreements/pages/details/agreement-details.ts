@@ -439,8 +439,9 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         if (!state.partners) {
           return;
         }
-
-        this.partnersDropdownData = partnersDropdownDataSelector(state);
+        if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
+          this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
+        }
 
         if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
           this.agreementTypes = state.commonData!.agreementTypes;

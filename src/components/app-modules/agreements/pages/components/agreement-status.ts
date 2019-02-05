@@ -14,9 +14,8 @@ import '../../../../layout/etools-status/etools-status-common-mixin.js';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
- * @appliesMixin EtoolsPmpApp.Mixins.EtoolsStatusCommon
- * @appliesMixin EtoolsPmpApp.Mixins.Constants
+ * @appliesMixin EventHelperMixin
+ * @appliesMixin EtoolsStatusCommonMixin
  */
 const AgreementStatusRequiredMixins = EtoolsMixinFactory.combineMixins([
   EventHelperMixin,
