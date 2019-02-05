@@ -31,6 +31,7 @@ const PROD_DOMAIN: string = 'etools.unicef.org';
 const STAGING_DOMAIN: string = 'etools-staging.unicef.org';
 const DEV_DOMAIN: string = 'etools-dev.unicef.org';
 const DEMO_DOMAIN: string = 'etools-demo.unicef.org';
+export const AP_DOMAIN: string = '/ap/';
 
 export const isProductionServer = () => {
   let location = window.location.href;

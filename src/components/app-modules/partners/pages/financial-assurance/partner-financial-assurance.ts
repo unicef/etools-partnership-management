@@ -28,6 +28,7 @@ import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
 import assign from 'lodash-es/assign.js';
 import moment from 'moment';
+import {AP_DOMAIN} from '../../../../../config/config.js';
 import {connect} from "pwa-helpers/connect-mixin";
 import {store} from "../../../../../store";
 
@@ -470,7 +471,7 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
     };
   }
 
-  public auditorPortalBasePath: string = window.EtoolsPmpApp.Config.apBasePath;
+  public auditorPortalBasePath: string = AP_DOMAIN;
   public engagements: any[] = [];
   public TYPES: object = {
     'audit': 'Audit',
