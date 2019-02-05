@@ -92,13 +92,13 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     }
   }
 
-  _triggerInterventionRequest(options) {
+  _triggerInterventionRequest(options: any) {
     let self = this;
     let ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then(function(resp) {
+    return this.sendRequest(options).then(function(resp: any) {
       self._handleResponse(resp, ajaxMethod);
       return true;
-    }).catch(function(error) {
+    }).catch(function(error: any) {
       self._handleErrorResponse(error, ajaxMethod);
       return false;
     });
@@ -109,12 +109,12 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     let options = {
       endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
     };
-    return this.sendRequest(options).catch(function(error) {
+    return this.sendRequest(options).catch(function(error: any) {
       self._handleErrorResponse(error, 'GET');
     });
   }
 
-  _interventionIdChanged(newId) {
+  _interventionIdChanged(newId: string) {
     if (!newId) {
       return;
     }
@@ -127,7 +127,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
   }
 
-  _handleErrorResponse(response, ajaxMethod) {
+  _handleErrorResponse(response: any, ajaxMethod: string) {
     this.handleErrorResponse(response, ajaxMethod, true);
     if (this.intervention && this.originalIntervention) {
       this._restoreUnsuccessfullyDeletedFrs();
@@ -144,13 +144,13 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     this.set('intervention.in_amendment', this.originalIntervention.in_amendment);
   }
 
-  _convertIdsToStrings(dataArray) {
-    return dataArray.map(function(elem) {
+  _convertIdsToStrings(dataArray: []) {
+    return dataArray.map(function(elem: any) {
       return typeof elem === 'number' ? String(elem) : elem;
     });
   }
 
-  _handleDataConversions(intervention) {
+  _handleDataConversions(intervention: any) {
     let fieldsToConvert = [
       'flat_locations',
       'offices',
@@ -159,12 +159,12 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
       'unicef_focal_points'
     ];
 
-    fieldsToConvert.forEach(function(propName) {
+    fieldsToConvert.forEach((propName: string) => {
       if (!intervention[propName] || !intervention[propName].length) {
         return;
       }
       intervention[propName] = this._convertIdsToStrings(intervention[propName]);
-    }.bind(this));
+    });
 
     return intervention;
   }
@@ -484,7 +484,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
         });
   }
 
-  _handleInterventionDeleteFromDexieSuccess(deleteCount) {
+  _handleInterventionDeleteFromDexieSuccess(deleteCount: number) {
     if (deleteCount === 1) {
       this.fireEvent('reload-list');
       this.fireEvent('toast', {
@@ -496,7 +496,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     }
   }
 
-  _handleInterventionDeleteFromDexieErr(dexieDeleteErr) {
+  _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
     this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
     this.fireEvent('toast', {

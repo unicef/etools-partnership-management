@@ -539,7 +539,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
           }
           this.set('enableEditForAuthorizedOfficers', false);
           this.resetAttachedAgreementElem(agreement);
-          this._initAuthorizedOfficers(agreement.authorized_officers);
+          this._initAuthorizedOfficers(agreement.authorized_officers!);
         } else {
           this.set('agreement.attachment', null);
           // new agreement, update status to draft and reset fields
@@ -674,7 +674,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         const aoSelected = selection instanceof Array && selection.length > 0;
         if (aoSelected) {
           const selectedIds = selection.map(s => parseInt(s, 10));
-          ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)
+          ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers!)
               .filter((a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
         } else {
           ao = (agreement && agreement.authorized_officers instanceof Array)
@@ -700,7 +700,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         this.generatePCADialog.open();
       }
 
-      _initAuthorizedOfficers(authOfficers: Array<StaffMember>) {
+      _initAuthorizedOfficers(authOfficers: StaffMember[]) {
         if (authOfficers instanceof Array && authOfficers.length) {
           this.set('authorizedOfficers', authOfficers.map(function(authOfficer) {
             return authOfficer.id + '';

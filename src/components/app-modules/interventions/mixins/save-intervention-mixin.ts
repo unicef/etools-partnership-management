@@ -176,7 +176,7 @@ const SaveInterventionMixin = dedupingMixin(
 
     // prepare attachments
     interventionData.attachments = this._prepareAttachments();
-    if (_.isEmpty(interventionData.attachments)) {
+    if (isEmptyObject(interventionData.attachments)) {
       delete interventionData.attachments;
     }
     return interventionData;

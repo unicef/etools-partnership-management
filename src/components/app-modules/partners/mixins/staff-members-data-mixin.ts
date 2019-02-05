@@ -1,8 +1,10 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EventHelper from "../../../mixins/event-helper-mixin.js";
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';

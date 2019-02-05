@@ -6,6 +6,7 @@ import { Intervention, InterventionPermissionsFields } from '../../../../typings
 import CONSTANTS from '../../../../config/app-constants';
 import {store} from '../../../../store.js';
 import { setPageDataPermissions } from '../../../../actions/page-data';
+import { isEmptyObject } from '../../../utils/utils';
 
 /**
  * PD/SSFA permissions mixin
@@ -18,6 +19,7 @@ const InterventionPermissionsMixin = dedupingMixin(
 (superClass: any) => class extends EtoolsMixinFactory.combineMixins([
   EventHelperMixin
 ], superClass) {
+  [x: string]: any;
   /* eslint-enable arrow-parens */
   static get properties() {
     return {
@@ -101,7 +103,8 @@ const InterventionPermissionsMixin = dedupingMixin(
   }
 
   // TODO: this method should be moved elsewhere
-  _updateRelatedPermStyles(onlyDetails: boolean, forceDetUiValidationOnAttach: boolean, forceReviewUiValidationOnAttach: boolean) {
+  _updateRelatedPermStyles(onlyDetails?: boolean, forceDetUiValidationOnAttach?: boolean,
+     forceReviewUiValidationOnAttach?: boolean) {
     setTimeout(() => {
       let details = this.shadowRoot.querySelector('#interventionDetails');
       let reviewAndSign = this.shadowRoot.querySelector('#interventionReviewAndSign');
@@ -134,7 +137,7 @@ const InterventionPermissionsMixin = dedupingMixin(
     this._setPermissions(this._getNoEditPermissionsClone());
   }
 
-  setInterventionPermissions(newIntervention: boolean, perm: InterventionPermissionsFields) {
+  setInterventionPermissions(newIntervention: boolean, perm?: InterventionPermissionsFields) {
     if (newIntervention) {
       this._setPermissions(this._getNewInterventionPermissions());
     } else {
@@ -167,7 +170,7 @@ const InterventionPermissionsMixin = dedupingMixin(
       this.set('intervention.permissions.edit.planned_budget_unicef_cash',
           this.get('intervention.permissions.edit.planned_budget'));
     }
-    store.dispatch(setPageDataPermissions(this.intervention.permissions);
+    store.dispatch(setPageDataPermissions(this.intervention.permissions));
     this._updateRelatedPermStyles(true);
   }
 
@@ -190,7 +193,7 @@ const InterventionPermissionsMixin = dedupingMixin(
 
     let unicefCashCopy = this.get('intervention.planned_budget.unicef_cash_local');
 
-    fieldsToRestore.forEach(function(field) {
+    fieldsToRestore.forEach((field: string) => {
       let dataPath = 'intervention.' + field;
       let originalDataPath = 'originalIntervention.' + field;
       this.set(dataPath, JSON.parse(JSON.stringify(this.get(originalDataPath))));
@@ -198,7 +201,7 @@ const InterventionPermissionsMixin = dedupingMixin(
         // if planned_budget we need to make sure in signed status unicef_cash remains the same
         this.set('intervention.planned_budget.unicef_cash_local', unicefCashCopy);
       }
-    }.bind(this));
+    });
     this.fireEvent('toast', {text: 'There are no new/unsaved amendments.\n' +
       'All fields unlocked by amendments are restored to the original values.', showCloseBtn: true});
   }
@@ -216,7 +219,7 @@ const InterventionPermissionsMixin = dedupingMixin(
   }
 
   _canRestoreOriginalPermissions() {
-    if (!_.isEmpty(this.originalIntervention) && !_.isEmpty(this.intervention)) {
+    if (!isEmptyObject(this.originalIntervention) && !isEmptyObject(this.intervention)) {
       // avoid restoring previous intervention permissions
       return this.originalIntervention.id === this.intervention.id;
     }

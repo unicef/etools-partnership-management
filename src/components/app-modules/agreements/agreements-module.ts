@@ -58,6 +58,7 @@ const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @appliesMixin AgreementsModuleRequiredMixins
  */
 class AgreementsModule extends AgreementsModuleRequiredMixins {
+  [x: string]: any;
 
   public static get template() {
     // language=HTML

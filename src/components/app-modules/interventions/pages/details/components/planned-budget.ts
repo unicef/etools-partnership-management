@@ -393,12 +393,12 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
       '#unicefCash',
       '#inKindAmount'
     ];
-    elementsSelectorsToValidate.forEach(function(selector: string) {
+    elementsSelectorsToValidate.forEach((selector: string) => {
       let el = this.shadowRoot.querySelector(selector);
       if (el && !el.validate()) {
         valid = false;
       }
-    }.bind(this));
+    });
     return valid;
   }
 
@@ -409,12 +409,12 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
       '#unicefCash',
       '#inKindAmount'
     ];
-    elementsSelectorsToValidate.forEach(function(selector: string) {
+    elementsSelectorsToValidate.forEach((selector: string) => {
       let el = this.shadowRoot.querySelector(selector);
       if (el) {
         el.set('invalid', false);
       }
-    }.bind(this));
+    });
   }
 
   _editModeChanged(newValue: boolean, oldValue: boolean) {

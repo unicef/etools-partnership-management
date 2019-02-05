@@ -31,6 +31,7 @@ const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @appliesMixin AgreementsListDataRequiredMixins
  */
 class AgreementsListData extends AgreementsListDataRequiredMixins {
+  [x: string]: any;
 
   static get properties() {
     return {

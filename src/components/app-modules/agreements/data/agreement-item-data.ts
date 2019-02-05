@@ -213,7 +213,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 
   // Save agreement data
-  saveAgreement(agreement: Agreement, succCallback) {
+  saveAgreement(agreement: Agreement, succCallback: any) {
     if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
       this.fireEvent('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
       return Promise.resolve(false);

@@ -1,34 +1,24 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/av-icons.js';
 import CONSTANTS from '../../../../../config/app-constants';
-
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-status-common-mixin';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import '../../../../mixins/event-helper-mixin.js';
 import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
+import { fireEvent } from '../../../../utils/fire-custom-event';
 
 
-
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin EventHelperMixin
- * @appliesMixin EtoolsStatusCommonMixin
- */
-const AgreementStatusRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EventHelperMixin,
-  EtoolsStatusCommonMixin
-], PolymerElement);
 
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin AgreementStatusRequiredMixins
+ * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends AgreementStatusRequiredMixins {
+class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
+  [x: string]: any;
   static get template() {
     return html`
         <style>
@@ -289,11 +279,11 @@ class AgreementStatus extends AgreementStatusRequiredMixins {
 
   _statusChangeConfirmationCallback(event: CustomEvent) {
     if (event.detail.confirmed) {
-      this.fireEvent('update-agreement-status', {
+      fireEvent(this, 'update-agreement-status', {
         agreementId: this.agreementId,
         status: this.newStatus + ''
       });
-      this.fireEvent('reload-list');
+      fireEvent(this, 'reload-list');
     }
     this.set('newStatus', '');
   }

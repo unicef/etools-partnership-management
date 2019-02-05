@@ -16,7 +16,7 @@ import { partnersDropdownDataSelector } from '../../../../../../reducers/partner
  * @customElement
  * @appliesMixin CommonMixin
  */
-class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)) {
+class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as any){
   [x: string]: any;
 
   static get template() {
