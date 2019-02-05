@@ -13,7 +13,7 @@ import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 
-// <link rel="import" href="../../../interventions/mixins/fr-numbers-consistency-mixin.html">
+import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
 // <link rel="import" href="../../../interventions/styles/fr-warnings-styles.html">
 
 /**
@@ -23,13 +23,14 @@ import { SharedStyles } from '../../../../styles/shared-styles.js';
  * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
- * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
+ * @appliesMixin FrNumbersConsistencyixin
  */
 const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
   EventHelperMixin,
   CommonMixin,
-  RiskRatingMixin
+  RiskRatingMixin,
+  FrNumbersConsistencyMixin
 ], PolymerElement);
 
 /**
@@ -48,20 +49,20 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
           @apply --layout-vertical;
           width: 100%;
         }
-        
+
         paper-input,
         paper-dropdown-menu {
           width: 100%;
         }
-        
+
         .assessments {
           margin-top: 20px;
         }
-        
+
         #core-values-assessment {
           width: 100%;
         }
-        
+
         .hact-heading {
           @apply --layout-vertical;
           background-color: var(--medium-theme-background-color);
@@ -120,9 +121,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
           @apply --layout-vertical;
           @apply --layout-start;
         }
-      
+
       </style>
-      
+
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
@@ -249,13 +250,13 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
                 <div class="col center-align overflow-hidden">
                   <span class="partnership-status">[[partnership.status]]</span>
                 </div>
-  
+
               </div>
             </template>
           </div>
         </template>
       </etools-content-panel>
-    
+
     `;
   }
 

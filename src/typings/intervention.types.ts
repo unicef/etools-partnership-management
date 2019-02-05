@@ -41,9 +41,12 @@ export class Intervention {
 }
 
 export class ListItemIntervention {
+  start: string = '';
+  end: string = '';
   frs_earliest_start_date: string = '';
   frs_latest_end_date: string = '';
-
+  partner_name: string = '';
+  [key: string] : any;
 }
 
 export type InterventionAttachment = {
@@ -55,7 +58,7 @@ export type InterventionAttachment = {
 
 export class FrsDetails {
   currencies_match: boolean = false;
-  total_frs_amt: string | number = 0;
+  total_frs_amt: string = '0';
   earliest_start_date: string | null = null;
   latest_end_date: string | null = null;
   frs: Fr[] = [];

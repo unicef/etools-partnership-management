@@ -7,7 +7,7 @@ import { Intervention, ListItemIntervention, FrsDetails, Fr } from '../../../../
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  */
-const FrNumbersConsistency = (superClass: any) => class extends EtoolsCurrency(superClass) {
+const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurrency(superClass) {
   static get properties() {
     return {
       frsConsistencyWarnings: {
@@ -264,4 +264,4 @@ const FrNumbersConsistency = (superClass: any) => class extends EtoolsCurrency(s
 
 };
 
-export default FrNumbersConsistency;
+export default FrNumbersConsistencyMixin;
