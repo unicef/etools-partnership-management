@@ -63,6 +63,8 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
     };
   }
 
+   public endpointName: string = 'agreements';
+
   _handleMyResponse(res: any) {
     this._handleResponse(res);
     store.dispatch(setAgreements(res));

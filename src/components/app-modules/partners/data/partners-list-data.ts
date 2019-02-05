@@ -1,5 +1,7 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {store} from '../../../../store.js';
 
@@ -8,7 +10,7 @@ import EventHelperMixin from '../../../mixins/event-helper-mixin';
 
 import Dexie from 'dexie';
 import {isEmptyObject} from "../../../utils/utils";
-import { setPartners } from '../../../../actions/partners.js';
+import {setPartners} from '../../../../actions/partners.js';
 
 /**
  * @polymer
@@ -28,7 +30,7 @@ const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin PartnersListDataRequiredMixins
  */
-class PartnersListData extends PartnersListDataRequiredMixins {
+class PartnersListData extends (PartnersListDataRequiredMixins as any) {
   static get properties() {
     return {
       endpointName: String,
@@ -63,7 +65,7 @@ class PartnersListData extends PartnersListDataRequiredMixins {
   public dataLoadedEventName: string = 'partners-loaded';
   public prepareDropdownData: boolean = false;
 
-   public _handleMyResponse(res: any) {
+  public _handleMyResponse(res: any) {
     this._handleResponse(res);
     if (res && res.length) {
       store.dispatch(setPartners(res));
@@ -81,14 +83,15 @@ class PartnersListData extends PartnersListDataRequiredMixins {
       //   }
       // });
 
-      //TODO - replaced by selector- to test
+      // TODO - replaced by selector - to test
       // store.dispatch('setPartnersDropdown', preparedData);
       // store.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
     }
   }
 
-  public query(field, order, searchString, partnerTypes, csoTypes, riskRatings,
-               pageNumber, pageSize, showHidden, showQueryLoading) {
+  public query(field: string, order: string, searchString: string, partnerTypes: string[], csoTypes: string[],
+               riskRatings: string[], pageNumber: number, pageSize: number, showHidden: boolean,
+               showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
     // a new one
@@ -107,7 +110,7 @@ class PartnersListData extends PartnersListDataRequiredMixins {
     }
 
     let partnersDexieTable = window.EtoolsPmpApp.DexieDb.partners;
-    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function() {
+    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function () {
       self.currentQuery = Dexie.currentTransaction;
 
       let queryResult = partnersDexieTable;
@@ -119,7 +122,7 @@ class PartnersListData extends PartnersListDataRequiredMixins {
         queryResult = queryResult.reverse();
       }
 
-      queryResult = queryResult.filter(function(partner) {
+      queryResult = queryResult.filter(function (partner: any) {
         if (!isEmptyObject(partnerTypes) && partnerTypes.indexOf(partner.partner_type) === -1) {
           return false;
         }
@@ -154,8 +157,9 @@ class PartnersListData extends PartnersListDataRequiredMixins {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      Dexie.ignoreTransaction(function() {
-        queryResult.count(function(count) {
+      // @ts-ignore
+      Dexie.ignoreTransaction(function () {
+        queryResult.count(function (count: number) {
           self._setTotalResults(count);
         });
       });
@@ -165,13 +169,13 @@ class PartnersListData extends PartnersListDataRequiredMixins {
           .limit(pageSize)
           .toArray();
 
-    }).then(function(result) {
+    }).then(function (result: any[]) {
       self._setFilteredPartners(result);
       self.fireEvent('global-loading', {
         active: false,
         loadingSource: 'partners-list'
       });
-    }).catch(function(error) {
+    }).catch(function (error: any) {
       self.logError('Error querying partners!', 'partners-list-data', error, true);
       self.fireEvent('global-loading', {
         active: false,

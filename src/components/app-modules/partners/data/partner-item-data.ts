@@ -13,7 +13,6 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {store} from "../../../../store.js";
 import { deletePartner } from '../../../../actions/partners.js';
 
-
 /**
  * @polymer
  * @mixinFunction

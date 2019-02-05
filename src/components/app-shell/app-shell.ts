@@ -157,7 +157,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
                   swipe-open="[[narrow]]" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
         <app-menu root-path="[[rootPath]]"
-                  selected-option="[[_page]]"
+                  selected-option="[[module]]"
                   small-menu$="[[smallMenu]]"></app-menu>
       </app-drawer>
 
