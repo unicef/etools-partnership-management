@@ -34,6 +34,7 @@ import { isEmptyObject } from '../../utils/utils';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
+import './components/partner-status.js';
 
 /**
  * @polymer
