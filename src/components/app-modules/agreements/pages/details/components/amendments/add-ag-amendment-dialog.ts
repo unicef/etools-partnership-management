@@ -13,6 +13,7 @@ import { AgreementAmendment } from '../../../../agreement.types';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import '../../../../../../../validators/required-and-not-future-date-validator.js';
 
 /**
  * @polymer

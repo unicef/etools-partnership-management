@@ -18,7 +18,6 @@ import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-error-messages-box.js'
 // <link rel="import" href="../../../../layout/components/icons-actions.html">
 
-import {appMixins} from '../../../../styles/app-mixins.js';
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
@@ -52,7 +51,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
   static get template() {
     // language=HTML
     return html`
-        ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${appMixins}
+        ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
         <style include="data-table-styles">
             :host {
                 @apply --layout-vertical;

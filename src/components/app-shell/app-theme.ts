@@ -3,8 +3,6 @@ import '@polymer/polymer/lib/elements/custom-style';
 import '@polymer/paper-styles/typography.js';
 import '@polymer/paper-styles/color.js';
 
-import {appMixins} from "../styles/app-mixins.js";
-
 const documentContainer = document.createElement('template');
 documentContainer.innerHTML = `
   <custom-style>
@@ -174,7 +172,7 @@ documentContainer.innerHTML = `
         --paper-input-container-ms-clear: {
           display: none;
           width:0;
-          height:0;s
+          height:0;
         };
   
         --paper-tooltip-delay-in: 0;
@@ -183,7 +181,6 @@ documentContainer.innerHTML = `
      
     </style>
   </custom-style>
-  
-  ${appMixins}`;
+  `;
 
 document.head.appendChild(documentContainer.content);

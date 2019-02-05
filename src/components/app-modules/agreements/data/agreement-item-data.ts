@@ -11,6 +11,8 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import { Agreement, MinimalAgreement } from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
 import { addEditAgreement } from '../../../../actions/agreements.js';
+// @ts-ignore
+import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
 
 /**
@@ -73,7 +75,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     };
   }
 
-  _triggerAgreementRequest(options) {
+  _triggerAgreementRequest(options: any) {
     let ajaxMethod = options.method || 'GET';
     return this.sendRequest(options).then((resp) => {
       this._handleSuccResponse(resp, ajaxMethod);
@@ -87,7 +89,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     });
   }
 
-  _agreementIdChanged(newId) {
+  _agreementIdChanged(newId: string) {
     if (newId) {
       this.fireEvent('global-loading', {
         message: 'Loading...',

@@ -451,6 +451,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         super.ready();
         this.generatePCADialog = document.createElement('generate-pca-dialog');
         this.generatePCADialog.setAttribute('id', 'generatePCADialog');
+        // @ts-ignore
         document.querySelector('body').appendChild(this.generatePCADialog);
       }
 
@@ -466,6 +467,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
       disconnectedCallback() {
         super.disconnectedCallback();
         if (this.generatePCADialog) {
+          // @ts-ignore
           document.querySelector('body').removeChild(this.generatePCADialog);
         }
       }
@@ -656,7 +658,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         if (this.agreement.partner_signatory) {
           return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
         } else if (staffMembers && staffMembers.length) {
-          let selectedPartner = staffMembers.filter(function(s) {
+          let selectedPartner = staffMembers.filter(function(s: any) {
             return parseInt(s.id) === parseInt(selectedId);
           });
           if (selectedPartner && selectedPartner.length) {
@@ -672,7 +674,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         if (aoSelected) {
           const selectedIds = selection.map(s => parseInt(s, 10));
           ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)
-              .filter(a => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
+              .filter((a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
         } else {
           ao = (agreement && agreement.authorized_officers instanceof Array)
             ? agreement.authorized_officers
@@ -743,6 +745,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
           reqFieldsSelectors.push('#cpStructure');
         }
         reqFieldsSelectors.forEach(function(fSelector: string) {
+          // @ts-ignore
           let field = this.shadowRoot.querySelector(fSelector);
           if (field && !field.validate()) {
             valid = false;

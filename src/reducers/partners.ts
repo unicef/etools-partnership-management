@@ -2,6 +2,7 @@
 import {createSelector} from 'reselect';
 import * as a from '../actions/partners';
 import { RootState } from '../store';
+import { Reducer, Action } from 'redux';
 
 export class PartnersState {
   list: [] = [];
@@ -9,7 +10,7 @@ export class PartnersState {
 
 const INITIAL_STATE = new PartnersState();
 
-const partners = (state = INITIAL_STATE, action: any) => {
+const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE, action: any) => {
   switch(action.type) {
     case a.SET_PARTNERS:
       return {
