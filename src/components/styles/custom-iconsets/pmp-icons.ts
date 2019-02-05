@@ -1,7 +1,7 @@
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
 import { html } from '@polymer/polymer';
 
-export const pmpIcons = html`
+export const pmpMainIcons = html`
  <iron-iconset-svg name="pmp-main-icons" size="36">
   <svg>
     <defs>
@@ -20,7 +20,10 @@ export const pmpIcons = html`
     </defs>
   </svg>
 </iron-iconset-svg>
-<iron-iconset-svg name="pmp-custom-icons" size="24">
+`;
+
+  export const pmpCustomIcons = html`
+    <iron-iconset-svg name="pmp-custom-icons" size="24">
     <svg>
       <defs>
         <g id="not-equal">
@@ -34,4 +37,5 @@ export const pmpIcons = html`
         </g>
       </defs>
     </svg>
-  </iron-iconset-svg>`;
+  </iron-iconset-svg>
+  `;
