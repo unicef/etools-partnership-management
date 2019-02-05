@@ -37,7 +37,6 @@ import '../../data/partners-list-data.js';
 import { isJsonStrMatch } from '../../../../utils/utils';
 
 
-
 /**
  * @polymer
  * @mixinFunction
@@ -82,7 +81,6 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
           text-transform: none;
         }
       </style>
-
       <template is="dom-if" if="[[stampListData]]">
         <partners-list-data id="partners"
                             filtered-partners="{{filteredPartners}}"

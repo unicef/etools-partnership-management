@@ -32,6 +32,7 @@ import { listFilterStyles } from '../../../../styles/list-filter-styles';
 import { frWarningsStyles } from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
+import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -72,7 +73,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
         text-transform: none;
       }
     </style>
-
+    ${pmpCustomIcons}
     <template is="dom-if" if="[[stampListData]]">
       <interventions-list-data id="interventions"
                               filtered-interventions="{{filteredInterventions}}"

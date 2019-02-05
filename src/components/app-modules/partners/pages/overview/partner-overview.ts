@@ -14,7 +14,8 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
-// <link rel="import" href="../../../interventions/styles/fr-warnings-styles.html">
+import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
 
 /**
  * @polymer
@@ -43,7 +44,7 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
   static get template() {
     // language=HTML
     return html`
-        ${SharedStyles} ${pageCommonStyles} ${gridLayoutStyles}
+        ${SharedStyles} ${pageCommonStyles} ${gridLayoutStyles} ${frWarningsStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -123,6 +124,8 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
         }
 
       </style>
+
+      ${pmpCustomIcons}
 
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
