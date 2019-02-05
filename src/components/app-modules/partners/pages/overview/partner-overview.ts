@@ -14,6 +14,7 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
+import { pmpIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 // <link rel="import" href="../../../interventions/styles/fr-warnings-styles.html">
 
 /**
@@ -123,7 +124,7 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
         }
 
       </style>
-
+        ${pmpIcons}
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
