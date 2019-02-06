@@ -2,27 +2,28 @@ import { IPermission } from './globals.types';
 
 export class Intervention {
   id: number | null = null;
-  agreement?: number = undefined;
-  document_type?: string = undefined;
-  country_programme?: number = undefined;
-  number?: string = undefined;
+  agreement?: number ;
+  document_type?: string;
+  country_programme?: number;
+  number?: string;
   reference_number_year?: string | null = null;
-  prc_review_attachment?: number | string = undefined;
-  signed_pd_attachment?: number | string = undefined;
-  title?: string = undefined;
+  prc_review_attachment?: number | string;
+  signed_pd_attachment?: number | string;
+  title?: string;
   status: string = '';
-  start: string | null = null;
-  end: string | null = null;
+  start: string = '';
+  end: string = '';
   submitted_to_prc: boolean = false;
-  submission_date_prc?: string = undefined;
-  review_date_prc?: string = undefined;
-  submission_date?: string = undefined;
-  signed_by_unicef_date?: string = undefined;
-  signed_by_partner_date?: string = undefined;
-  unicef_signatory?: string = undefined;
+  submission_date_prc?: string ;
+  review_date_prc?: string;
+  submission_date?: string;
+  signed_by_unicef_date?: string;
+  signed_by_partner_date?: string;
+  unicef_signatory?: string;
   unicef_focal_points: [] = [];
+  partner?: string;
   partner_focal_points: [] = [];
-  partner_authorized_officer_signatory?: string = undefined;
+  partner_authorized_officer_signatory?: string;
   offices: [] = [];
   sections: [] =[];
   frs: number[] = [];
@@ -38,15 +39,35 @@ export class Intervention {
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: IPermission<InterventionPermissionsFields>;
+
+  [key: string] : any;
 }
 
 export class ListItemIntervention {
   start: string = '';
   end: string = '';
-  frs_earliest_start_date: string = '';
-  frs_latest_end_date: string = '';
-  partner_name: string = '';
+  frs_earliest_start_date: string | null= '';
+  frs_latest_end_date: string | null= '';
+  partner_name?: string = '';
+  cp_outputs: [] = [];
+  unicef_budget: number = 0;
+  cso_contribution: number = 0;
+  country_programme?: number;
+  title?: string = '';
+  status: string = '';
+  number?: string = '';
+  offices: [] = [];
+  sections: number[] = [];
+  section_names: string[] | null = null;
+  document_type?: string ='';
+  unicef_focal_points: [] = [];
   [key: string] : any;
+}
+
+export class SelectedSection {
+  constructor(public sectionIds: number[], public section_names: string[]) {
+
+  }
 }
 
 export type InterventionAttachment = {
@@ -73,6 +94,8 @@ export type PlannedBudget = {
   currency: string;
   unicef_cash_local: string;
   total: string;
+  in_kind_amount_local: string;
+  partner_contribution_local: string;
 }
 
 export class InterventionPermissionsFields {

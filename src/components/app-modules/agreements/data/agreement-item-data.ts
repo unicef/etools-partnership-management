@@ -13,6 +13,7 @@ import CONSTANTS from '../../../../config/app-constants.js';
 import { addEditAgreement } from '../../../../actions/agreements.js';
 // @ts-ignore
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
+import { GenericObject } from '../../../../typings/globals.types.js';
 
 
 /**
@@ -163,7 +164,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 
   // Update agreement status. In addition set a callback to be called after request is complete.
-  updateAgreementStatus(data, callback) {
+  updateAgreementStatus(data: any, callback: any) {
     if (!data.agreementId) {
       this.fireEvent('toast', {text: 'Invalid agreement ID', showCloseBtn: true});
     } else {
@@ -196,7 +197,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     }
   }
 
-  _hasFiles(list, property) {
+  _hasFiles(list: GenericObject[], property: string) {
     if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
       return false;
     }

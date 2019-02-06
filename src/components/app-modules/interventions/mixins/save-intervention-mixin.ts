@@ -30,6 +30,7 @@ const SaveInterventionMixin = dedupingMixin(
   ModifiedInterventionFieldsMixin,
   AjaxErrorsParserMixin
 ], superClass) {
+  [x: string]: any;
 
   static get actions() {
     return {

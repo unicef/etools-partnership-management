@@ -49,7 +49,7 @@ const ModifiedInterventionFieldsMixin = dedupingMixin((superClass: any) => class
     } else {
       differencesArray = difference(array2, array1);
     }
-    return _.isEmpty(differencesArray);
+    return isEmptyObject(differencesArray);
   }
 
   _primitiveFieldIsModified(fieldName: string) {
@@ -98,7 +98,7 @@ const ModifiedInterventionFieldsMixin = dedupingMixin((superClass: any) => class
   }
 
   _prepareAttachments() {// TODO - is this method still relevant?
-    if (_.isEmpty(this.intervention.attachments)) {
+    if (isEmptyObject(this.intervention.attachments)) {
       return [];
     }
     let modifAttachments = this.intervention.attachments

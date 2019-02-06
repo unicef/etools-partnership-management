@@ -226,7 +226,7 @@ const InterventionPermissionsMixin = dedupingMixin(
     return false;
   }
 
-  _signedDocChangedForDraft(e) {
+  _signedDocChangedForDraft(e: CustomEvent) {
     e.stopImmediatePropagation();
     if (e.detail.docSelected) {
       this.setInterventionPermissions(false,

@@ -54,6 +54,8 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
     };
   }
 
+  public endpointName: string = 'interventions';
+
   _filterFound(intervention: ListItemIntervention, prop: string,
      multiple: boolean, filterValues: any) {
     if (!filterValues.length) {
