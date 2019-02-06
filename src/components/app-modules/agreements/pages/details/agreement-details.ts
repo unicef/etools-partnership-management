@@ -453,7 +453,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         this.generatePCADialog = document.createElement('generate-pca-dialog');
         this.generatePCADialog.setAttribute('id', 'generatePCADialog');
         // @ts-ignore
-        document.querySelector('body').appendChild(this.generatePCADialog);
+        document.querySelector('body')!.appendChild(this.generatePCADialog);
       }
 
       connectedCallback() {
@@ -469,7 +469,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         super.disconnectedCallback();
         if (this.generatePCADialog) {
           // @ts-ignore
-          document.querySelector('body').removeChild(this.generatePCADialog);
+          document.querySelector('body')!.removeChild(this.generatePCADialog);
         }
       }
 

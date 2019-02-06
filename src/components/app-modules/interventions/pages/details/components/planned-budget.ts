@@ -12,7 +12,7 @@ import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currenc
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin';
-import '../../../../../layout/components/etools-form-element-wrapper.js';
+import '../../../../../layout/etools-form-element-wrapper.js';
 import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../utils/utils';
 import { store, RootState } from '../../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';

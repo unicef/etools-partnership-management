@@ -70,7 +70,7 @@ const ToastNotifications = dedupingMixin((baseClass: any) =>
         // @ts-ignore
         this._toast.addEventListener('toast-confirm', this._toggleToast);
         // @ts-ignore
-        document.querySelector('body').appendChild(this._toast);
+        document.querySelector('body')!.appendChild(this._toast);
         this._toastAfterRenderSetup();
       }
 

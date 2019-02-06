@@ -160,3 +160,8 @@ export class InterventionPermissionsFields {
   // attachments
   attachments: boolean = false;
 }
+
+export class ResultLink {
+  ll_results: [] = [];
+}
+

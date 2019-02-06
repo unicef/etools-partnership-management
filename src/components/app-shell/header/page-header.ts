@@ -11,7 +11,7 @@ import {updateDrawerState} from "../../../actions/app";
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-profile-dropdown/etools-profile-dropdown.js';
 import 'etools-app-selector/etools-app-selector.js'
-// import '../layout/components/countries-dropdown.js';
+// import '../layout/countries-dropdown.js';
 import EventHelperMixin from "../../mixins/event-helper-mixin";
 import ProfileOperations from "../../user/profile-operations-mixin";
 import {isJsonStrMatch} from "../../utils/utils";

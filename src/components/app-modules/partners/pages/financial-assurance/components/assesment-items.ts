@@ -2,6 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import "etools-content-panel/etools-content-panel.js";
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
@@ -14,7 +15,7 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
 // <link rel="import" href="../../../../../styles/etools-cp-header-actions-bar-styles.html">
-// <link rel="import" href="../../../../../layout/components/icons-actions.html">
+import '../../../../../layout/icons-actions.js';
 
 import './assesment-dialog.js';
 import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
@@ -200,14 +201,14 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
     this.assessmentDialog.addEventListener('assessment-added', this.newAssessmentAdded);
     this.assessmentDialog.addEventListener('assessment-updated', this.assessmentUpdated);
 
-    document.querySelector('body').appendChild(this.assessmentDialog);
+    document.querySelector('body')!.appendChild(this.assessmentDialog);
   }
 
   _removeAssessmentDialog() {
     if (this.assessmentDialog) {
       this.assessmentDialog.removeEventListener('assessment-added', this.newAssessmentAdded);
       this.assessmentDialog.removeEventListener('assessment-updated', this.assessmentUpdated);
-      document.querySelector('body').removeChild(this.assessmentDialog);
+      document.querySelector('body')!.removeChild(this.assessmentDialog);
     }
   }
 
