@@ -132,8 +132,8 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
   }
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.agreements, state.agreeements!.list)) {
-      this.agreements = [...state.agreeements!.list];
+    if (!isJsonStrMatch(this.agreements, state.agreements!.list)) {
+      this.agreements = [...state.agreements!.list];
     }
     if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];

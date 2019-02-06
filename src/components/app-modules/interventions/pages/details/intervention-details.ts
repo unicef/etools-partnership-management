@@ -29,19 +29,20 @@ import { Intervention } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 import { PolymerElEvent } from '../../../../../typings/globals.types';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../../../../../store';
+import { store, RootState } from '../../../../../store';
 import { pageCommonStyles } from '../../../../styles/page-common-styles';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../../styles/required-field-styles';
 import { buttonsStyles } from '../../../../styles/buttons-styles';
 import { frWarningsStyles } from '../../styles/fr-warnings-styles';
-import { isEmptyObject } from '../../../../utils/utils';
+import { isEmptyObject, isJsonStrMatch, copy } from '../../../../utils/utils';
 
 import './components/agreement-selector.js';
 import './components/planned-budget.js';
 //import 'components/results/expected-results.js';
 import './components/planned-visits.js';
+import { setPageDataPermissions } from '../../../../../actions/page-data.js';
 //import 'components/reporting-requirements/partner-reporting-requirements.js';
 //import 'components/grouped-locations-dialog.js';
 
@@ -535,6 +536,28 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     ];
   }
 
+  stateChanged(state: RootState) {
+    if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
+      this.permissions = copy(state.pageData!.permissions);
+    }
+    if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
+      this.documentTypes = [...state.commonData!.interventionDocTypes];
+    }
+    if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
+      this.sections = [...state.commonData!.sections];
+    }
+
+    if (!isJsonStrMatch(this.offices, state.commonData!.offices)) {
+      this.offices = [...state.commonData!.offices];
+    }
+    if (!isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)) {
+      this.unicefUsersData = [...state.commonData!.unicefUsersData];
+    }
+    if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
+      this.locations = [...state.commonData!.locations];
+    }
+  }
+
   ready() {
     super.ready();
     this.locationsDialog = document.createElement('grouped-locations-dialog');
@@ -651,7 +674,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
   _updateDatesRequiredState(isRequired: boolean) {
     this.set('intervention.permissions.required.start', isRequired);
     this.set('intervention.permissions.required.end', isRequired);
-    this.updateReduxPermissionsData(this.get('intervention.permissions'));
+    store.dispatch(setPageDataPermissions(this.intervention.permissions));
   }
 
   _showContingencyPd(agreement: Agreement) {
