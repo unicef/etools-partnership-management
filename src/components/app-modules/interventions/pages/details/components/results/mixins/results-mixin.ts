@@ -1,10 +1,10 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import { ResultLink } from '../../../../../../../../typings/intervention.types';
-import { isEmptyObject } from '../../../../../../../utils/utils';
+import { ExpectedResult, CpOutput } from '../../../../../../../../typings/intervention.types';
+import { isEmptyObject, isJsonStrMatch } from '../../../../../../../utils/utils';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../../../../../../../../store';
+import { store, RootState } from '../../../../../../../../store';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -42,7 +42,13 @@ const ResultsMixin = dedupingMixin(
       };
     }
 
-    _computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure) {
+    stateChanged(state: RootState) {
+      if (!isJsonStrMatch(this.cpOutputs, state.commonData!.cpOutputs)) {
+        this.cpOutputs = [...state.commonData!.cpOutputs];
+      }
+    }
+
+    _computeAvailableCpOutputs(cpOutputs: CpOutput[], alreadySelectedCpOutputs: number[], selectedCpStructure: number) {
       if (isEmptyObject(cpOutputs) ||
           typeof alreadySelectedCpOutputs === 'undefined' ||
           typeof selectedCpStructure === 'undefined') {
@@ -59,7 +65,7 @@ const ResultsMixin = dedupingMixin(
       });
     }
 
-    setAlreadySelectedCpOutputs(resultsLength: number, results) {
+    setAlreadySelectedCpOutputs(resultsLength: number, results: ExpectedResult[]) {
       if (resultsLength > 0) {
         this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds(results || []));
       } else {
@@ -68,8 +74,8 @@ const ResultsMixin = dedupingMixin(
     }
 
     // get selected cpoutputs ids
-    _getSelectedCpOutputsIds(results) {
-      let selectedCpOIds = [];
+    _getSelectedCpOutputsIds(results: ExpectedResult[]) {
+      let selectedCpOIds: number[] = [];
       if (results.length > 0) {
         results.forEach(function(result) {
           if (result.cp_output) {
@@ -91,7 +97,7 @@ const ResultsMixin = dedupingMixin(
     }
 
     createAddEditCpOutputRamIndicatorsElement() {
-      this.cpOutputRamIndicatorsEditElem = document.querySelector('body')
+      this.cpOutputRamIndicatorsEditElem = document.querySelector('body')!
           .querySelector('#cpOutputRamIndicatorsEditElem');
       if (!this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
@@ -110,7 +116,8 @@ const ResultsMixin = dedupingMixin(
       }
     }
 
-    openCpOutputAndRamIndicatorsDialog(expectedResultId, cpOutputId, ramIndicatorsIds, editIndex) {
+    openCpOutputAndRamIndicatorsDialog(expectedResultId?: number, cpOutputId?: number,
+       ramIndicatorsIds?: number[], editIndex?: number) {
       if (this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem.resetData();
 
@@ -157,7 +164,7 @@ const ResultsMixin = dedupingMixin(
       this.push('dataItems', resultLink);
     }
 
-    _initializeToBeAbleToAddLowerResult(resultLink: ResultLink) {
+    _initializeToBeAbleToAddLowerResult(resultLink: ExpectedResult) {
       if (!resultLink.ll_results) {
         resultLink.ll_results = [];
       }

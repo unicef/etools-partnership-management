@@ -32,7 +32,7 @@ export class Intervention {
   contingency_pd: boolean = false;
   planned_budget: PlannedBudget | null = null;
   flat_locations: [] = [];
-  result_links: [] = [];
+  result_links: ExpectedResult[] = [];
   planned_visits: [] = [];
   in_amendment: boolean = false;
   amendments: [] = [];
@@ -161,7 +161,22 @@ export class InterventionPermissionsFields {
   attachments: boolean = false;
 }
 
-export class ResultLink {
-  ll_results: [] = [];
+export type ExpectedResult = {
+  id: number;
+  cp_output: number;
+  cp_output_name: string;
+  intervention: number;
+  ll_results: [];
+  ram_indicators: number[];
+  ram_indicator_names: number[];
 }
+
+export type CpOutput = {
+  id: number;
+  name: string;
+  wbs: string;
+  country_programme: number;
+}
+
+
 
