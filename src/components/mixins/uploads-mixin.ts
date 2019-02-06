@@ -6,7 +6,7 @@ import { DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS } from '../../ac
  * @polymer
  * @mixinFunction
  */
-const UploadMixin = (baseClass: any) => class extends connect(store)(baseClass) {
+const UploadsMixin = (baseClass: any) => class extends connect(store)(baseClass) {
   public static get properties() {
     return {
       uploadEndpoint: {
@@ -45,4 +45,4 @@ const UploadMixin = (baseClass: any) => class extends connect(store)(baseClass) 
   }
 };
 
-export default UploadMixin;
+export default UploadsMixin;

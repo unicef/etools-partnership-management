@@ -1,15 +1,15 @@
 import {PolymerElement, html} from '@polymer/polymer';
+import 'etoold-date-time/datepicker-lite.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import EventHelperMixin from '../../../../../mixins/event-helper-mixin.js';
-// <link rel="import" href="../../../../../validators/required-and-not-future-date-validator.html">
-
-// <link rel="import" href="../../../../../layout/components/etools-date-input.html">
+import '../../../../../validators/required-and-not-future-date-validator.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
@@ -25,7 +25,7 @@ const AssessmentDialogMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
   AjaxErrorsParserMixin,
   EventHelperMixin
-]);
+], PolymerElement);
 
 /**
  * @polymer
@@ -41,12 +41,12 @@ class AssesmentDialog extends AssessmentDialogMixins {
         :host {
           display: block;
         }
-        
+
         .padd-left {
           padding-left: 48px !important;
         }
       </style>
-    
+
       <etools-dialog no-padding
         keep-dialog-open
         id="assessmentDialog"
@@ -74,15 +74,14 @@ class AssesmentDialog extends AssessmentDialogMixins {
             <required-and-not-future-date-validator validator-name="dateSubmittedValidator"
                                                     field-selector="#dateSubmitted">
             </required-and-not-future-date-validator>
-            <etools-date-input id="dateSubmitted"
+            <datepicker-lite id="dateSubmitted"
                                label="Date of Assessment"
                                value="{{assessment.completed_date}}"
                                auto-validate
                                required-and-not-future-date
                                validator="dateSubmittedValidator"
-                               no-init show-clear-btn
                                required>
-            </etools-date-input>
+            </datepicker-lite>
           </div>
         </div>
         <div class="row-h">
@@ -105,8 +104,8 @@ class AssesmentDialog extends AssessmentDialogMixins {
         </div>
 
       </etools-dialog>
-    
-   
+
+
     `;
   }
 

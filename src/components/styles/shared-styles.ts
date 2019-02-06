@@ -119,7 +119,7 @@ export const SharedStyles = html`
   /* paper input readonly state */
   paper-input[readonly],
   paper-textarea[readonly],
-  etools-date-input[readonly],
+  datepicker-lite[readonly],
   etools-dropdown[readonly],
   etools-dropdown-multi[readonly],
   etools-currency-amount-input[readonly],

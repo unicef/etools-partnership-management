@@ -1,4 +1,5 @@
 import { IPermission } from './globals.types';
+import CONSTANTS from '../config/app-constants';
 
 export class Intervention {
   id: number | null = null;
@@ -39,8 +40,16 @@ export class Intervention {
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: IPermission<InterventionPermissionsFields>;
-
   [key: string] : any;
+
+  public isDraft() {
+    return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
+        status === '';
+  }
+  public isContingencyAndHasActivationLetter() {
+    return this.contingency_pd &&
+      this.activation_letter_attachment;
+  }
 }
 
 export class ListItemIntervention {

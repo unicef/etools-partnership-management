@@ -25,7 +25,7 @@ import '../../../../layout/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
-import UploadMixin from '../../../../mixins/uploads-mixin';
+import UploadsMixin from '../../../../mixins/uploads-mixin';
 import { Agreement } from '../../agreement.types.js';
 
 import '../../../../mixins/missing-dropdown-options-mixin.js';
@@ -53,12 +53,12 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
      * @mixinFunction
      * @appliesMixin StaffMembersData
      * @appliesMixin CommonMixin
-     * @appliesMixin UploadMixin
+     * @appliesMixin UploadsMixin
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
       StaffMembersData,
       CommonMixin,
-      UploadMixin
+      UploadsMixin
     ], PolymerElement);
 
     /**
