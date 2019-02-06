@@ -44,7 +44,6 @@
       }
 
       .unknown {
-        margin-top: -14px;
         padding-left: 24px;
         padding-bottom: 16px;
       }
@@ -108,21 +107,32 @@
       <template is="dom-if" if="[[!_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
         <div class="col col-3">
           <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
-            <paper-input label="Baseline"
+            <paper-input id="baselineNumeric"
+                         label="Baseline"
                          value="{{indicator.baseline.v}}"
                          type="number"
                          allowed-pattern="[0-9\.]"
-                         placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+                         pattern="^\d+\.?\d+$"
+                         auto-validate
+                         error-message="Only numbers allowed"
+                         placeholder="&#8212;"
+                         disabled="[[baselineIsUnknown]]"
+                         on-change="_validateNumericValue">
             </paper-input>
           </template>
           <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
-            <paper-input label="Baseline"
+            <paper-input id="baselineNonNumeric"
+                         label="Baseline"
                          value="{{indicator.baseline.v}}"
                          type="number"
                          min="0"
                          max="100"
                          allowed-pattern="[0-9\.]"
-                         placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+                         pattern="^\d+\.?\d+$"
+                         auto-validate
+                         error-message="Only numbers allowed"
+                         placeholder="&#8212;"
+                         disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
         </div>
@@ -153,19 +163,29 @@
       </template>
       <template is="dom-if" if="[[_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
         <div class="col-3 layout-horizontal">
-          <paper-input label="Baseline"
+          <paper-input id="baselineNumerator"
+                       label="Baseline"
                        value="{{indicator.baseline.v}}"
                        type="number"
-                       allowed-pattern="[0-9\.]"
-                       placeholder="Numerator" disabled="[[baselineIsUnknown]]">
+                       allowed-pattern="[0-9]"
+                       pattern="^\d+"
+                       auto-validate
+                       error-message="Use only digits"
+                       placeholder="Numerator"
+                       disabled="[[baselineIsUnknown]]">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input
+              id="baselineDenominator"
               value="{{indicator.baseline.d}}"
               type="number"
               min="1"
-              allowed-pattern="[0-9\.]"
-              placeholder="Denominator" disabled="[[baselineIsUnknown]]">
+              allowed-pattern="[0-9]"
+              pattern="^\d+"
+              auto-validate
+              error-message="Use only digits"
+              placeholder="Denominator"
+              disabled="[[baselineIsUnknown]]">
           </paper-input>
         </div>
         <div class="col col-3">
@@ -336,13 +356,13 @@
 
       _getIndicatorTargetElId() {
         if (!this.indicator || !this.indicator.indicator) {
-          return ['targetElForNumericUnit'];
+          return ['targetElForNumericUnit', 'baselineNumeric'];
         }
         if (this._getIndUnit() === 'percentage' && this._getIndDisplayType() === 'ratio') {
-          return ['targetNumerator', 'targetDenominator'];
+          return ['baselineNumerator', 'baselineDenominator', 'targetNumerator', 'targetDenominator'];
         }
         return (this._unitIsNumeric(this.indicator.indicator.unit))
-            ? ['targetElForNumericUnit'] : ['targetElForNonNumericUnit'];
+            ? ['targetElForNumericUnit', 'baselineNumeric'] : ['targetElForNonNumericUnit', 'baselineNonNumeric'];
       }
 
       _isRatioType() {
@@ -359,6 +379,10 @@
 
       _getIndUnit() {
         return this.indicator.indicator.unit;
+      }
+
+      _validateNumericValue(e) {
+        console.log('target: ', e.target);
       }
 
     }
