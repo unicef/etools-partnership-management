@@ -68,6 +68,11 @@
      * Make sure you also have the data-selector attribute set on the input field.
      */
     openDatePicker(event) {
+      // this is in place here so that the filters dropdown would close if you click the label of another dropdown
+      if (Polymer && Polymer.IronOverlayManager && Polymer.IronOverlayManager._overlays.length > 0) {
+        document.dispatchEvent(new CustomEvent('tap', {detail: {sourceEvent: event}}));
+      }
+
       let id = event.target.getAttribute('data-selector');
       if (id) {
         let datePicker = this.shadowRoot.querySelector('#' + id);
