@@ -44,7 +44,7 @@ import './components/results/expected-results.js';
 import './components/planned-visits.js';
 import { setPageDataPermissions } from '../../../../../actions/page-data.js';
 //import 'components/reporting-requirements/partner-reporting-requirements.js';
-//import 'components/grouped-locations-dialog.js';
+import './components/grouped-locations-dialog.js';
 
 /**
  * @polymer

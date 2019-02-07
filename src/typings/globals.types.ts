@@ -23,6 +23,24 @@ export type UserPermissions = {
   viewPartnerDetails: boolean
 }
 
+export type User = {
+  first_name: string,
+  last_name: string,
+  middle_name: string,
+  name: string,
+  email: string,
+  country: object,
+  country_override: number,
+  countries_available: [],
+  groups: UserGroup[]
+}
+
+export type UserGroup = {
+  id: number,
+  name: string,
+  permissions: []
+}
+
 export interface EtoolsTab {
   tab: string;
   tabLabel: string;

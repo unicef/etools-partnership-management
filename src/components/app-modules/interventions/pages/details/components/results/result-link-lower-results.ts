@@ -3,11 +3,18 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-data-table/etools-data-table.js';
+
+import '../../../../../../mixins/repeatable-data-sets-mixin.js';
+import '../../../../../../layout/icons-actions.js';
+
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { PolymerElEvent, DomRepeatEvent } from '../../../../../../../typings/globals.types';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
+
+import './pd-lower-result-name.js';
+import './applied-indicators.js';
 
 /**
  * @polymer

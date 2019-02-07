@@ -3,16 +3,18 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-data-table/etools-data-table.js';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { isEmptyObject } from '../../../../../../utils/utils';
+import { isEmptyObject, isJsonStrMatch } from '../../../../../../utils/utils';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import '../../../../../../layout/icons-actions.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../../../store';
 
 /**
  * @polymer
  * @customElement
  */
-class AppliedIndicator extends PolymerElement {
+class AppliedIndicator extends connect(store)(PolymerElement) {
   [x: string]: any;
 
   static get template() {
@@ -165,6 +167,21 @@ class AppliedIndicator extends PolymerElement {
     return [
       'setIndicatorDetails(indicator, disaggregations, locations)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
+      this.sections = state.commonData!.sections;
+    }
+    if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
+      this.locations = state.commonData!.locations;
+    }
+    if (!isJsonStrMatch(this.disaggregations, state.commonData!.disaggregations)) {
+      this.disaggregations = state.commonData!.disaggregations;
+    }
+    if (this.inAmendment !== state.pageData!.in_amendment) {
+      this.inAmendment = state.pageData!.in_amendment;
+    }
   }
 
   ready() {
