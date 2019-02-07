@@ -123,7 +123,7 @@
                          label="Baseline"
                          value="{{indicator.baseline.v}}"
                          allowed-pattern="[0-9]"
-                         pattern="[[justDigitsNotStartingWith0Pattern]]"
+                         pattern="[[justDigits]]"
                          auto-validate
                          error-message="Invalid number"
                          placeholder="&#8212;"
@@ -147,7 +147,7 @@
                        placeholder="&#8212;"
                        allowed-pattern="[0-9]"
                        required
-                       pattern="[[justDigitsNotStartingWith0Pattern]]"
+                       pattern="[[justDigits]]"
                        auto-validate
                        error-message="Please add a valid target"
                        hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
@@ -280,6 +280,10 @@
           justDigitsNotStartingWith0Pattern: { // any number starting from 1
             type: String,
             value: '^[1-9]{1}(\\d+)?$'
+          },
+          justDigits: {
+            type: String,
+            value: '^\\d+'
           }
         };
       }
