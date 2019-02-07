@@ -16,7 +16,7 @@ import 'etools-data-table/etools-data-table.js';
 import '../../../../layout/etools-form-element-wrapper.js';
 
 import '../../../../layout/etools-error-messages-box.js'
-// <link rel="import" href="../../../../layout/icons-actions.html">
+import '../../../../layout/icons-actions.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';

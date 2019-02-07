@@ -126,7 +126,7 @@ const ResultsMixin = dedupingMixin(
         if (expectedResultId) {
           this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
         }
-        if (!_.isEmpty(ramIndicatorsIds)) {
+        if (!isEmptyObject(ramIndicatorsIds)) {
           this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
         }
 

@@ -29,7 +29,7 @@ import '../../layout/etools-error-messages-box.js';
 import '../../layout/etools-tabs.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
-//import 'components/intervention-status.js';
+import './components/intervention-status.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
 import {SharedStyles} from '../../styles/shared-styles.js';
 import {buttonsStyles} from '../../styles/buttons-styles.js';

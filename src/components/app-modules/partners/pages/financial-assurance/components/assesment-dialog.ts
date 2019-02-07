@@ -13,6 +13,7 @@ import '../../../../../validators/required-and-not-future-date-validator.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
+import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 
 /**
  * @customElement
@@ -116,7 +117,7 @@ class AssesmentDialog extends AssessmentDialogMixins {
       },
       uploadEndpoint: {
         type: String,
-        value: () => window.EtoolsPmpApp.Endpoints.attachmentsUpload.url
+        value: () => pmpEndpoints.attachmentsUpload.url
       },
       opened: {
         type: Boolean,
