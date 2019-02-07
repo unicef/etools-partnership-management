@@ -110,27 +110,22 @@
             <paper-input id="baselineNumeric"
                          label="Baseline"
                          value="{{indicator.baseline.v}}"
-                         type="number"
-                         allowed-pattern="[0-9\.]"
-                         pattern="^\d+\.?\d+$"
+                         allowed-pattern="[0-9\.\,]"
+                         pattern="[[numberPattern]]"
                          auto-validate
-                         error-message="Only numbers allowed"
+                         error-message="Invalid number"
                          placeholder="&#8212;"
-                         disabled="[[baselineIsUnknown]]"
-                         on-change="_validateNumericValue">
+                         disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
           <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
             <paper-input id="baselineNonNumeric"
                          label="Baseline"
                          value="{{indicator.baseline.v}}"
-                         type="number"
-                         min="0"
-                         max="100"
-                         allowed-pattern="[0-9\.]"
-                         pattern="^\d+\.?\d+$"
+                         allowed-pattern="[0-9]"
+                         pattern="[[justDigitsNotStartingWith0Pattern]]"
                          auto-validate
-                         error-message="Only numbers allowed"
+                         error-message="Invalid number"
                          placeholder="&#8212;"
                          disabled="[[baselineIsUnknown]]">
             </paper-input>
@@ -139,22 +134,20 @@
         <div class="col col-3">
           <paper-input label="Target" id="targetElForNumericUnit"
                        value="{{indicator.target.v}}"
-                       type="number"
                        placeholder="&#8212;"
+                       allowed-pattern="[0-9\.\,]"
                        required
-                       allowed-pattern="[0-9\.]"
+                       pattern="[[numberPattern]]"
                        auto-validate
                        error-message="Please add a valid target"
                        hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
           </paper-input>
           <paper-input label="Target" id="targetElForNonNumericUnit"
                        value="{{indicator.target.v}}"
-                       type="number"
-                       min="0"
-                       max="100"
-                       allowed-pattern="[0-9\.]"
                        placeholder="&#8212;"
+                       allowed-pattern="[0-9]"
                        required
+                       pattern="[[justDigitsNotStartingWith0Pattern]]"
                        auto-validate
                        error-message="Please add a valid target"
                        hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
@@ -166,11 +159,10 @@
           <paper-input id="baselineNumerator"
                        label="Baseline"
                        value="{{indicator.baseline.v}}"
-                       type="number"
                        allowed-pattern="[0-9]"
-                       pattern="^\d+"
+                       pattern="[[justDigitsNotStartingWith0Pattern]]"
                        auto-validate
-                       error-message="Use only digits"
+                       error-message="Invalid"
                        placeholder="Numerator"
                        disabled="[[baselineIsUnknown]]">
           </paper-input>
@@ -178,12 +170,10 @@
           <paper-input
               id="baselineDenominator"
               value="{{indicator.baseline.d}}"
-              type="number"
-              min="1"
               allowed-pattern="[0-9]"
-              pattern="^\d+"
+              pattern="[[justDigitsNotStartingWith0Pattern]]"
               auto-validate
-              error-message="Use only digits"
+              error-message="Invalid"
               placeholder="Denominator"
               disabled="[[baselineIsUnknown]]">
           </paper-input>
@@ -191,20 +181,22 @@
         <div class="col col-3">
           <paper-input label="Target" id="targetNumerator"
                        value="{{indicator.target.v}}"
-                       type="number"
-                       allowed-pattern="[0-9\.]"
+                       allowed-pattern="[0-9]"
+                       pattern="[[justDigitsNotStartingWith0Pattern]]"
+                       auto-validate
                        required
                        auto-validate
+                       error-message="Invalid"
                        placeholder="Numerator">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input id="targetDenominator"
                        value="{{indicator.target.d}}"
-                       type="number"
-                       min="1"
                        required
+                       allowed-pattern="[0-9]"
+                       pattern="[[justDigitsNotStartingWith0Pattern]]"
                        auto-validate
-                       allowed-pattern="[0-9\.]"
+                       error-message="Empty or < 1"
                        placeholder="Denominator"
                        readonly$="[[isReadonlyDenominator(interventionStatus, indicator.id)]]">
           </paper-input>
@@ -280,14 +272,22 @@
           },
           interventionStatus: {
             type: String
+          },
+          numberPattern: { // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
+            type: String,
+            value: '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)'
+          },
+          justDigitsNotStartingWith0Pattern: { // any number starting from 1
+            type: String,
+            value: '^[1-9]{1}(\\d+)?$'
           }
         };
       }
 
       static get observers() {
         return [
-          '_baselineChanged(indicator.baseline.v)',
-          '_targetChanged(indicator.target.v)',
+          '_baselineChanged(indicator.baseline.v, indicator.indicator.unit)',
+          '_targetChanged(indicator.target.v, indicator.indicator.unit)',
           '_baselineUnknownChanged(baselineIsUnknown)',
           '_typeChanged(indicator.indicator.display_type, indicator.indicator.unit)'
         ];
@@ -379,10 +379,6 @@
 
       _getIndUnit() {
         return this.indicator.indicator.unit;
-      }
-
-      _validateNumericValue(e) {
-        console.log('target: ', e.target);
       }
 
     }
