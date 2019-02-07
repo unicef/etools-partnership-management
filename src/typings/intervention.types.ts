@@ -33,7 +33,7 @@ export class Intervention {
   planned_budget: PlannedBudget | null = null;
   flat_locations: [] = [];
   result_links: ExpectedResult[] = [];
-  planned_visits: [] = [];
+  planned_visits: PlannedVisit[] = [];
   in_amendment: boolean = false;
   amendments: [] = [];
   //distributions: [];
@@ -178,5 +178,12 @@ export type CpOutput = {
   country_programme: number;
 }
 
-
+export class PlannedVisit {
+  id: number | null = null;
+  year: string | null = null;
+  programmatic_q1: number = 0;
+  programmatic_q2: number = 0;
+  programmatic_q3: number = 0;
+  programmatic_q4: number = 0;
+}
 

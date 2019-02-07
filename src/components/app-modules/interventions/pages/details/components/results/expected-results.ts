@@ -13,7 +13,11 @@ import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-se
 import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
-
+import LowerResultsMixin from './mixins/lower-results-mixin.js';
+import ResultsMixin from './mixins/results-mixin.js';
+import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
+import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
+import { buttonsStyles } from '../../../../../../styles/buttons-styles';
 import './mixins/results-mixin.js';
 import './mixins/lower-results-mixin.js';
 import './result-cp-output-and-ram-indicators.js';
@@ -29,12 +33,87 @@ import './indicator-dialog.js';
  */
 class ExpectedResults extends EtoolsMixinFactory.combineMixins([
   RepeatableDataSetsMixin,
-  //ResultsMixin,
-  //LowerResultsMixin
+  ResultsMixin,
+  LowerResultsMixin
 ], PolymerElement) {
+  [x: string]: any;
 
-  static get is() {
+  static get template() {
     return html`
+      ${gridLayoutStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
+      <style include="data-table-styles">
+        [hidden] {
+          display: none !important;
+        }
+
+        :host {
+          display: block;
+          width: 100%;
+          --list-row-collapse-wrapper: {
+            padding: 0;
+          };
+        }
+
+        .ram-indicators-col {
+          @apply --layout-vertical;
+          position: relative;
+        }
+
+        .ram-indicator-name {
+          display: inline-block;
+          width: 100%;
+        }
+
+        icons-actions {
+          visibility: hidden;
+        }
+
+        etools-data-table-row div[slot="row-data"]:hover icons-actions {
+          visibility: visible;
+        }
+
+      </style>
+
+      <div hidden$="[[_emptyList(dataItems.length)]]">
+        <etools-data-table-header no-title>
+          <etools-data-table-column class="col-4">Corresponding CP Output</etools-data-table-column>
+          <etools-data-table-column class="col-8">Corresponding CP Indicator(s)</etools-data-table-column>
+        </etools-data-table-header>
+        <template is="dom-repeat" items="{{dataItems}}">
+          <etools-data-table-row details-opened="[[detailsOpened]]">
+            <div slot="row-data">
+              <div class="col-data col-4">
+                <span>[[item.cp_output_name]]</span>
+              </div>
+              <div class="col-data col-8 ram-indicators-col">
+                <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
+                  <span class="ram-indicator-name">[[ramIndicatorName]]</span>
+                </template>
+                <icons-actions hidden$="[[!editableCpoRamIndicators]]"
+                              data-args$="[[index]]"
+                              on-edit="_editCpOutputAndRamIndicators"
+                              show-delete="[[editMode]]"
+                              on-delete="_openDeleteConfirmation">
+                </icons-actions>
+              </div>
+            </div>
+            <div slot="row-data-details">
+              <result-link-lower-results data-items="{{item.ll_results}}"
+                                        edit-mode$="[[editMode]]"
+                                        expected-result-id="[[item.id]]"
+                                        cp-output-id="[[item.cp_output]]"
+                                        intervention-status="[[interventionStatus]]"
+                                        show-inactive-indicators="[[showInactiveIndicators]]"
+                                        on-open-indicator-dialog="_openIndicatorDialog">
+              </result-link-lower-results>
+            </div>
+          </etools-data-table-row>
+        </template>
+      </div>
+
+      <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+        <p>There are no results added.</p>
+      </div>
     `;
   }
 
@@ -118,8 +197,8 @@ class ExpectedResults extends EtoolsMixinFactory.combineMixins([
 
   removeDeactivateIndicatorDialog() {
     let body = document.querySelector('body');
-    let dialogs = body.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
-    dialogs.forEach(d => body.removeChild(d));
+    let dialogs = body!.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
+    dialogs.forEach(d => body!.removeChild(d));
   }
 
   _dataItemsChanged(dataItemsLength: number) {
@@ -203,14 +282,14 @@ class ExpectedResults extends EtoolsMixinFactory.combineMixins([
     fireEvent(this, 'indicators-changed');
   }
 
-  _indicatorSectionOptionsUpdate(sectionOptions) {
+  _indicatorSectionOptionsUpdate(sectionOptions: any) {
     if (typeof sectionOptions === 'undefined') {
       return;
     }
     this._updateIndicatorData('sectionOptionsIds', sectionOptions);
   }
 
-  _indicatorLocationOptionsUpdate(locationOptions) {
+  _indicatorLocationOptionsUpdate(locationOptions: any) {
     if (typeof locationOptions === 'undefined') {
       return;
     }

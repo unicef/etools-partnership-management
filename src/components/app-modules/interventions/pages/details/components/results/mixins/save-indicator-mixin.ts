@@ -1,5 +1,9 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 // @ts-ignore
+import pick from 'lodash-es/pick';
+// @ts-ignore
+import keys from 'lodash-es/keys';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
@@ -8,8 +12,8 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin Endpoints
- * @appliesMixin AjaxErrorsParser
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin AjaxErrorsParserMixin
  */
 const SaveIndicatorMixin = dedupingMixin(
 (superClass: any) => class extends EtoolsMixinFactory.combineMixins([
@@ -173,7 +177,7 @@ const SaveIndicatorMixin = dedupingMixin(
   _getIndicatorBody() {
     let body = this._getIndicatorModelForSave();
 
-    Object.assign(body, _.pick(this.indicator, _.keys(body)));
+    Object.assign(body, pick(this.indicator, keys(body)));
 
     this._prepareBaselineAndTarget(body);
 

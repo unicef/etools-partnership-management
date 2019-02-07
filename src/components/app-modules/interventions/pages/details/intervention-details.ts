@@ -40,7 +40,7 @@ import { isEmptyObject, isJsonStrMatch, copy } from '../../../../utils/utils';
 
 import './components/agreement-selector.js';
 import './components/planned-budget.js';
-//import 'components/results/expected-results.js';
+import './components/results/expected-results.js';
 import './components/planned-visits.js';
 import { setPageDataPermissions } from '../../../../../actions/page-data.js';
 //import 'components/reporting-requirements/partner-reporting-requirements.js';

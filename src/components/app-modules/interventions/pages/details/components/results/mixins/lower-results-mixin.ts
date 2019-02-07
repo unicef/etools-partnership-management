@@ -1,6 +1,6 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 // @ts-ignore
-import EtoolsLogsMixin from 'etools-behavior/etools-logs-mixin.js';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
 /**
  * @polymer

@@ -1,10 +1,14 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import DynamicDialogMixin from 'etools-dialog/dynamic-dialog-mixin.js';
+// @ts-ignore
+import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+// @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import EventHelperMixin from './event-helper-mixin.js';
+import { fireEvent } from '../utils/fire-custom-event.js';
 
 
 /**
@@ -14,19 +18,15 @@ import EventHelperMixin from './event-helper-mixin.js';
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin EventHelperMixin
- */
-const RepeatableDataMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin, DynamicDialogMixin, EndpointsMixin, EtoolsAjaxRequestMixin, EventHelperMixin
-]);
-
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin RepeatableDataMixins
  */
 const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
-  class extends baseClass(RepeatableDataMixins) {
+  class extends EtoolsMixinFactory.combineMixins([
+      EtoolsLogsMixin,
+      DynamicDialogMixin,
+      EndpointsMixin,
+      EtoolsAjaxRequestMixin
+    ], baseClass) {
+    [x: string]: any;
 
     public static get properties() {
       return {
@@ -126,11 +126,11 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
     public _handleDeleteResponse() {
       this._deleteElement();
       this.elToDeleteIndex = -1;
-      this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      fireEvent(this, 'global-loading', {active: false, loadingSource: this.deleteLoadingSource});
     }
 
     public _handleDeleteError(responseErr: any) {
-      this.fireEvent('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      fireEvent(this, 'global-loading', {active: false, loadingSource: this.deleteLoadingSource});
 
       let msg = this.deleteActionDefaultErrMsg;
       if (responseErr instanceof Array && responseErr.length > 0) {
@@ -138,7 +138,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
       } else if (typeof responseErr === 'string') {
         msg = responseErr;
       }
-      this.fireEvent('toast', {text: msg, showCloseBtn: true});
+      fireEvent(this, 'toast', {text: msg, showCloseBtn: true});
     }
 
     public _onDeleteConfirmation(event: any) {
@@ -152,7 +152,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
             return;
           }
 
-          this.fireEvent('global-loading', {
+          fireEvent(this, 'global-loading', {
             message: this.deleteActionLoadingMsg,
             active: true,
             loadingSource: this.deleteLoadingSource
@@ -186,7 +186,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
 
-        this.fireEvent('delete-confirm', {index: this.elToDeleteIndex});
+        fireEvent(this, 'delete-confirm', {index: this.elToDeleteIndex});
       }
     }
 

@@ -29,7 +29,7 @@ export interface EtoolsTab {
   hidden: boolean;
 }
 
-export interface DomRepeatEvent extends CustomEvent {//TODO- should be in polymer declarations
+export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in polymer declarations
   model: any;
 }
 
