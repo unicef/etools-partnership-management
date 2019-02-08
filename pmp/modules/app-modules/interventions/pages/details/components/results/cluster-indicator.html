@@ -119,40 +119,47 @@
     <template is="dom-if" if="[[_typeMatches(prpClusterIndicator, 'ratio')]]">
       <div class="row-h flex-c">
         <div class="col-4 layout-horizontal">
-          <paper-input label="Baseline"
+          <paper-input id="baselineNumerator"
+                       label="Baseline"
                        value="{{indicator.baseline.v}}"
-                       type="number"
-                       allowed-pattern="[0-9\.]"
-                       placeholder="Numerator">
+                       placeholder="Numerator"
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
+                       auto-validate
+                       error-message="Invalid">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-          <paper-input
-              value="{{indicator.baseline.d}}"
-              type="number"
-              min="1"
-              allowed-pattern="[0-9\.]"
-              placeholder="Denominator">
+          <paper-input id="baselineDenominator"
+                       value="{{indicator.baseline.d}}"
+                       placeholder="Denominator"
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
+                       auto-validate
+                       error-message="Invalid">
           </paper-input>
         </div>
         <div class="col col-4">
-          <paper-input label="Target" id="targetNumerator"
+          <paper-input id="targetNumerator"
+                       label="Target"
                        value="{{indicator.target.v}}"
-                       type="number"
-                       allowed-pattern="[0-9\.]"
+                       placeholder="Numerator"
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
+                       auto-validate
                        required
                        auto-validate
-                       placeholder="Numerator">
+                       error-message="Invalid">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input id="targetDenominator"
+                       placeholder="Denominator"
                        value="{{indicator.target.d}}"
-                       type="number"
-                       min="1"
-                       required
                        readonly
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
+                       required
                        auto-validate
-                       allowed-pattern="[0-9\.]"
-                       placeholder="Denominator">
+                       error-message="Invalid">
           </paper-input>
         </div>
       </div>
@@ -161,23 +168,26 @@
     <template is="dom-if" if="[[!_typeMatches(prpClusterIndicator, 'ratio')]]">
       <div class="row-h flex-c">
         <div class="col col-4">
-          <paper-input label="Baseline"
+          <paper-input id="baselineEl"
+                       label="Baseline"
+                       placeholder="&#8212;"
                        value="{{indicator.baseline.v}}"
-                       type="number"
-                       allowed-pattern="[0-9\.]"
-                       placeholder="&#8212;">
+                       allowed-pattern="[0-9\.\,]"
+                       pattern="[[numberPattern]]"
+                       auto-validate
+                       error-message="Invalid number">
           </paper-input>
         </div>
         <div class="col col-4">
           <paper-input id="targetEl"
                        label="Target"
+                       placeholder="&#8212;"
                        value="{{indicator.target.v}}"
-                       type="number"
                        required
-                       allowed-pattern="[0-9\.]"
+                       allowed-pattern="[0-9\.\,]"
+                       pattern="[[numberPattern]]"
                        auto-validate
-                       error-message="Please add a valid target"
-                       placeholder="&#8212;">
+                       error-message="Please add a valid target">
           </paper-input>
         </div>
       </div>
@@ -423,13 +433,13 @@
 
       _getIndicatorTargetElId() {
         if (!this.prpClusterIndicator || !this.prpClusterIndicator.blueprint) {
-          return ['targetEl'];
+          return ['targetEl', 'baselineEl'];
         }
         if (this.prpClusterIndicator.blueprint.display_type === 'ratio') {
-          return ['targetNumerator', 'targetDenominator'];
+          return ['baselineNumerator', 'baselineDenominator', 'targetNumerator', 'targetDenominator'];
         }
 
-        return ['targetEl'];
+        return ['targetEl', 'baselineEl'];
       }
 
       resetValidations() {
@@ -440,9 +450,9 @@
 
           this._resetInvalid('#targetEl');
 
-          let targetNominator = this.shadowRoot.querySelector('#targetNumerator');
-          if (targetNominator) {
-            targetNominator.invalid = false;
+          let targetNumerator = this.shadowRoot.querySelector('#targetNumerator');
+          if (targetNumerator) {
+            targetNumerator.invalid = false;
 
             this._resetInvalid('#targetDenominator');
             this._resetInvalid('#baselineNumerator');
