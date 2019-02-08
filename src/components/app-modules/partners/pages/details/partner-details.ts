@@ -28,6 +28,8 @@ import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 
+import './components/edit-core-values-assessment';
+
 /**
  * @polymer
  * @mixinFunction
