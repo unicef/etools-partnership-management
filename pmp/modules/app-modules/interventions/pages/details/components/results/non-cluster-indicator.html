@@ -123,7 +123,7 @@
                          label="Baseline"
                          value="{{indicator.baseline.v}}"
                          allowed-pattern="[0-9]"
-                         pattern="[[justDigits]]"
+                         pattern="[[digitsPattern]]"
                          auto-validate
                          error-message="Invalid number"
                          placeholder="&#8212;"
@@ -147,7 +147,7 @@
                        placeholder="&#8212;"
                        allowed-pattern="[0-9]"
                        required
-                       pattern="[[justDigits]]"
+                       pattern="[[digitsPattern]]"
                        auto-validate
                        error-message="Please add a valid target"
                        hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
@@ -160,7 +160,7 @@
                        label="Baseline"
                        value="{{indicator.baseline.v}}"
                        allowed-pattern="[0-9]"
-                       pattern="[[justDigitsNotStartingWith0Pattern]]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
                        auto-validate
                        error-message="Invalid"
                        placeholder="Numerator"
@@ -171,7 +171,7 @@
               id="baselineDenominator"
               value="{{indicator.baseline.d}}"
               allowed-pattern="[0-9]"
-              pattern="[[justDigitsNotStartingWith0Pattern]]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
               auto-validate
               error-message="Invalid"
               placeholder="Denominator"
@@ -182,7 +182,7 @@
           <paper-input label="Target" id="targetNumerator"
                        value="{{indicator.target.v}}"
                        allowed-pattern="[0-9]"
-                       pattern="[[justDigitsNotStartingWith0Pattern]]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
                        auto-validate
                        required
                        auto-validate
@@ -194,7 +194,7 @@
                        value="{{indicator.target.d}}"
                        required
                        allowed-pattern="[0-9]"
-                       pattern="[[justDigitsNotStartingWith0Pattern]]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
                        auto-validate
                        error-message="Empty or < 1"
                        placeholder="Denominator"
@@ -272,18 +272,6 @@
           },
           interventionStatus: {
             type: String
-          },
-          numberPattern: { // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
-            type: String,
-            value: '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)'
-          },
-          justDigitsNotStartingWith0Pattern: { // any number starting from 1
-            type: String,
-            value: '^[1-9]{1}(\\d+)?$'
-          },
-          justDigits: {
-            type: String,
-            value: '^\\d+'
           }
         };
       }
