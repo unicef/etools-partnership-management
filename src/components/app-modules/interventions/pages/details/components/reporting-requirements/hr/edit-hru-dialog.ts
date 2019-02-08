@@ -5,7 +5,7 @@ import 'etools-dialog/etools-dialog.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-data-table/etools-data-table.js';
 //<link rel="import" href="../../../../../../../../../bower_components/etools-datepicker/etools-simple-datepicker.html">
-
+import 'etools-date-time/datepicker-lite.js';
 import './hru-list.js';
 import { PolymerElement, html } from '@polymer/polymer';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
@@ -66,7 +66,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
                   hidden$="[[datePickerOpen]]"
                   spinner-text="Saving...">
       <div class="start-date">
-      <etools-date-input id="dtPickerStDate"
+      <datepicker-lite id="dtPickerStDate"
                         label="Select start date"
                         value="{{repStartDate}}"
                         required
@@ -74,7 +74,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
                         auto-validate
                         open="{{datePickerOpen}}"
                         no-init show-clear-btn>
-      </etools-date-input>
+      </datepicker-lite>
       </div>
       <div>
         Use the date picker to select end dates of humanitarian report requirements.

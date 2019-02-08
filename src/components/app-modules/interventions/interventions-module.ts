@@ -37,7 +37,7 @@ import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header
 import { isEmptyObject } from '../../utils/utils';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { setInAmendment } from '../../../actions/page-data';
+import { setInAmendment, setPageDataPermissions } from '../../../actions/page-data';
 import { store } from '../../../store';
 
 
@@ -562,7 +562,7 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
             this.set('intervention.permissions', resp.permissions);
             this.set('intervention.in_amendment', resp.in_amendment);
             this.set('originalIntervention.in_amendment', resp.in_amendment);
-            this.updateReduxPermissionsData(resp.permissions);
+            store.dispatch(setPageDataPermissions(resp.permissions));
           }
         })
         .then(() => {
