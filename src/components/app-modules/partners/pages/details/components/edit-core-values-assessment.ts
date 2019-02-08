@@ -14,6 +14,7 @@ import {requiredFieldStarredStyles} from "../../../../../styles/required-field-s
 /**
  * @polymer
  * @customElement
+ * @appliesMixin CommonMixin
  */
 class EditCoreValuesAssessment extends (CommonMixin(PolymerElement) as any) {
 

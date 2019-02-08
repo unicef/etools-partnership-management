@@ -29,6 +29,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 
 import './components/edit-core-values-assessment';
+import './components/staff-members';
 
 /**
  * @polymer
@@ -232,8 +233,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
                     data-items="[[partner.staff_members]]"
                     edit-mode="[[editMode]]">
         </staff-members>
-
-
+        
     `;
   }
 
