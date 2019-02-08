@@ -166,9 +166,22 @@ export type ExpectedResult = {
   cp_output: number;
   cp_output_name: string;
   intervention: number;
-  ll_results: [];
+  ll_results: ResultLinkLowerResult[];
   ram_indicators: number[];
   ram_indicator_names: number[];
+}
+
+export type ResultLinkLowerResult = { //ll_result
+  id: number;
+  name: string;
+  applied_indicators: AppliedIndicator[];
+}
+
+export type AppliedIndicator = {// Indicator
+  id: number;
+  cluster_indicator_id: number;
+  is_active: boolean;
+  is_high_frequency: boolean;
 }
 
 export type CpOutput = {
@@ -185,5 +198,18 @@ export class PlannedVisit {
   programmatic_q2: number = 0;
   programmatic_q3: number = 0;
   programmatic_q4: number = 0;
+}
+
+export type Disaggregation = {
+  id: number;
+  name: string;
+  active: boolean;
+  disaggregation_values: DisaggregationValue[];
+}
+
+export type DisaggregationValue = {
+  id: number;
+  value: string;
+  active: boolean;
 }
 
