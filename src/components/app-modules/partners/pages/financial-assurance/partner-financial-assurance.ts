@@ -29,7 +29,7 @@ import moment from 'moment';
 import {AP_DOMAIN} from '../../../../../config/config.js';
 import './components/assessments-items.js';
 
-// <link rel="import" href="../../../shared/components/monitoring-visits-list.html">
+import '../../../shared/components/monitoring-visits-list.js';
 
 /**
  * @polymer
@@ -196,7 +196,7 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
             font-size: 16px;
             color: var(--primary-text-color);
         }
-        
+
       </style>
 
       <etools-content-panel panel-title="[[_getYear()]] Overview" class="content-section">
@@ -445,7 +445,7 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
                          data-items="{{partner.assessments}}"
                          edit-mode="[[editMode]]"
                          partner-id="[[partner.id]]"></assessments-items>
-    
+
     `;
   }
 

@@ -79,11 +79,12 @@ export class SelectedSection {
   }
 }
 
-export type InterventionAttachment = {
-  id: number;
-  active: boolean;
-  type: number;
-  intervention: number;
+export class InterventionAttachment  {
+  id?: number;
+  active: boolean = true;
+  type?: number;
+  intervention?: number;
+  attachment_document?: string | number;
 }
 
 export class FrsDetails {

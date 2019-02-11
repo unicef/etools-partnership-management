@@ -18,9 +18,8 @@ const AmendmentModeUIMixin = dedupingMixin((baseClass: any) =>
       }
 
       public stateChanged(state: RootState) {
-        if (state.commonData && state.commonData.pageData && (state.commonData.pageData as any).in_amendment &&
-            (state.commonData.pageData as any).in_amendment !== this.amendmentModeActive) {
-          this.amendmentModeActive = (state.commonData.pageData as any).in_amendment;
+        if (state.pageData!.in_amendment !== this.amendmentModeActive) {
+          this.amendmentModeActive = state.pageData!.in_amendment;
         }
       }
 

@@ -24,6 +24,7 @@
     "@polymer/app-route": "^3.0.2",
     "@polymer/decorators": "^3.0.0",
     "@polymer/iron-icons": "^3.0.1",
+    "@polymer/iron-label": "^3.0.1",
     "@polymer/iron-pages": "^3.0.1",
     "@polymer/iron-selector": "^3.0.1",
     "@polymer/lit-element": "^0.6.2",

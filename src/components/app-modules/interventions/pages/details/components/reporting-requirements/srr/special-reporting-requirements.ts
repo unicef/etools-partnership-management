@@ -7,7 +7,7 @@ import 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import '../../../../../../../layout/components/icons-actions.js';
+import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
