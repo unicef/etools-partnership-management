@@ -48,8 +48,8 @@
       if (_.isEmpty(profile)) {
         // empty profile means no changes found
         this.fireEvent('toast', {
-          text: 'There is nothing to save. No change detected on your profile.',
-          showCloseBtn: true
+          text: 'All changes are saved.',
+          showCloseBtn: false
         });
         return;
       }
