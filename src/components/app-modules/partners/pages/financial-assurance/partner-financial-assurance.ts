@@ -7,35 +7,29 @@ import "etools-content-panel/etools-content-panel.js";
 import 'etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-// <link rel="import" href="../../../../../../bower_components/moment-element/moment-import.html">
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-dropdown/etools-dropdown.js';
 
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.js';
-import DateMixin from '../../../../mixins/date-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 
-import {pageLayoutStyles} from '../../../../styles/page-layout-styles';
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
-import assign from 'lodash-es/assign.js';
 import moment from 'moment';
 import {AP_DOMAIN} from '../../../../../config/config.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../../../../store";
-
+import './components/assessments-items.js';
 
 // <link rel="import" href="../../../shared/components/monitoring-visits-list.html">
-
-// <link rel="import" href="components/assessments-items.html">
 
 /**
  * @polymer
@@ -67,7 +61,7 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
   static get template() {
     // language=HTML
     return html`
-        ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
       <style include="data-table-styles">
         :host {
             --paper-input-container-input-webkit-spinner: {
@@ -503,13 +497,18 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
      * Disable loading message for details tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
+    // @ts-ignore
     this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
+    // @ts-ignore
     this.fireEvent('tab-content-attached');
   }
 
   public _init(engagements: any) {
+    // @ts-ignore
     this.set('allEngagements', engagements);
+    // @ts-ignore
     this.set('engagements', []);
+    // @ts-ignore
     this.set('paginator', JSON.parse(JSON.stringify({
       count: engagements.length,
       page: 1,
@@ -519,11 +518,13 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
   }
 
   public _displayType(type: any) {
+    // @ts-ignore
     return this.TYPES[type];
   }
 
   public _getEngagementsRequestOptions(partnerId: any) {
     return {
+      // @ts-ignore
       endpoint: this.getEndpoint('engagements'),
       params: {
         ordering: 'unique_id',
@@ -539,46 +540,61 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
       return;
     }
     let requestOptions = this._getEngagementsRequestOptions(partner.id);
+    // @ts-ignore
     this.sendRequest(requestOptions)
-        .then(results => this._init(results))
-        .catch(err => this.handleErrorResponse(err));
+        .then((results: any) => this._init(results))
+        // @ts-ignore
+        .catch((err: any) => this.handleErrorResponse(err));
 
+    // @ts-ignore
     this.set('basisOptions', []);
     this._addBasisFromPartner();
   }
 
   public _addBasisFromPartner() {
+    // @ts-ignore
     this.set('basisOptions', [
       ...this.basisOptions,
+      // @ts-ignore
       ...this.partner.assessments.map(a => ({
+        // @ts-ignore
         label: `${a.type} - ${this.prettyDate(a.completed_date)}`,
+        // @ts-ignore
         value: `${a.type} - ${this.prettyDate(a.completed_date)}`
       }))
     ]);
   }
 
   public _addBasisFromEngagements(engagements: any) {
+    // @ts-ignore
     this.set('basisOptions', [
       ...this.basisOptions,
-      ...engagements.map(e => ({
+      ...engagements.map((e: any) => ({
+        // @ts-ignore
         label: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`,
+        // @ts-ignore
         value: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`
       }))
     ]);
   }
 
   public _paginate(pageNumber: number, pageSize: number) {
+    // @ts-ignore
     if (!this.allEngagements) {
       return;
     }
+    // @ts-ignore
     let engagements = this.allEngagements;
     engagements = engagements
+        // @ts-ignore
         .sort((a, b) => moment(b.status_date) - moment(a.status_date))
         .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    // @ts-ignore
     this.set('engagements', engagements);
   }
 
   public _validatePageData() {
+    // @ts-ignore
     return this.$.assessmentsList.validate();
   }
 
@@ -586,19 +602,23 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
     return moment().year();
   }
 
-  public _toggleRadio(e: CustomEvent) {
-    const checked = e.target.checked;
-    const quarter = e.target.getAttribute('data-idx');
-    let spotChecksMr = assign({
-      q1: 0,
-      q2: 0,
-      q3: 0,
-      q4: 0
-    }, {
-      [quarter]: checked ? 1 : 0
-    });
-    this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
-  }
+  // TODO: polymer 3 - is this still needed?
+  // public _toggleRadio(e: CustomEvent) {
+  //   // @ts-ignore
+  //   const checked = e.target.checked;
+  //   // @ts-ignore
+  //   const quarter = e.target.getAttribute('data-idx');
+  //   let spotChecksMr = assign({
+  //     q1: 0,
+  //     q2: 0,
+  //     q3: 0,
+  //     q4: 0
+  //   }, {
+  //     [quarter]: checked ? 1 : 0
+  //   });
+  //   // @ts-ignore
+  //   this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
+  // }
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0

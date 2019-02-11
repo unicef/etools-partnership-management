@@ -14,11 +14,11 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
-// <link rel="import" href="../../../../../styles/etools-cp-header-actions-bar-styles.html">
 import '../../../../../layout/icons-actions.js';
 
-import './assesment-dialog.js';
+import './assessment-dialog.js';
 import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
+import {etoolsCpHeaderActionsBarStyles} from "../../../../../styles/etools-cp-header-actions-bar-styles";
 
 /**
  * @polymer
@@ -36,13 +36,13 @@ const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @polymer
  * @appliesMixin AssessmentsItemsRequiredMixins
  */
-class AssesmentItems extends AssessmentsItemsRequiredMixins {
+class AssessmentsItems extends AssessmentsItemsRequiredMixins {
   [x: string]: any;
 
   static get template() {
     // language=HTML
     return html`
-        ${gridLayoutStyles} ${SharedStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${etoolsCpHeaderActionsBarStyles}
       <style include="data-table-styles">
         [hidden] {
           display: none !important;
@@ -219,7 +219,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
   assessmentUpdated(e: CustomEvent) {
     const updatedAss = e.detail;
     const assessments = JSON.parse(JSON.stringify(this.dataItems));
-    let idx = this.dataItems.findIndex(a => a.id === updatedAss.id);
+    let idx = this.dataItems.findIndex((a: any) => a.id === updatedAss.id);
     if (idx > -1) {
       assessments.splice(idx, 1, updatedAss);
     }
@@ -235,7 +235,7 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
 
   _editAssessment(e: PolymerElEvent) {
     let assessment = this.dataItems
-        .find(a => a.id === Number(e.target.getAttribute('item-id')));
+        .find((a: any) => a.id === Number(e.target.getAttribute('item-id')));
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
     this.assessmentDialog.opened = true;
   }
@@ -244,9 +244,10 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
     this.updateStyles();
   }
 
-  _uploadFinished(e) {
+  _uploadFinished(e: CustomEvent) {
     this.dispatch('decreaseUploadsInProgress');
     if (e.detail.success) {
+      // @ts-ignore
       const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
       const uploadResponse = JSON.parse(e.detail.success);
       this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
@@ -254,17 +255,17 @@ class AssesmentItems extends AssessmentsItemsRequiredMixins {
     }
   }
 
-  _isVisible(active, showArchived) {
+  _isVisible(active: boolean, showArchived: boolean) {
     return active || showArchived;
   }
 
-  _emptyList(length) {
+  _emptyList(length: number) {
     return length === 0;
   }
 
 }
 
-window.customElements.define('assesment-items', AssesmentItems);
+window.customElements.define('assessments-items', AssessmentsItems);
 
 
 

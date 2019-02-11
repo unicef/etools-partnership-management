@@ -45,20 +45,26 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
   // or in other partner id changed observer
   public getPartnerStaffMembers(newId: number) {
     if (newId > 0) {
+
+      // @ts-ignore
       this.fireEvent('global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: this.staffLoadingMsgSource
       });
+      // @ts-ignore
       let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
       let self = this;
 
+      // @ts-ignore
       this.sendRequest({
         endpoint: endpoint
       }).then(function(response: any) {
         self._handleStaffMembersResponse(response);
       }).catch(function(error: any) {
+        // @ts-ignore
         self.logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
+        // @ts-ignore
         self.fireEvent('toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
       });
     }
@@ -72,8 +78,10 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
       }).filter(function(sMember) {
         return sMember.active;
       });
+      // @ts-ignore
       this.set('staffMembers', activeStaffMembers);
     }
+    // @ts-ignore
     this.fireEvent('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
   }
 
