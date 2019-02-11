@@ -7,7 +7,7 @@ import { Intervention, ListItemIntervention, FrsDetails, Fr } from '../../../../
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  */
-const FrNumbersConsistency = (superClass: any) => class extends EtoolsCurrency(superClass) {
+const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurrency(superClass) {
   static get properties() {
     return {
       frsConsistencyWarnings: {
@@ -177,7 +177,7 @@ const FrNumbersConsistency = (superClass: any) => class extends EtoolsCurrency(s
     }
   }
 
-  getFrsCurrency(frsCurrencyMatch: boolean, frs: any) {
+  getFrsCurrency(frsCurrencyMatch: boolean, frs: Fr[]) {
     return frsCurrencyMatch ? frs[0].currency : 'N/A';
   }
 
@@ -186,7 +186,7 @@ const FrNumbersConsistency = (superClass: any) => class extends EtoolsCurrency(s
     return frsCurrencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
   }
 
-  allCurrenciesMatch(frsCurrencyMatch: boolean, frs: any, plannedBudgetCurrency: string) {
+  allCurrenciesMatch(frsCurrencyMatch: boolean, frs: Fr[], plannedBudgetCurrency: string) {
     return frsCurrencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
   }
 
@@ -264,4 +264,4 @@ const FrNumbersConsistency = (superClass: any) => class extends EtoolsCurrency(s
 
 };
 
-export default FrNumbersConsistency;
+export default FrNumbersConsistencyMixin;

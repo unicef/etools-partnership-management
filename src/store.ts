@@ -33,8 +33,9 @@ import { AppAction } from './actions/app.js';
 import { CommonDataState } from './reducers/common-data.js';
 import { UploadStatusState } from './reducers/upload-status.js';
 import { CommonDataAction } from "./actions/common-data.js";
-import partners, { PartnersState } from './reducers/partners.js';
+import { PartnersState } from './reducers/partners.js';
 import { AgreementsState } from './reducers/agreements.js';
+import { PageDataState } from './reducers/page-data.js';
 
 // Overall state extends static states and partials lazy states.
 export interface RootState {
@@ -42,7 +43,8 @@ export interface RootState {
   commonData?: CommonDataState;
   uploadStatus?: UploadStatusState;
   partners?: PartnersState;
-  agreeements?: AgreementsState;
+  agreements?: AgreementsState;
+  pageData?: PageDataState;
 }
 
 export type RootAction = AppAction | CommonDataAction;

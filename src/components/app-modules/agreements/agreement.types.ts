@@ -14,15 +14,15 @@ export class MinimalAgreement {
   signed_by?: string | null = null;
   start?: string | null = undefined;
   status?: string = undefined;
+  country_programme?: string = undefined;
+  special_conditions_pca?: boolean = false;
 }
 export class Agreement extends MinimalAgreement {
-  authorized_officers: Array<StaffMember> = [];
-  amendments: AgreementAmendment[] = [];
-  reference_number_year: number = new Date().getFullYear();
-  country_programme?: number = undefined;
+  authorized_officers?: StaffMember[] = [];
+  amendments?: AgreementAmendment[] = [];
+  reference_number_year?: number = new Date().getFullYear();
   partner_manager?: number | null = null;
-  special_conditions_pca?: boolean = false;
-  permissions: IPermission<AgreementPermissionFields> = {
+  permissions?: IPermission<AgreementPermissionFields> = {
     edit: new AgreementPermissionFields(true),
     required: new AgreementPermissionFields(false)
   };

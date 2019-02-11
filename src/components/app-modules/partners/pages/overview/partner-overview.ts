@@ -1,7 +1,9 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
@@ -13,8 +15,10 @@ import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 
-// <link rel="import" href="../../../interventions/mixins/fr-numbers-consistency-mixin.html">
-// <link rel="import" href="../../../interventions/styles/fr-warnings-styles.html">
+import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
+import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
+import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 
 /**
  * @polymer
@@ -23,13 +27,14 @@ import { SharedStyles } from '../../../../styles/shared-styles.js';
  * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
- * @appliesMixin EtoolsPmpApp.Mixins.FrNumbersConsistency
+ * @appliesMixin FrNumbersConsistencyixin
  */
 const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
   EventHelperMixin,
   CommonMixin,
-  RiskRatingMixin
+  RiskRatingMixin,
+  FrNumbersConsistencyMixin
 ], PolymerElement);
 
 /**
@@ -42,26 +47,26 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
   static get template() {
     // language=HTML
     return html`
-        ${SharedStyles} ${pageCommonStyles} ${gridLayoutStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons} ${frWarningsStyles}
       <style>
         :host {
           @apply --layout-vertical;
           width: 100%;
         }
-        
+
         paper-input,
         paper-dropdown-menu {
           width: 100%;
         }
-        
+
         .assessments {
           margin-top: 20px;
         }
-        
+
         #core-values-assessment {
           width: 100%;
         }
-        
+
         .hact-heading {
           @apply --layout-vertical;
           background-color: var(--medium-theme-background-color);
@@ -120,9 +125,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
           @apply --layout-vertical;
           @apply --layout-start;
         }
-      
+
       </style>
-      
+
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
@@ -183,7 +188,7 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
             <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
               <div class="row-h">
                 <div class="col col-3 block word-break">
-                  <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+                  <a  class="primary" href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
                   <span>
                     [[partnership.title]]
                     </span>
@@ -249,13 +254,13 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
                 <div class="col center-align overflow-hidden">
                   <span class="partnership-status">[[partnership.status]]</span>
                 </div>
-  
+
               </div>
             </template>
           </div>
         </template>
       </etools-content-panel>
-    
+
     `;
   }
 
@@ -271,7 +276,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
+    // @ts-ignore
     this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
+    // @ts-ignore
     this.fireEvent('tab-content-attached');
   }
 

@@ -30,6 +30,7 @@ const SaveInterventionMixin = dedupingMixin(
   ModifiedInterventionFieldsMixin,
   AjaxErrorsParserMixin
 ], superClass) {
+  [x: string]: any;
 
   static get actions() {
     return {
@@ -176,7 +177,7 @@ const SaveInterventionMixin = dedupingMixin(
 
     // prepare attachments
     interventionData.attachments = this._prepareAttachments();
-    if (_.isEmpty(interventionData.attachments)) {
+    if (isEmptyObject(interventionData.attachments)) {
       delete interventionData.attachments;
     }
     return interventionData;

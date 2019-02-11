@@ -39,7 +39,6 @@ export const UPDATE_SECTIONS = 'UPDATE_SECTIONS';
 export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
-export const UPDATE_IN_AMENDMENT_MODE_STATE = 'UPDATE_IN_AMENDMENT_MODE_STATE';
 export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
@@ -150,9 +149,6 @@ export interface CommonDataActionUpdateEnvFlags extends Action<'UPDATE_ENV_FLAGS
   envFlags: object
 };
 
-export interface CommonDataActionUpdateInAmendmentMode extends Action<'UPDATE_IN_AMENDMENT_MODE_STATE'> {
-  inAmendment: object
-};
 
 export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURRENT_USER'> {
   user: object
@@ -168,7 +164,7 @@ export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonD
     CommonDataActionUpdateInterventionAmendmentTypes | CommonDataActionUpdateLocationTypes |
     CommonDataActionUpdatePartnerRiskRatings | CommonDataActionUpdateLocations | CommonDataActionUpdateOffices |
     CommonDataActionUpdateSections | CommonDataActionUpdateUnicefUsers | CommonDataActionUpdateUserCountryData |
-    CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags | CommonDataActionUpdateInAmendmentMode |
+    CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags |
     CommonDataActionUpdateCurrentUser;
 
 // @ts-ignore - for now
@@ -388,14 +384,6 @@ export const updateEnvFlags: ActionCreator<CommonDataActionUpdateEnvFlags> =
       return {
         type: UPDATE_ENV_FLAGS,
         envFlags
-      };
-    };
-
-export const updateReduxInAmendment: ActionCreator<CommonDataActionUpdateInAmendmentMode> =
-    (inAmendment: object) => {
-      return {
-        type: UPDATE_IN_AMENDMENT_MODE_STATE,
-        inAmendment
       };
     };
 

@@ -1,28 +1,30 @@
 import { IPermission } from './globals.types';
+import CONSTANTS from '../config/app-constants';
 
 export class Intervention {
   id: number | null = null;
-  agreement?: number = undefined;
-  document_type?: string = undefined;
-  country_programme?: number = undefined;
-  number?: string = undefined;
+  agreement?: number ;
+  document_type?: string;
+  country_programme?: number;
+  number?: string;
   reference_number_year?: string | null = null;
-  prc_review_attachment?: number | string = undefined;
-  signed_pd_attachment?: number | string = undefined;
-  title?: string = undefined;
+  prc_review_attachment?: number | string;
+  signed_pd_attachment?: number | string;
+  title?: string;
   status: string = '';
-  start: string | null = null;
-  end: string | null = null;
+  start: string = '';
+  end: string = '';
   submitted_to_prc: boolean = false;
-  submission_date_prc?: string = undefined;
-  review_date_prc?: string = undefined;
-  submission_date?: string = undefined;
-  signed_by_unicef_date?: string = undefined;
-  signed_by_partner_date?: string = undefined;
-  unicef_signatory?: string = undefined;
+  submission_date_prc?: string ;
+  review_date_prc?: string;
+  submission_date?: string;
+  signed_by_unicef_date?: string;
+  signed_by_partner_date?: string;
+  unicef_signatory?: string;
   unicef_focal_points: [] = [];
+  partner?: string;
   partner_focal_points: [] = [];
-  partner_authorized_officer_signatory?: string = undefined;
+  partner_authorized_officer_signatory?: string;
   offices: [] = [];
   sections: [] =[];
   frs: number[] = [];
@@ -30,20 +32,51 @@ export class Intervention {
   contingency_pd: boolean = false;
   planned_budget: PlannedBudget | null = null;
   flat_locations: [] = [];
-  result_links: [] = [];
-  planned_visits: [] = [];
+  result_links: ExpectedResult[] = [];
+  planned_visits: PlannedVisit[] = [];
   in_amendment: boolean = false;
   amendments: [] = [];
   //distributions: [];
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: IPermission<InterventionPermissionsFields>;
+  [key: string] : any;
+
+  public isDraft() {
+    return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
+        status === '';
+  }
+  public isContingencyAndHasActivationLetter() {
+    return this.contingency_pd &&
+      this.activation_letter_attachment;
+  }
 }
 
 export class ListItemIntervention {
-  frs_earliest_start_date: string = '';
-  frs_latest_end_date: string = '';
+  start: string = '';
+  end: string = '';
+  frs_earliest_start_date: string | null= '';
+  frs_latest_end_date: string | null= '';
+  partner_name?: string = '';
+  cp_outputs: [] = [];
+  unicef_budget: number = 0;
+  cso_contribution: number = 0;
+  country_programme?: number;
+  title?: string = '';
+  status: string = '';
+  number?: string = '';
+  offices: [] = [];
+  sections: number[] = [];
+  section_names: string[] | null = null;
+  document_type?: string ='';
+  unicef_focal_points: [] = [];
+  [key: string] : any;
+}
 
+export class SelectedSection {
+  constructor(public sectionIds: number[], public section_names: string[]) {
+
+  }
 }
 
 export type InterventionAttachment = {
@@ -55,7 +88,7 @@ export type InterventionAttachment = {
 
 export class FrsDetails {
   currencies_match: boolean = false;
-  total_frs_amt: string | number = 0;
+  total_frs_amt: string = '0';
   earliest_start_date: string | null = null;
   latest_end_date: string | null = null;
   frs: Fr[] = [];
@@ -70,6 +103,8 @@ export type PlannedBudget = {
   currency: string;
   unicef_cash_local: string;
   total: string;
+  in_kind_amount_local: string;
+  partner_contribution_local: string;
 }
 
 export class InterventionPermissionsFields {
@@ -125,3 +160,63 @@ export class InterventionPermissionsFields {
   // attachments
   attachments: boolean = false;
 }
+
+export type ExpectedResult = {
+  id: number;
+  cp_output: number;
+  cp_output_name: string;
+  intervention: number;
+  ll_results: ResultLinkLowerResult[];
+  ram_indicators: number[];
+  ram_indicator_names: number[];
+}
+
+export type ResultLinkLowerResult = { //ll_result
+  id: number;
+  name: string;
+  applied_indicators: Indicator[];
+}
+
+export type Indicator = {// Indicator
+  id: number;
+  cluster_indicator_id: number;
+  is_active: boolean;
+  is_high_frequency: boolean;
+  indicator: IndicatorIndicator;
+  baseline: any;
+}
+
+export type IndicatorIndicator = {
+  display_type: string;
+  unit: string
+}
+
+export type CpOutput = {
+  id: number;
+  name: string;
+  wbs: string;
+  country_programme: number;
+}
+
+export class PlannedVisit {
+  id: number | null = null;
+  year: string | null = null;
+  programmatic_q1: number = 0;
+  programmatic_q2: number = 0;
+  programmatic_q3: number = 0;
+  programmatic_q4: number = 0;
+}
+
+export type Disaggregation = {
+  id: number;
+  name: string;
+  active: boolean;
+  disaggregation_values: DisaggregationValue[];
+}
+
+export type DisaggregationValue = {
+  id: number;
+  value: string;
+  active: boolean;
+}
+

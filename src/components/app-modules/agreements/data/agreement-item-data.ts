@@ -13,6 +13,7 @@ import CONSTANTS from '../../../../config/app-constants.js';
 import { addEditAgreement } from '../../../../actions/agreements.js';
 // @ts-ignore
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
+import { GenericObject } from '../../../../typings/globals.types.js';
 
 
 /**
@@ -37,6 +38,7 @@ const AgreementItemDataRequiredMixin = EtoolsMixinFactory.combineMixins([
  * @appliesMixin AgreementItemDataRequiredMixin
  */
 class AgreementItemData extends AgreementItemDataRequiredMixin {
+  [x: string]: any;
   static get template() {
     return null;
   }
@@ -163,7 +165,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 
   // Update agreement status. In addition set a callback to be called after request is complete.
-  updateAgreementStatus(data, callback) {
+  updateAgreementStatus(data: any, callback: any) {
     if (!data.agreementId) {
       this.fireEvent('toast', {text: 'Invalid agreement ID', showCloseBtn: true});
     } else {
@@ -196,7 +198,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     }
   }
 
-  _hasFiles(list, property) {
+  _hasFiles(list: GenericObject[], property: string) {
     if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
       return false;
     }
@@ -213,7 +215,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 
   // Save agreement data
-  saveAgreement(agreement: Agreement, succCallback) {
+  saveAgreement(agreement: Agreement, succCallback: any) {
     if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
       this.fireEvent('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
       return Promise.resolve(false);
@@ -253,8 +255,8 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
         });
       } else {
         this.fireEvent('toast', {
-          text: 'There is nothing to save. No change detected on this agreement.',
-          showCloseBtn: true
+          text: 'All changes are saved.',
+          showCloseBtn: false
         });
         return Promise.resolve(false);
       }

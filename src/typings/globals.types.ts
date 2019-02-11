@@ -23,13 +23,31 @@ export type UserPermissions = {
   viewPartnerDetails: boolean
 }
 
+export type User = {
+  first_name: string,
+  last_name: string,
+  middle_name: string,
+  name: string,
+  email: string,
+  country: object,
+  country_override: number,
+  countries_available: [],
+  groups: UserGroup[]
+}
+
+export type UserGroup = {
+  id: number,
+  name: string,
+  permissions: []
+}
+
 export interface EtoolsTab {
   tab: string;
   tabLabel: string;
   hidden: boolean;
 }
 
-export interface DomRepeatEvent extends CustomEvent {//TODO- should be in polymer declarations
+export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in polymer declarations
   model: any;
 }
 
@@ -55,5 +73,9 @@ export type CpStructure = {
   from_date: string,
   to_date: string,
   wbs: string
+}
+
+export type CountryData = {
+  local_currency_code: string;
 }
 

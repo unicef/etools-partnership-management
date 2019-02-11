@@ -29,7 +29,7 @@ import '../../layout/etools-error-messages-box.js';
 import '../../layout/etools-tabs.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
-//import 'components/intervention-status.js';
+import './components/intervention-status.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
 import {SharedStyles} from '../../styles/shared-styles.js';
 import {buttonsStyles} from '../../styles/buttons-styles.js';
@@ -37,6 +37,8 @@ import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header
 import { isEmptyObject } from '../../utils/utils';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
+import { setInAmendment, setPageDataPermissions } from '../../../actions/page-data';
+import { store } from '../../../store';
 
 
 /**
@@ -68,6 +70,7 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
   InterventionPermissionsMixin,
   SaveInterventionMixin,
 ], PolymerElement) {
+  [x: string]: any;
 
   static get template() {
     return html`
@@ -148,9 +151,9 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
                 Export
               </paper-button>
               <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_exportPdBudget">[[CONSTANTS.PD_EXPORT_TYPES.PdBudget]] Export</paper-item>
-                <paper-item on-tap="_exportPdResult">[[CONSTANTS.PD_EXPORT_TYPES.PdResult]] Export</paper-item>
-                <paper-item on-tap="_exportPdLocations">[[CONSTANTS.PD_EXPORT_TYPES.PdLocations]] Export</paper-item>
+                <paper-item on-tap="_exportPdBudget">PD Budget Export</paper-item>
+                <paper-item on-tap="_exportPdResult">PD Result Export</paper-item>
+                <paper-item on-tap="_exportPdLocations">PD Locations Export</paper-item>
               </paper-listbox>
             </paper-menu-button>
           </div>
@@ -412,16 +415,16 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _amendmentModeChanged(amendmentModeActive, tabAttached, listActive) {
+  _amendmentModeChanged(amendmentModeActive: boolean, tabAttached: boolean, listActive: boolean) {
     if (typeof amendmentModeActive === 'undefined' || !this.intervention || (!tabAttached && !listActive)) {
       return;
     }
     if (listActive) {
-      this.updateReduxInAmendment(false);
+      store.dispatch(setInAmendment(false));
       return;
     }
     if (this.selectedInterventionId === this.intervention.id) {
-      this.updateReduxInAmendment(amendmentModeActive);
+      store.dispatch(setInAmendment(amendmentModeActive));
     }
   }
 
@@ -454,7 +457,7 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _displayAnyMigrationErrors(intervention) {
+  _displayAnyMigrationErrors(intervention: any) {
     if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
       if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
         // Avoid showing msg again after save
@@ -466,18 +469,18 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
   }
 
   /* Show metadata error message on intervention detail 'page load'*/
-  _makeSureMigrationErrorIsNotShownAgainAfterSave(intervention) {
+  _makeSureMigrationErrorIsNotShownAgainAfterSave(intervention: Intervention) {
     if (this.saved.interventionId !== intervention.id) {
       this.saved.justSaved = false;
     }
     this.saved.interventionId = intervention.id;
   }
 
-  _isPrpTab(tabName) {
+  _isPrpTab(tabName: string) {
     return ['reports', 'progress'].indexOf(tabName) > -1;
   }
 
-  _canAccessPdTab(tabName) {
+  _canAccessPdTab(tabName: string) {
     if (this._isPrpTab(tabName)) {
       return this.showPrpReports();
     } else {
@@ -492,7 +495,7 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _pageChanged(listActive, tabsActive, routeData) {
+  _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any) {
     // Using isActiveModule will prevent wrong page import
     if (!this.isActiveModule() || (!listActive && !tabsActive)) {
       return;
@@ -518,27 +521,27 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
         });
   }
 
-  _observeRouteDataId(id: string) {
+  _observeRouteDataId(idStr: string) {
     // Using isActiveModule will prevent PD details/reports/progress request with the wrong id (report id)
-    if (!this.isActiveModule() || typeof id === 'undefined') {
+    if (!this.isActiveModule() || typeof idStr === 'undefined') {
       return;
     }
     setTimeout(() => {
-      id = parseInt(id, 10);
+      let id: number | null = parseInt(idStr, 10);
       if (isNaN(id)) {
         id = null;
       }
       if (this.selectedInterventionId !== id) {
         this.set('selectedInterventionId', id);
-        this.updateReduxInAmendment(false);
+        store.dispatch(setInAmendment(false));
       }
     }, 0);
   }
 
-  _finalizeAmendmentConfirmationCallback() {
-    if (event.detail.confirmed) {//TODO - event undefined
+  _finalizeAmendmentConfirmationCallback(event: CustomEvent) {
+    if (event.detail.confirmed) {
       this.set('intervention.in_amendment', false);
-      this._validateAndSaveIntervention(null).then((successfull) => {
+      this._validateAndSaveIntervention(null).then((successfull: boolean) => {
           if (!successfull) {
             // if save fails restore in_amendment flag
             this.set('intervention.in_amendment', true);
@@ -554,12 +557,12 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
   _refreshInterventionPermissions(e: CustomEvent) {
     e.stopImmediatePropagation();
     this.$.interventionData._reqInterventionDataWithoutRespHandling()
-        .then((resp) => {
+        .then((resp: any) => {
           if (!isEmptyObject(resp.permissions)) {
             this.set('intervention.permissions', resp.permissions);
             this.set('intervention.in_amendment', resp.in_amendment);
             this.set('originalIntervention.in_amendment', resp.in_amendment);
-            this.updateReduxPermissionsData(resp.permissions);
+            store.dispatch(setPageDataPermissions(resp.permissions));
           }
         })
         .then(() => {

@@ -16,7 +16,7 @@ import 'etools-data-table/etools-data-table.js';
 import '../../../../layout/etools-form-element-wrapper.js';
 
 import '../../../../layout/etools-error-messages-box.js'
-// <link rel="import" href="../../../../layout/components/icons-actions.html">
+import '../../../../layout/icons-actions.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
@@ -27,6 +27,9 @@ import moment from "moment";
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
+
+import './components/edit-core-values-assessment';
+import './components/staff-members';
 
 /**
  * @polymer
@@ -230,8 +233,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
                     data-items="[[partner.staff_members]]"
                     edit-mode="[[editMode]]">
         </staff-members>
-
-
+        
     `;
   }
 
@@ -302,7 +304,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
     super.disconnectedCallback();
     if (this.editCVADialog) {
       // @ts-ignore
-      document.querySelector('body').removeChild(this.editCVADialog);
+      document.querySelector('body')!.removeChild(this.editCVADialog);
     }
   }
 
@@ -317,7 +319,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
     this.editCVADialog = document.createElement('edit-core-values-assessment');
     this.editCVADialog.parent = this;
     // @ts-ignore
-    document.querySelector('body').appendChild(this.editCVADialog);
+    document.querySelector('body')!.appendChild(this.editCVADialog);
   }
 
   public _editCoreValuesAssessment(e: CustomEvent) {

@@ -1,9 +1,13 @@
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import moment from 'moment';
 import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import { PolymerElement } from '@polymer/polymer';
+import { ListItemIntervention } from '../../../../typings/intervention.types';
+import Dexie from 'dexie';
 
 
 /**
@@ -50,7 +54,10 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
     };
   }
 
-  _filterFound(intervention, prop, multiple, filterValues) {
+  public endpointName: string = 'interventions';
+
+  _filterFound(intervention: ListItemIntervention, prop: string,
+     multiple: boolean, filterValues: any) {
     if (!filterValues.length) {
       return true;
     }
@@ -58,22 +65,24 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
     let foundValues;
     if (multiple) {
       // case for intervention properties values like: offices, sections, cp outputs (array of values)
-      foundValues = intervention[prop].filter(function(propVal) {
+      foundValues = intervention[prop].filter(function(propVal: any) {
         return filterValues.indexOf(String(propVal)) > -1;
       });
       return foundValues && foundValues.length > 0;
     } else {
       // case for intervention properties values like: status, doc type (primitive types)
-      foundValues = filterValues.filter(function(selectedFilter) {
+      foundValues = filterValues.filter(function(selectedFilter: any) {
         return String(selectedFilter) === String(intervention[prop]);
       });
       return !!foundValues[0];
     }
   }
 
-  query(field, order, searchString, documentTypes, cpOutputs, donors, grants,
-        statuses, sections, unicefFocalPoints, offices, cpStructures, startDate,
-        endDate, pageNumber, pageSize, showQueryLoading) {
+  query(field: string, order: string, searchString: string, documentTypes: string[],
+        cpOutputs: string[], donors: string[], grants: string[],
+        statuses: string[], sections: string[], unicefFocalPoints: string[],
+        offices: string[], cpStructures: string[], startDate: string,
+        endDate: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
     // a new one
@@ -104,7 +113,7 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
         queryResult = queryResult.reverse();
       }
 
-      queryResult = queryResult.filter(function(intervention) {
+      queryResult = queryResult.filter(function(intervention: ListItemIntervention) {
 
         if (!self._filterFound(intervention, 'status', false, statuses) ||
             !self._filterFound(intervention, 'document_type', false, documentTypes) ||
@@ -129,9 +138,9 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
         }
 
         if (searchString && searchString.length &&
-            intervention.title.toLowerCase().indexOf(searchString) < 0 &&
-            intervention.partner_name.toLowerCase().indexOf(searchString) < 0 &&
-            intervention.number.toLowerCase().indexOf(searchString) < 0) {
+            intervention.title!.toLowerCase().indexOf(searchString) < 0 &&
+            intervention.partner_name!.toLowerCase().indexOf(searchString) < 0 &&
+            intervention.number!.toLowerCase().indexOf(searchString) < 0) {
           return false;
         }
 
@@ -142,7 +151,7 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
       Dexie.ignoreTransaction(function() {
-        queryResult.count(function(count) {
+        queryResult.count(function(count: number) {
           self._setTotalResults(count);
         });
       });
@@ -152,10 +161,10 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
           .limit(pageSize)
           .toArray();
 
-    }).then(function(result) {
+    }).then(function(result: any) {
       self._setFilteredInterventions(result);
       self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
-    }).catch(function(error) {
+    }).catch(function(error: any) {
       self.logError('Error querying interventions: ' + error, 'interventions-list-data');
       self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     });

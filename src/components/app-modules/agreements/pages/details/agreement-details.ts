@@ -25,7 +25,7 @@ import '../../../../layout/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
-import UploadMixin from '../../../../mixins/uploads-mixin';
+import UploadsMixin from '../../../../mixins/uploads-mixin';
 import { Agreement } from '../../agreement.types.js';
 
 import '../../../../mixins/missing-dropdown-options-mixin.js';
@@ -53,12 +53,12 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
      * @mixinFunction
      * @appliesMixin StaffMembersData
      * @appliesMixin CommonMixin
-     * @appliesMixin UploadMixin
+     * @appliesMixin UploadsMixin
      */
     const AgreementDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
       StaffMembersData,
       CommonMixin,
-      UploadMixin
+      UploadsMixin
     ], PolymerElement);
 
     /**
@@ -439,8 +439,9 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         if (!state.partners) {
           return;
         }
-
-        this.partnersDropdownData = partnersDropdownDataSelector(state);
+        if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
+          this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
+        }
 
         if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
           this.agreementTypes = state.commonData!.agreementTypes;
@@ -452,7 +453,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         this.generatePCADialog = document.createElement('generate-pca-dialog');
         this.generatePCADialog.setAttribute('id', 'generatePCADialog');
         // @ts-ignore
-        document.querySelector('body').appendChild(this.generatePCADialog);
+        document.querySelector('body')!.appendChild(this.generatePCADialog);
       }
 
       connectedCallback() {
@@ -468,7 +469,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         super.disconnectedCallback();
         if (this.generatePCADialog) {
           // @ts-ignore
-          document.querySelector('body').removeChild(this.generatePCADialog);
+          document.querySelector('body')!.removeChild(this.generatePCADialog);
         }
       }
 
@@ -538,7 +539,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
           }
           this.set('enableEditForAuthorizedOfficers', false);
           this.resetAttachedAgreementElem(agreement);
-          this._initAuthorizedOfficers(agreement.authorized_officers);
+          this._initAuthorizedOfficers(agreement.authorized_officers!);
         } else {
           this.set('agreement.attachment', null);
           // new agreement, update status to draft and reset fields
@@ -673,7 +674,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         const aoSelected = selection instanceof Array && selection.length > 0;
         if (aoSelected) {
           const selectedIds = selection.map(s => parseInt(s, 10));
-          ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)
+          ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers!)
               .filter((a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
         } else {
           ao = (agreement && agreement.authorized_officers instanceof Array)
@@ -699,7 +700,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
         this.generatePCADialog.open();
       }
 
-      _initAuthorizedOfficers(authOfficers: Array<StaffMember>) {
+      _initAuthorizedOfficers(authOfficers: StaffMember[]) {
         if (authOfficers instanceof Array && authOfficers.length) {
           this.set('authorizedOfficers', authOfficers.map(function(authOfficer) {
             return authOfficer.id + '';

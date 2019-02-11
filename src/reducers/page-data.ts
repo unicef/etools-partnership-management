@@ -17,7 +17,11 @@ const pageData: Reducer<PageDataState, Action<string>>  = (state = INITIAL_STATE
         ...state,
         permissions: action.permissions
       };
-
+    case a.SET_IN_AMENDMENT_MODE:
+      return {
+        ...state,
+        in_amendment: action.inAmendment
+      };
     default:
       return state;
   }

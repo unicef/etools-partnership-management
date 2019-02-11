@@ -1,8 +1,10 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
+// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-
+// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EventHelper from "../../../mixins/event-helper-mixin.js";
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';
@@ -12,8 +14,8 @@ import { MinimalStaffMember } from '../../../../typings/partner.types.js';
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin EventHelper
- * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+ * @appliesMixin EventHelperMixin
+ * @appliesMixin EndpointsMixin
  */
 const StaffMembersDataRequiredMixinsList = [
   EtoolsLogsMixin,
@@ -43,20 +45,26 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
   // or in other partner id changed observer
   public getPartnerStaffMembers(newId: number) {
     if (newId > 0) {
+
+      // @ts-ignore
       this.fireEvent('global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: this.staffLoadingMsgSource
       });
+      // @ts-ignore
       let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
       let self = this;
 
+      // @ts-ignore
       this.sendRequest({
         endpoint: endpoint
       }).then(function(response: any) {
         self._handleStaffMembersResponse(response);
       }).catch(function(error: any) {
+        // @ts-ignore
         self.logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
+        // @ts-ignore
         self.fireEvent('toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
       });
     }
@@ -70,8 +78,10 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
       }).filter(function(sMember) {
         return sMember.active;
       });
+      // @ts-ignore
       this.set('staffMembers', activeStaffMembers);
     }
+    // @ts-ignore
     this.fireEvent('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
   }
 

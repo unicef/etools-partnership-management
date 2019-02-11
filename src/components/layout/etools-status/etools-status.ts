@@ -14,6 +14,7 @@ import './etools-action-button.js';
  * @customElement
  */
 class EtoolsStatus extends connect(store)(PolymerElement) {
+  [x: string]: any;
 
   static get template() {
     return html`
@@ -139,7 +140,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
         });
   }
 
-  _getStatusIcon(icon) {
+  _getStatusIcon(icon: string) {
     return icon || 'done';
   }
 
@@ -150,7 +151,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return '';
   }
 
-  _getStatusCssClass(status: string, index: number) {
+  _getStatusCssClass(status: any, index: number) {
     let cls = '';
     if (status.completed && !status.icon) {
       cls = 'completed';

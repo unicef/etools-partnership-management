@@ -34,6 +34,7 @@ import { isEmptyObject } from '../../utils/utils';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
+import './components/partner-status.js';
 
 /**
  * @polymer
@@ -297,7 +298,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     this.newPartnerDialog = document.createElement('new-partner-dialog');
     this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
     // @ts-ignore
-    document.querySelector('body').appendChild(this.newPartnerDialog);
+    document.querySelector('body')!.appendChild(this.newPartnerDialog);
 
     this._createPartner = this._createPartner.bind(this);
     this.newPartnerDialog.addEventListener('create-partner', this._createPartner);
@@ -307,7 +308,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     if (this.newPartnerDialog) {
       this.newPartnerDialog.removeEventListener('create-partner', this._createPartner);
       // @ts-ignore
-      document.querySelector('body').removeChild(this.newPartnerDialog);
+      document.querySelector('body')!.removeChild(this.newPartnerDialog);
     }
   }
 

@@ -6,7 +6,7 @@ import EtoolsIronValidatorMixin from './etools-iron-validator-mixin';
  * @customElement
  * @appliesMixin EtoolsIronValidatorMixin
  */
-class RequiredAndNotFutureDateValidator extends EtoolsIronValidatorMixin(PolymerElement) {
+class RequiredAndNotFutureDateValidator extends (EtoolsIronValidatorMixin(PolymerElement) as any) {
 
   static get properties() {
     return {

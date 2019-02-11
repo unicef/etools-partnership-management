@@ -28,7 +28,6 @@ import {
   UPDATE_FILE_TYPES,
   UPDATE_PRP_COUNTRIES,
   UPDATE_ENV_FLAGS,
-  UPDATE_IN_AMENDMENT_MODE_STATE,
   UPDATE_CURRENT_USER,
   CommonDataAction
 } from '../actions/common-data';
@@ -66,7 +65,6 @@ export interface CommonDataState {
   grants: object[];
   donors: object[];
   partnerRiskRatings: object[];
-  pageData: object;
   envFlags: object | null;
 }
 
@@ -114,10 +112,6 @@ const INITIAL_STATE: CommonDataState = {
   grants: [],
   donors: [],
   partnerRiskRatings: [],
-  pageData: {
-    permissions: null,
-    in_amendment: false
-  },
   envFlags: null
 };
 
@@ -395,16 +389,16 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     //     pageData: pageDataWithPermsUpdated
     //   };
 
-    case UPDATE_IN_AMENDMENT_MODE_STATE:
-      let pageDataInAmendment = {
-        ...state.pageData,
-        in_amendment: action.inAmendment
-      };
+    // case UPDATE_IN_AMENDMENT_MODE_STATE:
+    //   let pageDataInAmendment = {
+    //     ...state.pageData,
+    //     in_amendment: action.inAmendment
+    //   };
 
-      return {
-        ...state,
-        pageData: pageDataInAmendment
-      };
+    //   return {
+    //     ...state,
+    //     pageData: pageDataInAmendment
+    //   };
 
     default:
       return state;

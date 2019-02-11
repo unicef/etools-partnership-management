@@ -20,7 +20,7 @@ export const requiredFieldStarredStyles = html`
 
     paper-input[required][label],
     paper-input-container[required],
-    etools-date-input[required],
+    datepicker-lite[required],
     etools-dropdown[required],
     etools-dropdown-multi[required],
     etools-upload[required],

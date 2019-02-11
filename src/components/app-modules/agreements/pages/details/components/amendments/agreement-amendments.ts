@@ -235,13 +235,13 @@ class AgreementAmendments extends connect(store)(EventHelperMixin(CommonMixin(Po
     this._addAgAmendmentDialog.setAttribute('id', 'addAgAmendmentDialog');
     this._addAgAmendmentDialog.toastEventSource = this;
     this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment);
-    document.querySelector('body').appendChild(this._addAgAmendmentDialog);
+    document.querySelector('body')!.appendChild(this._addAgAmendmentDialog);
   }
 
   _removeAddAgAmendmentDialog() {
     if (this._addAgAmendmentDialog) {
       this._addAgAmendmentDialog.removeEventListener('update-amendment-and-ao', this.saveNewAmendment);
-      document.querySelector('body').removeChild(this._addAgAmendmentDialog);
+      document.querySelector('body')!.removeChild(this._addAgAmendmentDialog);
     }
   }
 

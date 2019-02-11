@@ -1,124 +1,120 @@
+import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 // @ts-ignore
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EventHelperMixin from './event-helper-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 
-
 /**
-  * @polymer
-  * @mixinFunction
-  * @appliesMixin EtoolsAjaxRequestMixin
-  * @appliesMixin Endpoints
-  * @appliesMixin EventHelper
-  * @appliesMixin AjaxServerErrors
-  */
- const ListDataMixin = (baseClass: any) => class extends EndpointsMixin(
-        AjaxServerErrorsMixin(
-          EventHelperMixin(
-            EtoolsAjaxRequestMixin(baseClass)))) {
+ * @polymer
+ * @mixinFunction
+ * @appliesMixin EtoolsAjaxRequestMixin
+ * @appliesMixin Endpoints
+ * @appliesMixin EventHelper
+ * @appliesMixin AjaxServerErrors
+ */
+const ListDataMixin = dedupingMixin((baseClass: any) =>
+    class extends (EtoolsMixinFactory.combineMixins([
+      EndpointsMixin, AjaxServerErrorsMixin, EventHelperMixin], baseClass) as any) {
 
-static get properties() {
-  return {
-    options: {
-      type: Object,
-      value: {
+      static get properties() {
+        return {
+          options: Object,
+          data: {
+            type: Array,
+            readOnly: true,
+            notify: true
+          },
+          globalMessage: String,
+          fireDataLoaded: Boolean,
+          _refreshInterval: Object
+        };
+      }
+
+      public options: any = {
         endpoint: null,
         csrf: true
+      };
+      public data: any[] = [];
+      public globalMessage: string = 'An error occurred while trying to fetch the data!';
+      public fireDataLoaded: boolean =  false;
+      protected _refreshInterval: any = null;
+      public endpointName: string = '';
+
+      static get observers() {
+        return [
+          '_endpointChanged(options.endpoint)'
+        ];
       }
-    },
-    data: {
-      type: Array,
-      readOnly: true,
-      notify: true
-    },
-    globalMessage: {
-      type: String,
-      value: 'An error occurred while trying to fetch the data!'
-    },
-    fireDataLoaded: {
-      type: Boolean,
-      value: false
-    },
-    _refreshInterval: {
-      type: Object,
-      value: null
-    }
-  };
-}
-static get observers() {
-  return [
-   '_endpointChanged(options.endpoint)'
-  ];
-}
 
-disconnectedCallback() {
-  super.disconnectedCallback();
-  this._removeAutomaticDataRefreshLoop();
-}
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._removeAutomaticDataRefreshLoop();
+      }
 
-ready() {
-  super.ready();
-  this._elementReady();
+      ready() {
+        super.ready();
+        this._elementReady();
 
-}
+      }
 
-_elementReady() {
-  if (!this.endpointName) {
-    this.logWarn('Please specify an endpointName property', 'list-data-mixin');
-  } else {
-    this.set('options.endpoint', this.getEndpoint(this.endpointName));
-    this._requestListData();
-  }
-}
-_requestListData() {
-  let self = this;
-  this.sendRequest(this.options)
-    .then(function(resp: any) {
-      self._handleMyResponse(resp);
-    }).catch(function(error: any) {
-      self.handleErrorResponse(error);
-    });
-}
+      _elementReady() {
+        if (!this.endpointName) {
+          this.logWarn('Please specify an endpointName property', 'list-data-mixin');
+        } else {
+          this.set('options.endpoint', this.getEndpoint(this.endpointName));
+          this._requestListData();
+        }
+      }
+
+      _requestListData() {
+        this.sendRequest(this.options)
+            .then((resp: any) => {
+              this._handleMyResponse(resp);
+            }).catch((error: any) => {
+              this.handleErrorResponse(error);
+            });
+      }
+
 // some children overwrite this function for custom data processing
-_handleMyResponse(res: any) {
-  this._handleResponse(res);
-}
+      _handleMyResponse(res: any) {
+        this._handleResponse(res);
+      }
 
-_handleResponse(res: any) {
-  this._setData(res);
-  if (this.fireDataLoaded) {
-    if (!this.dataLoadedEventName) {
-      this.logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
-    } else {
-      this.fireEvent(this.dataLoadedEventName);
-    }
-  }
-}
+      _handleResponse(res: any) {
+        this._setData(res);
+        if (this.fireDataLoaded) {
+          if (!this.dataLoadedEventName) {
+            this.logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
+          } else {
+            this.fireEvent(this.dataLoadedEventName);
+          }
+        }
+      }
 
-_endpointChanged(newEndpoint: any) {
-  if (typeof newEndpoint === 'undefined') {
-    return;
-  }
-  if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
-      this._removeAutomaticDataRefreshLoop();
-      this._setAutomaticDataRefreshLoop(newEndpoint);
-    }
-}
+      _endpointChanged(newEndpoint: any) {
+        if (typeof newEndpoint === 'undefined') {
+          return;
+        }
+        if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
+          this._removeAutomaticDataRefreshLoop();
+          this._setAutomaticDataRefreshLoop(newEndpoint);
+        }
+      }
 
-_removeAutomaticDataRefreshLoop() {
-  if (this._refreshInterval !== null) {
-    clearInterval(this._refreshInterval);
-    this.set('_refreshInterval', null);
-  }
-}
+      _removeAutomaticDataRefreshLoop() {
+        if (this._refreshInterval !== null) {
+          clearInterval(this._refreshInterval);
+          this.set('_refreshInterval', null);
+        }
+      }
 
-_setAutomaticDataRefreshLoop(newEndpoint: any) {
-  this._refreshInterval = setInterval(() => {
-    this._requestListData();
-  }, newEndpoint.exp);
-}
-};
+      _setAutomaticDataRefreshLoop(newEndpoint: any) {
+        this._refreshInterval = setInterval(() => {
+          this._requestListData();
+        }, newEndpoint.exp);
+      }
+    });
 
 
 export default ListDataMixin;
