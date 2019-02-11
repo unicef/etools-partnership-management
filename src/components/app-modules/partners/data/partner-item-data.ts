@@ -248,8 +248,8 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
         });
       } else {
         this.fireEvent('toast', {
-          text: 'There is nothing to save. No change detected on this partner.',
-          showCloseBtn: true
+          text: 'All changes are saved.',
+          showCloseBtn: false
         });
         return Promise.resolve(false);
       }

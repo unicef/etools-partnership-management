@@ -52,8 +52,8 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
         if (isEmptyObject(profile)) {
           // empty profile means no changes found
           this.fireEvent('toast', {
-            text: 'There is nothing to save. No change detected on your profile.',
-            showCloseBtn: true
+            text: 'All changes are saved.',
+            showCloseBtn: false
           });
           return;
         }

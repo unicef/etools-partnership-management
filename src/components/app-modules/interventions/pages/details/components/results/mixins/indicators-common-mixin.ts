@@ -6,6 +6,23 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
  */
 const IndicatorsCommonMixin = dedupingMixin((superClass: any) => class extends superClass {
 
+  static get properties() {
+    return {
+      numberPattern: { // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
+        type: String,
+        value: '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)'
+      },
+      digitsNotStartingWith0Pattern: { // any number starting from 1
+        type: String,
+        value: '^[1-9]{1}(\\d+)?$'
+      },
+      digitsPattern: {
+        type: String,
+        value: '^\\d+'
+      }
+    };
+  }
+
   _baselineChanged(baselineV: string) {
     if (!this.indicator || this._isEmptyExcept0(baselineV)) {
       return;

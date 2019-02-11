@@ -38,6 +38,7 @@ const AgreementItemDataRequiredMixin = EtoolsMixinFactory.combineMixins([
  * @appliesMixin AgreementItemDataRequiredMixin
  */
 class AgreementItemData extends AgreementItemDataRequiredMixin {
+  [x: string]: any;
   static get template() {
     return null;
   }
@@ -254,8 +255,8 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
         });
       } else {
         this.fireEvent('toast', {
-          text: 'There is nothing to save. No change detected on this agreement.',
-          showCloseBtn: true
+          text: 'All changes are saved.',
+          showCloseBtn: false
         });
         return Promise.resolve(false);
       }

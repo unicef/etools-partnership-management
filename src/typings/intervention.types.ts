@@ -174,14 +174,21 @@ export type ExpectedResult = {
 export type ResultLinkLowerResult = { //ll_result
   id: number;
   name: string;
-  applied_indicators: AppliedIndicator[];
+  applied_indicators: Indicator[];
 }
 
-export type AppliedIndicator = {// Indicator
+export type Indicator = {// Indicator
   id: number;
   cluster_indicator_id: number;
   is_active: boolean;
   is_high_frequency: boolean;
+  indicator: IndicatorIndicator;
+  baseline: any;
+}
+
+export type IndicatorIndicator = {
+  display_type: string;
+  unit: string
 }
 
 export type CpOutput = {

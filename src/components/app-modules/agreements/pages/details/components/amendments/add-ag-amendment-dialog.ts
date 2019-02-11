@@ -165,7 +165,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
   }
 
   initData(authorizedOfficers: any, showAuthorizedOfficers: any, amendmentTypes: any) {
-    this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));
+    this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));//Todo - do a direct new Amendment
     this.set('amendmentTypes', amendmentTypes);
     this.set('authorizedOfficersOptions',
         JSON.parse(JSON.stringify(authorizedOfficers)));
