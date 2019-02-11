@@ -23,4 +23,4 @@ export const isJsonStrMatch = (a: any, b: any) => {
 
 export const copy = (a: any) => {
   return JSON.parse(JSON.stringify(a));
-}
+};

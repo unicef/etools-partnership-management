@@ -18,6 +18,7 @@ import { SharedStyles } from '../../../../styles/shared-styles.js';
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
+import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 
 /**
  * @polymer
@@ -46,7 +47,7 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
   static get template() {
     // language=HTML
     return html`
-        ${SharedStyles} ${pageCommonStyles} ${gridLayoutStyles} ${frWarningsStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons} ${frWarningsStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -127,8 +128,6 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
 
       </style>
 
-      ${pmpCustomIcons}
-
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
@@ -189,7 +188,7 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
             <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
               <div class="row-h">
                 <div class="col col-3 block word-break">
-                  <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+                  <a  class="primary" href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
                   <span>
                     [[partnership.title]]
                     </span>
@@ -277,7 +276,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
+    // @ts-ignore
     this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
+    // @ts-ignore
     this.fireEvent('tab-content-attached');
   }
 
