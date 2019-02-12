@@ -27,9 +27,9 @@ import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
 import moment from 'moment';
 import {AP_DOMAIN} from '../../../../../config/config.js';
-import './components/assessments-items.js';
 
-import '../../../shared/components/monitoring-visits-list.js';
+import './components/assessments-items.js';
+import '../../../../layout/monitoring-visits-list.js';
 
 /**
  * @polymer

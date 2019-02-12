@@ -25,6 +25,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   EventHelperMixin
 ], PolymerElement) {
+  [x: string]: any;
 
   static get template() {
     return html`
@@ -176,7 +177,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
     this._resetValidations();
   }
 
-  _validateAndSaveAmendment(e: CustomEvent) {
+  _validateAndSaveAmendment() {
     if (this.validate()) {
       this.fireEvent('update-amendment-and-ao', {
         amendment: this.amendment,
@@ -185,13 +186,13 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _handleDialogClosed(e: CustomEvent) {
+  _handleDialogClosed() {
     this.set('autoValidate', false);
     this._resetValidations();
   }
 
   _resetValidations() {
-    this._validationSelectors.forEach((selector) => {
+    this._validationSelectors.forEach((selector: string) => {
       let el = this.shadowRoot.querySelector(selector);
       if (el) {
         el.set('invalid', false);
@@ -201,7 +202,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
 
   validate() {
     let isValid = true;
-    this._validationSelectors.forEach((selector) => {
+    this._validationSelectors.forEach((selector: string) => {
       let el = this.shadowRoot.querySelector(selector);
       if (el && !el.validate()) {
         isValid = false;
