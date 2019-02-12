@@ -211,7 +211,7 @@ import { gridLayoutStyles } from '../styles/grid-layout-styles';
       }
 
       showTpmVisitsAndIdChanged(partnerId: string, showTpmVisits: boolean) {
-        if (!showTpmVisits) {
+        if (!showTpmVisits || !partnerId) {
           this.set('tpmMonitoringVisits', []);
           return;
         }

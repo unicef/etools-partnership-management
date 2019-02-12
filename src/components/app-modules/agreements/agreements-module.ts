@@ -29,8 +29,6 @@ import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 
-
-
 /**
  * @polymer
  * @mixinFunction

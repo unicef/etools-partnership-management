@@ -51,7 +51,11 @@ class GeneratePcaDialog extends PolymerElement {
     };
   }
 
+  public agreementId: string | number | null = null;
+  public selectedTemplate: string | null = null;
+
   open() {
+    // @ts-ignore
     this.$.etoolsDialog.opened = true;
   }
 
@@ -62,7 +66,7 @@ class GeneratePcaDialog extends PolymerElement {
     }
     if (closingReason.detail.confirmed) {
       window.open('/api/v2/agreements/' + this.agreementId + '/generate_doc/?lang=' +
-          encodeURIComponent(this.selectedTemplate), '_blank');
+          encodeURIComponent(this.selectedTemplate as string), '_blank');
     }
     this.selectedTemplate = null;
   }

@@ -150,8 +150,9 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
+      // @ts-ignore
       Dexie.ignoreTransaction(function() {
-        queryResult.count(function(count) {
+        queryResult.count(function(count: number) {
           self._setTotalResults(count);
         });
       });
@@ -160,10 +161,10 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
           .offset((pageNumber - 1) * pageSize)
           .limit(pageSize)
           .toArray();
-    }).then(function(result) {
+    }).then(function(result: any) {
       self._setFilteredAgreements(result);
       self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
-    }).catch(function(error) {
+    }).catch(function(error: any) {
       self.logError('Error querying agreements: ', 'agreements-list-data', error, true);
       self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
     });
