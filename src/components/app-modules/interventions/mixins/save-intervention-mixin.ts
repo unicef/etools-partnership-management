@@ -17,7 +17,7 @@ import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixi
  * @polymer
  * @mixinFunction
  * @mixinFunction
- * @appliesMixin ArrayHelper
+ * @appliesMixin ArrayHelperMixin
  * @appliesMixin ModifiedInterventionFields
  * @appliesMixin EventHelper
  * @appliesMixin Constants

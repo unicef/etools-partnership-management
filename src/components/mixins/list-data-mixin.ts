@@ -9,7 +9,7 @@ import EndpointsMixin from '../endpoints/endpoints-mixin';
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EventHelper
  * @appliesMixin AjaxServerErrors
  */

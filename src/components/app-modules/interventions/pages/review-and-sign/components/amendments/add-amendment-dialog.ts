@@ -28,7 +28,7 @@ import { isJsonStrMatch } from '../../../../../../utils/utils.js';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EventHelper
  * @appliesMixin AjaxErrorsParser
  */

@@ -14,7 +14,7 @@ import moment from 'moment';
  * @polymer
  * @customElement
  * @appliesMixin AjaxErrorsParser
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EventHelper
  */
 class ReportRejectDialog extends EtoolsMixinFactory.combineMixins([

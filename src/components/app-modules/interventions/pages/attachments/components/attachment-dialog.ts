@@ -20,7 +20,7 @@ import { SharedStyles } from '../../../../../styles/shared-styles.js';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EventHelper
  * @appliesMixin AjaxErrorsParser
  */

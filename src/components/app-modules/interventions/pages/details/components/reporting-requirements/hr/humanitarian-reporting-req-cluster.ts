@@ -13,7 +13,7 @@ import { isEmptyObject } from '../../../../../../../utils/utils';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin Common
  * @appliesMixin AjaxErrorsParser
  */

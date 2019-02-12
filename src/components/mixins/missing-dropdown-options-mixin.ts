@@ -6,7 +6,7 @@ import EndpointsMixin from '../endpoints/endpoints-mixin';
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  */
 const MissingDropdownOptionsMixin = (baseClass: any) =>
     class extends EndpointsMixin(EtoolsLogsMixin(baseClass)) {

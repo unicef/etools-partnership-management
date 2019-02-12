@@ -53,7 +53,7 @@ import './components/grouped-locations-dialog.js';
  * @appliesMixin StaffMembersData
  * @appliesMixin EnvironmentFlags
  * @appliesMixin MissingDropdownOptions
- * @appliesMixin FrNumbersConsistency
+ * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
 class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixins([

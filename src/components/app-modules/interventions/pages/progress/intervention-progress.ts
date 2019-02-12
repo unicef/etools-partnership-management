@@ -39,7 +39,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsCurrency
  * @appliesMixin AjaxErrorsParser
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin Date
  * @appliesMixin Common
  * @appliesMixin Utils

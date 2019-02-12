@@ -20,7 +20,7 @@ import { GenericObject } from '../../../../typings/globals.types.js';
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EventHelper
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants

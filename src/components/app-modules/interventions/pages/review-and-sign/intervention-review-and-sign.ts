@@ -30,6 +30,9 @@ import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 import { requiredFieldStarredStyles } from '../../../../styles/required-field-styles.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../store.js';
+import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 
 
 /**
@@ -54,7 +57,7 @@ const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin InterventionReviewAndSignMixin
  */
-class InterventionReviewAndSign extends InterventionReviewAndSignMixin {
+class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSignMixin) {
   [x: string]: any;
 
   static get template() {
@@ -307,6 +310,16 @@ class InterventionReviewAndSign extends InterventionReviewAndSignMixin {
       '_signedPdDocHasChanged(intervention.signed_pd_attachment)',
       '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
+      this.permissions = copy(state.pageData!.permissions);
+    }
+
+    if (!isJsonStrMatch(this.signedByUnicefUsers, state.commonData!.unicefUsersData)) {
+      this.signedByUnicefUsers = copy(state.commonData!.unicefUsersData);
+    }
   }
 
   connectedCallback() {

@@ -42,7 +42,7 @@ import { isEmptyObject } from '../../utils/utils.js';
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRouting
  * @appliesMixin ReportDetails
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  * @appliesMixin EventHelper
  */

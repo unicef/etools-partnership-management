@@ -27,9 +27,9 @@ import { FrsDetails } from '../../../../../../../typings/intervention.types.js';
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
- * @appliesMixin Endpoints
- * @appliesMixin ArrayHelper
- * @appliesMixin FrNumbersConsistency
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin ArrayHelperMixin
+ * @appliesMixin FrNumbersConsistencyMixin
  */
 const InterventionFundReservationsMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
