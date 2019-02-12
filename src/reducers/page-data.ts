@@ -20,7 +20,7 @@ const pageData: Reducer<PageDataState, Action<string>>  = (state = INITIAL_STATE
     case a.SET_IN_AMENDMENT_MODE:
       return {
         ...state,
-        in_amendment: action.inAmendment
+        in_amendment: action.in_amendment
       };
     default:
       return state;

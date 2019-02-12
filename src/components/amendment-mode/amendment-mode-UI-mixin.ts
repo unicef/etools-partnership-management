@@ -17,7 +17,7 @@ const AmendmentModeUIMixin = dedupingMixin((baseClass: any) =>
         };
       }
 
-      public stateChanged(state: RootState) {
+      public amdStateChanged(state: RootState) {
         if (state.pageData!.in_amendment !== this.amendmentModeActive) {
           this.amendmentModeActive = state.pageData!.in_amendment;
         }

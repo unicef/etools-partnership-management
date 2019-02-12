@@ -55,6 +55,8 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import {LoadingMixin} from 'etools-loading/etools-loading-mixin.js';
+// @ts-ignore
+import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
@@ -92,6 +94,7 @@ setPassiveTouchGestures(true);
 import {BASE_URL} from '../../config/config';
 import { setInAmendment } from '../../actions/page-data.js';
 import pageData from '../../reducers/page-data.js';
+import UploadsMixin from '../mixins/uploads-mixin.js';
 setRootPath(BASE_URL);
 
 /**
@@ -122,8 +125,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   LoadingMixin,
   EventHelperMixin,
   UtilsMixin,
-  // DynamicDialogMixin,
-  // Uploads
+  DynamicDialogMixin,
+  UploadsMixin
 ], PolymerElement) as any) {
 
   public static get template() {
@@ -346,6 +349,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   public stateChanged(state: RootState) {
     this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
+    this.amdStateChanged(state);
   }
 
   // dev purpose - to be removed in the future
