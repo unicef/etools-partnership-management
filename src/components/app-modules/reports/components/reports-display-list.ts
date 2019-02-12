@@ -16,7 +16,7 @@ import PaginationMixin from '../../../mixins/pagination-mixin.js';
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../store.js';
-import { isJsonStrMatch } from '../../../utils/utils.js';
+import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils.js';
 
 
 
@@ -253,7 +253,8 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
   }
 
   _loadReportsData(prpCountries: any, interventionId: string, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
-    if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData) || _.isEmpty(prpCountries)) {
+    if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) ||
+     isEmptyObject(prpCountries)) {
       return;
     }
 
@@ -318,7 +319,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
 
   _preserveExistingQueryParams() {
     let params = {};
-    if (!_.isEmpty(this.queryParams)) {
+    if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach(function(k) {
         if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
             (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {

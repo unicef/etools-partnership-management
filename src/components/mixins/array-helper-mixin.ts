@@ -49,7 +49,7 @@ const ArrayHelperMixin = dedupingMixin((baseClass: any) =>
 
           return diffVals;
         } catch (err) {
-          this.logError('EtoolsPmpApp.Mixins.ArrayHelper.compareArrays error occurred', 'array-helper-mixin', err);
+          this.logError('ArrayHelperMixin.compareArrays error occurred', 'array-helper-mixin', err);
         }
         return [];
       }

@@ -257,7 +257,7 @@ class ReportProgress extends EtoolsMixinFactory.combineMixins([
   }
 
   _getLowerResultIndicatorReports(lowerResultId: any) {
-    if (!lowerResultId || _.isEmpty(this.report.indicator_reports)) {
+    if (!lowerResultId || isEmptyObject(this.report.indicator_reports)) {
       return [];
     }
     return this.report.indicator_reports.filter((rep: any) => {

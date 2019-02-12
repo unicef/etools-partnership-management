@@ -14,7 +14,7 @@ import AppNavigationHelperMixin from '../../../../mixins/app-navigation-helper-m
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
-import { isJsonStrMatch } from '../../../../utils/utils.js';
+import { isJsonStrMatch, isEmptyObject } from '../../../../utils/utils.js';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
 
@@ -368,7 +368,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     let urlQueryParams = this.urlParams;
     this.set('_initComplete', false);
 
-    if (_.isEmpty(urlQueryParams)) {
+    if (isEmptyObject(urlQueryParams)) {
       urlQueryParams.status = 'Sub|Ove|Sen';
     }
 
@@ -407,10 +407,10 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
   // Outputs the query string for the list
   _buildQueryString() {
     let qStrData = [];
-    if (!_.isEmpty(this.queryParams)) {
+    if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach(function(k) {
         let qStrVal;
-        if (this.queryParams[k] instanceof Array && !_.isEmpty(this.queryParams[k])) {
+        if (this.queryParams[k] instanceof Array && !isEmptyObject(this.queryParams[k])) {
           qStrVal = this.queryParams[k].join('|');
         } else if (['string', 'number'].indexOf(typeof this.queryParams[k]) > -1) {
           qStrVal = this.queryParams[k];
@@ -420,7 +420,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
         }
       }.bind(this));
     }
-    if (!_.isEmpty(this.paginator)) {
+    if (!isEmptyObject(this.paginator)) {
       if (this.paginator.page) {
         qStrData.push('page=' + this.paginator.page);
       }

@@ -15,9 +15,8 @@ import './applied-indicator.js';
   * @polymer
   * @customElement
   * @appliesMixin EtoolsLogsMixin
-  * @appliesMixin EtoolsMixins.DynamicDialogMixin
-  * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
-  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+  * @appliesMixin DynamicDialogMixin
+  * @appliesMixin RepeatableDataSetsMixin
   */
 class AppliedIndicators extends EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
