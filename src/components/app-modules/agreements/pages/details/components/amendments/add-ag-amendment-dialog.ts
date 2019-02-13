@@ -130,10 +130,6 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
         value: []
       },
       amendment: Object,
-      amendmentModel: {
-        type: Object,
-        value: () => new AgreementAmendment()
-      },
       autoValidate: {
         type: Boolean,
         value: false
@@ -166,7 +162,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
   }
 
   initData(authorizedOfficers: any, showAuthorizedOfficers: any, amendmentTypes: any) {
-    this.set('amendment', JSON.parse(JSON.stringify(this.amendmentModel)));//Todo - do a direct new Amendment
+    this.set('amendment', new AgreementAmendment());
     this.set('amendmentTypes', amendmentTypes);
     this.set('authorizedOfficersOptions',
         JSON.parse(JSON.stringify(authorizedOfficers)));
