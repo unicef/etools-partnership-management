@@ -350,6 +350,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
     this.amdStateChanged(state);
+    this.uploadsStateChanged(state);
   }
 
   // dev purpose - to be removed in the future

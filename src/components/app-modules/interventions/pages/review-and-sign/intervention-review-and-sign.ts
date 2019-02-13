@@ -320,6 +320,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     if (!isJsonStrMatch(this.signedByUnicefUsers, state.commonData!.unicefUsersData)) {
       this.signedByUnicefUsers = copy(state.commonData!.unicefUsersData);
     }
+    this.uploadsStateChanged(state);
   }
 
   connectedCallback() {

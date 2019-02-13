@@ -556,6 +556,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
       this.locations = [...state.commonData!.locations];
     }
+    this.uploadsStateChanged(state);
   }
 
   ready() {

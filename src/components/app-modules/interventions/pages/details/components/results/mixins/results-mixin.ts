@@ -3,8 +3,6 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { ExpectedResult, CpOutput } from '../../../../../../../../typings/intervention.types';
 import { isEmptyObject, isJsonStrMatch } from '../../../../../../../utils/utils';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../../store';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -15,7 +13,8 @@ import { store, RootState } from '../../../../../../../../store';
  * @appliesMixin EtoolsLogsMixin
  */
 const ResultsMixin = dedupingMixin(
-  (superClass: any) => class extends connect(store)(EtoolsLogsMixin(superClass)) {
+  (superClass: any) => class extends EtoolsLogsMixin(superClass) {
+    [x: string]: any;
 
     static get properties() {
       return {
@@ -42,7 +41,7 @@ const ResultsMixin = dedupingMixin(
       };
     }
 
-    stateChanged(state: RootState) {
+    resultsStateChanged(state: RootState) {
       if (!isJsonStrMatch(this.cpOutputs, state.commonData!.cpOutputs)) {
         this.cpOutputs = [...state.commonData!.cpOutputs];
       }
