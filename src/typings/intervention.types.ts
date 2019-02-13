@@ -30,7 +30,7 @@ export class Intervention {
   frs: number[] = [];
   frs_details: FrsDetails = new FrsDetails();
   contingency_pd: boolean = false;
-  planned_budget: PlannedBudget | null = null;
+  planned_budget: PlannedBudget = new PlannedBudget();
   flat_locations: [] = [];
   result_links: ExpectedResult[] = [];
   planned_visits: PlannedVisit[] = [];
@@ -100,12 +100,12 @@ export type Fr = {
   currency: string;
 }
 
-export type PlannedBudget = {
-  currency: string;
-  unicef_cash_local: string;
-  total: string;
-  in_kind_amount_local: string;
-  partner_contribution_local: string;
+export class PlannedBudget  {
+  currency?: string;
+  unicef_cash_local?: string;
+  total?: string;
+  in_kind_amount_local?: string;
+  partner_contribution_local?: string;
 }
 
 export class InterventionPermissionsFields {

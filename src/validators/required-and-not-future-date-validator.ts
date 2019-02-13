@@ -25,7 +25,7 @@ class RequiredAndNotFutureDateValidator extends (EtoolsIronValidatorMixin(Polyme
       },
       noFutureDateErrorMessage: {
         type: String,
-        value: 'Date cannot be in the future!'
+        value: 'Date can not be in the future!'
       },
       /**
        * Used to set the error message directly to the field.

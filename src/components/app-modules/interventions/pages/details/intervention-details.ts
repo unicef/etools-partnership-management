@@ -852,7 +852,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
       fieldSelectors.push('#intStart', '#intEnd');
     }
 
-    if (this.intervention.document_type !== 'SSFA' && this.intervention.isDraft()) {
+    if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
       fieldSelectors.push('#ref-year');
     }
     fieldSelectors.forEach(function(selector: string) {
