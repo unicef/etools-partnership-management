@@ -172,7 +172,6 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
   }
 
   public stateChanged(state: RootState) {
-    super.stateChanged();
     if (!state.commonData) {
       return;
     }
