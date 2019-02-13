@@ -227,7 +227,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
         } else {
           // no valid partner id, cannot update
           this.fireEvent('toast', {
-            text: 'Update cannot be made. Invalid partner ID.',
+            text: 'Update can not be made. Invalid partner ID.',
             showCloseBtn: true
           });
           return Promise.resolve(false);

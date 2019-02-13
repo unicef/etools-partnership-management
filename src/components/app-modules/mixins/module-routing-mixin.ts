@@ -131,7 +131,7 @@ const ModuleRoutingMixin = dedupingMixin(
           this.fireEvent('clear-server-errors');
         } else {
           if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
-            // the user cannot access this tab (ex: prp tabs on interventions)
+            // the user can not access this tab (ex: prp tabs on interventions)
             this.fireEvent('404');
             return;
           }

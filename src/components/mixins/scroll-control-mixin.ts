@@ -11,8 +11,7 @@ const ScrollControl = dedupingMixin((baseClass: any) =>
       public static get properties() {
         return {
           contentContainer: {
-            type: Object,
-            readOnly: true
+            type: Object
           }
         };
       }
@@ -47,7 +46,7 @@ const ScrollControl = dedupingMixin((baseClass: any) =>
       public scrollToTop() {
         if (!this.contentContainer) {
           // @ts-ignore
-          this.logWarn('Cannot scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
+          this.logWarn('Can not scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
           return;
         }
         // @ts-ignore

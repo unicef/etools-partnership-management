@@ -3,7 +3,7 @@ import 'etools-data-table/etools-data-table.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
-import '../../../../../../../layout/components/icons-actions.js';
+import '../../../../../../../layout/icons-actions.js';
 import '../mixins/reporting-req-past-dates-check.js';
 import '../styles/reporting-requirements-lists-styles.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';

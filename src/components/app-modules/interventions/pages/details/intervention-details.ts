@@ -53,7 +53,7 @@ import './components/grouped-locations-dialog.js';
  * @appliesMixin StaffMembersData
  * @appliesMixin EnvironmentFlags
  * @appliesMixin MissingDropdownOptions
- * @appliesMixin FrNumbersConsistency
+ * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
 class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixins([
@@ -556,6 +556,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
       this.locations = [...state.commonData!.locations];
     }
+    this.uploadsStateChanged(state);
   }
 
   ready() {
@@ -852,7 +853,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
       fieldSelectors.push('#intStart', '#intEnd');
     }
 
-    if (this.intervention.document_type !== 'SSFA' && this.intervention.isDraft()) {
+    if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
       fieldSelectors.push('#ref-year');
     }
     fieldSelectors.forEach(function(selector: string) {

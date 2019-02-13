@@ -1,12 +1,11 @@
 import pmpEdpoints from '../endpoints/endpoints.js';
-import {connect} from "pwa-helpers/connect-mixin";
 import {store, RootState} from "../../store";
 import { DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
 /**
  * @polymer
  * @mixinFunction
  */
-const UploadsMixin = (baseClass: any) => class extends connect(store)(baseClass) {
+const UploadsMixin = (baseClass: any) => class extends baseClass {
   public static get properties() {
     return {
       uploadEndpoint: {
@@ -24,7 +23,7 @@ const UploadsMixin = (baseClass: any) => class extends connect(store)(baseClass)
     };
   }
 
-  stateChanged(state: RootState) {
+  uploadsStateChanged(state: RootState) {
     if (state.uploadStatus!.unsavedUploads !== this.unsavedUploads) {
       this.unsavedUploads = state.uploadStatus!.unsavedUploads;
     }

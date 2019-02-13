@@ -9,7 +9,8 @@ import { requiredFieldStarredStyles } from '../../../../../styles/required-field
 import { store, RootState } from '../../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { isJsonStrMatch, copy } from '../../../../../utils/utils';
-import { partnersDropdownDataSelector } from '../../../../../../reducers/partners';
+import { csoPartnersSelector } from '../../../../../../reducers/partners';
+import CONSTANTS from '../../../../../../config/app-constants';
 
 /**
  * @polymer
@@ -135,8 +136,8 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
     if (!isJsonStrMatch(this.agreements, state.agreements!.list)) {
       this.agreements = [...state.agreements!.list];
     }
-    if (!isJsonStrMatch(this.partnersDropdownData, partnersDropdownDataSelector(state))) {
-      this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
+    if (!isJsonStrMatch(this.partnersDropdownData, csoPartnersSelector(state))) {
+      this.partnersDropdownData = [...csoPartnersSelector(state)];
     }
     if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
       this.permissions = copy(state.pageData!.permissions);
@@ -211,12 +212,12 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
           if (this.intervention) {
             // existing intervention
             return agreement.partner === partnerId
-                && agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU;
+                && agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU;
           } else {
             // new intervention
             return agreement.partner === partnerId &&
                 ['suspended', 'terminated'].indexOf(agreement.status!) === -1
-                && agreement.agreement_type !== this.CONSTANTS.AGREEMENT_TYPES.MOU;
+                && agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU;
           }
 
     });

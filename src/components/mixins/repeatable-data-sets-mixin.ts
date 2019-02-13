@@ -49,7 +49,6 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
 
     public dataItems: any[] = [];
     public dataSetModel: object = null;
-    public editMode: boolean = false;
     public deleteConfirmationTitle: string = 'Delete confirmation';
     public deleteConfirmationMessage: string = 'Are you sure you want to delete this item?';
     public deleteLoadingSource: string = 'delete-data-set';

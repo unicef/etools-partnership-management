@@ -48,7 +48,7 @@ import { store } from '../../../store';
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EventHelper
  * @appliesMixin EnvironmentFlags
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleMainElCommonFunctionality
  * @appliesMixin ModuleRouting

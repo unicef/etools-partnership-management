@@ -26,7 +26,7 @@ import { store } from '../../../../../../../../store.js';
  * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EventHelper
  * @appliesMixin Date
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParser
  */
 class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([

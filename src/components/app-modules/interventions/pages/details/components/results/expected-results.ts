@@ -23,6 +23,8 @@ import './mixins/lower-results-mixin.js';
 import './result-cp-output-and-ram-indicators.js';
 import './result-link-lower-results.js';
 import './indicator-dialog.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../../../store';
 
 /**
  * @polymer
@@ -31,11 +33,11 @@ import './indicator-dialog.js';
  * @appliesMixin Results
  * @appliesMixin LowerResults
  */
-class ExpectedResults extends EtoolsMixinFactory.combineMixins([
+class ExpectedResults extends connect(store)(EtoolsMixinFactory.combineMixins([
   RepeatableDataSetsMixin,
   ResultsMixin,
   LowerResultsMixin
-], PolymerElement) {
+], PolymerElement)) {
   [x: string]: any;
 
   static get template() {
@@ -157,6 +159,10 @@ class ExpectedResults extends EtoolsMixinFactory.combineMixins([
       '_indicatorLocationOptionsUpdate(indicatorLocationOptions, indicatorDialog)',
       '_indicatorSectionOptionsUpdate(indicatorSectionOptions, indicatorDialog)'
     ];
+  }
+
+  stateChanged(state: RootState ) {
+    this.resultsStateChanged(state);
   }
 
   ready() {

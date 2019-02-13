@@ -3,7 +3,7 @@ import 'etools-data-table/etools-data-table.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
-import '../../../../../../../layout/components/icons-actions.js';
+import '../../../../../../../layout/icons-actions.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
 import { PolymerElEvent } from '../../../../../../../../typings/globals.types.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';

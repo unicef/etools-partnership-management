@@ -13,7 +13,7 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
       frsConsistencyWarnings: {
         type: Object,
         value: {
-          amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution cannot be compared.',
+          amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution can not be compared.',
           tooManyFrsCurencies: 'More than 1 FR currency is available.',
           amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
           currencyMismatch: 'FR currency does not match PD/SSFA currency.',

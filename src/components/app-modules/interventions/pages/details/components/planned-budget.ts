@@ -296,7 +296,7 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
     return value;
   }
   _initLocalCurrency(plannedBudget: any, countryData: CountryData) {
-    if (typeof plannedBudget === 'undefined' || typeof countryData === 'undefined') {
+    if (!plannedBudget || typeof countryData === 'undefined') {
       return;
     }
     if (!plannedBudget.currency && countryData && countryData.local_currency_code) {

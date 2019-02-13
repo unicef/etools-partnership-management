@@ -20,7 +20,7 @@ import { GenericObject } from '../../../../typings/globals.types.js';
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin Endpoints
+ * @appliesMixin EndpointsMixin
  * @appliesMixin EventHelper
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
@@ -79,10 +79,10 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
 
   _triggerAgreementRequest(options: any) {
     let ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then((resp) => {
+    return this.sendRequest(options).then((resp: any) => {
       this._handleSuccResponse(resp, ajaxMethod);
       return true;
-    }).catch((error) => {
+    }).catch((error: any) => {
       if (error instanceof EtoolsRequestError === false) {
         this.logError('handleErrorResponse', 'agreement-item-data', error);
       }
@@ -146,11 +146,12 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
       start: null,
       status: ''
     };
-    let propName;
+    let propName: string;
     for (propName in minimalAgrData) {
       if (!detail.hasOwnProperty(propName)) {
         this.logWarn('Mapping property not found');
       } else {
+        // @ts-ignore
         minimalAgrData[propName] = detail[propName];
       }
     }
@@ -270,7 +271,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     const reqMethod = 'DELETE';
     this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
       this._handleAgreementDeleteSuccess(id);
-    }).catch((reqError) => {
+    }).catch((reqError: any) => {
       this.handleErrorResponse(reqError, reqMethod);
     });
   }
@@ -279,8 +280,8 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     window.EtoolsPmpApp.DexieDb.agreements.where('id')
         .equals(parseInt(id, 10))
         .delete()
-        .then(deleteCount => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
-        .catch(dexieDeleteErr => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
+        .then((deleteCount: number) => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
+        .catch((dexieDeleteErr: any) => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
         .then(() => {
           // go to agreements list after delete
           this.fireEvent('update-main-path', {path: 'agreements/list'});
