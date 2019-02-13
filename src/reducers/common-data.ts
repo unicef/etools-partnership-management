@@ -3,6 +3,8 @@ import {Reducer} from 'redux';
 import {
   UPDATE_COUNTRY_PROGRAMMES,
   UPDATE_DISAGGREGATIONS,
+  PATCH_DISAGGREGATION,
+  ADD_DISAGGREGATION,
   UPDATE_USER_COUNTRY_DATA,
   UPDATE_UNICEF_USERS,
   UPDATE_SECTIONS,
@@ -117,13 +119,13 @@ const INITIAL_STATE: CommonDataState = {
 
 const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
   // let partnersDdDataCopy;
-  // let disaggregsCopy;
+  let disaggregsCopy;
   // let agreementsCopy;
   // let csoPartnerCopy;
   // let indexP;
   // let index;
   // let pageDataWithPermsUpdated;
-  // let dIndex;
+  let dIndex;
 
   switch (action.type) {
     case UPDATE_COUNTRY_PROGRAMMES:
@@ -316,25 +318,25 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         countryData: action.countryData
       };
 
-    // case ADD_DISAGGREGATION:
-    //   disaggregsCopy = state.disaggregations.slice(0);
-    //   disaggregsCopy.push(action.disaggregation);
-    //   return {
-    //     ...state,
-    //     disaggregations: action.disaggregsCopy
-    //   };
+    case ADD_DISAGGREGATION:
+      disaggregsCopy = state.disaggregations.slice(0);
+      disaggregsCopy.push(action.disaggregation);
+      return {
+        ...state,
+        disaggregations: disaggregsCopy
+      };
 
-    // case PATCH_DISAGGREGATION:
-    //   disaggregsCopy = state.disaggregations.slice(0);
-    //
-    //   dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
-    //   if (dIndex >= 0) {
-    //     disaggregsCopy.splice(dIndex, 1, action.disaggregation);
-    //   }
-    //   return {
-    //     ...state,
-    //     disaggregations: action.disaggregsCopy
-    //   };
+    case PATCH_DISAGGREGATION:
+      disaggregsCopy = state.disaggregations.slice(0);
+
+      dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
+      if (dIndex >= 0) {
+        disaggregsCopy.splice(dIndex, 1, action.disaggregation);
+      }
+      return {
+        ...state,
+        disaggregations: disaggregsCopy
+      };
 
     case UPDATE_CURRENT_USER:
       return {

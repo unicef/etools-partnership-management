@@ -28,7 +28,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         };
       }
 
-      public stateChanged(state: RootState) {
+      public endStateChanged(state: RootState) {
         if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.PRPCountryData)) {
           this.PRPCountryData = [...state.commonData!.PRPCountryData];
         }

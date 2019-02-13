@@ -17,7 +17,7 @@ const EnvironmentFlags = dedupingMixin((baseClass: any) =>
 
       public environmentFlags: EnvFlags | null = null;
 
-      public stateChanged(state: RootState) {
+      public envStateChanged(state: RootState) {
         if (!state.commonData) {
             return;
         }

@@ -11,7 +11,12 @@ const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-    public pagination = new Paginator();
+    // TODO: polymer3 - use just one paginator mixin
+    public pagination = {
+      pageSize: 10,
+      pageNumber: 1,
+      totalResults: null
+    };
 
     public _pageSizeChanged(ev: CustomEvent) {
       this.set('pagination.pageNumber', 1);
