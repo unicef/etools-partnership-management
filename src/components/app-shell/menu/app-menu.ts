@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import EnvironmentFlags from "../../environment-flags/environment-flags-mixin.js";
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
@@ -18,7 +19,7 @@ import {fireEvent} from '../../utils/fire-custom-event.js';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends GestureEventListeners(PolymerElement) {
+class AppMenu extends GestureEventListeners(EnvironmentFlags(PolymerElement)) {
 
   public static get template() {
     // main template

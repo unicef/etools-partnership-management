@@ -347,10 +347,13 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   public stateChanged(state: RootState) {
-    this._page = state.app!.page;
+    // TODO: _page is gonna be user with pwa router, not used right now (future improvement)
+    // this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
     this.amdStateChanged(state);
     this.uploadsStateChanged(state);
+
+    this.envStateChanged(state);
   }
 
   // dev purpose - to be removed in the future

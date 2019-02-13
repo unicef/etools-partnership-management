@@ -14,6 +14,8 @@ import {RootState} from '../store.js';
 
 export const UPDATE_COUNTRY_PROGRAMMES = 'UPDATE_COUNTRY_PROGRAMMES';
 export const UPDATE_DISAGGREGATIONS = 'UPDATE_DISAGGREGATIONS';
+export const PATCH_DISAGGREGATION = 'PATCH_DISAGGREGATION';
+export const ADD_DISAGGREGATION = 'ADD_DISAGGREGATION';
 export const UPDATE_FILE_TYPES = 'UPDATE_FILE_TYPES';
 export const UPDATE_CP_OUTPUTS = 'UPDATE_CP_OUTPUTS';
 export const UPDATE_SIGNED_BY_UNICEF_USERS = 'UPDATE_SIGNED_BY_UNICEF_USERS';
@@ -47,6 +49,14 @@ export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_
 
 export interface CommonDataActionUpdateDisaggregations extends Action<'UPDATE_DISAGGREGATIONS'> {
   disaggregations: object[]
+};
+
+export interface CommonDataActionPatchDisaggregation extends Action<'PATCH_DISAGGREGATION'> {
+  disaggregation: object;
+};
+
+export interface CommonDataActionAddDisaggregation extends Action<'ADD_DISAGGREGATION'> {
+  disaggregation: object;
 };
 
 export interface CommonDataActionUpdateFileTypes extends Action<'UPDATE_FILE_TYPES'> {
@@ -155,8 +165,9 @@ export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURREN
 };
 
 export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonDataActionUpdateDisaggregations |
-    CommonDataActionUpdateFileTypes | CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers |
-    CommonDataActionUpdateDonors | CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
+    CommonDataActionPatchDisaggregation | CommonDataActionAddDisaggregation | CommonDataActionUpdateFileTypes |
+    CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers | CommonDataActionUpdateDonors |
+    CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
     CommonDataActionUpdateInterventionStatuses | CommonDataActionUpdateCurrencies |
     CommonDataActionUpdateAgreementTypes | CommonDataActionUpdateAgreementStatuses |
     CommonDataActionUpdateAgencyChoices | CommonDataActionUpdateAgreementAmendmentTypes |
@@ -183,6 +194,22 @@ export const updateDisaggregations: ActionCreator<CommonDataActionUpdateDisaggre
       return {
         type: UPDATE_DISAGGREGATIONS,
         disaggregations
+      };
+    };
+
+export const patchDisaggregation: ActionCreator<CommonDataActionPatchDisaggregation> =
+    (disaggregation: object) => {
+      return {
+        type: PATCH_DISAGGREGATION,
+        disaggregation
+      };
+    };
+
+export const addDisaggregation: ActionCreator<CommonDataActionAddDisaggregation> =
+    (disaggregation: object) => {
+      return {
+        type: ADD_DISAGGREGATION,
+        disaggregation
       };
     };
 
