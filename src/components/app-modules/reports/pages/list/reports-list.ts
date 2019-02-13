@@ -228,7 +228,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     if (!isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)) {
       this.unicefUsersData = [...state.commonData!.unicefUsersData];
     }
-    this.pertners = partnersDropdownDataSelector(state);
+    this.partners = [...partnersDropdownDataSelector(state)];
   }
 
   connectedCallback() {
