@@ -13,8 +13,8 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
-import '../../layout/page-content-header/page-content-header.js';
-import '../../layout/page-content-header/page-content-header-slotted-styles.js';
+import '../../layout/page-content-header.js';
+import '../../layout//page-content-header-slotted-styles.js';
 import '../../layout/etools-tabs.js';
 
 import './components/report-status.js';
@@ -32,6 +32,7 @@ import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header
 import ReportDetailsMixin from './mixins/report-details-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import { isEmptyObject } from '../../utils/utils.js';
+import moment from 'moment';
 
 
 
@@ -525,7 +526,7 @@ class ReportsModule extends ReportsModuleRequiredMixins {
   }
 
   _reportChanged(report: any) {
-    if (!report) {!
+    if (!report) {
       return;
     }
     this.reportRatingDialog.set('report', report);

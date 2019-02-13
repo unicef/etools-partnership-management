@@ -17,6 +17,9 @@ import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch, isEmptyObject } from '../../../../utils/utils.js';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { timeOut } from '@polymer/polymer/lib/utils/async';
+import { fireEvent } from '../../../../utils/fire-custom-event.js';
 
 
 /**
@@ -234,7 +237,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    this.fireEvent('global-loading', {active: false, loadingSource: 'reports-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-page'});
   }
 
   _initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes) {
@@ -328,8 +331,8 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
 
   // update selected filters(prezent in URL) at page refresh
   _updateSelectedFiltersValues() {
-    this._updateFiltersValsDebouncer = Polymer.Debouncer.debounce(this._updateFiltersValsDebouncer,
-        Polymer.Async.timeOut.after(100),
+    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
+        timeOut.after(100),
         () => {
           let filtersValues = [
             {
