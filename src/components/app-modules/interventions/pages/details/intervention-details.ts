@@ -43,7 +43,7 @@ import './components/planned-budget.js';
 import './components/results/expected-results.js';
 import './components/planned-visits.js';
 import { setPageDataPermissions } from '../../../../../actions/page-data.js';
-//import 'components/reporting-requirements/partner-reporting-requirements.js';
+import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
 
 /**
@@ -422,16 +422,13 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
       </planned-visits>
     </etools-content-panel>
 
-    <template is="dom-if"
-              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, permissions.view.reporting_requirements)]]"
-              restamp>
+
       <partner-reporting-requirements class="content-section"
                                       intervention-id="[[intervention.id]]"
                                       intervention-start="[[intervention.start]]"
                                       intervention-end="[[intervention.end]]"
                                       expected-results="[[intervention.result_links]]">
       </partner-reporting-requirements>
-    </template>
     `;
   }
 

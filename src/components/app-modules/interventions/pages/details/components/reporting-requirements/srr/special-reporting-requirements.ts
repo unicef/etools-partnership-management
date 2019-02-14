@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
-import '@polymer/etools-data-table/etools-data-table.js';
+import 'etools-data-table/etools-data-table.js';
 
 import 'etools-dialog/dynamic-dialog-mixin.js';
 // @ts-ignore

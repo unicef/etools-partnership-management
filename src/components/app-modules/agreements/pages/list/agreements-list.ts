@@ -124,9 +124,9 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
                                 label="[[filter.filterName]]"
                                 placeholder="Select"
                                 value="{{filter.dateSelected}}"
-                                on-date-changed="_filterDateHasChanged"
+                                on-date-has-changed="_filterDateHasChanged"
                                 data-filter-path$="[[filter.path]]"
-                                fire-date-changed-event>
+                                fire-date-has-changed>
               </datepicker-lite>
             </template>
 

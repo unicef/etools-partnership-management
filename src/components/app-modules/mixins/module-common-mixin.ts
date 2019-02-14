@@ -113,7 +113,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
         e.stopImmediatePropagation();
         try {
           let listElem = this.shadowRoot.querySelector('#list');
-          if (listElem && !listElem.classList.contains('hidden')) {
+          if (listElem && listElem._filterListData) {
             listElem._filterListData(true);
           }
         } catch (err) {
