@@ -172,6 +172,12 @@ export const SharedStyles = html`
   paper-radio-button {
     --paper-radio-button-ink-size: 0;
   }
+  
+  datepicker-lite {
+    --paper-input-prefix: {
+      color: var(--dark-secondary-text-color);
+    }
+  }
 
   .capitalize {
     text-transform: capitalize;
