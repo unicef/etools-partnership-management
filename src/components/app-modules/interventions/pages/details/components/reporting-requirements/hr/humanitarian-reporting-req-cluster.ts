@@ -8,6 +8,7 @@ import CommonMixin from '../../../../../../../mixins/common-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import { ResultLinkLowerResult, ExpectedResult } from '../../../../../../../../typings/intervention.types';
 import { isEmptyObject } from '../../../../../../../utils/utils';
+import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
 
 
 /**
@@ -31,8 +32,8 @@ class HumanitarianReportingReqCluster extends HumanitarianReportingReqClusterMix
   [x: string]: any;
   static get template() {
     return html`
-
-      <style include="grid-layout-styles data-table-styles">
+    ${gridLayoutStyles}
+      <style include="data-table-styles">
         :host {
           display: block;
         }

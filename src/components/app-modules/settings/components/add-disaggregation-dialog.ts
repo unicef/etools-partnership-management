@@ -16,6 +16,7 @@ import { requiredFieldStarredStyles } from '../../../styles/required-field-style
 import {connect} from "pwa-helpers/connect-mixin";
 import {store} from "../../../../store";
 import {addDisaggregation} from "../../../../actions/common-data";
+import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
 
 
 
@@ -45,36 +46,36 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     // language=HTML
     return html`
         ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles}
-      <style include="action-icons-btns-styles">
-        
+        ${actionIconBtnsStyles}
+      <style>
         paper-input {
           width: 100%
         }
-  
+
         .groups {
           align-items: center;
           flex-wrap: wrap;
           width: 520px; /* For IE */
         }
-  
+
         .newGroup {
           width: 80px;
         }
-  
+
         .action.delete.no-padding {
           padding-top: 0 !important;
           padding-bottom: 0 !important;
           height: 20px;
         }
-  
+
         etools-dialog paper-input.newGroup {
           --paper-input-container: {
             padding: 0 0 !important;
           };
         }
-        
+
       </style>
-      
+
       <etools-dialog keep-dialog-open id="etoolsDialog" size="lg" ok-btn-text="Save"
                      dialog-title="Add Disaggregation" disable-confirm-btn="[[disableConfirmBtn]]"
                      on-confirm-btn-clicked="_validateAndSaveDisaggregation">

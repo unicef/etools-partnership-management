@@ -13,7 +13,9 @@ import './qpr-list.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 
-//<link rel="import" href="../../../../../../../../../bower_components/etools-datepicker/etools-simple-datepicker.html">
+import 'etools-date-time/calendar-lite.js';
+import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
+import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 
 
 /**
@@ -32,7 +34,8 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
 
   static get template() {
     return html`
-    <style include="grid-layout-styles buttons-styles">
+    ${gridLayoutStyles} ${buttonsStyles}
+    <style>
       *[hidden] {
         display: none !important;
       }
@@ -96,28 +99,28 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
           <iron-label for="startDate">
             Start Date
           </iron-label>
-          <etools-simple-datepicker id="startDate"
+          <calendar-lite id="startDate"
                                     date="[[prepareDatepickerDate(_editedQprDatesSet.start_date)]]"
                                     pretty-date="{{_editedQprDatesSet.start_date}}"
-                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+                                    format="YYYY-MM-DD"></calendar-lite>
         </div>
         <div class="col layout-vertical">
           <iron-label for="endDate">
             End Date
           </iron-label>
-          <etools-simple-datepicker id="endDate"
+          <calendar-lite id="endDate"
                                     date="[[prepareDatepickerDate(_editedQprDatesSet.end_date)]]"
                                     pretty-date="{{_editedQprDatesSet.end_date}}"
-                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+                                    format="YYYY-MM-DD"></calendar-lite>
         </div>
         <div class="col layout-vertical">
           <iron-label for="dueDate">
             Due Date
           </iron-label>
-          <etools-simple-datepicker id="dueDate"
+          <calendar-lite id="dueDate"
                                     date="[[prepareDatepickerDate(_editedQprDatesSet.due_date)]]"
                                     pretty-date="{{_editedQprDatesSet.due_date}}"
-                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+                                    format="YYYY-MM-DD"></calendar-lite>
         </div>
       </div>
 

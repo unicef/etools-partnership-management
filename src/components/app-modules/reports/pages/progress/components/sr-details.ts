@@ -3,6 +3,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-upload/etools-upload.js';
 
 import '../../../../../layout/etools-form-element-wrapper.js';
+import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 
 
 class SrDetails extends PolymerElement {
@@ -13,7 +14,8 @@ class SrDetails extends PolymerElement {
 
   static get template() {
     return html`
-      <style include="paper-material-styles grid-layout-styles">
+     ${gridLayoutStyles}
+      <style include="paper-material-styles">
         :host {
           display: block;
           background-color: var(--primary-background-color);

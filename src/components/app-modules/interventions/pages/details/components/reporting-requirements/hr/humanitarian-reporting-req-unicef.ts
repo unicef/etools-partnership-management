@@ -12,6 +12,8 @@ import { PolymerElement, html } from '@polymer/polymer';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin';
 import FrontendPaginationMixin from '../../../../../../../mixins/frontend-pagination-mixin';
 import { ExpectedResult } from '../../../../../../../../typings/intervention.types';
+import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
+import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
 
 
 
@@ -37,7 +39,8 @@ class HumanitarianReportingReqUnicef extends HumanitarianReportingReqUnicefMixin
   [x: string]: any;
   static get template() {
     return html`
-    <style include="buttons-styles grid-layout-styles">
+    ${buttonsStyles} ${gridLayoutStyles}
+    <style>
     :host {
       display: block;
     }

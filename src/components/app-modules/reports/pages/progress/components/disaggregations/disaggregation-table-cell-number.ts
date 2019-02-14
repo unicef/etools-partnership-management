@@ -2,6 +2,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
+import { disaggregationTableStyles } from './styles/disaggregation-table-styles.js';
 
 
 /**
@@ -17,7 +18,8 @@ class DisaggregationTableCellNumber extends UtilsMixin(PolymerElement) {
 
   static get template() {
     return html`
-      <style include="disaggregation-table-styles">
+      ${disaggregationTableStyles}
+      <style>
         :host {
           display: block;
         }

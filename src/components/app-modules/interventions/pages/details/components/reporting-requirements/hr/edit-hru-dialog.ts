@@ -39,7 +39,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
   static get template() {
     return html`
     ${gridLayoutStyles} ${buttonsStyles} ${requiredFieldStarredStyles}
-    <style include="buttons-styles data-table-styles>
+    <style include="data-table-styles>
       *[hidden] {
         display: none !important;
       }
