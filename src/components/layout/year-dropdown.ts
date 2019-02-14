@@ -76,6 +76,7 @@ class YearDropdown extends PolymerElement {
   }
 
   validate() {
+    // @ts-ignore
     return this.$.yearSelector.validate();
   }
 

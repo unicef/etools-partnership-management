@@ -39,7 +39,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
   static get template() {
     return html`
     ${gridLayoutStyles} ${buttonsStyles} ${requiredFieldStarredStyles}
-    <style include="data-table-styles>
+    <style include="data-table-styles">
       *[hidden] {
         display: none !important;
       }
@@ -169,7 +169,8 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     }
   }
   _getSavedStartDate() {
-    this.hruData.sort((a: string, b: string) => {
+    this.hruData.sort((a: any, b: any) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
 
@@ -190,7 +191,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   _addToList() {
-    let alreadySelected = this.hruData.find(d => d.end_date === this.selectedDate);
+    let alreadySelected = this.hruData.find((d: any) => d.end_date === this.selectedDate);
     if (alreadySelected) {
       fireEvent(this.toastMsgLoadingSource, 'toast',
           {text: 'This date is already added to the list.', showCloseBtn: true});
