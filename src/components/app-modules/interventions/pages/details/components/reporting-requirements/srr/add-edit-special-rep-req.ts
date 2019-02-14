@@ -1,5 +1,5 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import {PolymerElement, html} from '@polymer/polymer';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import DateMixin from '../../../../../../../mixins/date-mixin';
@@ -11,7 +11,7 @@ import 'etools-dialog/etools-dialog.js';
 import 'etools-date-time/calendar-lite.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 
 
 /**
@@ -35,9 +35,12 @@ const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
  */
 class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
 
+  [x: string]: any;
+
   static get template() {
+    // language=HTML
     return html`
-    ${gridLayoutStyles}
+      ${gridLayoutStyles}
       <style>
         :host {
           display: block
@@ -49,6 +52,10 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
 
         iron-label {
           margin-bottom: 24px;
+        }
+        
+        calendar-lite {
+          position: relative;
         }
 
       </style>

@@ -1,17 +1,16 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-data-table/etools-data-table.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import '../../../../../../../layout/icons-actions.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
-import { PolymerElEvent } from '../../../../../../../../typings/globals.types.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
+import {PolymerElEvent} from '../../../../../../../../typings/globals.types.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
 import ReportingReqPastDatesCheckMixin from '../mixins/reporting-req-past-dates-check.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
-import { isEmptyObject } from '../../../../../../../utils/utils.js';
-
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
+import {isEmptyObject} from '../../../../../../../utils/utils.js';
 
 /**
  * @polymer
@@ -27,6 +26,7 @@ class HruList extends EtoolsMixinFactory.combineMixins([
   [x: string]: any;
 
   static get template() {
+    // language=HTML
     return html`
      ${gridLayoutStyles} ${reportingRequirementsListStyles}
       <style include="data-table-styles">
@@ -100,7 +100,8 @@ class HruList extends EtoolsMixinFactory.combineMixins([
   }
 
   _sortRequirementsAsc() {
-    this.hruData.sort((a: string, b: string) => {
+    this.hruData.sort((a: any, b: any) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }

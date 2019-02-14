@@ -51,6 +51,10 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       iron-label {
         margin-bottom: 24px;
       }
+      
+      calendar-lite {
+        position: relative;
+      }
 
     </style>
 
