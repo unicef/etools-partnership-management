@@ -29,7 +29,7 @@ class HruList extends EtoolsMixinFactory.combineMixins([
   static get template() {
     return html`
      ${gridLayoutStyles} ${reportingRequirementsListStyles}
-      <style include="data-table-styles>
+      <style include="data-table-styles">
         :host([with-scroll]) {
           max-height: 400px;
           overflow-y: auto;
