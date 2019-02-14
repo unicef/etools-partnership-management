@@ -422,6 +422,9 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
       </planned-visits>
     </etools-content-panel>
 
+    <template is="dom-if"
+              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, permissions.view.reporting_requirements)]]"
+              restamp>
 
       <partner-reporting-requirements class="content-section"
                                       intervention-id="[[intervention.id]]"
@@ -429,6 +432,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
                                       intervention-end="[[intervention.end]]"
                                       expected-results="[[intervention.result_links]]">
       </partner-reporting-requirements>
+    </template>
     `;
   }
 

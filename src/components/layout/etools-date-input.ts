@@ -7,6 +7,7 @@ import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js'
 import 'etools-datepicker/etools-datepicker-button.js';
 import '../../mixins/date-mixin.js';
 import {SharedStyles} from '../styles/shared-styles.js';
+import { IronMeta } from '@polymer/iron-meta';
 
 
 
@@ -157,7 +158,7 @@ class EtoolsDateInput extends
       };
       // TODO - validator should be defined globally(IronMeta) only once
       // -> extract validator in separate file
-      new Polymer.IronMeta({
+      new IronMeta({
         type: defaultValidator.type,
         key: defaultValidator.name,
         value: defaultValidator

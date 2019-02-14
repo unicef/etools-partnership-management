@@ -20,7 +20,6 @@ import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixi
  * @appliesMixin ArrayHelperMixin
  * @appliesMixin ModifiedInterventionFields
  * @appliesMixin EventHelper
- * @appliesMixin Constants
  * @appliesMixin AjaxErrorsParser
  */
 const SaveInterventionMixin = dedupingMixin(

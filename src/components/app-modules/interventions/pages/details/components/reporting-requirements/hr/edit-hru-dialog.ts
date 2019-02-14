@@ -18,7 +18,7 @@ import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../../../../../../../../store.js';
+import { store, RootState } from '../../../../../../../../store.js';
 
 /**
  * @polymer
@@ -143,6 +143,10 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     return [
       'intervDataChanged(interventionStart, interventionId)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    this.inAmendment = state.pageData!.in_amendment;
   }
 
   intervDataChanged() {

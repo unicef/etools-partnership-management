@@ -13,13 +13,16 @@ import './hr/humanitarian-reporting-req-unicef.js';
 import './hr/humanitarian-reporting-req-cluster.js';
 import './srr/special-reporting-requirements.js';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../../../store.js';
 
 
 /**
  * @polymer
  * @customElement
  */
-class PartnerReportingRequirements extends PolymerElement {
+class PartnerReportingRequirements extends connect(store)(PolymerElement) {
+  [x: string]: any;
   static get template() {
     return html`
     ${gridLayoutStyles}
@@ -192,6 +195,10 @@ class PartnerReportingRequirements extends PolymerElement {
     };
   }
 
+  stateChanged(state: RootState) {
+    this.editMode = state.pageData!.permissions!.edit.reporting_requirements;
+  }
+
   _openQprEditDialog() {
     this.$.qpr.openQuarterlyRepRequirementsDialog();
   }
@@ -200,7 +207,7 @@ class PartnerReportingRequirements extends PolymerElement {
     this.$.hru.openUnicefHumanitarianRepReqDialog();
   }
 
-  _hideRepReqEditBtn(editMode, qprCount) {
+  _hideRepReqEditBtn(editMode: boolean, qprCount: Number) {
     return qprCount === 0 || !editMode;
   }
 

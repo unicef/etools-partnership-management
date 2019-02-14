@@ -46,16 +46,15 @@ import { store } from '../../../store';
  * @customElement
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
- * @appliesMixin EventHelper
+ * @appliesMixin EventHelperMixin
  * @appliesMixin EnvironmentFlags
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
- * @appliesMixin ModuleMainElCommonFunctionality
- * @appliesMixin ModuleRouting
- * @appliesMixin InterventionPageTabs
- * @appliesMixin InterventionPermissions
- * @appliesMixin SaveIntervention
- * @appliesMixin Constants
+ * @appliesMixin ModuleMainElCommonFunctionalityMixin
+ * @appliesMixin ModuleRoutingMixin
+ * @appliesMixin InterventionPageTabsMixin
+ * @appliesMixin InterventionPermissionsMixin
+ * @appliesMixin SaveInterventionMixin
  */
 class InterventionsModule extends EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
@@ -68,7 +67,7 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
   ModuleRoutingMixin,
   InterventionPageTabsMixin,
   InterventionPermissionsMixin,
-  SaveInterventionMixin,
+  SaveInterventionMixin
 ], PolymerElement) {
   [x: string]: any;
 
