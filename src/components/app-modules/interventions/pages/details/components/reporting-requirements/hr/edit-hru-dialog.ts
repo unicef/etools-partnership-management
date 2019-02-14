@@ -54,6 +54,10 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
         padding-bottom: 24px;
         max-width: 300px;
       }
+      
+      calendar-lite {
+        position: relative;
+      }
     </style>
 
     <etools-dialog id="editHruDialog"

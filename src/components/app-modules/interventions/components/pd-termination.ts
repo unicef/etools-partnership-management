@@ -9,6 +9,7 @@ import '../../../layout/etools-warn-message.js';
 import { SharedStyles } from '../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
+import {fireEvent} from '../../../utils/fire-custom-event.js';
 
 
 /**
@@ -151,7 +152,7 @@ class PdTermination extends EnvironmentFlags(PolymerElement) {
 
   _terminatePD() {
     if (this.validate()) {
-      this.terminationElSource.fireEvent('terminate-pd',
+      fireEvent(this.terminationElSource, 'terminate-pd',
           {
             interventionId: this.interventionId,
             terminationData: {
