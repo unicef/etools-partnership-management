@@ -2,7 +2,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import {EtoolsCurrency} 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-upload/etools-upload.js';
 

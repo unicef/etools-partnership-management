@@ -11,7 +11,7 @@ import {updateDrawerState} from "../../../actions/app";
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-profile-dropdown/etools-profile-dropdown.js';
 import 'etools-app-selector/etools-app-selector.js'
-// import '../layout/countries-dropdown.js';
+import '../header/countries-dropdown.js';
 import EventHelperMixin from "../../mixins/event-helper-mixin";
 import ProfileOperations from "../../user/profile-operations-mixin";
 import {isJsonStrMatch} from "../../utils/utils";
@@ -100,8 +100,9 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
           </dom-if>
         </div>
         <div class="content-align">
-          <!--<countries-dropdown id="countries" countries="[[countries]]"-->
-                              <!--current-country="[[profile.country]]"></countries-dropdown>-->
+          <countries-dropdown id="countries" countries="[[countries]]"
+                              current-country="[[profile.country]]">
+                              </countries-dropdown>
 
           <etools-profile-dropdown
               sections="[[allSections]]"
@@ -111,7 +112,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
               on-save-profile="_saveProfile"
               on-sign-out="_signOut"></etools-profile-dropdown>
 
-          <!--<paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>-->
+          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
         </div>
       </app-toolbar>
     `;

@@ -16,6 +16,7 @@ import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import 'etools-date-time/calendar-lite.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
+import moment from 'moment';
 
 
 /**
@@ -51,9 +52,10 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       iron-label {
         margin-bottom: 24px;
       }
-      
+
       calendar-lite {
         position: relative;
+        width: 268px;
       }
 
     </style>
@@ -104,27 +106,24 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
             Start Date
           </iron-label>
           <calendar-lite id="startDate"
-                                    date="[[prepareDatepickerDate(_editedQprDatesSet.start_date)]]"
-                                    pretty-date="{{_editedQprDatesSet.start_date}}"
-                                    format="YYYY-MM-DD"></calendar-lite>
+                                    date="{{_editedQprDatesSet.start_date}}">
+                                    </calendar-lite>
         </div>
         <div class="col layout-vertical">
           <iron-label for="endDate">
             End Date
           </iron-label>
           <calendar-lite id="endDate"
-                                    date="[[prepareDatepickerDate(_editedQprDatesSet.end_date)]]"
-                                    pretty-date="{{_editedQprDatesSet.end_date}}"
-                                    format="YYYY-MM-DD"></calendar-lite>
+                                  date="{{_editedQprDatesSet.end_date}}">
+                                  </calendar-lite>
         </div>
         <div class="col layout-vertical">
           <iron-label for="dueDate">
             Due Date
           </iron-label>
           <calendar-lite id="dueDate"
-                                    date="[[prepareDatepickerDate(_editedQprDatesSet.due_date)]]"
-                                    pretty-date="{{_editedQprDatesSet.due_date}}"
-                                    format="YYYY-MM-DD"></calendar-lite>
+                                    date="{{_editedQprDatesSet.due_date}}">
+                                    </calendar-lite>
         </div>
       </div>
 

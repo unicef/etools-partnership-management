@@ -54,7 +54,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
         padding-bottom: 24px;
         max-width: 300px;
       }
-      
+
       calendar-lite {
         position: relative;
       }
@@ -86,9 +86,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       <div class="layout-horizontal row-padding-v">
         <div class="col layout-vertical col-6">
           <calendar-lite id="datepicker"
-                                    date="[[prepareDatepickerDate(selectedDate)]]"
-                                    pretty-date="{{selectedDate}}"
-                                    format="YYYY-MM-DD"></calendar-lite>
+                                    date="{{selectedDate}}"></calendar-lite>
 
           <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
             Add Selected Date to List
@@ -204,7 +202,9 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
           {text: 'This date is already added to the list.', showCloseBtn: true});
       return;
     }
-    this.push('hruData', {end_date: this.selectedDate, due_date: this._oneDayAfterEndDate(this.selectedDate)});
+    this.push('hruData', {
+       end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
+       due_date: this._oneDayAfterEndDate(this.selectedDate)});
   }
 
   _oneDayAfterEndDate(endDt: string) {

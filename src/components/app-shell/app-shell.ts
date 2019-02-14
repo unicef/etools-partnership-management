@@ -68,6 +68,7 @@ import UserDataMixin from "../user/user-data-mixin";
 
 import './menu/app-menu.js';
 import './header/page-header.js'
+import './header/data-refresh-dialog'
 import './footer/page-footer.js'
 
 import '../environment-flags/environment-flags';
@@ -81,7 +82,6 @@ import EventHelperMixin from '../mixins/event-helper-mixin.js';
 
 // import global config and dexie db config
 import '../../config/config.js';
-import '../../config/dexie-db-config.js';
 import { RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
 import uploadStatus from '../../reducers/upload-status.js';
 import agreements from '../../reducers/agreements.js';
@@ -232,7 +232,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     </app-drawer-layout>
 
     <!-- TODO: polymer 3 - refactor, migrate, uncomment -->
-    <!--<data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>-->
+    <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
     <partners-list-data></partners-list-data>
     <agreements-list-data></agreements-list-data>
