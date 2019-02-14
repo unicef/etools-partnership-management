@@ -1,13 +1,13 @@
+import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 import moment from 'moment';
 import 'etools-dialog/etools-dialog.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-data-table/etools-data-table.js';
-//<link rel="import" href="../../../../../../../../../bower_components/etools-datepicker/etools-simple-datepicker.html">
+import 'etools-date-time/calendar-lite';
 import 'etools-date-time/datepicker-lite.js';
 import './hru-list.js';
-import { PolymerElement, html } from '@polymer/polymer';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
@@ -24,8 +24,7 @@ import { store } from '../../../../../../../../store.js';
  * @polymer
  * @customElement
  * @appliesMixin EtoolsDataReduxStore
- * @appliesMixin EventHelper
- * @appliesMixin Date
+ * @appliesMixin DateMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParser
  */
@@ -82,10 +81,10 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
 
       <div class="layout-horizontal row-padding-v">
         <div class="col layout-vertical col-6">
-          <etools-simple-datepicker id="datepicker"
+          <calendar-lite id="datepicker"
                                     date="[[prepareDatepickerDate(selectedDate)]]"
                                     pretty-date="{{selectedDate}}"
-                                    format="YYYY-MM-DD"></etools-simple-datepicker>
+                                    format="YYYY-MM-DD"></calendar-lite>
 
           <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
             Add Selected Date to List

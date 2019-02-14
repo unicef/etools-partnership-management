@@ -8,7 +8,7 @@ import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 
-//import '/etools-datepicker/etools-simple-datepicker.js';
+import 'etools-date-time/calendar-lite.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
@@ -65,10 +65,10 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
             <iron-label for="startDate">
               Report Due Date
             </iron-label>
-            <etools-simple-datepicker id="startDate"
+            <calendar-lite id="startDate"
                                       date="[[prepareDatepickerDate(item.due_date)]]"
                                       pretty-date="{{item.due_date}}"
-                                      format="YYYY-MM-DD"></etools-simple-datepicker>
+                                      format="YYYY-MM-DD"></calendar-lite>
           </div>
         </div>
         <div class="row-h">
