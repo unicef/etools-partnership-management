@@ -72,16 +72,14 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
                     disable-dismiss-btn="[[uploadInProgress]]">
 
         <div class="row-h flex-c">
-          <required-and-not-future-date-validator validator-name="signedDate_validator"
-                                                  field-selector="#signed-date">
-          </required-and-not-future-date-validator>
+
           <!-- Signed Date -->
           <datepicker-lite id="signed-date"
                             label="Signed date"
                             value="{{newAmendment.signed_date}}"
-                            required-and-not-future-date
                             open="{{datePickerOpen}}"
-                            validator="signedDate_validator"
+                            max-date="[[getCurrentDate()]]"
+                            max-date-error-msg="Date can not be in the future"
                             auto-validate
                             required>
           </datepicker-lite>
@@ -370,6 +368,10 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
       const uploadResponse = JSON.parse(e.detail.success);
       this.set('newAmendment.internal_prc_review', uploadResponse.id);
     }
+  }
+
+  getCurrentDate() {
+    return new Date();
   }
 }
 

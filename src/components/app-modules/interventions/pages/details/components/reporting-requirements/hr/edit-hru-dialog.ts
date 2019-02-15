@@ -86,7 +86,10 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       <div class="layout-horizontal row-padding-v">
         <div class="col layout-vertical col-6">
           <calendar-lite id="datepicker"
-                                    date="{{selectedDate}}"></calendar-lite>
+                    date="[[prepareDatepickerDate(selectedDate)]]"
+                    pretty-date="{{selectedDate}}"
+                    format="YYYY-MM-DD">
+          </calendar-lite>
 
           <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
             Add Selected Date to List
