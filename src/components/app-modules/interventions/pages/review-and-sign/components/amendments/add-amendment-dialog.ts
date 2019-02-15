@@ -9,7 +9,6 @@ import 'etools-date-time/datepicker-lite.js';
 
 
 import '../../../../../../layout/etools-warn-message.js';
-import '../../../../../../../validators/required-and-not-future-date-validator.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin.js';

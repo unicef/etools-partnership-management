@@ -75,8 +75,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
                         required
                         min-date="[[minDate]]"
                         auto-validate
-                        open="{{datePickerOpen}}"
-                        no-init show-clear-btn>
+                        open="{{datePickerOpen}}">
       </datepicker-lite>
       </div>
       <div>
