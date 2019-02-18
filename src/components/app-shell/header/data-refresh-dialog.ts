@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import '@polymer/iron-label/iron-label.js';
 import 'etools-dialog/etools-dialog.js';
+import '@polymer/iron-label/iron-label.js';
 import { SharedStyles } from '../../styles/shared-styles';
 import { gridLayoutStyles } from '../../styles/grid-layout-styles';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';

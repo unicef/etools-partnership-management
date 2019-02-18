@@ -49,9 +49,18 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
           color: var(--header-color);
         }
 
+        countries-dropdown {
+          --countries-dropdown-color: var(--light-secondary-text-color);
+        }
+
+        etools-profile-dropdown,
+        #refresh {
+          color: var(--light-secondary-text-color);
+        }
+
         #menuButton {
           display: block;
-          color: var(--header-color);
+          color: var(--light-secondary-text-color);
         }
 
         .titlebar {
