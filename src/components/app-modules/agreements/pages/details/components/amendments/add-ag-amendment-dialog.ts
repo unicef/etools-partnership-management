@@ -13,7 +13,6 @@ import { AgreementAmendment } from '../../../../agreement.types';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import '../../../../../../../validators/required-and-not-future-date-validator.js';
 
 /**
  * @polymer
@@ -47,16 +46,12 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Signed Date -->
-            <required-and-not-future-date-validator validator-name="ag_am_signed_date_validator"
-                                                    field-selector="#signedDate">
-            </required-and-not-future-date-validator>
             <datepicker-lite id="signedDate"
                               label="Signed Date"
                               value="{{amendment.signed_date}}"
-                              error-message="Please select signed date"
-                              required
+                              required-error-msg="Please select signed date"
+                              max-date-error-msg="Date can not be in the future"
                               open="{{datePickerOpen}}"
-                              validator="ag_am_signed_date_validator"
                               auto-validate="[[autoValidate]]"
                               max-date="[[getCurrentDate()]]"
                               required>

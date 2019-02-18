@@ -10,7 +10,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import EventHelperMixin from '../../../../../mixins/event-helper-mixin.js';
-import '../../../../../../validators/required-and-not-future-date-validator.js';
+
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
@@ -76,15 +76,12 @@ class AssessmentDialog extends connect(store)(AssessmentDialogMixins) {
                              auto-validate></etools-dropdown>
           </div>
           <div class="col col-5 padd-left">
-            <required-and-not-future-date-validator validator-name="dateSubmittedValidator"
-                                                    field-selector="#dateSubmitted">
-            </required-and-not-future-date-validator>
             <datepicker-lite id="dateSubmitted"
                                label="Date of Assessment"
                                value="{{assessment.completed_date}}"
                                auto-validate
-                               required-and-not-future-date
-                               validator="dateSubmittedValidator"
+                               max-date-error-msg="Date can not be in the future"
+                               max-date="[[getCurrentDate()]]"
                                required>
             </datepicker-lite>
           </div>
@@ -276,6 +273,11 @@ class AssessmentDialog extends connect(store)(AssessmentDialogMixins) {
     // @ts-ignore
     this.set('assessment.active', !e.target.checked);
   }
+
+  getCurrentDate() {
+    return new Date();
+  }
+
 
 }
 

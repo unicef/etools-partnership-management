@@ -106,7 +106,9 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
             Start Date
           </iron-label>
           <calendar-lite id="startDate"
-                                    date="{{_editedQprDatesSet.start_date}}">
+                    date="[[prepareDatepickerDate(_editedQprDatesSet.start_date)]]"
+                    pretty-date="{{_editedQprDatesSet.start_date}}"
+                    format="YYYY-MM-DD">
                                     </calendar-lite>
         </div>
         <div class="col layout-vertical">
@@ -114,7 +116,9 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
             End Date
           </iron-label>
           <calendar-lite id="endDate"
-                                  date="{{_editedQprDatesSet.end_date}}">
+                    date="[[prepareDatepickerDate(_editedQprDatesSet.end_date)]]"
+                    pretty-date="{{_editedQprDatesSet.end_date}}"
+                    format="YYYY-MM-DD">
                                   </calendar-lite>
         </div>
         <div class="col layout-vertical">
@@ -122,7 +126,9 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
             Due Date
           </iron-label>
           <calendar-lite id="dueDate"
-                                    date="{{_editedQprDatesSet.due_date}}">
+                    date="[[prepareDatepickerDate(_editedQprDatesSet.due_date)]]"
+                    pretty-date="{{_editedQprDatesSet.due_date}}"
+                    format="YYYY-MM-DD">
                                     </calendar-lite>
         </div>
       </div>

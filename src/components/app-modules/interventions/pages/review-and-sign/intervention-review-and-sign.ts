@@ -117,8 +117,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
               <datepicker-lite id="submissionDatePrcField"
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
-                                readonly$="[[!permissions.edit.submission_date_prc]]"
-                                no-init show-clear-btn>
+                                readonly$="[[!permissions.edit.submission_date_prc]]">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -126,8 +125,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
               <datepicker-lite id="reviewDatePrcField"
                                 label="Review Date by PRC"
                                 value="{{intervention.review_date_prc}}"
-                                readonly$="[[!permissions.edit.review_date_prc]]"
-                                no-init show-clear-btn>
+                                readonly$="[[!permissions.edit.review_date_prc]]">
               </datepicker-lite>
             </div>
             <div class="col col-6">
@@ -170,7 +168,8 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
                               required$="[[permissions.required.signed_by_partner_date]]"
                               auto-validate
                               error-message="Date is required"
-                              no-init show-clear-btn disable-future-dates>
+                              max-date-error-msg="Date can not be in the future"
+                              max-date="[[getCurrentDate()]]">
             </datepicker-lite>
           </div>
         </div>
@@ -190,7 +189,8 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
                               required$="[[permissions.required.signed_by_unicef_date]]"
                               auto-validate
                               error-message="Date is required"
-                              no-init show-clear-btn disable-future-dates>
+                              max-date-error-msg="Date can not be in the future"
+                              max-date="[[getCurrentDate()]]">
             </datepicker-lite>
           </div>
         </div>
@@ -490,6 +490,10 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
 
   showSignedPDDeleteBtn(status: string) {
     return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.signed_pd_attachment;
+  }
+
+  getCurrentDate() {
+    return new Date();
   }
 
 }
