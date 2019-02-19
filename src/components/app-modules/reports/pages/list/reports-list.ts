@@ -191,7 +191,11 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
         }
       },
       paginator: {
-        type: Object
+        type: Object,
+        value: {
+          page: 1,
+          page_size: 10
+        }
       },
       _initComplete: {
         type: Boolean,
@@ -238,6 +242,11 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
      * triggered by parent element on stamp
      */
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-page'});
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._initComplete = false;
   }
 
   _initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes) {
@@ -364,13 +373,12 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
         });
   }
 
-  _init(active) {
+  _init(active: boolean) {
     if (!active) {
       return;
     }
     let urlQueryParams = this.urlParams;
     this.set('_initComplete', false);
-
     if (isEmptyObject(urlQueryParams)) {
       urlQueryParams.status = 'Sub|Ove|Sen';
     }
@@ -394,8 +402,8 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     this.set('_initComplete', true);
   }
 
-  _updateURL(queryParamsData, pageNr, pageSize, _initComplete) {
-    if (!_initComplete) {
+  _updateURL(queryParamsData, pageNr: number, pageSize: number, _initComplete: boolean) {
+    if (!_initComplete || !this.active) {
       return;
     }
     if (!queryParamsData || !pageNr || !pageSize) {

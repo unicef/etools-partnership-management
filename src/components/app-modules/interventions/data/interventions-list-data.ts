@@ -81,7 +81,7 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
         cpOutputs: string[], donors: string[], grants: string[],
         statuses: string[], sections: string[], unicefFocalPoints: string[],
         offices: string[], cpStructures: string[], startDate: string,
-        endDate: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
+        endDate: string, endAfter: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
     // a new one
@@ -133,6 +133,11 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
 
         if (endDate && endDate.length &&
             (!intervention.end || !moment.utc(intervention.end).isBefore(moment.utc(endDate)))) {
+          return false;
+        }
+
+        if (endAfter && endAfter.length &&
+            (!intervention.end || !moment.utc(intervention.end).isSameOrAfter(moment.utc(endAfter)))) {
           return false;
         }
 

@@ -161,7 +161,7 @@ declare const moment: any;
    *  - 'dropdown'(dropdown created using polymer catalog elements)
    *  - 'esmm' (etools-dropdown-multi)
    *  - 'etools-dropdown' - etools-dropdown single selection
-   *  - 'datepicker' (etools-datepicker)update
+   *  - 'datepicker' (datepicker-lite)update
    */
   filterTypeIs(expectedType: string, checkedTypeValue: string) {
     return expectedType === checkedTypeValue;

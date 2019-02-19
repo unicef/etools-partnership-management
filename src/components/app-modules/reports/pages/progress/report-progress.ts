@@ -8,10 +8,10 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import '../../../../layout/etools-ram-indicators.js';
 
 import '../../components/report-status.js';
-import 'components/report-overall.js';
-import 'components/indicator-report-target.js';
-import 'components/indicator-details.js';
-import 'components/sr-details.js';
+import './components/report-overall.js';
+import './components/indicator-report-target.js';
+import './components/indicator-details.js';
+import './components/sr-details.js';
 import { PolymerElement, html } from '@polymer/polymer';
 import UtilsMixin from '../../../../mixins/utils-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';

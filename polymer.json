@@ -1,17 +1,51 @@
 {
   "entrypoint": "index.html",
   "shell": "src/components/app-shell/app-shell.js",
+  "fragments": [
+    "src/components/app-modules/partners/partners-module.js",
+    "src/components/app-modules/partners/pages/list/partners-list.js",
+    "src/components/app-modules/partners/pages/overview/partner-overview.js",
+    "src/components/app-modules/partners/pages/details/partner-details.js",
+    "src/components/app-modules/partners/pages/financial-assurance/partner-financial-assurance.js",
+
+    "src/components/app-modules/agreements/agreements-module.js",
+    "src/components/app-modules/agreements/pages/list/agreements-list.js",
+    "src/components/app-modules/agreements/pages/details/agreement-details.js",
+
+    "src/components/app-modules/interventions/interventions-module.js",
+    "src/components/app-modules/interventions/pages/list/interventions-list.js",
+    "src/components/app-modules/interventions/pages/overview/intervention-overview.js",
+    "src/components/app-modules/interventions/pages/details/intervention-details.js",
+    "src/components/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.js",
+    "src/components/app-modules/interventions/pages/attachments/intervention-attachments.js",
+    "src/components/app-modules/interventions/pages/reports/intervention-reports.js",
+    "src/components/app-modules/interventions/pages/progress/intervention-progress.js",
+
+    "src/components/app-modules/reports/reports-module.js",
+    "src/components/app-modules/reports/pages/list/reports-list.js",
+    "src/components/app-modules/reports/pages/progress/report-progress.js",
+    "src/components/app-modules/reports/pages/summary/report-summary.js",
+
+    "src/components/app-modules/settings/settings-module.js",
+    "src/components/app-modules/not-found/not-found.js"
+  ],
   "sources": [
-    "images/**/*"
+    "pmp_poly3/**/*",
+    "images/**/*",
+    "package.json"
   ],
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
     "push-manifest.json"
   ],
+  "lint": {
+    "rules": ["polymer-3"],
+    "ignoreWarnings": []
+  },
   "builds": [
     {
-      "name": "esm-bundled",
+      "name": "pmp_poly3/esm-bundled",
       "browserCapabilities": [
         "es2015",
         "modules"
@@ -29,7 +63,7 @@
       "addServiceWorker": true
     },
     {
-      "name": "es6-bundled",
+      "name": "pmp_poly3/es6-bundled",
       "browserCapabilities": [
         "es2015"
       ],
@@ -48,7 +82,7 @@
       "addServiceWorker": true
     },
     {
-      "name": "es5-bundled",
+      "name": "pmp_poly3/es5-bundled",
       "js": {
         "compile": "es5",
         "minify": true,
