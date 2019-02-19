@@ -3,6 +3,8 @@
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import { RootState } from '../../../../store';
+import { isJsonStrMatch, copy } from '../../../utils/utils';
 
 
   /**
@@ -25,7 +27,7 @@ import { fireEvent } from '../../../utils/fire-custom-event';
       reportAttachment: Object,
       currentUser: {
         type: Object,
-        statePath: 'currentUser' //TODO
+        statePath: 'currentUser'
       },
       reportActions: {
         type: Array,
@@ -54,6 +56,12 @@ import { fireEvent } from '../../../utils/fire-custom-event';
         value: 'report-details-behavior'
       }
     };
+  }
+
+  repDetailsStateChanged(state: RootState) {
+    if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
+      this.currentUser = copy(state.commonData!.currentUser);
+    }
   }
 
   requestReportDetails(id: string) {

@@ -32,6 +32,8 @@ import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header
 import ReportDetailsMixin from './mixins/report-details-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import { isEmptyObject } from '../../utils/utils.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../store.js';
 declare const moment: any;
 
 /**
@@ -59,7 +61,7 @@ const ReportsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin ReportsModuleRequiredMixins
  */
-class ReportsModule extends ReportsModuleRequiredMixins {
+class ReportsModule extends connect(store)(ReportsModuleRequiredMixins) {
   [x: string]: any;
 
   static get is() {
@@ -283,6 +285,10 @@ class ReportsModule extends ReportsModuleRequiredMixins {
       '_loadReport(routeData.id, tabsActive, prpCountries, currentUser)',
       '_reportChanged(report)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    this.repDetailsStateChanged(state);
   }
 
   ready() {
