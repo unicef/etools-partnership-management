@@ -98,46 +98,6 @@ const ModifiedInterventionFieldsMixin = dedupingMixin((superClass: any) => class
     return modifiedObject;
   }
 
-  _prepareAttachments() {// TODO - is this method still relevant?
-    if (isEmptyObject(this.intervention.attachments)) {
-      return [];
-    }
-    let modifAttachments = this.intervention.attachments
-        .filter(this._attachmentIsNewOrModified.bind(this))
-        .map((attachment: InterventionAttachment) => {
-          let _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
-          if (!_sendAttachmentFile && attachment.id) {
-            return {
-              id: attachment.id,
-              type: attachment.type
-            };
-          } else {
-            return {
-              id: attachment.id,
-              intervention: attachment.intervention,
-              type: attachment.type,
-              attachment: attachment.raw
-            };
-          }
-        });
-    return modifAttachments;
-  }
-
-  _attachmentIsNewOrModified(attachment: InterventionAttachment) {
-    if (isEmptyObject(this.originalIntervention.attachments)) {
-      return true;
-    }
-    if (!attachment.id) {
-      return true;
-    }
-    let originalAttachment = this.originalIntervention.attachments.find((att: InterventionAttachment) => {
-      return att.id === attachment.id;
-    });
-    if (!originalAttachment) {
-      return true;
-    }
-    return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
-  }
 });
 
 export default ModifiedInterventionFieldsMixin;

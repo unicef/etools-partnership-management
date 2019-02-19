@@ -174,11 +174,9 @@ const SaveInterventionMixin = dedupingMixin(
       delete interventionData.planned_budget.total;
     }
 
-    // prepare attachments
-    interventionData.attachments = this._prepareAttachments();
-    if (isEmptyObject(interventionData.attachments)) {
-      delete interventionData.attachments;
-    }
+    // attachments are saved in modal dialog, so no need to resend them to bk
+    delete interventionData.attachments;
+
     return interventionData;
   }
 
