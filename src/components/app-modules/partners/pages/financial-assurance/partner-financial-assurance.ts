@@ -593,11 +593,6 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
     this.set('engagements', engagements);
   }
 
-  public _validatePageData() {
-    // @ts-ignore
-    return this.$.assessmentsList.validate();
-  }
-
   public _getYear() {
     return moment().year();
   }

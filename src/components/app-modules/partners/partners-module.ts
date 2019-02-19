@@ -434,39 +434,18 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     this.fireEvent('clear-server-errors');
   }
 
-  /**
-   * All partners pages with editable fields should be validated on save
-   */
-  public _partnerDataIsValid() {
-    let valid = true;
-    let partnersPages = [
-      this.shadowRoot.querySelector('#financialAssurance')
-      // this.shadowRoot.querySelector('#partnerDetails')
-    ];
-    partnersPages.forEach((pageEl) => {
-      if (pageEl && !pageEl._validatePageData()) {
-        valid = false;
-      }
-    });
-    return valid;
-  }
 
   public _validateAndTriggerPartnerSave(event: CustomEvent) {
     event.stopImmediatePropagation();
     if (!this._hasEditPermissions(this.permissions)) {
       return;
     }
-    if (this._partnerDataIsValid()) {
-      // both partner details and financial assurance data is valid
-      let partnerChanges = this._cleanUpdateData(this.partner);
-      partnerChanges.id = this.partner.id;
-      this._savePartner(partnerChanges);
-    } else {
-      this.fireEvent('toast', {
-        text: 'Please check assessments and partner contacts for ' +
-            'invalid fields or empty data rows!', showCloseBtn: true
-      });
-    }
+
+    // both partner details and financial assurance data is valid
+    let partnerChanges = this._cleanUpdateData(this.partner);
+    partnerChanges.id = this.partner.id;
+    this._savePartner(partnerChanges);
+
   }
 
   public _cleanUpdateData(partner: any) {
