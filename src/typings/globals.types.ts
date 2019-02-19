@@ -53,6 +53,7 @@ export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in pol
 
 export interface PolymerElEvent extends CustomEvent {//TODO - should be in polymer type declarions
   target: any;
+  currentTarget: any
 }
 
 export class Paginator {
