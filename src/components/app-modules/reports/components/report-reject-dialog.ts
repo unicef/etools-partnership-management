@@ -6,9 +6,7 @@ import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { PolymerElement, html } from '@polymer/polymer';
 import { SharedStyles } from '../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
-import moment from 'moment';
-
-
+declare const moment: any;
 
 /**
  * @polymer

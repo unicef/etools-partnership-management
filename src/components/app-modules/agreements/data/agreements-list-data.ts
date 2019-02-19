@@ -7,7 +7,9 @@ import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
 import Dexie from 'dexie';
-import moment from 'moment';
+
+declare const moment: any;
+
 import { isEmptyObject } from '../../../utils/utils';
 import { setAgreements } from '../../../../actions/agreements';
 import { MinimalAgreement } from '../agreement.types';

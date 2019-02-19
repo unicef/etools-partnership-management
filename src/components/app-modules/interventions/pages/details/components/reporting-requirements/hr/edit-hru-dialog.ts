@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
-import moment from 'moment';
+declare const moment: any;
 import 'etools-dialog/etools-dialog.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';

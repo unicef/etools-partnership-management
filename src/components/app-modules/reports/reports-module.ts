@@ -32,9 +32,7 @@ import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header
 import ReportDetailsMixin from './mixins/report-details-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import { isEmptyObject } from '../../utils/utils.js';
-import moment from 'moment';
-
-
+declare const moment: any;
 
 /**
  * @polymer

@@ -8,7 +8,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { SharedStyles } from '../../../styles/shared-styles';
-import moment from 'moment';
+declare const moment: any;
 import { fireEvent } from '../../../utils/fire-custom-event';
 
 

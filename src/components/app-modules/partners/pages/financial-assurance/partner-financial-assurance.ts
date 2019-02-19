@@ -25,7 +25,7 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
-import moment from 'moment';
+declare const moment: any;
 import {AP_DOMAIN} from '../../../../../config/config.js';
 
 import './components/assessments-items.js';

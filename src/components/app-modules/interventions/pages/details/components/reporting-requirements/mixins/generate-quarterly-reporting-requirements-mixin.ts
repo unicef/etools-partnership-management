@@ -1,4 +1,4 @@
-import moment from 'moment';
+declare const moment: any;
 import DateMixin from '../../../../../../../mixins/date-mixin';
 
 /**

@@ -2,13 +2,12 @@
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import moment from 'moment';
+declare const moment: any;
 import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import { PolymerElement } from '@polymer/polymer';
 import { ListItemIntervention } from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
-
 
 /**
  * @polymer

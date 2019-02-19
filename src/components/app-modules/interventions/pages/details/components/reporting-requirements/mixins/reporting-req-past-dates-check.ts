@@ -1,4 +1,4 @@
-import moment from 'moment';
+declare const moment: any;
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 /**

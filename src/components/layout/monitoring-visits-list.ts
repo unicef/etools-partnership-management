@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-loading/etools-loading.js';
-import moment from 'moment';
+declare const moment: any;
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore

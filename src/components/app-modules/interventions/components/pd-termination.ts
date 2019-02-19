@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin.js';
 import pmpEndpoints from '../../../endpoints/endpoints.js';
-import moment from 'moment';
+declare const moment: any;
 import 'etools-dialog/etools-dialog.js';
 import 'etools-upload/etools-upload.js';
 import 'etools-date-time/datepicker-lite.js';
