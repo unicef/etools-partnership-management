@@ -10,6 +10,10 @@ export const AppShellStyles = html`
       display: block;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     app-header-layout {
       position: relative;
     }
@@ -38,6 +42,10 @@ export const AppShellStyles = html`
       border-top: 12px solid var(--amendment-mode-color);
       border-left: 12px solid var(--amendment-mode-color);
       border-right: 12px solid var(--amendment-mode-color);
+    }
+
+    #page-container.in-amendment {
+      padding-bottom: 48px;
     }
 
     @media print {
