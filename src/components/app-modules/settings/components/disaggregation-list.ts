@@ -8,7 +8,6 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import EventHelperMixin from '../../../mixins/event-helper-mixin.js';
 import UserPermissionsMixin from '../../../user/user-permissions-mixin.js';
-import ListsCommonMixin from '../../../mixins/lists-common-mixin.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
@@ -31,7 +30,6 @@ import {isJsonStrMatch} from "../../../utils/utils";
  * @appliesMixin EnvironmentFlags
  * @appliesMixin EventHelperMixin
  * @appliesMixin FrontendPaginationMixin
- * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
@@ -60,20 +58,20 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
         [hidden] {
           display: none !important;
         }
-        
+
         #filters {
           background-color: var(--primary-background-color, #FFFFFF);
           padding: 8px 24px;
           margin-bottom: 24px;
           box-sizing: border-box;
         }
-        
+
         .qFilter {
           max-width: 200px;
         }
-        
+
       </style>
-      
+
       <div id="filters" class="paper-material" elevation="1">
         <paper-input id="query"
                      class="qFilter"
@@ -84,7 +82,7 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
       </div>
-      
+
       <etools-content-panel panel-title="Disaggregations">
         <template is="dom-if" if="[[userIsPme(currentUser)]]">
           <paper-icon-button slot="panel-btns"
@@ -118,13 +116,13 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
                                        disabled="[[!userIsPme(currentUser)]]"
                                        checked="{{item.active}}"
                                        on-tap="_toggleActive">
-  
+
                   </paper-toggle-button>
                 </span>
               </div>
             </etools-data-table-row>
           </template>
-  
+
           <etools-data-table-footer
               page-size="[[pagination.pageSize]]"
               page-number="[[pagination.pageNumber]]"

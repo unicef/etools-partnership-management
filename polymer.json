@@ -39,6 +39,10 @@
     "node_modules/@webcomponents/webcomponentsjs/**",
     "push-manifest.json"
   ],
+  "lint": {
+    "rules": ["polymer-3"],
+    "ignoreWarnings": []
+  },
   "builds": [
     {
       "name": "pmp_poly3/esm-bundled",

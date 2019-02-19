@@ -526,7 +526,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
       },
       {
         filterName: 'Ends Before',
-        type: 'datepicker', // etools-datepicker
+        type: 'datepicker', // datepicker-lite
         path: 'endDate',
         dateSelected: '',
         selected: false
@@ -580,7 +580,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
       },
       {
         filterName: 'Starts After',
-        type: 'datepicker', // etools-datepicker
+        type: 'datepicker', // datepicker-lite
         path: 'startDate',
         dateSelected: '',
         selected: false
