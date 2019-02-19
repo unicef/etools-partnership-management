@@ -643,16 +643,15 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   private _createLeavePageDialog() {
     let msg = document.createElement('span');
     msg.innerText = 'Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!';
-    // TODO: polymer 3
-    // let conf: any = {
-    //   title: 'Are you sure you want to leave this page?',
-    //   size: 'md',
-    //   okBtnText: 'Leave',
-    //   cancelBtnText: 'Stay',
-    //   closeCallback: this._onLeavePageConfirmation.bind(this),
-    //   content: msg
-    // };
-    // this.leavePageDialog = this.createDynamicDialog(conf);
+    let conf: any = {
+      title: 'Are you sure you want to leave this page?',
+      size: 'md',
+      okBtnText: 'Leave',
+      cancelBtnText: 'Stay',
+      closeCallback: this._onLeavePageConfirmation.bind(this),
+      content: msg
+    };
+    this.leavePageDialog = this.createDynamicDialog(conf);
   }
 
   private _openLeavePageDialog() {
@@ -669,9 +668,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       // revert url
       this.appLocRoute = JSON.parse(JSON.stringify(this.route));
 
-      // TODO: polymer 3
-      // this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
-      this.shadowRoot.querySelector('app-sidebar-menu')
+      this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+      this.shadowRoot.querySelector('app-menu')
           .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
     }
   }

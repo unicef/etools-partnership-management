@@ -1,5 +1,6 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EventHelperMixin from './event-helper-mixin.js';
+import { fireEvent } from '../utils/fire-custom-event.js';
 
 /**
  * @polymer
@@ -144,7 +145,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
           if (!source) {
             source = this;
           }
-          source.fireEvent('404');
+          fireEvent(source, '404');
           return;
         }
 
@@ -159,7 +160,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
           if (!source) {
             source = this;
           }
-          source.fireEvent('toast', {text: errorsString, showCloseBtn: true});
+          fireEvent(source, 'toast', {text: errorsString, showCloseBtn: true});
         }
       }
 

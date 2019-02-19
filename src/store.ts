@@ -83,11 +83,11 @@ window.addEventListener('storage', function(e) {
 
 window.addEventListener('beforeunload', function(e) {
   const state = store.getState();
-  if (!(state as any).commonData) {
+  if (!(state as any).uploadStatus) {
     return;
   }
-  const uploadsInprogressNumber: number = (state as any).commonData.uploadsInProgress;
-  const unsavedUploadsNumber: number = (state as any).commonData.unsavedUploads;
+  const uploadsInprogressNumber: number = (state as any).uploadStatus.uploadsInProgress;
+  const unsavedUploadsNumber: number = (state as any).uploadStatus.unsavedUploads;
   if (uploadsInprogressNumber > 0 || unsavedUploadsNumber > 0) {
     // Cancel the event as stated by the standard.
     e.preventDefault();
