@@ -5,6 +5,7 @@ import AppNavigationHelperMixin from '../../../../mixins/app-navigation-helper-m
 import { isEmptyObject } from '../../../../utils/utils.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
+import { fireEvent } from '../../../../utils/fire-custom-event.js';
 
 
 /**
@@ -52,8 +53,8 @@ class InterventionReports extends (AppNavigationHelperMixin(PolymerElement) as a
       * Disable loading message for reports tab elements load,
       * triggered by parent element on stamp or by tap event on tabs
       */
-    this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
-    this.fireEvent('tab-content-attached');
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this,'tab-content-attached');
   }
 
   _init(active: boolean) {

@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout';
+import '@polymer/paper-progress/paper-progress';
 
 
 

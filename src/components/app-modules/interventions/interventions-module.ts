@@ -38,7 +38,8 @@ import { isEmptyObject } from '../../utils/utils';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import { setInAmendment, setPageDataPermissions } from '../../../actions/page-data';
-import { store } from '../../../store';
+import { store, RootState } from '../../../store';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 
 /**
@@ -56,7 +57,7 @@ import { store } from '../../../store';
  * @appliesMixin InterventionPermissionsMixin
  * @appliesMixin SaveInterventionMixin
  */
-class InterventionsModule extends EtoolsMixinFactory.combineMixins([
+class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   DynamicDialogMixin,
   EventHelperMixin,
@@ -68,7 +69,7 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
   InterventionPageTabsMixin,
   InterventionPermissionsMixin,
   SaveInterventionMixin
-], PolymerElement) {
+], PolymerElement)) {
   [x: string]: any;
 
   static get template() {
@@ -344,6 +345,10 @@ class InterventionsModule extends EtoolsMixinFactory.combineMixins([
       '_interventionChanged(intervention, permissions)',
       '_amendmentModeChanged(intervention.in_amendment, tabAttached, listActive)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    this.envStateChanged(state);
   }
 
   ready() {
