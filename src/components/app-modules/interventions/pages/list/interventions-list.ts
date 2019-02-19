@@ -323,6 +323,11 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
         observer: '_filtersChanged'
       },
 
+      endAfter: {
+        type: String,
+        observer: '_filtersChanged'
+      },
+
       cpOutputs: {
         type: Array,
         statePath: 'cpOutputs'
@@ -417,7 +422,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
           'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
           'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-          'selectedDonors.length, selectedGrants.length, startDate, endDate, selectedCPStructures.length, ' +
+          'selectedDonors.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
           'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
@@ -581,6 +586,13 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
         selected: false
       },
       {
+        filterName: 'Ends After',
+        type: 'datepicker',
+        dateSelected: '',
+        path: 'endAfter',
+        selected: false
+      },
+      {
         filterName: 'Status',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -633,7 +645,8 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
         selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
         selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
         startDate: urlQueryParams.start ? urlQueryParams.start : '',
-        endDate: urlQueryParams.end ? urlQueryParams.end : ''
+        endDate: urlQueryParams.end ? urlQueryParams.end : '',
+        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter: ''
       }
     );
 
@@ -694,6 +707,10 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
               selectedValue: this.startDate
             },
             {
+              filterName: 'Ends After',
+              selectedValue: this.endAfter
+            },
+            {
               filterName: 'Ends Before',
               selectedValue: this.endDate
             }
@@ -738,6 +755,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
               this.selectedCPStructures,
               this.startDate,
               this.endDate,
+              this.endAfter,
               this.paginator.page,
               this.paginator.page_size,
               forceNoLoading ? false : this.showQueryLoading
@@ -762,6 +780,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
       cpStructures: this.selectedCPStructures.join('|'),
       start: this.startDate,
       end: this.endDate,
+      endAfter: this.endAfter,
       sort: this.sortOrder
     });
   }
@@ -779,6 +798,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
       cp_outputs: this.selectedCpOutputs,
       start: this.startDate,
       end: this.endDate,
+      endAfter: this.endAfter,
       search: this.q
     };
     return this._buildExportQueryString(params);
