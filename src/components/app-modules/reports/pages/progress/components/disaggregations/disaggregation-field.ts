@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-behaviors/etools-mixin-factory.js';
 
-import './mixins/disaggregation-field.js';
 import { PolymerElEvent } from '../../../../../../../typings/globals.types.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 import DisaggregationFieldMixin from './mixins/disaggregation-field-mixin';
