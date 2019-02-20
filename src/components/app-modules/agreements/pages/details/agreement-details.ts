@@ -333,7 +333,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
                     file-url="{{agreement.attachment}}"
                     upload-endpoint="[[uploadEndpoint]]"
                     on-upload-finished="_signedAgreementUploadFinished"
-                    show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment, originalAgreementData.attachment, isNewAgreement)]]"
+                    show-delete-btn="[[!showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment, originalAgreementData.attachment, isNewAgreement)]]"
                     on-delete-file="_signedAgFileDelete"
                     accept=".doc,.docx,.pdf,.jpg,.png"
                     readonly$="[[!agreement.permissions.edit.attachment]]"
