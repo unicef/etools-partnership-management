@@ -231,7 +231,6 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       </app-header-layout>
     </app-drawer-layout>
 
-    <!-- TODO: polymer 3 - refactor, migrate, uncomment -->
     <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
     <partners-list-data></partners-list-data>
