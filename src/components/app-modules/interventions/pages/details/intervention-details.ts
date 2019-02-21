@@ -46,6 +46,7 @@ import { setPageDataPermissions } from '../../../../../actions/page-data.js';
 import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
+import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 
 /**
  * @polymer
@@ -69,6 +70,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
 
   static get template() {
     return html`
+      ${pmpCustomIcons}
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       ${buttonsStyles} ${frWarningsStyles}
       <style>

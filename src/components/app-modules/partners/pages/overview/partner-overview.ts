@@ -47,7 +47,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
   static get template() {
     // language=HTML
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons} ${frWarningsStyles}
+      ${pmpCustomIcons}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons}
+      ${frWarningsStyles}
       <style>
         :host {
           @apply --layout-vertical;

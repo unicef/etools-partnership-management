@@ -20,6 +20,7 @@ import ArrayHelperMixin from '../../../../../../mixins/array-helper-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
 import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
 import { FrsDetails } from '../../../../../../../typings/intervention.types.js';
+import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 
 
 /**
@@ -48,6 +49,7 @@ class FundReservations extends InterventionFundReservationsMixins {
   [x: string]: any;
   static get template() {
     return html`
+      ${pmpCustomIcons}
       ${frWarningsStyles}
       <style>
         [hidden] {
