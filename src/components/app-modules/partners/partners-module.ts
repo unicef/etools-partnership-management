@@ -14,7 +14,6 @@ import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory";
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import ScrollControl from "../../mixins/scroll-control-mixin";
-import EventHelper from "../../mixins/event-helper-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
 
@@ -35,19 +34,19 @@ import { isEmptyObject } from '../../utils/utils';
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
+import { fireEvent } from '../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin GestureEventListeners
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelper
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionality
  */
 const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  GestureEventListeners, EtoolsLogsMixin, EventHelper, ScrollControl,
+  GestureEventListeners, EtoolsLogsMixin, ScrollControl,
   ModuleRoutingMixin, ModuleMainElCommonFunctionalityMixin
 ], PolymerElement);
 
@@ -248,7 +247,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   public connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
@@ -346,7 +345,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
 
   public _deletePartner(e: CustomEvent) {
     e.stopImmediatePropagation();
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       active: true,
       message: 'Deleting partner...',
       loadingSource: 'partner-data'
@@ -359,15 +358,15 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   }
 
   public _handlePartnerDeleted() {
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       active: false,
       loadingSource: 'partner-data'
     });
-    this.fireEvent('toast', {
+    fireEvent(this, 'toast', {
       text: 'Partner successfully deleted',
       showCloseBtn: true
     });
-    this.fireEvent('update-main-path', {
+    fireEvent(this, 'update-main-path', {
       path: 'partners/list'
     });
   }
@@ -387,7 +386,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
-      this.fireEvent('set-server-errors', event.detail);
+      fireEvent(this, 'set-server-errors', event.detail);
       this.scrollToTop();
     }
   }
@@ -409,13 +408,13 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   }
 
   public _newPartnerCreated(partner: any) {
-    this.fireEvent('update-main-path', {
+    fireEvent(this, 'update-main-path', {
       path: 'partners/' + partner.id + '/details'
     });
   }
 
   public _handleCreatePartnerError(errorDetails: any) {
-    this.fireEvent('toast', {
+    fireEvent(this, 'toast', {
       text: errorDetails,
       showCloseBtn: true
     });
@@ -424,14 +423,14 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   public _partnerChanged(partner: any) {
     if (!isEmptyObject(partner)) {
       // dismiss partner details pages loading
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         active: false,
         loadingSource: 'partner-data'
       });
       // keep a copy of loaded partner to be able to check changed data
       this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
     }
-    this.fireEvent('clear-server-errors');
+    fireEvent(this, 'clear-server-errors');
   }
 
 
@@ -529,7 +528,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
    * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
    */
   public _showPartnersPageLoadingMessage() {
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'partners-page'

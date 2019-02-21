@@ -316,16 +316,16 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
   }
 
   _getPrpClusterIndicator(clusterIndicId: string) {
-    this.fireEvent('start-spinner', {spinnerText: 'Loading...'});
+    fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
     let self = this;
     this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
         .then(function(response: any) {
           self.prpClusterIndicator = response;
-          self.fireEvent('stop-spinner');
+          fireEvent(self, 'stop-spinner');
         })
         .catch(function(error: any) {
-          self.fireEvent('stop-spinner');
-          self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+          fireEvent(self, 'stop-spinner');
+          fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
         });
   }
 
@@ -364,15 +364,15 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
     if (!clusterId) {
       return;
     }
-    this.fireEvent('start-spinner', {spinnerText: 'Loading...'});
+    fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
     let self = this;
     this.fireRequest('getPrpClusterIndicators', {id: clusterId})
         .then(function(response: any) {
           self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
-          self.fireEvent('stop-spinner');
+          fireEvent(self, 'stop-spinner');
         }).catch(function(error: any) {
-      self.fireEvent('stop-spinner');
-      self.fireEvent('show-toast', {error: {response: error.message || error.response}});
+      fireEvent(self, 'stop-spinner');
+      fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
     });
   }
 

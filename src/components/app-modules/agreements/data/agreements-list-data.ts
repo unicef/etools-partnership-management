@@ -3,7 +3,6 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { PolymerElement } from '@polymer/polymer';
-import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
 import Dexie from 'dexie';
@@ -13,18 +12,17 @@ declare const moment: any;
 import { isEmptyObject } from '../../../utils/utils';
 import { setAgreements } from '../../../../actions/agreements';
 import { MinimalAgreement } from '../agreement.types';
+import { fireEvent } from '../../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ListDataMixin
- * @appliesMixin EventHelperMixin
  */
 const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  ListDataMixin,
-  EventHelperMixin
+  ListDataMixin
 ], PolymerElement);
 
  /**
@@ -86,7 +84,7 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
     let self = this;
 
     if (showQueryLoading) {
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: 'ag-list'
@@ -165,10 +163,10 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
           .toArray();
     }).then(function(result: any) {
       self._setFilteredAgreements(result);
-      self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     }).catch(function(error: any) {
       self.logError('Error querying agreements: ', 'agreements-list-data', error, true);
-      self.fireEvent('global-loading', {active: false, loadingSource: 'ag-list'});
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     });
   }
 }

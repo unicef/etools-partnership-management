@@ -9,8 +9,6 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
-import EventHelperMixin from '../../../../../mixins/event-helper-mixin.js';
-
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
@@ -18,18 +16,17 @@ import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from "pwa-helpers/connect-mixin";
 import {RootState, store} from "../../../../../../store";
 import {isJsonStrMatch} from "../../../../../utils/utils";
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 
 /**
  * @customElement
  * @polymer
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParserMixin
- * @appliesMixin EventHelperMixin
  */
 const AssessmentDialogMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin,
-  EventHelperMixin
+  AjaxErrorsParserMixin
 ], PolymerElement);
 
 /**
@@ -227,7 +224,7 @@ class AssessmentDialog extends connect(store)(AssessmentDialogMixins) {
     // @ts-ignore
     this.set('opened', false);
     // @ts-ignore
-    this.fireEvent(isNew ? 'assessment-added' : 'assessment-updated', response);
+    fireEvent(this, isNew ? 'assessment-added' : 'assessment-updated', response);
   }
 
   public _handleErrorResponse(error: any) {

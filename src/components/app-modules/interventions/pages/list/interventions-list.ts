@@ -20,7 +20,6 @@ import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currenc
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin';
@@ -33,6 +32,7 @@ import { frWarningsStyles } from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import { fireEvent } from '../../../../utils/fire-custom-event.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -41,7 +41,6 @@ let _interventionsLastNavigated: string = '';
  * @polymer
  * @customElement
  * @appliesMixin EtoolsCurrency
- * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  * @appliesMixin ListFiltersMixin
  * @appliesMixin ListsCommonMixin
@@ -50,7 +49,6 @@ let _interventionsLastNavigated: string = '';
  */
 class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
-  EventHelperMixin,
   CommonMixin,
   ListFiltersMixin,
   ListsCommonMixin,
@@ -470,7 +468,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    this.fireEvent('global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
 
     this.listAttachedCallback(this.active, 'Loading...', 'pd-ssfa-list');
   }
@@ -825,7 +823,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
   }
 
   _triggerInterventionLoadingMsg() {
-    this.fireEvent('trigger-intervention-loading-msg');
+    fireEvent(this, 'trigger-intervention-loading-msg');
   }
 
 }

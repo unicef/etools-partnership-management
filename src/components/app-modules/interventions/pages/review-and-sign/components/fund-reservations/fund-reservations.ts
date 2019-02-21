@@ -20,6 +20,8 @@ import ArrayHelperMixin from '../../../../../../mixins/array-helper-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
 import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
 import { FrsDetails } from '../../../../../../../typings/intervention.types.js';
+import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
+import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 
 
 /**
@@ -48,6 +50,7 @@ class FundReservations extends InterventionFundReservationsMixins {
   [x: string]: any;
   static get template() {
     return html`
+      ${pmpCustomIcons}
       ${frWarningsStyles}
       <style>
         [hidden] {
@@ -343,7 +346,7 @@ class FundReservations extends InterventionFundReservationsMixins {
     this.frsDialogEl.stopSpinner();
 
     // show the invalid frs warning
-    this.fireEvent('toast', {
+    fireEvent(this, 'toast', {
       text: responseErr.error,
       showCloseBtn: true
     });
@@ -352,7 +355,7 @@ class FundReservations extends InterventionFundReservationsMixins {
   // trigger FR Numbers update on main intervention
   _triggerPdFrsUpdate(newFrsDetails: FrsDetails) {
     this.frsDialogEl.closeDialog();
-    this.fireEvent('frs-update', {frsDetails: newFrsDetails});
+    fireEvent(this, 'frs-update', {frsDetails: newFrsDetails});
   }
 
   thereAreFrs(_frsDetails: any) {

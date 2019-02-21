@@ -9,7 +9,6 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
@@ -19,19 +18,18 @@ import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
 import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
+import {fireEvent} from '../../../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
- * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  * @appliesMixin FrNumbersConsistencyixin
  */
 const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
-  EventHelperMixin,
   CommonMixin,
   RiskRatingMixin,
   FrNumbersConsistencyMixin
@@ -47,7 +45,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
   static get template() {
     // language=HTML
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons} ${frWarningsStyles}
+      ${pmpCustomIcons}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons}
+      ${frWarningsStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -277,9 +277,9 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
      * triggered by parent element on stamp or by tap event on tabs
      */
     // @ts-ignore
-    this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
     // @ts-ignore
-    this.fireEvent('tab-content-attached');
+    fireEvent(this, 'tab-content-attached');
   }
 
   public _getMinReqAudits(plannedEngagement: any) {

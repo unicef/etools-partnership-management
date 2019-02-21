@@ -6,21 +6,19 @@ import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EventHelper from "../../../mixins/event-helper-mixin.js";
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';
+import {fireEvent} from '../../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin EventHelperMixin
  * @appliesMixin EndpointsMixin
  */
 const StaffMembersDataRequiredMixinsList = [
   EtoolsLogsMixin,
   EtoolsAjaxRequestMixin,
-  EventHelper,
   EndpointsMixin
 ];
 
@@ -47,7 +45,7 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
     if (newId > 0) {
 
       // @ts-ignore
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: this.staffLoadingMsgSource
@@ -65,7 +63,7 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
         // @ts-ignore
         self.logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
         // @ts-ignore
-        self.fireEvent('toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
+        fireEvent(self, 'toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
       });
     }
   }
@@ -82,7 +80,7 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
       this.set('staffMembers', activeStaffMembers);
     }
     // @ts-ignore
-    this.fireEvent('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
   }
 
 });

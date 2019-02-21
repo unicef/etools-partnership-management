@@ -78,7 +78,6 @@ import '../app-modules/agreements/data/agreements-list-data.js';
 import './app-theme.js';
 import '../styles/app-mixins.js';
 import UtilsMixin from '../mixins/utils-mixin.js';
-import EventHelperMixin from '../mixins/event-helper-mixin.js';
 
 // import global config and dexie db config
 import '../../config/config.js';
@@ -95,6 +94,7 @@ import {BASE_URL} from '../../config/config';
 import { setInAmendment } from '../../actions/page-data.js';
 import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
+import { fireEvent } from '../utils/fire-custom-event.js';
 setRootPath(BASE_URL);
 
 /**
@@ -123,7 +123,6 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   AmendmentModeUIMixin,
   UserDataMixin,
   LoadingMixin,
-  EventHelperMixin,
   UtilsMixin,
   DynamicDialogMixin,
   UploadsMixin
@@ -320,7 +319,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
        * This will be triggered once at page load or, after page load, on menu option tap event.
        * The loading message is disabled by *-module.html elements ready callback (in both cases)
        */
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         active: true,
         loadingSource: 'main-page'
       });
@@ -466,7 +465,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   private _pageNotFound() {
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-    this.fireEvent('toast', {text: 'An error occurred.', showCloseBtn: true});
+    fireEvent(this, 'toast', {text: 'An error occurred.', showCloseBtn: true});
   }
 
   private _openDataRefreshDialog() {
@@ -530,7 +529,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     // set last partners active page... needed to make a difference between partners and government-partners
     this._updateLastPartnersModuleActivePage(module);
     // clear loading messages queue
-    this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+    fireEvent(this, 'clear-loading-messages', {bubbles: true, composed: true});
     store.dispatch(setInAmendment(false));
   }
 
@@ -663,7 +662,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       // revert url
       this.appLocRoute = JSON.parse(JSON.stringify(this.route));
 
-      this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
+      fireEvent(this, 'clear-loading-messages', {bubbles: true, composed: true});
       this.shadowRoot.querySelector('app-menu')
           .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
     }

@@ -4,17 +4,16 @@ import '../../../layout/etools-status/etools-status.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import EventHelperMixin from "../../../mixins/event-helper-mixin";
 import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status-common-mixin";
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from "../../../utils/utils";
+import { fireEvent } from '../../../utils/fire-custom-event.js';
 /**
  * @polymer
  * @customElement
  */
 class PartnerStatus extends (EtoolsMixinFactory.combineMixins([
   DynamicDialogMixin,
-  EventHelperMixin,
   EtoolsStatusCommonMixin
 ], PolymerElement) as any) {
 
@@ -186,7 +185,7 @@ class PartnerStatus extends (EtoolsMixinFactory.combineMixins([
       if (!this.editMode) {
         return;
       }
-      this.fireEvent('delete-partner', {id: this.partner.id});
+      fireEvent(this, 'delete-partner', {id: this.partner.id});
     }
   }
 

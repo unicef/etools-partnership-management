@@ -6,23 +6,22 @@ import {store} from "../../store";
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
 // @ts-ignore
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
-import EventHelper from '../mixins/event-helper-mixin.js';
 import EndpointsMixin from "../endpoints/endpoints-mixin.js";
 import UserPermisionsMixin from "./user-permissions-mixin.js";
 import {updateCurrentUser} from "../../actions/common-data";
 import {isEmptyObject} from "../utils/utils";
+import { fireEvent } from '../utils/fire-custom-event';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EventHelper
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserPermisionsMixin
  */
 const UserDataMixin = dedupingMixin((baseClass: any) =>
     class extends connect(store)(EtoolsMixinFactory.combineMixins([
-      EventHelper, EtoolsPageRefreshMixin, EndpointsMixin, UserPermisionsMixin], baseClass) as typeof baseClass) {
+       EtoolsPageRefreshMixin, EndpointsMixin, UserPermisionsMixin], baseClass) as typeof baseClass) {
 
       static get properties() {
         return {
@@ -58,7 +57,7 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
           this._resetUserAndPermissions();
           this.logError('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
-            this.fireEvent('forbidden', {bubbles: true, composed: true});
+            fireEvent(this, 'forbidden', {bubbles: true, composed: true});
           }
         });
       }
@@ -77,7 +76,7 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
                     active: true,
                     loadingSource: 'country-update'
                   };
-                  this.fireEvent('global-loading', eventPayload);
+                  fireEvent(this, 'global-loading', eventPayload);
                   this.refresh();
                 }
               } else {

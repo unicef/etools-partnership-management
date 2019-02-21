@@ -10,7 +10,6 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import AjaxErrorsParserMixin from '../../mixins/ajax-errors-parser-mixin.js';
 import ScrollControl from '../../mixins/scroll-control-mixin.js';
-import EventHelperMixin from '../../mixins/event-helper-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
@@ -28,12 +27,12 @@ import {buttonsStyles} from "../../styles/buttons-styles";
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
+import { fireEvent } from '../../utils/fire-custom-event.js';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelperMixin
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
@@ -42,7 +41,6 @@ import './pages/components/agreement-status.js';
  */
 const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  EventHelperMixin,
   ScrollControl,
   ModuleRoutingMixin,
   ModuleMainElCommonFunctionalityMixin,
@@ -232,7 +230,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this,'global-loading', {active: false, loadingSource: 'main-page'});
     // fire agreement page loading message
     this._showAgreementsPageLoadingMessage();
   }
@@ -316,7 +314,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     e.stopImmediatePropagation();
     if ((e.detail instanceof Array && e.detail.length > 0) ||
         (typeof e.detail === 'string' && e.detail !== '')) {
-      this.fireEvent('set-server-errors', e.detail);
+      fireEvent(this, 'set-server-errors', e.detail);
       this.scrollToTop();
     }
   }
@@ -328,7 +326,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   _goToNewAgreementPage() {
     // go to new agreement
     this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
-    this.fireEvent('update-main-path', {path: 'agreements/new/details'});
+    fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
     this._handleAgreementSelectionLoadingMsg();
   }
 
@@ -346,7 +344,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   _agreementChanged(agreement: Agreement) {
     // keep a copy of the agreement before changes are made and use it later to save only the changes
     this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
-    this.fireEvent('clear-server-errors');
+    fireEvent(this, 'clear-server-errors');
   }
 
   _validateAndTriggerAgreementSave(e: CustomEvent) {
@@ -376,7 +374,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       return false;
     }
     if (!agreementDetailsEl._validateAgreement()) {
-      this.fireEvent('toast', {
+      fireEvent(this, 'toast', {
         text: 'Document can not be saved ' +
             'because of missing data in Details tab', showCloseBtn: true
       });
@@ -510,7 +508,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   // Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
   _showAgreementsPageLoadingMessage() {
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'ag-page'

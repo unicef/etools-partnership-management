@@ -21,7 +21,6 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
@@ -35,6 +34,7 @@ import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
 
 import '../../data/partners-list-data.js';
 import { isJsonStrMatch } from '../../../../utils/utils';
+import { fireEvent } from '../../../../utils/fire-custom-event';
 
 
 /**
@@ -46,12 +46,10 @@ import { isJsonStrMatch } from '../../../../utils/utils';
  * @appliesMixin CommonMixin
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
- * @appliesMixin EventHelperMixin
  */
 const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
   EndpointsMixin,
-  EventHelperMixin,
   PaginationMixin,
   CommonMixin,
   ListsCommonMixin,
@@ -324,7 +322,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       active: false,
       loadingSource: 'partners-page'
     });
@@ -545,7 +543,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
   }
 
   public _triggerPartnerLoadingMsg() {
-    this.fireEvent('trigger-partner-loading-msg');
+    fireEvent(this, 'trigger-partner-loading-msg');
   }
 
 }

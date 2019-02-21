@@ -12,20 +12,19 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-profile-dropdown/etools-profile-dropdown.js';
 import 'etools-app-selector/etools-app-selector.js'
 import '../header/countries-dropdown.js';
-import EventHelperMixin from "../../mixins/event-helper-mixin";
 import ProfileOperations from "../../user/profile-operations-mixin";
 import {isJsonStrMatch} from "../../utils/utils";
+import { fireEvent } from '../../utils/fire-custom-event';
 
 /**
  * page header mixin
  * @polymer
  * @mixinFunction
  * @appliesMixin GestureEventListeners
- * @appliesMixin EventHelper
  * @appliesMixin ProfileOperations
  */
 const PageHeaderMixins = EtoolsMixinFactory.combineMixins([
-    GestureEventListeners, ProfileOperations, EventHelperMixin], PolymerElement);
+    GestureEventListeners, ProfileOperations], PolymerElement);
 
 /**
  * @polymer
@@ -253,7 +252,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
 
   // @ts-ignore
   private _openDataRefreshDialog() {
-    this.fireEvent('open-data-refresh-dialog');
+    fireEvent(this, 'open-data-refresh-dialog');
   }
 
   public _saveProfile(e: any) {

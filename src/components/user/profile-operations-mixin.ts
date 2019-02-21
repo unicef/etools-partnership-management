@@ -51,14 +51,14 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
       public saveProfile(profile: any) {
         if (isEmptyObject(profile)) {
           // empty profile means no changes found
-          this.fireEvent('toast', {
+          fireEvent(this, 'toast', {
             text: 'All changes are saved.',
             showCloseBtn: false
           });
           return;
         }
 
-        this.fireEvent('global-loading', {
+        fireEvent(this, 'global-loading', {
           message: 'Saving...',
           active: true,
           loadingSource: this.profileSaveLoadingMsgSource
@@ -74,7 +74,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
 
       protected _hideProfileSaveLoadingMsg() {
         if (this._saveActionInProgress) {
-          this.fireEvent('global-loading', {
+          fireEvent(this, 'global-loading', {
             active: false,
             loadingSource: this.profileSaveLoadingMsgSource
           });

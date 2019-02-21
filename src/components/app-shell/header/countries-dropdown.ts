@@ -11,19 +11,18 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import EventHelper from '../../mixins/event-helper-mixin.js';
+import { fireEvent } from '../../utils/fire-custom-event.js';
 
 /**
  * countries dropdown mixin
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelper
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
 const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin, EventHelper, EndpointsMixin, EtoolsPageRefreshMixin], PolymerElement);
+  EtoolsLogsMixin, EndpointsMixin, EtoolsPageRefreshMixin], PolymerElement);
 
 /**
  * @polymer
@@ -152,7 +151,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
 
   protected _triggerCountryChangeRequest(countryId: any) {
     let self = this;
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Please wait while country data is changing...',
       active: true,
       loadingSource: 'country-change'
@@ -170,7 +169,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   }
 
   protected _handleResponse() {
-    this.fireEvent('update-main-path', {path: 'partners'});
+    fireEvent(this, 'update-main-path', {path: 'partners'});
     this.refresh();
   }
 
@@ -185,8 +184,8 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
     // TODO: this should be a larger alert.
     // @ts-ignore
     this.$.countrySelector.set('selected', this.currentCountry.id);
-    this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
-    this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});
+    fireEvent(this, 'toast', {text: 'Something went wrong changing your workspace. Please try again'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'country-change'});
   }
 
 }
