@@ -212,10 +212,6 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
             <settings-module id="settings" class="main-page"></settings-module>
           </template>
 
-          <!--<page-one class="page" active$="[[_isActivePage(_page, 'page-one')]]"></page-one>-->
-          <!--<page-two class="page" active$="[[_isActivePage(_page, 'page-two')]]"></page-two>-->
-          <!--<page-not-found class="page" active$="[[_isActivePage(_page, 'page-not-found')]]"></page-not-found>-->
-
         </main>
 
         <page-footer hidden$="[[amendmentModeActive]]"></page-footer>

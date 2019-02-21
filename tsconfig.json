@@ -11,6 +11,7 @@
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "esModuleInterop": true
+//    "outDir": "src_test"
   },
   "include": [
     "src/**/*.ts"
