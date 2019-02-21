@@ -19,6 +19,8 @@ import '../../../../../layout/icons-actions.js';
 import './assessment-dialog.js';
 import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
 import {etoolsCpHeaderActionsBarStyles} from "../../../../../styles/etools-cp-header-actions-bar-styles";
+import { store } from '../../../../../../store.js';
+import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
 
 /**
  * @polymer
@@ -245,13 +247,13 @@ class AssessmentsItems extends AssessmentsItemsRequiredMixins {
   }
 
   _uploadFinished(e: CustomEvent) {
-    this.dispatch('decreaseUploadsInProgress');
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       // @ts-ignore
       const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
       const uploadResponse = JSON.parse(e.detail.success);
       this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
-      this.dispatch('increaseUnsavedUploads');
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 

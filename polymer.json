@@ -41,7 +41,7 @@
   ],
   "lint": {
     "rules": ["polymer-3"],
-    "ignoreWarnings": []
+    "ignoreWarnings": ["could-not-resolve-reference"]
   },
   "builds": [
     {

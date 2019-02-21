@@ -23,13 +23,13 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
-import moment from "moment";
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 
 import './components/edit-core-values-assessment';
 import './components/staff-members';
+declare const moment: any;
 
 /**
  * @polymer
@@ -233,7 +233,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
                     data-items="[[partner.staff_members]]"
                     edit-mode="[[editMode]]">
         </staff-members>
-        
+
     `;
   }
 

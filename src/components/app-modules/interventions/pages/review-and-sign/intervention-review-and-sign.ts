@@ -33,6 +33,7 @@ import { requiredFieldStarredStyles } from '../../../../styles/required-field-st
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
+import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
 
 
 /**
@@ -457,31 +458,31 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
   }
 
   _signedPDUploadFinished(e: CustomEvent) {
-    this.dispatch('decreaseUploadsInProgress');
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = JSON.parse(e.detail.success);
       this.set('intervention.signed_pd_attachment', response.id);
-      this.dispatch('increaseUnsavedUploads');
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
   _signedPDDocDelete(e: CustomEvent) {
     this.set('intervention.signed_pd_attachment', null);
-    this.dispatch('decreaseUnsavedUploads');
+    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
   _prcRevDocUploadFinished(e: CustomEvent) {
-    this.dispatch('decreaseUploadsInProgress');
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = JSON.parse(e.detail.success);
       this.set('intervention.prc_review_attachment', response.id);
-      this.dispatch('increaseUnsavedUploads');
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
-  _prcRevDocDelete(e) {
+  _prcRevDocDelete(e: CustomEvent) {
     this.set('intervention.prc_review_attachment', null);
-    this.dispatch('decreaseUnsavedUploads');
+    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
   showPrcReviewDeleteBtn(status: string) {

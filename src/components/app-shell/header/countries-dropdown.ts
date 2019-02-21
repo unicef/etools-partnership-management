@@ -131,7 +131,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   }
 
   public stateChanged(state: RootState) {
-    // TODO: polymer 3
+    // TODO: polymer 3 do what?
     if (!state) {
       return;
     }

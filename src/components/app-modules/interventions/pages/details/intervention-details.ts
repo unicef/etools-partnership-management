@@ -45,6 +45,7 @@ import './components/planned-visits.js';
 import { setPageDataPermissions } from '../../../../../actions/page-data.js';
 import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
+import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
 
 /**
  * @polymer
@@ -962,17 +963,17 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _activationLetterUploadFinished(e: CustomEvent) {
-    this.dispatch('decreaseUploadsInProgress');
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = JSON.parse(e.detail.success);
       this.set('intervention.activation_letter_attachment', response.id);
-      this.dispatch('increaseUnsavedUploads');
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
   _activationLetterDelete(e: CustomEvent) {
     this.set('intervention.activation_letter_attachment', null);
-    this.dispatch('decreaseUnsavedUploads');
+    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
   showActivationLetterDeleteBtn(status: string) {

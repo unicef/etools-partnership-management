@@ -9,7 +9,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
-import 'disaggregations/disaggregation-table.js';
+import './disaggregations/disaggregation-table.js';
 import { isEmptyObject } from '../../../../../utils/utils.js';
 import { PolymerElement, html } from '@polymer/polymer';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
