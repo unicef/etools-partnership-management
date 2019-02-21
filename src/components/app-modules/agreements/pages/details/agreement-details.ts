@@ -771,7 +771,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
        * For Draft Status, only Change option is available. No delete option is available in Draft.
        */
       showSignedAgDeleteBtn(_status: string, _editAttPermission: boolean, _originalAtt: string, _isNewAgreement: boolean) {
-        return this.isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
+        return _isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
             && !this.originalAgreementData.attachment);
       }
 
