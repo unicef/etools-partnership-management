@@ -4,7 +4,6 @@ import {store} from '../../../../store.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
 import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
@@ -14,20 +13,19 @@ import { isJsonStrMatch } from '../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { ListItemIntervention, SelectedSection, FrsDetails, Intervention } from '../../../../typings/intervention.types.js';
 import { Agreement } from '../../agreements/agreement.types.js';
+import { fireEvent } from '../../../utils/fire-custom-event.js';
 
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelperMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin EnvironmentFlags
  */
 const InterventionItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  EventHelperMixin,
   EndpointsMixin,
   AjaxServerErrorsMixin,
   EnvironmentFlags,
@@ -121,7 +119,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
       return;
     }
 
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: this.ajaxLoadingMsgSource
@@ -189,7 +187,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
       // update the interventions list in dexieDB
       let mappedResponse = this._formatResponseDataForDexie(response);
       window.EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
-        self.fireEvent('reload-list');
+        fireEvent(self, 'reload-list');
       });
 
       if (response.document_type &&
@@ -260,7 +258,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
    */
   updateInterventionStatus(data: any, callback: any) {
     if (!data.interventionId) {
-      this.fireEvent('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
+      fireEvent(this, 'toast', {text: 'Invalid intervention ID', showCloseBtn: true});
     } else {
       if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
             CONSTANTS.STATUSES.Suspended.toLowerCase(),
@@ -270,7 +268,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
         if (callback) {
           this.set('handleResponseAdditionalCallback', callback);
         }
-        this.fireEvent('global-loading', {
+        fireEvent(this, 'global-loading', {
           message: 'Changing intervention status...',
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
@@ -284,7 +282,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
           }
         });
       } else {
-        this.fireEvent('toast', {
+        fireEvent(this, 'toast', {
           text: 'Changing status to \'' + data.status + '\' is not allowed!',
           showCloseBtn: true
         });
@@ -297,7 +295,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
    */
   saveIntervention(intervention: Intervention, callback: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
-      this.fireEvent('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
+      fireEvent(this, 'toast', {text: 'Invalid intervention data!', showCloseBtn: true});
       return Promise.resolve(false);
     } else {
       let endpoint = null;
@@ -335,7 +333,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
           return elem.year || elem.programmatic;
         });
       }
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         message: 'Saving...',
         active: true,
         loadingSource: this.ajaxLoadingMsgSource
@@ -478,14 +476,14 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
         .catch((dexieDeleteErr: any) => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr))
         .then(() => {
           // go to pd/ssfa list after delete
-          this.fireEvent('update-main-path', {path: 'interventions/list'});
+          fireEvent(this, 'update-main-path', {path: 'interventions/list'});
         });
   }
 
   _handleInterventionDeleteFromDexieSuccess(deleteCount: number) {
     if (deleteCount === 1) {
-      this.fireEvent('reload-list');
-      this.fireEvent('toast', {
+      fireEvent(this, 'reload-list');
+      fireEvent(this, 'toast', {
         text: 'PD/SSFA successfully deleted.',
         showCloseBtn: true
       });
@@ -497,7 +495,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
   _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
     this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
-    this.fireEvent('toast', {
+    fireEvent(this, 'toast', {
       text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
       'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
       showCloseBtn: true

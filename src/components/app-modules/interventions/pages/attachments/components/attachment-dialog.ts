@@ -21,7 +21,6 @@ import { SharedStyles } from '../../../../../styles/shared-styles.js';
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EventHelper
  * @appliesMixin AjaxErrorsParser
  */
 const AttachmentDialogMixin = EtoolsMixinFactory.combineMixins([
@@ -209,7 +208,7 @@ class AttachmentDialog extends AttachmentDialogMixin {
 
   _handleResponse(response: any, isNewAttachment: boolean) {
     this.set('opened', false);
-    this.fireEvent(isNewAttachment ? 'attachment-added' : 'attachment-updated', response);
+    fireEvent(this, isNewAttachment ? 'attachment-added' : 'attachment-updated', response);
   }
 
   _handleErrorResponse(error: any) {

@@ -2,7 +2,6 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
-import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ArrayHelperMixin from '../../../mixins/array-helper-mixin';
 import { store } from '../../../../store.js';
 import { RESET_UNSAVED_UPLOADS } from '../../../../actions/upload-status';
@@ -10,6 +9,7 @@ import CONSTANTS from '../../../../config/app-constants';
 import { Intervention, Fr } from '../../../../typings/intervention.types';
 import { isEmptyObject } from '../../../utils/utils';
 import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixin';
+import { fireEvent } from '../../../utils/fire-custom-event';
 
 
 /**
@@ -19,12 +19,10 @@ import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixi
  * @mixinFunction
  * @appliesMixin ArrayHelperMixin
  * @appliesMixin ModifiedInterventionFields
- * @appliesMixin EventHelper
  * @appliesMixin AjaxErrorsParser
  */
 const SaveInterventionMixin = dedupingMixin(
 (superClass: any) => class extends EtoolsMixinFactory.combineMixins([
-  EventHelperMixin,
   ArrayHelperMixin,
   ModifiedInterventionFieldsMixin,
   AjaxErrorsParserMixin
@@ -47,7 +45,7 @@ const SaveInterventionMixin = dedupingMixin(
       event.stopImmediatePropagation();
     }
     this.saved.justSaved = true;
-    this.fireEvent('clear-server-errors');
+    fireEvent(this, 'clear-server-errors');
     this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
     if (!this._hasEditPermissions(this.permissions, this.intervention)) {
       return Promise.resolve(false);
@@ -199,7 +197,7 @@ const SaveInterventionMixin = dedupingMixin(
       msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '.';
     }
 
-    this.fireEvent('toast', {text: msg, showCloseBtn: true});
+    fireEvent(this, 'toast', {text: msg, showCloseBtn: true});
   }
 
   _needFrsUpdate(frs: Fr[]) {

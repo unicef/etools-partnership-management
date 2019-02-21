@@ -45,7 +45,6 @@ declare const moment: any;
  * @appliesMixin ReportDetails
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
- * @appliesMixin EventHelper
  */
 const ReportsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,

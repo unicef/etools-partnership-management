@@ -5,20 +5,19 @@ import '@polymer/paper-icon-button/paper-icon-button';
 import 'etools-content-panel/etools-content-panel';
 import 'etools-data-table/etools-data-table';
 
-import EventHelperMixin from "../../../../../mixins/event-helper-mixin";
 import {gridLayoutStyles} from "../../../../../styles/grid-layout-styles";
 import {SharedStyles} from "../../../../../styles/shared-styles";
 import {etoolsCpHeaderActionsBarStyles} from "../../../../../styles/etools-cp-header-actions-bar-styles";
 
 import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
+import { fireEvent } from '../../../../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EventHelperMixin
  */
-class StaffMembers extends (EventHelperMixin(PolymerElement) as any) {
+class StaffMembers extends (PolymerElement as any) {
 
   static get template() {
     // language=HTML
@@ -218,7 +217,7 @@ class StaffMembers extends (EventHelperMixin(PolymerElement) as any) {
   }
 
   _savePartnerContact(e: CustomEvent) {
-    this.fireEvent('save-partner-contact', e.detail);
+    fireEvent(this, 'save-partner-contact', e.detail);
   }
 
   _isVisible(active: boolean, showInactive: boolean) {

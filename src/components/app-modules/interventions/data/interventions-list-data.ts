@@ -3,22 +3,20 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 declare const moment: any;
-import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import { PolymerElement } from '@polymer/polymer';
 import { ListItemIntervention } from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
+import { fireEvent } from '../../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelperMixin
  * @appliesMixin ListDataMixin
  */
 class InterventionsListData extends EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  EventHelperMixin,
   ListDataMixin
 ], PolymerElement) {
 
@@ -92,7 +90,7 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
     let self = this;
 
     if (showQueryLoading) {
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: 'pd-ssfa-list'
@@ -167,10 +165,10 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
 
     }).then(function(result: any) {
       self._setFilteredInterventions(result);
-      self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     }).catch(function(error: any) {
       self.logError('Error querying interventions: ' + error, 'interventions-list-data');
-      self.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     });
   }
 

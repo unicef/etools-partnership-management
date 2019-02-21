@@ -9,7 +9,6 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-data-table/etools-data-table.js';
@@ -29,6 +28,7 @@ import { store, RootState } from '../../../../../store.js';
 
 import './components/edit-core-values-assessment';
 import './components/staff-members';
+import { fireEvent } from '../../../../utils/fire-custom-event.js';
 declare const moment: any;
 
 /**
@@ -36,12 +36,10 @@ declare const moment: any;
  * @mixinFunction
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
- * @appliesMixin EventHelperMixin
  */
 const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
   CommonMixin,
-  RiskRatingMixin,
-  EventHelperMixin
+  RiskRatingMixin
 ], PolymerElement);
 
 /**
@@ -295,8 +293,8 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
      * Disable loading message for details tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
-    this.fireEvent('tab-content-attached');
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
+    fireEvent(this, 'tab-content-attached');
     this._createEditCoreValuesAssessmentsDialog();
   }
 
@@ -386,7 +384,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
     }
     if (notifMessage) {
       setTimeout(() => {
-        this.fireEvent('toast', {text: notifMessage, showCloseBtn: true});
+        fireEvent(this, 'toast', {text: notifMessage, showCloseBtn: true});
       }, 0);
     }
   }

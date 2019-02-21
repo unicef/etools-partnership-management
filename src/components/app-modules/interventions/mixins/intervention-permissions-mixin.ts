@@ -1,24 +1,19 @@
-import EventHelperMixin from '../../../mixins/event-helper-mixin';
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import { Intervention, InterventionPermissionsFields } from '../../../../typings/intervention.types';
 import CONSTANTS from '../../../../config/app-constants';
 import {store} from '../../../../store.js';
 import { setPageDataPermissions } from '../../../../actions/page-data';
 import { isEmptyObject } from '../../../utils/utils';
+import { fireEvent } from '../../../utils/fire-custom-event';
 
 /**
  * PD/SSFA permissions mixin
  * @polymer
  * @mixinFunction
- * @appliesMixin EventHelperMixin
  * @appliesMixin ReduxPermissionsUpdaterMixin
  */
 const InterventionPermissionsMixin = dedupingMixin(
-(superClass: any) => class extends EtoolsMixinFactory.combineMixins([
-  EventHelperMixin
-], superClass) {
+(superClass: any) => class extends superClass {
   [x: string]: any;
   /* eslint-enable arrow-parens */
   static get properties() {
@@ -202,7 +197,7 @@ const InterventionPermissionsMixin = dedupingMixin(
         this.set('intervention.planned_budget.unicef_cash_local', unicefCashCopy);
       }
     });
-    this.fireEvent('toast', {text: 'There are no new/unsaved amendments.\n' +
+    fireEvent(this, 'toast', {text: 'There are no new/unsaved amendments.\n' +
       'All fields unlocked by amendments are restored to the original values.', showCloseBtn: true});
   }
 

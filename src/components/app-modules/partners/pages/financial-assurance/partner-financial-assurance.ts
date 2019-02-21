@@ -18,7 +18,6 @@ import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.j
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
@@ -30,6 +29,7 @@ import {AP_DOMAIN} from '../../../../../config/config.js';
 
 import './components/assessments-items.js';
 import '../../../../layout/monitoring-visits-list.js';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -40,7 +40,6 @@ import '../../../../layout/monitoring-visits-list.js';
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin PaginationMixin
  * @appliesMixin RiskRatingMixin
- * @appliesMixin EventHelperMixin
  */
 const PartnerFinancialAssuranceMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
@@ -48,8 +47,7 @@ const PartnerFinancialAssuranceMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
   AjaxServerErrorsMixin,
   PaginationMixin,
-  RiskRatingMixin,
-  EventHelperMixin
+  RiskRatingMixin
 ], PolymerElement);
 
 /**
@@ -498,9 +496,9 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
      * triggered by parent element on stamp or by tap event on tabs
      */
     // @ts-ignore
-    this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
     // @ts-ignore
-    this.fireEvent('tab-content-attached');
+    fireEvent(this, 'tab-content-attached');
   }
 
   public _init(engagements: any) {

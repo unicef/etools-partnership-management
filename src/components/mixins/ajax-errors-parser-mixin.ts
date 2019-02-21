@@ -1,14 +1,12 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import EventHelperMixin from './event-helper-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EventHelperMixin
  */
 const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
-    class extends EventHelperMixin(baseClass) {
+    class extends baseClass {
       static get properties() {
         return {
           globalMessage: String,

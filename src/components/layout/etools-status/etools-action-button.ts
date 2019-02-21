@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import EventHelperMixin from '../../mixins/event-helper-mixin';
 import { DomRepeatEvent } from '../../../typings/globals.types';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
@@ -10,13 +9,13 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import { fireEvent } from '../../utils/fire-custom-event';
 
  /**
  * @polymer
  * @customElement
- * @appliesMixin EventHelperMixin
  */
-class EtoolsActionButton extends EventHelperMixin(PolymerElement) {
+class EtoolsActionButton extends PolymerElement {
 
   static get template() {
     return html`
@@ -179,11 +178,11 @@ class EtoolsActionButton extends EventHelperMixin(PolymerElement) {
 
   _handleSecondaryClick(event: DomRepeatEvent) {
     let action = event.model.item;
-    this.fireEvent(action.event);
+    fireEvent(this, action.event);
   }
 
   _handlePrimaryClick() {
-    this.fireEvent(this.primaryAction.event);
+    fireEvent(this, this.primaryAction.event);
   }
 }
 

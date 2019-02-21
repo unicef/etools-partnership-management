@@ -11,24 +11,22 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory'
 import CONSTANTS from '../../../../../../../config/app-constants';
 import { AgreementAmendment } from '../../../../agreement.types';
 import CommonMixin from '../../../../../../mixins/common-mixin';
-import EventHelperMixin from '../../../../../../mixins/event-helper-mixin';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../../../styles/shared-styles.js';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles.js';
-import '../../../../../../mixins/event-helper-mixin.js';
 import '../../../../../../mixins/common-mixin.js';
 import './add-ag-amendment-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
+import { fireEvent } from '../../../../../../utils/fire-custom-event';
 
 
-const AgAmendmentsMixins = [EventHelperMixin, CommonMixin];
+const AgAmendmentsMixins = [CommonMixin];
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  */
 class AgreementAmendments extends connect(store)(EtoolsMixinFactory.combineMixins(AgAmendmentsMixins, PolymerElement)) {
@@ -285,7 +283,7 @@ class AgreementAmendments extends connect(store)(EtoolsMixinFactory.combineMixin
         this.set('selectedAo', e.detail.ao);
       }
 
-      this.fireEvent('save-agreement');
+      fireEvent(this, 'save-agreement');
     }
   }
 

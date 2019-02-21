@@ -28,7 +28,6 @@ import { isJsonStrMatch } from '../../../../../../utils/utils.js';
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EventHelper
  * @appliesMixin AjaxErrorsParser
  */
 const AddAmendmentDialogMixin = EtoolsMixinFactory.combineMixins([

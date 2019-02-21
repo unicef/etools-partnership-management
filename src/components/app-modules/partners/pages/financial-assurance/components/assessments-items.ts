@@ -7,7 +7,6 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import "etools-content-panel/etools-content-panel.js";
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-data-table/etools-data-table.js';
-import EventHelperMixin from '../../../../../mixins/event-helper-mixin.js';
 
 import '../../../../../endpoints/endpoints.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
@@ -25,11 +24,9 @@ import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../..
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EventHelperMixin
  * @appliesMixin CommonMixin
  */
 const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EventHelperMixin,
   CommonMixin
 ], PolymerElement);
 

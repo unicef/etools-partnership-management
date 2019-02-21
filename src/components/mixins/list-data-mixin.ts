@@ -2,20 +2,19 @@ import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
-import EventHelperMixin from './event-helper-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
+import { fireEvent } from '../utils/fire-custom-event';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin EventHelper
  * @appliesMixin AjaxServerErrors
  */
 const ListDataMixin = dedupingMixin((baseClass: any) =>
     class extends (EtoolsMixinFactory.combineMixins([
-      EndpointsMixin, AjaxServerErrorsMixin, EventHelperMixin], baseClass) as any) {
+      EndpointsMixin, AjaxServerErrorsMixin], baseClass) as any) {
 
       static get properties() {
         return {
@@ -87,7 +86,7 @@ const ListDataMixin = dedupingMixin((baseClass: any) =>
           if (!this.dataLoadedEventName) {
             this.logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
           } else {
-            this.fireEvent(this.dataLoadedEventName);
+            fireEvent(this, this.dataLoadedEventName);
           }
         }
       }

@@ -1,14 +1,14 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import EventHelperMixin from './event-helper-mixin';
 import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';
+import { fireEvent } from '../utils/fire-custom-event';
 
 const ListsCommonMixin =  dedupingMixin(
   (baseClass: any) => class extends EtoolsMixinFactory.combineMixins([
-    AppNavigationHelperMixin,
-    EventHelperMixin], baseClass) {
+    AppNavigationHelperMixin
+    ], baseClass) {
     [x: string]: any;
 
 static get properties() {
@@ -126,7 +126,7 @@ _requiredDataHasBeenLoaded(event: PolymerElEvent) {
 listAttachedCallback(active: boolean, loadingMsg: string, loadingSource: any) {
   this.set('stampListData', true);
   if (active) {
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: loadingMsg,
       active: true,
       loadingSource: loadingSource

@@ -23,7 +23,6 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
  * @mixinFunction
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin FrontendPagination
- * @appliesMixin EventHelper
  */
 const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
   ReportingRequirementsCommonMixin,
