@@ -62,17 +62,19 @@ gulp.task('serve', () => {
  * Gulp build task for esm-bundle
  */
 gulp.task('build_esm_bundle', () => {
-  // Promise is used to avoid error:
-  //    `The following tasks did not complete: build_esm_bundle.
-  //     Did you forget to signal async completion?`
-  return new Promise((resolve, reject) => {
-    spawn('polymer', ['build --name "pmp_poly3/esm-bundled" ' +
+  const esmBundle = spawn('polymer', ['build --name "pmp_poly3/esm-bundled" ' +
     '--preset "es6-bundled" --bundle --js-minify --css-minify --html-minify ' +
     '--add-service-worker --module-resolution "node" --npm ' +
     '--entrypoint "index.html" --shell "src/components/app-shell/app-shell.js" ' +
     '--fragment "src/components/app-modules/partners/partners-module.js" ' +
     '"src/components/app-modules/partners/pages/list/partners-list.js"'
     ], spawnOptions);
-    resolve();
+
+  esmBundle.on('close', (code) => {
+    if (code !== 0) {
+      console.log(`process build_esm_bundle exited with code ${code}`);
+    }
+    console.log(`process build_esm_bundle completed...`);
   });
+  return esmBundle;
 });
