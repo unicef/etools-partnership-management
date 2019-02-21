@@ -5,43 +5,6 @@
       "type": "script",
       "weight": 1
     },
-    "src/components/pages/page-one.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
-    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
-      "type": "script",
-      "weight": 1
-    }
-  },
-  "/page-one": {
-    "src/components/app-shell/app-shell.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
-    "src/components/pages/page-one.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
-    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
-      "type": "script",
-      "weight": 1
-    }
-  },
-  "/page-two": {
-    "src/components/app-shell/app-shell.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
-    "src/components/pages/page-two.js": {
-      "crossorigin": "anonymous",
-      "type": "script",
-      "weight": 1
-    },
     "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
       "type": "script",
       "weight": 1
