@@ -38,12 +38,11 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsCurrency
- * @appliesMixin AjaxErrorsParser
+ * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin Date
- * @appliesMixin Common
- * @appliesMixin Utils
- * @appliesMixin EventHelper
+ * @appliesMixin DateMixin
+ * @appliesMixin CommonMixin
+ * @appliesMixin UtilsMixin
  */
 const InterventionProgressMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
@@ -330,12 +329,12 @@ class InterventionProgress extends InterventionProgressMixins {
 
     this.fireRequest('interventionProgress', {pdId: id}).then(function(response: any) {
       self.set('progress', response);
-      self.fireEvent('global-loading', {active: false, loadingSource: 'pd-progress'});
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
     }).catch(function(error: any) {
       let errMsg = 'PD/SSFA progress request failed!';
       self.logError(errMsg, 'intervention-progress', error);
       self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-      self.fireEvent('global-loading', {active: false, loadingSource: 'pd-progress'});
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
     });
   }
 

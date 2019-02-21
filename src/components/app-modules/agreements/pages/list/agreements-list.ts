@@ -22,7 +22,6 @@ import 'etools-dropdown/etools-dropdown.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
-import EventHelperMixin from '../../../../mixins/event-helper-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
@@ -33,6 +32,7 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import '../../data/agreements-list-data.js';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
+import { fireEvent } from '../../../../utils/fire-custom-event.js';
 
 /**
      * @polymer
@@ -42,15 +42,13 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners.j
      * @appliesMixin ListFiltersMixin
      * @appliesMixin ListsCommonMixin
      * @appliesMixin PaginationMixin
-     * @appliesMixin EventHelperMixin
      */
     const AgreementsListRequiredMixins = EtoolsMixinFactory.combineMixins([
       CommonMixin,
       EndpointsMixin,
       ListFiltersMixin,
       ListsCommonMixin,
-      PaginationMixin,
-      EventHelperMixin,
+      PaginationMixin
     ], PolymerElement);
 
    let _agreementsLastNavigated: string = '';
@@ -441,7 +439,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'ag-page'});
     this.listAttachedCallback(this.active, 'Loading...', 'ag-list');
   }
 
@@ -616,7 +614,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
   }
 
   _triggerAgreementLoadingMsg() {
-    this.fireEvent('trigger-agreement-loading-msg');
+    fireEvent(this, 'trigger-agreement-loading-msg');
   }
 
 }

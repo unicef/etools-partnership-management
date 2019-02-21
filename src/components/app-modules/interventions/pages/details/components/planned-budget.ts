@@ -21,6 +21,7 @@ import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
 import { frWarningsStyles } from '../../../styles/fr-warnings-styles';
 import { CountryData } from '../../../../../../typings/globals.types';
 import {Fr, FrsDetails } from '../../../../../../typings/intervention.types';
+import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons';
 
 /**
  * @polymer
@@ -35,6 +36,7 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
 
   static get template() {
     return html`
+      ${pmpCustomIcons}
       ${SharedStyles} ${gridLayoutStyles} ${frWarningsStyles}
       <style include="data-table-styles">
         [hidden] {

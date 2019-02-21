@@ -14,7 +14,6 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import CONSTANTS from '../../../config/app-constants';
 import { UserPermissions } from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
-import EventHelperMixin from '../../mixins/event-helper-mixin';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import EnvironmentFlags from '../../environment-flags/environment-flags-mixin';
 import ScrollControl from '../../mixins/scroll-control-mixin';
@@ -40,6 +39,7 @@ import { timeOut } from '@polymer/polymer/lib/utils/async';
 import { setInAmendment, setPageDataPermissions } from '../../../actions/page-data';
 import { store, RootState } from '../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
+import { fireEvent } from '../../utils/fire-custom-event';
 
 
 /**
@@ -47,7 +47,6 @@ import { connect } from 'pwa-helpers/connect-mixin';
  * @customElement
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
- * @appliesMixin EventHelperMixin
  * @appliesMixin EnvironmentFlags
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
@@ -60,7 +59,6 @@ import { connect } from 'pwa-helpers/connect-mixin';
 class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   DynamicDialogMixin,
-  EventHelperMixin,
   EnvironmentFlags,
   EndpointsMixin,
   ScrollControl,
@@ -364,7 +362,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
     this._showInterventionPageLoadingMessage();
   }
 
@@ -456,7 +454,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
           this._hasEditPermissions(permissions), isNewIntervention);
       setTimeout(() => {
         // ensure intervention get/save/change status loading msgs close
-        this.fireEvent('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
+        fireEvent(this, 'global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
       }, 1000);
     }
   }
@@ -467,7 +465,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
         // Avoid showing msg again after save
         this.set('errorMsgBoxTitle',
             'eTools validation code has been upgraded and this record is now considered invalid due to:');
-        this.fireEvent('set-server-errors', intervention.metadata.error_msg);
+        fireEvent(this, 'set-server-errors', intervention.metadata.error_msg);
       }
     }
   }
@@ -611,7 +609,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
     this.set('_redirectToNewIntervPageInProgress', true);
     this._setNewInterventionObj();
     this.set('selectedInterventionId', null);
-    this.fireEvent('update-main-path', {path: 'interventions/new/details'});
+    fireEvent(this, 'update-main-path', {path: 'interventions/new/details'});
     this._handleInterventionSelectionLoadingMsg();
   }
 
@@ -639,7 +637,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
-      this.fireEvent('set-server-errors', event.detail);
+      fireEvent(this, 'set-server-errors', event.detail);
       this.scrollToTop();
     }
   }
@@ -669,7 +667,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
    * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
    */
   _showInterventionPageLoadingMessage() {
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'interv-page'

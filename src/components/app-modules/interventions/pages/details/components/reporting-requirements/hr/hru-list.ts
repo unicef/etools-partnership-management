@@ -16,7 +16,6 @@ import {isEmptyObject} from '../../../../../../../utils/utils.js';
  * @polymer
  * @customElement
  * @appliesMixin Common
- * @appliesMixin EventHelper
  * @appliesMixin ReportingReqPastDatesCheck
  */
 class HruList extends EtoolsMixinFactory.combineMixins([

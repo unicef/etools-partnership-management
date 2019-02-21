@@ -10,6 +10,7 @@ import CommonMixin from "../../../../../mixins/common-mixin";
 
 import {gridLayoutStyles} from "../../../../../styles/grid-layout-styles";
 import {requiredFieldStarredStyles} from "../../../../../styles/required-field-styles";
+import { fireEvent } from '../../../../../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -21,7 +22,7 @@ class EditCoreValuesAssessment extends (CommonMixin(PolymerElement) as any) {
   static get template() {
     // language=HTML
     return html`
-      ${gridLayoutStyles} ${requiredFieldStarredStyles} 
+      ${gridLayoutStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           display: block
@@ -73,7 +74,7 @@ class EditCoreValuesAssessment extends (CommonMixin(PolymerElement) as any) {
     if (!this.shadowRoot.querySelector('#attachment').validate()) {
       return;
     }
-    this.parent.fireEvent('save-core-values-assessment', this.item);
+    fireEvent(this.parent, 'save-core-values-assessment', this.item);
     this.$.cvaDialog.opened = false;
   }
 

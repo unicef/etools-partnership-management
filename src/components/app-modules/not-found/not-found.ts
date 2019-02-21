@@ -1,15 +1,13 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@polymer/iron-flex-layout/iron-flex-layout';
-import EventHelperMixin from '../../mixins/event-helper-mixin';
 import {SharedStyles} from '../../styles/shared-styles.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EventHelperMixin
  */
-class NotFound extends EventHelperMixin(PolymerElement) {
+class NotFound extends PolymerElement {
   static get template() {
     return html`
       ${SharedStyles}

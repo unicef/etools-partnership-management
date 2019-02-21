@@ -7,22 +7,20 @@ import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
 import 'etools-date-time/datepicker-lite.js';
-import EventHelperMixin from '../../../../../../mixins/event-helper-mixin';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import { AgreementAmendment } from '../../../../agreement.types';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelperMixin
  */
 class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
-  EventHelperMixin
+  EtoolsLogsMixin
 ], PolymerElement) {
   [x: string]: any;
 
@@ -170,7 +168,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
 
   _validateAndSaveAmendment() {
     if (this.validate()) {
-      this.fireEvent('update-amendment-and-ao', {
+      fireEvent(this, 'update-amendment-and-ao', {
         amendment: this.amendment,
         ao: JSON.parse(JSON.stringify(this.authorizedOfficers))});
       this.set('opened', false);

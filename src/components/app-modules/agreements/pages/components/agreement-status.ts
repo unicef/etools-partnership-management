@@ -4,12 +4,9 @@ import CONSTANTS from '../../../../../config/app-constants';
 // @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-status-common-mixin';
-import '../../../../mixins/event-helper-mixin.js';
 import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-
-
 
 
 /**
@@ -202,7 +199,7 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     }
   }
 
-  _computeAvailableStatuses(status) {
+  _computeAvailableStatuses(status: string) {
     this._setAllStatusesToHidden();
     let availableStatuses = [];
     let completedFlag = false;
@@ -341,7 +338,7 @@ class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
   _triggerAgDeleteOnConfirm(e: CustomEvent) {
     if (e.detail.confirmed) {
-      this.fireEvent('delete-agreement', {id: this.agreementId});
+      fireEvent(this, 'delete-agreement', {id: this.agreementId});
     }
   }
 }

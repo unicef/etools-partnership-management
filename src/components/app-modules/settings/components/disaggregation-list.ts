@@ -6,7 +6,6 @@ import 'etools-data-table/etools-data-table.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import EventHelperMixin from '../../../mixins/event-helper-mixin.js';
 import UserPermissionsMixin from '../../../user/user-permissions-mixin.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
 
@@ -28,7 +27,6 @@ import {isJsonStrMatch} from "../../../utils/utils";
  * @appliesMixin UserPermissionsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EnvironmentFlags
- * @appliesMixin EventHelperMixin
  * @appliesMixin FrontendPaginationMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
@@ -37,7 +35,6 @@ const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
   UserPermissionsMixin,
   EtoolsAjaxRequestMixin,
   EnvironmentFlags,
-  EventHelperMixin,
   FrontendPaginationMixin,
   EndpointsMixin,
   AjaxErrorsParserMixin
@@ -186,14 +183,14 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     this.editMode = true;
     this.disaggregationModal = document.createElement('add-disaggregation-dialog');
     this.disaggregationModal.setAttribute('id', 'disaggregationModal');
-    document.querySelector('body').appendChild(this.disaggregationModal);
+    document.querySelector('body')!.appendChild(this.disaggregationModal);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
     if (this.disaggregationModal) {
-      document.querySelector('body').removeChild(this.disaggregationModal);
+      document.querySelector('body')!.removeChild(this.disaggregationModal);
     }
   }
 
@@ -275,7 +272,6 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     this.disaggregationModal.initializeDisaggregation();
     this._openModal();
   }
-
 
 }
 

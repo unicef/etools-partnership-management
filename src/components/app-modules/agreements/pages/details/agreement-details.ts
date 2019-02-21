@@ -31,7 +31,6 @@ import { Agreement } from '../../agreement.types.js';
 import '../../../../mixins/missing-dropdown-options-mixin.js';
 import '../../../../mixins/common-mixin.js';
 import '../../../../endpoints/endpoints.js';
-import '../../../../mixins/event-helper-mixin.js';
 import '../../../../mixins/uploads-mixin.js';
 import '../../../partners/mixins/staff-members-data-mixin.js';
 
@@ -47,6 +46,7 @@ import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.
 import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
 import { isJsonStrMatch } from '../../../../utils/utils';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
+import { fireEvent } from '../../../../utils/fire-custom-event';
 
 /**
      * @polymer
@@ -463,8 +463,8 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
 
         // Disable loading message for details tab elements load,
         // triggered by parent element on stamp
-        this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
-        this.fireEvent('tab-content-attached');
+        fireEvent(this, 'global-loading', {active: false, loadingSource: 'ag-page'});
+        fireEvent(this, 'tab-content-attached');
       }
 
       disconnectedCallback() {
@@ -549,7 +549,7 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
           this._resetDropdown('#partner');
           this._resetDropdown('#agreementType');
         }
-        this.fireEvent('global-loading', {active: false, loadingSource: 'ag-data'});
+        fireEvent(this, 'global-loading', {active: false, loadingSource: 'ag-data'});
       }
 
       resetAttachedAgreementElem(agreement: Agreement) {

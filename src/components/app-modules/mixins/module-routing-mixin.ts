@@ -1,20 +1,19 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import EventHelperMixin from '../../mixins/event-helper-mixin.js';
 import { GenericObject } from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {PolymerElement} from "@polymer/polymer/polymer-element";
+import { fireEvent } from '../../utils/fire-custom-event';
 /**
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin EventHelperMixin
  */
 const ModuleRoutingMixin = dedupingMixin(
-    (superClass: any) => class extends (EtoolsLogsMixin(EventHelperMixin(superClass)) as any) {
+    (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
       static get properties() {
         return {
           listActive: Boolean,
@@ -118,8 +117,8 @@ const ModuleRoutingMixin = dedupingMixin(
         let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
         this.logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
 
-        this.fireEvent('global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
-        this.fireEvent('404');
+        fireEvent(this, 'global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
+        fireEvent(this, '404');
       }
 
       setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab: object,
@@ -128,11 +127,11 @@ const ModuleRoutingMixin = dedupingMixin(
 
         if (listActive) {
           // clear server errors for the list
-          this.fireEvent('clear-server-errors');
+          fireEvent(this, 'clear-server-errors');
         } else {
           if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
             // the user can not access this tab (ex: prp tabs on interventions)
-            this.fireEvent('404');
+            fireEvent(this, '404');
             return;
           }
         }

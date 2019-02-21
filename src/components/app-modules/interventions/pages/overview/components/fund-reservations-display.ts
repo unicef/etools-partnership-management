@@ -14,6 +14,7 @@ import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mi
 import DateMixin from '../../../../../mixins/date-mixin.js';
 import { isEmptyObject } from '../../../../../utils/utils.js';
 import { Intervention, FrsDetails } from '../../../../../../typings/intervention.types.js';
+import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.js';
 
 
 
@@ -39,6 +40,7 @@ class FundReservationsDisplay extends FundReservationsDisplayMixins {
 
   static get template() {
     return html`
+    ${pmpCustomIcons}
     ${gridLayoutStyles} ${frWarningsStyles}
       <style include="data-table-styles">
         :host {

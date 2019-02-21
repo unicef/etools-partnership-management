@@ -1,20 +1,19 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import EventHelperMixin from '../../mixins/event-helper-mixin.js';
 import { ListQueryParams } from '../../../typings/route.types.js';//TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
+import { fireEvent } from '../../utils/fire-custom-event.js';
   /**
    * Module main elements common functionality
    * @polymer
    * @mixinFunction
    * @appliesMixin EtoolsLogsMixin
-   * @appliesMixin EventHelperMixin
    */
   const ModuleMainElCommonFunctionalityMixin = dedupingMixin(
-    (superClass: any) => class extends (EtoolsLogsMixin(EventHelperMixin(superClass)) as any) {
+    (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
       static get properties() {
         return {
           /* Gets updated by app-route */
@@ -93,7 +92,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
           // tab element already loaded, no need for loading messages
           return;
         }
-         this.fireEvent('global-loading', {
+         fireEvent(this, 'global-loading', {
           message: 'Loading...',
           active: true,
           loadingSource: loadingSource

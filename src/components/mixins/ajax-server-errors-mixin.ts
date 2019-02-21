@@ -1,15 +1,14 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import EventHelperMixin from './event-helper-mixin.js';
 import AjaxErrorsParserMixin from './ajax-errors-parser-mixin.js';
+import { fireEvent } from '../utils/fire-custom-event.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EventHelperMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
-    class extends EventHelperMixin(AjaxErrorsParserMixin(baseClass)) {
+    class extends AjaxErrorsParserMixin(baseClass) {
 
       static get properties() {
         return {
@@ -35,11 +34,11 @@ const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
 
       handleErrorResponse(response: any, ajaxMethod: string, redirectOn404: boolean) {
         if (redirectOn404 && response.status === 404) {
-          this.fireEvent('404');
+          fireEvent(this, '404');
           return;
         }
 
-        this.fireEvent('global-loading', {
+        fireEvent(this, 'global-loading', {
           active: false,
           loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
         });
@@ -60,7 +59,7 @@ const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
           if (this.serverErrors.length > 1) {
             errorMessage = this.serverErrors.join('\n');
           }
-          this.fireEvent('toast', {text: errorMessage, showCloseBtn: true});
+          fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
         } else {
           if (this.serverErrors.length === 0) {
             this._fireAjaxErrorEvent(errorMessage);
@@ -75,7 +74,7 @@ const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
           if (typeof errors === 'string') {
             errors = [errors];
           }
-          this.fireEvent(this.errorEventName, errors);
+          fireEvent(this, this.errorEventName, errors);
         }
       }
 

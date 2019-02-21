@@ -22,7 +22,6 @@ import { fireEvent } from '../../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin AjaxErrorsParser
  * @appliesMixin EndpointsMixin
- * @appliesMixin EventHelper
  */
 class ReportRatingDialog extends EtoolsMixinFactory.combineMixins([
   AjaxErrorsParserMixin,

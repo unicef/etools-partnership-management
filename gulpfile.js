@@ -43,16 +43,38 @@ gulp.task('prpl-server', gulp.series(
   'prpl-server:build'
 ));
 
+
+const spawnOptions = {
+  // `shell` option for Windows compatability. See:
+  // https://nodejs.org/api/child_process.html#child_process_spawning_bat_and_cmd_files_on_windows
+  shell: true,
+  stdio: 'inherit'
+};
 /**
  * Gulp task to run `tsc --watch` and `polymer serve` in parallel.
  */
 gulp.task('serve', () => {
-  const spawnOptions = {
-    // `shell` option for Windows compatability. See:
-    // https://nodejs.org/api/child_process.html#child_process_spawning_bat_and_cmd_files_on_windows
-    shell: true,
-    stdio: 'inherit'
-  };
   spawn('tsc', ['--watch'], spawnOptions);
   spawn('polymer', ['serve -H 0.0.0.0 -p 8080'], spawnOptions);
+});
+
+/**
+ * Gulp build task for esm-bundle
+ */
+gulp.task('build_esm_bundle', () => {
+  const esmBundle = spawn('polymer', ['build --name "pmp_poly3/esm-bundled" ' +
+    '--preset "es6-bundled" --bundle --js-minify --css-minify --html-minify ' +
+    '--add-service-worker --module-resolution "node" --npm ' +
+    '--entrypoint "index.html" --shell "src/components/app-shell/app-shell.js" ' +
+    '--fragment "src/components/app-modules/partners/partners-module.js" ' +
+    '"src/components/app-modules/partners/pages/list/partners-list.js"'
+    ], spawnOptions);
+
+  esmBundle.on('close', (code) => {
+    if (code !== 0) {
+      console.log(`process build_esm_bundle exited with code ${code}`);
+    }
+    console.log(`process build_esm_bundle completed...`);
+  });
+  return esmBundle;
 });

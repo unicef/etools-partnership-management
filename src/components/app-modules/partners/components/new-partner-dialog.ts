@@ -1,15 +1,14 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
+import { fireEvent } from '../../../utils/fire-custom-event';
 
-import EventHelper from '../../../mixins/event-helper-mixin.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EventHelper
  */
-class NewPartnerDialog extends EventHelper(PolymerElement) {
+class NewPartnerDialog extends PolymerElement {
 
   static get template() {
     // language=HTML
@@ -62,7 +61,7 @@ class NewPartnerDialog extends EventHelper(PolymerElement) {
       if (!this.vendorNumber) {
         return;
       }
-      this.fireEvent('create-partner', {vendor: this.vendorNumber});
+      fireEvent(this, 'create-partner', {vendor: this.vendorNumber});
     } else {
       this.vendorNumber = '';
     }

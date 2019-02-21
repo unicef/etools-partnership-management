@@ -5,18 +5,16 @@ import '@polymer/iron-icons/communication-icons';
 
 import 'etools-dialog/etools-dialog';
 
-import EventHelperMixin from "../../../../../mixins/event-helper-mixin";
-
 import '../../../../../layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from "../../../../../styles/grid-layout-styles";
 import {SharedStyles} from "../../../../../styles/shared-styles";
 import {requiredFieldStarredStyles} from "../../../../../styles/required-field-styles";
+import { fireEvent } from '../../../../../utils/fire-custom-event';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EventHelperMixin
  */
-class AddEditStaffMembers extends (EventHelperMixin(PolymerElement) as any) {
+class AddEditStaffMembers extends (PolymerElement as any) {
 
   static get template() {
     // language=HTML
@@ -221,7 +219,7 @@ class AddEditStaffMembers extends (EventHelperMixin(PolymerElement) as any) {
 
   _savePartnerContact() {
     if (this.validate()) {
-      this.fireEvent('save-partner-contact', this.item);
+      fireEvent(this, 'save-partner-contact', this.item);
       this.$.staffMemberDialog.opened = false;
     }
   }

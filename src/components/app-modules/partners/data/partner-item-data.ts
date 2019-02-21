@@ -8,10 +8,10 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import EventHelperMixin from '../../../mixins/event-helper-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {store} from "../../../../store.js";
 import { deletePartner } from '../../../../actions/partners.js';
+import { fireEvent } from '../../../utils/fire-custom-event.js';
 
 /**
  * @polymer
@@ -19,12 +19,10 @@ import { deletePartner } from '../../../../actions/partners.js';
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
- * @appliesMixin EventHelperMixin
  */
 const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   EndpointsMixin,
-  EventHelperMixin,
   AjaxServerErrorsMixin
 ], PolymerElement);
 
@@ -75,7 +73,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
       // set an empty partner
       this._setPartner({});
       // set the new endpoint
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: this.ajaxLoadingMsgSource
@@ -108,7 +106,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
     if (['GET', 'DELETE'].indexOf(ajaxMethod) === -1) {
       // update the partners list in dexieDB
       window.EtoolsPmpApp.DexieDb.table('partners').put(response).then(() => {
-        this.fireEvent('reload-list');
+        fireEvent(this, 'reload-list');
       });
     }
     if (ajaxMethod === 'DELETE') {
@@ -125,19 +123,19 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
         .catch((dexieDeleteErr: any) => this._handlePartnerDeleteFromDexieErr(dexieDeleteErr))
         .then(() => {
           // disable loading
-          this.fireEvent('global-loading', {
+          fireEvent(this, 'global-loading', {
             active: false,
             loadingSource: this.ajaxLoadingMsgSource
           });
           // go to partners list after delete
-          this.fireEvent('update-main-path', {path: 'partners/list'});
+          fireEvent(this, 'update-main-path', {path: 'partners/list'});
         });
   }
 
   public _handlePartnerDeleteFromDexieSuccess(deleteCount: number) {
     if (deleteCount === 1) {
-      this.fireEvent('reload-list');
-      this.fireEvent('toast', {
+      fireEvent(this, 'reload-list');
+      fireEvent(this, 'toast', {
         text: 'Partner successfully deleted.',
         showCloseBtn: true
       });
@@ -149,7 +147,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
   public _handlePartnerDeleteFromDexieErr(dexieDeleteErr: any) {
     // Partner dexie deleted issue
     this.logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
-    this.fireEvent('toast', {
+    fireEvent(this, 'toast', {
       text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
           'partner data from browser cache. Use refresh data functionality to update cached partners data.',
       showCloseBtn: true
@@ -161,7 +159,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
       this.logError('_handleErrorResponse', 'partner-item-data', response);
     }
     if (this._skipDefaultErrorHandler) {
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         active: false,
         loadingSource: this.ajaxLoadingMsgSource
       });
@@ -180,13 +178,13 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   public createPartner(vendorNoObj: any, successCallback: any, errorCallback: any) {
     if (!vendorNoObj && !vendorNoObj.vendor) {
-      this.fireEvent('toast', {
+      fireEvent(this, 'toast', {
         text: 'Invalid Vendor Number for new partner!',
         showCloseBtn: true
       });
       return;
     }
-    this.fireEvent('global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Importing partner information...',
       active: true,
       loadingSource: this.ajaxLoadingMsgSource
@@ -211,7 +209,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   public savePartner(partner: any, callback: any) {
     if (typeof partner === 'object' && Object.keys(partner).length === 0) {
-      this.fireEvent('toast', {text: 'Invalid partner data!', showCloseBtn: true});
+      fireEvent(this, 'toast', {text: 'Invalid partner data!', showCloseBtn: true});
       return Promise.resolve(false);
     } else {
       let endpoint = null;
@@ -226,7 +224,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
           endpoint = this.getEndpoint(this.partnerEndpoints.DETAILS, {id: partnerId});
         } else {
           // no valid partner id, cannot update
-          this.fireEvent('toast', {
+          fireEvent(this, 'toast', {
             text: 'Update can not be made. Invalid partner ID.',
             showCloseBtn: true
           });
@@ -237,7 +235,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
           this.set('handleSuccResponseAdditionalCallback', callback);
         }
 
-        this.fireEvent('global-loading', {
+        fireEvent(this, 'global-loading', {
           message: 'Saving...',
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
@@ -247,7 +245,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
           method: 'PATCH', endpoint: endpoint, body: partner
         });
       } else {
-        this.fireEvent('toast', {
+        fireEvent(this, 'toast', {
           text: 'All changes are saved.',
           showCloseBtn: false
         });

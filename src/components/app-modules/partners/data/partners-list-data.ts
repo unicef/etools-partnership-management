@@ -6,23 +6,21 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {store} from '../../../../store.js';
 
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import EventHelperMixin from '../../../mixins/event-helper-mixin';
 
 import Dexie from 'dexie';
 import {isEmptyObject} from "../../../utils/utils";
 import {setPartners} from '../../../../actions/partners.js';
+import { fireEvent } from '../../../utils/fire-custom-event.js';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ListDataMixin
- * @appliesMixin EventHelperMixin
  */
 const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  ListDataMixin,
-  EventHelperMixin
+  ListDataMixin
 ], PolymerElement);
 
 /**
@@ -102,7 +100,7 @@ class PartnersListData extends (PartnersListDataRequiredMixins as any) {
     let self = this;
 
     if (showQueryLoading) {
-      this.fireEvent('global-loading', {
+      fireEvent(this, 'global-loading', {
         message: 'Loading...',
         active: true,
         loadingSource: 'partners-list'
@@ -171,13 +169,13 @@ class PartnersListData extends (PartnersListDataRequiredMixins as any) {
 
     }).then(function (result: any[]) {
       self._setFilteredPartners(result);
-      self.fireEvent('global-loading', {
+      fireEvent(self, 'global-loading', {
         active: false,
         loadingSource: 'partners-list'
       });
     }).catch(function (error: any) {
       self.logError('Error querying partners!', 'partners-list-data', error, true);
-      self.fireEvent('global-loading', {
+      fireEvent(self, 'global-loading', {
         active: false,
         loadingSource: 'partners-list'
       });

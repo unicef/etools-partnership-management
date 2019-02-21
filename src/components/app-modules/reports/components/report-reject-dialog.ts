@@ -6,6 +6,7 @@ import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { PolymerElement, html } from '@polymer/polymer';
 import { SharedStyles } from '../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
+import { fireEvent } from '../../../utils/fire-custom-event';
 declare const moment: any;
 
 /**
@@ -13,7 +14,6 @@ declare const moment: any;
  * @customElement
  * @appliesMixin AjaxErrorsParser
  * @appliesMixin EndpointsMixin
- * @appliesMixin EventHelper
  */
 class ReportRejectDialog extends EtoolsMixinFactory.combineMixins([
   AjaxErrorsParserMixin,
