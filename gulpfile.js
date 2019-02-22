@@ -256,6 +256,7 @@ gulp.task('merge_folders', () => {
 /**
  * TODOs:
  *  - apply single responsability
+ *  - move helper functions in a separate file for a better structure
  *  - split fragments set builds from folders merging
  *      - remove code block containing `return mergeTempBuildFolders(buildName);`
  *      - create a new task for removing build_temp folder (see rmTempBuildFolder spawn)
