@@ -118,12 +118,12 @@ function getBuildCmd(name) {
 function setCmdFragments(cmd, fragments) {
   // also set sources from fragments
   let sources = polymerConfig.sources.filter(s => s.indexOf('src/**/*') === -1);
-  cmd.replace('[sources]', buildCmdFlagArrStrValue([...sources, ...fragments]));
+  cmd = cmd.replace('[sources]', buildCmdFlagArrStrValue([...sources, ...fragments]));
   return cmd.replace('[fragments]', buildCmdFlagArrStrValue(fragments));
 }
 
 const buildCmdTmpl = `build --name "[name]" --entrypoint "${polymerConfig.entrypoint}" \
-    --shell "${polymerConfig.shell}" [sources] \
+    --shell "${polymerConfig.shell}" --sources [sources] \
     --extra-dependencies ${buildCmdFlagArrStrValue(polymerConfig.extraDependencies)} \
     ${getModuleResolution()} ${getNpmMode()} \
     [build_options] --fragment [fragments]`;
@@ -134,17 +134,22 @@ function runBuildCmd(cmd, fragmentsSetIndex, buildName) {
     const buildProcess = spawn('polymer', [cmd], spawnOptions);
     buildProcess.on('close', (code) => {
       if (code !== 0) {
-        console.log(`process build_esm_bundle[${fragmentsSetIndex}] exited with code ${code}`);
-        reject();
+        reject(new Error(`process build_esm_bundle[${fragmentsSetIndex}] exited with code ${code}`));
       }
       console.log(`process build_esm_bundle[${fragmentsSetIndex}] completed...`);
       // save build files in a temp folder
       const fragmentsBuildFolderPath = `build_temp/${buildName}_tmp_${fragmentsSetIndex}`;
-      const saveBuild = spawn('mkdir', [`-p build_temp && mv build ${fragmentsBuildFolderPath}`], spawnOptions);
+      /**
+       * for some reason when build folder is moved,
+       * on next iteration polymer root build folder is changed to currently moved folder
+       * `cd ../../` will make sure polymer build folder is the same on next iteration
+       * @type {ChildProcess}
+       */
+      const saveBuild = spawn('mkdir',
+          [`-p build_temp && mv build/${buildName} ${fragmentsBuildFolderPath} && cd ../../`], spawnOptions);
       saveBuild.on('close', (code) => {
         if (code !== 0) {
-          console.log(`mkdir -p build_temp && mv build ${fragmentsBuildFolderPath} exited with code ${code}`);
-          reject();
+          reject(new Error(`mkdir -p build_temp && mv build ${fragmentsBuildFolderPath} exited with code ${code}`));
         }
         resolve();
       });
@@ -160,37 +165,17 @@ function buildFragments(cmd, i, buildName) {
     } else {
       // all fragments sets have been built
       // merge files from temp build folders
-      // return mergeTempBuildFolders(buildName);
-      console.log('====================== DONE ====================== ');
+      return mergeTempBuildFolders(buildName);
     }
   });
 }
-
-// function copyFile(sourceFolder, destFolder, path) {
-//   return new Promise((resolve, reject) => {
-//     const fileFolderPath = path.substr(0, path.lastIndexOf('/') + 1);
-//     const destFolderPath = destFolder + fileFolderPath;
-//     const fileFromPath = sourceFolder + path;
-//     const fileToPath = destFolder + path;
-//     const copyCmd = `-p ${destFolderPath} && cp ${fileFromPath} ${fileToPath}`;
-//     console.log('copy cmd: mkdir ', copyCmd);
-//     const copyF = spawn('mkdir', [copyCmd], spawnOptions);
-//     copyF.on('close', (code) => {
-//       if (code !== 0) {
-//         reject(`copy file from ${fileFromPath} to ${fileToPath} failed`);
-//       }
-//       resolve();
-//     });
-//   });
-// }
 
 function copyFolder(sourceFolder, destFolder) {
   return new Promise((resolve, reject) => {
     const copyF = spawn('cp', [`-rf ${sourceFolder}/src/* ${destFolder}/src/`], spawnOptions);
     copyF.on('close', (code) => {
       if (code !== 0) {
-        console.log(`copy files from ${sourceFolder}/src/ to ${destFolder}/src/ failed`);
-        reject();
+        reject(new Error(`copy files from ${sourceFolder}/src/ to ${destFolder}/src/ failed`));
       }
       resolve();
     });
@@ -210,36 +195,24 @@ function mergeTempBuildFolders(buildName) {
     // copy first folder, clear src files (remove), copy app-shell and fragments
     const finalBuildFolder = 'build/' + buildName + '/';
     // clear build/build_name folder files && copy first fragments set bundle
-    const initCmd = `-rf ${finalBuildFolder}/* && mv -rf ${buildFolders[0]} ${finalBuildFolder}`;
+    const initCmd = `-rf ${finalBuildFolder}* && mv ${buildFolders[0]} ${finalBuildFolder}`;
     console.log('run: rm ' + initCmd);
 
     const mergeBuildFiles = spawn('rm', [initCmd], spawnOptions);
     mergeBuildFiles.on('close', (code) => {
       if (code !== 0) {
-        console.log(`mergeTempBuildFolders failed at first step... exited with code ${code}`);
-        reject();
+        reject(new Error(`mergeTempBuildFolders failed at first step... exited with code ${code}`));
       }
 
-      buildFolders.shift().forEach(async f => await copyFolder(f, finalBuildFolder));
+      buildFolders.slice(1).forEach(async f => await copyFolder(f, finalBuildFolder));
 
       const rmTempBuildFolder = spawn('rm', [' -rf build_temp/'], spawnOptions);
       rmTempBuildFolder.on('close', (code) => {
         if (code !== 0) {
-          console.log(`removing build_temp folder failed... exited with code ${code}`);
-          reject();
+          reject(new Error(`removing build_temp folder failed... exited with code ${code}`));
         }
         resolve();
       });
-
-      // copy the remaining bundled fragments from the other build_temp folders
-      // buildFolders.shift().forEach((tmpBuildFolder, index) => {
-      //   const files = polymerConfig.fragment_sets[index + 1]; // exclude first set (already copied, prev step)
-      //   if (files instanceof Array && files.length > 0) {
-      //     files.forEach(async (f) => {
-      //       await copyFile(tmpBuildFolder, finalBuildFolder, f);
-      //     });
-      //   }
-      // })
 
     });
   });
@@ -253,11 +226,15 @@ gulp.task('build_esm_bundle', (done) => {
   let cmd = getBuildCmd(name);
 
   // build each fragment set
-  buildFragments(cmd, 0, name).catch(() => {
-    console.log('build failed!');
+  buildFragments(cmd, 0, name).then(() => {
+    console.log('====================== DONE ====================== ');
+    done();
+  }).catch((err) => {
+    console.log('build failed!', err);
+    done();
   });
 
-  done(); // to fix `Did you forget to signal async completion?` error
+  // done(); // to fix `Did you forget to signal async completion?` error
 
   /**
    * Generated build cmd example:
@@ -271,3 +248,18 @@ gulp.task('build_esm_bundle', (done) => {
 
 });
 
+// TODO: might be removed
+gulp.task('merge_folders', () => {
+  return mergeTempBuildFolders('esm-bundled');
+});
+
+/**
+ * TODOs:
+ *  - apply single responsability
+ *  - split fragments set builds from folders merging
+ *      - remove code block containing `return mergeTempBuildFolders(buildName);`
+ *      - create a new task for removing build_temp folder (see rmTempBuildFolder spawn)
+ *      - new gulp task using  gulp.series('build_esm_bundle', 'merge_folders', 'remove_build_temp_folder')
+ * - build cmd generation improvements
+ * - tasks for es6 and es5
+ */
