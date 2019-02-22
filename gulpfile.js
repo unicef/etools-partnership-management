@@ -207,10 +207,7 @@ function mergeTempBuildFolders(buildName) {
   console.log('merging temp build folders: ', buildFolders.join(', '));
 
   return new Promise((resolve, reject) => {
-    // ????? merge folders using linux cmd
     // copy first folder, clear src files (remove), copy app-shell and fragments
-    // mkdir -p final_build_fragment_path && cp temp_build_fragment_path final_build_fragment_path
-
     const finalBuildFolder = 'build/' + buildName + '/';
     // clear build/build_name folder files && copy first fragments set bundle
     const initCmd = `-rf ${finalBuildFolder}/* && mv -rf ${buildFolders[0]} ${finalBuildFolder}`;
@@ -222,7 +219,17 @@ function mergeTempBuildFolders(buildName) {
         console.log(`mergeTempBuildFolders failed at first step... exited with code ${code}`);
         reject();
       }
+
       buildFolders.shift().forEach(async f => await copyFolder(f, finalBuildFolder));
+
+      const rmTempBuildFolder = spawn('rm', [' -rf build_temp/'], spawnOptions);
+      rmTempBuildFolder.on('close', (code) => {
+        if (code !== 0) {
+          console.log(`removing build_temp folder failed... exited with code ${code}`);
+          reject();
+        }
+        resolve();
+      });
 
       // copy the remaining bundled fragments from the other build_temp folders
       // buildFolders.shift().forEach((tmpBuildFolder, index) => {
