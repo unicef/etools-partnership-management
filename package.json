@@ -1,11 +1,11 @@
 {
-  "name": "pwa-starter-kit",
-  "version": "0.9.0",
+  "name": "etools_partnership_management_portal",
+  "version": "3.0.0",
   "contributors": [
-    "The Polymer Authors"
+    "Unicef eTools team"
   ],
-  "license": "BSD-3-Clause",
-  "repository": "Polymer/pwa-starter-kit",
+  "license": "https://github.com/unicef/etools-partnership-management/blob/master/LICENSE.md",
+  "repository": "unicef/etools-partnership-management",
   "scripts": {
     "start": "gulp serve",
     "build": "tsc && npm run build:prpl-server && npm run build:static",

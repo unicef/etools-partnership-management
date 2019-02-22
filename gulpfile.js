@@ -59,16 +59,16 @@ gulp.task('serve', () => {
   spawn('polymer', ['serve -H 0.0.0.0 -p 8080'], spawnOptions);
 });
 
-const getModuleResolution = () => {
+function getModuleResolution() {
   return polymerConfig.moduleResolution ? `--module-resolution "${polymerConfig.moduleResolution}"` : '';
-};
+}
 
-const getNpmMode = () => {
+function getNpmMode() {
   return polymerConfig.npm ? '--npm' : '';
-};
+}
 
 // TODO: improve this in the future
-const getBuildConfig = (buildName) => {
+function getBuildConfig (buildName) {
   const buildConfig = polymerConfig.builds.find(b => b.name === buildName);
   if (!buildConfig) {
     throw new Error(`polymer.json file has no build configuration for name: ${buildName}`);
@@ -102,30 +102,33 @@ const getBuildConfig = (buildName) => {
     }
   }
   return buildFlags.join(' ');
-};
+}
 
-const buildCmdFlagArrStrValue = (strArray) => {
+function buildCmdFlagArrStrValue(strArray) {
   const s = strArray.map(str => `"${str}"`);
   return s.join(' ');
-};
+}
 
-const getBuildCmd = (name) => {
+function getBuildCmd(name) {
   let cmd = buildCmdTmpl.replace('[name]', name);
   cmd = cmd.replace('[build_options]', getBuildConfig(name));
   return cmd;
-};
+}
 
-const setCmdFragments = (cmd, fragments) => {
-  return cmd.replace('[fragments]', fragments)
-};
+function setCmdFragments(cmd, fragments) {
+  // also set sources from fragments
+  let sources = polymerConfig.sources.filter(s => s.indexOf('src/**/*') === -1);
+  cmd.replace('[sources]', buildCmdFlagArrStrValue([...sources, ...fragments]));
+  return cmd.replace('[fragments]', buildCmdFlagArrStrValue(fragments));
+}
 
 const buildCmdTmpl = `build --name "[name]" --entrypoint "${polymerConfig.entrypoint}" \
-    --shell "${polymerConfig.shell}" --sources ${buildCmdFlagArrStrValue(polymerConfig.sources)} \
+    --shell "${polymerConfig.shell}" [sources] \
     --extra-dependencies ${buildCmdFlagArrStrValue(polymerConfig.extraDependencies)} \
     ${getModuleResolution()} ${getNpmMode()} \
     [build_options] --fragment [fragments]`;
 
-function runBuildCmd(cmd, fragmentsSetIndex) {
+function runBuildCmd(cmd, fragmentsSetIndex, buildName) {
   return new Promise((resolve, reject) => {
     console.log('running: polymer ' + cmd);
     const buildProcess = spawn('polymer', [cmd], spawnOptions);
@@ -135,18 +138,103 @@ function runBuildCmd(cmd, fragmentsSetIndex) {
         reject();
       }
       console.log(`process build_esm_bundle[${fragmentsSetIndex}] completed...`);
+      // save build files in a temp folder
+      const fragmentsBuildFolderPath = `build_temp/${buildName}_tmp_${fragmentsSetIndex}`;
+      const saveBuild = spawn('mkdir', [`-p build_temp && mv build ${fragmentsBuildFolderPath}`], spawnOptions);
+      saveBuild.on('close', (code) => {
+        if (code !== 0) {
+          console.log(`mkdir -p build_temp && mv build ${fragmentsBuildFolderPath} exited with code ${code}`);
+          reject();
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+function buildFragments(cmd, i, buildName) {
+  let buildCmd = setCmdFragments(cmd, polymerConfig.fragment_sets[i]);
+  return runBuildCmd(buildCmd, i, buildName).then(() => {
+    if (++i < polymerConfig.fragment_sets.length) {
+      return buildFragments(cmd, i, buildName); // proceed to the next set of fragments
+    } else {
+      // all fragments sets have been built
+      // merge files from temp build folders
+      // return mergeTempBuildFolders(buildName);
+      console.log('====================== DONE ====================== ');
+    }
+  });
+}
+
+// function copyFile(sourceFolder, destFolder, path) {
+//   return new Promise((resolve, reject) => {
+//     const fileFolderPath = path.substr(0, path.lastIndexOf('/') + 1);
+//     const destFolderPath = destFolder + fileFolderPath;
+//     const fileFromPath = sourceFolder + path;
+//     const fileToPath = destFolder + path;
+//     const copyCmd = `-p ${destFolderPath} && cp ${fileFromPath} ${fileToPath}`;
+//     console.log('copy cmd: mkdir ', copyCmd);
+//     const copyF = spawn('mkdir', [copyCmd], spawnOptions);
+//     copyF.on('close', (code) => {
+//       if (code !== 0) {
+//         reject(`copy file from ${fileFromPath} to ${fileToPath} failed`);
+//       }
+//       resolve();
+//     });
+//   });
+// }
+
+function copyFolder(sourceFolder, destFolder) {
+  return new Promise((resolve, reject) => {
+    const copyF = spawn('cp', [`-rf ${sourceFolder}/src/* ${destFolder}/src/`], spawnOptions);
+    copyF.on('close', (code) => {
+      if (code !== 0) {
+        console.log(`copy files from ${sourceFolder}/src/ to ${destFolder}/src/ failed`);
+        reject();
+      }
       resolve();
     });
   });
 }
 
-function buildFragments(cmd, i) {
-  let buildCmd = setCmdFragments(cmd, buildCmdFlagArrStrValue(polymerConfig.fragment_sets[i]));
-  return runBuildCmd(buildCmd, i).then(() => {
-    if (++i < polymerConfig.fragment_sets.length) {
-      buildCmd = setCmdFragments(cmd, buildCmdFlagArrStrValue(polymerConfig.fragment_sets[i]));
-      return runBuildCmd(buildCmd, i);
-    }
+function mergeTempBuildFolders(buildName) {
+  const buildFolders = [];
+  let i = 0;
+  while(i < polymerConfig.fragment_sets.length) {
+    buildFolders.push(`build_temp/${buildName}_tmp_${i}/`);
+    i++;
+  }
+  console.log('merging temp build folders: ', buildFolders.join(', '));
+
+  return new Promise((resolve, reject) => {
+    // ????? merge folders using linux cmd
+    // copy first folder, clear src files (remove), copy app-shell and fragments
+    // mkdir -p final_build_fragment_path && cp temp_build_fragment_path final_build_fragment_path
+
+    const finalBuildFolder = 'build/' + buildName + '/';
+    // clear build/build_name folder files && copy first fragments set bundle
+    const initCmd = `-rf ${finalBuildFolder}/* && mv -rf ${buildFolders[0]} ${finalBuildFolder}`;
+    console.log('run: rm ' + initCmd);
+
+    const mergeBuildFiles = spawn('rm', [initCmd], spawnOptions);
+    mergeBuildFiles.on('close', (code) => {
+      if (code !== 0) {
+        console.log(`mergeTempBuildFolders failed at first step... exited with code ${code}`);
+        reject();
+      }
+      buildFolders.shift().forEach(async f => await copyFolder(f, finalBuildFolder));
+
+      // copy the remaining bundled fragments from the other build_temp folders
+      // buildFolders.shift().forEach((tmpBuildFolder, index) => {
+      //   const files = polymerConfig.fragment_sets[index + 1]; // exclude first set (already copied, prev step)
+      //   if (files instanceof Array && files.length > 0) {
+      //     files.forEach(async (f) => {
+      //       await copyFile(tmpBuildFolder, finalBuildFolder, f);
+      //     });
+      //   }
+      // })
+
+    });
   });
 }
 
@@ -157,28 +245,22 @@ gulp.task('build_esm_bundle', (done) => {
   const name = 'pmp_poly3/esm-bundled';
   let cmd = getBuildCmd(name);
 
-  // const fragmentsBuildPromises = [];
-
   // build each fragment set
-
-  // polymerConfig.fragment_sets.forEach(async (f) => {
-    // const fragments = buildCmdFlagArrStrValue(f);
-    // const buildCmdForFragmentsSet = setCmdFragments(cmd, buildCmdFlagArrStrValue(polymerConfig.fragment_sets[i]));
-  buildFragments(cmd, 0).catch(() => {
-          console.log('build failed!');
-        });
-  // });
+  buildFragments(cmd, 0, name).catch(() => {
+    console.log('build failed!');
+  });
 
   done(); // to fix `Did you forget to signal async completion?` error
 
-  // const esmBundle = spawn('polymer', [cmd], spawnOptions);
-  //
-  // esmBundle.on('close', (code) => {
-  //   if (code !== 0) {
-  //     console.log(`process build_esm_bundle exited with code ${code}`);
-  //   }
-  //   console.log(`process build_esm_bundle completed...`);
-  // });
-  // return esmBundle;
+  /**
+   * Generated build cmd example:
+   * polymer build --name "pmp_poly3/esm-bundled" \
+   * --preset "es6-bundled" \
+   * --bundle --js-minify --css-minify --html-minify --add-service-worker \
+   * --module-resolution "node" --npm \
+   * --entrypoint "index.html" --shell "src/components/app-shell/app-shell.js" \
+   * --fragment "src/components/app-modules/partners/partners-module.js" "src/components/app-modules/partners/pages/list/partners-list.js"
+   */
+
 });
 
