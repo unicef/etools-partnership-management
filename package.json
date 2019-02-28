@@ -7,6 +7,7 @@
   "license": "BSD-3-Clause",
   "repository": "Polymer/pwa-starter-kit",
   "scripts": {
+    "polymerbuild": "tsc && polymer build",
     "start": "gulp serve",
     "build": "tsc && npm run build:prpl-server && npm run build:static",
     "build:prpl-server": "polymer build --auto-base-path && gulp prpl-server",
@@ -46,6 +47,7 @@
     "@polymer/paper-tooltip": "^3.0.1",
     "@polymer/polymer": "^3.1.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
+    "browser-capabilities": "^1.1.3",
     "dexie": "^2.0.4",
     "etools-ajax": "git+https://github.com/unicef-polymer/etools-ajax#update-to-polymer3",
     "etools-app-selector": "git+https://github.com/unicef-polymer/etools-app-selector#upgrade-to-polymer3",

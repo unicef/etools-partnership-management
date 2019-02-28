@@ -45,8 +45,7 @@
   },
   "builds": [
     {
-      "preset": "es6-bundled",
-      "name": "pmp_poly3/esm-bundled",
+      "name": "esm-bundled",
       "browserCapabilities": [
         "es2015",
         "modules"
@@ -64,7 +63,7 @@
       "addServiceWorker": true
     },
     {
-      "name": "pmp_poly3/es6-bundled",
+      "name": "es6-bundled",
       "browserCapabilities": [
         "es2015"
       ],
@@ -83,7 +82,7 @@
       "addServiceWorker": true
     },
     {
-      "name": "pmp_poly3/es5-bundled",
+      "name": "es5-bundled",
       "js": {
         "compile": "es5",
         "minify": true,
