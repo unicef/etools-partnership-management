@@ -118,7 +118,7 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <datepicker-lite id$="datepicker_[[filter.path]]"
-                              class="filter date"
+                              class="filter-date"
                               label="[[filter.filterName]]"
                               placeholder="&#8212;"
                               value="{{filter.dateSelected}}"
