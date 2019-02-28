@@ -37,7 +37,7 @@ export const listFilterStyles = html`
 
     #filters-fields #query {
       --paper-input-container: {
-        width: 280px;
+        width: 282px;
       };
       min-width: 280px;
     }

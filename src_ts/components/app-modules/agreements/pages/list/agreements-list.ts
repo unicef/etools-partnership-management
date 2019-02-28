@@ -70,10 +70,6 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
           text-transform: none;
         }
         
-        .filter-date {
-          min-width: 182px;
-        }
-
       </style>
 
       <template is="dom-if" if="[[stampListData]]">
@@ -122,7 +118,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
 
             <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
               <datepicker-lite id$="datepicker_[[filter.path]]"
-                                class="filter-date"
+                                class="filter date"
                                 label="[[filter.filterName]]"
                                 placeholder="Select"
                                 value="{{filter.dateSelected}}"
