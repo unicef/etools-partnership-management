@@ -37,14 +37,14 @@ export const listFilterStyles = html`
 
     #filters-fields #query {
       --paper-input-container: {
-        width: 282px;
+        width: 280px;
       };
       min-width: 280px;
     }
 
     #filters-fields .filter.date {
       --paper-input-container: {
-        width: 180px;
+        width: 182px;
       };
       min-width: 180px;
     }
