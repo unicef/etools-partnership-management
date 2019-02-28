@@ -9,7 +9,4 @@ RUN npm install -g --unsafe-perm polymer-cli
 RUN npm install -g gulp
 RUN npm install -g typescript
 
-RUN mkdir /code/
-VOLUME ".:/code"
 WORKDIR /code
-CMD ["polymer", "serve"]
