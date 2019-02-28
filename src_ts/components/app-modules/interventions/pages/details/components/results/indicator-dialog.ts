@@ -121,8 +121,8 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
               </div>
             </div>
             <div class="row-h">
-              <paper-toggle-button disabled="[[_clusterToggleIsDisabled(indicator)]]"
-                                  checked="{{isCluster}}"></paper-toggle-button>
+              <paper-toggle-button disabled$="[[_clusterToggleIsDisabled(indicator)]]"
+                                  checked$="{{isCluster}}"></paper-toggle-button>
               Cluster Indicator
             </div>
             <div class="indicator-content">
@@ -253,6 +253,8 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
       this.locations = state.commonData!.locations;
     }
+
+    this.envStateChanged(state);
   }
 
   ready() {

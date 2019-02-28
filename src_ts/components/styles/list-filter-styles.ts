@@ -44,7 +44,7 @@ export const listFilterStyles = html`
 
     #filters-fields .filter.date {
       --paper-input-container: {
-        width: 180px;
+        width: 182px;
       };
       min-width: 180px;
     }

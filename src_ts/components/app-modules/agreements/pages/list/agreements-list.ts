@@ -69,7 +69,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
           @apply --text-btn-style;
           text-transform: none;
         }
-
+        
       </style>
 
       <template is="dom-if" if="[[stampListData]]">
