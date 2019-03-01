@@ -1,8 +1,6 @@
 import {PolymerElement} from "@polymer/polymer/polymer-element.js";
 
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';

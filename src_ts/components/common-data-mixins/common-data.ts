@@ -4,7 +4,6 @@ import {store} from "../../store";
 
 import * as commonDataActions from '../../actions/common-data.js';
 
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import EnvironmentFlags from "../environment-flags/environment-flags-mixin";

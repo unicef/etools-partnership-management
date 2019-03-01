@@ -2,7 +2,6 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 
 import '@polymer/paper-button/paper-button.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 

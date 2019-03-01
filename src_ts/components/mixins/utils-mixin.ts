@@ -1,4 +1,3 @@
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { GenericObject } from '../../typings/globals.types';
 

@@ -6,9 +6,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-content-panel/etools-content-panel.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';

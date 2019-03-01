@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '../../../layout/etools-status/etools-status.js';
 // @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status-common-mixin";
 import CONSTANTS from '../../../../config/app-constants.js';
