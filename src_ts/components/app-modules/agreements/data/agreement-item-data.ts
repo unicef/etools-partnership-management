@@ -1,7 +1,5 @@
-
 import { store } from '../../../../store.js';
 import { PolymerElement } from '@polymer/polymer';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
@@ -9,7 +7,6 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import { Agreement, MinimalAgreement } from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
 import { addEditAgreement } from '../../../../actions/agreements.js';
-// @ts-ignore
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 import { GenericObject } from '../../../../typings/globals.types.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';

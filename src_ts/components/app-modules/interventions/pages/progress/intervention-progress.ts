@@ -6,7 +6,6 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';

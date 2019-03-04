@@ -5,7 +5,6 @@ import '@polymer/app-route/app-route.js';
 import "@polymer/paper-button/paper-button.js"
 import {store} from '../../../store.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import AjaxErrorsParserMixin from '../../mixins/ajax-errors-parser-mixin.js';
 import ScrollControl from '../../mixins/scroll-control-mixin.js';

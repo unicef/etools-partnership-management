@@ -1,5 +1,4 @@
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { PolymerElement } from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';

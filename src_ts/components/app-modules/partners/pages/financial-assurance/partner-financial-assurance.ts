@@ -7,7 +7,6 @@ import "etools-content-panel/etools-content-panel.js";
 import 'etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-dropdown/etools-dropdown.js';

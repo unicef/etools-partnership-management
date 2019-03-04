@@ -5,7 +5,6 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';

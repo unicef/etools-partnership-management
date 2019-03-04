@@ -1,5 +1,4 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-// @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';

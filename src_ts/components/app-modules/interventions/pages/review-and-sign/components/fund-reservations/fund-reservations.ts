@@ -7,7 +7,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-content-panel/etools-content-panel.js';
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
