@@ -1,4 +1,3 @@
-import {resolveUrl} from '@polymer/polymer/lib/utils/resolve-url.js';
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import { GenericObject } from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
@@ -172,12 +171,8 @@ const ModuleRoutingMixin = dedupingMixin(
              * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
             let pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
-            console.log(pageUrl);
-            let resolved = resolveUrl(pageUrl);
-            console.log('Resolved url: ', resolved);
             console.log('Root path: ', this.rootPath );
             console.log('Import path: ', this.importPath );
-            console.log('Base path: ', this.basePAth );
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {

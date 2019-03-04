@@ -64,37 +64,12 @@
     },
     {
       "name": "es6-bundled",
-      "browserCapabilities": [
-        "es2015"
-      ],
-      "js": {
-        "compile": "es2015",
-        "minify": true,
-        "transformModulesToAmd": true
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
+      "preset": "es6-bundled",
       "addServiceWorker": true
     },
     {
       "name": "es5-bundled",
-      "js": {
-        "compile": "es5",
-        "minify": true,
-        "transformModulesToAmd": true
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
+      "preset": "es5-bundled",
       "addServiceWorker": true
     }
   ],
