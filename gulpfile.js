@@ -154,7 +154,7 @@ function buildFragments(cmd, i) {
  * Gulp build task for esm-bundle
  */
 gulp.task('build_esm_bundle', (done) => {
-  const name = 'pmp_poly3/esm-bundled';
+  const name = 'pmp/esm-bundled';
   let cmd = getBuildCmd(name);
 
   // const fragmentsBuildPromises = [];

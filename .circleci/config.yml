@@ -16,17 +16,8 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
-      - restore_cache:
-          key: dependency-cache-{{ checksum "bower.json" }}
       - run:
-          name: Install bower components
-          command: bower install --allow-root --config.interactive=false -s
-      - save_cache:
-          key: dependency-cache-{{ checksum "bower.json" }}
-          paths:
-            - bower_components
-      - run:
-          name: Polymer2 Build
+          name: Polymer3 Build
           command: npm run build
       - run:
           name: Run Tests
@@ -46,8 +37,8 @@ jobs:
           command: |
             REVNO=${CIRCLE_SHA1}
             BUILDDATE=$(date -u +%F_%T)
-            sed -i "0,/revNo/s//$REVNO/" bower.json
-            sed -i "0,/bDate/s//$BUILDDATE/" bower.json
+            sed -i "0,/revNo/s//$REVNO/" package.json
+            sed -i "0,/bDate/s//$BUILDDATE/" package.json
       - run:
           name: Install Docker client
           command: |

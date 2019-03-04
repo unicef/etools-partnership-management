@@ -18,7 +18,7 @@ function getSourcesPath(request) {
   }
 }
 
-app.use('/pmp_poly3/', (req, res, next) => {
+app.use('/pmp/', (req, res, next) => {
   express.static(getSourcesPath(req))(req, res, next);
 });
 
@@ -29,10 +29,10 @@ app.get(/.*service-worker\.js/, function(req, res) {
 // TODO: check if this holds true in Polymer 2
 app.use(function(req, res) {
   // static file requests that end up here are missing so they should return 404
-  if (req.originalUrl.startsWith('/pmp_poly3/pmp_poly3/')) {
+  if (req.originalUrl.startsWith('/pmp/pmp/')) {
     res.status(404).send('Not found');
   } else {
-    // handles requests that look like /pmp_poly3/interventions/details
+    // handles requests that look like /pmp/interventions/details
     res.sendFile(getSourcesPath(req) + 'index.html');
   }
 });
