@@ -1,3 +1,4 @@
+import {resolveUrl} from '@polymer/polymer/lib/utils/resolve-url.js';
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import { GenericObject } from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
@@ -6,6 +7,7 @@ import '../../../typings/globals.types.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {PolymerElement} from "@polymer/polymer/polymer-element";
 import { fireEvent } from '../../utils/fire-custom-event';
+import {getDomainByEnv} from '../../../config/config.js';
 /**
  * Module main elements common functionality
  * @polymer
@@ -14,6 +16,9 @@ import { fireEvent } from '../../utils/fire-custom-event';
  */
 const ModuleRoutingMixin = dedupingMixin(
     (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
+      static get importMeta() {
+        return import.meta;
+      }
       static get properties() {
         return {
           listActive: Boolean,
@@ -166,8 +171,13 @@ const ModuleRoutingMixin = dedupingMixin(
              * So non-absolute paths will be relative to
              * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
-            let pageUrl = '../' + baseUrl + fileName + '.js';
-
+            let pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
+            console.log(pageUrl);
+            let resolved = resolveUrl(pageUrl);
+            console.log('Resolved url: ', resolved);
+            console.log('Root path: ', this.rootPath );
+            console.log('Import path: ', this.importPath );
+            console.log('Base path: ', this.basePAth );
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {
