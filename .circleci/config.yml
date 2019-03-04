@@ -75,3 +75,4 @@ workflows:
                 - staging
                 - develop
                 - upgrade--polymer3
+                - prepare-for-deploy
