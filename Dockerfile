@@ -1,4 +1,4 @@
-FROM node:11.9.0-alpine
+FROM node:11.9.0-alpine as builder
 RUN apk update
 RUN apk add --update bash
 
@@ -9,15 +9,22 @@ RUN npm install -g typescript
 
 WORKDIR /tmp
 ADD package.json /tmp/
+ADD package-lock.json /tmp/
 
-RUN npm install
+RUN npm install --no-save
 
-RUN mkdir /code/
 ADD . /code/
 WORKDIR /code
 RUN cp -a /tmp/node_modules /code/node_modules
-
-ENV NODE_OPTIONS="--max_old_space_size=4072"
 RUN npm run build
+
+
+FROM node:11.9.0-alpine
+RUN apk update
+RUN apk add --update bash
+
+WORKDIR /code
+COPY --from=builder /code/express.js /code/express.js
+COPY --from=builder /code/build /code/build
 EXPOSE 8080
 CMD ["node", "express.js"]
