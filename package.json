@@ -9,7 +9,7 @@
   "license": "BSD-3-Clause",
   "repository": "Polymer/pwa-starter-kit",
   "scripts": {
-    "build": "export NODE_OPTIONS=--max_old_space_size=4096 && npm run tsToJs && polymer build",
+    "build": "export NODE_OPTIONS=--max_old_space_size=3096 && npm run tsToJs && polymer build",
     "tsToJs": "tsc || true",
     "start": "gulp serve",
     "initialbuild": "tsc && npm run build:prpl-server && npm run build:static",
