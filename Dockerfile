@@ -17,7 +17,7 @@ ADD . /code/
 WORKDIR /code
 RUN cp -a /tmp/node_modules /code/node_modules
 
-ENV NODE_OPTIONS="--max_old_space_size=3072"
+ENV NODE_OPTIONS="--max_old_space_size=4072"
 RUN npm run build
 EXPOSE 8080
 CMD ["node", "express.js"]
