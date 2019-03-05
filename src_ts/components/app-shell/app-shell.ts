@@ -51,8 +51,7 @@ import {AppShellStyles} from './app-shell-styles';
 
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
-import {LoadingMixin} from 'etools-loading/etools-loading-mixin.js';
+import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
