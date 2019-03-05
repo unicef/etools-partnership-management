@@ -72,6 +72,25 @@ export const tokenEndpointsHost = (host: string) => {
   return null;
 };
 
+export const getDomainByEnv = () => {
+  if (window.location.port === '8082') {
+    return 'http://localhost:8082/pmp_poly3';
+  }
+  if (isStagingServer()) {
+    return 'https://etools-staging.unicef.org/pmp';
+  }
+  if (isDevServer()) {
+    return 'https://etools-dev.unicef.org/pmp';
+  }
+  if (isDemoServer()) {
+    return 'https://etools-demo.unicef.org/pmp';
+  }
+  if (isProductionServer()) {
+    return 'https://etools.unicef.org/pmp';
+  }
+  return 'https://etools-dev.unicef.org/pmp';
+}
+
 export const tokenStorageKeys = {
   prp: 'etoolsPrpToken'
 };
