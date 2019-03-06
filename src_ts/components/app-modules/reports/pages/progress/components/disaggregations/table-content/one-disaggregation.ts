@@ -1,4 +1,3 @@
-
 import { PolymerElement, html } from '@polymer/polymer';
 import '../disaggregation-table-row.js';
 import DisaggregationsMixin from '../mixins/disaggregations.js';
@@ -89,7 +88,7 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
     if (typeof columns === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    return columns.map(function(z) {
+    return columns.map(function(z: any) {
       let formatted = this._formatDisaggregationIds([z.id]);
 
       return {

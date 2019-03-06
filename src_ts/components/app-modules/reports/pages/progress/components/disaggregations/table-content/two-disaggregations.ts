@@ -1,4 +1,3 @@
-
 import '../mixins/disaggregations.js';
 import '../disaggregation-table-row.js';
 import { PolymerElement, html } from '@polymer/polymer';
@@ -76,28 +75,28 @@ class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)
     };
   }
 
-  _getColumns(mapping) {
+  _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {
       return;
     }
     return (mapping[0] || []).choices;
   }
 
-  _getRows(mapping) {
+  _getRows(mapping: any) {
     if (typeof mapping === 'undefined') {
       return;
     }
     return (mapping[1] || []).choices;
   }
 
-  _determineRowsForDisplay(columns, rows) {
+  _determineRowsForDisplay(columns: any[], rows: any[]) {
     if (typeof columns === 'undefined' || typeof rows === 'undefined') {
       return;
     }
     return this._determineRows(this, rows, columns);
   }
 
-  _determineTotals(columns, data) {
+  _determineTotals(columns: any[], data: any) {
     if (typeof columns === 'undefined' || typeof data === 'undefined') {
       return;
     }

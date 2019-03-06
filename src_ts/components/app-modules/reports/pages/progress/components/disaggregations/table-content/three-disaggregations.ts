@@ -105,43 +105,43 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
     return ['_determineTotals(columns, middleRows, data)'];
   }
 
-  _getColumns(mapping) {
+  _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {
       return;
     }
     return (mapping[0] || []).choices;
   }
 
-  _getRows(mapping) {
+  _getRows(mapping: any) {
     if (typeof mapping === 'undefined') {
       return;
     }
     return (mapping[1] || []).choices;
   }
 
-  _getMiddleRows(mapping) {
+  _getMiddleRows(mapping: any) {
     if (!mapping) {
       return;
     }
     return (mapping[2] || []).choices;
   }
 
-  _determineOuterRows(columns, rows) {
+  _determineOuterRows(columns: any[], rows: any[]) {
     if (typeof columns === 'undefined' || typeof rows === 'undefined') {
       return;
     }
     return this._determineRows(this, rows, columns);
   }
 
-  _determineMiddleRows(outerRowID, columns, middleRows, data) {
+  _determineMiddleRows(outerRowID: any, columns: any[], middleRows: any[], data: any) {
     if (!columns || !middleRows) {
       return [];
     }
 
-    return middleRows.map(function(y) {
+    return middleRows.map(function(y: any) {
       let formatted;
 
-      let columnData = columns.map(function(z) {
+      let columnData = columns.map(function(z: any) {
         formatted = this._formatDisaggregationIds([outerRowID, y.id, z.id]);
 
         return {
@@ -164,11 +164,11 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
     }, this);
   }
 
-  _determineTotals(columns, middleRows, data) {
+  _determineTotals(columns: any[], middleRows: any[], data: any) {
     if (typeof columns === 'undefined' || typeof middleRows === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map(function(z) {
+    let columnData = columns.map(function(z: any) {
       let formatted = this._formatDisaggregationIds([z.id]);
 
       return {
