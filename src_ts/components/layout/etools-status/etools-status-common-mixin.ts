@@ -14,10 +14,11 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
    * @appliesMixin DynamicDialogMixin
    * @appliesMixin EtoolsLogsMixin
    * @appliesMixin ScrollControl
-   */
+  **/
   const EtoolsStatusCommonMixin = dedupingMixin(
     (superClass: any) => class extends ScrollControl(
         DynamicDialogMixin(EtoolsLogsMixin(superClass))) {
+      [x: string]: any;
   static get properties() {
     return {
       status: {
@@ -110,7 +111,7 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
       this._setNotStickyStyles();
       return;
     }
-    this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+    this.contentContainer!.onscroll = this._scrollChangedHandler.bind(this);
   }
   _isStatusHorizontal() {
     // HD res: 1360/1366 x 768
@@ -175,13 +176,13 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
   }
   _setAllActionsToHidden() {
     let possibleActions = this.possibleActions;
-    possibleActions.forEach((elem, index) => {
+    possibleActions.forEach((_elem: any, index: number) => {
       this.set(['possibleActions', index, 'hidden'], true);
     });
   }
   _setAllStatusesToHidden() {
     let possibleStatuses = this.possibleStatuses;
-    possibleStatuses.forEach((elem, index) => {
+    possibleStatuses.forEach((_elem: any, index: number) => {
       this.set(['possibleStatuses', index, 'hidden'], true);
       this.set(['possibleStatuses', index, 'completed'], false);
     });
@@ -226,7 +227,7 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
     return 'You are changing the status from <strong>\''
         + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
   }
-  getComputedStyleValue(varName) {
+  getComputedStyleValue(varName: string) {
     if (ShadyCSS) {
       return ShadyCSS.getComputedStyleValue(this, varName);
     } else {
