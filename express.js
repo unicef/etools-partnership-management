@@ -18,7 +18,7 @@ function getSourcesPath(request) {
   }
 }
 
-app.use('/pmp/', (req, res, next) => {
+app.use((req, res, next) => {
   express.static(getSourcesPath(req))(req, res, next);
 });
 
@@ -26,15 +26,9 @@ app.get(/.*service-worker\.js/, function(req, res) {
   res.sendFile(getSourcesPath(req) + 'service-worker.js');
 });
 
-// TODO: check if this holds true in Polymer 2
-app.use(function(req, res) {
-  // static file requests that end up here are missing so they should return 404
-  if (req.originalUrl.startsWith('/pmp/pmp/')) {
-    res.status(404).send('Not found');
-  } else {
-    // handles requests that look like /pmp/interventions/details
-    res.sendFile(getSourcesPath(req) + 'index.html');
-  }
+app.use((req, res) => {
+  // handles app access using a different state path than index (otherwise it will not return any file)
+  res.sendFile(getSourcesPath(req) + 'index.html');
 });
 
 app.listen(8080);
