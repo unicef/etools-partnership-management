@@ -4,9 +4,11 @@ import { PolymerElement, html } from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/av-icons.js';
 import 'etools-content-panel/etools-content-panel.js'
 import { etoolsStatusStyles } from './etools-status-styles';
 import './etools-action-button.js';
+import { Action, Status } from '../../../typings/etools-status.types';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -120,7 +122,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return !!actionsBtnTooltip;
   }
 
-  _handleStatusChanged(statuses) {
+  _handleStatusChanged(statuses: Status[]) {
     this._statusChangedDebouncer = Debouncer.debounce(this._statusChangedDebouncer,
         timeOut.after(10),
         () => {
@@ -128,12 +130,12 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
         });
   }
 
-  _handleActionsChanged(statuses) {
+  _handleActionsChanged() {
     this._actionsOptionsChangedDebouncer = Debouncer.debounce(this._actionsOptionsChangedDebouncer,
         timeOut.after(10),
         () => {
           let hidden = true;
-          this.actions.forEach((elem) => {
+          this.actions.forEach((elem: Action) => {
             hidden = elem.hidden && hidden;
           });
           this.set('hideActions', hidden);
@@ -167,7 +169,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return 1 + index;
   }
 
-  _computeAvailableStatuses(statuses) {
+  _computeAvailableStatuses(statuses: Status[]) {
     this.set('availableStatuses', []);
     setTimeout(() => {
       let filteredStatuses = statuses.filter((elem) => {
