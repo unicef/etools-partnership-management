@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 declare const moment: any;
 import 'etools-dialog/etools-dialog.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-date-time/calendar-lite';

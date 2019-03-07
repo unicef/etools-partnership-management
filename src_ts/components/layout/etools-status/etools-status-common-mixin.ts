@@ -15,8 +15,8 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
    * @appliesMixin ScrollControl
   **/
   const EtoolsStatusCommonMixin = dedupingMixin(
-    (superClass: any) => class extends ScrollControl(
-        DynamicDialogMixin(EtoolsLogsMixin(superClass))) {
+    (superClass: any) => class extends (ScrollControl(
+        DynamicDialogMixin(EtoolsLogsMixin(superClass))) as any) {
       [x: string]: any;
   static get properties() {
     return {

@@ -420,7 +420,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
   _buildQueryString() {
     let qStrData = [];
     if (!isEmptyObject(this.queryParams)) {
-      Object.keys(this.queryParams).forEach(function(k) {
+      Object.keys(this.queryParams).forEach(function(k: any) {
         let qStrVal;
         if (this.queryParams[k] instanceof Array && !isEmptyObject(this.queryParams[k])) {
           qStrVal = this.queryParams[k].join('|');

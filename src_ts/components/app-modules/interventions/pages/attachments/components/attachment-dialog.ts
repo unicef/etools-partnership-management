@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';

@@ -16,6 +16,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @customElement
  */
 class EtoolsActionButton extends PolymerElement {
+  [x: string]: any;
 
   static get template() {
     return html`

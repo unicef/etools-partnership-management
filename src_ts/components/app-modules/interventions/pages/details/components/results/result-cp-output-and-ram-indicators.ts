@@ -3,7 +3,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';
@@ -43,7 +42,7 @@ class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
 
     <etools-dialog id="cpOutputRamIndicatorsDialog"
                   size="md"
-                  dialog-title="Add/Update CP Output/Ram Indicators"
+                  dialog-title="Add/Update CP Indicators"
                   ok-btn-text="Add/Update"
                   disable-confirm-btn="[[disableConfirmBtn]]"
                   on-confirm-btn-clicked="_saveChanges"
