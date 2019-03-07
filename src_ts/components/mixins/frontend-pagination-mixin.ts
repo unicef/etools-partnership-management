@@ -1,5 +1,4 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {Paginator} from '../../typings/globals.types.js';
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 
 const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
   class extends baseClass {
@@ -45,9 +44,6 @@ const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
     public _isUndefined(item: any) {
       return typeof item === 'undefined';
     }
-
-
-
 
   });
 

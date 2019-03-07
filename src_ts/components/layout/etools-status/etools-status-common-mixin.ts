@@ -6,7 +6,6 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js'
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
 
-
  /**
    * Common functionality for etools status element
    * @polymer

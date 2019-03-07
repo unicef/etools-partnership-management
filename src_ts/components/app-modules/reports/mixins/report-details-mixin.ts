@@ -1,5 +1,5 @@
-  import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-  import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../utils/fire-custom-event';
@@ -98,7 +98,7 @@ import { isJsonStrMatch, copy } from '../../../utils/utils';
       loadingSource: this._loadingMsgSource
     });
     this.set('reportAttachment', null);
-    this.fireRequest('reportAttachment', {reportId: reportId}).then((response) => {
+    this.fireRequest('reportAttachment', {reportId: reportId}).then((response: any) => {
       fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
 
       if (!this._attachmentHasNullFields(response)) {
@@ -117,7 +117,7 @@ import { isJsonStrMatch, copy } from '../../../utils/utils';
     });
   }
 
-  _attachmentHasNullFields(att) {
+  _attachmentHasNullFields(att: any) {
     if (!att) {
       return true;
     }

@@ -163,7 +163,7 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
     this.set('anySelected', anySelected);
   }
 
-  _handleDialogClosed(closingReason) {
+  _handleDialogClosed(closingReason: object) {
     if (!closingReason.detail.confirmed) {
       return;
     }
@@ -209,17 +209,17 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
     });
   }
 
-  _handleSuccess(afterDataRefreshLandingPage, restampLandingPage) {
+  _handleSuccess(afterDataRefreshLandingPage: string, restampLandingPage: string) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {text: 'Data successfully refreshed', showCloseBtn: true});
   }
 
-  _handleFailure(afterDataRefreshLandingPage, restampLandingPage) {
+  _handleFailure(afterDataRefreshLandingPage: string, restampLandingPage: string) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
   }
 
-  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage) {
+  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: string) {
     let routePath = afterDataRefreshLandingPage + '/list';
     if (restampLandingPage) {
       this.set('page', null);
