@@ -7,7 +7,6 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from "../../../store";
 import {isProductionServer, isStagingServer} from '../../../config/config.js';
 import {updateDrawerState} from "../../../actions/app";
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-profile-dropdown/etools-profile-dropdown.js';
 import 'etools-app-selector/etools-app-selector.js'

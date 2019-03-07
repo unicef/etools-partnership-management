@@ -4,9 +4,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/paper-input/paper-input.js';
 
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';

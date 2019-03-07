@@ -1,4 +1,3 @@
-// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { Intervention, ListItemIntervention, FrsDetails, Fr } from '../../../../typings/intervention.types';
 

@@ -1,5 +1,4 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';

@@ -5,7 +5,6 @@ import {connect} from "pwa-helpers/connect-mixin.js";
 import {store} from "../../store.js";
 import {updateEnvFlags} from '../../actions/common-data.js';
 
-// @ts-ignore
 // import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
 export interface EnvFlags extends Object {

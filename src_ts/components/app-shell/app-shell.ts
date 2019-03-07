@@ -49,13 +49,9 @@ import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';

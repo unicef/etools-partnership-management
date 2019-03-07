@@ -3,7 +3,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';

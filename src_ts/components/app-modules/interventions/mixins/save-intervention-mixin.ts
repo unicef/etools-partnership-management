@@ -1,5 +1,4 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import ArrayHelperMixin from '../../../mixins/array-helper-mixin';

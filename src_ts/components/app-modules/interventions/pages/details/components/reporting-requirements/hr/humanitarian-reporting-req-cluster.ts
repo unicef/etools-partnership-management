@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import uniq from 'lodash-es/uniq';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-data-table/etools-data-table.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
