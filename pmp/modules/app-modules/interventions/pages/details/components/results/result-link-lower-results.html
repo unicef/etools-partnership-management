@@ -110,7 +110,7 @@
 
     <div class="lower-results-list" hidden$="[[_emptyList(dataItems.length)]]">
       <div class="header-container header-text border-b">
-        <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
+        <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD Output or SSFA Expected Result</div>
         <div class="col flex-c">
           <div class="col col-8">Performance Indicator</div>
           <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
@@ -152,7 +152,7 @@
     <div class="add-btn-row border-t" hidden$="[[!editMode]]">
       <paper-icon-button icon="add-box"
                          on-tap="_addNewLowerResult"
-                         title="Add PD or SSFA OUTPUT"
+                         title="Add PD or SSFA Expected Result"
                          disabled$="[[!editMode]]">
         Add PD output or SSFA expected result
       </paper-icon-button>
