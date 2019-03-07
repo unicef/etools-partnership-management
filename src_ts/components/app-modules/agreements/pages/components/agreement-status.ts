@@ -13,7 +13,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
+class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
   [x: string]: any;
   static get template() {
     return html`

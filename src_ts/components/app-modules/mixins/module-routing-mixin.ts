@@ -6,6 +6,7 @@ import '../../../typings/globals.types.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {PolymerElement} from "@polymer/polymer/polymer-element";
 import { fireEvent } from '../../utils/fire-custom-event';
+import {getDomainByEnv} from '../../../config/config.js';
 /**
  * Module main elements common functionality
  * @polymer
@@ -14,6 +15,9 @@ import { fireEvent } from '../../utils/fire-custom-event';
  */
 const ModuleRoutingMixin = dedupingMixin(
     (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
+      static get importMeta() {
+        return import.meta;
+      }
       static get properties() {
         return {
           listActive: Boolean,
@@ -166,8 +170,9 @@ const ModuleRoutingMixin = dedupingMixin(
              * So non-absolute paths will be relative to
              * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
-            let pageUrl = '../' + baseUrl + fileName + '.js';
-
+            let pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
+            console.log('Root path: ', this.rootPath );
+            console.log('Import path: ', this.importPath );
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {

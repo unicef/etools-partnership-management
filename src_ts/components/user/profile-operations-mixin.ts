@@ -8,6 +8,7 @@ import AjaxErrorsParserMixin from "../mixins/ajax-errors-parser-mixin.js";
 import EndpointsMixin from "../endpoints/endpoints-mixin.js";
 import UserDataMixin from "./user-data-mixin.js";
 import {updateCurrentUser} from "../../actions/common-data.js";
+import { fireEvent } from '../utils/fire-custom-event';
 
 /**
  * @polymer
