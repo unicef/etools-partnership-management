@@ -44,7 +44,6 @@
       }
 
       .unknown {
-        margin-top: -14px;
         padding-left: 24px;
         padding-bottom: 16px;
       }
@@ -108,43 +107,47 @@
       <template is="dom-if" if="[[!_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
         <div class="col col-3">
           <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
-            <paper-input label="Baseline"
+            <paper-input id="baselineNumeric"
+                         label="Baseline"
                          value="{{indicator.baseline.v}}"
-                         type="number"
-                         allowed-pattern="[0-9\.]"
-                         placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+                         allowed-pattern="[0-9\.\,]"
+                         pattern="[[numberPattern]]"
+                         auto-validate
+                         error-message="Invalid number"
+                         placeholder="&#8212;"
+                         disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
           <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
-            <paper-input label="Baseline"
+            <paper-input id="baselineNonNumeric"
+                         label="Baseline"
                          value="{{indicator.baseline.v}}"
-                         type="number"
-                         min="0"
-                         max="100"
-                         allowed-pattern="[0-9\.]"
-                         placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
+                         allowed-pattern="[0-9]"
+                         pattern="[[digitsPattern]]"
+                         auto-validate
+                         error-message="Invalid number"
+                         placeholder="&#8212;"
+                         disabled="[[baselineIsUnknown]]">
             </paper-input>
           </template>
         </div>
         <div class="col col-3">
           <paper-input label="Target" id="targetElForNumericUnit"
                        value="{{indicator.target.v}}"
-                       type="number"
                        placeholder="&#8212;"
+                       allowed-pattern="[0-9\.\,]"
                        required
-                       allowed-pattern="[0-9\.]"
+                       pattern="[[numberPattern]]"
                        auto-validate
                        error-message="Please add a valid target"
                        hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
           </paper-input>
           <paper-input label="Target" id="targetElForNonNumericUnit"
                        value="{{indicator.target.v}}"
-                       type="number"
-                       min="0"
-                       max="100"
-                       allowed-pattern="[0-9\.]"
                        placeholder="&#8212;"
+                       allowed-pattern="[0-9]"
                        required
+                       pattern="[[digitsPattern]]"
                        auto-validate
                        error-message="Please add a valid target"
                        hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
@@ -153,38 +156,47 @@
       </template>
       <template is="dom-if" if="[[_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
         <div class="col-3 layout-horizontal">
-          <paper-input label="Baseline"
+          <paper-input id="baselineNumerator"
+                       label="Baseline"
                        value="{{indicator.baseline.v}}"
-                       type="number"
-                       allowed-pattern="[0-9\.]"
-                       placeholder="Numerator" disabled="[[baselineIsUnknown]]">
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
+                       auto-validate
+                       error-message="Invalid"
+                       placeholder="Numerator"
+                       disabled="[[baselineIsUnknown]]">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input
+              id="baselineDenominator"
               value="{{indicator.baseline.d}}"
-              type="number"
-              min="1"
-              allowed-pattern="[0-9\.]"
-              placeholder="Denominator" disabled="[[baselineIsUnknown]]">
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              error-message="Invalid"
+              placeholder="Denominator"
+              disabled="[[baselineIsUnknown]]">
           </paper-input>
         </div>
         <div class="col col-3">
           <paper-input label="Target" id="targetNumerator"
                        value="{{indicator.target.v}}"
-                       type="number"
-                       allowed-pattern="[0-9\.]"
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
+                       auto-validate
                        required
                        auto-validate
+                       error-message="Invalid"
                        placeholder="Numerator">
           </paper-input>
           <div class="layout-horizontal bottom-aligned dash-separator">/</div>
           <paper-input id="targetDenominator"
                        value="{{indicator.target.d}}"
-                       type="number"
-                       min="1"
                        required
+                       allowed-pattern="[0-9]"
+                       pattern="[[digitsNotStartingWith0Pattern]]"
                        auto-validate
-                       allowed-pattern="[0-9\.]"
+                       error-message="Empty or < 1"
                        placeholder="Denominator"
                        readonly$="[[isReadonlyDenominator(interventionStatus, indicator.id)]]">
           </paper-input>
@@ -266,8 +278,8 @@
 
       static get observers() {
         return [
-          '_baselineChanged(indicator.baseline.v)',
-          '_targetChanged(indicator.target.v)',
+          '_baselineChanged(indicator.baseline.v, indicator.indicator.unit)',
+          '_targetChanged(indicator.target.v, indicator.indicator.unit)',
           '_baselineUnknownChanged(baselineIsUnknown)',
           '_typeChanged(indicator.indicator.display_type, indicator.indicator.unit)'
         ];
@@ -336,13 +348,13 @@
 
       _getIndicatorTargetElId() {
         if (!this.indicator || !this.indicator.indicator) {
-          return ['targetElForNumericUnit'];
+          return ['targetElForNumericUnit', 'baselineNumeric'];
         }
         if (this._getIndUnit() === 'percentage' && this._getIndDisplayType() === 'ratio') {
-          return ['targetNumerator', 'targetDenominator'];
+          return ['baselineNumerator', 'baselineDenominator', 'targetNumerator', 'targetDenominator'];
         }
         return (this._unitIsNumeric(this.indicator.indicator.unit))
-            ? ['targetElForNumericUnit'] : ['targetElForNonNumericUnit'];
+            ? ['targetElForNumericUnit', 'baselineNumeric'] : ['targetElForNonNumericUnit', 'baselineNonNumeric'];
       }
 
       _isRatioType() {
