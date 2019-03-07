@@ -54,7 +54,7 @@ import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 // @ts-ignore
-import {LoadingMixin} from 'etools-loading/etools-loading-mixin.js';
+import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 // @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
@@ -95,6 +95,7 @@ import { setInAmendment } from '../../actions/page-data.js';
 import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
+import { objectsAreTheSame } from '../utils/utils.js';
 setRootPath(BASE_URL);
 
 /**
@@ -364,7 +365,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   public appLocRouteChanged(appLocRoute: any) {
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
-        if (this.objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
+        if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
           return;
         } else {
           if (this.isInterventionReports(this.appLocRoute.path)) {
@@ -384,7 +385,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
 
   public routeChanged() {
     if (this.appLocRoute.path === this.route.path &&
-        this.objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
+        objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
       return;
     }
 
