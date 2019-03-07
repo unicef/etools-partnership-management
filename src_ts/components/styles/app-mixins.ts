@@ -75,4 +75,4 @@ documentContainer.innerHTML = `
     </style>
   </custom-style>`;
 
-document.head.appendChild(documentContainer.content);
+document.head.appendChild(documentContainer!.content);

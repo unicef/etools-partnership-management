@@ -3,7 +3,6 @@ import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-button/paper-button.js';
 
 import 'etools-dialog/etools-dialog.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import DateMixin from '../../../../../../../mixins/date-mixin.js';

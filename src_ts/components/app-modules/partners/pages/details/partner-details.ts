@@ -5,7 +5,6 @@ import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';

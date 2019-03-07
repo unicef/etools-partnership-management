@@ -4,7 +4,6 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import 'etools-dropdown/etools-dropdown.js'
 import { store, RootState } from '../../store.js';

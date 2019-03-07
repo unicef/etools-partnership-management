@@ -7,9 +7,7 @@ import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';

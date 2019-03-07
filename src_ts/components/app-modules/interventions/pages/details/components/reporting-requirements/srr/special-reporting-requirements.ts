@@ -3,9 +3,7 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-data-table/etools-data-table.js';
 
 import 'etools-dialog/dynamic-dialog-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';

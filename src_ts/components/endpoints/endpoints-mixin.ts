@@ -1,9 +1,7 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
-// @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {RootState, store} from "../../store";
 

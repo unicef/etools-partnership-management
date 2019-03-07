@@ -1,6 +1,4 @@
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';

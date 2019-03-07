@@ -1,8 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
-// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-data-table/etools-data-table.js';

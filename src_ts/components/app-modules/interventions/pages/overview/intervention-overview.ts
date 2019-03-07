@@ -6,7 +6,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-content-panel/etools-content-panel.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import '../../../../layout/monitoring-visits-list.js';
@@ -19,6 +18,8 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
+import { CpOutput, ExpectedResult, Section } from '../../../../../typings/intervention.types.js';
+import { GenericObject } from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -26,7 +27,7 @@ import { isJsonStrMatch } from '../../../../utils/utils.js';
  * @customElement
  * @appliesMixin CommonMixin
  */
-class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
+class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {
@@ -208,11 +209,11 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
       return;
     }
     let resultLinks = this.intervention.result_links;
-    let ids = {};
-    let uniqueIds = [];
-    let interventionCpOutputs = [];
+    let ids: GenericObject = {};
+    let uniqueIds: number[] = [];
+    let interventionCpOutputs: CpOutput[] = [];
 
-    resultLinks.forEach(function(res) {
+    resultLinks.forEach(function(res: ExpectedResult) {
       ids[res.cp_output] = true;
     });
 
@@ -238,14 +239,21 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
       this.set('inteventionSections', []);
       return;
     }
-    let sections = [];
+
+    this.set('inteventionSections', this._getIntervSectionNames());
+  }
+
+  _getIntervSectionNames() {
     let interventionSections = this.intervention.sections.map((sectionId: string) =>  parseInt(sectionId, 10));
-    this.sections.forEach(function(section) {
+    let sectionNames: string[] = [];
+
+    this.sections.forEach(function(section: Section) {
       if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
-        sections.push(section.name);
+        sectionNames.push(section.name);
       }
     });
-    this.set('inteventionSections', sections);
+
+    return sectionNames;
   }
 
 }

@@ -2,9 +2,7 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {connect} from "pwa-helpers/connect-mixin";
 import {store} from "../../store";
 
-// @ts-ignore
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
-// @ts-ignore
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from "../endpoints/endpoints-mixin.js";
 import UserPermisionsMixin from "./user-permissions-mixin.js";

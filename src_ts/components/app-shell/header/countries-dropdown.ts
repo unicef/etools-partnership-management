@@ -4,11 +4,8 @@ import {store, RootState} from "../../../store.js";
 
 import 'etools-dropdown/etools-dropdown.js';
 
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
