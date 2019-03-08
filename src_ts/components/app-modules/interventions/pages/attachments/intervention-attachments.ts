@@ -311,7 +311,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
   }
 
   _interventionIdChanged(id: string) {
-    if (!id || isNaN(id)) {
+    if ( !id ) {
       this.set('attachments', []);
       return;
     }
@@ -354,9 +354,11 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
   }
 
   _confirmAttachmentDelete(e: CustomEvent) {
-    this.attMarkedToBeDeleted = this.attachments.find((a: InterventionAttachment) => a.id === Number(e.target.getAttribute('item-id')));
-    if (this.attMarkedToBeDeleted) {
-      this.attDeleteConfirmDialog.opened = true;
+    if (e.target !== null) {
+      this.attMarkedToBeDeleted = this.attachments.find((a: InterventionAttachment) => a.id === Number(e.target.getAttribute('item-id')));
+      if (this.attMarkedToBeDeleted) {
+        this.attDeleteConfirmDialog.opened = true;
+      }
     }
   }
 

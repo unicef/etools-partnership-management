@@ -14,6 +14,7 @@ import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
+import { fireEvent } from '../../../../../utils/fire-custom-event';
 
 
 /**
