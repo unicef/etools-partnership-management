@@ -9,9 +9,7 @@ import {store} from "../../../store";
 import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-// @ts-ignore
 import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory";
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import ScrollControl from "../../mixins/scroll-control-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';

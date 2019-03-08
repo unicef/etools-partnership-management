@@ -3,7 +3,6 @@ import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';

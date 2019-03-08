@@ -4,7 +4,6 @@ import 'etools-date-time/datepicker-lite.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';

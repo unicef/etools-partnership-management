@@ -1,9 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-loading/etools-loading.js';
 declare const moment: any;
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import CommonMixin from '../mixins/common-mixin';
 import AjaxErrorsParserMixin from '../mixins/ajax-errors-parser-mixin';

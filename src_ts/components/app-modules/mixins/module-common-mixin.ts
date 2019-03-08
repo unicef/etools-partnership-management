@@ -3,7 +3,6 @@ import { ListQueryParams } from '../../../typings/route.types.js';//TODO - load 
 import '../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import { fireEvent } from '../../utils/fire-custom-event.js';
   /**
