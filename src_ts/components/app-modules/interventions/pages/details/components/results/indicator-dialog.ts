@@ -237,6 +237,9 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       },
       interventionStatus: {
         type: String
+      },
+      currentUser: {
+        type: Object
       }
     };
   }
@@ -251,6 +254,10 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     }
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
       this.locations = state.commonData!.locations;
+    }
+
+    if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
+      this.currentUser = state.commonData!.currentUser;
     }
 
     this.envStateChanged(state);

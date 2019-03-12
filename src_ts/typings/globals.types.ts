@@ -24,15 +24,15 @@ export type UserPermissions = {
 }
 
 export type User = {
-  first_name: string,
-  last_name: string,
-  middle_name: string,
-  name: string,
-  email: string,
-  country: object,
-  country_override: number,
-  countries_available: [],
-  groups: UserGroup[]
+  first_name: string;
+  last_name: string;
+  middle_name: string;
+  name: string;
+  email: string;
+  country: object;
+  country_override: number;
+  countries_available: MinimalCountry[];
+  groups: UserGroup[];
 }
 
 export type UserGroup = {
@@ -76,8 +76,22 @@ export type CpStructure = {
   wbs: string;
 }
 
-export type CountryData = {
+export interface MinimalCountry {
+  id: number;
+  name: string;
+  business_area_code: string;
+}
+
+export interface Country extends MinimalCountry {
+
+  country_short_code: string;
+  initial_zoom: number;
+  latitude: string;
+  local_currency: string;
   local_currency_code: string;
+  local_currency_id: number;
+  longitude: string;
+
 }
 
 export type LabelAndValue = {
