@@ -27,8 +27,8 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       }
 
       public endStateChanged(state: RootState) {
-        if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.PRPCountryData)) {
-          this.PRPCountryData = [...state.commonData!.PRPCountryData];
+        if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)) {
+          this.prpCountries = [...state.commonData!.PRPCountryData];
         }
         if (!isJsonStrMatch(state.commonData!.currentUser, this.currentUser)) {
           this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser)) as User;
