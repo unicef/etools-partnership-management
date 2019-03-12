@@ -770,7 +770,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
         && typeof interventionEnd === 'string' && interventionEnd !== '') {
 
       let start = parseInt(interventionStart.substr(0, 4), 10);
-      let end = parseInt(interventionEnd.substr(0, 4), 10);
+      let end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
       let years = [];
       while (start <= end) {
         years.push({
