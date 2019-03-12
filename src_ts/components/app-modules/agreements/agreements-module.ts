@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
-import "@polymer/paper-button/paper-button.js"
+import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../store.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
@@ -20,8 +20,8 @@ import '../../layout/etools-error-messages-box.js'
 import '../../layout/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 import {pageLayoutStyles} from '../../styles/page-layout-styles'
-import {SharedStyles} from "../../styles/shared-styles";
-import {buttonsStyles} from "../../styles/buttons-styles";
+import {SharedStyles} from '../../styles/shared-styles';
+import {buttonsStyles} from '../../styles/buttons-styles';
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';

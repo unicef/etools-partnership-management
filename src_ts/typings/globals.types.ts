@@ -53,7 +53,7 @@ export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in pol
 
 export interface PolymerElEvent extends CustomEvent {//TODO - should be in polymer type declarions
   target: any;
-  currentTarget: any
+  currentTarget: any;
 }
 
 export class Paginator {
@@ -64,16 +64,16 @@ export class Paginator {
 }
 
 export type CpStructure = {
-  id: string,
-  name: string,
-  expired: boolean,
-  future: boolean,
-  active: boolean,
-  special: boolean,
-  invalid: boolean,
-  from_date: string,
-  to_date: string,
-  wbs: string
+  id: string;
+  name: string;
+  expired: boolean;
+  future: boolean;
+  active: boolean;
+  special: boolean;
+  invalid: boolean;
+  from_date: string;
+  to_date: string;
+  wbs: string;
 }
 
 export type CountryData = {
@@ -81,7 +81,7 @@ export type CountryData = {
 }
 
 export type LabelAndValue = {
-  label: string,
-  value: string
+  label: string;
+  value: string;
 }
 

@@ -35,7 +35,7 @@ export class Intervention {
   result_links: ExpectedResult[] = [];
   planned_visits: PlannedVisit[] = [];
   in_amendment: boolean = false;
-  amendments: [] = [];
+  amendments: InterventionAmendment[] = [];
   //distributions: [];
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
@@ -51,6 +51,19 @@ export class Intervention {
     return this.contingency_pd &&
       this.activation_letter_attachment;
   }
+}
+
+export class InterventionAmendment {
+  id?: number;
+  intervention?: number;
+  created?: string;
+
+  amendment_number: string | null = null;
+  types: string[] = [];
+  other_description: string | null = null;
+  signed_date: string | null = null;
+  signed_amendment_attachment: number| string | null = null;
+  internal_prc_review: number | string | null = null;
 }
 
 export class ListItemIntervention {
