@@ -170,7 +170,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
   validate() {
     let valid = true;
     if (this.dataItems instanceof Array && this.dataItems.length > 0) {
-      this.dataItems.forEach((item, index) => {
+      this.dataItems.forEach((_item, index) => {
         let lastItem = this.shadowRoot.querySelector('#fr-nr-' + index);
         if (lastItem && !lastItem.validate()) {
           valid = false;
@@ -224,7 +224,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     this._frNrValueChanged();
   }
 
-  _checkFrNumbers(e: CustomEvent) {
+  _checkFrNumbers(_e: CustomEvent) {
     if (!this.validate()) {
       return;
     }

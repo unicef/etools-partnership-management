@@ -16,6 +16,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store.js';
 import { setInAmendment } from '../../../../../../../actions/page-data.js';
 import { isJsonStrMatch } from '../../../../../../utils/utils.js';
+import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
 
 
 /**
@@ -227,15 +228,15 @@ class PdAmendments extends connect(store)(InterventionAmendmentsMixin) {
     }
   }
 
-  _getReadonlyAmendmentTypes(types: []) {
+  _getReadonlyAmendmentTypes(types: string[]) {
     if (!types || !types.length) {
       return null;
     }
-    let amdTypes = this.amendmentTypes.filter((t) => {
+    let amdTypes = this.amendmentTypes.filter((t: LabelAndValue) => {
       return types.indexOf(t.value) > -1;
     });
     if (amdTypes.length) {
-      let amdTypesLabels = amdTypes.map((t) => {
+      let amdTypesLabels = amdTypes.map((t: LabelAndValue) => {
         return t.label;
       });
       return amdTypesLabels.join(', ');
@@ -274,7 +275,7 @@ class PdAmendments extends connect(store)(InterventionAmendmentsMixin) {
     }
   }
 
-  _showOtherInput(selectedAmdTypes: [], _selectedAmdTypesLength: number) {
+  _showOtherInput(selectedAmdTypes: string[], _selectedAmdTypesLength: number) {
     if (!selectedAmdTypes || !selectedAmdTypes.length) {
       return false;
     }
