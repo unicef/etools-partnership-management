@@ -148,7 +148,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     this.$.frsDialog.opened = true;
   }
 
-  stopSpinner(e: CustomEvent) {
+  stopSpinner(e?: CustomEvent) {
     if (e) {
       e.stopImmediatePropagation();
     }

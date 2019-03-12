@@ -972,7 +972,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     }
   }
 
-  _activationLetterDelete(e: CustomEvent) {
+  _activationLetterDelete(_e: CustomEvent) {
     this.set('intervention.activation_letter_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }

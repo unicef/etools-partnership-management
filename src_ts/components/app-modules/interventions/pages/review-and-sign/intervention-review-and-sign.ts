@@ -21,7 +21,7 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { Intervention } from '../../../../../typings/intervention.types.js';
+import { Intervention, Fr } from '../../../../../typings/intervention.types.js';
 import { Agreement } from '../../../agreements/agreement.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
@@ -424,7 +424,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     e.stopImmediatePropagation();
     try {
       this.set('intervention.frs_details', e.detail.frsDetails);
-      let frIds = e.detail.frsDetails.frs.map(fr => fr.id);
+      let frIds = e.detail.frsDetails.frs.map((fr: Fr) => fr.id);
       this.set('intervention.frs', frIds);
     } catch (err) {
       this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
@@ -464,7 +464,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     }
   }
 
-  _signedPDDocDelete(e: CustomEvent) {
+  _signedPDDocDelete(_e: CustomEvent) {
     this.set('intervention.signed_pd_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
@@ -478,7 +478,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     }
   }
 
-  _prcRevDocDelete(e: CustomEvent) {
+  _prcRevDocDelete(_e: CustomEvent) {
     this.set('intervention.prc_review_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }

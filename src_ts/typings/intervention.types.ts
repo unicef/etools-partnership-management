@@ -42,6 +42,7 @@ export class Intervention {
   permissions?: IPermission<InterventionPermissionsFields>;
   [key: string] : any;
 
+  //Domain driven design idea
   public isDraft() {
     return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
         status === '';
@@ -74,7 +75,8 @@ export class ListItemIntervention {
 }
 
 export class SelectedSection {
-  constructor(public sectionIds: number[], public section_names: string[]) {
+  constructor(public sectionIds: number[],
+    public section_names: string[]) {
 
   }
 }
@@ -94,16 +96,31 @@ export class InterventionAttachment  {
 }
 
 export class FrsDetails {
-  currencies_match: boolean = false;
-  total_frs_amt: string = '0';
-  earliest_start_date: string | null = null;
-  latest_end_date: string | null = null;
+  currencies_match: boolean = false
+  earliest_start_date: string | null = null
   frs: Fr[] = [];
+  latest_end_date: string | null = null;
+  multi_curr_flag: boolean = false;
+  total_actual_amt: number = 0;
+  total_frs_amt: number = 0
+  total_intervention_amt: number = 0
+  total_outstanding_amt: number = 0
 }
 
 export type Fr = {
-  id: number,
+  id: number;
   currency: string;
+  fr_number: string;
+  line_item_details: [];
+  end_date: string;
+  start_date: string;
+  actual_amt: string;
+  actual_amt_local: string;
+  outstanding_amt: string;
+  outstanding_amt_local: string;
+  total_amt: string;
+  total_amt_local: string;
+  vendor_code: string;
 }
 
 export class PlannedBudget  {

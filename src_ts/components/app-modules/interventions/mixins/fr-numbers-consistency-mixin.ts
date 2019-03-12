@@ -60,7 +60,7 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
   /**
    * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
    */
-  checkFrsConsistency(frsDetails: FrsDetails, intervention: Intervention, skipEmptyListCheck: boolean) {
+  checkFrsConsistency(frsDetails: FrsDetails, intervention: Intervention, skipEmptyListCheck?: boolean) {
     if (intervention.status === 'closed') {
       return false;
     }
