@@ -163,7 +163,7 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
     this.set('anySelected', anySelected);
   }
 
-  _handleDialogClosed(closingReason: object) {
+  _handleDialogClosed(closingReason: CustomEvent) {
     if (!closingReason.detail.confirmed) {
       return;
     }

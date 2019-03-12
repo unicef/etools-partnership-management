@@ -249,8 +249,9 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     this._initComplete = false;
   }
 
-  _initListFilters(partners: any[], cpOutputs: any[], sections: any[], unicefUsersData: any[], reportStatuses: any,
-                                                                                                reportTypes: any[]) {
+  _initListFilters(partners: any[], cpOutputs: any[], sections: any[], unicefUsersData: any[],
+                   reportStatuses: any[], reportTypes: any[]) {
+
     if (!partners || partners.length === 0 || !cpOutputs || !sections ||
         !unicefUsersData || unicefUsersData.length === 0 || !reportStatuses || !reportTypes) {
       return;

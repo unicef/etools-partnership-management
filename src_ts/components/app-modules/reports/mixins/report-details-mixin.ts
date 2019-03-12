@@ -2,24 +2,24 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
-import { fireEvent } from '../../../utils/fire-custom-event';
-import { RootState } from '../../../../store';
-import { isJsonStrMatch, copy } from '../../../utils/utils';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {RootState} from '../../../../store';
+import {isJsonStrMatch, copy} from '../../../utils/utils';
 
 
-  /**
-   * @polymerMixin
-   * @mixinFunction
-   * @appliesMixin EtoolsLogsMixin
-   * @appliesMixin EndpointsMixin
-   * @appliesMixin AjaxErrorsParserMixin
-   */
-  const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory.combineMixins([
+/**
+ * @polymerMixin
+ * @mixinFunction
+ * @appliesMixin EtoolsLogsMixin
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin AjaxErrorsParserMixin
+ */
+const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   EndpointsMixin,
   AjaxErrorsParserMixin
-  ], superclass) {
-    [x: string]: any;
+], superclass) {
+  [x: string]: any;
 
   static get properties() {
     return {
@@ -126,4 +126,4 @@ import { isJsonStrMatch, copy } from '../../../utils/utils';
 
 };
 
- export default ReportDetailsMixin;
+export default ReportDetailsMixin;
