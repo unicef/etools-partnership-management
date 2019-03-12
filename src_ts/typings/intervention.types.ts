@@ -185,6 +185,7 @@ export type ResultLinkLowerResult = { //ll_result
 
 export type Indicator = {// Indicator
   id: number;
+  cluster_name: string;
   cluster_indicator_id: number;
   is_active: boolean;
   is_high_frequency: boolean;

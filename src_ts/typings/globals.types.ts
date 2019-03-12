@@ -80,3 +80,8 @@ export type CountryData = {
   local_currency_code: string;
 }
 
+export type LabelAndValue = {
+  label: string,
+  value: string
+}
+
