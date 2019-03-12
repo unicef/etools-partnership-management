@@ -17,7 +17,6 @@ const UserPermissionsMixin = dedupingMixin((baseClass: any) =>
             'viewInterventionDetails'
           ],
           unicefUserPermissions: [
-            'editInterventionDetails'
           ],
           superPermissions: [
             'loggedInDefault',
