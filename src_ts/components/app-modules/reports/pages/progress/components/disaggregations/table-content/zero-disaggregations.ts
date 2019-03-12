@@ -36,7 +36,7 @@ class ZeroDisaggregations extends PolymerElement {
     };
   }
 
-  _determineTotalRow(_, data) {
+  _determineTotalRow(_, data: object) {
     if (typeof data === 'undefined') {
       return;
     }

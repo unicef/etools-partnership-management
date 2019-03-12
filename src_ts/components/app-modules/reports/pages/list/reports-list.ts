@@ -249,7 +249,9 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     this._initComplete = false;
   }
 
-  _initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes) {
+  _initListFilters(partners: any[], cpOutputs: any[], sections: any[], unicefUsersData: any[],
+                   reportStatuses: any[], reportTypes: any[]) {
+
     if (!partners || partners.length === 0 || !cpOutputs || !sections ||
         !unicefUsersData || unicefUsersData.length === 0 || !reportStatuses || !reportTypes) {
       return;
@@ -402,7 +404,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     this.set('_initComplete', true);
   }
 
-  _updateURL(queryParamsData, pageNr: number, pageSize: number, _initComplete: boolean) {
+  _updateURL(queryParamsData: any, pageNr: number, pageSize: number, _initComplete: boolean) {
     if (!_initComplete || !this.active) {
       return;
     }
@@ -419,7 +421,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
   _buildQueryString() {
     let qStrData = [];
     if (!isEmptyObject(this.queryParams)) {
-      Object.keys(this.queryParams).forEach(function(k) {
+      Object.keys(this.queryParams).forEach(function(k: any) {
         let qStrVal;
         if (this.queryParams[k] instanceof Array && !isEmptyObject(this.queryParams[k])) {
           qStrVal = this.queryParams[k].join('|');

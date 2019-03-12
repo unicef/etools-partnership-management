@@ -276,7 +276,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
     this.push('attachments', e.detail);
   }
 
-  _updateAttachments(attachment: InterventionAttachment[], deleteAction?: boolean) {
+  _updateAttachments(attachment: InterventionAttachment, deleteAction?: boolean) {
     const attachments = JSON.parse(JSON.stringify(this.attachments));
     const attachmentIdx = attachments.findIndex((a: InterventionAttachment) => a.id === attachment.id);
     if (attachmentIdx > -1) {
@@ -311,7 +311,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
   }
 
   _interventionIdChanged(id: string) {
-    if (!id || isNaN(id)) {
+    if (!id || isNaN(parseInt(id, 10))) {
       this.set('attachments', []);
       return;
     }
@@ -354,9 +354,12 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
   }
 
   _confirmAttachmentDelete(e: CustomEvent) {
-    this.attMarkedToBeDeleted = this.attachments.find((a: InterventionAttachment) => a.id === Number(e.target.getAttribute('item-id')));
-    if (this.attMarkedToBeDeleted) {
-      this.attDeleteConfirmDialog.opened = true;
+    if (e.target !== null) {
+      this.attMarkedToBeDeleted = this.attachments
+          .find((a: InterventionAttachment) => a.id === Number((e.target as any).getAttribute('item-id')));
+      if (this.attMarkedToBeDeleted) {
+        this.attDeleteConfirmDialog.opened = true;
+      }
     }
   }
 

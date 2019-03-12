@@ -280,7 +280,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   getSectionName(sectionId: string) {
     let sectionName = '—';
     if (sectionId && !isEmptyObject(this.sections)) {
-      let section = this.sections.find(function(s) {
+      let section = this.sections.find(function(s: any) {
         return parseInt(s.id) === parseInt(sectionId);
       });
       if (section) {

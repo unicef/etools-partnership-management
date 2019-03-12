@@ -10,14 +10,14 @@ import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
-import {buttonsStyles} from "../../../styles/buttons-styles";
+import {buttonsStyles} from '../../../styles/buttons-styles';
 import { SharedStyles } from '../../../styles/shared-styles.js';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../../../store";
-import {addDisaggregation} from "../../../../actions/common-data";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../../../store';
+import {addDisaggregation} from '../../../../actions/common-data';
 import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
-
+import {Disaggregation} from '../../../../typings/intervention.types';
 
 
 /**
@@ -148,7 +148,7 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     this.editMode = true;
   }
 
-  broadcastAddDisaggregToOtherTabs(disaggregation: any) {
+  broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
     localStorage.setItem('update-redux', {
       type: 'ADD_DISAGGREGATION',
       disaggregation: disaggregation

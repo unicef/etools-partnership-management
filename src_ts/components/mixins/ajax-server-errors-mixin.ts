@@ -1,4 +1,4 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import AjaxErrorsParserMixin from './ajax-errors-parser-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 
@@ -8,83 +8,83 @@ import { fireEvent } from '../utils/fire-custom-event.js';
  * @appliesMixin AjaxErrorsParserMixin
  */
 const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
-    class extends AjaxErrorsParserMixin(baseClass) {
+  class extends AjaxErrorsParserMixin(baseClass) {
 
-      static get properties() {
-        return {
-          serverErrors: {
-            type: Array,
-            notify: true
-          },
-          options: Object,
-          useToastEvent: {
-            type: Boolean,
-            value: true
-          },
-          errorEventName: {
-            value: null,
-            observer: '_errorEventNameChange'
-          },
-          ajaxLoadingMsgSource: {
-            type: String,
-            value: ''
-          }
-        };
+    static get properties() {
+      return {
+        serverErrors: {
+          type: Array,
+          notify: true
+        },
+        options: Object,
+        useToastEvent: {
+          type: Boolean,
+          value: true
+        },
+        errorEventName: {
+          value: null,
+          observer: '_errorEventNameChange'
+        },
+        ajaxLoadingMsgSource: {
+          type: String,
+          value: ''
+        }
+      };
+    }
+
+    handleErrorResponse(response: any, ajaxMethod: string, redirectOn404: boolean) {
+      if (redirectOn404 && response.status === 404) {
+        fireEvent(this, '404');
+        return;
       }
 
-      handleErrorResponse(response: any, ajaxMethod: string, redirectOn404: boolean) {
-        if (redirectOn404 && response.status === 404) {
-          fireEvent(this, '404');
-          return;
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
+      });
+
+      let errors = this.tryGetResponseError(response);
+
+      let errorMessage = this.globalMessage;
+
+      if (!ajaxMethod) {
+        ajaxMethod = 'GET';
+      }
+
+      if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
+        this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
+      }
+      this.serverErrors = this.serverErrors ? this.serverErrors : [];
+      if (this.useToastEvent) {
+        if (this.serverErrors.length > 1) {
+          errorMessage = this.serverErrors.join('\n');
         }
-
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
-        });
-
-        let errors = this.tryGetResponseError(response);
-
-        let errorMessage = this.globalMessage;
-
-        if (!ajaxMethod) {
-          ajaxMethod = 'GET';
-        }
-
-        if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
-          this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
-        }
-        this.serverErrors = this.serverErrors ? this.serverErrors : [];
-        if (this.useToastEvent) {
-          if (this.serverErrors.length > 1) {
-            errorMessage = this.serverErrors.join('\n');
-          }
-          fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
+        fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
+      } else {
+        if (this.serverErrors.length === 0) {
+          this._fireAjaxErrorEvent(errorMessage);
         } else {
-          if (this.serverErrors.length === 0) {
-            this._fireAjaxErrorEvent(errorMessage);
-          } else {
-            this._fireAjaxErrorEvent(this.serverErrors);
-          }
+          this._fireAjaxErrorEvent(this.serverErrors);
         }
       }
+    }
 
-      _fireAjaxErrorEvent(errors: any) {
-        if (typeof this.errorEventName === 'string' && this.errorEventName !== '') {
-          if (typeof errors === 'string') {
-            errors = [errors];
-          }
-          fireEvent(this, this.errorEventName, errors);
+    _fireAjaxErrorEvent(errors: any) {
+      if (typeof this.errorEventName === 'string' && this.errorEventName !== '') {
+        if (typeof errors === 'string') {
+          errors = [errors];
         }
+        fireEvent(this, this.errorEventName, errors);
       }
+    }
 
-      _errorEventNameChange(eventName: string) {
-        if (typeof eventName === 'string' && eventName !== '') {
-          // disable toasts error notifications if eventName is given
-          this.set('useToastEvent', false);
-        }
+    _errorEventNameChange(eventName: string) {
+      if (typeof eventName === 'string' && eventName !== '') {
+        // disable toasts error notifications if eventName is given
+        this.set('useToastEvent', false);
       }
+    }
 
-    });
+  });
 
 export default AjaxServerErrorsMixin;

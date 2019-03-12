@@ -4,7 +4,6 @@ import CONSTANTS from '../../../../../../../../config/app-constants';
 import '@polymer/paper-button/paper-button.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 
-
 import './edit-hru-dialog.js';
 import './hru-list.js';
 import { PolymerElement, html } from '@polymer/polymer';
@@ -13,8 +12,6 @@ import FrontendPaginationMixin from '../../../../../../../mixins/frontend-pagina
 import { ExpectedResult } from '../../../../../../../../typings/intervention.types';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
-
-
 
 
 /**
@@ -169,9 +166,9 @@ class HumanitarianReportingReqUnicef extends HumanitarianReportingReqUnicefMixin
     if (!expectedResults) {
       return false;
     }
-    let hfIndicator = expectedResults.find((r) => {
-      return r.ll_results.find((llr) => {
-        return llr.applied_indicators.find((i) => {
+    let hfIndicator = expectedResults.find((r: any) => {
+      return r.ll_results.find((llr: any) => {
+        return llr.applied_indicators.find((i: any) => {
           return i.is_active && i.is_high_frequency;
         });
       });

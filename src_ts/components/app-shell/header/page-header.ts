@@ -4,15 +4,15 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import {store, RootState} from "../../../store";
+import {store, RootState} from '../../../store';
 import {isProductionServer, isStagingServer} from '../../../config/config.js';
-import {updateDrawerState} from "../../../actions/app";
+import {updateDrawerState} from '../../../actions/app';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-profile-dropdown/etools-profile-dropdown.js';
 import 'etools-app-selector/etools-app-selector.js'
 import '../header/countries-dropdown.js';
-import ProfileOperations from "../../user/profile-operations-mixin";
-import {isJsonStrMatch} from "../../utils/utils";
+import ProfileOperations from '../../user/profile-operations-mixin';
+import {isJsonStrMatch} from '../../utils/utils';
 import { fireEvent } from '../../utils/fire-custom-event';
 
 /**
@@ -109,7 +109,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
         <div class="content-align">
           <countries-dropdown id="countries" countries="[[countries]]"
                               current-country="[[profile.country]]">
-                              </countries-dropdown>
+          </countries-dropdown>
 
           <etools-profile-dropdown
               sections="[[allSections]]"
@@ -170,7 +170,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     };
   }
 
-  // @ts-ignore
   private _isStaging: boolean = false;
 
   public sections: object[] = [];
@@ -249,14 +248,12 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     return countriesList;
   }
 
-  // @ts-ignore
   private _openDataRefreshDialog() {
     fireEvent(this, 'open-data-refresh-dialog');
   }
 
   public _saveProfile(e: any) {
     let modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
-    // @ts-ignore
     this.saveProfile(modifiedFields);
   }
 
@@ -279,7 +276,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     let modifiedFields = {};
     this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
-        // @ts-ignore
         modifiedFields[field] = newData[field];
       }
     });

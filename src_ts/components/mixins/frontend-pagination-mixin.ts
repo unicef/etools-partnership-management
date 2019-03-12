@@ -1,4 +1,4 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 
 const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
   class extends baseClass {
@@ -44,9 +44,6 @@ const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
     public _isUndefined(item: any) {
       return typeof item === 'undefined';
     }
-
-
-
 
   });
 

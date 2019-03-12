@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EnvironmentFlags from "../../environment-flags/environment-flags-mixin.js";
+import EnvironmentFlags from '../../environment-flags/environment-flags-mixin.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
@@ -158,14 +158,12 @@ class AppMenu extends GestureEventListeners(EnvironmentFlags(PolymerElement)) {
   public rootPath: string = '';
   public smallMenu: boolean = false;
 
-  // @ts-ignore
   private _menuSizeChange(newVal: boolean, oldVal: boolean): void {
     if (newVal !== oldVal) {
       setTimeout(() => fireEvent(this, 'resize-main-layout'));
     }
   }
 
-  // @ts-ignore
   private _toggleSmallMenu(e: Event): void {
     e.stopImmediatePropagation();
     fireEvent(this, 'toggle-small-menu');

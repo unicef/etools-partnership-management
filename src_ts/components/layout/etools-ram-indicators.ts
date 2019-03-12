@@ -102,7 +102,7 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
     ];
   }
 
-  _getRamIndicatorsData(interventionId, cpId) {
+  _getRamIndicatorsData(interventionId: number, cpId: number) {
     // Debounce to make sure the request is called only after both params are updated
     this._debounceRamIndRequest = Debouncer.debounce(this._debounceRamIndRequest,
         timeOut.after(100),
@@ -116,15 +116,15 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
         });
   }
 
-  _requestRamIndicatorsData(reqPayload) {
+  _requestRamIndicatorsData(reqPayload: any) {
     this.set('loading', true);
     this.sendRequest({
       method: 'GET',
       endpoint: this.getEndpoint('cpOutputRamIndicators', reqPayload)
-    }).then((resp) => {
+    }).then((resp: any) => {
       this.set('loading', false);
       this.set('ramIndicators', resp.ram_indicators.map(ri => ri.indicator_name));
-    }).catch((error) => {
+    }).catch((error: any) => {
       this.logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
           ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
       this.parseRequestErrorsAndShowAsToastMsgs(error);
@@ -132,7 +132,7 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
     });
   }
 
-  _noRamIndicators(l) {
+  _noRamIndicators(l: number) {
     return typeof l !== 'number' || l === 0;
   }
 

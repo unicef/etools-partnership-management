@@ -252,7 +252,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
     }
   }
 
-  _loadReportsData(prpCountries: any, interventionId: string, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
+  _loadReportsData(prpCountries: any, interventionId: number, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
     if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) ||
      isEmptyObject(prpCountries)) {
       return;
@@ -290,7 +290,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
                 }
                 fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
               })
-              .catch((error) => {
+              .catch((error: object) => {
                 if (error.status === 0) {
                   // req aborted
                   return;
@@ -304,7 +304,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
         });
   }
 
-  _prepareReqParamsObj(interventionId) {
+  _prepareReqParamsObj(interventionId: number) {
     let params = {};
     if (interventionId > 0) {
       params.programme_document_ext = interventionId;
@@ -320,7 +320,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
   _preserveExistingQueryParams() {
     let params = {};
     if (!isEmptyObject(this.queryParams)) {
-      Object.keys(this.queryParams).forEach(function(k) {
+      Object.keys(this.queryParams).forEach(function(k: any) {
         if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
             (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
           params[k] = this.queryParams[k];
@@ -334,7 +334,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
     return this.waitQueryParamsInit && !qParamsData.value && qParamsData.path === 'queryParams';
   }
 
-  _displayOrDefault(val) {
+  _displayOrDefault(val: any) {
     if (!val) {
       return '-';
     }

@@ -1,4 +1,4 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 declare const moment: any;
 

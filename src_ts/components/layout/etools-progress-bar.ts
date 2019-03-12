@@ -87,7 +87,7 @@ class EtoolsProgressBar extends PolymerElement {
     };
   }
 
-  _getProgress(value) {
+  _getProgress(value: number) {
     value = parseFloat(parseFloat(value).toFixed(2));
     if (isNaN(value)) {
       return 0;

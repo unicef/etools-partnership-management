@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
-import "etools-content-panel/etools-content-panel.js";
+import 'etools-content-panel/etools-content-panel.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
@@ -14,11 +14,12 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin.js';
 
 import './add-disaggregation-dialog.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {RootState, store} from "../../../../store";
-import {patchDisaggregation} from "../../../../actions/common-data.js";
-import EnvironmentFlags from "../../../environment-flags/environment-flags-mixin";
-import {isJsonStrMatch} from "../../../utils/utils";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {RootState, store} from '../../../../store';
+import {patchDisaggregation} from '../../../../actions/common-data.js';
+import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import {isJsonStrMatch} from '../../../utils/utils';
+import {Disaggregation} from '../../../../typings/intervention.types';
 
 /**
  * @polymer
@@ -194,7 +195,7 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     }
   }
 
-  broadcastPatchDisaggregToOtherTabs(disaggregation) {
+  broadcastPatchDisaggregToOtherTabs(disaggregation: Disaggregation) {
     localStorage.setItem('update-redux', {
       type: 'PATCH_DISAGGREGATION',
       disaggregation: disaggregation
@@ -202,7 +203,7 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     localStorage.removeItem('update-redux');
   }
 
-  _filterData(disaggregations: any, q: any) {
+  _filterData(disaggregations: Disaggregation[], q: any) {
     if (!(disaggregations instanceof Array && disaggregations.length > 0)) {
       return [];
     }
@@ -245,7 +246,7 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     return !this.disaggregations || !this.disaggregations.length;
   }
 
-  _disagregationsChanged(disaggregs: any, EnvironmentFlags: any) {
+  _disagregationsChanged(disaggregs: Disaggregation[], EnvironmentFlags: any) {
     if (!disaggregs || !disaggregs.length) {
       this.dataItems = [];
       return;

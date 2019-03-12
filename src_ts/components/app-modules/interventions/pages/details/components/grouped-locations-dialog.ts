@@ -148,7 +148,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 
   _removeCountry(adminLevels: any) {
-    let index = adminLevels.findIndex(function(al) {
+    let index = adminLevels.findIndex(function(al: any) {
       return al.name === 'Country';
     });
     if (index > -1) {
@@ -167,11 +167,11 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     this._setInterventionLocationsDetails(locationIds);
   }
 
-  _setInterventionLocationsDetails(locationIds: []) {
+  _setInterventionLocationsDetails(locationIds: any[]) {
     locationIds = locationIds.map(function(loc) {
       return parseInt(loc);
     });
-    let interventionLocations = this.locations.filter(function(loc) {
+    let interventionLocations = this.locations.filter(function(loc: any) {
       return locationIds.indexOf(parseInt(loc.id)) > -1;
     });
 
@@ -240,11 +240,11 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     return existingGroup;
   }
 
-  _findAdminLevelParent(location, adminLevel) {
+  _findAdminLevelParent(location: any, adminLevel: any) {
     if (!location.parent) {
       return null;
     }
-    let parent = this.locations.find(function(loc) {
+    let parent = this.locations.find(function(loc: any) {
       return parseInt(loc.id) === parseInt(location.parent);
     });
     if (!parent) {

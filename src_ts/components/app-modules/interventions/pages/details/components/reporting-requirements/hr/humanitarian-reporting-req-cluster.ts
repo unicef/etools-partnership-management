@@ -115,7 +115,7 @@ class HumanitarianReportingReqCluster extends HumanitarianReportingReqClusterMix
     if (isEmptyObject(this.expectedResults)) {
       return [];
     }
-    let clusterIndicIds = [];
+    let clusterIndicIds: any[] = [];
     this.expectedResults.forEach((r: ExpectedResult) => {
       return r.ll_results.forEach((llr: ResultLinkLowerResult) => {
         return llr.applied_indicators.forEach((i) => {

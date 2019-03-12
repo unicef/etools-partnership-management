@@ -129,15 +129,19 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
 
   _setDialogData(e: CustomEvent) {
     this.addEditDialog.interventionId = this.interventionId;
-    this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+    if (e.target !== null) {
+      this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+    }
   }
 
   _onDelete(e: CustomEvent) {
     e.stopPropagation();
     if (this._deleteConfirmationDialog) {
-      let itemToDelete = JSON.parse(e.target.getAttribute('item'));
-      let index = this._getIndexById(itemToDelete.id);
-      this.set('_itemToDeleteIndex', index);
+      if (e.target !== null) {
+        let itemToDelete = JSON.parse(e.target.getAttribute('item'));
+        let index = this._getIndexById(itemToDelete.id);
+        this.set('_itemToDeleteIndex', index);
+      }
       this._deleteConfirmationDialog.opened = true;
     }
   }
