@@ -81,7 +81,7 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
     if (this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, intervention.planned_budget!.currency as string)) {
       // currencies are the same => check amounts consistency
       if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local as string,
-              frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
+              frsDetails.total_frs_amt as unknown as string, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
         warnFrsFields.push(this.frsValidationFields.fr_total_amount);
         warnIntervFields.push(this.frsValidationFields.pd_unicef_cash_contribution);
       }
@@ -102,7 +102,7 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
 
   checkFrsAndUnicefCashAmountsConsistency(unicefCash: string, frsTotalAmt: string, intervention: Intervention,
                                           interventionIsFromWhere: string, returnMsg: boolean,
-                                          skipEmptyListCheck: boolean) {
+                                          skipEmptyListCheck?: boolean) {
     if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere,
             skipEmptyListCheck)) {
       return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;

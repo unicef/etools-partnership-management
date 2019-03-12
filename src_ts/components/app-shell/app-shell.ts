@@ -92,7 +92,7 @@ import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { objectsAreTheSame } from '../utils/utils.js';
-import {EtoolsMixinFactory} from "etools-behaviors/etools-mixin-factory";
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 setRootPath(BASE_URL);
 
 /**

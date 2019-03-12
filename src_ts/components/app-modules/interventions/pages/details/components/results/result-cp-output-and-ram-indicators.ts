@@ -160,7 +160,7 @@ class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _handleRamIndicatorsReqResponse(response) {
+  _handleRamIndicatorsReqResponse(response: any) {
     if (this._thereAreSelectedIndicators() &&  // to prevent triggering validation
         !this.preventRamIndicatorReset) {
       this.set('selectedRamIndicatorsIds', []);

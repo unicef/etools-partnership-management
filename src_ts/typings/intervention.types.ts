@@ -212,21 +212,36 @@ export type ResultLinkLowerResult = { //ll_result
   id: number;
   name: string;
   applied_indicators: Indicator[];
+
+  code?: string;
+  created?: string;
+  result_link?: number;
 }
 
-export type Indicator = {// Indicator
-  id: number;
-  cluster_name: string;
-  cluster_indicator_id: number;
-  is_active: boolean;
-  is_high_frequency: boolean;
-  indicator: IndicatorIndicator;
-  baseline: any;
+export class Indicator {// Indicator
+  id: number | null = null;
+  is_active: boolean = true;
+  is_high_frequency: boolean = false;
+  indicator = new IndicatorIndicator();
+  section: number | null = null;
+  baseline: {v?: string, d?: string} = {};
+  target: {v?: string, d: string} = {d: '1'};
+  means_of_verification: string | null = null;
+  locations: string[] = [];
+  disaggregation: string[] = [];
+
+  cluster_name: string | null = null;
+  cluster_indicator_id: number | null = null;
+  cluster_indicator_title: string | null = null;
+  response_plan_name: string | null = null;
 }
 
-export type IndicatorIndicator = {
-  display_type: string;
-  unit: string
+
+export class IndicatorIndicator {
+  id: number | null = null;
+  title: string = '';
+  display_type: string = 'percentage';
+  unit: string = 'number'
 }
 
 export type CpOutput = {

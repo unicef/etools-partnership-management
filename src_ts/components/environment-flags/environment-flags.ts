@@ -1,8 +1,8 @@
 import { PolymerElement} from '@polymer/polymer/polymer-element.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import pmpEdpoints from "../endpoints/endpoints.js";
-import {connect} from "pwa-helpers/connect-mixin.js";
-import {store} from "../../store.js";
+import pmpEdpoints from '../endpoints/endpoints.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store} from '../../store.js';
 import {updateEnvFlags} from '../../actions/common-data.js';
 
 // import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';

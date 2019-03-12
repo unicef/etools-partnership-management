@@ -12,9 +12,9 @@ import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixi
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {RootState, store} from "../../../../../../store";
-import {isJsonStrMatch} from "../../../../../utils/utils";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {RootState, store} from '../../../../../../store';
+import {isJsonStrMatch} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 
 /**

@@ -100,7 +100,7 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
     };
     if (!lowerResult.result_link) {
       this.logError('Expected result ID is missing! Can not save lower result name.', 'lower-result-name-modal');
-      return;
+      return false;
     }
 
     let endpoint;

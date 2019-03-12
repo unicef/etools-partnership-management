@@ -9,6 +9,8 @@ import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
+import { RootState, store } from '../../../../../../../store';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 /**
  * @polymer
@@ -17,11 +19,11 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
  * @appliesMixin IndicatorsCommonMixin
  * @appliesMixin EndpointsMixin
  */
-class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
+class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   IndicatorsCommonMixin,
   EndpointsMixin,
-], PolymerElement) {
+], PolymerElement)) {
   [x: string]: any;
 
   static get template() {
@@ -283,6 +285,9 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
     ];
   }
 
+  stateChanged(state: RootState) {
+    this.endStateChanged(state);
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -418,7 +423,7 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
 
   validate() {
     let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
-    [].push.apply(elemIds, this._getIndicatorTargetElId());
+    elemIds.push(this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
