@@ -100,7 +100,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-    public _addElement(addNull: any) {
+    public _addElement(addNull?: boolean) {
       if (!this.editMode) {
         return;
       }

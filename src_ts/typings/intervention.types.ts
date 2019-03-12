@@ -248,7 +248,7 @@ export type CpOutput = {
   id: number;
   name: string;
   wbs: string;
-  country_programme: number;
+  country_programme: string;
 }
 
 export class PlannedVisit {
@@ -272,5 +272,21 @@ export type DisaggregationValue = {
   id: number;
   value: string;
   active: boolean;
+}
+
+export type Location = {
+  id: number;
+  name: string;
+  p_code: string;
+  gateway: AdminLevel;
+  parent?: string;
+}
+
+export type AdminLevel = {
+  id: number;
+  name: string;
+  admin_level: string | null;
+  created: string;
+  modified: string;
 }
 

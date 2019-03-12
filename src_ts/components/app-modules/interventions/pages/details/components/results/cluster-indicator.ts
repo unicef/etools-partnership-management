@@ -347,7 +347,7 @@ class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
       this.clusters = [];
       return;
     }
-    this.clusters = this.responsePlans.filter(function(r) {
+    this.clusters = this.responsePlans.filter(function(r: any) {
       return parseInt(r.id) === parseInt(selectedRespPlanId);
     })[0].clusters;
   }
@@ -411,7 +411,7 @@ class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _resetDenominator(newD) {
+  _resetDenominator(newD: number) {
     this.indicator.baseline.d = newD;
     this.indicator.target.d = newD;
   }
@@ -423,11 +423,11 @@ class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
 
   validate() {
     let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
-    elemIds.push(this._getIndicatorTargetElId());
+    ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
-  _getIndicatorTargetElId() {
+  _getIndicatorTargetElId(): string[] {
     if (!this.prpClusterIndicator || !this.prpClusterIndicator.blueprint) {
       return ['targetEl', 'baselineEl'];
     }

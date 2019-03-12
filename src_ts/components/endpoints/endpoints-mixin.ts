@@ -17,6 +17,7 @@ import { User } from '../../typings/globals.types';
  */
 const EndpointsMixin = dedupingMixin((baseClass: any) =>
     class extends EtoolsAjaxRequestMixin(EtoolsLogsMixin(baseClass)) {
+      [x: string]: any;
 
       // TODO: polymer 3 - remove properties from here
       static get properties() {

@@ -123,7 +123,7 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
       endpoint: this.getEndpoint('cpOutputRamIndicators', reqPayload)
     }).then((resp: any) => {
       this.set('loading', false);
-      this.set('ramIndicators', resp.ram_indicators.map(ri => ri.indicator_name));
+      this.set('ramIndicators', resp.ram_indicators.map((ri: any) => ri.indicator_name));
     }).catch((error: any) => {
       this.logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
           ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);

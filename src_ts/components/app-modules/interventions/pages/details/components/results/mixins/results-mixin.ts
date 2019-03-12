@@ -2,6 +2,7 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { ExpectedResult, CpOutput } from '../../../../../../../../typings/intervention.types';
 import { isEmptyObject, isJsonStrMatch } from '../../../../../../../utils/utils';
+import { RootState } from '../../../../../../../../store';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -46,7 +47,7 @@ const ResultsMixin = dedupingMixin(
       }
     }
 
-    _computeAvailableCpOutputs(cpOutputs: CpOutput[], alreadySelectedCpOutputs: number[], selectedCpStructure: number) {
+    _computeAvailableCpOutputs(cpOutputs: CpOutput[], alreadySelectedCpOutputs: number[], selectedCpStructure: string) {
       if (isEmptyObject(cpOutputs) ||
           typeof alreadySelectedCpOutputs === 'undefined' ||
           typeof selectedCpStructure === 'undefined') {
@@ -114,7 +115,7 @@ const ResultsMixin = dedupingMixin(
       }
     }
 
-    openCpOutputAndRamIndicatorsDialog(expectedResultId?: number, cpOutputId?: number,
+    openCpOutputAndRamIndicatorsDialog(expectedResultId?: number, cpOutputId?: string,
        ramIndicatorsIds?: number[], editIndex?: number) {
       if (this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem.resetData();
@@ -135,7 +136,7 @@ const ResultsMixin = dedupingMixin(
            * cpOutputId is valid => edit operation, include curent cpOutput in the availableCpOutputsOptions
            * as user might want to edit only the ram indicators
            */
-          let currentCpOutputData = this.cpOutputs.find(function(cp) {
+          let currentCpOutputData = this.cpOutputs.find(function(cp: any) {
             return parseInt(cp.id, 10) === parseInt(cpOutputId, 10);
           });
           if (currentCpOutputData) {

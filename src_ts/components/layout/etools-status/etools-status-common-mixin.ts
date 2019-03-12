@@ -137,7 +137,7 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
         });
   }
   _waitForBoundingClientRectToBeSet() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       let top = this.getBoundingClientRect().top;
       if (top === 0) {
         let bcrInterval = setInterval(() => {
@@ -205,7 +205,7 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
           this._computeAvailableActions(status);
         });
   }
-  _statusChangeConfirmationCallback(event: CustomEvent) {
+  _statusChangeConfirmationCallback(_event: CustomEvent) {
     // children should overwrite this
   }
   _statusChangeIsValid(_newStatus: string) {
