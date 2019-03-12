@@ -312,7 +312,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     e.stopImmediatePropagation();
     if ((e.detail instanceof Array && e.detail.length > 0) ||
         (typeof e.detail === 'string' && e.detail !== '')) {
-      fireEvent(this, 'set-server-errors', e.detail);
+      fireEvent(this, 'set-server-errors', e.detail as any);
       this.scrollToTop();
     }
   }
