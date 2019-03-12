@@ -128,6 +128,9 @@ const pmpEdpoints = {
   frNumbersDetails: {
     url: '/api/v2/funds/frs'
   },
+  governmentSpending: {
+    url: '/api/v2/funds/reservation-header/'
+  },
   userCountryDetails: {
     url: '/api/v3/users/country/'
   },

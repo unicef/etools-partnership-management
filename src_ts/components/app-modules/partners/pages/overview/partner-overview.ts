@@ -4,6 +4,7 @@ import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currenc
 import 'etools-content-panel/etools-content-panel.js';
 import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import './government-spending';
 
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
@@ -256,6 +257,13 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
               </div>
             </template>
           </div>
+        </template>
+      </etools-content-panel>
+      
+      <etools-content-panel class="content-section" panel-title="Implementation Status">
+        <template is="dom-if" if="[[partner.partner_type === 'Government']]">
+          <government-spending>
+          </government-spending>
         </template>
       </etools-content-panel>
 
