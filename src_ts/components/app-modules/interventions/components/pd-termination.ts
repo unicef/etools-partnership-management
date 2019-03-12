@@ -1,15 +1,15 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin.js';
-import pmpEndpoints from '../../../endpoints/endpoints.js';
+import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import pmpEndpoints from '../../../endpoints/endpoints';
 declare const moment: any;
-import 'etools-dialog/etools-dialog.js';
-import 'etools-upload/etools-upload.js';
-import 'etools-date-time/datepicker-lite.js';
-import '../../../layout/etools-warn-message.js';
+import 'etools-dialog/etools-dialog';
+import 'etools-upload/etools-upload';
+import 'etools-date-time/datepicker-lite';
+import '../../../layout/etools-warn-message';
 import { SharedStyles } from '../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
-import {fireEvent} from '../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../utils/fire-custom-event';
 
 
 /**
@@ -17,7 +17,7 @@ import {fireEvent} from '../../../utils/fire-custom-event.js';
  * @customElement
  * @appliesMixin EnvironmentFlags
  */
-class PdTermination extends EnvironmentFlags(PolymerElement) {
+class PdTermination extends (EnvironmentFlags(PolymerElement) as any) {
 
   static get template() {
     return html`
@@ -128,11 +128,11 @@ class PdTermination extends EnvironmentFlags(PolymerElement) {
     return moment(Date.now()).add(30, 'd').toDate();
   }
 
-  _handleDialogClosed(e: CustomEvent) {
+  _handleDialogClosed() {
     this.resetValidations();
   }
 
-  _triggerPdTermination(e: CustomEvent) {
+  _triggerPdTermination() {
     if (!this.validate()) {
       return;
     }

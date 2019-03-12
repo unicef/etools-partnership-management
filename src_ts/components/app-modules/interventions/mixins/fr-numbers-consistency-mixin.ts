@@ -78,9 +78,9 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
 
     let computedWarning = '';
     // check frs currencies and planned budget currency match
-    if (this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, intervention.planned_budget!.currency)) {
+    if (this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, intervention.planned_budget!.currency as string)) {
       // currencies are the same => check amounts consistency
-      if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local,
+      if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local as string,
               frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
         warnFrsFields.push(this.frsValidationFields.fr_total_amount);
         warnIntervFields.push(this.frsValidationFields.pd_unicef_cash_contribution);
@@ -125,17 +125,18 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
     return totalUnicefContribution === totalFrsAmount;
   }
 
-  checkFrsAndIntervDateConsistency(intervDateStr: string, frsDateStr: string,
+  checkFrsAndIntervDateConsistency(intervDateStr: string, frsDateStr: string | null,
     fieldName?: string, returnMsg?: string) {
     if (!this.validateFrsVsInterventionDates(intervDateStr, frsDateStr)) {
       return returnMsg
-          ? this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl, '<<field_name>>', fieldName)
+          ? this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
+              '<<field_name>>', fieldName as string)
           : true;
     }
     return false;
   }
 
-  validateFrsVsInterventionDates(intervDateStr: string, frsDateStr: string) {
+  validateFrsVsInterventionDates(intervDateStr: string, frsDateStr: string | null) {
     if (!frsDateStr || !intervDateStr) {
       // No Fr added or interv dates not set yet
       return true;
@@ -173,6 +174,8 @@ const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurre
         return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
       case 'interventionsList':
         return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
+      default:
+        return true;
     }
   }
 
