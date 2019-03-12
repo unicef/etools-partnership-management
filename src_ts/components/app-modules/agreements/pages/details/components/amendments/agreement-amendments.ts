@@ -5,7 +5,7 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory'
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
 import { AgreementAmendment } from '../../../../agreement.types';

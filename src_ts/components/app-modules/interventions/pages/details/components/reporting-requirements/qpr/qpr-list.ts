@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-data-table/etools-data-table.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../../../../../../layout/icons-actions.js';
 import '../mixins/reporting-req-past-dates-check.js';

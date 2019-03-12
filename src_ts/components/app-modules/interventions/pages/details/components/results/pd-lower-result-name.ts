@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';

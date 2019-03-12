@@ -4,7 +4,7 @@ import {store, RootState} from "../../../store.js";
 
 import 'etools-dropdown/etools-dropdown.js';
 
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';

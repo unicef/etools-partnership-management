@@ -9,7 +9,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../layout/page-content-header.js';
 import '../../layout//page-content-header-slotted-styles.js';

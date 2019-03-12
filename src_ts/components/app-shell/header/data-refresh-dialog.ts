@@ -5,7 +5,7 @@ import '@polymer/iron-label/iron-label.js';
 import { SharedStyles } from '../../styles/shared-styles';
 import { gridLayoutStyles } from '../../styles/grid-layout-styles';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import { store } from '../../../store';
 import { RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';

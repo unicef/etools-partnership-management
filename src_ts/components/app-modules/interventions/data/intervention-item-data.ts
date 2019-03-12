@@ -1,7 +1,7 @@
 import { PolymerElement } from '@polymer/polymer';
 import {store} from '../../../../store.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
 import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';

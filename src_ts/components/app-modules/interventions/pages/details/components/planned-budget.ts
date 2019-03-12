@@ -8,7 +8,7 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-currency-amount-input/etools-currency-amount-input.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../utils/utils';

@@ -5,7 +5,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../components/reports-display-list.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';

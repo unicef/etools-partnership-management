@@ -49,7 +49,7 @@ import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
@@ -92,6 +92,7 @@ import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { objectsAreTheSame } from '../utils/utils.js';
+import {EtoolsMixinFactory} from "etools-behaviors/etools-mixin-factory";
 setRootPath(BASE_URL);
 
 /**

@@ -1,5 +1,5 @@
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import { PolymerElement } from '@polymer/polymer';

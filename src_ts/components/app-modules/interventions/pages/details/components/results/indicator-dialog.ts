@@ -7,7 +7,7 @@ import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EnvironmentFlags from '../../../../../../environment-flags/environment-flags-mixin';
 import UserPermissionsMixin from '../../../../../../user/user-permissions-mixin';
 import SaveIndicatorMixin from './mixins/save-indicator-mixin';

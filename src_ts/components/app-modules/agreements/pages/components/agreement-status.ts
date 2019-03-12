@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/av-icons.js';
 import CONSTANTS from '../../../../../config/app-constants';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-status-common-mixin';
 import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';

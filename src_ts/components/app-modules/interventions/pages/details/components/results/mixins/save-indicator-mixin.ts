@@ -3,7 +3,7 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import pick from 'lodash-es/pick';
 // @ts-ignore
 import keys from 'lodash-es/keys';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event';

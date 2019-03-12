@@ -7,7 +7,7 @@ import '@polymer/paper-menu-button/paper-menu-button.js';
 
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CONSTANTS from '../../../config/app-constants';
 import { UserPermissions } from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';

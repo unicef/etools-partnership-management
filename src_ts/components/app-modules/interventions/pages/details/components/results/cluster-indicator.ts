@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';

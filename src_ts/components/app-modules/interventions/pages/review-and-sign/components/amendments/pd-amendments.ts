@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import CommonMixin from '../../../../../../mixins/common-mixin.js';
 

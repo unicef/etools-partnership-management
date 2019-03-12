@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import 'etools-loading/etools-loading.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../mixins/ajax-errors-parser-mixin';

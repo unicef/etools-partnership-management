@@ -3,7 +3,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import 'etools-content-panel/etools-content-panel.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import 'etools-data-table/etools-data-table.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import UserPermissionsMixin from '../../../user/user-permissions-mixin.js';

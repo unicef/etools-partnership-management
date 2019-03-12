@@ -6,7 +6,7 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
 import GenerateQuarterlyReportingRequirementsMixin from '../mixins/generate-quarterly-reporting-requirements-mixin';
 
 import '@polymer/paper-button/paper-button.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 
 import './edit-qpr-dialog.js';
