@@ -1,6 +1,11 @@
 import {IPermission} from '../../../typings/globals.types';
 import { StaffMember } from '../../../typings/partner.types';
 
+// export interface MinimalAgreement {
+//   [key: string]: undefined | null | number | string | boolean;
+// }
+
+// TODO: refactor this...
 export class MinimalAgreement {
   id?: number | null = undefined;
   agreement_number?: string = undefined;
@@ -16,6 +21,7 @@ export class MinimalAgreement {
   status?: string = undefined;
   country_programme?: string = undefined;
   special_conditions_pca?: boolean = false;
+  [key: string]: undefined | null | number | string | boolean;
 }
 export class Agreement extends MinimalAgreement {
   authorized_officers?: StaffMember[] = [];

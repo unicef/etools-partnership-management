@@ -384,7 +384,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
-      fireEvent(this, 'set-server-errors', event.detail);
+      fireEvent(this, 'set-server-errors', event.detail as any);
       this.scrollToTop();
     }
   }

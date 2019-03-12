@@ -150,6 +150,8 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
+      // TODO: to not use @ts-ignore we should import dexie in index.html then decalre it as global variable
+      // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
           self._setTotalResults(count);

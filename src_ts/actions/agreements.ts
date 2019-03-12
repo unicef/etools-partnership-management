@@ -8,11 +8,11 @@ export const setAgreements = (agreements: Array<MinimalAgreement>) => {
     type: SET_AGREEMENTS,
     agreements
   }
-}
+};
 
 export const addEditAgreement = (agreement: MinimalAgreement) => {
   return {
     type: ADD_EDIT_AGREEMENT,
     agreement
   }
-}
+};

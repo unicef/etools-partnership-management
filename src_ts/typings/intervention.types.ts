@@ -58,7 +58,7 @@ export class ListItemIntervention {
   frs_earliest_start_date: string | null= '';
   frs_latest_end_date: string | null= '';
   partner_name?: string = '';
-  cp_outputs: [] = [];
+  cp_outputs: number[] = [];
   unicef_budget: number = 0;
   cso_contribution: number = 0;
   country_programme?: number;
@@ -89,7 +89,8 @@ export class InterventionAttachment  {
   active: boolean = true;
   type?: number;
   intervention?: number;
-  attachment_document?: string | number;
+  attachment_document?: string | number| File;
+  [key: string]: undefined | number | string | boolean | File;
 }
 
 export class FrsDetails {
@@ -212,6 +213,7 @@ export class PlannedVisit {
   programmatic_q2: number = 0;
   programmatic_q3: number = 0;
   programmatic_q4: number = 0;
+  programmatic: any;
 }
 
 export type Disaggregation = {

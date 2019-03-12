@@ -12,7 +12,7 @@ import './pd-termination.js';
  * @customElement
  * @appliesMixin EtoolsStatusCommon
  */
-class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
+class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {
@@ -443,7 +443,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     this._updateStatus(CONSTANTS.STATUSES.Signed.toLowerCase());
   }
 
-  _triggerInterventionDeleteOnConfirm(e) {
+  _triggerInterventionDeleteOnConfirm(e: CustomEvent) {
     if (e.detail.confirmed) {
       fireEvent(this, 'delete-intervention', {id: this.interventionId});
     }
