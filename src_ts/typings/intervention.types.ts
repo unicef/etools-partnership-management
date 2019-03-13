@@ -28,9 +28,9 @@ export class Intervention {
   offices: [] = [];
   sections: [] =[];
   frs: number[] = [];
-  frs_details: FrsDetails = new FrsDetails();
+  frs_details = new FrsDetails();
   contingency_pd: boolean = false;
-  planned_budget: PlannedBudget = new PlannedBudget();
+  planned_budget = new PlannedBudget();
   flat_locations: [] = [];
   result_links: ExpectedResult[] = [];
   planned_visits: PlannedVisit[] = [];
@@ -254,10 +254,10 @@ export type CpOutput = {
 export class PlannedVisit {
   id: number | null = null;
   year: string | null = null;
-  programmatic_q1: number = 0;
-  programmatic_q2: number = 0;
-  programmatic_q3: number = 0;
-  programmatic_q4: number = 0;
+  programmatic_q1: string = '0';
+  programmatic_q2: string = '0';
+  programmatic_q3: string = '0';
+  programmatic_q4: string = '0';
   programmatic: any;
 }
 

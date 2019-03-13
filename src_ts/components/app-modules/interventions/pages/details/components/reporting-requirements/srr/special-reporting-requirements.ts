@@ -130,6 +130,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
   _setDialogData(e: CustomEvent) {
     this.addEditDialog.interventionId = this.interventionId;
     if (e.target !== null) {
+      // @ts-ignore
       this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
     }
   }
@@ -138,6 +139,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
     e.stopPropagation();
     if (this._deleteConfirmationDialog) {
       if (e.target !== null) {
+        // @ts-ignore
         let itemToDelete = JSON.parse(e.target.getAttribute('item'));
         let index = this._getIndexById(itemToDelete.id);
         this.set('_itemToDeleteIndex', index);
@@ -220,6 +222,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
 
   _sortRequirementsAsc() {
     this.reportingRequirements.sort((a: string, b: string) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }
@@ -229,7 +232,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
   }
 
   _getIndexById(id: number) {
-    return this.reportingRequirements.findIndex(r => r.id === id);
+    return this.reportingRequirements.findIndex((r: any) => r.id === id);
   }
 
   _onSpecialReportingRequirementsSaved(e: CustomEvent) {

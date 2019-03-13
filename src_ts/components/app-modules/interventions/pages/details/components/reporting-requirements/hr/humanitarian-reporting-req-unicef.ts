@@ -126,6 +126,7 @@ class HumanitarianReportingReqUnicef extends HumanitarianReportingReqUnicefMixin
 
   _sortRequirementsAsc() {
     this.reportingRequirements.sort((a: string, b: string) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }

@@ -180,7 +180,7 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
   }
 
   _duplicateDueDate(dueDate: any) {
-    let foundQpr = this.qprData.find(d => d.due_date === dueDate);
+    let foundQpr = this.qprData.find((d: any) => d.due_date === dueDate);
     if (this._qprDatesSetEditedIndex > -1 && foundQpr) {
       let foundQprIndex = this.qprData.indexOf(foundQpr);
       return foundQprIndex !== +this._qprDatesSetEditedIndex;
