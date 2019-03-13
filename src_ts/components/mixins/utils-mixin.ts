@@ -25,6 +25,7 @@ const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) 
     thousandsPoint = thousandsPoint ? thousandsPoint : '';
 
     if (decimalsPoint && thousandsPoint && decimalsPoint === thousandsPoint) {
+      // @ts-ignore
       this.logWarn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
       return nr;
     }
@@ -62,6 +63,7 @@ const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) 
   _fieldsAreValid() {
     let valid = true;
     let fields = [].slice.call(
+        // @ts-ignore
         this.shadowRoot.querySelectorAll('.validate')
     );
     // NOTE: NodeList.forEach is not supported by older browsers(min IE11),
