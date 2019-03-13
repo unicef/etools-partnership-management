@@ -75,4 +75,5 @@ documentContainer.innerHTML = `
     </style>
   </custom-style>`;
 
+// @ts-ignore
 document.head.appendChild(documentContainer!.content);

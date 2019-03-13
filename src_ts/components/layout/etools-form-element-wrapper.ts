@@ -1,8 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input-container.js';
 
-import {SharedStyles} from '../styles/shared-styles.js'
-import {requiredFieldStarredStyles} from '../styles/required-field-styles.js'
+import {SharedStyles} from '../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 
 /**
  * @polymer
@@ -91,6 +91,8 @@ class EtoolsFormElementWrapper extends PolymerElement {
       noPlaceholder: Boolean
     };
   }
+
+  public noPlaceholder: boolean = false;
 
   connectedCallback() {
     super.connectedCallback();
