@@ -186,10 +186,6 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       selectedAgreementId: {
         type: Number
       },
-      newAgreementModel: {
-        type: Object,
-        value: () => new Agreement()
-      },
       csvDownloadUrl: {
         type: String
       },
@@ -221,7 +217,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     this._initListeners();
     if (this.newAgreementActive) {
       // Useful when refreshing the page
-      this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+      this.set('agreement', new Agreement());
     }
   }
 
@@ -323,7 +319,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
    */
   _goToNewAgreementPage() {
     // go to new agreement
-    this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+    this.set('agreement', new Agreement());
     fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
     this._handleAgreementSelectionLoadingMsg();
   }

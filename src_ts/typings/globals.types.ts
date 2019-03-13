@@ -91,11 +91,15 @@ export interface Country extends MinimalCountry {
   local_currency_code: string;
   local_currency_id: number;
   longitude: string;
-
 }
 
 export type LabelAndValue = {
   label: string;
   value: string;
+}
+
+export type IdAndName = {
+  id: string;
+  name: string;
 }
 

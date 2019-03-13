@@ -17,7 +17,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../../store';
 import {addDisaggregation} from '../../../../actions/common-data';
 import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
-import {Disaggregation} from '../../../../typings/intervention.types';
+import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
 
 
 /**
@@ -120,15 +120,6 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
       dataItems: {
         type: Array
       },
-      disaggregationModel: {
-        type: Object,
-        value: {
-          id: null,
-          active: true,
-          name: undefined,
-          disaggregation_values: []
-        }
-      },
       toastEventSource: {
         type: Object
       },
@@ -149,15 +140,15 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
   }
 
   broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
-    localStorage.setItem('update-redux', {
+    localStorage.setItem('update-redux', JSON.stringify({
       type: 'ADD_DISAGGREGATION',
       disaggregation: disaggregation
-    });
+    }));
     localStorage.removeItem('update-redux');
   }
 
   initializeDisaggregation() {
-    this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
+    this.disaggregation = new Disaggregation();
   }
 
   open() {
@@ -178,7 +169,7 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     this.$.etoolsDialog.stopSpinner();
   }
 
-  _disaggregationChanged(disaggreg: any) {
+  _disaggregationChanged(disaggreg: Disaggregation) {
     this.set('dataItems', disaggreg.disaggregation_values);
     if (!this.dataItems) {
       this.dataItems = [];
@@ -219,10 +210,11 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     return this.disaggregation;
   }
 
-  _cleanUpDisaggregations(disaggregs: any) {
+  _cleanUpDisaggregations(disaggregs: DisaggregationValue[]) {
     if (!disaggregs || !disaggregs.length) {
       return;
     }
+
     let i;
     for (i = 0; i < disaggregs.length; i++) {
       if (disaggregs[i] !== undefined && this._isEmpty(disaggregs[i].value)) {
