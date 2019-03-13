@@ -7,7 +7,9 @@ import { GenericObject } from '../../../../../../../../typings/globals.types';
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  */
-const LowerResultsMixin = dedupingMixin((superClass: any) => class extends EtoolsLogsMixin(superClass) {
+const LowerResultsMixin = dedupingMixin(
+    // @ts-ignore
+    (superClass: any) => class extends EtoolsLogsMixin(superClass) {
   [x: string]: any;
 
   static get properties() {

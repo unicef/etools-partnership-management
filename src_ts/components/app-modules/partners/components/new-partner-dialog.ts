@@ -52,7 +52,9 @@ class NewPartnerDialog extends PolymerElement {
   }
 
   openNewPartnerDialog() {
+    // @ts-ignore
     this.$.vendorNo.invalid = false;
+    // @ts-ignore
     this.$.newPartnerDialog.opened = true;
   }
 

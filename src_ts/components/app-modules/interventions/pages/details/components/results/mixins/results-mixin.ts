@@ -13,6 +13,7 @@ import { RootState } from '../../../../../../../../store';
  * @appliesMixin EtoolsLogsMixin
  */
 const ResultsMixin = dedupingMixin(
+    // @ts-ignore
   (superClass: any) => class extends EtoolsLogsMixin(superClass) {
     [x: string]: any;
 
