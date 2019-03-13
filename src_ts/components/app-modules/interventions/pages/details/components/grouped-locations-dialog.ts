@@ -228,6 +228,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     }
 
     this.groupedLocations = groupedLocations;
+    //@ts-ignore
     this.$.groupedLocDialog.notifyResize();
   }
 
@@ -236,7 +237,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
       return null;
     }
     let existingGroup = groupedLocations.find(function(g) {
-      return parseInt(g.adminLevelLocation.id) === parseInt(adminLevelLocation.id);
+      return parseInt(g.adminLevelLocation!.id as unknown as string) === parseInt(adminLevelLocation.id);
     });
 
     if (!existingGroup) {
@@ -262,6 +263,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 
   open() {
+    // @ts-ignore
     this.$.groupedLocDialog.opened = true;
   }
 
