@@ -52,12 +52,14 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
     public deleteActionLoadingMsg: string = 'Deleting items from server...';
     public deleteActionDefaultErrMsg: string = 'Deleting items from server action has failed!';
 
+    // @ts-ignore
     private connectedCallback() {
       super.connectedCallback();
       // create delete confirmation dialog
       this._createDeleteConfirmationDialog();
     }
 
+    // @ts-ignore
     private disconnectedCallback() {
       super.disconnectedCallback();
       // remove delete confirmation dialog when the element is detached

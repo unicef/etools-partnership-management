@@ -8,7 +8,7 @@ import { fireEvent } from '../utils/fire-custom-event.js';
  * @appliesMixin AjaxErrorsParserMixin
  */
 const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
-  class extends AjaxErrorsParserMixin(baseClass) {
+  class extends (AjaxErrorsParserMixin(baseClass) as any) {
 
     static get properties() {
       return {

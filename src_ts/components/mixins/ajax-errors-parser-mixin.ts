@@ -27,9 +27,9 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return response.response || this.globalMessage;
       }
 
-      protected _getErrorsArray(errors: any, prepareForToastMsg: any) {
+      protected _getErrorsArray(errors: any, prepareForToastMsg: boolean) {
         //@ts-ignore
-        let errorsArray = [];
+        let errorsArray: any = [];
         if (!errors) {
           //@ts-ignore
           return errorsArray;
@@ -138,7 +138,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         return errors;
       }
 
-      public parseRequestErrorsAndShowAsToastMsgs(error: any, source?: any, redirectOn404?: any) {
+      public parseRequestErrorsAndShowAsToastMsgs(error: any, source?: any, redirectOn404?: boolean) {
         if (redirectOn404 && error.status === 404) {
           if (!source) {
             source = this;
@@ -153,7 +153,7 @@ const AjaxErrorsParserMixin = dedupingMixin((baseClass: any) =>
         this.showErrorAsToastMsg(errorsString, source);
       }
 
-      public showErrorAsToastMsg(errorsString: any, source: any) {
+      public showErrorAsToastMsg(errorsString: string, source: any) {
         if (errorsString) {
           if (!source) {
             source = this;
