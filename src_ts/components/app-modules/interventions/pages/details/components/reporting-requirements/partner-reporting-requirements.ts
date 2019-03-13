@@ -200,10 +200,12 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
   }
 
   _openQprEditDialog() {
+    // @ts-ignore
     this.$.qpr.openQuarterlyRepRequirementsDialog();
   }
 
   _openHruEditDialog() {
+    // @ts-ignore
     this.$.hru.openUnicefHumanitarianRepReqDialog();
   }
 

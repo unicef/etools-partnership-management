@@ -376,12 +376,12 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
       '#signedByUnicefDateField', '#signedIntervFile'];
 
-    fieldSelectors.forEach(function(selector: string) {
+    fieldSelectors.forEach((selector: string) => {
       let field = this.shadowRoot.querySelector(selector);
       if (field && !field.validate()) {
         valid = false;
       }
-    }.bind(this));
+    });
     return valid;
   }
 

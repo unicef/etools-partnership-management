@@ -1,5 +1,6 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import { GenericObject } from '../../../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -65,7 +66,7 @@ const LowerResultsMixin = dedupingMixin((superClass: any) => class extends Etool
     }
   }
 
-  _getDataIndex(id: string, dataSet: []) {
+  _getDataIndex(id: string, dataSet: GenericObject[]) {
     try {
       let index = null;
       let resultsLength = dataSet.length;

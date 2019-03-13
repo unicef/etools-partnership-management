@@ -95,6 +95,7 @@ class QprList extends EtoolsMixinFactory.combineMixins([
 
   _sortRequirementsAsc() {
     this.qprData.sort((a: string, b: string) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }
