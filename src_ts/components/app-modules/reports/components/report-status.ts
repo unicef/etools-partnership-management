@@ -102,7 +102,7 @@ class ReportStatus extends PolymerElement {
     };
   }
 
-  _computeStatusType(status) {
+  _computeStatusType(status: null | undefined | string) {
     if (status === null || typeof status === 'undefined') {
       return 'no-status';
     }
@@ -136,9 +136,6 @@ class ReportStatus extends PolymerElement {
   }
 
   _computeLabel(status: string, final: string, reportType: string) {
-    if (status === null || typeof status === 'undefined') {
-      return 'No Status';
-    }
     switch (status) {
       case '1':
         return 'Nothing due';
@@ -172,22 +169,23 @@ class ReportStatus extends PolymerElement {
         return 'Sent Back';
       case 'Acc':
         return reportType !== 'HR' ? 'Accepted' : 'Received';
+      default:
+        return 'No Status';
     }
   }
 
-  _computeIcon(type) {
-    if (!this.hideIcon) {
-      switch (type) {
-        case 'success':
-          return 'icons:check-circle';
-        case 'submitted':
-          return 'icons:assignment-turned-in';
-        case 'error':
-        case 'warning':
-          return 'icons:error';
-      }
+  _computeIcon(type: string) {
+    switch (type) {
+      case 'success':
+        return 'icons:check-circle';
+      case 'submitted':
+        return 'icons:assignment-turned-in';
+      case 'error':
+      case 'warning':
+        return 'icons:error';
+      default:
+        return 'image:lens';
     }
-    return 'image:lens';
   }
 }
 

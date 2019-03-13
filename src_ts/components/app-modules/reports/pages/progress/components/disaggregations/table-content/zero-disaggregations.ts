@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
-import '../disaggregation-table-row.js';
+import '../disaggregation-table-row';
+import {GenericObject} from "../../../../../../../../typings/globals.types";
 
 
 /**
@@ -36,7 +37,7 @@ class ZeroDisaggregations extends PolymerElement {
     };
   }
 
-  _determineTotalRow(_, data: object) {
+  _determineTotalRow(_: any, data: GenericObject) {
     if (typeof data === 'undefined') {
       return;
     }

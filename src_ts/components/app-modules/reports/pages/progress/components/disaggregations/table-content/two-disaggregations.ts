@@ -1,9 +1,9 @@
-import '../mixins/disaggregations.js';
-import '../disaggregation-table-row.js';
+import '../mixins/disaggregations';
+import '../disaggregation-table-row';
 import { PolymerElement, html } from '@polymer/polymer';
-import DisaggregationsMixin from '../mixins/disaggregations.js';
-import UtilsMixin from '../../../../../../../mixins/utils-mixin.js';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles.js';
+import DisaggregationsMixin from '../mixins/disaggregations';
+import UtilsMixin from '../../../../../../../mixins/utils-mixin';
+import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
 
 /**
  * @polymer
@@ -11,7 +11,7 @@ import { disaggregationTableStyles } from '../styles/disaggregation-table-styles
  * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin
  */
-class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)) {
+class TwoDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement)) as any) {
 
   static get is() {
     return 'two-disaggregations';
@@ -100,14 +100,14 @@ class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)
     if (typeof columns === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map(function(z) {
+    let columnData = columns.map((z) => {
       let formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         key: formatted,
         data: data.disaggregation[formatted]
       };
-    }, this);
+    });
 
     return {
       title: 'total',

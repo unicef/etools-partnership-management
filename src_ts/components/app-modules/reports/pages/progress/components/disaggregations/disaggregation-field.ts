@@ -2,8 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-behaviors/etools-mixin-factory.js';
 
-import { PolymerElEvent } from '../../../../../../../typings/globals.types.js';
-import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {GenericObject, PolymerElEvent} from '../../../../../../../typings/globals.types';
+import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import DisaggregationFieldMixin from './mixins/disaggregation-field-mixin';
 
 
@@ -100,7 +100,7 @@ class DisaggregationField extends DisaggregationFieldMixin(PolymerElement) {
   }
 
   _handleInput(e: PolymerElEvent) {
-    let change = {};
+    let change: GenericObject = {};
 
     change[this.key] = e.target.value;
 

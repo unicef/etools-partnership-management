@@ -1,25 +1,26 @@
+import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-content-panel/etools-content-panel.js';
+import 'etools-content-panel/etools-content-panel';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
-import '../../../../layout/etools-ram-indicators.js';
+import '../../../../layout/etools-ram-indicators';
 
-import '../../components/report-status.js';
-import './components/report-overall.js';
-import './components/indicator-report-target.js';
-import './components/indicator-details.js';
-import './components/sr-details.js';
-import { PolymerElement, html } from '@polymer/polymer';
-import UtilsMixin from '../../../../mixins/utils-mixin.js';
-import CommonMixin from '../../../../mixins/common-mixin.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { PolymerElEvent } from '../../../../../typings/globals.types.js';
-import { isEmptyObject } from '../../../../utils/utils.js';
-import { CpOutput } from '../../../../../typings/intervention.types.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import '../../components/report-status';
+import './components/report-overall';
+import './components/indicator-report-target';
+import './components/indicator-details';
+import './components/sr-details';
+
+import UtilsMixin from '../../../../mixins/utils-mixin';
+import CommonMixin from '../../../../mixins/common-mixin';
+import { pageCommonStyles } from '../../../../styles/page-common-styles';
+import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
+import { PolymerElEvent } from '../../../../../typings/globals.types';
+import { isEmptyObject } from '../../../../utils/utils';
+import { CpOutput } from '../../../../../typings/intervention.types';
+import { fireEvent } from '../../../../utils/fire-custom-event';
 
 
 /**
@@ -229,10 +230,11 @@ class ReportProgress extends EtoolsMixinFactory.combineMixins([
   }
 
   _indicatorDetailsTransitioningComplete(e: CustomEvent) {
-    let indicatorCollapsibleContent = e.target;
+    let indicatorCollapsibleContent = e.target as Element;
     let indicatorDetails = indicatorCollapsibleContent!.querySelector('indicator-details');
-    if (indicatorDetails && !e.detail.value && indicatorCollapsibleContent!.opened) {
+    if (indicatorDetails && !e.detail.value && (indicatorCollapsibleContent as any)!.opened) {
       // trigger indicator details request
+      // @ts-ignore
       indicatorDetails.getIndicatorDetails();
     }
   }
