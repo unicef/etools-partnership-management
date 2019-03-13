@@ -183,4 +183,5 @@ documentContainer.innerHTML = `
   </custom-style>
   `;
 
+// @ts-ignore
 document.head.appendChild(documentContainer.content);

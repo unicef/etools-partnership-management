@@ -4,9 +4,9 @@ import 'etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
 import { SharedStyles } from '../../styles/shared-styles';
 import { gridLayoutStyles } from '../../styles/grid-layout-styles';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
+import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin';
 import { store } from '../../../store';
 import { RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 import { fireEvent } from '../../utils/fire-custom-event';
@@ -173,8 +173,8 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
 
     fireEvent(this, 'global-loading', {message: 'Refreshing data...', active: true});
 
-    let afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
-    let restampLandingPage = this.page === afterDataRefreshLandingPage ||
+    let afterDataRefreshLandingPage: string = this._getAfterRefreshLandingPage();
+    let restampLandingPage: boolean = this.page === afterDataRefreshLandingPage ||
         (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
     if (this.allSelected) {
@@ -199,7 +199,7 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
           window.EtoolsPmpApp.DexieDb.interventions.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
         }
-    }).then(function(result: any) {
+    }).then(function() {
       // transaction succeeded
       self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
     }).catch(function(error: any) {
@@ -209,25 +209,25 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
     });
   }
 
-  _handleSuccess(afterDataRefreshLandingPage: string, restampLandingPage: string) {
+  _handleSuccess(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {text: 'Data successfully refreshed', showCloseBtn: true});
   }
 
-  _handleFailure(afterDataRefreshLandingPage: string, restampLandingPage: string) {
+  _handleFailure(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
     fireEvent(this, 'toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
   }
 
-  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: string) {
+  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
     let routePath = afterDataRefreshLandingPage + '/list';
     if (restampLandingPage) {
       this.set('page', null);
-      setTimeout(function() {
+      setTimeout(() => {
         fireEvent(this, 'global-loading', {active: false});
         this.set('page', afterDataRefreshLandingPage);
         fireEvent(this, 'update-main-path', {path: routePath});
-      }.bind(this), 10);
+      }, 10);
     } else {
       fireEvent(this, 'global-loading', {active: false});
       fireEvent(this, 'update-main-path', {path: routePath});

@@ -173,4 +173,5 @@ documentContainer.innerHTML = `<dom-module id="nav-menu-styles">
   </template>
 </dom-module>`;
 
+// @ts-ignore
 document.head.appendChild(documentContainer.content);

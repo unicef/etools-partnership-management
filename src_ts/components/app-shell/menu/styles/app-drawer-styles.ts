@@ -25,4 +25,5 @@ documentContainer.innerHTML = `<dom-module id="app-drawer-styles">
   </template>
 </dom-module>`;
 
+// @ts-ignore
 document.head.appendChild(documentContainer.content);

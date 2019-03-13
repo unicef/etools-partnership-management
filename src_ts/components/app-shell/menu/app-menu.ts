@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EnvironmentFlags from '../../environment-flags/environment-flags-mixin.js';
+import EnvironmentFlags from '../../environment-flags/environment-flags-mixin';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
@@ -9,9 +9,9 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 
-import './styles/nav-menu-styles.js';
-import {pmpMainIcon} from '../../styles/pmp-custom-icons.js';
-import {fireEvent} from '../../utils/fire-custom-event.js';
+import './styles/nav-menu-styles';
+import {pmpMainIcon} from '../../styles/pmp-custom-icons';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * PMP main menu
@@ -19,7 +19,7 @@ import {fireEvent} from '../../utils/fire-custom-event.js';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends GestureEventListeners(EnvironmentFlags(PolymerElement)) {
+class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) as any) {
 
   public static get template() {
     // main template
@@ -158,12 +158,14 @@ class AppMenu extends GestureEventListeners(EnvironmentFlags(PolymerElement)) {
   public rootPath: string = '';
   public smallMenu: boolean = false;
 
+  // @ts-ignore
   private _menuSizeChange(newVal: boolean, oldVal: boolean): void {
     if (newVal !== oldVal) {
       setTimeout(() => fireEvent(this, 'resize-main-layout'));
     }
   }
 
+  // @ts-ignore
   private _toggleSmallMenu(e: Event): void {
     e.stopImmediatePropagation();
     fireEvent(this, 'toggle-small-menu');
