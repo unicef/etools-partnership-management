@@ -261,11 +261,11 @@ export class PlannedVisit {
   programmatic: any;
 }
 
-export type Disaggregation = {
-  id: number;
-  name: string;
-  active: boolean;
-  disaggregation_values: DisaggregationValue[];
+export class Disaggregation {
+  id: number | null = null;
+  name: string = '';
+  active: boolean = true;
+  disaggregation_values: DisaggregationValue[] = [];
 }
 
 export type DisaggregationValue = {

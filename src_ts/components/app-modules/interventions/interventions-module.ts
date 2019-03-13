@@ -294,10 +294,6 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
       csvDownloadQs: {
         type: String
       },
-      newInterventionModel: {
-        type: Object,
-        value: () => new Intervention()
-      },
       newInterventionActive: {
         type: Boolean,
         computed: '_updateNewItemPageFlag(routeData, listActive)'
@@ -611,7 +607,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _setNewInterventionObj() {
-    this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+    this.set('intervention', new Intervention());
   }
 
   _visibleTabContent(activePage: string, expectedPage: string,
