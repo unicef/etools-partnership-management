@@ -9,8 +9,7 @@ import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 
 import 'etools-date-time/calendar-lite.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 
 

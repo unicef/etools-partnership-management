@@ -2,11 +2,9 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
-import "@polymer/paper-button/paper-button.js"
+import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../store.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import AjaxErrorsParserMixin from '../../mixins/ajax-errors-parser-mixin.js';
 import ScrollControl from '../../mixins/scroll-control-mixin.js';
@@ -22,8 +20,8 @@ import '../../layout/etools-error-messages-box.js'
 import '../../layout/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 import {pageLayoutStyles} from '../../styles/page-layout-styles'
-import {SharedStyles} from "../../styles/shared-styles";
-import {buttonsStyles} from "../../styles/buttons-styles";
+import {SharedStyles} from '../../styles/shared-styles';
+import {buttonsStyles} from '../../styles/buttons-styles';
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
@@ -188,10 +186,6 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       selectedAgreementId: {
         type: Number
       },
-      newAgreementModel: {
-        type: Object,
-        value: () => new Agreement()
-      },
       csvDownloadUrl: {
         type: String
       },
@@ -223,7 +217,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     this._initListeners();
     if (this.newAgreementActive) {
       // Useful when refreshing the page
-      this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+      this.set('agreement', new Agreement());
     }
   }
 
@@ -314,7 +308,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     e.stopImmediatePropagation();
     if ((e.detail instanceof Array && e.detail.length > 0) ||
         (typeof e.detail === 'string' && e.detail !== '')) {
-      fireEvent(this, 'set-server-errors', e.detail);
+      fireEvent(this, 'set-server-errors', e.detail as any);
       this.scrollToTop();
     }
   }
@@ -325,7 +319,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
    */
   _goToNewAgreementPage() {
     // go to new agreement
-    this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+    this.set('agreement', new Agreement());
     fireEvent(this, 'update-main-path', {path: 'agreements/new/details'});
     this._handleAgreementSelectionLoadingMsg();
   }

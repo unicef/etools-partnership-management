@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import uniq from 'lodash-es/uniq';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-data-table/etools-data-table.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../../../../../mixins/common-mixin';
@@ -116,7 +115,7 @@ class HumanitarianReportingReqCluster extends HumanitarianReportingReqClusterMix
     if (isEmptyObject(this.expectedResults)) {
       return [];
     }
-    let clusterIndicIds = [];
+    let clusterIndicIds: any[] = [];
     this.expectedResults.forEach((r: ExpectedResult) => {
       return r.ll_results.forEach((llr: ResultLinkLowerResult) => {
         return llr.applied_indicators.forEach((i) => {

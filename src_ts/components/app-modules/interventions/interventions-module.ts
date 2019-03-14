@@ -5,12 +5,9 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CONSTANTS from '../../../config/app-constants';
 import { UserPermissions } from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
@@ -296,10 +293,6 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
       },
       csvDownloadQs: {
         type: String
-      },
-      newInterventionModel: {
-        type: Object,
-        value: () => new Intervention()
       },
       newInterventionActive: {
         type: Boolean,
@@ -614,7 +607,7 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _setNewInterventionObj() {
-    this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+    this.set('intervention', new Intervention());
   }
 
   _visibleTabContent(activePage: string, expectedPage: string,

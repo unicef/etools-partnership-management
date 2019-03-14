@@ -4,8 +4,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -25,9 +24,9 @@ import EnvironmentFlags from '../../../../environment-flags/environment-flags-mi
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import { Agreement } from '../../../agreements/agreement.types';
-import { Intervention } from '../../../../../typings/intervention.types';
+import { Intervention, ExpectedResult } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-import { PolymerElEvent } from '../../../../../typings/globals.types';
+import { PolymerElEvent, LabelAndValue } from '../../../../../typings/globals.types';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store';
 import { pageCommonStyles } from '../../../../styles/page-common-styles';
@@ -604,7 +603,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
       this.thereAreInactiveIndicators = false;
       return;
     }
-    this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
+    this.noOfPdOutputs = this.intervention.result_links.map((rl: ExpectedResult) => {
       return rl.ll_results.length;
     }).reduce((a: number, b: number) => a + b, 0);
 
@@ -616,7 +615,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _getNoOfInactiveIndicators() {
-    return this.intervention.result_links.map((rl) => {
+    return this.intervention.result_links.map((rl: ExpectedResult) => {
       return rl.ll_results.map((llr) => {
         return llr.applied_indicators.filter(i => !i.is_active).length;
       }).reduce((a: number, b: number) => a + b, 0);
@@ -686,12 +685,12 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     return agreement && CONSTANTS.AGREEMENT_TYPES.PCA === agreement.agreement_type;
   }
 
-  _initDocTypes(documentTypes: []) {
+  _initDocTypes(documentTypes: LabelAndValue[]) {
     if (!(documentTypes instanceof Array && documentTypes.length)) {
       return;
     }
-    let pcaTypes = [];
-    let ssfaTypes = [];
+    let pcaTypes: LabelAndValue[] = [];
+    let ssfaTypes: LabelAndValue[] = [];
     documentTypes.forEach((type) => {
       if (type.value !== CONSTANTS.DOCUMENT_TYPES.SSFA) {
         pcaTypes.push(type);
@@ -771,7 +770,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
         && typeof interventionEnd === 'string' && interventionEnd !== '') {
 
       let start = parseInt(interventionStart.substr(0, 4), 10);
-      let end = parseInt(interventionEnd.substr(0, 4), 10);
+      let end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
       let years = [];
       while (start <= end) {
         years.push({
@@ -812,7 +811,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
   /**
    * When an agreement is selected then check it's type and update document types dropdown
    */
-  _getCurrentDocTypes(agreement: Agreement, documentTypes: string[]) {
+  _getCurrentDocTypes(agreement: Agreement, documentTypes: LabelAndValue[]) {
     this._initDocTypes(documentTypes);
     let options = documentTypes;
     if (agreement && agreement.agreement_type) {
@@ -834,7 +833,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     return options;
   }
 
-  _resetSelectedDocType(options: any) {
+  _resetSelectedDocType(options: LabelAndValue[]) {
     if (!this.intervention || !this.intervention.document_type || options === undefined) {
       return;
     }
@@ -860,12 +859,12 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
       fieldSelectors.push('#ref-year');
     }
-    fieldSelectors.forEach(function(selector: string) {
+    fieldSelectors.forEach((selector: string) => {
       let field = this.shadowRoot.querySelector(selector);
       if (field && !field.validate()) {
         valid = false;
       }
-    }.bind(this));
+    });
     return valid;
   }
 
@@ -928,7 +927,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
   _extractClusterNamesFromIndicators() {
     let clusterNames = new Set();
 
-    this.intervention.result_links.forEach((rl) => {
+    this.intervention.result_links.forEach((rl: ExpectedResult) => {
       if (isEmptyObject(rl.ll_results)) {
         return;
       }
@@ -973,7 +972,7 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
     }
   }
 
-  _activationLetterDelete(e: CustomEvent) {
+  _activationLetterDelete(_e: CustomEvent) {
     this.set('intervention.activation_letter_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }

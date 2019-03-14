@@ -1,6 +1,6 @@
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { PolymerElement, html } from '@polymer/polymer';

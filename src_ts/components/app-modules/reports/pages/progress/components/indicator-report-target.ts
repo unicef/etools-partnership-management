@@ -2,8 +2,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import { PolymerElement, html } from '@polymer/polymer';
 
-
-
 /**
  * @polymer
  * @customElement
@@ -112,7 +110,7 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
     };
   }
 
-  _getTargetValue(displayType: string, target) {
+  _getTargetValue(displayType: string, target: any) {
     switch (displayType) {
       case 'number':
         return this._formatNumber(target.v, '-', 0, '\,');
@@ -124,12 +122,12 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
     return '-';
   }
 
-  _getCumulativeProgress(displayType: string, cumulativeVal) {
-    return this._formatIndicatorValue(displayType, cumulativeVal);
+  _getCumulativeProgress(displayType: string, cumulativeVal: string) {
+    return this._formatIndicatorValue(displayType, cumulativeVal, false);
   }
 
-  _getAchievement(displayType: string, achievedVal) {
-    return this._formatIndicatorValue(displayType, achievedVal);
+  _getAchievement(displayType: string, achievedVal: string) {
+    return this._formatIndicatorValue(displayType, achievedVal, false);
   }
 
 }

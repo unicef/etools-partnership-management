@@ -93,7 +93,7 @@ class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
     };
   }
 
-  _computeClass(rowType) {
+  _computeClass(rowType: string) {
     return rowType;
   }
 

@@ -199,15 +199,15 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     this._deleteIndicator = this._deleteIndicator.bind(this);
     this._deactivateIndicator = this._deactivateIndicator.bind(this);
 
-    this.addEventListener('edit', this._editIndicator);
-    this.addEventListener('delete', this._deleteIndicator);
-    this.addEventListener('deactivate', this._deactivateIndicator);
+    this.addEventListener('edit', this._editIndicator as EventListener);
+    this.addEventListener('delete', this._deleteIndicator as EventListener);
+    this.addEventListener('deactivate', this._deactivateIndicator as EventListener);
   }
 
   _removeAppliedIndicatorListeners() {
-    this.removeEventListener('edit', this._editIndicator);
-    this.removeEventListener('delete', this._deleteIndicator);
-    this.removeEventListener('deactivate', this._deactivateIndicator);
+    this.removeEventListener('edit', this._editIndicator as EventListener);
+    this.removeEventListener('delete', this._deleteIndicator as EventListener);
+    this.removeEventListener('deactivate', this._deactivateIndicator as EventListener);
   }
 
   _showDeactivate(inAmendment: boolean, indicIsActive: boolean) {
@@ -280,7 +280,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   getSectionName(sectionId: string) {
     let sectionName = '—';
     if (sectionId && !isEmptyObject(this.sections)) {
-      let section = this.sections.find(function(s) {
+      let section = this.sections.find(function(s: any) {
         return parseInt(s.id) === parseInt(sectionId);
       });
       if (section) {

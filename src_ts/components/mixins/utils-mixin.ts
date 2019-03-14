@@ -1,7 +1,6 @@
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import { GenericObject } from '../../typings/globals.types';
 
+// @ts-ignore
 const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) {
 
   _equals(a: any, b: any) {
@@ -27,6 +26,7 @@ const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) 
     thousandsPoint = thousandsPoint ? thousandsPoint : '';
 
     if (decimalsPoint && thousandsPoint && decimalsPoint === thousandsPoint) {
+      // @ts-ignore
       this.logWarn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
       return nr;
     }
@@ -64,6 +64,7 @@ const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) 
   _fieldsAreValid() {
     let valid = true;
     let fields = [].slice.call(
+        // @ts-ignore
         this.shadowRoot.querySelectorAll('.validate')
     );
     // NOTE: NodeList.forEach is not supported by older browsers(min IE11),
@@ -106,33 +107,6 @@ const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) 
       default:
         return value;
     }
-  }
-
-  // For simple objects, no nesting
-  objectsAreTheSame(obj1: any, obj2: any) {
-    if (obj1 === obj2) {
-      return true;
-    }
-    if (!obj1 && !obj2) {
-      return true;
-    }
-    let props1: GenericObject = obj1 ? Object.keys(obj1) : {};
-    let props2: GenericObject = obj2 ? Object.keys(obj2) : {};
-
-    if (props1.length !== props2.length) {
-      return false;
-    }
-    if (props1.length === 0) {
-      return true;
-    }
-
-    let areDiff = false;
-    props1.forEach((p: string) => {
-      if( obj1[p] !== obj2[p]) {
-        areDiff = true;
-      }
-    });
-    return !areDiff;
   }
 
 };

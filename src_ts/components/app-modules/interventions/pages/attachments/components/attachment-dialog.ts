@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
@@ -15,6 +14,7 @@ import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
+import { fireEvent } from '../../../../../utils/fire-custom-event';
 
 
 /**

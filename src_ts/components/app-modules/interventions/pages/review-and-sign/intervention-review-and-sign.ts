@@ -4,9 +4,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/paper-input/paper-input.js';
 
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -23,7 +21,7 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { Intervention } from '../../../../../typings/intervention.types.js';
+import { Intervention, Fr } from '../../../../../typings/intervention.types.js';
 import { Agreement } from '../../../agreements/agreement.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
@@ -378,12 +376,12 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
       '#signedByUnicefDateField', '#signedIntervFile'];
 
-    fieldSelectors.forEach(function(selector: string) {
+    fieldSelectors.forEach((selector: string) => {
       let field = this.shadowRoot.querySelector(selector);
       if (field && !field.validate()) {
         valid = false;
       }
-    }.bind(this));
+    });
     return valid;
   }
 
@@ -426,7 +424,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     e.stopImmediatePropagation();
     try {
       this.set('intervention.frs_details', e.detail.frsDetails);
-      let frIds = e.detail.frsDetails.frs.map(fr => fr.id);
+      let frIds = e.detail.frsDetails.frs.map((fr: Fr) => fr.id);
       this.set('intervention.frs', frIds);
     } catch (err) {
       this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
@@ -466,7 +464,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     }
   }
 
-  _signedPDDocDelete(e: CustomEvent) {
+  _signedPDDocDelete(_e: CustomEvent) {
     this.set('intervention.signed_pd_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
@@ -480,7 +478,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
     }
   }
 
-  _prcRevDocDelete(e: CustomEvent) {
+  _prcRevDocDelete(_e: CustomEvent) {
     this.set('intervention.prc_review_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }

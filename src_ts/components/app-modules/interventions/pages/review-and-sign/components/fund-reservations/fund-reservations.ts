@@ -5,12 +5,9 @@ import { timeOut } from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-content-panel/etools-content-panel.js';
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
@@ -19,7 +16,7 @@ import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
 import ArrayHelperMixin from '../../../../../../mixins/array-helper-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
 import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
-import { FrsDetails } from '../../../../../../../typings/intervention.types.js';
+import { FrsDetails, Fr } from '../../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 
@@ -229,7 +226,7 @@ class FundReservations extends InterventionFundReservationsMixins {
     if (this.frsDialogEl) {
       // populate dialog with current frs numbers deep copy
       let currentFrs = this._getCurrentFrs();
-      let frs = currentFrs.map((fr) => {
+      let frs = currentFrs.map((fr: Fr) => {
             return {fr_number: fr.fr_number};
           });
 
@@ -240,7 +237,7 @@ class FundReservations extends InterventionFundReservationsMixins {
   }
 
   // get original/initial intervention frs numbers
-  _getCurrentFrs() {
+  _getCurrentFrs(): Fr[]  {
     return (this.intervention.frs_details &&
             this.intervention.frs_details.frs instanceof Array)
         ? this.intervention.frs_details.frs : [];
@@ -265,14 +262,14 @@ class FundReservations extends InterventionFundReservationsMixins {
     let frsBeforeUpdate = this._getCurrentFrs();
     if (frsBeforeUpdate.length !== 0) {
       // all FR Numbers have been deleted
-      this._triggerPdFrsUpdate({frs: []});
+      this._triggerPdFrsUpdate(new FrsDetails());
     }
   }
 
   /**
    * Updates made and FR Numbers list is not empty
    */
-  _handleNotEmptyFrsAfterUpdate(frNumbers) {
+  _handleNotEmptyFrsAfterUpdate(frNumbers: string[]) {
     let diff = this.getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
     if (!diff.length) {
       // no changes have been made to FR Numbers
@@ -301,7 +298,7 @@ class FundReservations extends InterventionFundReservationsMixins {
   /**
    * Get FR Numbers details from server
    */
-  _triggerFrsDetailsRequest(frNumbers: []) {
+  _triggerFrsDetailsRequest(frNumbers: string[]) {
     this.frsDialogEl.startSpinner();
 
     let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
@@ -311,7 +308,7 @@ class FundReservations extends InterventionFundReservationsMixins {
 
     this.sendRequest({
       endpoint: {url: url}
-    }).then((resp: any) => {
+    }).then((resp: FrsDetails) => {
       this._frsDetailsSuccessHandler(resp);
     }).catch((error: any) => {
       this._frsDetailsErrorHandler(error.response);

@@ -5,7 +5,7 @@ import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
@@ -15,7 +15,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
-
 
 /**
  * @polymer
@@ -225,7 +224,7 @@ class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
     let params = this._computeParams(this.indicatorReportId);
     this._showLoading();
     let self = this;
-    this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response) {
+    this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response: any) {
       self.set('indicatorReport', (response && response[0]) ? response[0] : {});
       self._hideLoading();
     }).catch(function(error: any) {
@@ -253,7 +252,7 @@ class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
 
   _computeLocationData(rawLocationData: any) {
     let byLocation = (rawLocationData || [])
-        .reduce(function(acc, location) {
+        .reduce(function(acc: any, location: any) {
           let locationId = location.location.id;
 
           if (typeof acc[locationId] === 'undefined') {

@@ -2,9 +2,7 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 
 import '@polymer/paper-button/paper-button.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import './edit-hru-dialog.js';
 import './hru-list.js';
@@ -14,8 +12,6 @@ import FrontendPaginationMixin from '../../../../../../../mixins/frontend-pagina
 import { ExpectedResult } from '../../../../../../../../typings/intervention.types';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
-
-
 
 
 /**
@@ -130,6 +126,7 @@ class HumanitarianReportingReqUnicef extends HumanitarianReportingReqUnicefMixin
 
   _sortRequirementsAsc() {
     this.reportingRequirements.sort((a: string, b: string) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }
@@ -170,9 +167,9 @@ class HumanitarianReportingReqUnicef extends HumanitarianReportingReqUnicefMixin
     if (!expectedResults) {
       return false;
     }
-    let hfIndicator = expectedResults.find((r) => {
-      return r.ll_results.find((llr) => {
-        return llr.applied_indicators.find((i) => {
+    let hfIndicator = expectedResults.find((r: any) => {
+      return r.ll_results.find((llr: any) => {
+        return llr.applied_indicators.find((i: any) => {
           return i.is_active && i.is_high_frequency;
         });
       });

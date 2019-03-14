@@ -1,14 +1,11 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-// @ts-ignore
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
+import { GenericObject } from '../../typings/globals.types.js';
 
 
 /**
@@ -48,19 +45,21 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
     }
 
     public dataItems: any[] = [];
-    public dataSetModel: object = null;
+    public dataSetModel: object | null= null;
     public deleteConfirmationTitle: string = 'Delete confirmation';
     public deleteConfirmationMessage: string = 'Are you sure you want to delete this item?';
     public deleteLoadingSource: string = 'delete-data-set';
     public deleteActionLoadingMsg: string = 'Deleting items from server...';
     public deleteActionDefaultErrMsg: string = 'Deleting items from server action has failed!';
 
+    // @ts-ignore
     private connectedCallback() {
       super.connectedCallback();
       // create delete confirmation dialog
       this._createDeleteConfirmationDialog();
     }
 
+    // @ts-ignore
     private disconnectedCallback() {
       super.disconnectedCallback();
       // remove delete confirmation dialog when the element is detached
@@ -90,7 +89,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
         return null;
       }
       if (this.dataSetModel === null) {
-        let newObj = {};
+        let newObj: GenericObject = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
           Object.keys(this.dataItems[0]).forEach(function(property) {
             newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
@@ -103,7 +102,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-    public _addElement(addNull: any) {
+    public _addElement(addNull?: boolean) {
       if (!this.editMode) {
         return;
       }
@@ -163,8 +162,8 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
             method: 'DELETE',
             endpoint: deleteEndpoint,
             body: {}
-          }).then(function(resp: any) {
-            self._handleDeleteResponse(resp);
+          }).then(function(_resp: any) {
+            self._handleDeleteResponse();
           }).catch(function(error: any) {
             self._handleDeleteError(error.response);
           });
@@ -212,7 +211,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
     /**
      * Check is dataItems is Array, if not init with empty Array
      */
-    public _makeSureDataItemsAreValid(dataItems: any) {
+    public _makeSureDataItemsAreValid(dataItems?: any) {
       let items = dataItems ? dataItems : this.dataItems;
       if (!Array.isArray(items)) {
         this.set('dataItems', []);

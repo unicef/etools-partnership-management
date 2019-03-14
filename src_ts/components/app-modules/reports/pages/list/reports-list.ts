@@ -5,22 +5,21 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
-import '../../components/reports-display-list.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { listFilterStyles } from '../../../../styles/list-filter-styles.js';
-import AppNavigationHelperMixin from '../../../../mixins/app-navigation-helper-mixin.js';
-import ListFiltersMixin from '../../../../mixins/list-filters-mixin.js';
+import '../../components/reports-display-list';
+import { SharedStyles } from '../../../../styles/shared-styles';
+import { listFilterStyles } from '../../../../styles/list-filter-styles';
+import AppNavigationHelperMixin from '../../../../mixins/app-navigation-helper-mixin';
+import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
-import { isJsonStrMatch, isEmptyObject } from '../../../../utils/utils.js';
-import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
-import CONSTANTS from '../../../../../config/app-constants.js';
+import { store, RootState } from '../../../../../store';
+import { isJsonStrMatch, isEmptyObject } from '../../../../utils/utils';
+import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
+import CONSTANTS from '../../../../../config/app-constants';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-
+import { fireEvent } from '../../../../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -249,7 +248,9 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     this._initComplete = false;
   }
 
-  _initListFilters(partners, cpOutputs, sections, unicefUsersData, reportStatuses, reportTypes) {
+  _initListFilters(partners: any[], cpOutputs: any[], sections: any[], unicefUsersData: any[],
+                   reportStatuses: any[], reportTypes: any[]) {
+
     if (!partners || partners.length === 0 || !cpOutputs || !sections ||
         !unicefUsersData || unicefUsersData.length === 0 || !reportStatuses || !reportTypes) {
       return;
@@ -402,7 +403,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     this.set('_initComplete', true);
   }
 
-  _updateURL(queryParamsData, pageNr: number, pageSize: number, _initComplete: boolean) {
+  _updateURL(queryParamsData: any, pageNr: number, pageSize: number, _initComplete: boolean) {
     if (!_initComplete || !this.active) {
       return;
     }
@@ -417,9 +418,9 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
 
   // Outputs the query string for the list
   _buildQueryString() {
-    let qStrData = [];
+    let qStrData: string[] = [];
     if (!isEmptyObject(this.queryParams)) {
-      Object.keys(this.queryParams).forEach(function(k) {
+      Object.keys(this.queryParams).forEach((k: any) => {
         let qStrVal;
         if (this.queryParams[k] instanceof Array && !isEmptyObject(this.queryParams[k])) {
           qStrVal = this.queryParams[k].join('|');
@@ -429,7 +430,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
         if (qStrVal) {
           qStrData.push(k + '=' + qStrVal);
         }
-      }.bind(this));
+      });
     }
     if (!isEmptyObject(this.paginator)) {
       if (this.paginator.page) {

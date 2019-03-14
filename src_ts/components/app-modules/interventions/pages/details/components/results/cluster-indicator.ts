@@ -1,8 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
@@ -11,6 +9,8 @@ import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
+import { RootState, store } from '../../../../../../../store';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 /**
  * @polymer
@@ -19,11 +19,11 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
  * @appliesMixin IndicatorsCommonMixin
  * @appliesMixin EndpointsMixin
  */
-class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
+class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   IndicatorsCommonMixin,
   EndpointsMixin,
-], PolymerElement) {
+], PolymerElement)) {
   [x: string]: any;
 
   static get template() {
@@ -285,6 +285,9 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
     ];
   }
 
+  stateChanged(state: RootState) {
+    this.endStateChanged(state);
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -344,7 +347,7 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
       this.clusters = [];
       return;
     }
-    this.clusters = this.responsePlans.filter(function(r) {
+    this.clusters = this.responsePlans.filter(function(r: any) {
       return parseInt(r.id) === parseInt(selectedRespPlanId);
     })[0].clusters;
   }
@@ -408,7 +411,7 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
     }
   }
 
-  _resetDenominator(newD) {
+  _resetDenominator(newD: number) {
     this.indicator.baseline.d = newD;
     this.indicator.target.d = newD;
   }
@@ -420,11 +423,11 @@ class ClusterIndicator extends EtoolsMixinFactory.combineMixins([
 
   validate() {
     let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
-    [].push.apply(elemIds, this._getIndicatorTargetElId());
+    ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
-  _getIndicatorTargetElId() {
+  _getIndicatorTargetElId(): string[] {
     if (!this.prpClusterIndicator || !this.prpClusterIndicator.blueprint) {
       return ['targetEl', 'baselineEl'];
     }

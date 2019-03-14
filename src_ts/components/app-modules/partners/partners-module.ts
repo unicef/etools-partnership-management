@@ -9,9 +9,7 @@ import {store} from "../../../store";
 import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-// @ts-ignore
-import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory";
-// @ts-ignore
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import ScrollControl from "../../mixins/scroll-control-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
@@ -386,7 +384,7 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
-      fireEvent(this, 'set-server-errors', event.detail);
+      fireEvent(this, 'set-server-errors', event.detail as any);
       this.scrollToTop();
     }
   }

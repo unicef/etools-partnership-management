@@ -33,11 +33,12 @@ import {
   UPDATE_CURRENT_USER,
   CommonDataAction
 } from '../actions/common-data';
+import { CpOutput, Disaggregation } from '../typings/intervention.types';
 
 export interface CommonDataState {
   fileTypes: object[];
   signedByUnicefUsers: object[];
-  cpOutputs: object[];
+  cpOutputs: CpOutput[];
   countryProgrammes: object[];
   interventionDocTypes: object[];
   interventionStatuses: object[];
@@ -58,7 +59,7 @@ export interface CommonDataState {
   agreementStatuses: object[];
   csoPartners: object[];
   countryData: object;
-  disaggregations: object[];
+  disaggregations: Disaggregation[];
   PRPCountryData: object[];
   currentUser: object;
   reportStatuses: object[];
@@ -118,14 +119,8 @@ const INITIAL_STATE: CommonDataState = {
 };
 
 const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
-  // let partnersDdDataCopy;
   let disaggregsCopy;
-  // let agreementsCopy;
-  // let csoPartnerCopy;
-  // let indexP;
-  // let index;
-  // let pageDataWithPermsUpdated;
-  let dIndex;
+   let dIndex;
 
   switch (action.type) {
     case UPDATE_COUNTRY_PROGRAMMES:
@@ -194,64 +189,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         offices: action.offices
       };
 
-    // case UPDATE_PARTNERS:
-    //   return {
-    //     ...state,
-    //     partners: action.partnersData
-    //   };
-
-    // case UPDATE_AGREEMENTS:
-    //   return {
-    //     ...state,
-    //     agreementsList: action.agreementsList
-    //   };
-
-    // case ADD_EDIT_AGREEMENT:
-    //   agreementsCopy = state.agreementsList.slice(0);
-    //   index = agreementsCopy.findIndex(function (agr) {
-    //     return agr.id === action.agreement.id;
-    //   });
-    //
-    //   if (index > -1) {
-    //     agreementsCopy[index] = action.agreement;
-    //   } else {
-    //     agreementsCopy.push(action.agreement);
-    //   }
-    //   return Object.assign({}, state, {agreementsList: agreementsCopy});
-
-    // case 'SET_PARTNERS_DROPDOWN':
-    //   return {
-    //     ...state,
-    //     partnersDropdownData: action.partnersDropdownData
-    //   };
-
-    // case DELETE_PARTNER:
-    //   csoPartnerCopy = state.csoPartners.slice(0);
-    //   partnersDdDataCopy = state.partnersDropdownData.slice(0);
-    //
-    //   indexP = csoPartnerCopy.findIndex(function (partner) {
-    //     return partner.id === action.partnerId;
-    //   });
-    //   if (indexP > -1) {
-    //     csoPartnerCopy.splice(indexP, 1);
-    //   }
-    //   indexP = partnersDdDataCopy.findIndex(function (partner) {
-    //     return partner.value === action.partnerId;
-    //   });
-    //   if (indexP > -1) {
-    //     partnersDdDataCopy.splice(indexP, 1);
-    //   }
-    //   return Object.assign({}, state, {
-    //     partnersDropdownData: partnersDdDataCopy,
-    //     csoPartners: csoPartnerCopy
-    //   });
-
-    // case UPDATE_AGREEMENTS_DROPDOWN:
-    //   return {
-    //     ...state,
-    //     agreementsDropdownData: action.agreementsDropdownData
-    //   };
-
     case UPDATE_CURRENCIES:
       return {
         ...state,
@@ -269,12 +206,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         ...state,
         agreementStatuses: action.statuses
       };
-
-    // case UPDATE_CSO_PARTNERS:
-    //   return {
-    //     ...state,
-    //     csoPartners: action.csoPartners
-    //   };
 
     case UPDATE_CSO_TYPES:
       return {
@@ -379,28 +310,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         ...state,
         envFlags: action.envFlags
       };
-
-    // case UPDATE_PAGE_DATA_PERMISSIONS:
-    //   pageDataWithPermsUpdated = {
-    //     ...state.pageData,
-    //     permissions: action.permissions
-    //   };
-    //
-    //   return {
-    //     ...state,
-    //     pageData: pageDataWithPermsUpdated
-    //   };
-
-    // case UPDATE_IN_AMENDMENT_MODE_STATE:
-    //   let pageDataInAmendment = {
-    //     ...state.pageData,
-    //     in_amendment: action.inAmendment
-    //   };
-
-    //   return {
-    //     ...state,
-    //     pageData: pageDataInAmendment
-    //   };
 
     default:
       return state;

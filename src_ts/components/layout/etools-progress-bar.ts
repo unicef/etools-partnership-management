@@ -2,8 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-progress/paper-progress';
 
-
-
 /**
  * @polymer
  * @customElement
@@ -80,14 +78,13 @@ class EtoolsProgressBar extends PolymerElement {
         readOnly: true,
         computed: '_getProgress(value)'
       },
-      noDecimals: {
-        type: Boolean,
-        value: false
-      }
+      noDecimals: Boolean
     };
   }
 
-  _getProgress(value) {
+  public noDecimals: boolean = false;
+
+  _getProgress(value: any) {
     value = parseFloat(parseFloat(value).toFixed(2));
     if (isNaN(value)) {
       return 0;
@@ -106,11 +103,11 @@ class EtoolsProgressBar extends PolymerElement {
    * @param {number} value
    * @return {number}
    */
-  _getSecondaryProgress(value) {
+  _getSecondaryProgress(value: number) {
     return (value > 0 && value < 100) ? (value + 1) : 0;
   }
 
-  _prepareDisplayedValue(value) {
+  _prepareDisplayedValue(value: string) {
     return parseFloat(value).toFixed(this.noDecimals ? 0 : 2);
   }
 

@@ -10,12 +10,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // import { LitElement, html, property, PropertyValues } from '@polymer/lit-element';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
-import {afterNextRender} from "@polymer/polymer/lib/utils/render-status";
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
 import { setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
-// import {installRouter} from "pwa-helpers/router.js";
+// import {installRouter} from 'pwa-helpers/router.js';
 
 // This element is connected to the Redux store.
 import { store, RootState } from '../../store.js';
@@ -49,22 +49,18 @@ import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
+import 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
-import {LoadingMixin} from 'etools-loading/etools-loading-mixin.js';
-// @ts-ignore
+import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
 import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
-import EnvironmentFlags from "../environment-flags/environment-flags-mixin.js";
-import ScrollControl from "../mixins/scroll-control-mixin.js";
-import AmendmentModeUIMixin from "../amendment-mode/amendment-mode-UI-mixin.js";
-import UserDataMixin from "../user/user-data-mixin";
+import EnvironmentFlags from '../environment-flags/environment-flags-mixin.js';
+import ScrollControl from '../mixins/scroll-control-mixin.js';
+import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
+import UserDataMixin from '../user/user-data-mixin';
 
 import './menu/app-menu.js';
 import './header/page-header.js'
@@ -95,6 +91,8 @@ import { setInAmendment } from '../../actions/page-data.js';
 import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
+import { objectsAreTheSame } from '../utils/utils.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 setRootPath(BASE_URL);
 
 /**
@@ -364,7 +362,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   public appLocRouteChanged(appLocRoute: any) {
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
-        if (this.objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
+        if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
           return;
         } else {
           if (this.isInterventionReports(this.appLocRoute.path)) {
@@ -384,7 +382,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
 
   public routeChanged() {
     if (this.appLocRoute.path === this.route.path &&
-        this.objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
+        objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
       return;
     }
 

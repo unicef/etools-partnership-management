@@ -5,6 +5,12 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../store';
 import { isJsonStrMatch } from '../../../../../utils/utils';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
+import { Location } from '../../../../../../typings/intervention.types';
+
+class GroupedLocations  {
+  adminLevelLocation: Location | null = null;
+  subordinateLocations: Location[] = [];
+}
 
 /**
  * @polymer
@@ -148,7 +154,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 
   _removeCountry(adminLevels: any) {
-    let index = adminLevels.findIndex(function(al) {
+    let index = adminLevels.findIndex(function(al: any) {
       return al.name === 'Country';
     });
     if (index > -1) {
@@ -159,7 +165,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     }
   }
 
-  interventionLocationIdsChanged(locationIds: []) {
+  interventionLocationIdsChanged(locationIds: string[]) {
     if (!locationIds || !locationIds.length || !this.locations) {
       this.interventionLocations = [];
       return;
@@ -167,11 +173,11 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     this._setInterventionLocationsDetails(locationIds);
   }
 
-  _setInterventionLocationsDetails(locationIds: []) {
+  _setInterventionLocationsDetails(locationIds: any[]) {
     locationIds = locationIds.map(function(loc) {
       return parseInt(loc);
     });
-    let interventionLocations = this.locations.filter(function(loc) {
+    let interventionLocations: Location[] = this.locations.filter(function(loc: any) {
       return locationIds.indexOf(parseInt(loc.id)) > -1;
     });
 
@@ -179,29 +185,28 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     this.interventionLocations = interventionLocations;
   }
 
-  adminLevelChanged(adminLevel: any) {
+  adminLevelChanged(selectedAdminLevel: any) {
     this.message = '';
-    let groupedLocations = [];
+    let groupedLocations: GroupedLocations[] = [];
     let locationsUnableToGroup = [];
-    if (!adminLevel) {
+
+    if (!selectedAdminLevel) {
       this.groupedLocations = null;
       return;
     }
     let i;
     // Build grouped locations structure
     for (i = 0; i < this.interventionLocations.length; i++) {
-      let grouping = {
-        adminLevelLocation: null,
-        subordinateLocations: []
-      };
-      if (this.interventionLocations[i].gateway.name === adminLevel) { // gateway.name is location_type
+      let grouping = new GroupedLocations();
+
+      if (this.interventionLocations[i].gateway.name === selectedAdminLevel) { // gateway.name is location_type
         grouping.adminLevelLocation = this.interventionLocations[i];
         groupedLocations.push(grouping);
         continue;
       }
 
       // Find admin level parent location
-      let adminLevelLocation = this._findAdminLevelParent(this.interventionLocations[i], adminLevel);
+      let adminLevelLocation = this._findAdminLevelParent(this.interventionLocations[i], selectedAdminLevel);
       if (!adminLevelLocation) {
         locationsUnableToGroup.push(this.interventionLocations[i].name);
         continue;
@@ -223,15 +228,16 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     }
 
     this.groupedLocations = groupedLocations;
+    //@ts-ignore
     this.$.groupedLocDialog.notifyResize();
   }
 
-  _findInGroupedLocations(groupedLocations: [], adminLevelLocation: any) {
+  _findInGroupedLocations(groupedLocations: GroupedLocations[], adminLevelLocation: any) {
     if (!groupedLocations || !groupedLocations.length) {
       return null;
     }
     let existingGroup = groupedLocations.find(function(g) {
-      return parseInt(g.adminLevelLocation.id) === parseInt(adminLevelLocation.id);
+      return parseInt(g.adminLevelLocation!.id as unknown as string) === parseInt(adminLevelLocation.id);
     });
 
     if (!existingGroup) {
@@ -240,23 +246,24 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     return existingGroup;
   }
 
-  _findAdminLevelParent(location, adminLevel) {
+  _findAdminLevelParent(location: Location, adminLevel: string): Location | null {
     if (!location.parent) {
       return null;
     }
-    let parent = this.locations.find(function(loc) {
-      return parseInt(loc.id) === parseInt(location.parent);
+    let parentLoc: Location = this.locations.find(function(loc: any) {
+      return parseInt(loc.id) === parseInt(location.parent as string);
     });
-    if (!parent) {
+    if (!parentLoc) {
       return null;
     }
-    if (parent.gateway.name === adminLevel) {
-      return parent;
+    if (parentLoc.gateway.name === adminLevel) {
+      return parentLoc;
     }
-    return this._findAdminLevelParent(parent, adminLevel);
+    return this._findAdminLevelParent(parentLoc, adminLevel);
   }
 
   open() {
+    // @ts-ignore
     this.$.groupedLocDialog.opened = true;
   }
 

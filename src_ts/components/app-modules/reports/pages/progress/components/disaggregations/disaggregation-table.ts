@@ -1,12 +1,12 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin';
 
-import './table-content/three-disaggregations.js';
-import './table-content/two-disaggregations.js';
-import './table-content/one-disaggregation.js';
-import './table-content/zero-disaggregations.js';
+import './table-content/three-disaggregations';
+import './table-content/two-disaggregations';
+import './table-content/one-disaggregation';
+import './table-content/zero-disaggregations';
 import { disaggregationTableStyles } from './styles/disaggregation-table-styles';
-
+import {Disaggregation} from '../../../../../../../typings/intervention.types';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -17,7 +17,7 @@ import { disaggregationTableStyles } from './styles/disaggregation-table-styles'
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class DisaggregationTable extends UtilsMixin(PolymerElement) {
+class DisaggregationTable extends (UtilsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get is() {
@@ -184,7 +184,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     }
   }
 
-  _resetFields(reportedOn) {
+  _resetFields(reportedOn: any) {
     if (typeof reportedOn === 'undefined') {
       return;
     }
@@ -199,7 +199,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     }
   }
 
-  _computeEditableBool(editable) {
+  _computeEditableBool(editable: number) {
     return editable === 1;
   }
 
@@ -211,19 +211,19 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     }
     let reportedOn = formattedData.disaggregation_reported_on;
 
-    return editableBool ? mapping.filter(function(disagg) {
+    return editableBool ? mapping.filter(function(disagg: Disaggregation) {
       return reportedOn.indexOf(disagg.id) !== -1;
     }) : mapping;
   }
 
-  _computeIndicatorType(data) {
+  _computeIndicatorType(data: any) {
     if (typeof data === 'undefined') {
       return;
     }
     return data.display_type;
   }
 
-  _cloneData(data) {
+  _cloneData(data: any) {
     if (typeof data === 'undefined') {
       return;
     }
@@ -231,7 +231,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     this.set('totals', JSON.parse(JSON.stringify(this.formattedData.disaggregation)));
   }
 
-  _computeViewData(data, totals) {
+  _computeViewData(data: any, totals: number) {
     return Object.assign({}, data, {
       disaggregation: Object.assign({}, data.disaggregation, totals)
     });

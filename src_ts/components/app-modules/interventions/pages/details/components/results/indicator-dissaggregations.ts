@@ -4,8 +4,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-dropdown/etools-dropdown.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { DomRepeatEvent } from '../../../../../../../typings/globals.types';
 import { Disaggregation } from '../../../../../../../typings/intervention.types';

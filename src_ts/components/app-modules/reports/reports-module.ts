@@ -8,32 +8,30 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
-import '../../layout/page-content-header.js';
-import '../../layout//page-content-header-slotted-styles.js';
-import '../../layout/etools-tabs.js';
+import '../../layout/page-content-header';
+import '../../layout//page-content-header-slotted-styles';
+import '../../layout/etools-tabs';
 
-import './components/report-status.js';
-import './components/report-rating-dialog.js';
-import './components/report-reject-dialog.js';
-import { User } from '../../../typings/globals.types.js';
-import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
-import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
-import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import ScrollControl from '../../mixins/scroll-control-mixin.js';
-import { pageLayoutStyles } from '../../styles/page-layout-styles.js';
-import { SharedStyles } from '../../styles/shared-styles.js';
-import { buttonsStyles } from '../../styles/buttons-styles.js';
-import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header-slotted-styles.js';
-import ReportDetailsMixin from './mixins/report-details-mixin.js';
-import { fireEvent } from '../../utils/fire-custom-event.js';
-import { isEmptyObject } from '../../utils/utils.js';
+import './components/report-status';
+import './components/report-rating-dialog';
+import './components/report-reject-dialog';
+import {GenericObject, User} from '../../../typings/globals.types';
+import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
+import ModuleRoutingMixin from '../mixins/module-routing-mixin';
+import EndpointsMixin from '../../endpoints/endpoints-mixin';
+import ScrollControl from '../../mixins/scroll-control-mixin';
+import { pageLayoutStyles } from '../../styles/page-layout-styles';
+import { SharedStyles } from '../../styles/shared-styles';
+import { buttonsStyles } from '../../styles/buttons-styles';
+import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header-slotted-styles';
+import ReportDetailsMixin from './mixins/report-details-mixin';
+import { fireEvent } from '../../utils/fire-custom-event';
+import { isEmptyObject } from '../../utils/utils';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../store.js';
+import { store, RootState } from '../../../store';
 declare const moment: any;
 
 /**
@@ -406,7 +404,7 @@ class ReportsModule extends connect(store)(ReportsModuleRequiredMixins) {
       return;
     }
 
-    let params = {};
+    let params: GenericObject = {};
 
     if (typeof reportsList.queryParams.pd_ref_title === 'string' && reportsList.queryParams.pd_ref_title !== '') {
       params.pd_ref_title = reportsList.queryParams.pd_ref_title;
@@ -439,7 +437,7 @@ class ReportsModule extends connect(store)(ReportsModuleRequiredMixins) {
     params.export = type;
 
     this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params})
-        .then(blob => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+        .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
   }
 
   _downloadAnexC() {
@@ -467,10 +465,10 @@ class ReportsModule extends connect(store)(ReportsModuleRequiredMixins) {
     }
 
     this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
-        .then(blob => this._handleBlobDataReceivedAndStartDownload(blob, filename));
+        .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename));
   }
 
-  _handleBlobDataReceivedAndStartDownload(blob: any, filename: string) {
+  _handleBlobDataReceivedAndStartDownload(blob: Blob, filename: string) {
     if (window.navigator.userAgent.indexOf('Trident/') > -1) {
       window.navigator.msSaveBlob(blob, filename);
     } else {

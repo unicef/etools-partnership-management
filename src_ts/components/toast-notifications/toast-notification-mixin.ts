@@ -1,5 +1,4 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import './etools-toast'
 
@@ -8,6 +7,7 @@ import './etools-toast'
  * @mixinFunction
  */
 const ToastNotifications = dedupingMixin((baseClass: any) =>
+    // @ts-ignore
     class extends EtoolsLogsMixin(baseClass) {
       static get properties() {
         return {

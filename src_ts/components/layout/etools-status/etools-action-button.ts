@@ -16,6 +16,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @customElement
  */
 class EtoolsActionButton extends PolymerElement {
+  [x: string]: any;
 
   static get template() {
     return html`
@@ -140,7 +141,7 @@ class EtoolsActionButton extends PolymerElement {
     return ['_actionsChanged(actions, actions.*)'];
   }
 
-  _actionsChanged(actions, actionsData) {
+  _actionsChanged(actions: any[], actionsData: any) {
     if (typeof actions === 'undefined' && typeof actionsData === 'undefined') {
       return;
     }
@@ -160,11 +161,11 @@ class EtoolsActionButton extends PolymerElement {
     this.set('primaryAction', null);
     this.set('secondaryActions', []);
 
-    let primaryAction = actions.find((elem) => {
+    let primaryAction = actions.find((elem: any) => {
       return elem.primary && !elem.hidden;
     });
 
-    let secondaryActions = actions.filter((elem) => {
+    let secondaryActions = actions.filter((elem: any) => {
       return !elem.primary && !elem.hidden;
     });
 

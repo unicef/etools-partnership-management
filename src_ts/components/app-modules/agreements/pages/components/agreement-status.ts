@@ -1,8 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/av-icons.js';
 import CONSTANTS from '../../../../../config/app-constants';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-status-common-mixin';
 import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
@@ -14,7 +12,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
+class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
   [x: string]: any;
   static get template() {
     return html`

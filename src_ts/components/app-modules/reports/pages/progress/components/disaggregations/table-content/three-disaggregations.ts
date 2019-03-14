@@ -1,8 +1,8 @@
 import '../disaggregation-table-row.js';
 import { PolymerElement, html } from '@polymer/polymer';
-import UtilsMixin from '../../../../../../../mixins/utils-mixin.js';
-import DisaggregationsMixin from '../mixins/disaggregations.js';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles.js';
+import UtilsMixin from '../../../../../../../mixins/utils-mixin';
+import DisaggregationsMixin from '../mixins/disaggregations';
+import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
 
 
 
@@ -12,7 +12,7 @@ import { disaggregationTableStyles } from '../styles/disaggregation-table-styles
  * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin
  */
-class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)) {
+class ThreeDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement)) as any) {
 
   static get is() {
     return 'three-disaggregations';
@@ -105,50 +105,50 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
     return ['_determineTotals(columns, middleRows, data)'];
   }
 
-  _getColumns(mapping) {
+  _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {
       return;
     }
     return (mapping[0] || []).choices;
   }
 
-  _getRows(mapping) {
+  _getRows(mapping: any) {
     if (typeof mapping === 'undefined') {
       return;
     }
     return (mapping[1] || []).choices;
   }
 
-  _getMiddleRows(mapping) {
+  _getMiddleRows(mapping: any) {
     if (!mapping) {
       return;
     }
     return (mapping[2] || []).choices;
   }
 
-  _determineOuterRows(columns, rows) {
+  _determineOuterRows(columns: any[], rows: any[]) {
     if (typeof columns === 'undefined' || typeof rows === 'undefined') {
       return;
     }
     return this._determineRows(this, rows, columns);
   }
 
-  _determineMiddleRows(outerRowID, columns, middleRows, data) {
+  _determineMiddleRows(outerRowID: any, columns: any[], middleRows: any[], data: any) {
     if (!columns || !middleRows) {
       return [];
     }
 
-    return middleRows.map(function(y) {
+    return middleRows.map((y: any) => {
       let formatted;
 
-      let columnData = columns.map(function(z) {
+      let columnData = columns.map((z: any) => {
         formatted = this._formatDisaggregationIds([outerRowID, y.id, z.id]);
 
         return {
           key: formatted,
           data: data.disaggregation[formatted]
         };
-      }, this);
+      });
 
       formatted = this._formatDisaggregationIds([outerRowID, y.id]);
 
@@ -161,21 +161,21 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
           data: data.disaggregation[formatted]
         }
       };
-    }, this);
+    });
   }
 
-  _determineTotals(columns, middleRows, data) {
+  _determineTotals(columns: any[], middleRows: any[], data: any) {
     if (typeof columns === 'undefined' || typeof middleRows === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map(function(z) {
+    let columnData = columns.map((z: any) => {
       let formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         key: formatted,
         data: data.disaggregation[formatted]
       };
-    }, this);
+    });
 
     let columnTotalRow = {
       title: 'total',

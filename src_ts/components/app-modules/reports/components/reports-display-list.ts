@@ -1,22 +1,22 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
-import 'etools-data-table/etools-data-table.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import './report-status.js';
+import 'etools-data-table/etools-data-table';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
+import './report-status';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { fireEvent } from '../../../utils/fire-custom-event.js';
-import { User } from '../../../../typings/globals.types.js';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import CommonMixin from '../../../mixins/common-mixin.js';
-import PaginationMixin from '../../../mixins/pagination-mixin.js';
-import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
+import { fireEvent } from '../../../utils/fire-custom-event';
+import {GenericObject, User} from '../../../../typings/globals.types';
+import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
+import EndpointsMixin from '../../../endpoints/endpoints-mixin';
+import CommonMixin from '../../../mixins/common-mixin';
+import PaginationMixin from '../../../mixins/pagination-mixin';
+import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../store.js';
-import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils.js';
+import { store, RootState } from '../../../../store';
+import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils';
 
 
 
@@ -252,7 +252,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
     }
   }
 
-  _loadReportsData(prpCountries: any, interventionId: string, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
+  _loadReportsData(prpCountries: any, interventionId: number, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
     if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) ||
      isEmptyObject(prpCountries)) {
       return;
@@ -263,7 +263,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
         () => {
           let params = this._prepareReqParamsObj(interventionId);
 
-          if (JSON.stringify(this._lastParamsUsed) === JSON.stringify(params) ||
+          if (isJsonStrMatch(this._lastParamsUsed, params) ||
               (this.noPdSsfaRef && !params.programme_document_ext)) {
             return;
           }
@@ -290,7 +290,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
                 }
                 fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
               })
-              .catch((error) => {
+              .catch((error: any) => {
                 if (error.status === 0) {
                   // req aborted
                   return;
@@ -304,8 +304,8 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
         });
   }
 
-  _prepareReqParamsObj(interventionId) {
-    let params = {};
+  _prepareReqParamsObj(interventionId: number) {
+    let params: GenericObject = {};
     if (interventionId > 0) {
       params.programme_document_ext = interventionId;
     }
@@ -318,14 +318,14 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
   }
 
   _preserveExistingQueryParams() {
-    let params = {};
+    let params: GenericObject = {};
     if (!isEmptyObject(this.queryParams)) {
-      Object.keys(this.queryParams).forEach(function(k) {
+      Object.keys(this.queryParams).forEach((k: any) => {
         if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
             (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
           params[k] = this.queryParams[k];
         }
-      }.bind(this));
+      });
     }
     return params;
   }
@@ -334,7 +334,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
     return this.waitQueryParamsInit && !qParamsData.value && qParamsData.path === 'queryParams';
   }
 
-  _displayOrDefault(val) {
+  _displayOrDefault(val: any) {
     if (!val) {
       return '-';
     }

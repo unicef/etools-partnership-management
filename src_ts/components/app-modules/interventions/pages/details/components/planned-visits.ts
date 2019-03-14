@@ -21,7 +21,7 @@ import { fireEvent } from '../../../../../utils/fire-custom-event.js';
  * @customElement
  * @appliesMixin RepeatableDataSets
  */
-class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
+class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
 
   static get template() {
     return html`
@@ -243,11 +243,11 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   validate() {
     let valid = true;
-    this.dataItems.forEach(function(item: PlannedVisit, index: number) {
+    this.dataItems.forEach((item: PlannedVisit, index: number) => {
       if (!(this._validateYear(index) && this._validateQuarters(item, index))) {
         valid = false;
       }
-    }.bind(this));
+    });
 
     return valid;
   }

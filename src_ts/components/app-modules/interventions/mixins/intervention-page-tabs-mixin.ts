@@ -8,7 +8,7 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
  * @appliesMixin EnvironmentFlags
  */
 const InterventionPageTabsMixin = dedupingMixin(
-(superClass: any) => class extends EnvironmentFlags(superClass) {
+(superClass: any) => class extends (EnvironmentFlags(superClass) as any) {
   static get properties() {
     return {
       /**

@@ -45,7 +45,7 @@ class SentBkComments extends PolymerElement {
     };
   }
 
-  _getHeading(reviewDt, reviewedBy) {
+  _getHeading(reviewDt: string, reviewedBy: string) {
     if (!reviewDt && !reviewedBy) {
       return '';
     }

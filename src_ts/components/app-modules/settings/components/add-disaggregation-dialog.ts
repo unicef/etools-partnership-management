@@ -3,21 +3,21 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
-import {buttonsStyles} from "../../../styles/buttons-styles";
+import {buttonsStyles} from '../../../styles/buttons-styles';
 import { SharedStyles } from '../../../styles/shared-styles.js';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../../../store";
-import {addDisaggregation} from "../../../../actions/common-data";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../../../store';
+import {addDisaggregation} from '../../../../actions/common-data';
 import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
-
+import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
 
 
 /**
@@ -120,15 +120,6 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
       dataItems: {
         type: Array
       },
-      disaggregationModel: {
-        type: Object,
-        value: {
-          id: null,
-          active: true,
-          name: undefined,
-          disaggregation_values: []
-        }
-      },
       toastEventSource: {
         type: Object
       },
@@ -148,16 +139,16 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     this.editMode = true;
   }
 
-  broadcastAddDisaggregToOtherTabs(disaggregation: any) {
-    localStorage.setItem('update-redux', {
+  broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
+    localStorage.setItem('update-redux', JSON.stringify({
       type: 'ADD_DISAGGREGATION',
       disaggregation: disaggregation
-    });
+    }));
     localStorage.removeItem('update-redux');
   }
 
   initializeDisaggregation() {
-    this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
+    this.disaggregation = new Disaggregation();
   }
 
   open() {
@@ -178,7 +169,7 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     this.$.etoolsDialog.stopSpinner();
   }
 
-  _disaggregationChanged(disaggreg: any) {
+  _disaggregationChanged(disaggreg: Disaggregation) {
     this.set('dataItems', disaggreg.disaggregation_values);
     if (!this.dataItems) {
       this.dataItems = [];
@@ -219,10 +210,11 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
     return this.disaggregation;
   }
 
-  _cleanUpDisaggregations(disaggregs: any) {
+  _cleanUpDisaggregations(disaggregs: DisaggregationValue[]) {
     if (!disaggregs || !disaggregs.length) {
       return;
     }
+
     let i;
     for (i = 0; i < disaggregs.length; i++) {
       if (disaggregs[i] !== undefined && this._isEmpty(disaggregs[i].value)) {

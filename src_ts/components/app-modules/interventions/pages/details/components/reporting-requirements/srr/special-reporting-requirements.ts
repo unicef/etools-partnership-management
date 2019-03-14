@@ -3,9 +3,7 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-data-table/etools-data-table.js';
 
 import 'etools-dialog/dynamic-dialog-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
@@ -131,15 +129,21 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
 
   _setDialogData(e: CustomEvent) {
     this.addEditDialog.interventionId = this.interventionId;
-    this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+    if (e.target !== null) {
+      // @ts-ignore
+      this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+    }
   }
 
   _onDelete(e: CustomEvent) {
     e.stopPropagation();
     if (this._deleteConfirmationDialog) {
-      let itemToDelete = JSON.parse(e.target.getAttribute('item'));
-      let index = this._getIndexById(itemToDelete.id);
-      this.set('_itemToDeleteIndex', index);
+      if (e.target !== null) {
+        // @ts-ignore
+        let itemToDelete = JSON.parse(e.target.getAttribute('item'));
+        let index = this._getIndexById(itemToDelete.id);
+        this.set('_itemToDeleteIndex', index);
+      }
       this._deleteConfirmationDialog.opened = true;
     }
   }
@@ -218,6 +222,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
 
   _sortRequirementsAsc() {
     this.reportingRequirements.sort((a: string, b: string) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }
@@ -227,7 +232,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
   }
 
   _getIndexById(id: number) {
-    return this.reportingRequirements.findIndex(r => r.id === id);
+    return this.reportingRequirements.findIndex((r: any) => r.id === id);
   }
 
   _onSpecialReportingRequirementsSaved(e: CustomEvent) {

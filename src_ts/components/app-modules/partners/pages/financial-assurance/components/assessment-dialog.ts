@@ -4,8 +4,7 @@ import 'etools-date-time/datepicker-lite.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
@@ -13,9 +12,9 @@ import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixi
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {RootState, store} from "../../../../../../store";
-import {isJsonStrMatch} from "../../../../../utils/utils";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {RootState, store} from '../../../../../../store';
+import {isJsonStrMatch} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 
 /**

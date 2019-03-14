@@ -1,19 +1,24 @@
 import { PolymerElement } from '@polymer/polymer';
-import {store} from '../../../../store.js';
-// @ts-ignore
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {store} from '../../../../store';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
 import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
 import CONSTANTS from '../../../../config/app-constants';
-import { RootState } from '../../../../store.js';
-import { isJsonStrMatch } from '../../../utils/utils.js';
+import { RootState } from '../../../../store';
+import { isJsonStrMatch } from '../../../utils/utils';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { ListItemIntervention, SelectedSection, FrsDetails, Intervention } from '../../../../typings/intervention.types.js';
-import { Agreement } from '../../agreements/agreement.types.js';
-import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {
+  ListItemIntervention,
+  SelectedSection,
+  FrsDetails,
+  Intervention,
+  InterventionAttachment,
+  PlannedVisit, ExpectedResult
+} from '../../../../typings/intervention.types';
+import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
+import { fireEvent } from '../../../utils/fire-custom-event';
 
 
 /**
@@ -29,7 +34,7 @@ const InterventionItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
   AjaxServerErrorsMixin,
   EnvironmentFlags,
-], PolymerElement)
+], PolymerElement);
 
 /**
  * @polymer
@@ -208,7 +213,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
   }
 
   _getMinimalAgreementData(detail: Agreement) {
-    let minimalAgrData = {
+    let minimalAgrData: MinimalAgreement = {
       agreement_number: '',
       agreement_number_status: '',
       agreement_type: '',
@@ -222,7 +227,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
       start: null,
       status: ''
     };
-    let propName;
+    let propName: string;
     for (propName in minimalAgrData) {
       if (!detail.hasOwnProperty(propName)) {
         this.logWarn('Mapping property not found');
@@ -233,12 +238,12 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     return minimalAgrData;
   }
 
-  _hasFiles(list: [], property: string) { //TODO
+  _hasFiles(list: InterventionAttachment[], property: string) {
     if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
       return false;
     }
     let hasF = false;
-    let i;
+    let i: number;
     for (i = 0; i < list.length; i++) {
       if (list[i][property] instanceof File) {
         hasF = true;
@@ -329,7 +334,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
         });
       }
       if (Array.isArray(intervention.planned_visits)) {
-        intervention.planned_visits = intervention.planned_visits.filter(function(elem) {
+        intervention.planned_visits = intervention.planned_visits.filter(function(elem: PlannedVisit) {
           return elem.year || elem.programmatic;
         });
       }
@@ -368,9 +373,9 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     this._updateSections(dexieObject, responseDetail);
     this._updatePlannedBudgetInfo(dexieObject, responseDetail);
     this._updateOffices(dexieObject, responseDetail);
-    this._updateFrInfo(dexieObject, responseDetail.frs_details, responseDetail.planned_budget!.currency);
+    this._updateFrInfo(dexieObject, responseDetail.frs_details, responseDetail.planned_budget!.currency as string);
 
-    responseDetail.result_links.forEach(function(elem: any) {
+    responseDetail.result_links.forEach(function(elem: ExpectedResult) {
       dexieObject.cp_outputs.push(elem.cp_output);
     });
 
@@ -384,11 +389,11 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
   }
 
   _updatePlannedBudgetInfo(dexieObject: ListItemIntervention, intervention: Intervention) {
-    dexieObject.unicef_budget = parseFloat(intervention.planned_budget!.unicef_cash_local) +
-        parseFloat(intervention.planned_budget!.in_kind_amount_local);
-    dexieObject.cso_contribution = parseFloat(intervention.planned_budget!.partner_contribution_local);
+    dexieObject.unicef_budget = parseFloat(intervention.planned_budget!.unicef_cash_local as string) +
+        parseFloat(intervention.planned_budget!.in_kind_amount_local as string);
+    dexieObject.cso_contribution = parseFloat(intervention.planned_budget!.partner_contribution_local as string);
     dexieObject.total_budget = dexieObject.unicef_budget + dexieObject.cso_contribution;
-    dexieObject.unicef_cash = parseFloat(intervention.planned_budget!.unicef_cash_local);
+    dexieObject.unicef_cash = parseFloat(intervention.planned_budget!.unicef_cash_local as string);
     dexieObject.budget_currency = intervention.planned_budget!.currency;
   }
 

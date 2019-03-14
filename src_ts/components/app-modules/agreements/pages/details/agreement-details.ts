@@ -14,8 +14,7 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-date-time/datepicker-lite';
 
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { DECREASE_UPLOADS_IN_PROGRESS, DECREASE_UNSAVED_UPLOADS, INCREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status';
 import { store, RootState } from '../../../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';

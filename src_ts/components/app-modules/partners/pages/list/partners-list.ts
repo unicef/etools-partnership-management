@@ -16,9 +16,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';

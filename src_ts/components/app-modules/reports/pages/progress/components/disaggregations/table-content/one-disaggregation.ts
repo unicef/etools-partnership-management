@@ -1,8 +1,7 @@
-
 import { PolymerElement, html } from '@polymer/polymer';
-import '../disaggregation-table-row.js';
-import DisaggregationsMixin from '../mixins/disaggregations.js';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles.js';
+import '../disaggregation-table-row';
+import DisaggregationsMixin from '../mixins/disaggregations';
+import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
 
 
 /**
@@ -89,7 +88,7 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
     if (typeof columns === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    return columns.map(function(z) {
+    return columns.map((z: any) => {
       let formatted = this._formatDisaggregationIds([z.id]);
 
       return {
@@ -99,7 +98,7 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
           data: data.disaggregation[formatted]
         }]
       };
-    }, this);
+    });
   }
 
 }

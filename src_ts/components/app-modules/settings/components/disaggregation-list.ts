@@ -1,24 +1,26 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
-import "etools-content-panel/etools-content-panel.js";
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-import 'etools-data-table/etools-data-table.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import UserPermissionsMixin from '../../../user/user-permissions-mixin.js';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
-
-import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin.js';
+import 'etools-content-panel/etools-content-panel';
+import 'etools-data-table/etools-data-table';
+import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
+import EndpointsMixin from '../../../endpoints/endpoints-mixin';
+import UserPermissionsMixin from '../../../user/user-permissions-mixin';
+import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 
-import './add-disaggregation-dialog.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {RootState, store} from "../../../../store";
-import {patchDisaggregation} from "../../../../actions/common-data.js";
-import EnvironmentFlags from "../../../environment-flags/environment-flags-mixin";
-import {isJsonStrMatch} from "../../../utils/utils";
+import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
+import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
+
+import './add-disaggregation-dialog';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {RootState, store} from '../../../../store';
+import {patchDisaggregation} from '../../../../actions/common-data';
+import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import {isJsonStrMatch} from '../../../utils/utils';
+import {Disaggregation} from '../../../../typings/intervention.types';
+import {EnvFlags} from "../../../environment-flags/environment-flags";
 
 /**
  * @polymer
@@ -194,24 +196,24 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     }
   }
 
-  broadcastPatchDisaggregToOtherTabs(disaggregation) {
-    localStorage.setItem('update-redux', {
+  broadcastPatchDisaggregToOtherTabs(disaggregation: Disaggregation) {
+    localStorage.setItem('update-redux', JSON.stringify({
       type: 'PATCH_DISAGGREGATION',
       disaggregation: disaggregation
-    });
+    }));
     localStorage.removeItem('update-redux');
   }
 
-  _filterData(disaggregations: any, q: any) {
+  _filterData(disaggregations: Disaggregation[], q: any) {
     if (!(disaggregations instanceof Array && disaggregations.length > 0)) {
       return [];
     }
     let filteredDisaggregations = JSON.parse(JSON.stringify(disaggregations));
-    filteredDisaggregations = filteredDisaggregations.filter(e => this._applyQFilter(e, q));
+    filteredDisaggregations = filteredDisaggregations.filter((d: Disaggregation) => this._applyQFilter(d, q));
     return filteredDisaggregations;
   }
 
-  _applyQFilter(d: any, q: any) {
+  _applyQFilter(d: Disaggregation, q: any) {
     if (!q || q === '') {
       return true;
     }
@@ -245,7 +247,8 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
     return !this.disaggregations || !this.disaggregations.length;
   }
 
-  _disagregationsChanged(disaggregs: any, EnvironmentFlags: any) {
+  // @ts-ignore
+  _disagregationsChanged(disaggregs: Disaggregation[], environmentFlags: EnvFlags) {
     if (!disaggregs || !disaggregs.length) {
       this.dataItems = [];
       return;

@@ -1,10 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
-// @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
@@ -102,7 +100,7 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
     };
     if (!lowerResult.result_link) {
       this.logError('Expected result ID is missing! Can not save lower result name.', 'lower-result-name-modal');
-      return;
+      return false;
     }
 
     let endpoint;
@@ -114,7 +112,7 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
       endpoint = this.getEndpoint('pdLowerResultDetails', {llResultId: this.lowerResultId});
       method = 'PATCH';
     }
-    this._saveLowerResult(endpoint, method, lowerResult, this._lowerResultSuccessfullySaved);
+    return this._saveLowerResult(endpoint, method, lowerResult, this._lowerResultSuccessfullySaved);
   }
 
   _saveLowerResult(endpoint: any, method: string, lowerResultData: any, successCallback: any) {
@@ -122,7 +120,7 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
     this.set('disableConfirmBtn', true);
     let dialog = this.$.pdLowerResultNameDialog;
     dialog.startSpinner();
-    this.sendRequest({
+    return this.sendRequest({
       method: method,
       endpoint: endpoint,
       body: lowerResultData
@@ -132,10 +130,12 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
       if (typeof successCallback === 'function') {
         successCallback.bind(self, response)();
       }
+      return true;
     }).catch(function(error: any) {
       dialog.stopSpinner();
       self.set('disableConfirmBtn', false);
       self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      return false;
     });
   }
 

@@ -6,11 +6,8 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-behaviors/etools-logs-mixin.js';
-// @ts-ignore
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-// @ts-ignore
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
@@ -30,8 +27,10 @@ import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { listFilterStyles } from '../../../../styles/list-filter-styles.js';
 import { isEmptyObject } from '../../../../utils/utils.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-
-
+import { User } from '../../../../../typings/globals.types.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../store.js';
+declare const moment: any;
 
 /**
  * @polymer
@@ -59,7 +58,7 @@ const InterventionProgressMixins = EtoolsMixinFactory.combineMixins([
  * @customElement
  * @appliesMixin InterventionProgressMixins
  */
-class InterventionProgress extends InterventionProgressMixins {
+class InterventionProgress extends connect(store)(InterventionProgressMixins) {
   [x: string]: any;
 
   static get template() {
@@ -300,9 +299,13 @@ class InterventionProgress extends InterventionProgressMixins {
 
   static get observers() {
     return [
-      // `prpCountries` and `currentUser` are defined in endpoint behavior
+      // `prpCountries` and `currentUser` are defined in endpoint mixin
       '_requestProgressData(interventionId, prpCountries, currentUser)'
     ];
+  }
+
+  stateChanged(state: RootState) {
+    this.endStateChanged(state);
   }
 
   connectedCallback() {
@@ -315,7 +318,7 @@ class InterventionProgress extends InterventionProgressMixins {
     fireEvent(this, 'tab-content-attached');
   }
 
-  _requestProgressData(id, prpCountries, currentUser) {
+  _requestProgressData(id: string, prpCountries: any, currentUser: User) {
     if (!id || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
       return;
     }
@@ -338,15 +341,15 @@ class InterventionProgress extends InterventionProgressMixins {
     });
   }
 
-  _emptyList(dataSet) {
+  _emptyList(dataSet: any) {
     return isEmptyObject(dataSet);
   }
 
-  _computeLatestAcceptedPr(progress) {
+  _computeLatestAcceptedPr(progress: any) {
     return (progress && progress.latest_accepted_pr) ? progress.latest_accepted_pr : null;
   }
 
-  _progressDataObjChanged(progress) {
+  _progressDataObjChanged(progress: any) {
     if (!progress) {
       this.set('indicatorReports', []);
       return;
@@ -371,7 +374,7 @@ class InterventionProgress extends InterventionProgressMixins {
     if (this._emptyList(progressIndicatorReports)) {
       return;
     }
-    indicatorReportData.reports = progressIndicatorReports.filter(function(report) {
+    indicatorReportData.reports = progressIndicatorReports.filter(function(report: any) {
       return report.reportable_object_id === lowerResultId;
     });
     this.push('indicatorReports', indicatorReportData);
@@ -379,7 +382,7 @@ class InterventionProgress extends InterventionProgressMixins {
 
   _countIndicatorReports(lowerResultId: any) {
     return !this._emptyList(this.indicatorReports) &&
-        !!this.indicatorReports.find(function(indReports) {
+        !!this.indicatorReports.find(function(indReports: any) {
           return indReports.lowerResultId === lowerResultId;
         });
   }
@@ -388,7 +391,7 @@ class InterventionProgress extends InterventionProgressMixins {
     if (this._emptyList(this.indicatorReports)) {
       return [];
     }
-    let indicatorsReports = this.indicatorReports.filter(function(indReports) {
+    let indicatorsReports = this.indicatorReports.filter(function(indReports: any) {
       return indReports.lowerResultId === lowerResultId;
     });
     return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
@@ -399,7 +402,7 @@ class InterventionProgress extends InterventionProgressMixins {
     */
   _getLatestIndicatorReport(lowerResultId: any) {
     if (!this._emptyList(this.indicatorReports)) {
-      let indReports = this.indicatorReports.find(function(indReports) {
+      let indReports = this.indicatorReports.find(function(indReports: any) {
         return indReports.lowerResultId === lowerResultId;
       });
       if (indReports && indReports.reports[0]) {
@@ -418,7 +421,7 @@ class InterventionProgress extends InterventionProgressMixins {
     return status;
   }
 
-  _getLowerResultStatusDate(lowerResultId) {
+  _getLowerResultStatusDate(lowerResultId: any) {
     let resultStatusDateStr = '';
     let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
     if (latestIndReport) {
@@ -428,16 +431,16 @@ class InterventionProgress extends InterventionProgressMixins {
     return resultStatusDateStr;
   }
 
-  _getPdDuration(start, end) {
+  _getPdDuration(start: string, end: string) {
     start = this._convertToDisplayFormat(start) || 'N/A';
     end = this._convertToDisplayFormat(end) || 'N/A';
     return start + ' - ' + end;
   }
 
-  _getTimeProgress(start, end) {
+  _getTimeProgress(start: string, end: string) {
     let today = new Date();
-    let startDt = this._EdgeAcceptableDateParse(start);
-    let endDt = this._EdgeAcceptableDateParse(end);
+    let startDt = this.EdgeAcceptableDateParse(start);
+    let endDt = this.EdgeAcceptableDateParse(end);
     try {
       if (this.dateIsBetween(startDt, endDt, today)) {
         let intervalTotalDays = this.dateDiff(startDt, endDt);
@@ -455,16 +458,16 @@ class InterventionProgress extends InterventionProgressMixins {
     return 0;
   }
 
-  _getCashProgress(actual, total) {
+  _getCashProgress(actual: string, total: string) {
     return parseFloat(actual) * 100 / parseFloat(total);
   }
 
-  _getOverallPdStatusDate(date) {
+  _getOverallPdStatusDate(date: string) {
     return date ? ('(' + this._convertToDisplayFormat(date) + ')') : '';
   }
 
   _convertToDisplayFormat(strDt: string) {
-    return moment(this._EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+    return moment(this.EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
   }
 
 }

@@ -3,18 +3,18 @@ import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-l
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import {store, RootState} from "../../../store";
-import {isProductionServer, isStagingServer} from '../../../config/config.js';
-import {updateDrawerState} from "../../../actions/app";
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
-import 'etools-profile-dropdown/etools-profile-dropdown.js';
-import 'etools-app-selector/etools-app-selector.js'
-import '../header/countries-dropdown.js';
-import ProfileOperations from "../../user/profile-operations-mixin";
-import {isJsonStrMatch} from "../../utils/utils";
+import { connect } from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {isProductionServer, isStagingServer} from '../../../config/config';
+import {updateDrawerState} from '../../../actions/app';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
+import 'etools-profile-dropdown/etools-profile-dropdown';
+import 'etools-app-selector/etools-app-selector'
+import '../header/countries-dropdown';
+import ProfileOperations from '../../user/profile-operations-mixin';
+import {isJsonStrMatch} from '../../utils/utils';
 import { fireEvent } from '../../utils/fire-custom-event';
+import {GenericObject} from "../../../typings/globals.types";
 
 /**
  * page header mixin
@@ -110,7 +110,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
         <div class="content-align">
           <countries-dropdown id="countries" countries="[[countries]]"
                               current-country="[[profile.country]]">
-                              </countries-dropdown>
+          </countries-dropdown>
 
           <etools-profile-dropdown
               sections="[[allSections]]"
@@ -257,7 +257,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
 
   public _saveProfile(e: any) {
     let modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
-    // @ts-ignore
     this.saveProfile(modifiedFields);
   }
 
@@ -277,10 +276,9 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
   }
 
   protected _getModifiedFields(originalData: any, newData: any) {
-    let modifiedFields = {};
+    let modifiedFields: GenericObject = {};
     this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
-        // @ts-ignore
         modifiedFields[field] = newData[field];
       }
     });

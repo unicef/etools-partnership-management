@@ -15,13 +15,14 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
 
 import './pd-lower-result-name.js';
 import './applied-indicators.js';
+import { Indicator } from '../../../../../../../typings/intervention.types.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin RepeatableDataSetsMixin
  */
-class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
+class ResultLinkLowerResults extends (RepeatableDataSetsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {
@@ -119,7 +120,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
       <div class="lower-results-list" hidden$="[[_emptyList(dataItems.length)]]">
         <div class="header-container header-text border-b">
-          <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
+          <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD Output or SSFA Expected Result</div>
           <div class="col flex-c">
             <div class="col col-8">Performance Indicator</div>
             <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
@@ -161,7 +162,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
       <div class="add-btn-row border-t" hidden$="[[!editMode]]">
         <paper-icon-button icon="add-box"
                           on-tap="_addNewLowerResult"
-                          title="Add PD or SSFA OUTPUT"
+                          title="Add PD or SSFA Expected Result"
                           disabled$="[[!editMode]]">
           Add PD output or SSFA expected result
         </paper-icon-button>
@@ -232,7 +233,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     }
   }
 
-  allIndicatorsAreInactive(indicators: []) {
+  allIndicatorsAreInactive(indicators: Indicator[]) {
     this.forceVisibilityRecalc = false;
     let allIndicatorsAreDeactivated = indicators instanceof Array && indicators.length > 0 &&
         indicators.every(i => !i.is_active);

@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-data-table/etools-data-table.js';
-// @ts-ignore
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../../../../../../layout/icons-actions.js';
 import '../mixins/reporting-req-past-dates-check.js';
@@ -96,6 +95,7 @@ class QprList extends EtoolsMixinFactory.combineMixins([
 
   _sortRequirementsAsc() {
     this.qprData.sort((a: string, b: string) => {
+      // @ts-ignore
       return new Date(a.due_date) - new Date(b.due_date);
     });
   }
