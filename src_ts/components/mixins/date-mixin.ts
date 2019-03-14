@@ -8,6 +8,7 @@ declare const moment: any;
  * @appliesMixin EtoolsLogsMixin
  */
 const DateMixin = dedupingMixin((baseClass: any) =>
+  // @ts-ignore
   class extends (EtoolsLogsMixin(baseClass) as any) {
 
     public prettyDate(dateString: string, format: string, placeholder: string) {

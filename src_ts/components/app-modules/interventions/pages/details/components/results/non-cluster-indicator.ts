@@ -324,14 +324,14 @@ class NonClusterIndicator extends EtoolsMixinFactory.combineMixins([
 
   validate() {
     let elemIds = ['titleEl', 'locationsDropdw'];
-    [].push.apply(elemIds, this._getIndicatorTargetElId());
+    ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
   resetValidations() {
     setTimeout(() => {
       let elemIds = ['titleEl', 'locationsDropdw'];
-      [].push.apply(elemIds, this._getIndicatorTargetElId());
+      ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
 
       let i;
       for (i = 0; i < elemIds.length; i++) {
