@@ -1,6 +1,8 @@
 {
   "name": "pwa-starter-kit",
   "version": "0.9.0",
+  "revision": "revNo",
+  "buildDate": "bDate",
   "contributors": [
     "The Polymer Authors"
   ],
