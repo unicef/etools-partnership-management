@@ -1,6 +1,8 @@
 {
   "name": "pwa-starter-kit",
   "version": "0.9.0",
+  "revision": "revNo",
+  "buildDate": "bDate",
   "contributors": [
     "The Polymer Authors"
   ],
@@ -8,7 +10,7 @@
   "repository": "Polymer/pwa-starter-kit",
   "scripts": {
     "build": "export NODE_OPTIONS=--max_old_space_size=4096 && npm run tsToJs && polymer build",
-    "tsToJs": "tsc || true",
+    "tsToJs": "tsc --skipLibCheck",
     "start": "gulp serve",
     "initialbuild": "tsc && npm run build:prpl-server && npm run build:static",
     "build:prpl-server": "polymer build --auto-base-path && gulp prpl-server",

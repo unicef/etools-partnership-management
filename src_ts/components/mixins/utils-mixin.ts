@@ -1,5 +1,6 @@
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
+// @ts-ignore
 const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) {
 
   _equals(a: any, b: any) {

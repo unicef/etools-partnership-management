@@ -1,4 +1,4 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 // @ts-ignore
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
@@ -7,6 +7,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
  * @mixinFunction
  */
 const ScrollControl = dedupingMixin((baseClass: any) =>
+    // @ts-ignore
     class extends EtoolsLogsMixin(baseClass) {
       public static get properties() {
         return {

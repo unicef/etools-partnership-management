@@ -7,6 +7,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
  * @appliesMixin EtoolsLogsMixin
  */
 const ArrayHelperMixin = dedupingMixin((baseClass: any) =>
+    // @ts-ignore
     class extends (EtoolsLogsMixin(baseClass) as any) {
 
       /**
