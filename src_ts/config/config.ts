@@ -25,7 +25,7 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
 // configure app dexie db to be used for caching
 window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || window.EtoolsPmpApp.DexieDb;
 
-export const BASE_URL: string = '/pmp/';
+export const BASE_URL: string = '/pmp_poly3/';
 
 const PROD_DOMAIN: string = 'etools.unicef.org';
 const STAGING_DOMAIN: string = 'etools-staging.unicef.org';
@@ -74,7 +74,7 @@ export const tokenEndpointsHost = (host: string) => {
 
 export const getDomainByEnv = () => {
   if (window.location.port === '8082') {
-    return 'http://localhost:8082/pmp';
+    return 'http://localhost:8082/pmp_poly3';
   }
   if (isStagingServer()) {
     return 'https://etools-staging.unicef.org/pmp';
