@@ -285,32 +285,32 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
     `;
   }
 
-  @property({type: Array, notify: true, observer: InterventionsList.prototype._listChanged})
-  filteredInterventions: ListItemIntervention[] ;
+  @property({ type: Array, notify: true, observer: InterventionsList.prototype._listChanged })
+  filteredInterventions!: ListItemIntervention[];
 
-  @property({type: Array})
-  documentTypes: LabelAndValue[];
+  @property({ type: Array })
+  documentTypes!: LabelAndValue[];
 
   @property({type: Array})
   selectedDocumentTypes: string[] = [];
 
-  @property({type: Array})
-  interventionStatuses: LabelAndValue[];
+  @property({ type: Array })
+  interventionStatuses!: LabelAndValue[];
 
   @property({type: Array})
   selectedStatuses: string[] = [];
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
-  startDate: string;
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  startDate!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
-  endDate: string;
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  endDate!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
-  endAfter: string;
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  endAfter!: string;
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
-  cpOutputs!: CpOutput[] = []
+  cpOutputs: CpOutput[] = []
 
   @property({type: Array})
   selectedCpOutputs: number[] = [];
@@ -348,8 +348,8 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedGrants: string[] = [];
 
-  @property({type: String, notify: true})
-  csvDownloadQs: string;
+  @property({ type: String, notify: true })
+  csvDownloadQs!: string;
 
   @property({type: String})
   _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
