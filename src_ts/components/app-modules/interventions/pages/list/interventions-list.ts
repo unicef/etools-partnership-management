@@ -1,4 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
+import {customElement, property} from '@polymer/decorators';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icon/iron-icon.js';
@@ -31,6 +32,8 @@ import '../../data/interventions-list-data.js';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import { LabelAndValue, User, CpStructure } from '../../../../../typings/globals.types.js';
+import { CpOutput } from '../../../../../typings/intervention.types.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -45,14 +48,8 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin PaginationMixin
  */
-class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  CommonMixin,
-  ListFiltersMixin,
-  ListsCommonMixin,
-  FrNumbersConsistencyMixin,
-  PaginationMixin
-], PolymerElement)) {
+@customElement('interventions-list')
+class InterventionsList extends  PolymerElement {
 
   static get template() {
     return html`
@@ -281,133 +278,77 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
     `;
   }
 
-  static get properties() {
-    return {
-      filteredInterventions: {
-        type: Array,
-        notify: true,
-        observer: '_listChanged'
-      },
+  @property({type: Array, notify: true, observer: InterventionsList.prototype._listChanged})
+  filteredInterventions: ListItemIntervention[] ;
 
-      documentTypes: {
-        type: Array,
-        statePath: 'interventionDocTypes'
-      },
+  @property({type: Array})
+  documentTypes: LabelAndValue[];
 
-      selectedDocumentTypes: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array})
+  selectedDocumentTypes: string[] = [];
 
-      interventionStatuses: {
-        type: Array,
-        statePath: 'interventionStatuses'
-      },
+  @property({type: Array})
+  interventionStatuses: LabelAndValue[];
 
-      selectedStatuses: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array})
+  selectedStatuses: string[] = [];
 
-      startDate: {
-        type: String,
-        observer: '_filtersChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  startDate: string;
 
-      endDate: {
-        type: String,
-        observer: '_filtersChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  endDate: string;
 
-      endAfter: {
-        type: String,
-        observer: '_filtersChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  endAfter: string;
 
-      cpOutputs: {
-        type: Array,
-        statePath: 'cpOutputs'
-      },
-      selectedCpOutputs: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  cpOutputs!: CpOutput[] = []
 
-      countryProgrammes: {
-        type: Array,
-        statePath: 'countryProgrammes'
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
+  @property({type: Array})
+  selectedCpOutputs: number[] = [];
 
-      selectedSections: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array})
+  countryProgrammes!: CpStructure[];
 
-      unicefUsersData: {
-        type: Array,
-        statePath: 'unicefUsersData'
-      },
+  @property({type: Array})
+  sections!: [];
 
-      selectedUnicefFocalPoints: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array})
+  selectedSections: number[] = [];
 
-      offices: {
-        type: Array,
-        statePath: 'offices'
-      },
+  @property({type: Array})
+  unicefUsersData!: User[];
 
-      selectedOffices: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedUnicefFocalPoints: number[] = [];
 
-      donors: {
-        type: Array,
-        statePath: 'donors'
-      },
+  @property({type: Array})
+  offices!: [];
 
-      selectedDonors: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array})
+  selectedOffices: number[] = [];
 
-      grants: {
-        type: Array,
-        statePath: 'grants'
-      },
+  @property({type: Array})
+  donors!: [];
 
-      selectedGrants: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedDonors: string[] = [];
 
-      csvDownloadQs: {
-        type: String,
-        notify: true
-      },
+  @property({type: Array})
+  grants!: [];
 
-      _sortableFieldNames: {
-        type: Array,
-        value: ['number', 'partner_name', 'start', 'end']
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedGrants: string[] = [];
 
-      selectedCPStructures: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      }
-    };
-  }
+  @property({type: String, notify: true})
+  csvDownloadQs: string;
+
+  @property({type: String})
+  _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
+
+  @property({type: String, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedCPStructures: string[] = [];
 
   static get observers() {
     return [
@@ -826,4 +767,3 @@ class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins(
 
 }
 
-window.customElements.define('interventions-list', InterventionsList);
