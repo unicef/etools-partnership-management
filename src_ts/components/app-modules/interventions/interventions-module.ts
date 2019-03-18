@@ -534,14 +534,21 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _finalizeAmendmentConfirmationCallback(event: CustomEvent) {
+
+    let interventionData = this._getModifiedFields();
+    let prepareData = {id: interventionData.id, in_ammendment: false};
+
     if (event.detail.confirmed) {
-      this.set('intervention.in_amendment', false);
-      this._validateAndSaveIntervention(null).then((successfull: boolean) => {
-          if (!successfull) {
-            // if save fails restore in_amendment flag
-            this.set('intervention.in_amendment', true);
-          }
-        });
+      return this.$.interventionData.saveIntervention(prepareData, this._newInterventionSaved.bind(this))
+          .then((successfull: boolean) => {
+              if (successfull) {
+                  this.set('intervention.in_amendment', false);
+                  return true;
+              } else {
+                  this.set('intervention.in_amendment', true);
+                  return false;
+              }
+          });
     }
   }
 
