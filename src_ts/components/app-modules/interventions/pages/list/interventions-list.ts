@@ -33,7 +33,7 @@ import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { LabelAndValue, User, CpStructure } from '../../../../../typings/globals.types.js';
-import { CpOutput } from '../../../../../typings/intervention.types.js';
+import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -49,7 +49,14 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin PaginationMixin
  */
 @customElement('interventions-list')
-class InterventionsList extends  PolymerElement {
+class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins([
+  EtoolsCurrency,
+  CommonMixin,
+  ListFiltersMixin,
+  ListsCommonMixin,
+  FrNumbersConsistencyMixin,
+  PaginationMixin
+], PolymerElement)) {
 
   static get template() {
     return html`
