@@ -3,7 +3,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js'
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import "etools-content-panel/etools-content-panel.js";
+import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
