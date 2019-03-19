@@ -44,18 +44,18 @@
     _checkEnvironment: function() {
       let location = window.location.href;
       if (location.indexOf(this.stagingDomain) > -1) {
-        return 'STAGING'
+        return 'STAGING';
       }
       if (location.indexOf(this.demoDomain) > -1) {
-        return 'DEMO'
+        return 'DEMO';
       }
       if (location.indexOf(this.devDomain) > -1) {
-        return 'DEVELOPMENT'
-      } 
-      if (location.indexOf(this.localDomain) > -1) {
-        return 'LOCAL'
+        return 'DEVELOPMENT';
       }
-      return null
+      if (location.indexOf(this.localDomain) > -1) {
+        return 'LOCAL';
+      }
+      return null;
     }
   };
 
