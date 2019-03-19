@@ -49,14 +49,14 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin PaginationMixin
  */
 @customElement('interventions-list')
-class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins([
+class InterventionsList extends (connect(store)(EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
   CommonMixin,
   ListFiltersMixin,
   ListsCommonMixin,
   FrNumbersConsistencyMixin,
   PaginationMixin
-], PolymerElement)) {
+], PolymerElement)) as typeof PolymerElement) {
 
   static get template() {
     return html`

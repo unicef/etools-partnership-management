@@ -1,4 +1,4 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';
