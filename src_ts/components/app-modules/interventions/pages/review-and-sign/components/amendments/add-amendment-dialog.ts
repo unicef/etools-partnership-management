@@ -286,25 +286,32 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     if (!types || !types.length) {
       return;
     }
-    let message = 'Please make sure you update ';
+    let message = '';
     types.forEach((amdType: string) => {
       switch (amdType) {
-        case 'dates':
-          message += 'Dates, ';
+        case 'admin_error':
+          message += 'Corrections in the programme document due to typos or administrative error';
           break;
-        case 'results':
-          message += 'Programme Results, ';
+        case 'budget_lte_20':
+          message += 'Changes to the budget of activities resulting in a change in the UNICEF contribution ≤20% of ' +
+              'previously approved cash and/or supplies, with or without changes to the programme results';
           break;
-        case 'budget':
-          message += 'Planned Budget, ';
+        case 'budget_gt_20':
+          message += 'Changes to the budget of activities resulting in a change in the UNICEF contribution >20% of ' +
+              'previously approved cash and/or supplies, with or without changes to the programme results';
+          break;
+        case 'change':
+          message += 'Changes to planned results, population or geographical coverage of the programme with no ' +
+              'change in UNICEF contribution';
+          break;
+        case 'no_cost':
+          message += 'No cost extension';
           break;
         case 'other':
-          message += 'Other, ';
+          message += 'Other';
           break;
       }
     });
-    message = message.substring(0, message.length - 2);
-    message += ' section' + (message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
     return message;
   }
 
