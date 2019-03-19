@@ -11,27 +11,26 @@
     stagingDomain: 'etools-staging.unicef.org',
     devDomain: 'etools-dev.unicef.org',
     demoDomain: 'etools-demo.unicef.org',
+    localDomain: 'localhost:8082',
     apBasePath: '/ap/',
 
     endpointsDomainConfig: {
       tokenEndpointsHost: {
         get prp() {
-          if (window.location.port === '8082') {
-            return 'http://127.0.0.1:8080';
+          switch (this._checkEnvironment()) {
+            case 'LOCAL':
+              return 'http://127.0.0.1:8080';
+            case 'DEVELOPMENT':
+              return 'https://dev.partnerreportingportal.org';
+            case 'DEMO':
+              return 'https://demo.partnerreportingportal.org';
+            case 'STAGING':
+              return 'https://demo.partnerreportingportal.org';
+            case null:
+              return 'https://www.partnerreportingportal.org';
+            default:
+              return 'https://dev.partnerreportingportal.org';
           }
-          if (EtoolsPmpApp.Config.isStagingServer()) {
-            return 'https://demo.partnerreportingportal.org';
-          }
-          if (EtoolsPmpApp.Config.isDevServer()) {
-            return 'https://dev.partnerreportingportal.org';
-          }
-          if (EtoolsPmpApp.Config.isDemoServer()) {
-            return 'https://demo.partnerreportingportal.org';
-          }
-          if (EtoolsPmpApp.Config.isProductionServer()) {
-            return 'https://www.partnerreportingportal.org';
-          }
-          return 'https://dev.partnerreportingportal.org';
         }
       },
       tokenStorageKeys: {
@@ -42,23 +41,22 @@
       }
     },
 
-    isProductionServer: function() {
+    _checkEnvironment: function() {
       let location = window.location.href;
-      return location.indexOf(this.productionDomain) > -1;
-    },
-
-    isStagingServer: function() {
-      let location = window.location.href;
-      return location.indexOf(this.stagingDomain) > -1;
-    },
-
-    isDevServer: function() {
-      return window.location.href.indexOf(this.devDomain) > -1;
-    },
-    isDemoServer: function() {
-      return window.location.href.indexOf(this.demoDomain) > -1;
+      if (location.indexOf(this.stagingDomain) > -1) {
+        return 'STAGING'
+      }
+      if (location.indexOf(this.demoDomain) > -1) {
+        return 'DEMO'
+      }
+      if (location.indexOf(this.devDomain) > -1) {
+        return 'DEVELOPMENT'
+      } 
+      if (location.indexOf(this.localDomain) > -1) {
+        return 'LOCAL'
+      }
+      return null
     }
-
   };
 
 </script>
