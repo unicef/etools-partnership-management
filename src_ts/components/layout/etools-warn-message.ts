@@ -67,7 +67,6 @@ class EtoolsWarnMessage extends PolymerElement {
     if (!msgs || msgs.length === 0) {
       return;
     }
-    console.log(msgs);
     this._internalMsgs = (msgs instanceof Array && msgs.length > 0)
         ? msgs.map((msg: string) => new WarnMessage(msg))
         : [new WarnMessage(msgs as string)];
