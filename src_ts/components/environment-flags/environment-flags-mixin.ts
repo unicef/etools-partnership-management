@@ -1,7 +1,7 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {connect} from "pwa-helpers/connect-mixin";
-import {RootState, store} from "../../store";
-import {EnvFlags} from "./environment-flags";
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {RootState, store} from '../../store';
+import {EnvFlags} from './environment-flags';
 /**
  * @polymer
  * @mixinFunction

@@ -24,15 +24,15 @@ export type UserPermissions = {
 }
 
 export type User = {
-  first_name: string,
-  last_name: string,
-  middle_name: string,
-  name: string,
-  email: string,
-  country: object,
-  country_override: number,
-  countries_available: [],
-  groups: UserGroup[]
+  first_name: string;
+  last_name: string;
+  middle_name: string;
+  name: string;
+  email: string;
+  country: object;
+  country_override: number;
+  countries_available: MinimalCountry[];
+  groups: UserGroup[];
 }
 
 export type UserGroup = {
@@ -53,7 +53,7 @@ export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in pol
 
 export interface PolymerElEvent extends CustomEvent {//TODO - should be in polymer type declarions
   target: any;
-  currentTarget: any
+  currentTarget: any;
 }
 
 export class Paginator {
@@ -64,19 +64,42 @@ export class Paginator {
 }
 
 export type CpStructure = {
-  id: string,
-  name: string,
-  expired: boolean,
-  future: boolean,
-  active: boolean,
-  special: boolean,
-  invalid: boolean,
-  from_date: string,
-  to_date: string,
-  wbs: string
+  id: string;
+  name: string;
+  expired: boolean;
+  future: boolean;
+  active: boolean;
+  special: boolean;
+  invalid: boolean;
+  from_date: string;
+  to_date: string;
+  wbs: string;
 }
 
-export type CountryData = {
+export interface MinimalCountry {
+  id: number;
+  name: string;
+  business_area_code: string;
+}
+
+export interface Country extends MinimalCountry {
+
+  country_short_code: string;
+  initial_zoom: number;
+  latitude: string;
+  local_currency: string;
   local_currency_code: string;
+  local_currency_id: number;
+  longitude: string;
+}
+
+export type LabelAndValue = {
+  label: string;
+  value: string;
+}
+
+export type IdAndName = {
+  id: string;
+  name: string;
 }
 

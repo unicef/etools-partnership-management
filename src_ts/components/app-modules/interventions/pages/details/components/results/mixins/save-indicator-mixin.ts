@@ -3,7 +3,7 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import pick from 'lodash-es/pick';
 // @ts-ignore
 import keys from 'lodash-es/keys';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event';
@@ -181,7 +181,7 @@ const SaveIndicatorMixin = dedupingMixin(
     this._prepareBaselineAndTarget(body);
 
     if (body.hasOwnProperty('disaggregation')) {
-      body.disaggregation = this._prepareDisaggregations();
+      body.disaggregation = this._prepareDisaggregationIds();
     }
     if (this.isCluster && !body.id) {
       body.indicator = null;
@@ -225,16 +225,19 @@ const SaveIndicatorMixin = dedupingMixin(
     indicator.label = '';
   }
 
-  _prepareDisaggregations() {
+  _prepareDisaggregationIds(): number[] {
     if (!this.disaggregations || !this.disaggregations.length) {
       return [];
     }
-    this.disaggregations = this.disaggregations.filter(function(d) {
-      return !!d.disaggregId;
-    });
-    return this.disaggregations.map(function(item) {
+    this.disaggregations = this.disaggregations.filter(this._notEmptyDisaggregs);
+
+    return this.disaggregations.map(function(item: {disaggregId: number}) {
       return item.disaggregId;
     });
+  }
+
+  _notEmptyDisaggregs(d: {disaggregId: number}): boolean {
+    return !!d.disaggregId;
   }
 
   _getIndicatorModelForSave() {

@@ -1,15 +1,15 @@
 import { PolymerElement} from '@polymer/polymer/polymer-element.js';
-import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import pmpEdpoints from "../endpoints/endpoints.js";
-import {connect} from "pwa-helpers/connect-mixin.js";
-import {store} from "../../store.js";
-import {updateEnvFlags} from '../../actions/common-data.js';
+import EndpointsMixin from '../endpoints/endpoints-mixin';
+import pmpEdpoints from '../endpoints/endpoints';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../store';
+import {updateEnvFlags} from '../../actions/common-data';
 
 // import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
 export interface EnvFlags extends Object {
   prp_mode_off: boolean, prp_server_on: boolean, active_flags?: object[]
-};
+}
 
 /**
  * @polymer
@@ -35,6 +35,7 @@ class EnvironmentFlags extends connect(store)(EndpointsMixin(PolymerElement) as 
       prp_mode_off: false
     };
 
+    // @ts-ignore
     for (let key in flags) {
       let flag: string | undefined = (flags as any)[key];
       if (flag) {

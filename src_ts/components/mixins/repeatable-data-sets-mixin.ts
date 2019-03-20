@@ -2,7 +2,7 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { GenericObject } from '../../typings/globals.types.js';
@@ -52,12 +52,14 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
     public deleteActionLoadingMsg: string = 'Deleting items from server...';
     public deleteActionDefaultErrMsg: string = 'Deleting items from server action has failed!';
 
+    // @ts-ignore
     private connectedCallback() {
       super.connectedCallback();
       // create delete confirmation dialog
       this._createDeleteConfirmationDialog();
     }
 
+    // @ts-ignore
     private disconnectedCallback() {
       super.disconnectedCallback();
       // remove delete confirmation dialog when the element is detached
@@ -100,7 +102,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-    public _addElement(addNull: any) {
+    public _addElement(addNull?: boolean) {
       if (!this.editMode) {
         return;
       }

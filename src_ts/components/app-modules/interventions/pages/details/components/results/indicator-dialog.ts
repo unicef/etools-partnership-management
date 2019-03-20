@@ -7,7 +7,7 @@ import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EnvironmentFlags from '../../../../../../environment-flags/environment-flags-mixin';
 import UserPermissionsMixin from '../../../../../../user/user-permissions-mixin';
 import SaveIndicatorMixin from './mixins/save-indicator-mixin';
@@ -15,7 +15,7 @@ import IndicatorDialogTabsMixin from './mixins/indicator-dialog-tabs-mixin';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
 import { isEmptyObject, isJsonStrMatch } from '../../../../../../utils/utils';
-import { User } from '../../../../../../../typings/globals.types';
+import { User, GenericObject } from '../../../../../../../typings/globals.types';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
@@ -27,6 +27,7 @@ import './indicator-dissaggregations.js';
 import './cluster-indicator-disaggregations.js';
 import './cluster-indicator.js';
 import './non-cluster-indicator.js';
+import { Indicator } from '../../../../../../../typings/intervention.types';
 
 /**
  * @polymer
@@ -121,7 +122,7 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
             </div>
             <div class="row-h">
               <paper-toggle-button disabled$="[[_clusterToggleIsDisabled(indicator)]]"
-                                  checked$="{{isCluster}}"></paper-toggle-button>
+                                  checked="{{isCluster}}"></paper-toggle-button>
               Cluster Indicator
             </div>
             <div class="indicator-content">
@@ -165,29 +166,6 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     return {
       indicator: {
         type: Object
-      },
-      indicatorModel: {
-        type: Object,
-        readOnly: true,
-        value: {
-          id: null,
-          indicator: {
-            id: null,
-            title: null,
-            unit: 'number',
-            display_type: 'percentage'
-          },
-          section: null,
-          baseline: {},
-          target: {d: 1},
-          means_of_verification: null,
-          locations: [],
-          disaggregation: [],
-          cluster_indicator_title: null,
-          cluster_indicator_id: null,
-          cluster_name: null,
-          response_plan_name: null
-        }
       },
       actionParams: {
         type: Object
@@ -237,6 +215,9 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       },
       interventionStatus: {
         type: String
+      },
+      currentUser: {
+        type: Object
       }
     };
   }
@@ -251,6 +232,10 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     }
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
       this.locations = state.commonData!.locations;
+    }
+
+    if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
+      this.currentUser = state.commonData!.currentUser;
     }
 
     this.envStateChanged(state);
@@ -309,7 +294,7 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
 
     if (!data) { // new indicator
       this.isCluster = false;
-      this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
+      this.set('indicator', new Indicator());
       this.set('disaggregations', []);
       this.preselectSectionAndLocation();
       return;
@@ -336,7 +321,7 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     if (!disaggregations) {
       return [];
     }
-    return disaggregations.map(function(id) {
+    return disaggregations.map(function(id: number) {
       /**
        * disaggregId and not simply id to avoid repeatable-behavior
        * from trying to make an endpoint request on Delete
@@ -351,7 +336,7 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     // Anything else?
   }
 
-  _stopSpinner(e: CustomEvent) {
+  _stopSpinner(e?: CustomEvent) {
     if (e) {
       e.stopImmediatePropagation();
     }
@@ -393,7 +378,7 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   resetFieldValues() {
-    this.indicator = JSON.parse(JSON.stringify(this.indicatorModel));
+    this.indicator = new Indicator();
     this.disaggregations = [];
     this.prpDisaggregations = [];
     if (this.isCluster && this.shadowRoot.querySelector('#clusterIndicatorEl')) {
@@ -405,13 +390,14 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     this.$.indicatorDialog.notifyResize();
   }
 
-  _computeOptions(optionsIds: [], allOptions: []) {
-    let options = [];
+  _computeOptions(optionsIds: string[], allOptions: GenericObject[]) {
+    let options: GenericObject[] = [];
     if (!isEmptyObject(optionsIds) && !isEmptyObject(allOptions)) {
       // filter options
-      optionsIds = optionsIds.map(id => parseInt(id, 10));
+      let ids = optionsIds.map(id => parseInt(id, 10));
+
       options = allOptions.filter((opt: any) => {
-        return optionsIds.indexOf(parseInt(opt.id, 10)) > -1;
+        return ids.indexOf(parseInt(opt.id, 10)) > -1;
       });
     }
     return options;

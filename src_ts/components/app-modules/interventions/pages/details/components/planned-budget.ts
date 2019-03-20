@@ -8,7 +8,7 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-currency-amount-input/etools-currency-amount-input.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../utils/utils';
@@ -17,7 +17,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { SharedStyles } from '../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
 import { frWarningsStyles } from '../../../styles/fr-warnings-styles';
-import { CountryData } from '../../../../../../typings/globals.types';
+import { Country } from '../../../../../../typings/globals.types';
 import {Fr, FrsDetails } from '../../../../../../typings/intervention.types';
 import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons';
 
@@ -295,7 +295,7 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
   _getValue(value: any) {
     return value;
   }
-  _initLocalCurrency(plannedBudget: any, countryData: CountryData) {
+  _initLocalCurrency(plannedBudget: any, countryData: Country) {
     if (!plannedBudget || typeof countryData === 'undefined') {
       return;
     }

@@ -8,6 +8,7 @@ declare const moment: any;
  * @appliesMixin EtoolsLogsMixin
  */
 const DateMixin = dedupingMixin((baseClass: any) =>
+  // @ts-ignore
   class extends (EtoolsLogsMixin(baseClass) as any) {
 
     public prettyDate(dateString: string, format: string, placeholder: string) {
@@ -152,7 +153,7 @@ const DateMixin = dedupingMixin((baseClass: any) =>
       return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     }
 
-    public _EdgeAcceptableDateParse(strDt: any) {
+    public EdgeAcceptableDateParse(strDt: any) {
       // expected dt fromat : 01-Sep-2018
 
       let date = new Date(strDt + 'Z');

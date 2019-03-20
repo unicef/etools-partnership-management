@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
@@ -20,6 +20,8 @@ import { requiredFieldStarredStyles } from '../../../../../../styles/required-fi
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../../../config/app-constants.js';
 import { isJsonStrMatch } from '../../../../../../utils/utils.js';
+import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
+import { InterventionAmendment } from '../../../../../../../typings/intervention.types.js';
 
 
 
@@ -170,17 +172,6 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
       newAmendment: {
         type: Object
       },
-      newAmendmentModel: {
-        type: Object,
-        value: {
-          'types': [],
-          'other_description': null,
-          'signed_date': null,
-          'signed_amendment_attachment': null,
-          'amendment_number': null,
-          'internal_prc_review': null
-        }
-      },
       uploadEndpoint: {
         type: String,
         value: function() {
@@ -229,7 +220,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
   }
 
   resetAmendment() {
-    this.set('newAmendment', JSON.parse(JSON.stringify(this.newAmendmentModel)));
+    this.set('newAmendment', new InterventionAmendment());
   }
 
   startSpinner() {
@@ -240,12 +231,12 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     this.shadowRoot.querySelector('#add-amendment').stopSpinner();
   }
 
-  _filterAmendmentTypes(amendmentTypes: any, interventionDocumentType: any) {
+  _filterAmendmentTypes(amendmentTypes: LabelAndValue[], interventionDocumentType: string) {
     if (!amendmentTypes || !interventionDocumentType) {
       return;
     }
     if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-      this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment) => {
+      this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment: LabelAndValue) => {
         return [CONSTANTS.PD_AMENDMENT_TYPES.Dates,
                 CONSTANTS.PD_AMENDMENT_TYPES.Other].indexOf(newAmendment.label) > -1;
       });
@@ -291,7 +282,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     });
   }
 
-  _getSelectedAmendmentTypeWarning(types: any) {
+  _getSelectedAmendmentTypeWarning(types: string[]) {
     if (!types || !types.length) {
       return;
     }
@@ -324,7 +315,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     this._saveAmendment(this.newAmendment);
   }
 
-  _saveAmendment(newAmendment: any) {
+  _saveAmendment(newAmendment: InterventionAmendment) {
     if (!newAmendment.internal_prc_review) {
       delete newAmendment.internal_prc_review;
     }
@@ -335,7 +326,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     };
     this.startSpinner();
     this.sendRequest(options)
-        .then((resp: any) => {
+        .then((resp: InterventionAmendment) => {
           this._handleResponse(resp);
           this.stopSpinner();
         }).catch((error: any) => {
@@ -344,7 +335,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     });
   }
 
-  _handleResponse(response: any) {
+  _handleResponse(response: InterventionAmendment) {
     this.set('opened', false);
     fireEvent(this, 'amendment-added', response);
   }

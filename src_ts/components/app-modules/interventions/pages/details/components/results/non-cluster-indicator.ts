@@ -7,7 +7,7 @@ import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
@@ -324,14 +324,14 @@ class NonClusterIndicator extends EtoolsMixinFactory.combineMixins([
 
   validate() {
     let elemIds = ['titleEl', 'locationsDropdw'];
-    [].push.apply(elemIds, this._getIndicatorTargetElId());
+    ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
   resetValidations() {
     setTimeout(() => {
       let elemIds = ['titleEl', 'locationsDropdw'];
-      [].push.apply(elemIds, this._getIndicatorTargetElId());
+      ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
 
       let i;
       for (i = 0; i < elemIds.length; i++) {

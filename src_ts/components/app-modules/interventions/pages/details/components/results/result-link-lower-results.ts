@@ -15,13 +15,14 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
 
 import './pd-lower-result-name.js';
 import './applied-indicators.js';
+import { Indicator } from '../../../../../../../typings/intervention.types.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin RepeatableDataSetsMixin
  */
-class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
+class ResultLinkLowerResults extends (RepeatableDataSetsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {
@@ -232,7 +233,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     }
   }
 
-  allIndicatorsAreInactive(indicators: []) {
+  allIndicatorsAreInactive(indicators: Indicator[]) {
     this.forceVisibilityRecalc = false;
     let allIndicatorsAreDeactivated = indicators instanceof Array && indicators.length > 0 &&
         indicators.every(i => !i.is_active);

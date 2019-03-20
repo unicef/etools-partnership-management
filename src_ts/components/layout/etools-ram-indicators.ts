@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import 'etools-loading/etools-loading.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../mixins/ajax-errors-parser-mixin';
@@ -123,7 +123,7 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
       endpoint: this.getEndpoint('cpOutputRamIndicators', reqPayload)
     }).then((resp: any) => {
       this.set('loading', false);
-      this.set('ramIndicators', resp.ram_indicators.map(ri => ri.indicator_name));
+      this.set('ramIndicators', resp.ram_indicators.map((ri: any) => ri.indicator_name));
     }).catch((error: any) => {
       this.logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
           ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);

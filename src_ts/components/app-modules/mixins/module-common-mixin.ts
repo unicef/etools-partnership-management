@@ -12,6 +12,7 @@ import { fireEvent } from '../../utils/fire-custom-event.js';
    * @appliesMixin EtoolsLogsMixin
    */
   const ModuleMainElCommonFunctionalityMixin = dedupingMixin(
+      // @ts-ignore
     (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
       static get properties() {
         return {

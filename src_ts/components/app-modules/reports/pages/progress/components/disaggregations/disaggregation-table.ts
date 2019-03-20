@@ -1,13 +1,12 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin';
 
-import './table-content/three-disaggregations.js';
-import './table-content/two-disaggregations.js';
-import './table-content/one-disaggregation.js';
-import './table-content/zero-disaggregations.js';
+import './table-content/three-disaggregations';
+import './table-content/two-disaggregations';
+import './table-content/one-disaggregation';
+import './table-content/zero-disaggregations';
 import { disaggregationTableStyles } from './styles/disaggregation-table-styles';
 import {Disaggregation} from '../../../../../../../typings/intervention.types';
-
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -18,7 +17,7 @@ import {Disaggregation} from '../../../../../../../typings/intervention.types';
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class DisaggregationTable extends UtilsMixin(PolymerElement) {
+class DisaggregationTable extends (UtilsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get is() {

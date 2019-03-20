@@ -1,8 +1,8 @@
 import '../disaggregation-table-row.js';
 import { PolymerElement, html } from '@polymer/polymer';
-import UtilsMixin from '../../../../../../../mixins/utils-mixin.js';
-import DisaggregationsMixin from '../mixins/disaggregations.js';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles.js';
+import UtilsMixin from '../../../../../../../mixins/utils-mixin';
+import DisaggregationsMixin from '../mixins/disaggregations';
+import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
 
 
 
@@ -12,7 +12,7 @@ import { disaggregationTableStyles } from '../styles/disaggregation-table-styles
  * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin
  */
-class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)) {
+class ThreeDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement)) as any) {
 
   static get is() {
     return 'three-disaggregations';
@@ -138,17 +138,17 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
       return [];
     }
 
-    return middleRows.map(function(y: any) {
+    return middleRows.map((y: any) => {
       let formatted;
 
-      let columnData = columns.map(function(z: any) {
+      let columnData = columns.map((z: any) => {
         formatted = this._formatDisaggregationIds([outerRowID, y.id, z.id]);
 
         return {
           key: formatted,
           data: data.disaggregation[formatted]
         };
-      }, this);
+      });
 
       formatted = this._formatDisaggregationIds([outerRowID, y.id]);
 
@@ -161,21 +161,21 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
           data: data.disaggregation[formatted]
         }
       };
-    }, this);
+    });
   }
 
   _determineTotals(columns: any[], middleRows: any[], data: any) {
     if (typeof columns === 'undefined' || typeof middleRows === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map(function(z: any) {
+    let columnData = columns.map((z: any) => {
       let formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         key: formatted,
         data: data.disaggregation[formatted]
       };
-    }, this);
+    });
 
     let columnTotalRow = {
       title: 'total',

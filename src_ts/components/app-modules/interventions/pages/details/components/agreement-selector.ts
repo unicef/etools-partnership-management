@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import CommonMixin from '../../../../../mixins/common-mixin';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import { MinimalAgreement } from '../../../../agreements/agreement.types';
-import { DropdownPartner } from '../../../../../../typings/partner.types';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles';
@@ -11,6 +10,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { isJsonStrMatch, copy } from '../../../../../utils/utils';
 import { csoPartnersSelector } from '../../../../../../reducers/partners';
 import CONSTANTS from '../../../../../../config/app-constants';
+import { IdAndName } from '../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -144,7 +144,7 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
     }
   }
 
-  _partnersDropdownDataChanged(partnersDropdownData: DropdownPartner[]) {
+  _partnersDropdownDataChanged(partnersDropdownData: IdAndName[]) {
     if (typeof partnersDropdownData === 'undefined') {
       return;
     }
@@ -183,7 +183,7 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
     if (!agreement || !agreement.partner || this.partnerId === agreement.partner) {
       return;
     }
-    let partner = this.partnersDropdownData.find((partner: DropdownPartner) => {
+    let partner = this.partnersDropdownData.find((partner: IdAndName) => {
       return partner.id === agreement.partner;
     });
     if (!partner) {

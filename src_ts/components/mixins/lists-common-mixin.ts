@@ -1,5 +1,5 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 import { fireEvent } from '../utils/fire-custom-event';

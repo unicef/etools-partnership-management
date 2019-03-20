@@ -1,6 +1,5 @@
 // @ts-ignore
 import difference from 'lodash-es/difference';
-import { InterventionAttachment } from '../../../../typings/intervention.types';
 import { GenericObject } from '../../../../typings/globals.types';
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import { isEmptyObject } from '../../../utils/utils';

@@ -67,14 +67,14 @@ const IndicatorsCommonMixin = dedupingMixin((superClass: any) => class extends s
 
   validateComponents(elemIds: []) {
     let valid = true;
-    elemIds.forEach(function(elemId) {
+    elemIds.forEach((elemId) => {
       let elem = this.shadowRoot.querySelector('#' + elemId);
       if (elem) {
         valid = elem.validate() && valid;
       } else {
         this.logWarn('Elem ' + elemId + ' not found');
       }
-    }, this);
+    });
     return valid;
   }
 

@@ -1,13 +1,13 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../store";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../store';
 
-import EtoolsMixinFactory from "etools-behaviors/etools-mixin-factory.js";
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
-import EndpointsMixin from "../endpoints/endpoints-mixin.js";
-import UserPermisionsMixin from "./user-permissions-mixin.js";
-import {updateCurrentUser} from "../../actions/common-data";
-import {isEmptyObject} from "../utils/utils";
+import EndpointsMixin from '../endpoints/endpoints-mixin.js';
+import UserPermisionsMixin from './user-permissions-mixin.js';
+import {updateCurrentUser} from '../../actions/common-data';
+import {isEmptyObject} from '../utils/utils';
 import { fireEvent } from '../utils/fire-custom-event';
 
 /**

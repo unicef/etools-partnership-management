@@ -1,7 +1,7 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import EtoolsMixinFactory from 'etools-behaviors/etools-mixin-factory.js';
+import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event';

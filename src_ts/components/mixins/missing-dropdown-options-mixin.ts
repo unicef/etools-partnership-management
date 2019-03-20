@@ -8,6 +8,7 @@ import EndpointsMixin from '../endpoints/endpoints-mixin';
  * @appliesMixin EndpointsMixin
  */
 const MissingDropdownOptionsMixin = (baseClass: any) =>
+    // @ts-ignore
     class extends EndpointsMixin(EtoolsLogsMixin(baseClass)) {
       public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
         let self = this;

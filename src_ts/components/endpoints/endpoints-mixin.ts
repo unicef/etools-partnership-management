@@ -1,13 +1,13 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
 
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import {RootState, store} from "../../store";
+import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
+import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
+import {RootState} from '../../store';
 
 import pmpEndpoints from './endpoints.js';
-import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config.js';
-import {isJsonStrMatch} from "../utils/utils";
+import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
+import {isJsonStrMatch} from '../utils/utils';
+import { User } from '../../typings/globals.types';
 
 /**
  * @polymer
@@ -16,7 +16,9 @@ import {isJsonStrMatch} from "../utils/utils";
  * @appliesMixin EtoolsLogsMixin
  */
 const EndpointsMixin = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(EtoolsAjaxRequestMixin(EtoolsLogsMixin(baseClass))) {
+    // @ts-ignore
+    class extends (EtoolsAjaxRequestMixin(EtoolsLogsMixin(baseClass))) {
+      [x: string]: any;
 
       // TODO: polymer 3 - remove properties from here
       static get properties() {
@@ -27,11 +29,11 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       }
 
       public endStateChanged(state: RootState) {
-        if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.PRPCountryData)) {
-          this.PRPCountryData = [...state.commonData!.PRPCountryData];
+        if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)) {
+          this.prpCountries = [...state.commonData!.PRPCountryData];
         }
         if (!isJsonStrMatch(state.commonData!.currentUser, this.currentUser)) {
-          this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser));
+          this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser)) as User;
         }
       }
 
