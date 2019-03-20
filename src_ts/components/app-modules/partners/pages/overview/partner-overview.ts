@@ -4,20 +4,21 @@ import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currenc
 import 'etools-content-panel/etools-content-panel.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-import './government-spending';
 
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 
-import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import { SharedStyles } from '../../../../styles/shared-styles';
 
-import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
-import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
+import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin';
+import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons';
+import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles';
 import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 import {fireEvent} from '../../../../utils/fire-custom-event';
+
+import './government-spending';
 
 /**
  * @polymer
@@ -260,12 +261,11 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
         </template>
       </etools-content-panel>
       
-      <etools-content-panel class="content-section" panel-title="Implementation Status">
-        <template is="dom-if" if="[[partner.partner_type === 'Government']]">
-          <government-spending>
-          </government-spending>
-        </template>
-      </etools-content-panel>
+      <template is="dom-if" if="[[_isGovernment(partner.partner_type)]]">
+        <etools-content-panel class="content-section" panel-title="Implementation Status">
+            <government-spending partner-id="[[partner.id]]"></government-spending>
+        </etools-content-panel>
+      </template>
 
     `;
   }
@@ -291,6 +291,11 @@ class PartnerOverview extends PartnerOverviewRequiredMixins{
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
         : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+  }
+
+  // @ts-ignore
+  private _isGovernment(type: string): boolean {
+    return type === 'Government';
   }
 
 }

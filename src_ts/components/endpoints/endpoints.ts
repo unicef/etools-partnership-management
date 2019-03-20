@@ -129,7 +129,7 @@ const pmpEdpoints = {
     url: '/api/v2/funds/frs'
   },
   governmentSpending: {
-    url: '/api/v2/funds/reservation-header/'
+    template: '/api/v2/funds/reservation-header/?partners=<%=id%>'
   },
   userCountryDetails: {
     url: '/api/v3/users/country/'
