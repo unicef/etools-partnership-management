@@ -1,5 +1,7 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 declare const moment: any;
 
 /**
@@ -7,16 +9,15 @@ declare const moment: any;
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  */
-const DateMixin = dedupingMixin((baseClass: any) =>
-  // @ts-ignore
-  class extends (EtoolsLogsMixin(baseClass) as any) {
+function DateMixin(baseClass: Constructor<PolymerElement>) : typeof dateMixin {
+  const dateMixin = class extends EtoolsLogsMixin(baseClass) {
 
-    public prettyDate(dateString: string, format: string, placeholder: string) {
+    public prettyDate(dateString: string, format?: string, placeholder?: string) {
       let date = this._convertDate(dateString);
       return (!date) ? (placeholder ? placeholder : ''): this._utcDate(date, format);
     }
 
-    public _utcDate(date: any, format: string) {
+    public _utcDate(date: any, format?: string) {
       return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
     }
 
@@ -185,6 +186,8 @@ const DateMixin = dedupingMixin((baseClass: any) =>
           date1.getFullYear() === date2.getFullYear());
     }
 
-  });
+  };
+  return dateMixin;
+}
 
 export default DateMixin;

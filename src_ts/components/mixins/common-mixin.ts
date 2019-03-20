@@ -1,13 +1,15 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import DateMixin from './date-mixin.js';
+import { Constructor } from '../../typings/globals.types.js';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin DateMixin
  */
-const CommonMixin = dedupingMixin((baseClass: any) =>
-    class extends (DateMixin(baseClass) as any) {
+function CommonMixin(baseClass: Constructor<PolymerElement>): typeof commonMixin {
+    const commonMixin = class extends DateMixin(baseClass) {
 
       /**
        * Prepare and return the string value we have to display on the interface.
@@ -71,7 +73,7 @@ const CommonMixin = dedupingMixin((baseClass: any) =>
         if (!useValidate) {
           useValidate = false;
         }
-        let field = this.shadowRoot.querySelector(selector);
+        let field = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
         if (field) {
           if (useValidate) {
             field.validate();
@@ -82,6 +84,8 @@ const CommonMixin = dedupingMixin((baseClass: any) =>
         return field;
       }
 
-    });
+    };
+  return commonMixin;
+}
 
 export default CommonMixin;

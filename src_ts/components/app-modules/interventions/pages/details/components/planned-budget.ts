@@ -27,10 +27,9 @@ import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons'
  * @appliesMixin EtoolsCurrency
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  FrNumbersConsistencyMixin
-], PolymerElement)) {
+class PlannedBudget extends connect(store)(
+    FrNumbersConsistencyMixin(
+  (PolymerElement))) {
 
   static get template() {
     return html`

@@ -1,12 +1,15 @@
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { Intervention, ListItemIntervention, FrsDetails, Fr } from '../../../../typings/intervention.types';
+import { Constructor } from '../../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  */
-const FrNumbersConsistencyMixin = (superClass: any) => class extends EtoolsCurrency(superClass) {
+const FrNumbersConsistencyMixin =  <T extends Constructor<PolymerElement>>(superClass: T) =>
+ class extends EtoolsCurrency(superClass) {
   static get properties() {
     return {
       frsConsistencyWarnings: {

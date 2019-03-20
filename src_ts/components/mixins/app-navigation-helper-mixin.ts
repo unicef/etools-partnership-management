@@ -1,11 +1,13 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const AppNavigationHelperMixin = dedupingMixin((baseClass: any) =>
-    class extends baseClass {
+function AppNavigationHelperMixin(baseClass: Constructor<PolymerElement>) : typeof appNavigationHelperMixin {
+  const appNavigationHelperMixin = class extends baseClass {
 
       static get properties() {
         return {
@@ -40,6 +42,8 @@ const AppNavigationHelperMixin = dedupingMixin((baseClass: any) =>
         window.dispatchEvent(new CustomEvent('location-changed'));
       }
 
-    });
+    };
+    return appNavigationHelperMixin;
+}
 
 export default AppNavigationHelperMixin;

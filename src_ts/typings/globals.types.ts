@@ -11,7 +11,9 @@ export declare const _: any;
 */
 export type Constructor<T> = new(...args: any[]) => T;
 
-export type MixinFunction = <T extends Constructor<PolymerElement>>(baseElement: T) => T & Constructor<PolymerElement>;
+export type MixinFunction = <T extends Constructor<PolymerElement>>(baseClass: T) => T & {
+  new (...args: any[]): any;
+};
 
 export type GenericObject = {
   [key: string]: any

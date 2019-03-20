@@ -1,14 +1,13 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
+import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
+import { PolymerElement } from '@polymer/polymer';
 
-const ListsCommonMixin =  dedupingMixin(
-  (baseClass: any) => class extends EtoolsMixinFactory.combineMixins([
-    AppNavigationHelperMixin
-    ], baseClass) {
-    [x: string]: any;
+const ListsCommonMixin = <T extends Constructor<PolymerElement>>(baseClass: T) =>
+ // @ts-ignore
+ class extends AppNavigationHelperMixin(baseClass) {
 
 static get properties() {
   return {
@@ -246,6 +245,6 @@ _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, q
   }
 }
 
-});
+};
 
 export default ListsCommonMixin;

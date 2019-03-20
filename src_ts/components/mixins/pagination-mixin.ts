@@ -1,8 +1,9 @@
-import { Paginator } from '../../typings/globals.types';
+import { Paginator, Constructor } from '../../typings/globals.types';
 import CONSTANTS from '../../config/app-constants';
+import { PolymerElement } from '@polymer/polymer';
 
 
-const PaginationMixin = (baseClass: any) => class extends (baseClass) {
+const PaginationMixin = <T extends Constructor<PolymerElement>>(baseClass: T) => class extends (baseClass) {
   static get properties() {
     return {
       paginator: {

@@ -1,11 +1,12 @@
 import { ListFilterOption, SelectedFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
-import { DomRepeatEvent, PolymerElEvent, _ } from '../../typings/globals.types';
+import { DomRepeatEvent, PolymerElEvent, _, Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 declare const moment: any;
 /**
   * @polymer
   * @mixinFunction
   */
- const ListFiltersMixin = (baseClass: any) => class extends baseClass {
+ const ListFiltersMixin = <T extends Constructor<PolymerElement>>(baseClass:T) => class extends baseClass {
 
   static get properties() {
     return {
