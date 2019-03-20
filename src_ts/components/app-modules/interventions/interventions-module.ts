@@ -9,7 +9,7 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CONSTANTS from '../../../config/app-constants';
-import { UserPermissions } from '../../../typings/globals.types';
+import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import EnvironmentFlags from '../../environment-flags/environment-flags-mixin';
@@ -534,12 +534,11 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _finalizeAmendmentConfirmationCallback(event: CustomEvent) {
-
-    let interventionData = this._getModifiedFields();
-    let prepareData = {id: interventionData.id, in_ammendment: false};
+    let preparedData: GenericObject = {id: this.intervention.id, in_amendment: false};
 
     if (event.detail.confirmed) {
-      return this.$.interventionData.saveIntervention(prepareData, this._newInterventionSaved.bind(this))
+      return this.$.interventionData.saveIntervention(preparedData as Intervention,
+          this._newInterventionSaved.bind(this))
           .then((successfull: boolean) => {
               if (successfull) {
                   this.set('intervention.in_amendment', false);

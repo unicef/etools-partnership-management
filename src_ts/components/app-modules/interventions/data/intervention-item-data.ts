@@ -19,6 +19,7 @@ import {
 } from '../../../../typings/intervention.types';
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {GenericObject} from "../../../../typings/globals.types";
 
 
 /**
