@@ -20,7 +20,6 @@ import {
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
 
-
 /**
  * @polymer
  * @mixinFunction
