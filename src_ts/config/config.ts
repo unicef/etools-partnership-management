@@ -31,6 +31,7 @@ const PROD_DOMAIN: string = 'etools.unicef.org';
 const STAGING_DOMAIN: string = 'etools-staging.unicef.org';
 const DEV_DOMAIN: string = 'etools-dev.unicef.org';
 const DEMO_DOMAIN: string = 'etools-demo.unicef.org';
+const LOCAL_DOMAIN: string = 'localhost:8082';
 export const AP_DOMAIN: string = '/ap/';
 
 export const isProductionServer = () => {
@@ -52,22 +53,37 @@ export const isDemoServer = () => {
 
 export const tokenEndpointsHost = (host: string) => {
   if (host === 'prp') {
-    if (window.location.port === '8082') {
-      return 'http://127.0.0.1:8080';
+    switch (_checkEnvironment()) {
+      case 'LOCAL':
+        return 'http://127.0.0.1:8080';
+      case 'DEVELOPMENT':
+        return 'https://dev.partnerreportingportal.org';
+      case 'DEMO':
+        return 'https://demo.partnerreportingportal.org';
+      case 'STAGING':
+        return 'https://demo.partnerreportingportal.org';
+      case null:
+        return 'https://www.partnerreportingportal.org';
+      default:
+        return 'https://dev.partnerreportingportal.org';
     }
-    if (isStagingServer()) {
-      return 'https://demo.partnerreportingportal.org';
-    }
-    if (isDevServer()) {
-      return 'https://dev.partnerreportingportal.org';
-    }
-    if (isDemoServer()) {
-      return 'https://demo.partnerreportingportal.org';
-    }
-    if (isProductionServer()) {
-      return 'https://www.partnerreportingportal.org';
-    }
-    return 'https://dev.partnerreportingportal.org';
+  }
+  return null;
+};
+
+export const _checkEnvironment = () => {
+  let location = window.location.href;
+  if (location.indexOf(STAGING_DOMAIN) > -1) {
+    return 'STAGING';
+  }
+  if (location.indexOf(DEMO_DOMAIN) > -1) {
+    return 'DEMO';
+  }
+  if (location.indexOf(DEV_DOMAIN) > -1) {
+    return 'DEVELOPMENT';
+  }
+  if (location.indexOf(LOCAL_DOMAIN) > -1) {
+    return 'LOCAL';
   }
   return null;
 };
