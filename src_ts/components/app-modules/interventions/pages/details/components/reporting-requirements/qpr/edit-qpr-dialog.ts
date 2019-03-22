@@ -5,7 +5,7 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-dialog/etools-dialog.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
-import DateMixin from '../../../../../../../mixins/date-mixin.js';
+import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import './qpr-list.js';
@@ -19,12 +19,10 @@ import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin DateMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 class EditQprDialog extends EtoolsMixinFactory.combineMixins([
-  DateMixin,
   EndpointsMixin,
   AjaxErrorsParserMixin
 ], PolymerElement) {
@@ -244,6 +242,10 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });
+  }
+
+  prepareDatepickerDate(dateStr: string) {
+    return prepareDatepickerDate(dateStr);
   }
 
 }

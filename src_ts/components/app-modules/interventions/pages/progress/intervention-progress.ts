@@ -18,7 +18,6 @@ import '../../../reports/components/report-status.js';
 import '../../../reports/pages/progress/components/indicator-report-target.js';
 import AjaxErrorsParserMixin from '../../../../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
-import DateMixin from '../../../../mixins/date-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import UtilsMixin from '../../../../mixins/utils-mixin.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
@@ -30,6 +29,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { User } from '../../../../../typings/globals.types.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
+import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
 declare const moment: any;
 
 /**
@@ -39,7 +39,6 @@ declare const moment: any;
  * @appliesMixin EtoolsCurrency
  * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin DateMixin
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
@@ -48,7 +47,6 @@ const InterventionProgressMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
   AjaxErrorsParserMixin,
   EndpointsMixin,
-  DateMixin,
   CommonMixin,
   UtilsMixin
 ], PolymerElement);
@@ -426,7 +424,7 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
     let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
     if (latestIndReport) {
       let d = this._convertToDisplayFormat(latestIndReport.submission_date);
-      resultStatusDateStr = '(' + this.prettyDate(d) + ')';
+      resultStatusDateStr = '(' + this.getDateDisplayValue(d) + ')';
     }
     return resultStatusDateStr;
   }
@@ -439,20 +437,20 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
 
   _getTimeProgress(start: string, end: string) {
     let today = new Date();
-    let startDt = this.EdgeAcceptableDateParse(start);
-    let endDt = this.EdgeAcceptableDateParse(end);
+    let startDt = EdgeAcceptableDateParse(start);
+    let endDt = EdgeAcceptableDateParse(end);
     try {
-      if (this.dateIsBetween(startDt, endDt, today)) {
-        let intervalTotalDays = this.dateDiff(startDt, endDt);
-        let intervalDaysCompleted = this.dateDiff(startDt, today);
+      if (dateIsBetween(startDt, endDt, today)) {
+        let intervalTotalDays = dateDiff(startDt, endDt);
+        let intervalDaysCompleted = dateDiff(startDt, today);
         return intervalDaysCompleted * 100 / intervalTotalDays;
       }
     } catch (err) {
       this.logWarn('Time progress compute error', 'intervention-progress', err);
     }
     // if end date is valid and is past date or today's date, progress should be 100%
-    if (this.isValidDate(endDt) &&
-        (this.dateIsAfter(today, endDt) || this.datesAreEqual(today === endDt))) {
+    if (isValidDate(endDt) &&
+        (dateIsAfter(today, endDt) || datesAreEqual(today === endDt))) {
       return 100;
     }
     return 0;
@@ -467,7 +465,7 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
   }
 
   _convertToDisplayFormat(strDt: string) {
-    return moment(this.EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+    return moment(EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
   }
 
 }

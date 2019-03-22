@@ -16,7 +16,6 @@ import '../../../../layout/etools-form-element-wrapper.js';
 
 import './components/amendments/pd-amendments.js';
 import './components/fund-reservations/fund-reservations.js';
-import DateMixin from '../../../../mixins/date-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin.js';
@@ -38,14 +37,12 @@ import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVE
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
- * @appliesMixin DateMixin
  * @appliesMixin CommonMixin
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
 const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  DateMixin,
   CommonMixin,
   MissingDropdownOptionsMixin,
   UploadsMixin

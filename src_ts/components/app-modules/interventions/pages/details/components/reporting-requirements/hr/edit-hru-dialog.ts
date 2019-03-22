@@ -12,7 +12,7 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../../../styles/required-field-styles.js';
-import DateMixin from '../../../../../../../mixins/date-mixin.js';
+import {prepareDatepickerDate, convertDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
@@ -23,12 +23,10 @@ import { store, RootState } from '../../../../../../../../store.js';
  * @polymer
  * @customElement
  * @appliesMixin EtoolsDataReduxStore
- * @appliesMixin DateMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParser
  */
 class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
-  DateMixin,
   EndpointsMixin,
   AjaxErrorsParserMixin
 ], PolymerElement)) {
@@ -160,7 +158,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     if (!this.interventionStart) {
       return null;
     }
-    let stDt = this._convertDate(this.interventionStart);
+    let stDt = convertDate(this.interventionStart);
     if (stDt) {
       return moment(stDt).add(-1, 'days').toDate();
     }
@@ -263,6 +261,10 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });
+  }
+
+  prepareDatepickerDate(dateStr: string) {
+    return prepareDatepickerDate(dateStr);
   }
 
 }

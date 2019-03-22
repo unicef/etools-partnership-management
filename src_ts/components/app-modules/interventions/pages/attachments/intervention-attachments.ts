@@ -120,7 +120,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
             <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInvalid)]]">
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-2">
-                  [[prettyDate(item.created)]]
+                  [[getDateDisplayValue(item.created)]]
                 </span>
                 <span class="col-data col-3">
                   [[_getAttachmentType(item.type)]]

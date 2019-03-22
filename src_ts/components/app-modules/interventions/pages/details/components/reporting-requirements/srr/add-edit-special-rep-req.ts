@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
-import DateMixin from '../../../../../../../mixins/date-mixin';
+import {prepareDatepickerDate} from '../../../../../../../utils/date-utils';
 
 import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-input/paper-input.js';
@@ -17,12 +17,10 @@ import {fireEvent} from '../../../../../../../utils/fire-custom-event';
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin DateMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  DateMixin,
   AjaxErrorsParserMixin
 ], PolymerElement);
 
@@ -52,7 +50,7 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
         iron-label {
           margin-bottom: 24px;
         }
-        
+
         calendar-lite {
           position: relative;
         }
@@ -145,6 +143,10 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
       due_date: this.item.due_date,
       description: this.item.description
     };
+  }
+
+  prepareDatepickerDate(dateStr: string) {
+    return prepareDatepickerDate(dateStr);
   }
 
 }

@@ -107,7 +107,7 @@ class PdAmendments extends connect(store)(InterventionAmendmentsMixin) {
                 [[item.amendment_number]]
               </span>
               <span class="col-data col-2">
-                [[prettyDate(item.signed_date)]]
+                [[getDateDisplayValue(item.signed_date)]]
               </span>
               <span class="col-data col-2">
                 [[_getReadonlyAmendmentTypes(item.types)]]
