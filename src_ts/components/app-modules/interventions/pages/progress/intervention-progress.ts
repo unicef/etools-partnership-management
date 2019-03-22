@@ -450,7 +450,7 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
     }
     // if end date is valid and is past date or today's date, progress should be 100%
     if (isValidDate(endDt) &&
-        (dateIsAfter(today, endDt) || datesAreEqual(today === endDt))) {
+        (dateIsAfter(today, endDt) || datesAreEqual(today, endDt))) {
       return 100;
     }
     return 0;
