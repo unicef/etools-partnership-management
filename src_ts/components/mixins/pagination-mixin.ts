@@ -6,7 +6,7 @@ import {property} from '@polymer/decorators';
 
 function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class paginationMixin extends (baseClass) {
+  class paginationMixin extends baseClass {
 
   @property({type: Object, notify: true})
   paginator = new Paginator();

@@ -52,14 +52,13 @@ let _interventionsLastNavigated: string = '';
 @customElement('interventions-list')
 class InterventionsList extends connect(store)(
   ListFiltersMixin(
-    //ListsCommonMixin(
-     // CommonMixin(// For some reason the order of appliying mixins matters
-     FrNumbersConsistencyMixin(
-     PaginationMixin(
-
+    ListsCommonMixin(
+      CommonMixin(
+        PaginationMixin(
+        FrNumbersConsistencyMixin(
   PolymerElement)
-  //)
-//  )
+  )
+  )
   )
   )
   ) {

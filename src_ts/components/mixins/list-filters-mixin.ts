@@ -8,7 +8,7 @@ declare const moment: any;
   * @mixinFunction
   */
  function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass:T) {
-  class listFiltersMixin extends baseClass {
+  class listFiltersClass extends baseClass {
 
     @property({type: Array})
     listFilterOptions!: ListFilterOption[];
@@ -301,7 +301,7 @@ declare const moment: any;
     }
 
   }
-  return listFiltersMixin;
+  return listFiltersClass;
 }
 
 export default ListFiltersMixin;

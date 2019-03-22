@@ -9,7 +9,8 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin DateMixin
  */
 function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-     class commonMixin extends DateMixin(baseClass) {
+
+     class commonClass extends DateMixin(baseClass as Constructor<PolymerElement>)  {
 
       /**
        * Prepare and return the string value we have to display on the interface.
@@ -85,7 +86,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
     };
-  return commonMixin;
+  return commonClass;
 }
 
 export default CommonMixin;

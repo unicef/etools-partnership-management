@@ -9,8 +9,8 @@ declare const moment: any;
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  */
-function DateMixin(baseClass: Constructor<PolymerElement>) : typeof dateMixin {
-  const dateMixin = class extends EtoolsLogsMixin(baseClass) {
+function DateMixin<T extends Constructor<PolymerElement>>(baseClass: T) : typeof dateMixin {
+  const dateMixin = class extends EtoolsLogsMixin(baseClass as Constructor<PolymerElement>) {
 
     public prettyDate(dateString: string, format?: string, placeholder?: string) {
       let date = this._convertDate(dateString);
