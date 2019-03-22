@@ -28,6 +28,7 @@ import { store, RootState } from '../../../../../store.js';
 import './components/edit-core-values-assessment';
 import './components/staff-members';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import TestingUtilsMixin from "../../../../mixins/testing-utils-mixin";
 declare const moment: any;
 
 /**
@@ -38,7 +39,7 @@ declare const moment: any;
  */
 const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
   CommonMixin,
-  RiskRatingMixin
+  RiskRatingMixin, TestingUtilsMixin
 ], PolymerElement);
 
 /**
@@ -92,6 +93,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
         <etools-content-panel class="content-section" panel-title="Partner Details">
           <div class="row-h flex-c">
             <div class="col col-4">
+              [[tmplUtility('testingUtils', partner.name)]]
               <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
               </etools-form-element-wrapper>
             </div>
