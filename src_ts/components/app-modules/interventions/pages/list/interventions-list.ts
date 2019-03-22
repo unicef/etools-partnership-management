@@ -34,6 +34,7 @@ import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js'
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { LabelAndValue, User, CpStructure } from '../../../../../typings/globals.types.js';
 import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
+import { ListFilterOption } from '../../../../../typings/filter.types.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -51,13 +52,14 @@ let _interventionsLastNavigated: string = '';
 @customElement('interventions-list')
 class InterventionsList extends connect(store)(
   ListFiltersMixin(
-  ListsCommonMixin(
-  PaginationMixin(
-  FrNumbersConsistencyMixin(
-  CommonMixin(// For some reason the order of appliying mixins matters
+    //ListsCommonMixin(
+     // CommonMixin(// For some reason the order of appliying mixins matters
+     FrNumbersConsistencyMixin(
+     PaginationMixin(
+
   PolymerElement)
-  )
-  )
+  //)
+//  )
   )
   )
   ) {
@@ -323,7 +325,7 @@ class InterventionsList extends connect(store)(
   countryProgrammes!: CpStructure[];
 
   @property({type: Array})
-  sections!: [];
+  sections!: object[];
 
   @property({type: Array})
   selectedSections: number[] = [];
@@ -335,19 +337,19 @@ class InterventionsList extends connect(store)(
   selectedUnicefFocalPoints: number[] = [];
 
   @property({type: Array})
-  offices!: [];
+  offices!: object[];
 
   @property({type: Array})
   selectedOffices: number[] = [];
 
   @property({type: Array})
-  donors!: [];
+  donors!: object[];
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedDonors: string[] = [];
 
   @property({type: Array})
-  grants!: [];
+  grants!: object[];
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedGrants: string[] = [];
@@ -360,6 +362,9 @@ class InterventionsList extends connect(store)(
 
   @property({type: String, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedCPStructures: string[] = [];
+
+  _updateFiltersValsDebouncer!: Debouncer | null;
+  _queryDebouncer!: Debouncer | null;
 
   static get observers() {
     return [
@@ -438,7 +443,7 @@ class InterventionsList extends connect(store)(
     // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
     // IMPORTANT!!!
     this.initListFiltersData([
-      {
+      new ListFilterOption({
         filterName: 'CP Structure',
         type: 'esmm', // etools-dropdown-multi
         selectionOptions: countryProgrammes,
@@ -449,8 +454,8 @@ class InterventionsList extends connect(store)(
         selected: true,
         minWidth: '400px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Country Programme Output',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -460,8 +465,8 @@ class InterventionsList extends connect(store)(
         path: 'selectedCpOutputs',
         selected: false,
         minWidth: '400px'
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Donors',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -471,15 +476,15 @@ class InterventionsList extends connect(store)(
         path: 'selectedDonors',
         selected: false,
         minWidth: '400px'
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Ends Before',
         type: 'datepicker', // datepicker-lite
         path: 'endDate',
         dateSelected: '',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Grants',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -489,8 +494,8 @@ class InterventionsList extends connect(store)(
         path: 'selectedGrants',
         selected: false,
         minWidth: '400px'
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Offices',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -501,8 +506,8 @@ class InterventionsList extends connect(store)(
         selected: true,
         minWidth: '250px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'PD/SSFA Type',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -513,8 +518,8 @@ class InterventionsList extends connect(store)(
         selected: true,
         minWidth: '400px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Sections',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -525,22 +530,22 @@ class InterventionsList extends connect(store)(
         selected: true,
         minWidth: '350px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Starts After',
         type: 'datepicker', // datepicker-lite
         path: 'startDate',
         dateSelected: '',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Ends After',
         type: 'datepicker',
         dateSelected: '',
         path: 'endAfter',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Status',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -551,8 +556,8 @@ class InterventionsList extends connect(store)(
         selected: true,
         minWidth: '160px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'UNICEF focal point',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -562,7 +567,7 @@ class InterventionsList extends connect(store)(
         path: 'selectedUnicefFocalPoints',
         selected: false,
         minWidth: '400px'
-      }
+      })
     ]);
     this._updateSelectedFiltersValues();
   }
@@ -684,7 +689,7 @@ class InterventionsList extends connect(store)(
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
-          let interventions = this.shadowRoot.querySelector('#interventions');
+          let interventions = this.shadowRoot!.querySelector('#interventions');
           if (!interventions) {
             return;
           }

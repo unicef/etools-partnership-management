@@ -69,7 +69,7 @@ function DateMixin(baseClass: Constructor<PolymerElement>) : typeof dateMixin {
     public openDatePicker(event: any) {
       let id = event.target.getAttribute('data-selector');
       if (id) {
-        let datePicker = this.shadowRoot.querySelector('#' + id);
+        let datePicker = this.shadowRoot!.querySelector('#' + id) as PolymerElement & {open: boolean};
         if (datePicker) {
           datePicker.open = true;
         }

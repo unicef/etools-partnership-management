@@ -1,81 +1,68 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
+import {property} from '@polymer/decorators';
 import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
 import { PolymerElement } from '@polymer/polymer';
 
-const ListsCommonMixin = <T extends Constructor<PolymerElement>>(baseClass: T) =>
- // @ts-ignore
- class extends AppNavigationHelperMixin(baseClass) {
+function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+ class listCommonMixin extends AppNavigationHelperMixin(baseClass) {
 
-static get properties() {
-  return {
-    urlParams: {
-      type: Object
-    },
+    @property({type: Object})
+    urlParams!: GenericObject;
 
-    q: {
-      type: String,
-      notify: true
-    },
+    @property({type: String, notify: true})
+    q!: string;
 
-    sortOrder: Object,
+    @property({type: Object})
+    sortOrder!: object
 
-    debounceTime: {
-      type: Number,
-      value: 50
-    },
+    @property({type: Number})
+    debounceTime: number = 50;
 
-    active: Boolean,
+    @property({type: Boolean})
+    active: boolean = false;
 
-    detailsOpened: Boolean,
+    @property({type: Boolean})
+    detailsOpened!: boolean;
 
-    forceDataRefresh: {
-      type: Boolean,
-      value: false
-    },
+    @property({type: Boolean})
+    forceDataRefresh: boolean = false;
 
-    requiredDataLoaded: {
-      type: Boolean,
-      value: false
-    },
+    @property({type: Boolean})
+    requiredDataLoaded: boolean = false;
 
-    initComplete: {
-      type: Boolean,
-      value: false
-    },
+    @property({type: Boolean})
+    initComplete: boolean = false;
 
-    showQueryLoading: {
-      type: Boolean,
-      value: false
-    },
+    @property({type: Boolean})
+    showQueryLoading: boolean = false;
 
-    csvDownloadUrl: {
-      type: String,
-      notify: true
-    },
+    @property({type: String, notify: true})
+    csvDownloadUrl!: string;
 
-    stampListData: Boolean
-  };
-}
+    @property({type: Boolean})
+    stampListData!: boolean;
+
 
 connectedCallback() {
   super.connectedCallback();
   this._sortOrderChanged = this._sortOrderChanged.bind(this);
-  this.addEventListener('sort-changed', this._sortOrderChanged);
+  this.addEventListener('sort-changed', this._sortOrderChanged as EventListenerOrEventListenerObject);
 }
 
 disconnectedCallback() {
   super.disconnectedCallback();
-  this.removeEventListener('sort-changed', this._sortOrderChanged);
+  this.removeEventListener('sort-changed', this._sortOrderChanged as EventListenerOrEventListenerObject);
 }
 
 // When the list data rows are changing check and close any details opened
 _listDataChanged() {
-  let rows = this.$.list.querySelectorAll('etools-data-table-row');
+  let rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement>;
   if (rows && rows.length) {
     for (let i = 0; i < rows.length; i++) {
+      // @ts-ignore
       if (rows[i].detailsOpened) {
         rows[i].set('detailsOpened', false);
       }
@@ -118,6 +105,7 @@ _requiredDataHasBeenLoaded(event: PolymerElEvent) {
   // recheck params to trigger agreements filtering
   this.set('initComplete', false); // TODO : 2 flags that seem very similar..great..
   this.set('requiredDataLoaded', true);
+  // @ts-ignore
   this._init(this.active);
 }
 
@@ -143,6 +131,7 @@ listAttachedCallback(active: boolean, loadingMsg: string, loadingSource: any) {
  *  }
  */
 _isValidSortField(fieldName: string) {
+  // @ts-ignore
   return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
 }
 
@@ -246,5 +235,6 @@ _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, q
 }
 
 };
-
+ return listCommonMixin;
+}
 export default ListsCommonMixin;

@@ -1,20 +1,18 @@
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { Intervention, ListItemIntervention, FrsDetails, Fr } from '../../../../typings/intervention.types';
-import { Constructor } from '../../../../typings/globals.types';
+import { Constructor, GenericObject } from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  */
-const FrNumbersConsistencyMixin =  <T extends Constructor<PolymerElement>>(superClass: T) =>
- class extends EtoolsCurrency(superClass) {
-  static get properties() {
-    return {
-      frsConsistencyWarnings: {
-        type: Object,
-        value: {
+function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superClass: T) {
+  class frNumbersConsistencyMixin extends EtoolsCurrency(superClass as Constructor<PolymerElement>)  {
+      @property({type: Object})
+      frsConsistencyWarnings: GenericObject = {
           amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution can not be compared.',
           tooManyFrsCurencies: 'More than 1 FR currency is available.',
           amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
@@ -27,11 +25,9 @@ const FrNumbersConsistencyMixin =  <T extends Constructor<PolymerElement>>(super
           dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
           warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
           FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
-        }
-      },
-      frsValidationFields: {
-        type: Object,
-        value: {
+        };
+      @property({type: Object})
+      frsValidationFields: GenericObject = {
           start_date: 'Start Date',
           end_date: 'End Date',
           pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
@@ -39,9 +35,6 @@ const FrNumbersConsistencyMixin =  <T extends Constructor<PolymerElement>>(super
           fr_latest_date: 'FR End Date',
           fr_total_amount: 'Total FR amount'
         }
-      }
-    };
-  }
 
   /*
   * frs currencies and planned budget currency check
@@ -267,6 +260,10 @@ const FrNumbersConsistencyMixin =  <T extends Constructor<PolymerElement>>(super
     return this.frsConsistencyWarnings.FCmultiCurrFlagErrorMsg;
   }
 
-};
+  }
+
+  return frNumbersConsistencyMixin;
+}
+
 
 export default FrNumbersConsistencyMixin;

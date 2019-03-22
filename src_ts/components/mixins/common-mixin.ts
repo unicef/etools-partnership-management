@@ -8,8 +8,8 @@ import { PolymerElement } from '@polymer/polymer';
  * @mixinFunction
  * @appliesMixin DateMixin
  */
-function CommonMixin(baseClass: Constructor<PolymerElement>): typeof commonMixin {
-    const commonMixin = class extends DateMixin(baseClass) {
+function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+     class commonMixin extends DateMixin(baseClass) {
 
       /**
        * Prepare and return the string value we have to display on the interface.

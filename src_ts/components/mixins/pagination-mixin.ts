@@ -1,18 +1,15 @@
 import { Paginator, Constructor } from '../../typings/globals.types';
 import CONSTANTS from '../../config/app-constants';
 import { PolymerElement } from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 
-const PaginationMixin = <T extends Constructor<PolymerElement>>(baseClass: T) => class extends (baseClass) {
-  static get properties() {
-    return {
-      paginator: {
-        type: Object,
-        value: () => new Paginator(),
-        notify: true
-      }
-    };
-  }
+function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+
+  class paginationMixin extends (baseClass) {
+
+  @property({type: Object, notify: true})
+  paginator = new Paginator();
 
   static get observers() {
     return [
@@ -85,6 +82,10 @@ const PaginationMixin = <T extends Constructor<PolymerElement>>(baseClass: T) =>
   _getLastPageNr(pageSize: number, total: number) {
     return pageSize < total ? (Math.ceil(total / pageSize)) : 1;
   }
+}
+
+return paginationMixin;
+
 }
 
 export default PaginationMixin;

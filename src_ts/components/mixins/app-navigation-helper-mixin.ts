@@ -1,19 +1,18 @@
 import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function AppNavigationHelperMixin(baseClass: Constructor<PolymerElement>) : typeof appNavigationHelperMixin {
-  const appNavigationHelperMixin = class extends baseClass {
+function AppNavigationHelperMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class appNavigationHelperMixin extends (baseClass as Constructor<PolymerElement>) {
 
-      static get properties() {
-        return {
-          disableLoadingAfterAppStateChanged: Boolean
-        };
-      }
+      @property({type: Boolean})
+      disableLoadingAfterAppStateChanged!: Boolean;
+
       /**
        * Update app state
        */

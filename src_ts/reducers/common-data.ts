@@ -34,19 +34,19 @@ import {
   CommonDataAction
 } from '../actions/common-data';
 import { CpOutput, Disaggregation } from '../typings/intervention.types';
+import { LabelAndValue, CpStructure, User } from '../typings/globals.types';
 
 export interface CommonDataState {
   fileTypes: object[];
   signedByUnicefUsers: object[];
   cpOutputs: CpOutput[];
-  countryProgrammes: object[];
-  interventionDocTypes: object[];
-  interventionStatuses: object[];
+  countryProgrammes: CpStructure[];
+  interventionDocTypes: LabelAndValue[];
+  interventionStatuses: LabelAndValue[];
   sections: object[];
-  unicefUsersData: object[];
+  unicefUsersData: User[];
   locations: object[];
   offices: object[];
-  partners: object[];
   agreementsDropdownData: object[];
   agencyChoices: object[];
   agreementAmendmentTypes: object[];
@@ -57,7 +57,6 @@ export interface CommonDataState {
   currencies: object[];
   agreementTypes: object[];
   agreementStatuses: object[];
-  csoPartners: object[];
   countryData: object;
   disaggregations: Disaggregation[];
   PRPCountryData: object[];
@@ -82,7 +81,6 @@ const INITIAL_STATE: CommonDataState = {
   unicefUsersData: [],
   locations: [],
   offices: [],
-  partners: [],
   agreementsDropdownData: [],
   agencyChoices: [],
   agreementAmendmentTypes: [],
@@ -93,7 +91,6 @@ const INITIAL_STATE: CommonDataState = {
   currencies: [],
   agreementTypes: [],
   agreementStatuses: [],
-  csoPartners: [],
   countryData: {},
   disaggregations: [],
   PRPCountryData: [],
