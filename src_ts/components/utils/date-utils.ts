@@ -46,7 +46,7 @@ function _getDateWithoutTimezoneOffset(date: any) {
 export function prepareDatepickerDate(dateString: string) {
   let date = convertDate(dateString);
   if (!date) {
-    return new Date();
+    return null;
   }
   return _getDateWithoutTimezoneOffset(date);
 }

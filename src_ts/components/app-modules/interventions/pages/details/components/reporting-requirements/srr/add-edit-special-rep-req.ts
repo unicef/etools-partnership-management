@@ -72,7 +72,8 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
             <calendar-lite id="startDate"
                                       date="[[prepareDatepickerDate(item.due_date)]]"
                                       pretty-date="{{item.due_date}}"
-                                      format="YYYY-MM-DD"></calendar-lite>
+                                      format="YYYY-MM-DD"
+                                      hide-header></calendar-lite>
           </div>
         </div>
         <div class="row-h">
