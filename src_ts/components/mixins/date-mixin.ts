@@ -2,6 +2,7 @@
 
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import { logWarn } from 'etools-behaviors/etools-logging';
 declare const moment: any;
 
 /**
@@ -38,7 +39,7 @@ const DateMixin = dedupingMixin((baseClass: any) =>
         let date = new Date(dateString);
         let isValid = this.isValidDate(date);
         if (!isValid) {
-          this.logWarn('Date conversion unsuccessful: ' + dateString);
+          logWarn('Date conversion unsuccessful: ' + dateString);
         }
         return isValid ? date : null;
       }

@@ -554,13 +554,11 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     // import main module element if needed
     let moduleMainEl = this._getModuleMainElement(appModuleMainElId);
     let isPolymerElement = moduleMainEl instanceof PolymerElement;
-    console.log(pageUrl);
     if (!isPolymerElement) {
       // moduleMainEl is null => make the import
       import(pageUrl).then(() => {
         this._successfulImportCallback(appModuleMainElId);
       }).catch((err) => {
-        console.log(err);
         this._pageNotFound();
       });
     }

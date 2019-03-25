@@ -18,6 +18,7 @@ import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parse
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../../store.js';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -257,7 +258,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       dialog.stopSpinner();
       this.closeDialog();
     }).catch((error: any) => {
-      this.logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
+      logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
       this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });

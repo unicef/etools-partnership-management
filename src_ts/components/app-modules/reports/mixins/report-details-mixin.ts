@@ -1,4 +1,4 @@
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
@@ -83,7 +83,7 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
       this._getReportAttachment(response.id);
     }).catch((error: any) => {
       let errMsg = 'Reports details data request failed!';
-      this.logError(errMsg, this._logMsgPrefix, error);
+      logError(errMsg, this._logMsgPrefix, error);
       this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
       fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
     });
@@ -105,7 +105,7 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
 
     }).catch((error: any) => {
       let errMsg = 'Report attachment request failed!';
-      this.logError(errMsg, this._logMsgPrefix, error);
+      logError(errMsg, this._logMsgPrefix, error);
       if (error.status === 404) {
         // it means there is no attachment, which seems like a weird approach
       } else {

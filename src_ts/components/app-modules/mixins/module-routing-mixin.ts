@@ -169,7 +169,6 @@ const ModuleRoutingMixin = dedupingMixin(
              * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
             let pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
-            console.log('Root path: ', this.rootPath );
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {

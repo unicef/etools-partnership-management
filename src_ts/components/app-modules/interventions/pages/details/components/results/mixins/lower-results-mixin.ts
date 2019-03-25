@@ -106,7 +106,7 @@ const LowerResultsMixin = dedupingMixin(
           'll_results']));
         let validIndex = lrIndex >= 0;
         if (!validIndex) {
-          this.logError('Lower result with ID: ' + e.detail.lowerResultId + ' not found.', 'lower-results-behavior');
+          logError('Lower result with ID: ' + e.detail.lowerResultId + ' not found.', 'lower-results-behavior');
           return;
         }
         this.set(['dataItems', expectedResultIndex, 'll_results', lrIndex, 'name'], e.detail.lowerResult.name);

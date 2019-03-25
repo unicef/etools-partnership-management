@@ -9,6 +9,7 @@ import UserPermisionsMixin from './user-permissions-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data';
 import {isEmptyObject} from '../utils/utils';
 import { fireEvent } from '../utils/fire-custom-event';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -53,7 +54,7 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
           this.checkDexieCountryIsUserCountry(res);
         }).catch((error: any) => {
           this._resetUserAndPermissions();
-          this.logError('Error occurred on logged user data request', 'user request', error);
+          logError('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
             fireEvent(this, 'forbidden', {bubbles: true, composed: true});
           }
