@@ -15,6 +15,7 @@ import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
+import { logError } from 'etools-behaviors/etools-logging';
 
 
 /**
@@ -163,7 +164,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
       }).then(() => {
         this.splice('reportingRequirements', this._itemToDeleteIndex, 1);
       }).catch((error: any) => {
-        this.logError('Failed to delete special report requirement!',
+        logError('Failed to delete special report requirement!',
             'special-reporting-requirements', error);
         this.parseRequestErrorsAndShowAsToastMsgs(error);
       }).then(() => {
