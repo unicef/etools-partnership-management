@@ -14,7 +14,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
-import {logError} from "etools-behaviors/etools-logging";
+import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer

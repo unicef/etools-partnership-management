@@ -8,7 +8,7 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
-import {logError} from "etools-behaviors/etools-logging";
+import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * countries dropdown mixin

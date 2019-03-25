@@ -2,10 +2,10 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import { GenericObject } from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 
-import {PolymerElement} from "@polymer/polymer/polymer-element";
+import {PolymerElement} from '@polymer/polymer/polymer-element';
 import { fireEvent } from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
-import {logError} from "etools-behaviors/etools-logging";
+import {logError} from 'etools-behaviors/etools-logging';
 /**
  * Module main elements common functionality
  * @polymer

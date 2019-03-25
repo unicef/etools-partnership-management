@@ -1,5 +1,5 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import {logError} from "etools-behaviors/etools-logging";
+import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
