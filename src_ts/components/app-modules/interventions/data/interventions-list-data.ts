@@ -1,4 +1,3 @@
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
@@ -6,15 +5,14 @@ import { PolymerElement } from '@polymer/polymer';
 import { ListItemIntervention } from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ListDataMixin
  */
 class InterventionsListData extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   ListDataMixin
 ], PolymerElement) {
 
@@ -167,7 +165,7 @@ class InterventionsListData extends EtoolsMixinFactory.combineMixins([
       self._setFilteredInterventions(result);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     }).catch(function(error: any) {
-      self.logError('Error querying interventions: ' + error, 'interventions-list-data');
+      logError('Error querying interventions: ' + error, 'interventions-list-data');
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     });
   }

@@ -1,5 +1,4 @@
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { PolymerElement } from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
@@ -11,15 +10,14 @@ import { isEmptyObject } from '../../../utils/utils';
 import { setAgreements } from '../../../../actions/agreements';
 import { MinimalAgreement } from '../agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {logError} from "etools-behaviors/etools-logging";
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ListDataMixin
  */
 const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   ListDataMixin
 ], PolymerElement);
 
@@ -163,7 +161,7 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
       self._setFilteredAgreements(result);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     }).catch(function(error: any) {
-      self.logError('Error querying agreements: ', 'agreements-list-data', error, true);
+      logError('Error querying agreements: ', 'agreements-list-data', error);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     });
   }

@@ -1,8 +1,8 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { ExpectedResult, CpOutput } from '../../../../../../../../typings/intervention.types';
 import { isEmptyObject, isJsonStrMatch } from '../../../../../../../utils/utils';
 import { RootState } from '../../../../../../../../store';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -10,11 +10,10 @@ import { RootState } from '../../../../../../../../store';
  *  - save new result or edit one by selecting a cp output and a available ram indicators
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  */
 const ResultsMixin = dedupingMixin(
     // @ts-ignore
-  (superClass: any) => class extends EtoolsLogsMixin(superClass) {
+  (superClass: any) => class extends superClass {
     [x: string]: any;
 
     static get properties() {
@@ -183,8 +182,8 @@ const ResultsMixin = dedupingMixin(
 
     _canUpdateResult() {
       if (!this.get('dataItems')) {
-        this.logError('dataItems is undefined or null. You must have dataItems(Array of result_links) defined ' +
-            'to use this behavior.', 'results-behavior');
+        logError('dataItems is undefined or null. You must have dataItems(Array of result_links) defined' +
+            ' to use this behavior.', 'results-behavior');
         return false;
       }
       return true;

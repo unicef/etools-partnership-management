@@ -8,7 +8,6 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-content-panel/etools-content-panel.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
@@ -19,19 +18,18 @@ import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
 import { FrsDetails, Fr } from '../../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin ArrayHelperMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
 const InterventionFundReservationsMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   DynamicDialogMixin,
   EndpointsMixin,
   ArrayHelperMixin,
@@ -215,7 +213,7 @@ class FundReservations extends InterventionFundReservationsMixins {
     if (this._frsConfirmationsDialogMessage) {
       this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
     } else {
-      this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
+      logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
     }
   }
 

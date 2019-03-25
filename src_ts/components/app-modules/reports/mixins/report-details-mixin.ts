@@ -1,4 +1,4 @@
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
@@ -10,12 +10,10 @@ import {isJsonStrMatch, copy} from '../../../utils/utils';
 /**
  * @polymerMixin
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
   AjaxErrorsParserMixin
 ], superclass) {
@@ -66,7 +64,7 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
 
   requestReportDetails(id: string) {
     if (!this.currentUser) {
-      this.logWarn('Logged user data not init in Redux store.', this._logMsgPrefix);
+      logWarn('Logged user data not init in Redux store.', this._logMsgPrefix);
       return;
     }
 

@@ -5,7 +5,6 @@ import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/paper-input/paper-input.js';
 
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
@@ -31,18 +30,17 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
 const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   CommonMixin,
   MissingDropdownOptionsMixin,
   UploadsMixin
@@ -424,7 +422,7 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
       let frIds = e.detail.frsDetails.frs.map((fr: Fr) => fr.id);
       this.set('intervention.frs', frIds);
     } catch (err) {
-      this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
+      logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
     }
   }
 

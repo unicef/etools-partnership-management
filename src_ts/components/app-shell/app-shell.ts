@@ -50,7 +50,6 @@ import '@polymer/app-route/app-route.js';
 import {AppShellStyles} from './app-shell-styles';
 
 import 'etools-behaviors/etools-mixin-factory.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
@@ -99,7 +98,6 @@ setRootPath(BASE_URL);
  * @customElement
  * @polymer
  * @appliesMixin GestureEventListeners
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin AppMenuMixin
  * @appliesMixin CommonData
  * @appliesMixin ToastNotifications
@@ -112,7 +110,6 @@ setRootPath(BASE_URL);
  */
 class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   GestureEventListeners,
-  EtoolsLogsMixin,
   AppMenuMixin,
   CommonData,
   ToastNotifications,

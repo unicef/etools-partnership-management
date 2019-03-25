@@ -1,15 +1,14 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { GenericObject } from '../../../../../../../../typings/globals.types';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  */
 const LowerResultsMixin = dedupingMixin(
     // @ts-ignore
-    (superClass: any) => class extends EtoolsLogsMixin(superClass) {
+    (superClass: any) => class extends superClass {
   [x: string]: any;
 
   static get properties() {
@@ -79,7 +78,7 @@ const LowerResultsMixin = dedupingMixin(
       }
       return index;
     } catch (err) {
-      this.logError('Get lower result index failed!', 'lower-results-behavior', err);
+      logError('Get lower result index failed!', 'lower-results-behavior', err);
     }
 
     return -1;
@@ -89,13 +88,15 @@ const LowerResultsMixin = dedupingMixin(
     e.stopImmediatePropagation();
     try {
       if (!e.detail.expectedResultId) {
-        this.logError('Can not make changes if expected result ID is not specified.', 'lower-results-behavior');
+        logError('Can not make changes if expected result ID is not specified.',
+            'lower-results-behavior');
         return;
       }
       let expectedResultIndex = this._getDataIndex(e.detail.expectedResultId, this.dataItems);
       let validExpectedResultsIndex = expectedResultIndex >= 0;
       if (!validExpectedResultsIndex) {
-        this.logError('Result with ID: ' + e.detail.expectedResultId + ' not found.', 'lower-results-behavior');
+        logError('Result with ID: ' + e.detail.expectedResultId + ' not found.',
+            'lower-results-behavior');
         return;
       }
       if (!e.detail.lowerResultId) {
@@ -111,7 +112,8 @@ const LowerResultsMixin = dedupingMixin(
         this.set(['dataItems', expectedResultIndex, 'll_results', lrIndex, 'name'], e.detail.lowerResult.name);
       }
     } catch (err) {
-      this.logError('Adding lower result in displayed list has failed!', 'lower-results-behavior', err);
+      logError('Adding lower result in displayed list has failed!', 'lower-results-behavior',
+          err);
     }
   }
 
