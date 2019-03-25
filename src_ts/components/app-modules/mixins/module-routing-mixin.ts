@@ -10,7 +10,6 @@ import {logError} from "etools-behaviors/etools-logging";
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  */
 const ModuleRoutingMixin = dedupingMixin(
     // @ts-ignore
