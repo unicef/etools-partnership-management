@@ -8,7 +8,7 @@ import {prettyDate} from '../utils/date-utils';
  */
 function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-     class commonClass extends baseClass {
+     class commonClass extends (baseClass as Constructor<PolymerElement>) {
       /**
        * Prepare and return the string value we have to display on the interface.
        * Ex: partners and agreements lists data values.
