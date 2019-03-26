@@ -46,6 +46,7 @@ import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 
 /**
  * @polymer
@@ -878,9 +879,9 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _daysUntilExpiry(end: string) {
-    if (this.isFutureDate(end)) {
+    if (isFutureDate(end)) {
       let today = new Date().toString();
-      let diff = this.dateDiff(today, end);
+      let diff = dateDiff(today, end);
       if (diff) {
         return diff + ' days until expiry';
       }

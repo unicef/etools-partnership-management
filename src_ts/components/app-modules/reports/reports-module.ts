@@ -8,7 +8,6 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../layout/page-content-header';
@@ -37,7 +36,6 @@ declare const moment: any;
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRouting
  * @appliesMixin ReportDetails
@@ -45,7 +43,6 @@ declare const moment: any;
  * @appliesMixin ScrollControl
  */
 const ReportsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   ModuleMainElCommonFunctionalityMixin,
   ModuleRoutingMixin,
   ReportDetailsMixin,

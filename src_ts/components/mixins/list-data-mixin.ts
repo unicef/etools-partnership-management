@@ -3,6 +3,7 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
+import { logWarn } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -58,7 +59,7 @@ const ListDataMixin = dedupingMixin((baseClass: any) =>
 
       _elementReady() {
         if (!this.endpointName) {
-          this.logWarn('Please specify an endpointName property', 'list-data-mixin');
+          logWarn('Please specify an endpointName property', 'list-data-mixin');
         } else {
           this.set('options.endpoint', this.getEndpoint(this.endpointName));
           this._requestListData();
@@ -83,7 +84,7 @@ const ListDataMixin = dedupingMixin((baseClass: any) =>
         this._setData(res);
         if (this.fireDataLoaded) {
           if (!this.dataLoadedEventName) {
-            this.logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
+            logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
           } else {
             fireEvent(this, this.dataLoadedEventName);
           }

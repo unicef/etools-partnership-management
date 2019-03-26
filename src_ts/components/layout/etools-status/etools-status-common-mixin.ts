@@ -2,8 +2,8 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControl from '../../mixins/scroll-control-mixin';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 declare const ShadyCSS: any;
 
 /**
@@ -11,13 +11,12 @@ declare const ShadyCSS: any;
  * @polymer
  * @mixinFunction
  * @appliesMixin DynamicDialogMixin
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ScrollControl
  **/
 const EtoolsStatusCommonMixin = dedupingMixin(
     (superClass: any) => class extends (ScrollControl(
         // @ts-ignore
-        DynamicDialogMixin(EtoolsLogsMixin(superClass))) as any) {
+        DynamicDialogMixin(superClass)) as any) {
       [x: string]: any;
 
       static get properties() {
@@ -183,11 +182,11 @@ const EtoolsStatusCommonMixin = dedupingMixin(
             this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
             this.warningDialog.opened = true;
           } else {
-            this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' +
+            logWarn('#statusChangeWarningContent element not found!', 'pmp ' +
                 this.sectionName + ' status change');
           }
         } else {
-          this.logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
+          logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
         }
       }
 

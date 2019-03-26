@@ -1,8 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
-import DateMixin from '../../../../../../../mixins/date-mixin';
+import {prepareDatepickerDate} from '../../../../../../../utils/date-utils';
 
 import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-input/paper-input.js';
@@ -11,19 +10,17 @@ import 'etools-dialog/etools-dialog.js';
 import 'etools-date-time/calendar-lite.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
+import { logError } from 'etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin DateMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  DateMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 
@@ -52,7 +49,7 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
         iron-label {
           margin-bottom: 24px;
         }
-        
+
         calendar-lite {
           position: relative;
         }
@@ -74,7 +71,8 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
             <calendar-lite id="startDate"
                                       date="[[prepareDatepickerDate(item.due_date)]]"
                                       pretty-date="{{item.due_date}}"
-                                      format="YYYY-MM-DD"></calendar-lite>
+                                      format="YYYY-MM-DD"
+                                      hide-header></calendar-lite>
           </div>
         </div>
         <div class="row-h">
@@ -135,8 +133,8 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
         })
         .catch((error: any) => {
           dialog.stopSpinner();
-          this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
-          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+          logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
+          parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
         });
   }
 
@@ -145,6 +143,10 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
       due_date: this.item.due_date,
       description: this.item.description
     };
+  }
+
+  prepareDatepickerDate(dateStr: string) {
+    return prepareDatepickerDate(dateStr);
   }
 
 }

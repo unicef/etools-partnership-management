@@ -16,6 +16,7 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
 import './pd-lower-result-name.js';
 import './applied-indicators.js';
 import { Indicator } from '../../../../../../../typings/intervention.types.js';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -264,13 +265,13 @@ class ResultLinkLowerResults extends (RepeatableDataSetsMixin(PolymerElement) as
     e.stopPropagation();
     let index = parseInt(e.target.getAttribute('data-args'), 10);
     if (index < 0) {
-      this.logError('Can not edit, invalid index selected', 'lower-results');
+      logError('Can not edit, invalid index selected', 'lower-results');
       return;
     }
 
     let lowerResult = this.dataItems[index];
     if (!lowerResult) {
-      this.logError('Lower result not found in data items by index: ' + index, 'lower-results');
+      logError('Lower result not found in data items by index: ' + index, 'lower-results');
       return;
     }
 

@@ -3,7 +3,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import "etools-content-panel/etools-content-panel.js";
+import 'etools-content-panel/etools-content-panel.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-data-table/etools-data-table.js';
 
@@ -16,7 +16,7 @@ import '../../../../../layout/icons-actions.js';
 
 import './assessment-dialog.js';
 import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
-import {etoolsCpHeaderActionsBarStyles} from "../../../../../styles/etools-cp-header-actions-bar-styles";
+import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import { store } from '../../../../../../store.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
 
@@ -115,7 +115,7 @@ class AssessmentsItems extends AssessmentsItemsRequiredMixins {
                   [[item.type]]
                 </span>
                 <span class="col-data col-2">
-                  [[prettyDate(item.completed_date)]]
+                  [[getDateDisplayValue(item.completed_date)]]
                 </span>
                 <span class="col-data col-6">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>

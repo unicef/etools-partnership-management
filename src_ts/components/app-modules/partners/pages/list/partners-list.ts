@@ -511,7 +511,7 @@ class PartnersList extends connect(store)(PartnersListRequiredMixins){
   }
 
   public _computeName(name: string, shortName: string) {
-    return this.getDisplayValue([shortName, name], false, ' / ', true);
+    return this.getDisplayValue([shortName, name], ' / ', true);
   }
 
   public _computeType(csoType: any, partnerType: any) {

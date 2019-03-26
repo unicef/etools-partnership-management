@@ -5,9 +5,8 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-dialog/etools-dialog.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
-import DateMixin from '../../../../../../../mixins/date-mixin.js';
+import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import './qpr-list.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
@@ -15,18 +14,16 @@ import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import 'etools-date-time/calendar-lite.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
+import { logError } from 'etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin DateMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 class EditQprDialog extends EtoolsMixinFactory.combineMixins([
-  DateMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement) {
   [x: string]: any;
 
@@ -105,7 +102,8 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
           <calendar-lite id="startDate"
                     date="[[prepareDatepickerDate(_editedQprDatesSet.start_date)]]"
                     pretty-date="{{_editedQprDatesSet.start_date}}"
-                    format="YYYY-MM-DD">
+                    format="YYYY-MM-DD"
+                    hide-header>
                                     </calendar-lite>
         </div>
         <div class="col layout-vertical">
@@ -115,7 +113,8 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
           <calendar-lite id="endDate"
                     date="[[prepareDatepickerDate(_editedQprDatesSet.end_date)]]"
                     pretty-date="{{_editedQprDatesSet.end_date}}"
-                    format="YYYY-MM-DD">
+                    format="YYYY-MM-DD"
+                    hide-header>
                                   </calendar-lite>
         </div>
         <div class="col layout-vertical">
@@ -125,7 +124,8 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
           <calendar-lite id="dueDate"
                     date="[[prepareDatepickerDate(_editedQprDatesSet.due_date)]]"
                     pretty-date="{{_editedQprDatesSet.due_date}}"
-                    format="YYYY-MM-DD">
+                    format="YYYY-MM-DD"
+                    hide-header>
                                     </calendar-lite>
         </div>
       </div>
@@ -240,10 +240,14 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       dialog.stopSpinner();
       this.closeQprDialog();
     }).catch((error: any) => {
-      this.logError('Failed to save/update qpr data!', 'edit-qpr-dialog', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+      logError('Failed to save/update qpr data!', 'edit-qpr-dialog', error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });
+  }
+
+  prepareDatepickerDate(dateStr: string) {
+    return prepareDatepickerDate(dateStr);
   }
 
 }
