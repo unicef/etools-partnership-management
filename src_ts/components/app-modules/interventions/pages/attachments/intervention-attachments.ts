@@ -6,14 +6,11 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-content-panel/etools-content-panel.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../mixins/ajax-errors-parser-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { InterventionAttachment } from '../../../../../typings/intervention.types.js';
@@ -27,22 +24,20 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store } from '../../../../../store.js';
 import { RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin CommonMixin
  */
 const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   DynamicDialogMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin,
   CommonMixin,
 ], PolymerElement);
 
@@ -120,7 +115,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
             <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInvalid)]]">
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-2">
-                  [[prettyDate(item.created)]]
+                  [[getDateDisplayValue(item.created)]]
                 </span>
                 <span class="col-data col-3">
                   [[_getAttachmentType(item.type)]]
@@ -326,8 +321,8 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
     }).then((response: any) => {
       this.set('attachments', response);
     }).catch((error: any) => {
-      this.logError('Error during pd attachments fetch.', 'pd-attachments', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error);
+      logError('Error during pd attachments fetch.', 'pd-attachments', error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this);
     }).then(() => {
       fireEvent(this, 'global-loading', {
         active: false,
@@ -377,8 +372,8 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
       }).then((_response: any) => {
         this._updateAttachments(this.attMarkedToBeDeleted, true);
       }).catch((error: any) => {
-        this.logError('Error during pd attachment delete.', 'pd-attachments', error);
-        this.parseRequestErrorsAndShowAsToastMsgs(error);
+        logError('Error during pd attachment delete.', 'pd-attachments', error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         fireEvent(this, 'global-loading', {
           active: false,

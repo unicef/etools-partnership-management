@@ -6,10 +6,10 @@ import '../../../../../layout/etools-form-element-wrapper';
 
 
 import pmpEdpoints from '../../../../../endpoints/endpoints';
-import CommonMixin from "../../../../../mixins/common-mixin";
+import CommonMixin from '../../../../../mixins/common-mixin';
 
-import {gridLayoutStyles} from "../../../../../styles/grid-layout-styles";
-import {requiredFieldStarredStyles} from "../../../../../styles/required-field-styles";
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 
 /**
@@ -35,7 +35,7 @@ class EditCoreValuesAssessment extends (CommonMixin(PolymerElement) as any) {
                      disable-dismiss-btn="[[uploadInProgress]]">
         <div class="layout-horizontal row-padding-v">
           <etools-form-element-wrapper label="Date Last Assessed"
-                                       value="[[prettyDate(item.date)]]">
+                                       value="[[getDateDisplayValue(item.date)]]">
           </etools-form-element-wrapper>
         </div>
         <div class="layout-horizontal row-padding-v">

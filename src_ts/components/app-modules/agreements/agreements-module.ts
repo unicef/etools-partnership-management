@@ -4,9 +4,6 @@ import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../store.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-import AjaxErrorsParserMixin from '../../mixins/ajax-errors-parser-mixin.js';
 import ScrollControl from '../../mixins/scroll-control-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
@@ -30,27 +27,24 @@ import { fireEvent } from '../../utils/fire-custom-event.js';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
-const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
-  ScrollControl,
-  ModuleRoutingMixin,
-  ModuleMainElCommonFunctionalityMixin,
-  EndpointsMixin,
-  AjaxErrorsParserMixin,
-], PolymerElement);
+const AgreementsModuleRequiredMixins =
+  ScrollControl(
+  ModuleRoutingMixin(
+  ModuleMainElCommonFunctionalityMixin(
+  EndpointsMixin(
+  PolymerElement))));
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
+// @ts-ignore
 class AgreementsModule extends AgreementsModuleRequiredMixins {
   [x: string]: any;
 

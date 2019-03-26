@@ -1,23 +1,19 @@
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {RootState} from '../../../../store';
 import {isJsonStrMatch, copy} from '../../../utils/utils';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymerMixin
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], superclass) {
   [x: string]: any;
 
@@ -66,7 +62,7 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
 
   requestReportDetails(id: string) {
     if (!this.currentUser) {
-      this.logWarn('Logged user data not init in Redux store.', this._logMsgPrefix);
+      logWarn('Logged user data not init in Redux store.', this._logMsgPrefix);
       return;
     }
 
@@ -85,8 +81,8 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
       this._getReportAttachment(response.id);
     }).catch((error: any) => {
       let errMsg = 'Reports details data request failed!';
-      this.logError(errMsg, this._logMsgPrefix, error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+      logError(errMsg, this._logMsgPrefix, error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this, true);
       fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
     });
   }
@@ -107,11 +103,11 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
 
     }).catch((error: any) => {
       let errMsg = 'Report attachment request failed!';
-      this.logError(errMsg, this._logMsgPrefix, error);
+      logError(errMsg, this._logMsgPrefix, error);
       if (error.status === 404) {
         // it means there is no attachment, which seems like a weird approach
       } else {
-        this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }
       fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
     });

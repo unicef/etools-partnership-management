@@ -9,10 +9,10 @@ import '../../../mixins/fr-numbers-consistency-mixin.js';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 import { frWarningsStyles } from '../../../styles/fr-warnings-styles.js';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin.js';
-import DateMixin from '../../../../../mixins/date-mixin.js';
 import { isEmptyObject } from '../../../../../utils/utils.js';
 import { Intervention, FrsDetails } from '../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.js';
+import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 
 
@@ -20,12 +20,12 @@ import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
- * @appliesMixin DateMixin
+ * @appliesMixin CommonMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
 const FundReservationsDisplayMixins = EtoolsMixinFactory.combineMixins([
   EtoolsCurrency,
-  DateMixin,
+  CommonMixin,
   FrNumbersConsistencyMixin
 ], PolymerElement);
 
@@ -124,7 +124,7 @@ class FundReservationsDisplay extends FundReservationsDisplayMixins {
           <etools-data-table-row>
             <div slot="row-data">
               <span class="col-data col-2">[[fr.fr_number]]</span>
-              <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
+              <span class="col-data col-2 right-align">[[getDateDisplayValue(fr.start_date)]]</span>
               <span class="col-data col-2 right-align">
                 <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                     icon-first

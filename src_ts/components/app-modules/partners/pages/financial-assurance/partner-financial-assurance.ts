@@ -3,7 +3,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js'
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import "etools-content-panel/etools-content-panel.js";
+import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -411,7 +411,7 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
         <template is="dom-repeat" items="[[engagements]]">
           <div class="assessment-row panel-table-row layout-horizontal">
             <div class="col-3">[[_displayType(item.engagement_type)]]</div>
-            <div class="col-2">[[prettyDate(item.status_date)]]</div>
+            <div class="col-2">[[getDateDisplayValue(item.status_date)]]</div>
             <div class="col-2">[[displayCurrencyAmount(item.amount_tested, 0, 0)]]</div>
             <div class="col-3 col">[[displayCurrencyAmount(item.outstanding_findings, 0, 0)]]</div>
             <a class="report col" target="_blank"
@@ -554,9 +554,9 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
       // @ts-ignore
       ...this.partner.assessments.map(a => ({
         // @ts-ignore
-        label: `${a.type} - ${this.prettyDate(a.completed_date)}`,
+        label: `${a.type} - ${this.getDateDisplayValue(a.completed_date)}`,
         // @ts-ignore
-        value: `${a.type} - ${this.prettyDate(a.completed_date)}`
+        value: `${a.type} - ${this.getDateDisplayValue(a.completed_date)}`
       }))
     ]);
   }
@@ -567,9 +567,9 @@ class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
       ...this.basisOptions,
       ...engagements.map((e: any) => ({
         // @ts-ignore
-        label: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`,
+        label: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`,
         // @ts-ignore
-        value: `${this.TYPES[e.engagement_type]} - ${this.prettyDate(e.status_date)}`
+        value: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`
       }))
     ]);
   }

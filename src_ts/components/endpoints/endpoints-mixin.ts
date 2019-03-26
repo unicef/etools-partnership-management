@@ -1,23 +1,22 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {RootState} from '../../store';
 
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
 import { User } from '../../typings/globals.types';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin EtoolsLogsMixin
  */
 const EndpointsMixin = dedupingMixin((baseClass: any) =>
     // @ts-ignore
-    class extends (EtoolsAjaxRequestMixin(EtoolsLogsMixin(baseClass))) {
+    class extends (EtoolsAjaxRequestMixin(baseClass)) {
       [x: string]: any;
 
       // TODO: polymer 3 - remove properties from here
@@ -211,7 +210,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       public fireRequest(endpoint: any, endpointTemplateData: object,
                          requestAdditionalOptions: object, activeReqKey: string) {
         if (!endpoint) {
-          this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
+          logError('Endpoint name is missing.', 'Endpoints:fireRequest');
           return;
         }
         let defer = this._getDeferrer();
