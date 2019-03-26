@@ -147,7 +147,7 @@ class PlannedBudget extends connect(store)(
                 <template is="dom-if" if="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                   <etools-form-element-wrapper no-label-float
                                                 id="cso-cont"
-                                                value="[[plannedBudget.partner_contribution_local]]">
+                                                value="[[displayCurrencyAmount(plannedBudget.partner_contribution_local, '0.00')]]">
                   </etools-form-element-wrapper>
                 </template>
 
@@ -198,7 +198,7 @@ class PlannedBudget extends connect(store)(
                 <template is="dom-if" if="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                   <etools-form-element-wrapper no-label-float
                                                 id="in-kind-amount"
-                                                value="[[plannedBudget.in_kind_amount_local]]">
+                                                value="[[displayCurrencyAmount(plannedBudget.in_kind_amount_local, '0.00')]]">
                   </etools-form-element-wrapper>
                 </template>
 
