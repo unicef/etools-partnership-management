@@ -19,8 +19,8 @@ import {patchDisaggregation} from '../../../../actions/common-data';
 import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
-import {EnvFlags} from "../../../environment-flags/environment-flags";
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import { EnvFlags } from '../../../../typings/globals.types';
 
 
 /**

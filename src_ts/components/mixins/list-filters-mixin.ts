@@ -1,11 +1,14 @@
 import { ListFilterOption, SelectedFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
-import { DomRepeatEvent, PolymerElEvent, _ } from '../../typings/globals.types';
+import { DomRepeatEvent, PolymerElEvent, Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 declare const moment: any;
 /**
   * @polymer
   * @mixinFunction
   */
- const ListFiltersMixin = (baseClass: any) => class extends baseClass {
+ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass:T) {
+  class listFiltersClass extends baseClass {
+    [x: string]: any;
 
   static get properties() {
     return {
@@ -22,7 +25,7 @@ declare const moment: any;
    * Init filter options properties.
    * `filterOptions` object is particular for each list (see partners-list for example)
    */
-  initListFiltersData(filterOptions: []) {
+  initListFiltersData(filterOptions: ListFilterOption[]) {
     // init add filter menu options
     this.setProperties({
       listFilterOptions: filterOptions,
@@ -302,5 +305,7 @@ declare const moment: any;
   }
 
 };
+return listFiltersClass;
+}
 
 export default ListFiltersMixin;
