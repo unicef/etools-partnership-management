@@ -34,7 +34,7 @@ import {
   CommonDataAction
 } from '../actions/common-data';
 import { CpOutput, Disaggregation } from '../typings/intervention.types';
-import { LabelAndValue, CpStructure, User } from '../typings/globals.types';
+import { LabelAndValue, CpStructure, User, Country } from '../typings/globals.types';
 
 export interface CommonDataState {
   fileTypes: object[];
@@ -54,10 +54,10 @@ export interface CommonDataState {
   partnerTypes: object[];
   assessmentTypes: object[];
   interventionAmendmentTypes: object[];
-  currencies: object[];
+  currencies: LabelAndValue[];
   agreementTypes: object[];
   agreementStatuses: object[];
-  countryData: object;
+  countryData: Country | null;
   disaggregations: Disaggregation[];
   PRPCountryData: object[];
   currentUser: object;
@@ -91,7 +91,7 @@ const INITIAL_STATE: CommonDataState = {
   currencies: [],
   agreementTypes: [],
   agreementStatuses: [],
-  countryData: {},
+  countryData: null,
   disaggregations: [],
   PRPCountryData: [],
   currentUser: {},
@@ -314,4 +314,3 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
 };
 
 export default commonData;
-
