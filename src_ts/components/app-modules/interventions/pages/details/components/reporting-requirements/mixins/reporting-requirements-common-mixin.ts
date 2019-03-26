@@ -1,21 +1,19 @@
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 import { isEmptyObject } from '../../../../../../../utils/utils';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxErrorsParserMixin
  */
 const ReportingRequirementsCommonMixin =
     (baseClass: any) => class extends EtoolsMixinFactory.combineMixins([
-      EtoolsLogsMixin,
       EndpointsMixin,
       AjaxErrorsParserMixin
     ], baseClass) {
@@ -71,7 +69,8 @@ const ReportingRequirementsCommonMixin =
                   : response.reporting_requirements);
         })
         .catch((error: any) => {
-          this.logError('Failed to get qpr data from API!', 'reporting-requirements-common-mixin', error);
+          logError('Failed to get qpr data from API!',
+              'reporting-requirements-common-mixin', error);
           this.parseRequestErrorsAndShowAsToastMsgs(error, this);
         });
   }

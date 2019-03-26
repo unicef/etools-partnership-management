@@ -1,6 +1,5 @@
 import {PolymerElement} from "@polymer/polymer/polymer-element.js";
 
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
@@ -9,16 +8,15 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {store} from "../../../../store.js";
 import { deletePartner } from '../../../../actions/partners.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
 const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
   AjaxServerErrorsMixin
 ], PolymerElement);
@@ -143,7 +141,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   public _handlePartnerDeleteFromDexieErr(dexieDeleteErr: any) {
     // Partner dexie deleted issue
-    this.logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
+    logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
           'partner data from browser cache. Use refresh data functionality to update cached partners data.',
@@ -153,7 +151,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   public _handleErrorResponse(response: any, ajaxMethod: any) {
     if (response instanceof EtoolsRequestError === false) {
-      this.logError('_handleErrorResponse', 'partner-item-data', response);
+      logError('_handleErrorResponse', 'partner-item-data', response);
     }
     if (this._skipDefaultErrorHandler) {
       fireEvent(this, 'global-loading', {
@@ -253,4 +251,4 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
 }
 
-window.customElements.define('partner-item-data', PartnerItemData);;
+window.customElements.define('partner-item-data', PartnerItemData);

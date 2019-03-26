@@ -4,24 +4,22 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dropdown/etools-dropdown'
 import {store, RootState} from '../../store';
 import {SharedStyles} from '../styles/shared-styles'
 import {requiredFieldStarredStyles} from '../styles/required-field-styles'
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
 import {CpStructure} from '../../typings/globals.types';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 
-const EtoolsCpStructureMixins = [EtoolsLogsMixin];
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
  */
 class EtoolsCpStructure
-    extends connect(store)(EtoolsMixinFactory.combineMixins(EtoolsCpStructureMixins, PolymerElement)) {
+    extends connect(store)(PolymerElement) {
+  [x: string]: any;
   static get template() {
     return html`
           ${SharedStyles} ${requiredFieldStarredStyles}
@@ -140,7 +138,7 @@ class EtoolsCpStructure
               this.setDefaultSelectedCpStructure();
             } else {
               if (this._hasExpiredCpAssigned(this.selectedCp)) {
-                this.logWarn(this._getExpiredCPWarning());
+                logWarn(this._getExpiredCPWarning());
               }
             }
           }
@@ -216,7 +214,11 @@ class EtoolsCpStructure
   }
 
   _getCpStructureDropdown() {
-    return this.shadowRoot.querySelector('#cpStructure');
+    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
+                                                         {
+                                                           resetInvalidState(): void,
+                                                           validate(): boolean
+                                                         };
   }
 
 }

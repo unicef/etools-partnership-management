@@ -1,24 +1,22 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { GenericObject } from '../../typings/globals.types.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  */
 const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
   class extends EtoolsMixinFactory.combineMixins([
-      EtoolsLogsMixin,
       DynamicDialogMixin,
       EndpointsMixin,
       EtoolsAjaxRequestMixin
@@ -146,7 +144,7 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
 
         if (id) {
           if (!this._deleteEpName) {
-            this.logError('You must define _deleteEpName property to be able to remove existing records');
+            logError('You must define _deleteEpName property to be able to remove existing records');
             return;
           }
 

@@ -15,6 +15,7 @@ import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
+import { logWarn } from 'etools-behaviors/etools-logging';
 
 
 /**
@@ -185,7 +186,7 @@ class AttachmentDialog extends AttachmentDialogMixin {
       delete attachment.attachment;
       delete attachment.attachment_file;
     } else if (!this.interventionId || isNaN(this.interventionId)) {
-      this.logWarn('You need a valid PD id to be able to save the attachment!', 'attachment-dialog');
+      logWarn('You need a valid PD id to be able to save the attachment!', 'attachment-dialog');
       return;
     }
     const endpointName = !isNewAttachment ? 'updatePdAttachment' : 'pdAttachments';

@@ -11,6 +11,7 @@ import 'etools-dialog/etools-dialog.js';
 import 'etools-date-time/calendar-lite.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
+import { logError } from 'etools-behaviors/etools-logging';
 
 
 /**
@@ -134,7 +135,7 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
         })
         .catch((error: any) => {
           dialog.stopSpinner();
-          this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
+          logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
           this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
         });
   }

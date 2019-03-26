@@ -9,6 +9,7 @@ import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-m
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -235,7 +236,7 @@ class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
   _isValidResult(result: any) {
     let valid = true;
     if (!result.intervention) {
-      this.logError('Intervention ID is missing! Can not save result.', 'expected-results-modal');
+      logError('Intervention ID is missing! Can not save result.', 'expected-results-modal');
       valid = false;
     }
     if (!result.cp_output || result.ram_indicators.length === 0) {
