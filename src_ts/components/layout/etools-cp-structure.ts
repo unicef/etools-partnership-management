@@ -214,7 +214,11 @@ class EtoolsCpStructure
   }
 
   _getCpStructureDropdown() {
-    return this.shadowRoot.querySelector('#cpStructure');
+    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
+                                                         {
+                                                           resetInvalidState(): void,
+                                                           validate(): boolean
+                                                         };
   }
 
 }
