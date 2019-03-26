@@ -1,21 +1,19 @@
 import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {RootState} from '../../../../store';
 import {isJsonStrMatch, copy} from '../../../utils/utils';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymerMixin
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], superclass) {
   [x: string]: any;
 
@@ -84,7 +82,7 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
     }).catch((error: any) => {
       let errMsg = 'Reports details data request failed!';
       logError(errMsg, this._logMsgPrefix, error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+      parseRequestErrorsAndShowAsToastMsgs(error, this, true);
       fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
     });
   }
@@ -109,7 +107,7 @@ const ReportDetailsMixin = (superclass: any) => class extends EtoolsMixinFactory
       if (error.status === 404) {
         // it means there is no attachment, which seems like a weird approach
       } else {
-        this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }
       fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
     });

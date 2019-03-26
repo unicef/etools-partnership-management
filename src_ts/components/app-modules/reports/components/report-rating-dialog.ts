@@ -4,11 +4,11 @@ import '@polymer/paper-radio-group/paper-radio-group.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-behaviors/etools-mixin-factory.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { SharedStyles } from '../../../styles/shared-styles';
 declare const moment: any;
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 
 
 /*
@@ -19,11 +19,9 @@ import { fireEvent } from '../../../utils/fire-custom-event';
 /**
  * @polymer
  * @customElement
- * @appliesMixin AjaxErrorsParser
  * @appliesMixin EndpointsMixin
  */
 class ReportRatingDialog extends EtoolsMixinFactory.combineMixins([
-  AjaxErrorsParserMixin,
   EndpointsMixin
   ], PolymerElement) {
 
@@ -121,7 +119,7 @@ class ReportRatingDialog extends EtoolsMixinFactory.combineMixins([
 
   _handleErrorResponse(error: any) {
     this.stopSpinner();
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 }
 
