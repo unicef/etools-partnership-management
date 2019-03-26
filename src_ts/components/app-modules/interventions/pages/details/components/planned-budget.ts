@@ -7,8 +7,6 @@ import 'etools-dropdown/etools-dropdown.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-currency-amount-input/etools-currency-amount-input.js';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../utils/utils';
@@ -17,9 +15,10 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { SharedStyles } from '../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
 import { frWarningsStyles } from '../../../styles/fr-warnings-styles';
-import { Country } from '../../../../../../typings/globals.types';
-import {Fr, FrsDetails } from '../../../../../../typings/intervention.types';
+import { Country, IPermission, GenericObject, LabelAndValue } from '../../../../../../typings/globals.types';
+import {Fr, FrsDetails, InterventionPermissionsFields, Intervention } from '../../../../../../typings/intervention.types';
 import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons';
+import {property, computed} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -27,10 +26,9 @@ import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons'
  * @appliesMixin EtoolsCurrency
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  FrNumbersConsistencyMixin
-], PolymerElement)) {
+class PlannedBudget extends connect(store)(
+  FrNumbersConsistencyMixin(
+  PolymerElement)) {
 
   static get template() {
     return html`
@@ -219,59 +217,49 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: Object,
-      plannedBudget: {
-        type: Object,
-        notify: true,
-        observer: '_plannedBudgetChanged'
-      },
-      currencies: {
-        type: Array,
-        statePath: 'currencies'
-      },
-      required: {
-        type: Boolean,
-        computed: '_getValue(permissions.required.planned_budget)'
-      },
-      editMode: {
-        type: Boolean,
-        computed: '_getValue(permissions.edit.planned_budget)',
-        observer: '_editModeChanged'
-      },
-      unicefCashEditMode: {
-        type: Boolean,
-        computed: '_getValue(permissions.edit.planned_budget_unicef_cash)',
-        observer: '_editModeChanged'
-      },
-      editablePlannedBudget: {
-        type: Boolean,
-        value: false
-      },
-      interventionId: {
-        type: Number,
-        observer: '_interventionIdChanged'
-      },
-      initialPlannedBudget: Object,
-      _frsConsistencyWarning: {
-        type: String,
-        value: ''
-      },
-      _showCancelButton: Boolean,
-      countryData: {
-        type: Object,
-        statePath: 'countryData'
-      },
-      _visibleEditBtn: {
-        type: Boolean,
-        computed: '_showEditBtn(editMode, unicefCashEditMode, _showCancelButton, interventionId)'
-      },
-      permissions: {
-        type: Object
-      }
-    };
+  @property({type: Object})
+  intervention!: Intervention;
+
+  @property({type: Object, notify: true, observer: PlannedBudget.prototype._plannedBudgetChanged})
+  plannedBudget!: PlannedBudget;
+
+  @property({type: Array})
+  currencies!: LabelAndValue[];
+
+  @property({type: Boolean, computed: '_getValue(permissions.required.planned_budget)', observer: PlannedBudget.prototype._editModeChanged})
+  required!: boolean;
+
+  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget)', observer: PlannedBudget.prototype._editModeChanged})
+  editMode!: boolean;
+
+  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)', observer: PlannedBudget.prototype._editModeChanged})
+  unicefCashEditMode!: boolean;
+
+  @property({type: Boolean})
+  editablePlannedBudget: boolean = false;
+
+  @property({type: Number, observer: PlannedBudget.prototype._interventionIdChanged})
+  interventionId!: Number;
+
+  @property({type: Object})
+  initialPlannedBudget!: PlannedBudget;
+
+  @property({type: String})
+  _frsConsistencyWarning = '';
+
+  @property({type: Boolean})
+  _showCancelButton!: boolean;
+
+  @property({type: Object})
+  countryData!: Country;
+
+  @computed('editMode', 'unicefCashEditMode', '_showCancelButton', 'interventionId')
+  get _visibleEditBtn() {
+    return this._showEditBtn();
   }
+
+  @property({type: Object})
+  permissions!: IPermission<InterventionPermissionsFields>;
 
   static get observers() {
     return [
@@ -325,9 +313,9 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
     return showCancelButton && this.interventionId;
   }
 
-  _showEditBtn(editMode: boolean, unicefCashEditMode: boolean,
-     showCancelButton: boolean, interventionId: number) {
-    return (editMode || unicefCashEditMode) && !showCancelButton && interventionId > 0;
+  _showEditBtn(_editMode?: boolean, _unicefCashEditMode?: boolean,
+     _showCancelButton?: boolean, _interventionId?: number) {
+    return (this.editMode || this.unicefCashEditMode) && !this._showCancelButton && this.interventionId > 0;
   }
 
   _isReadonly(editMode: boolean, editablePlannedBudget: boolean, interventionId: number) {
@@ -352,7 +340,7 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   // make sure we have the right currency selected when intervention is changed
-  _interventionIdChanged(id: string) {
+  _interventionIdChanged(id: any, _old: any) {
     if (typeof id === 'undefined') {
       return;
     }
@@ -394,7 +382,7 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
       '#inKindAmount'
     ];
     elementsSelectorsToValidate.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
       if (el && !el.validate()) {
         valid = false;
       }
@@ -410,14 +398,14 @@ class PlannedBudget extends connect(store)(EtoolsMixinFactory.combineMixins([
       '#inKindAmount'
     ];
     elementsSelectorsToValidate.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
     });
   }
 
-  _editModeChanged(newValue: boolean, oldValue: boolean) {
+  _editModeChanged(newValue: any, oldValue: any) {
     if (newValue !== oldValue) {
       this.updateStyles();
     }
