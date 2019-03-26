@@ -175,7 +175,7 @@ class AddAgAmendmentDialog extends PolymerElement {
 
   _resetValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -185,7 +185,7 @@ class AddAgAmendmentDialog extends PolymerElement {
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }

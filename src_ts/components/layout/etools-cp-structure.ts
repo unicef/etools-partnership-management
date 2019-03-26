@@ -19,6 +19,7 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
  */
 class EtoolsCpStructure
     extends connect(store)(PolymerElement) {
+  [x: string]: any;
   static get template() {
     return html`
           ${SharedStyles} ${requiredFieldStarredStyles}
@@ -213,7 +214,11 @@ class EtoolsCpStructure
   }
 
   _getCpStructureDropdown() {
-    return this.shadowRoot.querySelector('#cpStructure');
+    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
+                                                         {
+                                                           resetInvalidState(): void,
+                                                           validate(): boolean
+                                                         };
   }
 
 }
