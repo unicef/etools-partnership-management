@@ -1,5 +1,5 @@
 import { ListFilterOption, SelectedFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
-import { DomRepeatEvent, PolymerElEvent, _ } from '../../typings/globals.types';
+import { DomRepeatEvent, PolymerElEvent } from '../../typings/globals.types';
 declare const moment: any;
 /**
   * @polymer
