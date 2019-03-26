@@ -8,6 +8,7 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import EnvironmentFlags from "../environment-flags/environment-flags-mixin";
 import { isEmptyObject } from '../utils/utils';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -67,7 +68,7 @@ const CommonData = dedupingMixin((baseClass: any) =>
       }
 
       protected _errorHandler(err: any) {
-        this.logError('Error getting static data', 'static-common-data', err);
+        logError('Error getting static data', 'static-common-data', err);
       }
 
       protected _getEndpointSuccessHandler(endpointName: string) {

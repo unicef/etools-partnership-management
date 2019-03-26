@@ -6,10 +6,8 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-content-panel/etools-content-panel.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
@@ -26,19 +24,18 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store } from '../../../../../store.js';
 import { RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
 const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   DynamicDialogMixin,
   EndpointsMixin,
   CommonMixin,
@@ -324,7 +321,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
     }).then((response: any) => {
       this.set('attachments', response);
     }).catch((error: any) => {
-      this.logError('Error during pd attachments fetch.', 'pd-attachments', error);
+      logError('Error during pd attachments fetch.', 'pd-attachments', error);
       parseRequestErrorsAndShowAsToastMsgs(error);
     }).then(() => {
       fireEvent(this, 'global-loading', {
@@ -375,7 +372,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
       }).then((_response: any) => {
         this._updateAttachments(this.attMarkedToBeDeleted, true);
       }).catch((error: any) => {
-        this.logError('Error during pd attachment delete.', 'pd-attachments', error);
+        logError('Error during pd attachment delete.', 'pd-attachments', error);
         parseRequestErrorsAndShowAsToastMsgs(error);
       }).then(() => {
         fireEvent(this, 'global-loading', {

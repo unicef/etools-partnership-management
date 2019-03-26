@@ -14,6 +14,7 @@ import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import 'etools-date-time/calendar-lite.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
+import { logError } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 /**
@@ -236,7 +237,7 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       dialog.stopSpinner();
       this.closeQprDialog();
     }).catch((error: any) => {
-      this.logError('Failed to save/update qpr data!', 'edit-qpr-dialog', error);
+      logError('Failed to save/update qpr data!', 'edit-qpr-dialog', error);
       parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });

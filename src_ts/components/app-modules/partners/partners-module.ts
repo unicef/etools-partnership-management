@@ -10,7 +10,6 @@ import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-l
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import ScrollControl from "../../mixins/scroll-control-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
@@ -38,14 +37,15 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @polymer
  * @mixinFunction
  * @appliesMixin GestureEventListeners
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionality
  */
 const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  GestureEventListeners, EtoolsLogsMixin, ScrollControl,
-  ModuleRoutingMixin, ModuleMainElCommonFunctionalityMixin
+  GestureEventListeners,
+  ScrollControl,
+  ModuleRoutingMixin,
+  ModuleMainElCommonFunctionalityMixin
 ], PolymerElement);
 
 /**

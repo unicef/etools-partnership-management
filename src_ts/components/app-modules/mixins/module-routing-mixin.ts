@@ -2,20 +2,18 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import { GenericObject } from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 
-// @ts-ignore
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
-import {PolymerElement} from "@polymer/polymer/polymer-element";
+import {PolymerElement} from '@polymer/polymer/polymer-element';
 import { fireEvent } from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
+import {logError} from 'etools-behaviors/etools-logging';
 /**
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  */
 const ModuleRoutingMixin = dedupingMixin(
     // @ts-ignore
-    (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
+    (superClass: any) => class extends (superClass) {
 
       static get properties() {
         return {
@@ -118,7 +116,7 @@ const ModuleRoutingMixin = dedupingMixin(
       _handleFailedImport(err: GenericObject, page: string, fileImportDetails: GenericObject) {
         // log page element import failed error
         let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
-        this.logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
+        logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
 
         fireEvent(this, 'global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
         fireEvent(this, '404');
@@ -170,7 +168,6 @@ const ModuleRoutingMixin = dedupingMixin(
              * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
             let pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
-            console.log('Root path: ', this.rootPath );
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {

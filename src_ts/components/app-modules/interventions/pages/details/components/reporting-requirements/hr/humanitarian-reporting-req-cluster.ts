@@ -7,6 +7,7 @@ import CommonMixin from '../../../../../../../mixins/common-mixin';
 import { ResultLinkLowerResult, ExpectedResult } from '../../../../../../../../typings/intervention.types';
 import { isEmptyObject } from '../../../../../../../utils/utils';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import { logError } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 
@@ -103,7 +104,7 @@ class HumanitarianReportingReqCluster extends HumanitarianReportingReqClusterMix
     }).then((response: any) => {
       this.set('reportingRequirements', response);
     }).catch((error: any) => {
-      this.logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
+      logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
       parseRequestErrorsAndShowAsToastMsgs(error, this);
       this.reportingRequirements = [];
     });

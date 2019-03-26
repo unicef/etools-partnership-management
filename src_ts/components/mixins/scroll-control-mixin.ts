@@ -1,6 +1,5 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-// @ts-ignore
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
@@ -8,7 +7,7 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
  */
 const ScrollControl = dedupingMixin((baseClass: any) =>
     // @ts-ignore
-    class extends EtoolsLogsMixin(baseClass) {
+    class extends baseClass {
       public static get properties() {
         return {
           contentContainer: {
@@ -46,8 +45,8 @@ const ScrollControl = dedupingMixin((baseClass: any) =>
 
       public scrollToTop() {
         if (!this.contentContainer) {
-          // @ts-ignore
-          this.logWarn('Can not scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
+          logWarn('Can not scroll! `contentContainer` object is null or undefined',
+              'scroll-control-mixin');
           return;
         }
         // @ts-ignore

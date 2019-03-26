@@ -1,21 +1,19 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  */
 class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
 ], PolymerElement) {
   [x: string]: any;
@@ -97,7 +95,7 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
       result_link: this.expectedResultId
     };
     if (!lowerResult.result_link) {
-      this.logError('Expected result ID is missing! Can not save lower result name.', 'lower-result-name-modal');
+      logError('Expected result ID is missing! Can not save lower result name.', 'lower-result-name-modal');
       return false;
     }
 

@@ -24,6 +24,7 @@ import './result-link-lower-results.js';
 import './indicator-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -221,13 +222,13 @@ class ExpectedResults extends connect(store)(EtoolsMixinFactory.combineMixins([
     e.stopPropagation();
     let index = parseInt(e.target.getAttribute('data-args'), 10);
     if (index < 0) {
-      this.logError('Can not edit, invalid index selected', 'expected-results');
+      logError('Can not edit, invalid index selected', 'expected-results');
       return;
     }
 
     let result = this.dataItems[index];
     if (!result) {
-      this.logError('Result not found in data items by index: ' + index, 'expected-results');
+      logError('Result not found in data items by index: ' + index, 'expected-results');
       return;
     }
 
@@ -261,7 +262,7 @@ class ExpectedResults extends connect(store)(EtoolsMixinFactory.combineMixins([
       }
       this._updateInterventionLocAndClusters();
     } catch (err) {
-      this.logError('Updating/adding new indicator data in displayed list has failed!',
+      logError('Updating/adding new indicator data in displayed list has failed!',
           'lower-results-behavior', err);
     }
   }

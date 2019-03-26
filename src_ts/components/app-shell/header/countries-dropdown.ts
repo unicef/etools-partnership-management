@@ -5,21 +5,22 @@ import {store, RootState} from "../../../store.js";
 import 'etools-dropdown/etools-dropdown.js';
 
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
+import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * countries dropdown mixin
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
 const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin, EndpointsMixin, EtoolsPageRefreshMixin], PolymerElement);
+  EndpointsMixin,
+  EtoolsPageRefreshMixin
+], PolymerElement);
 
 /**
  * @polymer
@@ -177,7 +178,7 @@ class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
   }
 
   protected _handleError(error: any) {
-    this.logError('Country change failed!', 'countries-dropdown', error);
+    logError('Country change failed!', 'countries-dropdown', error);
     // TODO: this should be a larger alert.
     // @ts-ignore
     this.$.countrySelector.set('selected', this.currentCountry.id);

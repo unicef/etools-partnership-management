@@ -5,10 +5,8 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
-import 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-progress-bar.js';
@@ -29,20 +27,19 @@ import { User } from '../../../../../typings/globals.types.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
+import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 declare const moment: any;
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsCurrency
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
 const InterventionProgressMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EtoolsCurrency,
   EndpointsMixin,
   CommonMixin,
@@ -330,8 +327,7 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
       self.set('progress', response);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
     }).catch(function(error: any) {
-      let errMsg = 'PD/SSFA progress request failed!';
-      self.logError(errMsg, 'intervention-progress', error);
+      logError('PD/SSFA progress request failed!', 'intervention-progress', error);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
     });
@@ -444,7 +440,7 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
         return intervalDaysCompleted * 100 / intervalTotalDays;
       }
     } catch (err) {
-      this.logWarn('Time progress compute error', 'intervention-progress', err);
+      logWarn('Time progress compute error', 'intervention-progress', err);
     }
     // if end date is valid and is past date or today's date, progress should be 100%
     if (isValidDate(endDt) &&

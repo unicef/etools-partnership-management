@@ -1,22 +1,20 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import './applied-indicator.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 
 /**
   * @polymer
   * @customElement
-  * @appliesMixin EtoolsLogsMixin
   * @appliesMixin DynamicDialogMixin
   * @appliesMixin RepeatableDataSetsMixin
   */
 class AppliedIndicators extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   DynamicDialogMixin,
   RepeatableDataSetsMixin,
 ], PolymerElement) {
@@ -156,7 +154,7 @@ class AppliedIndicators extends EtoolsMixinFactory.combineMixins([
 
   _handleDeactivateError(err: any) {
     fireEvent(this, 'toast', {text: 'Deactivate indicator error occurred', showCloseBtn: true});
-    this.logError('Deactivate indicator error occurred.', 'applies-indicators', err);
+    logError('Deactivate indicator error occurred.', 'applies-indicators', err);
     this.indicToDeactivateIndex = -1;
   }
 }

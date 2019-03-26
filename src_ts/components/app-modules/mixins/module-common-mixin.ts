@@ -3,17 +3,16 @@ import { ListQueryParams } from '../../../typings/route.types.js';//TODO - load 
 import '../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import { fireEvent } from '../../utils/fire-custom-event.js';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
   /**
    * Module main elements common functionality
    * @polymer
    * @mixinFunction
-   * @appliesMixin EtoolsLogsMixin
    */
   const ModuleMainElCommonFunctionalityMixin = dedupingMixin(
       // @ts-ignore
-    (superClass: any) => class extends (EtoolsLogsMixin(superClass) as any) {
+    (superClass: any) => class extends (superClass) {
       static get properties() {
         return {
           /* Gets updated by app-route */
@@ -116,7 +115,7 @@ import { fireEvent } from '../../utils/fire-custom-event.js';
             listElem._filterListData(true);
           }
         } catch (err) {
-          this.logWarn('List refresh error occurred', '[' + this.moduleName +'-module]', err);
+          logWarn('List refresh error occurred', '[' + this.moduleName +'-module]', err);
         }
       }
 

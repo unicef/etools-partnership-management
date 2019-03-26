@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import 'etools-loading/etools-loading.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
+import {logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
@@ -11,11 +11,9 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  */
 const EtoolsRamIndicatorsMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
 ], PolymerElement);
 
@@ -123,7 +121,7 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
       this.set('loading', false);
       this.set('ramIndicators', resp.ram_indicators.map((ri: any) => ri.indicator_name));
     }).catch((error: any) => {
-      this.logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
+      logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
           ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
       parseRequestErrorsAndShowAsToastMsgs(error);
       this.set('loading', false);

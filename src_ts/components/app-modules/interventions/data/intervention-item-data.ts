@@ -1,6 +1,5 @@
 import { PolymerElement } from '@polymer/polymer';
 import {store} from '../../../../store';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
@@ -19,17 +18,16 @@ import {
 } from '../../../../typings/intervention.types';
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin EnvironmentFlags
  */
 const InterventionItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
   AjaxServerErrorsMixin,
   EnvironmentFlags,
@@ -229,7 +227,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     let propName: string;
     for (propName in minimalAgrData) {
       if (!detail.hasOwnProperty(propName)) {
-        this.logWarn('Mapping property not found');
+        logWarn('Mapping property not found');
       } else {
         minimalAgrData[propName] = detail[propName];
       }
@@ -498,7 +496,8 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
 
   _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
-    this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+    logError('Agreement delete from local dexie db failed!', 'agreement-item-data',
+        dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
       'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',

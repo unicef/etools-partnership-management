@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import 'etools-data-table/etools-data-table';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import './report-status';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
@@ -16,20 +15,19 @@ import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../store';
 import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils';
+import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
 const ReportsDisplayListMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
   CommonMixin,
   PaginationMixin,
@@ -292,8 +290,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
                   // req aborted
                   return;
                 }
-                let errMsg = 'Reports list data request failed!';
-                this.logError(errMsg, 'reports-list', error);
+                logError('Reports list data request failed!', 'reports-list', error);
 
                 parseRequestErrorsAndShowAsToastMsgs(error, this);
                 fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
