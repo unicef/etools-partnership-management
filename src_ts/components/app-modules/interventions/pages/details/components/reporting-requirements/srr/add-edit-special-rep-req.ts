@@ -1,7 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import {prepareDatepickerDate} from '../../../../../../../utils/date-utils';
 
 import '@polymer/iron-label/iron-label.js';
@@ -11,17 +10,16 @@ import 'etools-dialog/etools-dialog.js';
 import 'etools-date-time/calendar-lite.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 
@@ -134,7 +132,7 @@ class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
         .catch((error: any) => {
           dialog.stopSpinner();
           this.logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
-          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+          parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
         });
   }
 

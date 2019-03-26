@@ -9,7 +9,6 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {GenericObject, User} from '../../../../typings/globals.types';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../mixins/common-mixin';
 import PaginationMixin from '../../../mixins/pagination-mixin';
@@ -17,7 +16,7 @@ import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../store';
 import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils';
-
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 
 
 /**
@@ -25,14 +24,12 @@ import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils';
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
 const ReportsDisplayListMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
-  AjaxErrorsParserMixin,
   EndpointsMixin,
   CommonMixin,
   PaginationMixin,
@@ -298,7 +295,7 @@ class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
                 let errMsg = 'Reports list data request failed!';
                 this.logError(errMsg, 'reports-list', error);
 
-                this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+                parseRequestErrorsAndShowAsToastMsgs(error, this);
                 fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
               });
         });

@@ -4,22 +4,23 @@ import {store} from '../../store';
 import {isEmptyObject} from '../utils/utils';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
-import AjaxErrorsParserMixin from '../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data.js';
 import { fireEvent } from '../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const ProfileOperations = dedupingMixin((baseClass: any) =>
     class extends connect(store)(EtoolsMixinFactory.combineMixins([
-      EndpointsMixin, UserDataMixin, AjaxErrorsParserMixin], baseClass) as typeof baseClass) {
+      EndpointsMixin,
+      UserDataMixin,
+    ], baseClass) as typeof baseClass) {
 
       public static get properties() {
         return {
@@ -43,7 +44,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
         this.sendRequest(config).then(function (resp: any) {
           self._handleResponse(resp);
         }).catch(function (error: any) {
-          self.parseRequestErrorsAndShowAsToastMsgs(error);
+          parseRequestErrorsAndShowAsToastMsgs(error);
           self._hideProfileSaveLoadingMsg();
         });
       }

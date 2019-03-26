@@ -13,7 +13,7 @@ export function tryGetResponseError(response: any) {
   return response.response || globalMessage;
 }
 
-export function _getErrorsArray(errors: any, prepareForToastMsg: boolean) {
+export function getErrorsArray(errors: any, prepareForToastMsg: boolean) {
   //@ts-ignore
   let errorsArray: any = [];
   if (!errors) {
@@ -71,7 +71,7 @@ export function _getErrorsArray(errors: any, prepareForToastMsg: boolean) {
       if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
         let parentErr = 'Field ' + errField + ': ';
         //@ts-ignore
-        let nestedErrs = _getErrorsArray(errors[errField]);
+        let nestedErrs = getErrorsArray(errors[errField]);
         if (nestedErrs.length === 1) {
           parentErr += nestedErrs[0];
           errorsArray.push(parentErr);
@@ -117,7 +117,7 @@ function _isArrayOfStrings(arr: any) {
 }
 
 function formatServerErrorAsText(errors: any) {
-  let errorsArray = _getErrorsArray(errors, false);
+  let errorsArray = getErrorsArray(errors, false);
   if (errorsArray && errorsArray.length) {
     return errorsArray.join('\n');
   }

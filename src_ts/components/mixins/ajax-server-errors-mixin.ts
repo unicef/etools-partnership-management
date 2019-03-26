@@ -1,14 +1,13 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import AjaxErrorsParserMixin from './ajax-errors-parser-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
+import {getErrorsArray, tryGetResponseError} from '../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin AjaxErrorsParserMixin
  */
 const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
-  class extends (AjaxErrorsParserMixin(baseClass) as any) {
+  class extends baseClass {
 
     static get properties() {
       return {
@@ -43,7 +42,7 @@ const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
         loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
       });
 
-      let errors = this.tryGetResponseError(response);
+      let errors = tryGetResponseError(response);
 
       let errorMessage = this.globalMessage;
 
@@ -52,7 +51,7 @@ const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
       }
 
       if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
-        this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
+        this.set('serverErrors', getErrorsArray(errors, this.useToastEvent));
       }
       this.serverErrors = this.serverErrors ? this.serverErrors : [];
       if (this.useToastEvent) {

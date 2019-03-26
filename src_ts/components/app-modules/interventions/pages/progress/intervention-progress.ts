@@ -16,7 +16,6 @@ import '../../../../layout/etools-ram-indicators.js';
 
 import '../../../reports/components/report-status.js';
 import '../../../reports/pages/progress/components/indicator-report-target.js';
-import AjaxErrorsParserMixin from '../../../../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import UtilsMixin from '../../../../mixins/utils-mixin.js';
@@ -30,6 +29,7 @@ import { User } from '../../../../../typings/globals.types.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 declare const moment: any;
 
 /**
@@ -37,7 +37,6 @@ declare const moment: any;
  * @mixinFunction
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsCurrency
- * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
@@ -45,7 +44,6 @@ declare const moment: any;
 const InterventionProgressMixins = EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   EtoolsCurrency,
-  AjaxErrorsParserMixin,
   EndpointsMixin,
   CommonMixin,
   UtilsMixin
@@ -334,7 +332,7 @@ class InterventionProgress extends connect(store)(InterventionProgressMixins) {
     }).catch(function(error: any) {
       let errMsg = 'PD/SSFA progress request failed!';
       self.logError(errMsg, 'intervention-progress', error);
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
     });
   }

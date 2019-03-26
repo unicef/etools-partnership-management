@@ -14,21 +14,19 @@ import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../../../styles/required-field-styles.js';
 import {prepareDatepickerDate, convertDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../../store.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParser
  */
 class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement)) {
   [x: string]: any;
 
@@ -258,7 +256,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       this.closeDialog();
     }).catch((error: any) => {
       this.logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });
   }

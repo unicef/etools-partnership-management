@@ -7,7 +7,6 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import './qpr-list.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
@@ -15,16 +14,15 @@ import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import 'etools-date-time/calendar-lite.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 class EditQprDialog extends EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement) {
   [x: string]: any;
 
@@ -239,7 +237,7 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       this.closeQprDialog();
     }).catch((error: any) => {
       this.logError('Failed to save/update qpr data!', 'edit-qpr-dialog', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });
   }

@@ -4,8 +4,8 @@ import 'etools-dialog/etools-dialog.js';
 import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 
 
 /**
@@ -13,12 +13,10 @@ import { fireEvent } from '../../../../../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
   EtoolsLogsMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement) {
   [x: string]: any;
 
@@ -134,7 +132,7 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
     }).catch(function(error: any) {
       dialog.stopSpinner();
       self.set('disableConfirmBtn', false);
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
       return false;
     });
   }
