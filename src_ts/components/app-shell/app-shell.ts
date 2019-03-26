@@ -558,7 +558,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       // moduleMainEl is null => make the import
       import(pageUrl).then(() => {
         this._successfulImportCallback(appModuleMainElId);
-      }).catch((err) => {
+      }).catch((_err: any) => {
         this._pageNotFound();
       });
     }

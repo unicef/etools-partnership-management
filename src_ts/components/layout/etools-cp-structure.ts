@@ -19,6 +19,7 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
  */
 class EtoolsCpStructure
     extends connect(store)(PolymerElement) {
+  [x: string]: any;
   static get template() {
     return html`
           ${SharedStyles} ${requiredFieldStarredStyles}
