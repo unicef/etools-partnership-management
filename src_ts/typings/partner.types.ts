@@ -1,3 +1,4 @@
+// TODO: clean up this file
 export class Partner {
   id?: string | number ;
 }

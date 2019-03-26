@@ -14,12 +14,11 @@ import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import ScrollControl from "../../mixins/scroll-control-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
-
 import '../../layout/page-content-header';
 import '../../layout/page-content-header-slotted-styles';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
-import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles.js';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
 import {UserPermissions} from "../../../typings/globals.types";
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
@@ -33,6 +32,8 @@ import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
+
+import {Partner} from '../../../models/partners.models';
 
 /**
  * @polymer
@@ -278,17 +279,11 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   }
 
   public _savePartnerContact(e: CustomEvent) {
-    this._savePartner({
-      id: this.partner.id,
-      staff_members: [e.detail]
-    });
+    this._savePartner(this.partner.getPartnerSaveReqPayload('staff_members', e.detail));
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
-    this._savePartner({
-      id: this.partner.id,
-      core_values_assessments: [e.detail]
-    });
+    this._savePartner(this.partner.getPartnerSaveReqPayload('core_values_assessments', e.detail));
   }
 
   public _createNewPartnerDialog() {
@@ -333,8 +328,8 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
   public _savePartner(newPartnerData: any) {
     let partnerData = this.shadowRoot.querySelector('#partnerData');
     if (partnerData) {
-      partnerData.savePartner(newPartnerData).then((successfull: any) => {
-        if (successfull) {
+      partnerData.savePartner(newPartnerData).then((successful: any) => {
+        if (successful) {
           store.dispatch({type: RESET_UNSAVED_UPLOADS});
         }
       });
@@ -425,8 +420,9 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
         active: false,
         loadingSource: 'partner-data'
       });
+
       // keep a copy of loaded partner to be able to check changed data
-      this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
+      this.set('originalPartnerData', new Partner(partner));
     }
     fireEvent(this, 'clear-server-errors');
   }
@@ -439,10 +435,11 @@ class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any)
     }
 
     // both partner details and financial assurance data is valid
+    // TODO: move _cleanUpdateData in Partner class then use
+    // partner.getPartnerSaveReqPayload to provide data for save method
     let partnerChanges = this._cleanUpdateData(this.partner);
     partnerChanges.id = this.partner.id;
     this._savePartner(partnerChanges);
-
   }
 
   public _cleanUpdateData(partner: any) {

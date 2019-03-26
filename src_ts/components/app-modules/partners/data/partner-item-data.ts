@@ -6,9 +6,10 @@ import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
-import {store} from "../../../../store.js";
-import { deletePartner } from '../../../../actions/partners.js';
-import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {store} from "../../../../store";
+import { deletePartner } from '../../../../actions/partners';
+import { fireEvent } from '../../../utils/fire-custom-event';
+import {Partner} from "../../../../models/partners.models";
 
 /**
  * @polymer
@@ -91,10 +92,11 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
   }
 
   public _handleSuccResponse(response: any, ajaxMethod: any) {
-    this._setPartner(response);
+    const partner: Partner = new Partner(response);
+    this._setPartner(partner);
 
     if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
-      this.handleSuccResponseAdditionalCallback.bind(this, response)();
+      this.handleSuccResponseAdditionalCallback.bind(this, partner)();
       // reset callback
       this.set('handleSuccResponseAdditionalCallback', null);
       this.set('handleErrResponseAdditionalCallback', null);
@@ -102,7 +104,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
     if (['GET', 'DELETE'].indexOf(ajaxMethod) === -1) {
       // update the partners list in dexieDB
-      window.EtoolsPmpApp.DexieDb.table('partners').put(response).then(() => {
+      window.EtoolsPmpApp.DexieDb.table('partners').put(partner).then(() => {
         fireEvent(this, 'reload-list');
       });
     }
@@ -204,7 +206,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
     this._triggerPartnerRequest({method: 'DELETE', endpoint: endpoint, body: {}});
   }
 
-  public savePartner(partner: any, callback: any) {
+  public savePartner(partner: any, callback?: any) {
     if (typeof partner === 'object' && Object.keys(partner).length === 0) {
       fireEvent(this, 'toast', {text: 'Invalid partner data!', showCloseBtn: true});
       return Promise.resolve(false);
