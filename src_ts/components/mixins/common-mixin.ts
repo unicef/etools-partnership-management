@@ -1,5 +1,3 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import DateMixin from './date-mixin.js';
 import { Constructor } from '../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 
@@ -10,7 +8,7 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-     class commonClass extends DateMixin(baseClass as Constructor<PolymerElement>)  {
+     class commonClass extends baseClass {
 
       /**
        * Prepare and return the string value we have to display on the interface.
@@ -20,7 +18,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       getDisplayValue(value: any, isDate: boolean, separator: string, skipSpaces: boolean) {
         if (typeof value === 'string' && value !== '') {
           if (isDate) {
-            return this.prettyDate(value);
+            return prettyDate(value);
           } else {
             return value;
           }
