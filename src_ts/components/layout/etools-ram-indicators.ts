@@ -123,7 +123,7 @@ class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
     }).catch((error: any) => {
       logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
           ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
-      parseRequestErrorsAndShowAsToastMsgs(error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this);
       this.set('loading', false);
     });
   }

@@ -112,7 +112,6 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
   }
 
   _saveLowerResult(endpoint: any, method: string, lowerResultData: any, successCallback: any) {
-    let self = this;
     this.set('disableConfirmBtn', true);
     let dialog = this.$.pdLowerResultNameDialog;
     dialog.startSpinner();
@@ -120,17 +119,17 @@ class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
       method: method,
       endpoint: endpoint,
       body: lowerResultData
-    }).then(function(response: any) {
+    }).then((response: any) => {
       dialog.stopSpinner();
-      self.set('disableConfirmBtn', false);
+      this.set('disableConfirmBtn', false);
       if (typeof successCallback === 'function') {
-        successCallback.bind(self, response)();
+        successCallback.bind(this, response)();
       }
       return true;
-    }).catch(function(error: any) {
+    }).catch((error: any) => {
       dialog.stopSpinner();
-      self.set('disableConfirmBtn', false);
-      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      this.set('disableConfirmBtn', false);
+      parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
       return false;
     });
   }

@@ -192,7 +192,7 @@ class MonitoringVisitsList extends MonitoringVisitsListMixins {
       self.set('showLoading', false);
     }).catch(function(error: any) {
       self.set('showLoading', false);
-      parseRequestErrorsAndShowAsToastMsgs(error);
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
 

@@ -322,7 +322,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
       this.set('attachments', response);
     }).catch((error: any) => {
       logError('Error during pd attachments fetch.', 'pd-attachments', error);
-      parseRequestErrorsAndShowAsToastMsgs(error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this);
     }).then(() => {
       fireEvent(this, 'global-loading', {
         active: false,
@@ -373,7 +373,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
         this._updateAttachments(this.attMarkedToBeDeleted, true);
       }).catch((error: any) => {
         logError('Error during pd attachment delete.', 'pd-attachments', error);
-        parseRequestErrorsAndShowAsToastMsgs(error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         fireEvent(this, 'global-loading', {
           active: false,

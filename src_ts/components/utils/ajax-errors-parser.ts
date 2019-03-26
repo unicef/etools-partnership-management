@@ -116,7 +116,7 @@ function _isArrayOfStrings(arr: any) {
   return allStrings;
 }
 
-function formatServerErrorAsText(errors: any) {
+export function formatServerErrorAsText(errors: any) {
   let errorsArray = getErrorsArray(errors, false);
   if (errorsArray && errorsArray.length) {
     return errorsArray.join('\n');
@@ -124,11 +124,8 @@ function formatServerErrorAsText(errors: any) {
   return errors;
 }
 
-export function parseRequestErrorsAndShowAsToastMsgs(error: any, source?: any, redirectOn404?: boolean) {
+export function parseRequestErrorsAndShowAsToastMsgs(error: any, source: any, redirectOn404?: boolean) {
   if (redirectOn404 && error.status === 404) {
-    if (!source) {
-      source = this;
-    }
     fireEvent(source, '404');
     return;
   }
@@ -141,9 +138,6 @@ export function parseRequestErrorsAndShowAsToastMsgs(error: any, source?: any, r
 
 function showErrorAsToastMsg(errorsString: string, source: any) {
   if (errorsString) {
-    if (!source) {
-      source = this;
-    }
     fireEvent(source, 'toast', {text: errorsString, showCloseBtn: true});
   }
 }

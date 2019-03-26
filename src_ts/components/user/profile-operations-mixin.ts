@@ -44,7 +44,7 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
         this.sendRequest(config).then(function (resp: any) {
           self._handleResponse(resp);
         }).catch(function (error: any) {
-          parseRequestErrorsAndShowAsToastMsgs(error);
+          parseRequestErrorsAndShowAsToastMsgs(error, self);
           self._hideProfileSaveLoadingMsg();
         });
       }

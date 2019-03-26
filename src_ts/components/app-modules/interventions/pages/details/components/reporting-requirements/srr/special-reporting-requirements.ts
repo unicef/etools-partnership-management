@@ -165,7 +165,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
       }).catch((error: any) => {
         logError('Failed to delete special report requirement!',
             'special-reporting-requirements', error);
-        parseRequestErrorsAndShowAsToastMsgs(error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         // delete complete, reset _itemToDeleteIndex
         this.set('_itemToDeleteIndex', -1);

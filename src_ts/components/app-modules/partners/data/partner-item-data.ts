@@ -5,10 +5,11 @@ import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
-import {store} from "../../../../store.js";
+import {store} from '../../../../store.js';
 import { deletePartner } from '../../../../actions/partners.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import { tryGetResponseError, formatServerErrorAsText } from '../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
@@ -165,7 +166,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
     if (typeof this.handleErrResponseAdditionalCallback === 'function') {
       this.handleErrResponseAdditionalCallback.bind(this,
-          this.formatServerErrorAsText(this.tryGetResponseError(response)))();
+          formatServerErrorAsText(tryGetResponseError(response)))();
     }
     this.handleErrResponseAdditionalCallback = null;
     this.handleSuccResponseAdditionalCallback = null;
