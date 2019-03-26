@@ -1,6 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
@@ -15,11 +13,8 @@ import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
  */
-class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin
-], PolymerElement) {
+class AddAgAmendmentDialog extends PolymerElement {
   [x: string]: any;
 
   static get template() {
@@ -180,7 +175,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
 
   _resetValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -190,7 +185,7 @@ class AddAgAmendmentDialog extends EtoolsMixinFactory.combineMixins([
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }

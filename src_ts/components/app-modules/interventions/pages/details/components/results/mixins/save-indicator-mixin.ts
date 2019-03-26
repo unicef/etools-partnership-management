@@ -5,19 +5,17 @@ import pick from 'lodash-es/pick';
 import keys from 'lodash-es/keys';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const SaveIndicatorMixin = dedupingMixin(
 (superClass: any) => class extends EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin,
 ], superClass) {
   [x: string]: any;
 
@@ -170,7 +168,7 @@ const SaveIndicatorMixin = dedupingMixin(
     this._stopSpinner();
     this.disableConfirmBtn = false;
 
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 
   _getIndicatorBody() {

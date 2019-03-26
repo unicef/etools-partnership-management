@@ -6,10 +6,9 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CONSTANTS from '../../../config/app-constants';
-import { UserPermissions } from '../../../typings/globals.types';
+import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import EnvironmentFlags from '../../environment-flags/environment-flags-mixin';
@@ -42,7 +41,6 @@ import { fireEvent } from '../../utils/fire-custom-event';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EnvironmentFlags
  * @appliesMixin EndpointsMixin
@@ -54,7 +52,6 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @appliesMixin SaveInterventionMixin
  */
 class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   DynamicDialogMixin,
   EnvironmentFlags,
   EndpointsMixin,
@@ -534,14 +531,20 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
   }
 
   _finalizeAmendmentConfirmationCallback(event: CustomEvent) {
+    let preparedData: GenericObject = {id: this.intervention.id, in_amendment: false};
+
     if (event.detail.confirmed) {
-      this.set('intervention.in_amendment', false);
-      this._validateAndSaveIntervention(null).then((successfull: boolean) => {
-          if (!successfull) {
-            // if save fails restore in_amendment flag
-            this.set('intervention.in_amendment', true);
-          }
-        });
+      return this.$.interventionData.saveIntervention(preparedData as Intervention,
+          this._newInterventionSaved.bind(this))
+          .then((successfull: boolean) => {
+              if (successfull) {
+                  this.set('intervention.in_amendment', false);
+                  return true;
+              } else {
+                  this.set('intervention.in_amendment', true);
+                  return false;
+              }
+          });
     }
   }
 

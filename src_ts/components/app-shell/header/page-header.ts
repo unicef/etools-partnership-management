@@ -5,7 +5,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
-import {isProductionServer, isStagingServer} from '../../../config/config';
+import {_checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../actions/app';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-profile-dropdown/etools-profile-dropdown';
@@ -101,11 +101,9 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
         <div class="titlebar content-align">
           <etools-app-selector></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
-          <dom-if if="[[_isStaging]]">
-            <template>
-              <div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>
-            </template>
-          </dom-if>
+          <template is="dom-if" if="[[environment]]">
+            <div class="envWarning"> - [[environment]] TESTING ENVIRONMENT</div>
+          </template>
         </div>
         <div class="content-align">
           <countries-dropdown id="countries" countries="[[countries]]"
@@ -130,7 +128,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
     return {
       // This shouldn't be neccessary, but the polymer lint isn't picking up
       rootPath: String,
-      _isStaging: Boolean,
 
       countries: Array,
       offices: Array,
@@ -152,6 +149,10 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
         notify: true,
         computed: '_convertUsers(users)'
       },
+      environment: {
+        type: String,
+        value: () => _checkEnvironment()
+      },
 
       profile: Object,
 
@@ -172,7 +173,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
   }
 
   // @ts-ignore
-  private _isStaging: boolean = false;
 
   public sections: object[] = [];
   public allSections: object = {};
@@ -192,7 +192,6 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
-    this._isStaging = isStagingServer();
   }
 
   public stateChanged(state: RootState) {
@@ -223,7 +222,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
 
   public _setBgColor() {
     // If not production environment, changing header color to red
-    if (!isProductionServer()) {
+    if (this.environment) {
       // @ts-ignore
       this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
     }

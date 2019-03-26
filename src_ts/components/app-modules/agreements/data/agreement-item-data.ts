@@ -1,6 +1,5 @@
 import { store } from '../../../../store.js';
 import { PolymerElement } from '@polymer/polymer';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
@@ -10,18 +9,17 @@ import { addEditAgreement } from '../../../../actions/agreements.js';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 import { GenericObject } from '../../../../typings/globals.types.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
  */
 const AgreementItemDataRequiredMixin = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
   AjaxServerErrorsMixin
 ], PolymerElement);
@@ -78,7 +76,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
       return true;
     }).catch((error: any) => {
       if (error instanceof EtoolsRequestError === false) {
-        this.logError('handleErrorResponse', 'agreement-item-data', error);
+        logError('handleErrorResponse', 'agreement-item-data', error);
       }
       this.handleErrorResponse(error, ajaxMethod, true);
       return false;
@@ -143,7 +141,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
     let propName: string;
     for (propName in minimalAgrData) {
       if (!detail.hasOwnProperty(propName)) {
-        this.logWarn('Mapping property not found');
+        logWarn('Mapping property not found');
       } else {
         // @ts-ignore
         minimalAgrData[propName] = detail[propName];
@@ -296,7 +294,8 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
 
   _handleAgreementDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
-    this.logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
+    logError('Agreement delete from local dexie db failed!', 'agreement-item-data',
+        dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
       'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',

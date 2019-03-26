@@ -157,7 +157,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
               <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
                 <div class="col col-3">
                   <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
-                                              value="[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]">
+                                              value="[[getDateDisplayValue(agreement.start)]] &#8212; [[getDateDisplayValue(agreement.end)]]">
                   </etools-form-element-wrapper>
                 </div>
               </template>

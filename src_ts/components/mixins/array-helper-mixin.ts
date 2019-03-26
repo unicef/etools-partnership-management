@@ -1,14 +1,13 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  */
 const ArrayHelperMixin = dedupingMixin((baseClass: any) =>
     // @ts-ignore
-    class extends (EtoolsLogsMixin(baseClass) as any) {
+    class extends (baseClass as any) {
 
       /**
        * Compare arrays.
@@ -49,7 +48,7 @@ const ArrayHelperMixin = dedupingMixin((baseClass: any) =>
 
           return diffVals;
         } catch (err) {
-          this.logError('ArrayHelperMixin.compareArrays error occurred', 'array-helper-mixin', err);
+          logError('ArrayHelperMixin.compareArrays error occurred', 'array-helper-mixin',err);
         }
         return [];
       }

@@ -2,19 +2,17 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  */
 const StaffMembersDataRequiredMixinsList = [
-  EtoolsLogsMixin,
   EtoolsAjaxRequestMixin,
   EndpointsMixin
 ];
@@ -57,9 +55,7 @@ const StaffMembersData = dedupingMixin((baseClass: any) => class extends
       }).then(function(response: any) {
         self._handleStaffMembersResponse(response);
       }).catch(function(error: any) {
-        // @ts-ignore
-        self.logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
-        // @ts-ignore
+        logError('etting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
         fireEvent(self, 'toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
       });
     }

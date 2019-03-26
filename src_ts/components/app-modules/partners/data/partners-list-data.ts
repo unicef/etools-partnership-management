@@ -1,6 +1,5 @@
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {store} from '../../../../store.js';
 
 import ListDataMixin from '../../../mixins/list-data-mixin';
@@ -9,15 +8,14 @@ import Dexie from 'dexie';
 import {isEmptyObject} from "../../../utils/utils";
 import {setPartners} from '../../../../actions/partners.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin ListDataMixin
  */
 const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   ListDataMixin
 ], PolymerElement);
 
@@ -172,7 +170,7 @@ class PartnersListData extends (PartnersListDataRequiredMixins as any) {
         loadingSource: 'partners-list'
       });
     }).catch(function (error: any) {
-      self.logError('Error querying partners!', 'partners-list-data', error, true);
+      logError('Error querying partners!', 'partners-list-data', error);
       fireEvent(self, 'global-loading', {
         active: false,
         loadingSource: 'partners-list'
