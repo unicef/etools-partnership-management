@@ -4,7 +4,7 @@ import 'etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
 import { SharedStyles } from '../../styles/shared-styles';
 import { gridLayoutStyles } from '../../styles/grid-layout-styles';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin';
 import { store } from '../../../store';
@@ -15,11 +15,9 @@ import { fireEvent } from '../../utils/fire-custom-event';
   /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPageRefreshMixin
     */
    const DataRefreshDialogMixin = EtoolsMixinFactory.combineMixins([
-    EtoolsLogsMixin,
     EtoolsPageRefreshMixin
   ], PolymerElement);
 /**
@@ -204,7 +202,7 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
       self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
     }).catch(function(error: any) {
       // transaction failed
-      self.logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
+      logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
       self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
     });
   }

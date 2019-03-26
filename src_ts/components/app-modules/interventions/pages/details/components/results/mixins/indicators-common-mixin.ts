@@ -1,4 +1,5 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import { logWarn } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
@@ -72,7 +73,7 @@ const IndicatorsCommonMixin = dedupingMixin((superClass: any) => class extends s
       if (elem) {
         valid = elem.validate() && valid;
       } else {
-        this.logWarn('Elem ' + elemId + ' not found');
+        logWarn('Elem ' + elemId + ' not found');
       }
     });
     return valid;

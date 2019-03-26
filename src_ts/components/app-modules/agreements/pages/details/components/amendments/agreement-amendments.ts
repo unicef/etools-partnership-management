@@ -149,7 +149,7 @@ class AgreementAmendments extends connect(store)(EtoolsMixinFactory.combineMixin
                   [[_getReadonlyAmendmentTypes(item.types)]]
                 </span>
                 <span class="col-data col-2">
-                  [[prettyDate(item.signed_date)]]
+                  [[getDateDisplayValue(item.signed_date)]]
                 </span>
                 <span class="col-data flex-c">
                   <iron-icon icon="attachment" class="attachment"></iron-icon>

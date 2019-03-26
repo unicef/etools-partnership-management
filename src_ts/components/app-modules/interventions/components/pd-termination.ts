@@ -74,7 +74,7 @@ class PdTermination extends (EnvironmentFlags(PolymerElement) as any) {
       </div>
       <div class="row-h">
         <etools-warn-message
-                message="Once you hit save, the PD/SSFA will be Terminated and this action can not be reversed">
+                messages="Once you hit save, the PD/SSFA will be Terminated and this action can not be reversed">
         </etools-warn-message>
       </div>
 

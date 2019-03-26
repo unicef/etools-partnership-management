@@ -1,13 +1,12 @@
 declare const moment: any;
-import DateMixin from '../../../../../../../mixins/date-mixin';
+import {convertDate} from '../../../../../../../utils/date-utils';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin DateMixin
  */
 const GenerateQuarterlyReportingRequirementsMixin =
-    (baseClass: any) => class extends DateMixin(baseClass) {
+    (baseClass: any) => class extends baseClass {
 
     static get properties() {
       return {
@@ -65,7 +64,7 @@ const GenerateQuarterlyReportingRequirementsMixin =
     }
 
     _generateEndDate(startStr: string, pdEndStr: string) {
-      let d = moment.utc(this._convertDate(startStr));
+      let d = moment.utc(convertDate(startStr));
       let month = d.get('M');
       if (d.get('D') <= 15) {
         month += 2;
@@ -76,7 +75,7 @@ const GenerateQuarterlyReportingRequirementsMixin =
       d.endOf('month');
 
       if (d.isAfter(pdEndStr)) {
-        return moment.utc(this._convertDate(pdEndStr));
+        return moment.utc(convertDate(pdEndStr));
       }
       return d;
     }

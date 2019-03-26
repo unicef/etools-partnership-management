@@ -6,34 +6,29 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
 import 'etools-date-time/datepicker-lite.js';
 
-
-import '../../../../../../layout/etools-warn-message.js';
-import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
-import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
-import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin.js';
+import '../../../../../../layout/etools-warn-message';
+import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
+import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store.js';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles.js';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles.js';
-import { SharedStyles } from '../../../../../../styles/shared-styles.js';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles.js';
-import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
-import CONSTANTS from '../../../../../../../config/app-constants.js';
-import { isJsonStrMatch } from '../../../../../../utils/utils.js';
-import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
-import { InterventionAmendment } from '../../../../../../../typings/intervention.types.js';
-
-
+import { store, RootState } from '../../../../../../../store';
+import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
+import { buttonsStyles } from '../../../../../../styles/buttons-styles';
+import { SharedStyles } from '../../../../../../styles/shared-styles';
+import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import pmpEndpoints from '../../../../../../endpoints/endpoints';
+import CONSTANTS from '../../../../../../../config/app-constants';
+import { isJsonStrMatch } from '../../../../../../utils/utils';
+import { LabelAndValue } from '../../../../../../../typings/globals.types';
+import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
+import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../../utils/ajax-errors-parser";
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParser
  */
 const AddAmendmentDialogMixin = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin,
 ], PolymerElement);
 
 /**
@@ -96,7 +91,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
           </etools-dropdown-multi>
         </div>
         <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
-          <etools-warn-message message="[[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]">
+          <etools-warn-message messages="[[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]">
           </etools-warn-message>
         </div>
         <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
@@ -286,26 +281,27 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
     if (!types || !types.length) {
       return;
     }
-    let message = 'Please make sure you update ';
+    let messages: string[] = [];
     types.forEach((amdType: string) => {
       switch (amdType) {
-        case 'dates':
-          message += 'Dates, ';
+        case 'admin_error':
+          messages.push('Corrections in the programme document due to typos or administrative error.');
           break;
-        case 'results':
-          message += 'Programme Results, ';
+        case 'budget_lte_20':
+          messages.push('Changes to the budget of activities resulting in a change in the UNICEF contribution ≤20% of ' +
+              'previously approved cash and/or supplies, with or without changes to the programme results.');
           break;
-        case 'budget':
-          message += 'Planned Budget, ';
+        case 'budget_gt_20':
+          messages.push('Changes to the budget of activities resulting in a change in the UNICEF contribution >20% of ' +
+              'previously approved cash and/or supplies, with or without changes to the programme results.');
           break;
-        case 'other':
-          message += 'Other, ';
+        case 'change':
+          messages.push('Changes to planned results, population or geographical coverage of the programme with no ' +
+              'change in UNICEF contribution.');
           break;
       }
     });
-    message = message.substring(0, message.length - 2);
-    message += ' section' + (message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
-    return message;
+    return messages;
   }
 
   _validateAndSaveAmendment() {
@@ -341,7 +337,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
   }
 
   _handleErrorResponse(error: any) {
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 
   _amendmentUploadFinished(e: CustomEvent) {

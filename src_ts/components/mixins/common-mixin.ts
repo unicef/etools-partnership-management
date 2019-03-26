@@ -1,27 +1,22 @@
 import { Constructor } from '../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
+import {prettyDate} from '../utils/date-utils';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin DateMixin
  */
 function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
      class commonClass extends baseClass {
-
       /**
        * Prepare and return the string value we have to display on the interface.
        * Ex: partners and agreements lists data values.
        */
       // TODO - apply single responsability
-      getDisplayValue(value: any, isDate: boolean, separator: string, skipSpaces: boolean) {
+      getDisplayValue(value: any, separator: string, skipSpaces: boolean) {
         if (typeof value === 'string' && value !== '') {
-          if (isDate) {
-            return prettyDate(value);
-          } else {
-            return value;
-          }
+          return value;
         } else if (Array.isArray(value) && value.length > 0) {
           if (!separator) {
             separator = ', ';
@@ -39,7 +34,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
        * Prepare date string and return it in a user readable format
        */
       getDateDisplayValue(dateString: string) {
-        let formatedDate = this.prettyDate(dateString);
+        let formatedDate = prettyDate(dateString);
         return formatedDate ? formatedDate : '-';
       }
 

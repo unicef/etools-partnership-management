@@ -1,7 +1,6 @@
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
 
-// @ts-ignore
-const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) {
+const UtilsMixin = (baseClass: any) => class extends baseClass {
 
   _equals(a: any, b: any) {
     return a === b;
@@ -26,8 +25,7 @@ const UtilsMixin = (baseClass: any) => class extends EtoolsLogsMixin(baseClass) 
     thousandsPoint = thousandsPoint ? thousandsPoint : '';
 
     if (decimalsPoint && thousandsPoint && decimalsPoint === thousandsPoint) {
-      // @ts-ignore
-      this.logWarn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
+      logWarn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
       return nr;
     }
     let nrParts = nr.split('.');

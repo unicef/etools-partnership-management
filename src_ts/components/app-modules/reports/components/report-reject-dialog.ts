@@ -1,22 +1,20 @@
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { PolymerElement, html } from '@polymer/polymer';
 import { SharedStyles } from '../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 declare const moment: any;
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin AjaxErrorsParser
  * @appliesMixin EndpointsMixin
  */
 class ReportRejectDialog extends EtoolsMixinFactory.combineMixins([
-  AjaxErrorsParserMixin,
   EndpointsMixin
   ], PolymerElement) {
 
@@ -112,7 +110,7 @@ class ReportRejectDialog extends EtoolsMixinFactory.combineMixins([
 
   _handleErrorResponse(error: any) {
     this.stopSpinner();
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 }
 

@@ -28,6 +28,7 @@ import { store, RootState } from '../../../../../store.js';
 import './components/edit-core-values-assessment';
 import './components/staff-members';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import {convertDate} from '../../../../utils/date-utils';
 declare const moment: any;
 
 /**
@@ -164,7 +165,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
             </div>
             <div class="col col-4">
               <!--Date last assessed-->
-              <etools-form-element-wrapper label="Date of Report" value="[[prettyDate(partner.last_assessment_date)]]">
+              <etools-form-element-wrapper label="Date of Report" value="[[getDateDisplayValue(partner.last_assessment_date)]]">
                 <iron-icon icon="date-range" slot="prefix"></iron-icon>
               </etools-form-element-wrapper>
 
@@ -199,7 +200,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
                 hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
                 <div slot="row-data" class="p-relative">
                   <span class="col-data col-4">
-                    [[prettyDate(item.date)]]
+                    [[getDateDisplayValue(item.date)]]
                     <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
                   </span>
                   <span class="col-data col-6">
@@ -367,7 +368,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
     }
     let datesFormat = 'YYYY-MM-DD';
     let today = moment.utc().format(datesFormat);
-    let assessmentDate = this._convertDate(assessmentDateString);
+    let assessmentDate = convertDate(assessmentDateString);
     let assessmentExpDate = moment(assessmentDate).add(60, 'months');
 
     let daysUntilExpire = assessmentExpDate.diff(today, 'days');
@@ -411,7 +412,7 @@ class PartnerDetails extends connect(store)(PartnersListRequiredMixins) {
     if (!date) {
       return true;
     }
-    let converted = this.prettyDate(date);
+    let converted = this.getDateDisplayValue(date);
     return !converted;
   }
 
