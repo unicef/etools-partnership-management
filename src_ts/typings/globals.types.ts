@@ -35,17 +35,21 @@ export type UserPermissions = {
   viewPartnerDetails: boolean
 }
 
-export type User = {
-  first_name: string;
-  last_name: string;
-  middle_name: string;
-  name: string;
-  email: string;
-  country: object;
-  country_override: number;
-  countries_available: MinimalCountry[];
-  groups: UserGroup[];
+export class MinimalUser {
+  first_name!: string;
+  last_name!: string;
+  middle_name!: string;
+  name!: string;
+  email!: string;
 }
+
+export class User extends MinimalUser {
+  country!: object;
+  country_override!: number;
+  countries_available!: MinimalCountry[];
+  groups!: UserGroup[];
+}
+
 
 export type UserGroup = {
   id: number,
@@ -113,5 +117,11 @@ export type LabelAndValue = {
 export type IdAndName = {
   id: string;
   name: string;
+}
+
+export type EnvFlags = {
+  prp_mode_off: boolean;
+  prp_server_on: boolean;
+  active_flags?: object[];
 }
 

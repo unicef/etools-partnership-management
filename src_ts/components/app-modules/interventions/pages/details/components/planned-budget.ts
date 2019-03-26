@@ -23,7 +23,6 @@ import {property, computed} from '@polymer/decorators';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsCurrency
  * @appliesMixin FrNumbersConsistencyMixin
  */
 class PlannedBudget extends connect(store)(

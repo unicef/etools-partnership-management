@@ -34,86 +34,54 @@ import {
   CommonDataAction
 } from '../actions/common-data';
 import { CpOutput, Disaggregation } from '../typings/intervention.types';
-import { LabelAndValue, CpStructure, User, Country } from '../typings/globals.types';
+import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags } from '../typings/globals.types';
 
-export interface CommonDataState {
-  fileTypes: object[];
-  signedByUnicefUsers: object[];
-  cpOutputs: CpOutput[];
-  countryProgrammes: CpStructure[];
-  interventionDocTypes: LabelAndValue[];
-  interventionStatuses: LabelAndValue[];
-  sections: object[];
-  unicefUsersData: User[];
-  locations: object[];
-  offices: object[];
-  agreementsDropdownData: object[];
-  agencyChoices: object[];
-  agreementAmendmentTypes: object[];
-  csoTypes: object[];
-  partnerTypes: object[];
-  assessmentTypes: object[];
-  interventionAmendmentTypes: object[];
-  currencies: LabelAndValue[];
-  agreementTypes: object[];
-  agreementStatuses: object[];
-  countryData: Country | null;
-  disaggregations: Disaggregation[];
-  PRPCountryData: object[];
-  currentUser: object;
-  reportStatuses: object[];
-  reportTypes: object[];
-  locationTypes: object[];
-  grants: object[];
-  donors: object[];
-  partnerRiskRatings: object[];
-  envFlags: object | null;
-}
-
-const INITIAL_STATE: CommonDataState = {
-  fileTypes: [],
-  signedByUnicefUsers: [],
-  cpOutputs: [],
-  countryProgrammes: [],
-  interventionDocTypes: [],
-  interventionStatuses: [],
-  sections: [],
-  unicefUsersData: [],
-  locations: [],
-  offices: [],
-  agreementsDropdownData: [],
-  agencyChoices: [],
-  agreementAmendmentTypes: [],
-  csoTypes: [],
-  partnerTypes: [],
-  assessmentTypes: [],
-  interventionAmendmentTypes: [],
-  currencies: [],
-  agreementTypes: [],
-  agreementStatuses: [],
-  countryData: null,
-  disaggregations: [],
-  PRPCountryData: [],
-  currentUser: {},
-  reportStatuses: [
+export class CommonDataState {
+  fileTypes: IdAndName[] = [];
+  signedByUnicefUsers: {id: number, name: string, email: string, username: string}[] = [];
+  cpOutputs: CpOutput[] = [];
+  countryProgrammes: CpStructure[] = [];
+  interventionDocTypes: LabelAndValue[] = [];
+  interventionStatuses: LabelAndValue[] = [];
+  sections: GenericObject[] = [];
+  unicefUsersData: MinimalUser[] = [];
+  locations: Location[] = [];
+  offices: {id: number, name: string, zonal_chief: any}[] = [];
+  agreementsDropdownData: object[] = []; // TODO - is empty
+  agencyChoices: LabelAndValue[] = [];
+  agreementAmendmentTypes: LabelAndValue[] = [];
+  csoTypes: LabelAndValue[] = [];
+  partnerTypes: LabelAndValue[] = [];
+  assessmentTypes: LabelAndValue[] = [];
+  interventionAmendmentTypes: LabelAndValue[] = [];
+  currencies: LabelAndValue[] = [];
+  agreementTypes: LabelAndValue[] = [];
+  agreementStatuses: LabelAndValue[] = [];
+  countryData: Country | null = null;
+  currentUser: User | null = null;
+  disaggregations: Disaggregation[] = [];
+  PRPCountryData: GenericObject[] = [];
+  reportStatuses: LabelAndValue[] = [
     // TODO: reports list filter statuses? To be confirmed by unicef team.
     {value: 'Acc', label: 'Accepted'},
     {value: 'Due', label: 'Due'},
     {value: 'Sen', label: 'Sent Back'},
     {value: 'Sub', label: 'Submitted'},
     {value: 'Ove', label: 'Overdue'}
-  ],
-  reportTypes: [
+  ];
+  reportTypes: LabelAndValue[] = [
     {value: 'HR', label: 'Humanitarian Reports'},
     {value: 'QPR', label: 'Quarterly Progress Reports'},
     {value: 'SR', label: 'Special Reports'}
-  ],
-  locationTypes: [],
-  grants: [],
-  donors: [],
-  partnerRiskRatings: [],
-  envFlags: null
-};
+  ];
+  locationTypes: {id: number, name: string, admin_level: any}[] = [];
+  grants: GenericObject[] = [];
+  donors: GenericObject[] = [];
+  partnerRiskRatings: LabelAndValue[] = [];
+  envFlags: EnvFlags | null = null;
+}
+
+const INITIAL_STATE = new CommonDataState();
 
 const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
   let disaggregsCopy;
