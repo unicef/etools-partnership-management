@@ -8,7 +8,6 @@ import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import UserPermissionsMixin from '../../../user/user-permissions-mixin';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
@@ -21,6 +20,8 @@ import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
 import {EnvFlags} from "../../../environment-flags/environment-flags";
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+
 
 /**
  * @polymer
@@ -30,7 +31,6 @@ import {EnvFlags} from "../../../environment-flags/environment-flags";
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EnvironmentFlags
  * @appliesMixin FrontendPaginationMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
@@ -39,7 +39,6 @@ const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
   EnvironmentFlags,
   FrontendPaginationMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 /**
@@ -235,7 +234,7 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {
       self.shadowRoot.querySelector('#showActive-' + e.model.item.id).checked = !e.model.item.active;
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
     });
   }
 
@@ -279,11 +278,3 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
 }
 
 window.customElements.define('disaggregation-list', DisaggregationList);
-
-
-
-
-
-
-
-

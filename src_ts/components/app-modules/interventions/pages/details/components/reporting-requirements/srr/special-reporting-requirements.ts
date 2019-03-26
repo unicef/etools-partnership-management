@@ -8,7 +8,6 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
@@ -16,6 +15,7 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
 import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import { logError } from 'etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 
 /**
@@ -29,7 +29,6 @@ import { logError } from 'etools-behaviors/etools-logging';
 const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
   DynamicDialogMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin,
   CommonMixin,
   ReportingRequirementsCommonMixin
 ], PolymerElement);
@@ -166,7 +165,7 @@ class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
       }).catch((error: any) => {
         logError('Failed to delete special report requirement!',
             'special-reporting-requirements', error);
-        this.parseRequestErrorsAndShowAsToastMsgs(error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         // delete complete, reset _itemToDeleteIndex
         this.set('_itemToDeleteIndex', -1);

@@ -28,6 +28,7 @@ import './cluster-indicator-disaggregations.js';
 import './cluster-indicator.js';
 import './non-cluster-indicator.js';
 import { Indicator } from '../../../../../../../typings/intervention.types';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
@@ -353,7 +354,7 @@ class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   _showToast(e: CustomEvent) {
-    this.parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
   }
 
   resetValidationsAndStyle(isCluster: boolean, skipUndefinedCheck: boolean) {

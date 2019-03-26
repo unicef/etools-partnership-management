@@ -3,22 +3,20 @@ import 'etools-loading/etools-loading.js';
 declare const moment: any;
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CommonMixin from '../mixins/common-mixin';
-import AjaxErrorsParserMixin from '../mixins/ajax-errors-parser-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { isEmptyObject } from '../utils/utils';
 import { SharedStyles } from '../styles/shared-styles';
 import { gridLayoutStyles } from '../styles/grid-layout-styles';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 
 /**
 * @polymer
 * @mixinFunction
-* @appliesMixin AjaxErrorsParserMixin
 * @appliesMixin EndpointsMixin
 * @appliesMixin CommonMixin
 */
 const MonitoringVisitsListMixins = EtoolsMixinFactory.combineMixins([
-  AjaxErrorsParserMixin,
   EndpointsMixin,
   CommonMixin
 ], PolymerElement);
@@ -194,7 +192,7 @@ class MonitoringVisitsList extends MonitoringVisitsListMixins {
       self.set('showLoading', false);
     }).catch(function(error: any) {
       self.set('showLoading', false);
-      self.parseRequestErrorsAndShowAsToastMsgs(error);
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
 

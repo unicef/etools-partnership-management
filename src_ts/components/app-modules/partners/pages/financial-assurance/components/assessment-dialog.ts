@@ -7,7 +7,6 @@ import 'etools-upload/etools-upload.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
@@ -16,16 +15,15 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../store';
 import {isJsonStrMatch} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @customElement
  * @polymer
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const AssessmentDialogMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 /**
@@ -227,8 +225,7 @@ class AssessmentDialog extends connect(store)(AssessmentDialogMixins) {
   }
 
   public _handleErrorResponse(error: any) {
-    // @ts-ignore
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 
   public startSpinner() {
@@ -278,7 +275,3 @@ class AssessmentDialog extends connect(store)(AssessmentDialogMixins) {
 }
 
 window.customElements.define('assessment-dialog', AssessmentDialog);
-
-
-
-

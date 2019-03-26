@@ -9,7 +9,6 @@ import 'etools-date-time/datepicker-lite.js';
 import '../../../../../../layout/etools-warn-message';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
@@ -21,16 +20,15 @@ import CONSTANTS from '../../../../../../../config/app-constants';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
+import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../../utils/ajax-errors-parser";
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParser
  */
 const AddAmendmentDialogMixin = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin,
 ], PolymerElement);
 
 /**
@@ -339,7 +337,7 @@ class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
   }
 
   _handleErrorResponse(error: any) {
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 
   _amendmentUploadFinished(e: CustomEvent) {

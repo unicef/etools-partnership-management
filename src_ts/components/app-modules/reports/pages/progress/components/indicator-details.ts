@@ -11,20 +11,18 @@ import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
 import { isEmptyObject } from '../../../../../utils/utils.js';
 import { PolymerElement, html } from '@polymer/polymer';
-import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
 import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
 class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
-  AjaxErrorsParserMixin,
   EndpointsMixin,
   UtilsMixin
 ], PolymerElement) {
@@ -227,7 +225,7 @@ class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
       self._hideLoading();
     }).catch(function(error: any) {
       logError('Indicator details data request failed!', 'reports-indicator-details', error)
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
       self._hideLoading();
     });
   }

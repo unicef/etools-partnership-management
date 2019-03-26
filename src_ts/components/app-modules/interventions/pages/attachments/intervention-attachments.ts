@@ -11,7 +11,6 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../mixins/ajax-errors-parser-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { InterventionAttachment } from '../../../../../typings/intervention.types.js';
@@ -26,6 +25,7 @@ import { store } from '../../../../../store.js';
 import { RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 
 
 /**
@@ -33,13 +33,11 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @mixinFunction
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin CommonMixin
  */
 const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
   DynamicDialogMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin,
   CommonMixin,
 ], PolymerElement);
 
@@ -324,7 +322,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
       this.set('attachments', response);
     }).catch((error: any) => {
       logError('Error during pd attachments fetch.', 'pd-attachments', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this);
     }).then(() => {
       fireEvent(this, 'global-loading', {
         active: false,
@@ -375,7 +373,7 @@ class InterventionAttachments extends connect(store)(InterventionAttachmentsMixi
         this._updateAttachments(this.attMarkedToBeDeleted, true);
       }).catch((error: any) => {
         logError('Error during pd attachment delete.', 'pd-attachments', error);
-        this.parseRequestErrorsAndShowAsToastMsgs(error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         fireEvent(this, 'global-loading', {
           active: false,

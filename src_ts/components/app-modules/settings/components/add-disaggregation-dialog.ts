@@ -7,7 +7,6 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin.js';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
 import {buttonsStyles} from '../../../styles/buttons-styles';
@@ -18,6 +17,7 @@ import {store} from '../../../../store';
 import {addDisaggregation} from '../../../../actions/common-data';
 import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
 import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 
 
 /**
@@ -26,13 +26,11 @@ import {Disaggregation, DisaggregationValue} from '../../../../typings/intervent
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixin
- * @appliesMixin AjaxErrorsParserMixin
  */
 const AddDisaggregationDialogMixins = EtoolsMixinFactory.combineMixins([
   EtoolsAjaxRequestMixin,
   EndpointsMixin,
   RepeatableDataSetsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 /**
@@ -199,7 +197,7 @@ class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixi
       self.close();
     }).catch(function(error: any) {
       self.stopSpinner();
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
     });
 
   }

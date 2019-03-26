@@ -7,7 +7,6 @@ import 'etools-upload/etools-upload.js';
 
 import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import { InterventionAttachment } from '../../../../../../typings/intervention.types.js';
 import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
@@ -16,17 +15,16 @@ import { requiredFieldStarredStyles } from '../../../../../styles/required-field
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import { logWarn } from 'etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParser
  */
 const AttachmentDialogMixin = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 /**
@@ -213,7 +211,7 @@ class AttachmentDialog extends AttachmentDialogMixin {
   }
 
   _handleErrorResponse(error: any) {
-    this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+    parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
   }
 
   _attachmentUploadFinished(e: CustomEvent) {
@@ -233,4 +231,3 @@ class AttachmentDialog extends AttachmentDialogMixin {
 }
 
 window.customElements.define('attachment-dialog', AttachmentDialog);
-
