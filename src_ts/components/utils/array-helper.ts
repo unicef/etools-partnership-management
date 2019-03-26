@@ -39,7 +39,7 @@ export function getArraysDiff(base: any[], valuesToVerify: any[], basePropertyTo
 
     return diffVals;
   } catch (err) {
-    logError('ArrayHelperMixin.compareArrays error occurred', 'array-helper-mixin',err);
+    logError('ArrayHelper.getArraysDiff error occurred', 'array-helper-mixin',err);
   }
   return [];
 }
