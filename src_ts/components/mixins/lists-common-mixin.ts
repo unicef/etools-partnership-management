@@ -1,13 +1,10 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import { PolymerElEvent, GenericObject } from '../../typings/globals.types';
-import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
+import { updateAppState } from '../utils/navigation-helper';
 
 const ListsCommonMixin =  dedupingMixin(
-  (baseClass: any) => class extends EtoolsMixinFactory.combineMixins([
-    AppNavigationHelperMixin
-    ], baseClass) {
+  (baseClass: any) => class extends baseClass {
     [x: string]: any;
 
 static get properties() {
@@ -226,7 +223,7 @@ _canFilterData() {
 _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, qs: string, filterData: () => void) {
   if (qs !== lastUrlQueryStr) {
     // update URL
-    this.updateAppState(currentPageUrlPath, qs, true);
+    updateAppState(currentPageUrlPath, qs, true);
     // filter agreements
     if (this.requiredDataLoaded) {
       filterData();
@@ -235,7 +232,7 @@ _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, q
     if (location.search === '') {
       // only update URL query string, without location change event being fired(no page refresh)
       // used to keep prev list filters values when navigating from details to list page
-      this.updateAppState(currentPageUrlPath, qs, false);
+      updateAppState(currentPageUrlPath, qs, false);
     }
     if (this.forceDataRefresh && this.requiredDataLoaded) {
       // re-filter list data

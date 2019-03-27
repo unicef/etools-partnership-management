@@ -1,19 +1,19 @@
 
 import { PolymerElement, html } from '@polymer/polymer';
 import '../../../reports/components/reports-display-list.js';
-import AppNavigationHelperMixin from '../../../../mixins/app-navigation-helper-mixin';
 import { isEmptyObject } from '../../../../utils/utils.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import { updateAppState } from '../../../../utils/navigation-helper.js';
 
 
 /**
   * @polymer
   * @customElement
-  * @appliesMixin AppNavigationHelper
   */
-class InterventionReports extends (AppNavigationHelperMixin(PolymerElement) as any) {
+class InterventionReports extends PolymerElement {
+  [x: string]: any;
 
   static get template() {
     return html`
@@ -39,6 +39,8 @@ class InterventionReports extends (AppNavigationHelperMixin(PolymerElement) as a
       initComplete: Boolean
     };
   }
+
+  private _debounceUrlUpdate!: Debouncer;
 
   static get observers() {
     return [
@@ -92,7 +94,7 @@ class InterventionReports extends (AppNavigationHelperMixin(PolymerElement) as a
             return;
           }
           let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
-          this.updateAppState('interventions/' + interventionId + '/reports', qs, true);
+          updateAppState('interventions/' + interventionId + '/reports', qs, true);
           this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
         });
   }
