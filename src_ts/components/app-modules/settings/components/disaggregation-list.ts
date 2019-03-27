@@ -234,7 +234,7 @@ class DisaggregationList extends connect(store)(DisagregationListRequiredMixins)
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {
       self.shadowRoot.querySelector('#showActive-' + e.model.item.id).checked = !e.model.item.active;
-      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource ? self.toastEventSource : self);
     });
   }
 
