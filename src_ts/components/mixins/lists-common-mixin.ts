@@ -1,4 +1,4 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
 import { fireEvent } from '../utils/fire-custom-event';
 import { updateAppState } from '../utils/navigation-helper';

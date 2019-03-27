@@ -20,7 +20,7 @@ import CONSTANTS from '../../../../../../../config/app-constants';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../../utils/ajax-errors-parser";
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
 
 /**
  * @polymer

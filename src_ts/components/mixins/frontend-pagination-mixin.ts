@@ -1,4 +1,4 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 
