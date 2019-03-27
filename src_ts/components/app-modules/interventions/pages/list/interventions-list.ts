@@ -14,8 +14,6 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
@@ -32,7 +30,7 @@ import '../../data/interventions-list-data.js';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { LabelAndValue, User, CpStructure } from '../../../../../typings/globals.types.js';
+import { LabelAndValue, CpStructure, MinimalUser } from '../../../../../typings/globals.types.js';
 import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
 import { ListFilterOption } from '../../../../../typings/filter.types.js';
 
@@ -42,7 +40,6 @@ let _interventionsLastNavigated: string = '';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
  * @appliesMixin ListFiltersMixin
  * @appliesMixin ListsCommonMixin
@@ -330,7 +327,7 @@ class InterventionsList extends connect(store)(
   selectedSections: number[] = [];
 
   @property({type: Array})
-  unicefUsersData!: User[];
+  unicefUsersData!: MinimalUser[];
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedUnicefFocalPoints: number[] = [];
