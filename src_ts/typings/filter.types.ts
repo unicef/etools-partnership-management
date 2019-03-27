@@ -23,7 +23,7 @@ export class ListFilterOption {
   selectionOptions?: string[] | number[];
   optionValue?: string;
   optionLabel?: string;
-  alreadySelected?: [];
+  alreadySelected?: [] | null;
   dateSelected?: string;
   selectedValue?: any;
   path: string = '';
