@@ -3,9 +3,10 @@ import { PolymerElEvent, GenericObject, Constructor } from '../../typings/global
 import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
 import { PolymerElement } from '@polymer/polymer';
+import { updateAppState } from '../utils/navigation-helper';
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
- class listCommonMixin extends AppNavigationHelperMixin(baseClass) {
+ class listCommonMixin extends baseClass {
 
     @property({type: Object})
     urlParams!: GenericObject;
@@ -212,7 +213,7 @@ _canFilterData() {
 _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, qs: string, filterData: () => void) {
   if (qs !== lastUrlQueryStr) {
     // update URL
-    this.updateAppState(currentPageUrlPath, qs, true);
+    updateAppState(currentPageUrlPath, qs, true);
     // filter agreements
     if (this.requiredDataLoaded) {
       filterData();
@@ -221,7 +222,7 @@ _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, q
     if (location.search === '') {
       // only update URL query string, without location change event being fired(no page refresh)
       // used to keep prev list filters values when navigating from details to list page
-      this.updateAppState(currentPageUrlPath, qs, false);
+      updateAppState(currentPageUrlPath, qs, false);
     }
     if (this.forceDataRefresh && this.requiredDataLoaded) {
       // re-filter list data
