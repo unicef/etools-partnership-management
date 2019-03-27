@@ -1,4 +1,4 @@
-import { ListFilterOption, SelectedFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
+import { ListFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
 import { PolymerElement } from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import { DomRepeatEvent, PolymerElEvent, Constructor } from '../../typings/globals.types';
