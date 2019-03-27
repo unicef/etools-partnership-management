@@ -1,26 +1,21 @@
-import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import DateMixin from './date-mixin.js';
+import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+import {prettyDate} from '../utils/date-utils';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin DateMixin
  */
 const CommonMixin = dedupingMixin((baseClass: any) =>
-    class extends (DateMixin(baseClass) as any) {
+    class extends (baseClass) {
 
       /**
        * Prepare and return the string value we have to display on the interface.
        * Ex: partners and agreements lists data values.
        */
       // TODO - apply single responsability
-      getDisplayValue(value: any, isDate: boolean, separator: string, skipSpaces: boolean) {
+      getDisplayValue(value: any, separator: string, skipSpaces: boolean) {
         if (typeof value === 'string' && value !== '') {
-          if (isDate) {
-            return this.prettyDate(value);
-          } else {
-            return value;
-          }
+          return value;
         } else if (Array.isArray(value) && value.length > 0) {
           if (!separator) {
             separator = ', ';
@@ -38,7 +33,7 @@ const CommonMixin = dedupingMixin((baseClass: any) =>
        * Prepare date string and return it in a user readable format
        */
       getDateDisplayValue(dateString: string) {
-        let formatedDate = this.prettyDate(dateString);
+        let formatedDate = prettyDate(dateString);
         return formatedDate ? formatedDate : '-';
       }
 

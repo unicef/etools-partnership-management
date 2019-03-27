@@ -1,15 +1,12 @@
-import { PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import pmpEdpoints from '../endpoints/endpoints';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../store';
 import {updateEnvFlags} from '../../actions/common-data';
+import {logError} from 'etools-behaviors/etools-logging.js';
+import { EnvFlags } from '../../typings/globals.types';
 
-// import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
-
-export interface EnvFlags extends Object {
-  prp_mode_off: boolean, prp_server_on: boolean, active_flags?: object[]
-}
 
 /**
  * @polymer
@@ -57,7 +54,7 @@ class EnvironmentFlags extends connect(store)(EndpointsMixin(PolymerElement) as 
         store.dispatch(updateEnvFlags(this.envFlagsDefaultValue));
       }
     }).catch((error: any) => {
-      this.logError('Env flags request failed', null, error);
+      logError('Env flags request failed', null, error);
       store.dispatch(updateEnvFlags(this.envFlagsDefaultValue));
     });
   }

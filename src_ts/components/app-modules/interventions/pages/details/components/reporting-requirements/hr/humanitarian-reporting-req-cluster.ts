@@ -4,10 +4,11 @@ import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-data-table/etools-data-table.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../../../../../mixins/common-mixin';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin';
 import { ResultLinkLowerResult, ExpectedResult } from '../../../../../../../../typings/intervention.types';
 import { isEmptyObject } from '../../../../../../../utils/utils';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import { logError } from 'etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 
 
 /**
@@ -15,12 +16,10 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin Common
- * @appliesMixin AjaxErrorsParser
  */
 const HumanitarianReportingReqClusterMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
   CommonMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement);
 
 /**
@@ -105,8 +104,8 @@ class HumanitarianReportingReqCluster extends HumanitarianReportingReqClusterMix
     }).then((response: any) => {
       this.set('reportingRequirements', response);
     }).catch((error: any) => {
-      this.logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this);
+      logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this);
       this.reportingRequirements = [];
     });
   }

@@ -1,6 +1,5 @@
 import {PolymerElement} from "@polymer/polymer/polymer-element.js";
 
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
@@ -10,16 +9,16 @@ import {store} from "../../../../store";
 import { deletePartner } from '../../../../actions/partners';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {Partner} from "../../../../models/partners.models";
+import {logError} from 'etools-behaviors/etools-logging.js';
+import { tryGetResponseError, formatServerErrorAsText } from '../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
 const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   EndpointsMixin,
   AjaxServerErrorsMixin
 ], PolymerElement);
@@ -145,7 +144,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   public _handlePartnerDeleteFromDexieErr(dexieDeleteErr: any) {
     // Partner dexie deleted issue
-    this.logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
+    logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
           'partner data from browser cache. Use refresh data functionality to update cached partners data.',
@@ -155,7 +154,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
   public _handleErrorResponse(response: any, ajaxMethod: any) {
     if (response instanceof EtoolsRequestError === false) {
-      this.logError('_handleErrorResponse', 'partner-item-data', response);
+      logError('_handleErrorResponse', 'partner-item-data', response);
     }
     if (this._skipDefaultErrorHandler) {
       fireEvent(this, 'global-loading', {
@@ -169,7 +168,7 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
     if (typeof this.handleErrResponseAdditionalCallback === 'function') {
       this.handleErrResponseAdditionalCallback.bind(this,
-          this.formatServerErrorAsText(this.tryGetResponseError(response)))();
+          formatServerErrorAsText(tryGetResponseError(response)))();
     }
     this.handleErrResponseAdditionalCallback = null;
     this.handleSuccResponseAdditionalCallback = null;
@@ -255,4 +254,4 @@ class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
 
 }
 
-window.customElements.define('partner-item-data', PartnerItemData);;
+window.customElements.define('partner-item-data', PartnerItemData);

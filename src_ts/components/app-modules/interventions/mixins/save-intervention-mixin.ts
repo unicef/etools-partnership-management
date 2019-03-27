@@ -1,7 +1,5 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import AjaxErrorsParserMixin from '../../../mixins/ajax-errors-parser-mixin';
-import ArrayHelperMixin from '../../../mixins/array-helper-mixin';
 import { store } from '../../../../store.js';
 import { RESET_UNSAVED_UPLOADS } from '../../../../actions/upload-status';
 import CONSTANTS from '../../../../config/app-constants';
@@ -9,22 +7,18 @@ import { Intervention, Fr } from '../../../../typings/intervention.types';
 import { isEmptyObject } from '../../../utils/utils';
 import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixin';
 import { fireEvent } from '../../../utils/fire-custom-event';
+import {getArraysDiff} from '../../../utils/array-helper.js';
 
 
 /**
  * PD/SSFA save functionality
  * @polymer
  * @mixinFunction
- * @mixinFunction
- * @appliesMixin ArrayHelperMixin
  * @appliesMixin ModifiedInterventionFields
- * @appliesMixin AjaxErrorsParser
  */
 const SaveInterventionMixin = dedupingMixin(
 (superClass: any) => class extends EtoolsMixinFactory.combineMixins([
-  ArrayHelperMixin,
   ModifiedInterventionFieldsMixin,
-  AjaxErrorsParserMixin
 ], superClass) {
   [x: string]: any;
 
@@ -200,7 +194,7 @@ const SaveInterventionMixin = dedupingMixin(
   }
 
   _needFrsUpdate(frs: Fr[]) {
-    let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
+    let diff = getArraysDiff(this.originalIntervention.frs, frs);
     return diff.length > 0;
   }
 

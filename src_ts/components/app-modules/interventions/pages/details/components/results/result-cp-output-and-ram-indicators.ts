@@ -5,21 +5,20 @@ import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import AjaxErrorsParserMixin from '../../../../../../mixins/ajax-errors-parser-mixin';
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import { logError } from 'etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixins Endpoints
- * @appliesMixins AjaxErrorsParser
  * @appliesMixins MissingDropdownOptions
  */
 class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
-  AjaxErrorsParserMixin,
   MissingDropdownOptionsMixin
 ], PolymerElement) {
   [x: string]: any;
@@ -155,7 +154,7 @@ class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
         self._handleRamIndicatorsReqResponse(response);
       }).catch(function(error: any) {
         self._showRamIndicatorsLoadingSpinner(false);
-        self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+        parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
       });
     }
   }
@@ -235,7 +234,7 @@ class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
   _isValidResult(result: any) {
     let valid = true;
     if (!result.intervention) {
-      this.logError('Intervention ID is missing! Can not save result.', 'expected-results-modal');
+      logError('Intervention ID is missing! Can not save result.', 'expected-results-modal');
       valid = false;
     }
     if (!result.cp_output || result.ram_indicators.length === 0) {
@@ -274,7 +273,7 @@ class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
     }).catch(function(error: any) {
       self._showRamIndicatorsLoadingSpinner(false);
       self.set('disableConfirmBtn', false);
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
     });
   }
 

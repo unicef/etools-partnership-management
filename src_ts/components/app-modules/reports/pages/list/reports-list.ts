@@ -5,12 +5,10 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../components/reports-display-list';
 import { SharedStyles } from '../../../../styles/shared-styles';
 import { listFilterStyles } from '../../../../styles/list-filter-styles';
-import AppNavigationHelperMixin from '../../../../mixins/app-navigation-helper-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store';
@@ -20,23 +18,21 @@ import CONSTANTS from '../../../../../config/app-constants';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import { fireEvent } from '../../../../utils/fire-custom-event';
+import { updateAppState } from '../../../../utils/navigation-helper';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin AppNavigationHelper
  * @appliesMixin ListFilters
  */
-const ReportsListRequiredMixins = EtoolsMixinFactory.combineMixins([
-  AppNavigationHelperMixin,
-  ListFiltersMixin
-], PolymerElement);
+const ReportsListRequiredMixins = ListFiltersMixin(PolymerElement);
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin ReportsListRequiredMixins
  */
+// @ts-ignore
 class ReportsList extends connect(store)(ReportsListRequiredMixins) {
 
   static get is() {
@@ -413,7 +409,7 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
 
     let qs = this._buildQueryString();
     // update URL
-    this.updateAppState('reports/list', qs, true);
+    updateAppState('reports/list', qs, true);
   }
 
   // Outputs the query string for the list

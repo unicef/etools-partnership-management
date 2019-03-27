@@ -4,7 +4,6 @@ import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-loading/etools-loading.js';
 
@@ -12,21 +11,18 @@ import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
 import { isEmptyObject } from '../../../../../utils/utils.js';
 import { PolymerElement, html } from '@polymer/polymer';
-import AjaxErrorsParserMixin from '../../../../../mixins/ajax-errors-parser-mixin.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
+import {logError} from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
- * @appliesMixin AjaxErrorsParserMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
 class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
-  AjaxErrorsParserMixin,
   EndpointsMixin,
   UtilsMixin
 ], PolymerElement) {
@@ -228,9 +224,8 @@ class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
       self.set('indicatorReport', (response && response[0]) ? response[0] : {});
       self._hideLoading();
     }).catch(function(error: any) {
-      let errMsg = 'Indicator details data request failed!';
-      self.logError(errMsg, 'reports-indicator-details', error);
-      self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+      logError('Indicator details data request failed!', 'reports-indicator-details', error)
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
       self._hideLoading();
     });
   }

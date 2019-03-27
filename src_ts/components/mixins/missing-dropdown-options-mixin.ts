@@ -1,15 +1,14 @@
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
+import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin EndpointsMixin
  */
 const MissingDropdownOptionsMixin = (baseClass: any) =>
     // @ts-ignore
-    class extends EndpointsMixin(EtoolsLogsMixin(baseClass)) {
+    class extends EndpointsMixin(baseClass) {
       public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
         let self = this;
         setTimeout(function() {
@@ -21,10 +20,10 @@ const MissingDropdownOptionsMixin = (baseClass: any) =>
               dropdownEl.set('ajaxParams', params);
               dropdownEl.set('url', endpointUrl);
             } else {
-              self.logWarn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+              logWarn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
             }
           } catch (err) {
-            self.logError('An error occurred at ghost data esmm setup.', err);
+            logError('An error occurred at ghost data esmm setup.', err);
           }
         });
       }

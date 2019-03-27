@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
@@ -15,12 +14,10 @@ import { connect } from 'pwa-helpers/connect-mixin';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin IndicatorsCommonMixin
  * @appliesMixin EndpointsMixin
  */
 class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   IndicatorsCommonMixin,
   EndpointsMixin,
 ], PolymerElement)) {

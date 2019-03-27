@@ -6,6 +6,7 @@ import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from "../../../utils/utils";
 import { fireEvent } from '../../../utils/fire-custom-event.js';
+import { logWarn } from 'etools-behaviors/etools-logging';
 /**
  * @polymer
  * @customElement
@@ -165,12 +166,12 @@ class PartnerStatus extends (EtoolsMixinFactory.combineMixins([
   // }
   _showDeleteConfirmationDialog() {
     if (!this.warningDialog) {
-      this.logWarn('warningDialog not created!', 'pmp partner status change');
+      logWarn('warningDialog not created!', 'pmp partner status change');
       return;
     }
 
     if (!this.deleteWarningDialogContent) {
-      this.logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
+      logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
       return;
     }
     let warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';

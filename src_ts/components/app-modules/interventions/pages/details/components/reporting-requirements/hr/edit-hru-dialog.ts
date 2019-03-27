@@ -12,25 +12,22 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../../../styles/required-field-styles.js';
-import DateMixin from '../../../../../../../mixins/date-mixin.js';
+import {prepareDatepickerDate, convertDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import AjaxErrorsParserMixin from '../../../../../../../mixins/ajax-errors-parser-mixin.js';
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../../store.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import { logError } from 'etools-behaviors/etools-logging';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsDataReduxStore
- * @appliesMixin DateMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxErrorsParser
  */
 class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
-  DateMixin,
   EndpointsMixin,
-  AjaxErrorsParserMixin
 ], PolymerElement)) {
   [x: string]: any;
 
@@ -86,7 +83,8 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
           <calendar-lite id="datepicker"
                     date="[[prepareDatepickerDate(selectedDate)]]"
                     pretty-date="{{selectedDate}}"
-                    format="YYYY-MM-DD">
+                    format="YYYY-MM-DD"
+                    hide-header>
           </calendar-lite>
 
           <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
@@ -160,7 +158,7 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
     if (!this.interventionStart) {
       return null;
     }
-    let stDt = this._convertDate(this.interventionStart);
+    let stDt = convertDate(this.interventionStart);
     if (stDt) {
       return moment(stDt).add(-1, 'days').toDate();
     }
@@ -259,10 +257,14 @@ class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
       dialog.stopSpinner();
       this.closeDialog();
     }).catch((error: any) => {
-      this.logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
-      this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+      logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
+      parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       dialog.stopSpinner();
     });
+  }
+
+  prepareDatepickerDate(dateStr: string) {
+    return prepareDatepickerDate(dateStr);
   }
 
 }

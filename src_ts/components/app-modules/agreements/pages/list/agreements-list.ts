@@ -67,7 +67,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
           @apply --text-btn-style;
           text-transform: none;
         }
-        
+
       </style>
 
       <template is="dom-if" if="[[stampListData]]">
@@ -608,7 +608,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
 
   // verify date and prettify or not
   _checkAndShowAgreementDate(dateString: string) {
-    return this.getDisplayValue(dateString, true);
+    return this.getDateDisplayValue(dateString);
   }
 
   _triggerAgreementLoadingMsg() {

@@ -8,33 +8,29 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-content-panel/etools-content-panel.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import EtoolsLogsMixin from 'etools-behaviors/etools-logs-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
-import ArrayHelperMixin from '../../../../../../mixins/array-helper-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
 import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
 import { FrsDetails, Fr } from '../../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {getArraysDiff} from '../../../../../../utils/array-helper.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsLogsMixin
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin ArrayHelperMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
 const InterventionFundReservationsMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsLogsMixin,
   DynamicDialogMixin,
   EndpointsMixin,
-  ArrayHelperMixin,
   FrNumbersConsistencyMixin
 ], PolymerElement);
 
@@ -215,7 +211,7 @@ class FundReservations extends InterventionFundReservationsMixins {
     if (this._frsConfirmationsDialogMessage) {
       this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
     } else {
-      this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
+      logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
     }
   }
 
@@ -270,7 +266,7 @@ class FundReservations extends InterventionFundReservationsMixins {
    * Updates made and FR Numbers list is not empty
    */
   _handleNotEmptyFrsAfterUpdate(frNumbers: string[]) {
-    let diff = this.getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
+    let diff = getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
     if (!diff.length) {
       // no changes have been made to FR Numbers
       this.frsDialogEl.closeDialog();
