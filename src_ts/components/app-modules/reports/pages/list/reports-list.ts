@@ -34,6 +34,7 @@ const ReportsListRequiredMixins = ListFiltersMixin(PolymerElement);
  */
 // @ts-ignore
 class ReportsList extends connect(store)(ReportsListRequiredMixins) {
+  [x: string]: any;
 
   static get is() {
     return 'reports-list';

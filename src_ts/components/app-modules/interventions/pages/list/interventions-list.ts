@@ -47,17 +47,18 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin PaginationMixin
  */
 @customElement('interventions-list')
+// @ts-ignore
 class InterventionsList extends connect(store)(
-  ListFiltersMixin(
-    ListsCommonMixin(
+   ListFiltersMixin(
+     ListsCommonMixin(
       CommonMixin(
-        PaginationMixin(
-        FrNumbersConsistencyMixin(
+          PaginationMixin(
+            FrNumbersConsistencyMixin(
   PolymerElement)
-  )
-  )
-  )
-  )
+   )
+   )
+   )
+   )
   ) {
 
   static get template() {
@@ -679,13 +680,13 @@ class InterventionsList extends connect(store)(
     }
   }
 
-  _filterListData(forceNoLoading: boolean) {
+  _filterListData(forceNoLoading?: boolean) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
-          let interventions = this.shadowRoot!.querySelector('#interventions');
+          let interventions = this.shadowRoot!.querySelector('#interventions') as PolymerElement & { query(...args: any[]): any };
           if (!interventions) {
             return;
           }

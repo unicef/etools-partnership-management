@@ -1,6 +1,5 @@
 import {property} from '@polymer/decorators';
 import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
-import AppNavigationHelperMixin from './app-navigation-helper-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
 import { PolymerElement } from '@polymer/polymer';
 import { updateAppState } from '../utils/navigation-helper';
@@ -15,7 +14,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     q!: string;
 
     @property({type: Object})
-    sortOrder!: object
+    sortOrder!: {field: string, direction: string};
 
     @property({type: Number})
     debounceTime: number = 50;
