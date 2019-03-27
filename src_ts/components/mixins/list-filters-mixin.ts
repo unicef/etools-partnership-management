@@ -1,7 +1,7 @@
 import { ListFilterOption, SelectedFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
-import { DomRepeatEvent, PolymerElEvent, _, Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import { DomRepeatEvent, PolymerElEvent, Constructor } from '../../typings/globals.types';
 declare const moment: any;
 /**
   * @polymer
@@ -301,7 +301,9 @@ declare const moment: any;
     }
 
   }
-  return listFiltersClass;
+};
+return listFiltersClass;
+
 }
 
 export default ListFiltersMixin;

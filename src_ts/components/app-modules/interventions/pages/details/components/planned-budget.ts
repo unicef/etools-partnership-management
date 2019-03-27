@@ -15,7 +15,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { SharedStyles } from '../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
 import { frWarningsStyles } from '../../../styles/fr-warnings-styles';
-import { Country, IPermission, GenericObject, LabelAndValue } from '../../../../../../typings/globals.types';
+import { Country, IPermission, LabelAndValue } from '../../../../../../typings/globals.types';
 import {Fr, FrsDetails, InterventionPermissionsFields, Intervention } from '../../../../../../typings/intervention.types';
 import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons';
 import {property, computed} from '@polymer/decorators';
@@ -23,7 +23,6 @@ import {property, computed} from '@polymer/decorators';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsCurrency
  * @appliesMixin FrNumbersConsistencyMixin
  */
 class PlannedBudget extends connect(store)(

@@ -15,15 +15,12 @@ import {
   AppAction
 } from '../actions/app.js';
 
-export interface AppState {
-  page: string;
-  drawerOpened: boolean;
+export class AppState {
+  page: string = '';
+  drawerOpened: boolean =  false;
 }
 
-const INITIAL_STATE: AppState = {
-  page: '',
-  drawerOpened: false
-};
+const INITIAL_STATE = new AppState();
 
 const app: Reducer<AppState, AppAction> = (state = INITIAL_STATE, action) => {
   switch (action.type) {
