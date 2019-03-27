@@ -1,13 +1,14 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {prettyDate} from '../utils/date-utils';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const CommonMixin = dedupingMixin((baseClass: any) =>
-    class extends (baseClass) {
-
+function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class commonClass extends baseClass {
       /**
        * Prepare and return the string value we have to display on the interface.
        * Ex: partners and agreements lists data values.
@@ -66,7 +67,7 @@ const CommonMixin = dedupingMixin((baseClass: any) =>
         if (!useValidate) {
           useValidate = false;
         }
-        let field = this.shadowRoot.querySelector(selector);
+        let field = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
         if (field) {
           if (useValidate) {
             field.validate();
@@ -77,6 +78,8 @@ const CommonMixin = dedupingMixin((baseClass: any) =>
         return field;
       }
 
-    });
+    };
+    return commonClass;
+}
 
 export default CommonMixin;

@@ -56,7 +56,7 @@ import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
 import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
-import EnvironmentFlags from '../environment-flags/environment-flags-mixin.js';
+import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin.js';
 import ScrollControl from '../mixins/scroll-control-mixin.js';
 import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
 import UserDataMixin from '../user/user-data-mixin';
@@ -101,7 +101,7 @@ setRootPath(BASE_URL);
  * @appliesMixin AppMenuMixin
  * @appliesMixin CommonData
  * @appliesMixin ToastNotifications
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin ScrollControl
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
@@ -113,7 +113,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   AppMenuMixin,
   CommonData,
   ToastNotifications,
-  EnvironmentFlags,
+  EnvironmentFlagsMixin,
   ScrollControl,
   AmendmentModeUIMixin,
   UserDataMixin,

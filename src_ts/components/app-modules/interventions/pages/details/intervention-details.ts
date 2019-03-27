@@ -20,7 +20,7 @@ import UploadsMixin from '../../../../mixins/uploads-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin';
-import EnvironmentFlags from '../../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../../environment-flags/environment-flags-mixin';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import { Agreement } from '../../../agreements/agreement.types';
@@ -53,7 +53,7 @@ import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin StaffMembersData
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin MissingDropdownOptions
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
@@ -61,7 +61,7 @@ import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixins([
   CommonMixin,
   StaffMembersData,
-  EnvironmentFlags,
+  EnvironmentFlagsMixin,
   MissingDropdownOptionsMixin,
   FrNumbersConsistencyMixin,
   UploadsMixin

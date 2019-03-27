@@ -1,14 +1,14 @@
-import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 /**
  * Interventions details tabs functionality
  * @polymer
  * @mixinFunction
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  */
 const InterventionPageTabsMixin = dedupingMixin(
-(superClass: any) => class extends (EnvironmentFlags(superClass) as any) {
+(superClass: any) => class extends (EnvironmentFlagsMixin(superClass) as any) {
   static get properties() {
     return {
       /**

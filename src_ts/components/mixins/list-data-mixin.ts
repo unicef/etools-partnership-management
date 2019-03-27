@@ -4,6 +4,8 @@ import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { fireEvent } from '../utils/fire-custom-event';
 import { logWarn } from 'etools-behaviors/etools-logging';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
@@ -12,9 +14,9 @@ import { logWarn } from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors
  */
-const ListDataMixin = dedupingMixin((baseClass: any) =>
-    class extends (EtoolsMixinFactory.combineMixins([
-      EndpointsMixin, AjaxServerErrorsMixin], baseClass) as any) {
+function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+    // @ts-ignore
+    class listDataClass extends EndpointsMixin(AjaxServerErrorsMixin(baseClass)) {
 
       static get properties() {
         return {
@@ -113,7 +115,8 @@ const ListDataMixin = dedupingMixin((baseClass: any) =>
           this._requestListData();
         }, newEndpoint.exp);
       }
-    });
-
+    };
+    return listDataClass;
+}
 
 export default ListDataMixin;

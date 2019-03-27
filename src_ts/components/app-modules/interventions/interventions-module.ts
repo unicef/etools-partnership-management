@@ -11,7 +11,7 @@ import CONSTANTS from '../../../config/app-constants';
 import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import EnvironmentFlags from '../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../environment-flags/environment-flags-mixin';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
@@ -42,7 +42,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @polymer
  * @customElement
  * @appliesMixin DynamicDialogMixin
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
@@ -53,7 +53,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
  */
 class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixins([
   DynamicDialogMixin,
-  EnvironmentFlags,
+  EnvironmentFlagsMixin,
   EndpointsMixin,
   ScrollControl,
   ModuleMainElCommonFunctionalityMixin,

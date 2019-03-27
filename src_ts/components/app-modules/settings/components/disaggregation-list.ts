@@ -16,7 +16,7 @@ import './add-disaggregation-dialog';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../store';
 import {patchDisaggregation} from '../../../../actions/common-data';
-import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
@@ -29,14 +29,14 @@ import { EnvFlags } from '../../../../typings/globals.types';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserPermissionsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
 const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
   EndpointsMixin,
   UserPermissionsMixin,
   EtoolsAjaxRequestMixin,
-  EnvironmentFlags,
+  EnvironmentFlagsMixin,
   FrontendPaginationMixin,
   EndpointsMixin,
 ], PolymerElement);

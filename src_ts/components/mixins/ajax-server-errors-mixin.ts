@@ -1,13 +1,16 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import {getErrorsArray, tryGetResponseError} from '../utils/ajax-errors-parser.js';
+import { Constructor } from '../../typings/globals.types.js';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
-  class extends baseClass {
+function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class ajaxServerErrors extends baseClass {
+    [x: string]: any;
 
     static get properties() {
       return {
@@ -84,6 +87,8 @@ const AjaxServerErrorsMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-  });
+  };
+  return ajaxServerErrors
+}
 
 export default AjaxServerErrorsMixin;
