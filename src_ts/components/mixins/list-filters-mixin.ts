@@ -300,10 +300,8 @@ declare const moment: any;
           : [];
     }
 
-  }
-};
-return listFiltersClass;
-
+  };
+  return listFiltersClass;
 }
 
 export default ListFiltersMixin;
