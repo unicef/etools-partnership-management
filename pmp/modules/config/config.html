@@ -17,7 +17,7 @@
     endpointsDomainConfig: {
       tokenEndpointsHost: {
         get prp() {
-          switch (this._checkEnvironment()) {
+          switch (EtoolsPmpApp.Config._checkEnvironment()) {
             case 'LOCAL':
               return 'http://127.0.0.1:8080';
             case 'DEVELOPMENT':
