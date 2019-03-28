@@ -3,6 +3,8 @@ import { ExpectedResult, CpOutput } from '../../../../../../../../typings/interv
 import { isEmptyObject, isJsonStrMatch } from '../../../../../../../utils/utils';
 import { RootState } from '../../../../../../../../store';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import { Constructor } from '../../../../../../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -11,9 +13,9 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @polymer
  * @mixinFunction
  */
-const ResultsMixin = dedupingMixin(
-    // @ts-ignore
-  (superClass: any) => class extends superClass {
+function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class resultsClass extends baseClass {
+
     [x: string]: any;
 
     static get properties() {
@@ -189,6 +191,8 @@ const ResultsMixin = dedupingMixin(
       return true;
     }
 
-  });
+  };
+  return resultsClass;
+}
 
-  export default ResultsMixin;
+export default ResultsMixin;

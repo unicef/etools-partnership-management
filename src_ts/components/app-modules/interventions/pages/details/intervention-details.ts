@@ -986,3 +986,5 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
 }
 
 window.customElements.define('intervention-details', InterventionDetails);
+
+export default InterventionDetails;

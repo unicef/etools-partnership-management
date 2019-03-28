@@ -10,6 +10,8 @@ import {updateCurrentUser} from '../../actions/common-data';
 import {isEmptyObject} from '../utils/utils';
 import { fireEvent } from '../utils/fire-custom-event';
 import { logError } from 'etools-behaviors/etools-logging';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
@@ -18,9 +20,8 @@ import { logError } from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserPermisionsMixin
  */
-const UserDataMixin = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(EtoolsMixinFactory.combineMixins([
-       EtoolsPageRefreshMixin, EndpointsMixin, UserPermisionsMixin], baseClass) as typeof baseClass) {
+function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+    class userDataClass extends EtoolsPageRefreshMixin(EndpointsMixin(UserPermisionsMixin(baseClass))) {
 
       static get properties() {
         return {
@@ -147,6 +148,8 @@ const UserDataMixin = dedupingMixin((baseClass: any) =>
         this._setPermissions(_permissions);
       }
 
-    });
+    };
+    return userDataClass;
+}
 
 export default UserDataMixin;

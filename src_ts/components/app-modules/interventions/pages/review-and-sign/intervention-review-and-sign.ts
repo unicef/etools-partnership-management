@@ -493,3 +493,5 @@ class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSign
 }
 
 window.customElements.define('intervention-review-and-sign', InterventionReviewAndSign);
+
+export default InterventionReviewAndSign;

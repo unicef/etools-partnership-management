@@ -291,7 +291,8 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
   /**
    * Save intervention data
    */
-  saveIntervention(intervention: Intervention, callback: any) {
+  //TODO Intervention | any
+  saveIntervention(intervention: Intervention | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
       fireEvent(this, 'toast', {text: 'Invalid intervention data!', showCloseBtn: true});
       return Promise.resolve(false);
@@ -504,3 +505,6 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
 }
 
 window.customElements.define('intervention-item-data', InterventionItemData);
+
+
+export default InterventionItemData;
