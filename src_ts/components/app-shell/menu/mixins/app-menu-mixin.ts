@@ -7,7 +7,7 @@ import { PolymerElement } from '@polymer/polymer';
  * @polymer
  * @mixinFunction
  */
-function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
  class appMenuClass extends baseClass {
 
     public static get properties() {
@@ -109,5 +109,4 @@ function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   return appMenuClass;
 }
 
-export default AppMenuMixin;
 

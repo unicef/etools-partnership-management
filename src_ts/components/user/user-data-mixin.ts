@@ -20,7 +20,7 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     // @ts-ignore
-    class userDataClass extends EtoolsPageRefreshMixin(EndpointsMixin(UserPermisionsMixin(baseClass))) {
+    class userDataClass extends EndpointsMixin(UserPermisionsMixin(EtoolsPageRefreshMixin(baseClass))) {
 
       static get properties() {
         return {
