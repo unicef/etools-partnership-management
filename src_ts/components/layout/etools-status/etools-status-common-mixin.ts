@@ -16,8 +16,9 @@ declare const ShadyCSS: any;
  * @appliesMixin ScrollControl
  **/
 function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  // @ts-ignore
   class etoolsStatusCommonClass extends ScrollControl(
-        DynamicDialogMixin(baseClass)) {
+        DynamicDialogMixin(baseClass) as Constructor<PolymerElement>) {
       [x: string]: any;
 
       static get properties() {
@@ -129,12 +130,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       }
 
       _setNotStickyStyles() {
-        let statusElem = this.shadowRoot.querySelector('etools-status');
-        statusElem.classList.remove('sticky-status');
+        let statusElem = this.shadowRoot!.querySelector('etools-status');
+        statusElem!.classList.remove('sticky-status');
       }
 
       _resetScrollHandler() {
         if (this.contentContainer) {
+          // @ts-ignore
           this.contentContainer.onscroll = null;
         }
       }
@@ -142,11 +144,11 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       _scrollChangedHandler() {
         this._waitForBoundingClientRectToBeSet()
             .then((containerDistanceFromViewportTop) => {
-              let statusElem = this.shadowRoot.querySelector('etools-status');
+              let statusElem = this.shadowRoot!.querySelector('etools-status');
               if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-                statusElem.classList.add('sticky-status');
+                statusElem!.classList.add('sticky-status');
               } else {
-                statusElem.classList.remove('sticky-status');
+                statusElem!.classList.remove('sticky-status');
               }
             });
       }
