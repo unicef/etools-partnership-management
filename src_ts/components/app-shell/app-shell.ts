@@ -49,7 +49,6 @@ import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
-import 'etools-behaviors/etools-mixin-factory.js';
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
@@ -91,7 +90,6 @@ import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { objectsAreTheSame } from '../utils/utils.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 setRootPath(BASE_URL);
 
 /**
@@ -108,20 +106,9 @@ setRootPath(BASE_URL);
  * @appliesMixin LoadingMixin
  * @appliesMixin UtilsMixin
  */
-class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
-  GestureEventListeners,
-  AppMenuMixin,
-  CommonData,
-  ToastNotifications,
-  EnvironmentFlagsMixin,
-  ScrollControl,
-  AmendmentModeUIMixin,
-  UserDataMixin,
-  LoadingMixin,
-  UtilsMixin,
-  DynamicDialogMixin,
-  UploadsMixin
-], PolymerElement) as any) {
+class AppShell extends connect(store)((GestureEventListeners(AppMenuMixin(CommonData(ToastNotifications
+(EnvironmentFlagsMixin(ScrollControl(AmendmentModeUIMixin(UserDataMixin(LoadingMixin(LoadingMixin(UtilsMixin
+(DynamicDialogMixin(UploadsMixin(PolymerElement))))))))))))))) {
 
   public static get template() {
     // main template

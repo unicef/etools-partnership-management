@@ -8,7 +8,6 @@ import 'etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dropdown/etools-dropdown.js';
 
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
@@ -29,8 +28,10 @@ import './components/assessments-items.js';
 import '../../../../layout/monitoring-visits-list.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 
+
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
@@ -39,21 +40,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
  * @appliesMixin PaginationMixin
  * @appliesMixin RiskRatingMixin
  */
-const PartnerFinancialAssuranceMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  CommonMixin,
-  EndpointsMixin,
-  AjaxServerErrorsMixin,
-  PaginationMixin,
-  RiskRatingMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin PartnerFinancialAssuranceMixins
- */
-class PartnerFinancialAssurance extends PartnerFinancialAssuranceMixins {
+class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`

@@ -7,7 +7,6 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
 import {_checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../actions/app';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-profile-dropdown/etools-profile-dropdown';
 import 'etools-app-selector/etools-app-selector'
 import '../header/countries-dropdown';
@@ -16,22 +15,15 @@ import {isJsonStrMatch} from '../../utils/utils';
 import { fireEvent } from '../../utils/fire-custom-event';
 import {GenericObject} from "../../../typings/globals.types";
 
-/**
- * page header mixin
- * @polymer
- * @mixinFunction
- * @appliesMixin GestureEventListeners
- * @appliesMixin ProfileOperations
- */
-const PageHeaderMixins = EtoolsMixinFactory.combineMixins([
-    GestureEventListeners, ProfileOperations], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin PageHeaderMixins
+ * @mixinFunction
+ * @appliesMixin GestureEventListeners
+ * @appliesMixin ProfileOperations
  */
-class PageHeader extends connect(store)(PageHeaderMixins) {
+class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations(PolymerElement)))) {
 
   public static get template() {
     // main template

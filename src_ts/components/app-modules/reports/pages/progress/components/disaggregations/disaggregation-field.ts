@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
-import 'etools-behaviors/etools-mixin-factory.js';
 
 import {GenericObject, PolymerElEvent} from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';

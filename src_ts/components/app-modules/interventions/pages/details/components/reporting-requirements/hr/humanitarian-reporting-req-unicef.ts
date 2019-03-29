@@ -2,7 +2,6 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 
 import '@polymer/paper-button/paper-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import './edit-hru-dialog.js';
 import './hru-list.js';
@@ -15,22 +14,13 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
 
 
 /**
+ * @customElement
  * @polymer
  * @mixinFunction
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin FrontendPagination
  */
-const HumanitarianReportingReqUnicefMixins = EtoolsMixinFactory.combineMixins([
-  ReportingRequirementsCommonMixin,
-  FrontendPaginationMixin
-], PolymerElement);
-
-/**
- * @customElement
- * @polymer
- * @appliesMixin HumanitarianReportingReqUnicefMixins
- */
-class HumanitarianReportingReqUnicef extends HumanitarianReportingReqUnicefMixins {
+class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(FrontendPaginationMixin(PolymerElement))) {
   [x: string]: any;
   static get template() {
     return html`

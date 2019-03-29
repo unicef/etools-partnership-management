@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
@@ -13,9 +12,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class PdLowerResultName extends EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement) {
+class PdLowerResultName extends (EndpointsMixin(PolymerElement)) {
   [x: string]: any;
 
   static get template() {

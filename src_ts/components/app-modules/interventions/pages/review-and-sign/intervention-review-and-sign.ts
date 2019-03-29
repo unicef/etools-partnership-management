@@ -4,7 +4,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/paper-input/paper-input.js';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
@@ -35,23 +34,13 @@ import {logError} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin CommonMixin
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
-const InterventionReviewAndSignMixin = EtoolsMixinFactory.combineMixins([
-  CommonMixin,
-  MissingDropdownOptionsMixin,
-  UploadsMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin InterventionReviewAndSignMixin
- */
-class InterventionReviewAndSign extends connect(store)(InterventionReviewAndSignMixin) {
+class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdownOptionsMixin(UploadsMixin(PolymerElement)))) {
   [x: string]: any;
 
   static get template() {

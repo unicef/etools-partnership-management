@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-data-table/etools-data-table.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../../../../../../layout/icons-actions.js';
 import '../mixins/reporting-req-past-dates-check.js';
@@ -20,10 +19,7 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingReqPastDatesCheckMixin
  */
-class QprList extends EtoolsMixinFactory.combineMixins([
-      CommonMixin,
-      ReportingReqPastDatesCheckMixin],
-    PolymerElement) {
+class QprList extends (CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement) as any)) {
 
   static get template() {
     return html`

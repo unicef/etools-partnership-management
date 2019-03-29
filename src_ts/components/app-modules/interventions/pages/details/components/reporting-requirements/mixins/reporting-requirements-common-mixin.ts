@@ -1,4 +1,3 @@
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 import { isEmptyObject } from '../../../../../../../utils/utils';
@@ -12,9 +11,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../../../utils/a
  * @appliesMixin EndpointsMixin
  */
 const ReportingRequirementsCommonMixin =
-    (baseClass: any) => class extends EtoolsMixinFactory.combineMixins([
-      EndpointsMixin,
-    ], baseClass) {
+    (baseClass: any) => class extends (EndpointsMixin(baseClass) as any) {
       [x: string]: any;
 
   static get properties() {

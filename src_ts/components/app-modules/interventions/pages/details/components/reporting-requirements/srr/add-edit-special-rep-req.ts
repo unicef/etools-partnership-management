@@ -8,7 +8,6 @@ import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 
 import 'etools-date-time/calendar-lite.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 import { logError } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
@@ -16,20 +15,11 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-const AddEditSpecialRepReqMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement);
-
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin AddEditSpecialRepReqMixins
- */
-class AddEditSpecialRepReq extends AddEditSpecialRepReqMixins {
+class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement)) {
 
   [x: string]: any;
 

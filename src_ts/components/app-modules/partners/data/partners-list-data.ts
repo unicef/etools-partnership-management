@@ -1,5 +1,4 @@
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {store} from '../../../../store.js';
 
 import ListDataMixin from '../../../mixins/list-data-mixin';
@@ -10,21 +9,14 @@ import {setPartners} from '../../../../actions/partners.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin ListDataMixin
- */
-const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  ListDataMixin
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin PartnersListDataRequiredMixins
+ * @mixinFunction
+ * @appliesMixin ListDataMixin
  */
-class PartnersListData extends (PartnersListDataRequiredMixins as any) {
+class PartnersListData extends (ListDataMixin(PolymerElement as any)) {
   static get properties() {
     return {
       endpointName: String,

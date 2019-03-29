@@ -3,7 +3,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
@@ -17,10 +16,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax
  * @appliesMixins Endpoints
  * @appliesMixins MissingDropdownOptions
  */
-class ResultCpOutputAndRamIndicators extends EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  MissingDropdownOptionsMixin
-], PolymerElement) {
+class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOptionsMixin(PolymerElement))) {
   [x: string]: any;
 
   static get template() {

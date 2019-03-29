@@ -1,20 +1,20 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '../../../layout/etools-status/etools-status.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status-common-mixin";
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from "../../../utils/utils";
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import { logWarn } from 'etools-behaviors/etools-logging';
+
+
 /**
  * @polymer
  * @customElement
+ * @appliesMixin DynamicDialogMixin
+ * @appliesMixin EtoolsStatusCommonMixin
  */
-class PartnerStatus extends (EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  EtoolsStatusCommonMixin
-], PolymerElement) as any) {
+class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerElement as any))) {
 
   static get template() {
     // language=HTML

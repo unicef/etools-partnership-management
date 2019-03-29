@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-data-table/etools-data-table.js';
 
@@ -15,26 +14,15 @@ import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.
 import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 
-
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-const FundReservationsDisplayMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  CommonMixin,
-  FrNumbersConsistencyMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin FundReservationsDisplayMixins
- */
-class FundReservationsDisplay extends FundReservationsDisplayMixins {
+class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
 
   static get template() {
     return html`

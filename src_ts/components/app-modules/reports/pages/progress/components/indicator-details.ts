@@ -4,7 +4,6 @@ import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
@@ -22,10 +21,7 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  UtilsMixin
-], PolymerElement) {
+class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement))) {
   [x: string]: any;
 
   static get is() {

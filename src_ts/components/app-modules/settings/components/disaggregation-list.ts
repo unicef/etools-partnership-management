@@ -5,7 +5,6 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-content-panel/etools-content-panel';
 import 'etools-data-table/etools-data-table';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import UserPermissionsMixin from '../../../user/user-permissions-mixin';
 
@@ -25,6 +24,7 @@ import { EnvFlags } from '../../../../typings/globals.types';
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserPermissionsMixin
@@ -32,21 +32,7 @@ import { EnvFlags } from '../../../../typings/globals.types';
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-const DisagregationListRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  UserPermissionsMixin,
-  EtoolsAjaxRequestMixin,
-  EnvironmentFlagsMixin,
-  FrontendPaginationMixin,
-  EndpointsMixin,
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin DisagregationListRequiredMixins
- */
-class DisaggregationList extends connect(store)(DisagregationListRequiredMixins) {
+class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMixin(EtoolsAjaxRequestMixin(EnvironmentFlagsMixin(FrontendPaginationMixin(EndpointsMixin(PolymerElement))))))) {
 
   static get template() {
     // language=HTML

@@ -5,27 +5,19 @@ import '@polymer/iron-label/iron-label.js';
 import { SharedStyles } from '../../styles/shared-styles';
 import { gridLayoutStyles } from '../../styles/grid-layout-styles';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin';
 import { store } from '../../../store';
 import { RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 import { fireEvent } from '../../utils/fire-custom-event';
 
 
-  /**
-     * @polymer
-     * @mixinFunction
-     * @appliesMixin EtoolsPageRefreshMixin
-    */
-   const DataRefreshDialogMixin = EtoolsMixinFactory.combineMixins([
-    EtoolsPageRefreshMixin
-  ], PolymerElement);
 /**
  * @polymer
  * @customElement
- * @appliesMixin DataRefreshDialogMixin
+ * @mixinFunction
+ * @appliesMixin EtoolsPageRefreshMixin
  */
-class DataRefreshDialog extends DataRefreshDialogMixin {
+class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement)) {
   [x: string]: any;
   static get is() {
     return 'data-refresh-dialog';

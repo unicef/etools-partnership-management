@@ -1,4 +1,3 @@
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import { PolymerElement } from '@polymer/polymer';
@@ -12,9 +11,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @customElement
  * @appliesMixin ListDataMixin
  */
-class InterventionsListData extends EtoolsMixinFactory.combineMixins([
-  ListDataMixin
-], PolymerElement) {
+class InterventionsListData extends (ListDataMixin(PolymerElement)) {
 
   static get properties() {
     return {

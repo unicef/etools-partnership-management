@@ -3,7 +3,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-content-panel/etools-content-panel';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../../../layout/etools-ram-indicators';
 
@@ -29,10 +28,7 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
-class ReportProgress extends EtoolsMixinFactory.combineMixins([
-  CommonMixin,
-  UtilsMixin
-], PolymerElement) {
+class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
   [x: string]: any;
 
   static get is() {

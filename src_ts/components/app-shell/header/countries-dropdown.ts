@@ -4,30 +4,20 @@ import {store, RootState} from "../../../store.js";
 
 import 'etools-dropdown/etools-dropdown.js';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging';
 
-/**
- * countries dropdown mixin
- * @polymer
- * @mixinFunction
- * @appliesMixin EndpointsMixin
- * @appliesMixin EtoolsPageRefreshMixin
- */
-const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  EtoolsPageRefreshMixin
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin CountriesDropdownMixin
+ * @mixinFunction
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(CountriesDropdownMixin) {
+class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshMixin(PolymerElement))) {
 
   public static get template() {
     // main template

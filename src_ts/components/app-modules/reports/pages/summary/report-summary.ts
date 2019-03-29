@@ -3,7 +3,6 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-upload/etools-upload.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
@@ -24,10 +23,7 @@ import { SharedStyles } from '../../../../styles/shared-styles.js';
  * @appliesMixin CommonMixin
  * @appliesMixin EtoolsCurrency
  */
-class ReportSummary extends EtoolsMixinFactory.combineMixins([
-  CommonMixin,
-  EtoolsCurrency
-], PolymerElement) {
+class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
   [x: string]: any;
 
   static get is() {

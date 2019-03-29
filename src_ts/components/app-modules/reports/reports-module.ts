@@ -8,7 +8,6 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/iron-pages/iron-pages.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../layout/page-content-header';
 import '../../layout//page-content-header-slotted-styles';
@@ -33,8 +32,10 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../store';
 declare const moment: any;
 
+
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRouting
@@ -42,20 +43,7 @@ declare const moment: any;
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  */
-const ReportsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  ModuleMainElCommonFunctionalityMixin,
-  ModuleRoutingMixin,
-  ReportDetailsMixin,
-  EndpointsMixin,
-  ScrollControl
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin ReportsModuleRequiredMixins
- */
-class ReportsModule extends connect(store)(ReportsModuleRequiredMixins) {
+class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(ReportDetailsMixin(EndpointsMixin(ScrollControl(PolymerElement)))))) {
   [x: string]: any;
 
   static get is() {

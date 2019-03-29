@@ -1,29 +1,20 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import 'etools-loading/etools-loading.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin EndpointsMixin
- */
-const EtoolsRamIndicatorsMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement);
-
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsRamIndicatorsMixins
+ * @mixinFunction
+ * @appliesMixin EndpointsMixin
  */
-class EtoolsRamIndicators extends EtoolsRamIndicatorsMixins {
+class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement)) {
   static get is() {
     return 'etools-ram-indicators';
   }

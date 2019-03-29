@@ -1,10 +1,10 @@
 import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging.js';
+
 
 /**
  * @polymer
@@ -12,18 +12,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  */
-const StaffMembersDataRequiredMixinsList = [
-  EtoolsAjaxRequestMixin,
-  EndpointsMixin
-];
-
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin StaffMembersDataRequiredMixinsList
- */
-const StaffMembersData = dedupingMixin((baseClass: any) => class extends
-   EtoolsMixinFactory.combineMixins(StaffMembersDataRequiredMixinsList, baseClass) {
+const StaffMembersData = dedupingMixin((baseClass: any) => class extends (EtoolsAjaxRequestMixin(EndpointsMixin(baseClass))) {
   static get properties() {
     return {
       staffMembers: Array,

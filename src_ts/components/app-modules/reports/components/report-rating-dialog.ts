@@ -2,8 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import 'etools-dialog/etools-dialog.js';
-import 'etools-behaviors/etools-mixin-factory.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { SharedStyles } from '../../../styles/shared-styles';
 declare const moment: any;
@@ -21,9 +19,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRatingDialog extends EtoolsMixinFactory.combineMixins([
-  EndpointsMixin
-  ], PolymerElement) {
+class ReportRatingDialog extends (EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`

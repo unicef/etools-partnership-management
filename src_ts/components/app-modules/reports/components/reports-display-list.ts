@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import 'etools-data-table/etools-data-table';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import './report-status';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
@@ -21,24 +20,14 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
-const ReportsDisplayListMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  CommonMixin,
-  PaginationMixin,
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin ReportsDisplayListMixins
- */
-class ReportsDisplayList extends connect(store)(ReportsDisplayListMixins) {
+class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(PaginationMixin(PolymerElement)))) {
   [x: string]: any;
   static get is() {
     return 'reports-display-list';

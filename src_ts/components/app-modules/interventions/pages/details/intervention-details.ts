@@ -4,7 +4,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -48,6 +47,7 @@ import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVE
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 
+
 /**
  * @polymer
  * @customElement
@@ -58,14 +58,7 @@ import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixins([
-  CommonMixin,
-  StaffMembersData,
-  EnvironmentFlagsMixin,
-  MissingDropdownOptionsMixin,
-  FrNumbersConsistencyMixin,
-  UploadsMixin
-], PolymerElement)) {
+class InterventionDetails extends connect(store)(CommonMixin(StaffMembersData(EnvironmentFlagsMixin(MissingDropdownOptionsMixin(FrNumbersConsistencyMixin(UploadsMixin(PolymerElement))))) as any)) {
   [x: string]: any;
 
   static get template() {

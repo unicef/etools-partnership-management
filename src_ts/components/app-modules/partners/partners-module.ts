@@ -9,7 +9,6 @@ import {store} from "../../../store";
 import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import ScrollControl from "../../mixins/scroll-control-mixin";
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
@@ -33,27 +32,17 @@ import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
 
+
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin GestureEventListeners
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionality
  */
-const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  GestureEventListeners,
-  ScrollControl,
-  ModuleRoutingMixin,
-  ModuleMainElCommonFunctionalityMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin PartnersModuleRequiredMixins
- */
-class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any) {
+class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(PolymerElement)) as any)))) {
 
   public static get template() {
     // main template
