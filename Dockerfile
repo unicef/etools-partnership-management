@@ -22,6 +22,8 @@ RUN npm run build
 FROM node:11.9.0-alpine
 RUN apk update
 RUN apk add --update bash
+RUN npm install -g express --no-save
+RUN npm install -g browser-capabilities@1.1.3 --no-save
 
 WORKDIR /code
 COPY --from=builder /code/express.js /code/express.js
