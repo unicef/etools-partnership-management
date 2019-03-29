@@ -1,9 +1,11 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
+import { Constructor } from '../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 declare const ShadyCSS: any;
 
 /**
@@ -13,10 +15,9 @@ declare const ShadyCSS: any;
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin ScrollControl
  **/
-const EtoolsStatusCommonMixin = dedupingMixin(
-    (superClass: any) => class extends (ScrollControl(
-        // @ts-ignore
-        DynamicDialogMixin(superClass)) as any) {
+function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class etoolsStatusCommonClass extends ScrollControl(
+        DynamicDialogMixin(baseClass)) {
       [x: string]: any;
 
       static get properties() {
@@ -270,6 +271,8 @@ const EtoolsStatusCommonMixin = dedupingMixin(
       _openDeleteConfirmation() {
         this.deleteConfirmDialog.opened = true;
       }
-    });
+    };
+    return etoolsStatusCommonClass;
+  }
 
 export default EtoolsStatusCommonMixin;

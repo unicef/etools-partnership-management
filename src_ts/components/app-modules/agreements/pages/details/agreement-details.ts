@@ -785,3 +785,5 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
     }
 
     window.customElements.define('agreement-details', AgreementDetails);
+
+    export default AgreementDetails;

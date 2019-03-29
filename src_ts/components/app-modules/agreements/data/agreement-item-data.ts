@@ -158,7 +158,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 
   // Update agreement status. In addition set a callback to be called after request is complete.
-  updateAgreementStatus(data: any, callback: any) {
+  updateAgreementStatus(data: any, callback?: any) {
     if (!data.agreementId) {
       fireEvent(this, 'toast', {text: 'Invalid agreement ID', showCloseBtn: true});
     } else {
@@ -304,3 +304,5 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 }
 window.customElements.define('agreement-item-data', AgreementItemData);
+
+export default AgreementItemData;
