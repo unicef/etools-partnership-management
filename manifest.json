@@ -1,7 +1,8 @@
 {
   "name": "eTools - Partnership Management Portal",
-  "short_name": "eTools - Partnership Management",
-  "start_url": "/?homescreen=1",
+  "short_name": "eTools - PMP",
+  "description": "UNICEF partners management app",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#0099ff",
   "background_color": "#ffffff",
