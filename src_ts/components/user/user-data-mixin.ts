@@ -1,8 +1,6 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {connect} from 'pwa-helpers/connect-mixin';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../store';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserPermisionsMixin from './user-permissions-mixin.js';
@@ -21,6 +19,7 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin UserPermisionsMixin
  */
 function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+    // @ts-ignore
     class userDataClass extends EtoolsPageRefreshMixin(EndpointsMixin(UserPermisionsMixin(baseClass))) {
 
       static get properties() {
