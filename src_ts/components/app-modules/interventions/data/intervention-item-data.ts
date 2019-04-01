@@ -323,7 +323,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
       }
 
       if (Array.isArray(intervention.result_links)) {
-        intervention.result_links = intervention.result_links.filter(function(elem) {
+        intervention.result_links = intervention.result_links.filter(function(elem: ExpectedResult) {
           return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
         });
       }
