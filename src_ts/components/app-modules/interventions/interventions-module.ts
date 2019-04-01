@@ -326,6 +326,8 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
     };
   }
 
+  private _pageChangeDebouncer!: Debouncer;
+
   static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, routeData)',
