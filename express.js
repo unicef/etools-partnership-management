@@ -18,7 +18,7 @@ function getSourcesPath(request) {
   }
 }
 
-app.use((req, res, next) => {
+app.use('/pmp/', (req, res, next) => {
   express.static(getSourcesPath(req))(req, res, next);
 });
 
