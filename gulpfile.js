@@ -13,6 +13,8 @@ const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 const del = require('del');
 const spawn = require('child_process').spawn;
+const polymerBuilds = require('./build_helpers/polymer-builds');
+const fileSystemHelper = require('./build_helpers/file-system-helper');
 
 /**
  * Cleans the prpl-server build in the server directory.
@@ -56,3 +58,24 @@ gulp.task('serve', () => {
   spawn('tsc', ['--watch'], spawnOptions);
   spawn('polymer', ['serve -H 0.0.0.0 -p 8080'], spawnOptions);
 });
+
+gulp.task('buildEsmBundled', (done) => {
+  polymerBuilds.buildEsmBundled(done);
+});
+
+gulp.task('buildEs6Bundled', (done) => {
+  polymerBuilds.buildEs6Bundled(done);
+});
+
+gulp.task('buildEs5Bundled', (done) => {
+  polymerBuilds.buildEs5Bundled(done);
+});
+
+gulp.task('moveTempToBuildFolder', (done) => {
+  fileSystemHelper.moveTempToBuildFolder().then(() => {
+    done();
+  });
+});
+
+gulp.task('build1by1', gulp.series(polymerBuilds.buildEsmBundled, polymerBuilds.buildEs6Bundled,
+polymerBuilds.buildEs5Bundled));
