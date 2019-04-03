@@ -43,7 +43,8 @@ declare const moment: any;
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  */
-class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(ReportDetailsMixin(EndpointsMixin(ScrollControl(PolymerElement)))))) {
+class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
+(ReportDetailsMixin(EndpointsMixin(ScrollControl(PolymerElement))))) as any) {
   [x: string]: any;
 
   static get is() {

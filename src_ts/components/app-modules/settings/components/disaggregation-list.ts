@@ -32,7 +32,8 @@ import { EnvFlags } from '../../../../typings/globals.types';
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMixin(EtoolsAjaxRequestMixin(EnvironmentFlagsMixin(FrontendPaginationMixin(EndpointsMixin(PolymerElement))))))) {
+class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMixin(EtoolsAjaxRequestMixin(
+    EnvironmentFlagsMixin(FrontendPaginationMixin(EndpointsMixin(PolymerElement))))))) {
 
   static get template() {
     // language=HTML

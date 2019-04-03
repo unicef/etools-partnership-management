@@ -108,7 +108,7 @@ setRootPath(BASE_URL);
  */
 class AppShell extends connect(store)((GestureEventListeners(AppMenuMixin(CommonData(ToastNotifications
 (EnvironmentFlagsMixin(ScrollControl(AmendmentModeUIMixin(UserDataMixin(LoadingMixin(LoadingMixin(UtilsMixin
-(DynamicDialogMixin(UploadsMixin(PolymerElement))))))))))))))) {
+(DynamicDialogMixin(UploadsMixin(PolymerElement)))))))))))))) as any) {
 
   public static get template() {
     // main template

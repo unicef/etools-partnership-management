@@ -27,7 +27,8 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixin
  */
-class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(EndpointsMixin(RepeatableDataSetsMixin(PolymerElement)))) {
+class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(EndpointsMixin
+(RepeatableDataSetsMixin(PolymerElement)))) {
 
   static get template() {
     // language=HTML

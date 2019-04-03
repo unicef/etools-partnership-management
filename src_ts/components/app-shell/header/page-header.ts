@@ -23,7 +23,7 @@ import {GenericObject} from "../../../typings/globals.types";
  * @appliesMixin GestureEventListeners
  * @appliesMixin ProfileOperations
  */
-class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations(PolymerElement)))) {
+class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations(PolymerElement)) as any)) {
 
   public static get template() {
     // main template
