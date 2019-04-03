@@ -33,7 +33,7 @@ class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumb
     // language=HTML
     return html`
       ${pmpCustomIcons}
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
       ${frWarningsStyles}
       <style>
         :host {

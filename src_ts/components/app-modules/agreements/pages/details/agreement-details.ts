@@ -774,3 +774,5 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
 }
 
 window.customElements.define('agreement-details', AgreementDetails);
+
+export default AgreementDetails;

@@ -13,7 +13,8 @@ import '../header/countries-dropdown';
 import ProfileOperations from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import { fireEvent } from '../../utils/fire-custom-event';
-import {GenericObject} from "../../../typings/globals.types";
+import {GenericObject} from '../../../typings/globals.types';
+import '../../layout/support-btn';
 
 
 /**
@@ -44,6 +45,7 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
           --countries-dropdown-color: var(--light-secondary-text-color);
         }
 
+        support-btn,
         etools-profile-dropdown,
         #refresh {
           color: var(--light-secondary-text-color);
@@ -81,6 +83,14 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
           font-size: 18px;
         }
 
+        support-btn {
+          margin-left: 24px;
+        }
+
+        etools-profile-dropdown {
+          margin-left: 16px;
+        }
+
         @media (min-width: 850px) {
           #menuButton {
             display: none;
@@ -101,6 +111,8 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
           <countries-dropdown id="countries" countries="[[countries]]"
                               current-country="[[profile.country]]">
           </countries-dropdown>
+
+          <support-btn></support-btn>
 
           <etools-profile-dropdown
               sections="[[allSections]]"

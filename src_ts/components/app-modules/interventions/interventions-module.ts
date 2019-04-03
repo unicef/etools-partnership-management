@@ -315,6 +315,8 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
     };
   }
 
+  private _pageChangeDebouncer!: Debouncer;
+
   static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, routeData)',

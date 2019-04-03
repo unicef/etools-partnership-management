@@ -10,7 +10,7 @@ import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 
 import './styles/nav-menu-styles';
-import {pmpMainIcon} from '../../styles/pmp-custom-icons';
+import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
@@ -34,7 +34,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlagsMixin(PolymerElemen
       </span>
 
         <span class="ripple-wrapper main">
-        <span id="menu-header-top-icon" on-tap="_toggleSmallMenu">${pmpMainIcon}</span>
+        <span id="menu-header-top-icon" on-tap="_toggleSmallMenu">${pmpMainIcons}</span>
         <paper-ripple class="circle" center></paper-ripple>
       </span>
 

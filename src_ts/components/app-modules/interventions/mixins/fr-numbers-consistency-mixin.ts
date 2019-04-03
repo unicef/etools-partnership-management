@@ -9,8 +9,8 @@ import {property} from '@polymer/decorators';
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  */
-function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superClass: T) {
-  class frNumbersConsistencyClass extends EtoolsCurrency(superClass as Constructor<PolymerElement>)  {
+function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class frNumbersConsistencyClass extends EtoolsCurrency(baseClass as Constructor<PolymerElement>)  {
       @property({type: Object})
       frsConsistencyWarnings: GenericObject = {
           amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution can not be compared.',

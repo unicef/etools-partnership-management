@@ -3,15 +3,14 @@ import '@polymer/paper-input/paper-input.js';
 
 import {GenericObject, PolymerElEvent} from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import DisaggregationFieldMixin from './mixins/disaggregation-field-mixin';
+import {toNumericValues} from './mixins/disaggregation-field';
 
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin DisaggregationFieldMixin
  */
-class DisaggregationField extends DisaggregationFieldMixin(PolymerElement) {
+class DisaggregationField extends PolymerElement {
 
   static get is() {
     return 'disaggregation-field';
@@ -74,10 +73,13 @@ class DisaggregationField extends DisaggregationFieldMixin(PolymerElement) {
     };
   }
 
+  public key!: string;
+  public coords!: string;
+
   ready() {
     super.ready();
     this._handleInput = this._handleInput.bind(this);
-    this.addEventListener('field.input', this._handleInput);
+    this.addEventListener('field.input', this._handleInput as EventListenerOrEventListenerObject);
   }
 
   connectedCallback() {
@@ -87,10 +89,11 @@ class DisaggregationField extends DisaggregationFieldMixin(PolymerElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('field.input', this._handleInput);
+    this.removeEventListener('field.input', this._handleInput as EventListenerOrEventListenerObject);
   }
 
   validate() {
+    // @ts-ignore
     return this.$.field.validate();
   }
 
@@ -105,7 +108,7 @@ class DisaggregationField extends DisaggregationFieldMixin(PolymerElement) {
 
     fireEvent(this, 'field-value-changed', {
       key: this.coords,
-      value: this._toNumericValues(change)
+      value: toNumericValues(change)
     });
   }
 

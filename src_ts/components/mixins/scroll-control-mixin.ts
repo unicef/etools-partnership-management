@@ -17,7 +17,7 @@ function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
       };
     }
 
-    public contentContainer: object | null = window.EtoolsPmpApp.ContentContainer;
+    public contentContainer: PolymerElement | null = window.EtoolsPmpApp.ContentContainer;
 
     public connectedCallback() {
       super.connectedCallback();

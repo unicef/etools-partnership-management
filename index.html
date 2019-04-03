@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       a) Add a `basePath` property to the build configuration in your `polymer.json`.
       b) Use the `--base-path` command-line option for `polymer build`.
     -->
-    <base href="/pmp_poly3/">
+    <base href="/pmp/">
 
     <link rel="icon" href="images/favicon.ico">
 
@@ -70,7 +70,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('service-worker.js', {
-            scope: '/pmp_poly3/',
+            scope: '/pmp/',
           });
         });
       }
@@ -109,10 +109,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="node_modules/moment/min/moment.min.js"></script>
     <!-- Built with love using PWA Starter Kit -->
     <script type="module" src="src/components/app-shell/app-shell.js"></script>
-    <!-- Start of etools Zendesk Widget script -->
-
-    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=69eb3f61-7900-4d7e-a3e2-9f4b3b28b2ac"> </script>
-
-    <!-- End of etools Zendesk Widget script -->
   </body>
 </html>

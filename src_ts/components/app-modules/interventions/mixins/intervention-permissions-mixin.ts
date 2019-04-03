@@ -1,4 +1,4 @@
-import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import { Intervention, InterventionPermissionsFields } from '../../../../typings/intervention.types';
 import CONSTANTS from '../../../../config/app-constants';
 import {store} from '../../../../store.js';
