@@ -1,11 +1,13 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const RiskRatingMixin = dedupingMixin((baseClass: any) =>
-  class extends baseClass {
+function RiskRatingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class riskRatingClass extends baseClass {
     public getRiskRatingValue(riskRating: string) {
       if (typeof riskRating === 'string' && riskRating !== '') {
         return riskRating;
@@ -23,6 +25,8 @@ const RiskRatingMixin = dedupingMixin((baseClass: any) =>
       }
       return riskRatingClass + ' risk-rating-field';
     }
-  });
+  };
+  return riskRatingClass;
+}
 
 export default RiskRatingMixin;

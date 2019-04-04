@@ -1,6 +1,5 @@
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import { PolymerElement, html } from '@polymer/polymer';
 import { SharedStyles } from '../../../styles/shared-styles';
@@ -14,9 +13,7 @@ declare const moment: any;
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRejectDialog extends EtoolsMixinFactory.combineMixins([
-  EndpointsMixin
-  ], PolymerElement) {
+class ReportRejectDialog extends (EndpointsMixin(PolymerElement) as any) {
 
   static get is() {
     return 'report-reject-dialog';

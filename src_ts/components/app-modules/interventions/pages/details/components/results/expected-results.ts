@@ -6,7 +6,6 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
 
 import 'etools-data-table/etools-data-table.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { PolymerElEvent } from '../../../../../../../typings/globals.types';
@@ -33,11 +32,7 @@ import { logError } from 'etools-behaviors/etools-logging';
  * @appliesMixin Results
  * @appliesMixin LowerResults
  */
-class ExpectedResults extends connect(store)(EtoolsMixinFactory.combineMixins([
-  RepeatableDataSetsMixin,
-  ResultsMixin,
-  LowerResultsMixin
-], PolymerElement)) {
+class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMixin(LowerResultsMixin(PolymerElement)  as any))) as any) {
   [x: string]: any;
 
   static get template() {

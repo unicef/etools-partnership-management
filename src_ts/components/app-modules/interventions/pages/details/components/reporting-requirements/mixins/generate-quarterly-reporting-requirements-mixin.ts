@@ -1,12 +1,15 @@
 declare const moment: any;
 import {convertDate} from '../../../../../../../utils/date-utils';
+import { Constructor } from '../../../../../../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const GenerateQuarterlyReportingRequirementsMixin =
-    (baseClass: any) => class extends baseClass {
+function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class generateQuarterlyReportingRequirements extends baseClass {
+    [x: string]: any;
 
     static get properties() {
       return {
@@ -89,6 +92,8 @@ const GenerateQuarterlyReportingRequirementsMixin =
     }
 
   };
+  return generateQuarterlyReportingRequirements;
+}
 
-  export default GenerateQuarterlyReportingRequirementsMixin;
+export default GenerateQuarterlyReportingRequirementsMixin;
 

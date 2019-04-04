@@ -1,14 +1,13 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../store';
 import {isEmptyObject} from '../utils/utils';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data.js';
 import { fireEvent } from '../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
@@ -16,11 +15,9 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
  */
-const ProfileOperations = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(EtoolsMixinFactory.combineMixins([
-      EndpointsMixin,
-      UserDataMixin,
-    ], baseClass) as typeof baseClass) {
+function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) {
+    // @ts-ignore
+    class profileOperations extends EndpointsMixin(UserDataMixin(baseClass)) {
 
       public static get properties() {
         return {
@@ -83,6 +80,8 @@ const ProfileOperations = dedupingMixin((baseClass: any) =>
         }
       }
 
-    });
+    };
+    return profileOperations;
+}
 
 export default ProfileOperations;

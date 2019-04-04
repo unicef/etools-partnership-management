@@ -1,6 +1,6 @@
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {store, RootState} from "../../../../../store";
+import {store, RootState} from '../../../../../store';
 import { PolymerElement, html } from '@polymer/polymer';
 
 import '@polymer/iron-icon/iron-icon';
@@ -16,7 +16,6 @@ import '@polymer/paper-styles/element-styles/paper-material-styles';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
@@ -35,8 +34,11 @@ import { isJsonStrMatch } from '../../../../utils/utils';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 
 
+let _partnersLastNavigated: string = '';
+
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin EndpointsMixin
@@ -45,23 +47,8 @@ import { fireEvent } from '../../../../utils/fire-custom-event';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-const PartnersListRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  EndpointsMixin,
-  PaginationMixin,
-  CommonMixin,
-  ListsCommonMixin,
-  ListFiltersMixin
-],PolymerElement);
-
-let _partnersLastNavigated: string = '';
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin PartnersListRequiredMixins
- */
-class PartnersList extends connect(store)(PartnersListRequiredMixins){
+class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(PaginationMixin(CommonMixin(ListsCommonMixin
+(ListFiltersMixin(PolymerElement)))))) as any){
 
   static get template() {
     // language=HTML

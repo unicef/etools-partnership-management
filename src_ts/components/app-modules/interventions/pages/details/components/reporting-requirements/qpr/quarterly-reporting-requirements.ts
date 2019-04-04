@@ -6,7 +6,6 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
 import GenerateQuarterlyReportingRequirementsMixin from '../mixins/generate-quarterly-reporting-requirements-mixin';
 
 import '@polymer/paper-button/paper-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 
 import './edit-qpr-dialog.js';
@@ -15,21 +14,13 @@ import './qpr-list.js';
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin GenerateQuarterlyReportingRequirements
  */
-const QuarterlyReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
-  ReportingRequirementsCommonMixin,
-  GenerateQuarterlyReportingRequirementsMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin QuarterlyReportingRequirementsMixins
- */
-class QuarterlyReportingRequirements extends QuarterlyReportingRequirementsMixins {
+class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
+(GenerateQuarterlyReportingRequirementsMixin(PolymerElement)) as any) {
   [x: string]: any;
   static get template() {
     return html`

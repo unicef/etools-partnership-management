@@ -1,9 +1,8 @@
 import { PolymerElement } from '@polymer/polymer';
 import {store} from '../../../../store';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
-import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import CONSTANTS from '../../../../config/app-constants';
 import { RootState } from '../../../../store';
 import { isJsonStrMatch } from '../../../utils/utils';
@@ -25,19 +24,16 @@ import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  */
-const InterventionItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  AjaxServerErrorsMixin,
-  EnvironmentFlags,
-], PolymerElement);
+const InterventionItemDataRequiredMixins = EnvironmentFlagsMixin(EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)));
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin InterventionItemDataRequiredMixins
  */
+// @ts-ignore
 class InterventionItemData extends connect(store)(InterventionItemDataRequiredMixins) {
 
   static get properties() {
@@ -295,7 +291,8 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
   /**
    * Save intervention data
    */
-  saveIntervention(intervention: Intervention, callback: any) {
+  //TODO Intervention | any
+  saveIntervention(intervention: Intervention | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
       fireEvent(this, 'toast', {text: 'Invalid intervention data!', showCloseBtn: true});
       return Promise.resolve(false);
@@ -326,7 +323,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
       }
 
       if (Array.isArray(intervention.result_links)) {
-        intervention.result_links = intervention.result_links.filter(function(elem) {
+        intervention.result_links = intervention.result_links.filter(function(elem: ExpectedResult) {
           return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
         });
       }
@@ -508,3 +505,6 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
 }
 
 window.customElements.define('intervention-item-data', InterventionItemData);
+
+
+export default InterventionItemData;

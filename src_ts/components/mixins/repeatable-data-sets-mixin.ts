@@ -1,11 +1,11 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
-import { GenericObject } from '../../typings/globals.types.js';
+import { GenericObject, Constructor } from '../../typings/globals.types.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import { PolymerElement } from '@polymer/polymer';
 
 
 /**
@@ -15,12 +15,10 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  */
-const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
-  class extends EtoolsMixinFactory.combineMixins([
-      DynamicDialogMixin,
-      EndpointsMixin,
-      EtoolsAjaxRequestMixin
-    ], baseClass) {
+function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  // @ts-ignore
+  class repeatableDataSetsClass extends EndpointsMixin(
+                                        DynamicDialogMixin(EtoolsAjaxRequestMixin(baseClass) as Constructor<PolymerElement>)) {
     [x: string]: any;
 
     public static get properties() {
@@ -216,7 +214,9 @@ const RepeatableDataSetsMixin = dedupingMixin((baseClass: any) =>
       }
     }
 
-  });
+  };
+  return repeatableDataSetsClass;
+}
 
 export default RepeatableDataSetsMixin;
 

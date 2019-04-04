@@ -1,6 +1,5 @@
 import { store } from '../../../../store.js';
 import { PolymerElement } from '@polymer/polymer';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import { Agreement, MinimalAgreement } from '../agreement.types.js';
@@ -14,23 +13,14 @@ import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
  */
-const AgreementItemDataRequiredMixin = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  AjaxServerErrorsMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin AgreementItemDataRequiredMixin
- */
-class AgreementItemData extends AgreementItemDataRequiredMixin {
-  [x: string]: any;
+// @ts-ignore
+class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) {
   static get template() {
     return null;
   }
@@ -158,7 +148,7 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 
   // Update agreement status. In addition set a callback to be called after request is complete.
-  updateAgreementStatus(data: any, callback: any) {
+  updateAgreementStatus(data: any, callback?: any) {
     if (!data.agreementId) {
       fireEvent(this, 'toast', {text: 'Invalid agreement ID', showCloseBtn: true});
     } else {
@@ -304,3 +294,5 @@ class AgreementItemData extends AgreementItemDataRequiredMixin {
   }
 }
 window.customElements.define('agreement-item-data', AgreementItemData);
+
+export default AgreementItemData;

@@ -1,22 +1,22 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../store";
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+import {store} from '../../store';
 
 import * as commonDataActions from '../../actions/common-data.js';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import EnvironmentFlags from "../environment-flags/environment-flags-mixin";
 import { isEmptyObject } from '../utils/utils';
 import { logError } from 'etools-behaviors/etools-logging';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
+import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const CommonData = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(EtoolsMixinFactory.combineMixins(
-        [EndpointsMixin, EnvironmentFlags], baseClass) as typeof baseClass) {
+function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
+  // @ts-ignore
+  class commonData extends EndpointsMixin(EnvironmentFlagsMixin(baseClass)) {
 
       public static get properties() {
         return {
@@ -245,6 +245,9 @@ const CommonData = dedupingMixin((baseClass: any) =>
         }
       }
 
-    });
+    };
+
+    return commonData;
+}
 
 export default CommonData;

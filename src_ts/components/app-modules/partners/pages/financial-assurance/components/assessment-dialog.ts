@@ -4,7 +4,6 @@ import 'etools-date-time/datepicker-lite.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 
@@ -17,21 +16,13 @@ import {isJsonStrMatch} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 
-/**
- * @customElement
- * @polymer
- * @appliesMixin EndpointsMixin
- */
-const AssessmentDialogMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin AssessmentDialogMixins
+ * @appliesMixin EndpointsMixin
  */
-class AssessmentDialog extends connect(store)(AssessmentDialogMixins) {
+class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
 
   static get template() {
     return html`
