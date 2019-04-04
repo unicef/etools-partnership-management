@@ -90,7 +90,7 @@ class AgreementPermissionFields  {
     this.authorized_officers = false;
     this.country_programme = true;
     this.end = false;
-    this.partner = true,
+    this.partner = true;
     this.signed_by_id = false;
     this.partner_manager = false;
     this.signed_by_partner_date = false;

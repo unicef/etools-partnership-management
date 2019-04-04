@@ -10,7 +10,7 @@ import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
-import {UserPermissions} from '../../../typings/globals.types';
+import {EtoolsTab, UserPermissions} from '../../../typings/globals.types';
 import {Agreement, AgreementAmendment} from './agreement.types.js';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box.js'
@@ -25,6 +25,7 @@ import './pages/components/agreement-status.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -166,40 +167,69 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     `;
   }
 
-  static get properties() {
-    return {
-      agreementsTabs: {
-        type: Array,
-        value: [{
-          tab: 'details',
-          tabLabel: 'Agreement Details',
-          hidden: false
-        }]
-      },
-      permissions: {
-        type: Object
-      },
-      selectedAgreementId: {
-        type: Number
-      },
-      csvDownloadUrl: {
-        type: String
-      },
-      newAgreementActive: {
-        type: Boolean,
-        computed: '_updateNewItemPageFlag(routeData, listActive)'
-      },
-      agreement: {
-        type: Object,
-        observer: '_agreementChanged'
-      },
-      moduleName: {
-        type: String,
-        value: 'agreements'
-      },
-      authorizedOfficers: Array
-    };
-  }
+  @property({type: Array})
+  agreementsTabs: EtoolsTab[] = [{
+      tab: 'details',
+      tabLabel: 'Agreement Details',
+      hidden: false
+  }];
+
+  @property({type: Object})
+  permissions: {} = {};
+
+  @property({type: Number})
+  selectedAgreementId: number | null = null;
+
+  @property({type: String})
+  csvDownloadUrl: string= '';
+
+  @property({type: Boolean, computed: `_updateNewItemPageFlag(routeData, listActive)`})
+  newAgreementActive: boolean = false;
+
+  @property({type: Object, observer:`_agreementChanged`})
+  agreement: Agreement = {};
+
+  @property({type: String})
+  moduleName: string = 'agreements';
+
+  @property({type: Array})
+  authorizedOfficers: [] = [];
+
+
+  // static get properties() {
+  //   return {
+  //     agreementsTabs: {
+  //       type: Array,
+  //       value: [{
+  //         tab: 'details',
+  //         tabLabel: 'Agreement Details',
+  //         hidden: false
+  //       }]
+  //     },
+  //     permissions: {
+  //       type: Object
+  //     },
+  //     selectedAgreementId: {
+  //       type: Number
+  //     },
+  //     csvDownloadUrl: {
+  //       type: String
+  //     },
+  //     newAgreementActive: {
+  //       type: Boolean,
+  //       computed: '_updateNewItemPageFlag(routeData, listActive)'
+  //     },
+  //     agreement: {
+  //       type: Object,
+  //       observer: '_agreementChanged'
+  //     },
+  //     moduleName: {
+  //       type: String,
+  //       value: 'agreements'
+  //     },
+  //     authorizedOfficers: Array
+  //   };
+  // }
 
   static get observers() {
     return [

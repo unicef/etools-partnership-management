@@ -45,6 +45,7 @@ import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.
 import { isJsonStrMatch } from '../../../../utils/utils';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
 import { fireEvent } from '../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -347,73 +348,115 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
     `;
   }
 
-  static get properties() {
-    return {
-      agreement: {
-        type: Object,
-        notify: true,
-        observer: '_agreementChanged'
-      },
-      editMode: {
-        type: Boolean,
-        value: false,
-        observer: '_editModeChanged'
-      },
-      isNewAgreement: {
-        type: Boolean,
-        value: false,
-        observer: '_isNewAgreementChanged'
-      },
-      partnersDropdownData: {
-        type: Array,
-        value: [],
-        statePath: 'partnersDropdownData'
-      },
-      agreementTypes: {
-        type: Array,
-        value: [],
-        statePath: 'agreementTypes'
-      },
-      staffMembers: {
-        type: Array,
-        value: []
-      },
-      authorizedOfficers: {
-        type: Array,
-        value: [],
-        notify: true
-      },
-      originalAgreementData: {
-        type: Object,
-        value: null
-      },
-      amendments: {
-        type: Array,
-        value: []
-      },
-      oldSelectedPartnerId: {
-        type: Number
-      },
-      enableEditForAuthorizedOfficers: {
-        type: Boolean,
-        value: false
-      },
-      generatePCAMessage: {
-        type: String,
-        value: 'Save before generating the PCA template'
-      },
-      allowAoEditForSSFA: {
-        type: Boolean,
-        value: false
-      },
-      uploadEndpoint: {
-        type: String,
-        value: function() {
-          return pmpEndpoints.attachmentsUpload.url;
-        }
-      }
-    };
-  }
+  @property({type: Object, observer: '_agreementChanged', notify: true})
+  agreement: object = {};
+
+  @property({type: Boolean, observer: '_editModeChanged'})
+  editMode: boolean = false;
+
+  @property({type: Boolean, observer: '_isNewAgreementChanged'})
+  isNewAgreement: boolean = false;
+
+  @property({type: Array})
+  partnersDropdownData: [] = [];
+
+  @property({type: Array})
+  agreementTypes: [] = [];
+
+  @property({type: Array})
+  staffMembers: [] = [];
+
+  @property({type: Array, notify: true})
+  authorizedOfficers: [] = [];
+
+  @property({type: Object})
+  originalAgreementData: object | null = null;
+
+  @property({type: Array})
+  amendments: [] = [];
+
+  @property({type: Number})
+  oldSelectedPartnerId: number | null = null;
+
+  @property({type: Boolean})
+  enableEditForAuthorizedOfficers: boolean = false;
+
+  @property({type: String})
+  generatePCAMessage: string = 'Save before generating the PCA template';
+
+  @property({type: Boolean})
+  allowAoEditForSSFA: boolean = false;
+
+  @property({type: String})
+  uploadEndpoint: string = ;
+
+  // static get properties() {
+  //   return {
+  //     agreement: {
+  //       type: Object,
+  //       notify: true,
+  //       observer: '_agreementChanged'
+  //     },
+  //     editMode: {
+  //       type: Boolean,
+  //       value: false,
+  //       observer: '_editModeChanged'
+  //     },
+  //     isNewAgreement: {
+  //       type: Boolean,
+  //       value: false,
+  //       observer: '_isNewAgreementChanged'
+  //     },
+  //     partnersDropdownData: {
+  //       type: Array,
+  //       value: [],
+  //       statePath: 'partnersDropdownData'
+  //     },
+  //     agreementTypes: {
+  //       type: Array,
+  //       value: [],
+  //       statePath: 'agreementTypes'
+  //     },
+  //     staffMembers: {
+  //       type: Array,
+  //       value: []
+  //     },
+  //     authorizedOfficers: {
+  //       type: Array,
+  //       value: [],
+  //       notify: true
+  //     },
+  //     originalAgreementData: {
+  //       type: Object,
+  //       value: null
+  //     },
+  //     amendments: {
+  //       type: Array,
+  //       value: []
+  //     },
+  //     oldSelectedPartnerId: {
+  //       type: Number
+  //     },
+  //     enableEditForAuthorizedOfficers: {
+  //       type: Boolean,
+  //       value: false
+  //     },
+  //     generatePCAMessage: {
+  //       type: String,
+  //       value: 'Save before generating the PCA template'
+  //     },
+  //     allowAoEditForSSFA: {
+  //       type: Boolean,
+  //       value: false
+  //     },
+  //     uploadEndpoint: {
+  //       type: String,
+  //       value: function() {
+  //         return pmpEndpoints.attachmentsUpload.url;
+  //       }
+  //     }
+  //   };
+  // }
 
   static get observers() {
     return [
