@@ -272,7 +272,7 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
       this.set('_frsTotalAmountWarning', '');
       return;
     }
-    let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local,
+    let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local!,
         frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
     this.set('_frsTotalAmountWarning', warn);
   }

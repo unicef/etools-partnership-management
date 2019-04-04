@@ -5,9 +5,9 @@ import '@polymer/paper-icon-button/paper-icon-button';
 import 'etools-content-panel/etools-content-panel';
 import 'etools-data-table/etools-data-table';
 
-import {gridLayoutStyles} from "../../../../../styles/grid-layout-styles";
-import {SharedStyles} from "../../../../../styles/shared-styles";
-import {etoolsCpHeaderActionsBarStyles} from "../../../../../styles/etools-cp-header-actions-bar-styles";
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 
 import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';

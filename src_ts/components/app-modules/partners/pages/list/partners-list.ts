@@ -1,6 +1,6 @@
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {store, RootState} from "../../../../../store";
+import {store, RootState} from '../../../../../store';
 import { PolymerElement, html } from '@polymer/polymer';
 
 import '@polymer/iron-icon/iron-icon';

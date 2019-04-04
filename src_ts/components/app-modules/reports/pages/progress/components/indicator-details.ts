@@ -12,7 +12,7 @@ import { isEmptyObject } from '../../../../../utils/utils.js';
 import { PolymerElement, html } from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
 import {logError} from 'etools-behaviors/etools-logging';
 
 /**

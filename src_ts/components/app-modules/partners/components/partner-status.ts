@@ -1,9 +1,9 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '../../../layout/etools-status/etools-status.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status-common-mixin";
+import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
-import {isEmptyObject} from "../../../utils/utils";
+import {isEmptyObject} from '../../../utils/utils';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import { logWarn } from 'etools-behaviors/etools-logging';
 

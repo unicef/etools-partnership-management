@@ -20,14 +20,13 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 
 
-const AgAmendmentsMixins = [CommonMixin];
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class AgreementAmendments extends connect(store)(AgAmendmentsMixins(PolymerElement)) {
+class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
+  [x: string]: any;
 
   static get template() {
     return html`

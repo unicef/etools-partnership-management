@@ -219,7 +219,7 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
 
   _toggle(e: PolymerElEvent) {
     let toggles = e.target.getAttribute('toggles-ind-details');
-    let indicatorCollapsibleContent = this.shadowRoot.querySelector('#collapse-' + toggles);
+    let indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {toggle(): void};
     if (indicatorCollapsibleContent) {
       indicatorCollapsibleContent.toggle();
     }
