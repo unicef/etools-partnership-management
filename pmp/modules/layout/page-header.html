@@ -88,11 +88,9 @@
       <div class="titlebar content-align">
         <etools-app-selector id="selector"></etools-app-selector>
         <img id="app-logo" src$="[[importPath]]../../../images/etools-logo-color-white.svg">
-        <dom-if id="envWarningIf">
-          <template>
-            <div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>
-          </template>
-        </dom-if>
+        <template is="dom-if" if="[[environment]]">
+          <div class="envWarning"> - [[environment]] TESTING ENVIRONMENT</div>
+        </template>
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
@@ -191,6 +189,10 @@
               'supervisor'
             ]
           },
+          environment: {
+            type: String,
+            value: () => EtoolsPmpApp.Config._checkEnvironment()
+          },
 
           userProfileDialog: Object
         };
@@ -203,13 +205,6 @@
       ready() {
         super.ready();
         this._setBgColor();
-        this._isStaging();
-      }
-
-      _isStaging() {
-        if (EtoolsPmpApp.Config.isStagingServer()) {
-          this.$.envWarningIf.if = true;
-        }
       }
 
       openDrawer() {
@@ -218,7 +213,7 @@
 
       _setBgColor() {
         // If not production environment, changing header color to red
-        if (!EtoolsPmpApp.Config.isProductionServer()) {
+        if (this.environment) {
           this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
         }
       }
