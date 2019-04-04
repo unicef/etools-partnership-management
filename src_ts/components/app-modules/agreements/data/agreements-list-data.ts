@@ -18,7 +18,8 @@ import {logError} from 'etools-behaviors/etools-logging';
   * @mixinFunction
   * @appliesMixin ListDataMixin
  */
-class AgreementsListData extends (ListDataMixin(PolymerElement) as any) {
+// @ts-ignore
+class AgreementsListData extends ListDataMixin(PolymerElement) {
   [x: string]: any;
 
   static get properties() {
@@ -160,3 +161,5 @@ class AgreementsListData extends (ListDataMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('agreements-list-data', AgreementsListData);
+
+export {AgreementsListData};

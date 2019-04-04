@@ -30,6 +30,7 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import '../../data/agreements-list-data.js';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import {AgreementsListData} from '../../data/agreements-list-data';
 
 
  let _agreementsLastNavigated: string = '';
@@ -43,8 +44,9 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
+//@ts-ignore
 class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFiltersMixin(ListsCommonMixin
-(PaginationMixin(PolymerElement))))) as any) {
+(PaginationMixin(PolymerElement)))))) {
 
 
   static get template() {
@@ -526,7 +528,7 @@ class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFilte
     this.queryDebouncer = Debouncer.debounce(this.queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
-          let agreements = this.shadowRoot.querySelector('#agreements');
+          let agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
           if (!agreements) {
             return;
           }
