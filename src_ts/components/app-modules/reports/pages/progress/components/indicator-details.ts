@@ -21,7 +21,7 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement))) {
+class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as any) {
   [x: string]: any;
 
   static get is() {

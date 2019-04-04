@@ -106,9 +106,9 @@ setRootPath(BASE_URL);
  * @appliesMixin LoadingMixin
  * @appliesMixin UtilsMixin
  */
-class AppShell extends connect(store)((GestureEventListeners(AppMenuMixin(CommonData(ToastNotifications
+class AppShell extends connect(store)(GestureEventListeners(AppMenuMixin(CommonData(ToastNotifications
 (EnvironmentFlagsMixin(ScrollControl(AmendmentModeUIMixin(UserDataMixin(LoadingMixin(LoadingMixin(UtilsMixin
-(DynamicDialogMixin(UploadsMixin(PolymerElement)))))))))))))) as any) {
+(DynamicDialogMixin(UploadsMixin(PolymerElement))))))) as any))) as any)))) {
 
   public static get template() {
     // main template

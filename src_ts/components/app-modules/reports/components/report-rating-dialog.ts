@@ -19,7 +19,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRatingDialog extends (EndpointsMixin(PolymerElement)) {
+class ReportRatingDialog extends (EndpointsMixin(PolymerElement) as any) {
 
   static get template() {
     return html`

@@ -17,7 +17,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement)) {
+class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) {
   [x: string]: any;
   static get is() {
     return 'data-refresh-dialog';

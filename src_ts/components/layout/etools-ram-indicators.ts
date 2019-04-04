@@ -14,7 +14,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement)) {
+class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement) as any) {
   static get is() {
     return 'etools-ram-indicators';
   }

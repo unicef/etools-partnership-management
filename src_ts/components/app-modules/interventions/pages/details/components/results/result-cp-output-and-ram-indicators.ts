@@ -16,7 +16,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax
  * @appliesMixins Endpoints
  * @appliesMixins MissingDropdownOptions
  */
-class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOptionsMixin(PolymerElement))) {
+class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOptionsMixin(PolymerElement)) as any) {
   [x: string]: any;
 
   static get template() {

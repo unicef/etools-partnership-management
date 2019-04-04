@@ -25,7 +25,7 @@ import { logError } from 'etools-behaviors/etools-logging';
  * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EndpointsMixin
  */
-class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
+class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

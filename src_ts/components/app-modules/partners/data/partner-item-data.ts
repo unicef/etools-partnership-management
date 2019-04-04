@@ -18,7 +18,7 @@ import { tryGetResponseError, formatServerErrorAsText } from '../../../utils/aja
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
-class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerElement as any))) {
+class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) as any) {
 
   static get properties() {
     return {

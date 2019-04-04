@@ -15,7 +15,7 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshMixin(PolymerElement))) {
+class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshMixin(PolymerElement)) as any) {
 
   public static get template() {
     // main template

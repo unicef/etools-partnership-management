@@ -17,7 +17,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @appliesMixin EndpointsMixin
  * @appliesMixin Common
  */
-class HumanitarianReportingReqCluster extends (EndpointsMixin(CommonMixin(PolymerElement))) {
+class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(PolymerElement))) as any) {
   [x: string]: any;
   static get template() {
     return html`

@@ -20,7 +20,7 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin FrontendPagination
  */
-class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(FrontendPaginationMixin(PolymerElement))) {
+class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(FrontendPaginationMixin(PolymerElement)) as any) {
   [x: string]: any;
   static get template() {
     return html`

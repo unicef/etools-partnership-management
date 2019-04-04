@@ -16,7 +16,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @mixinFunction
  * @appliesMixin ListDataMixin
  */
-class PartnersListData extends (ListDataMixin(PolymerElement as any)) {
+class PartnersListData extends (ListDataMixin(PolymerElement) as any) {
   static get properties() {
     return {
       endpointName: String,

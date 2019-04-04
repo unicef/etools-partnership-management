@@ -47,7 +47,8 @@ let _partnersLastNavigated: string = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(PaginationMixin(CommonMixin(ListsCommonMixin(ListFiltersMixin(PolymerElement))))))){
+class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(PaginationMixin(CommonMixin(ListsCommonMixin
+(ListFiltersMixin(PolymerElement)))))) as any){
 
   static get template() {
     // language=HTML

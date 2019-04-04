@@ -40,7 +40,8 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdownOptionsMixin(UploadsMixin(PolymerElement)))) {
+class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdownOptionsMixin
+(UploadsMixin(PolymerElement))) as any) {
   [x: string]: any;
 
   static get template() {

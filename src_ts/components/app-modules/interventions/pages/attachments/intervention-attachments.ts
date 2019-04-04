@@ -35,7 +35,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-error
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class InterventionAttachments extends connect(store)(DynamicDialogMixin(EndpointsMixin(CommonMixin(PolymerElement)))) {
+class InterventionAttachments extends connect(store)(DynamicDialogMixin(EndpointsMixin(CommonMixin(PolymerElement)) as any)) {
   [x: string]: any;
 
   static get template() {

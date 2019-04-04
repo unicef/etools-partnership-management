@@ -17,7 +17,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement))) {
+class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) as any) {
   [x: string]: any;
 
   static get template() {

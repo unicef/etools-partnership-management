@@ -21,7 +21,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EditQprDialog extends (EndpointsMixin(PolymerElement)) {
+class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

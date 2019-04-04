@@ -22,7 +22,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-er
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
+class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
 
   static get template() {
     return html`

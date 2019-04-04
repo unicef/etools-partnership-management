@@ -13,7 +13,7 @@ declare const moment: any;
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRejectDialog extends (EndpointsMixin(PolymerElement)) {
+class ReportRejectDialog extends (EndpointsMixin(PolymerElement) as any) {
 
   static get is() {
     return 'report-reject-dialog';

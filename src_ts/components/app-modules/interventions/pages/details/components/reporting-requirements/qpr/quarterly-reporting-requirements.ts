@@ -19,7 +19,8 @@ import './qpr-list.js';
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin GenerateQuarterlyReportingRequirements
  */
-class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin(GenerateQuarterlyReportingRequirementsMixin(PolymerElement))) {
+class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
+(GenerateQuarterlyReportingRequirementsMixin(PolymerElement)) as any) {
   [x: string]: any;
   static get template() {
     return html`

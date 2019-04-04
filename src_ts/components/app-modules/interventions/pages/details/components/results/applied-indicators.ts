@@ -13,7 +13,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
   * @appliesMixin DynamicDialogMixin
   * @appliesMixin RepeatableDataSetsMixin
   */
-class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(PolymerElement))) {
+class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(PolymerElement) as any)) {
   [x: string]: any;
 
   static get template() {

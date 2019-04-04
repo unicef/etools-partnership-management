@@ -38,7 +38,7 @@ declare const moment: any;
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement))) {
+class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement)) as any) {
 
   static get template() {
     // language=HTML

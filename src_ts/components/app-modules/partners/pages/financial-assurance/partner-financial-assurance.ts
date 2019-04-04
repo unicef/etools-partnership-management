@@ -40,7 +40,8 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
  * @appliesMixin PaginationMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
+class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin
+(PaginationMixin(RiskRatingMixin(PolymerElement))))) as any)) {
   static get template() {
     // language=HTML
     return html`

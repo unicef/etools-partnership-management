@@ -19,7 +19,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement)) {
+class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement) as any) {
 
   [x: string]: any;
 

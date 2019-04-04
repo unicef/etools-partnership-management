@@ -40,7 +40,8 @@ declare const moment: any;
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
-class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(CommonMixin(UtilsMixin(PolymerElement))))) {
+class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(CommonMixin
+(UtilsMixin(PolymerElement)))) as any) {
   [x: string]: any;
 
   static get template() {

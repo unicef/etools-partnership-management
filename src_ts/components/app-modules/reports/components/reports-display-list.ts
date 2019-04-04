@@ -27,7 +27,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
-class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(PaginationMixin(PolymerElement)))) {
+class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(PaginationMixin(PolymerElement))) as any) {
   [x: string]: any;
   static get is() {
     return 'reports-display-list';

@@ -11,7 +11,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @customElement
  * @appliesMixin ListDataMixin
  */
-class InterventionsListData extends (ListDataMixin(PolymerElement)) {
+class InterventionsListData extends (ListDataMixin(PolymerElement) as any) {
 
   static get properties() {
     return {

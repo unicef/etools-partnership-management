@@ -28,7 +28,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
+class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles}

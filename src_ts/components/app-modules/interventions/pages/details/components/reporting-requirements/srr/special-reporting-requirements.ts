@@ -26,7 +26,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingRequirementsCommonMixin
  */
-class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(CommonMixin(ReportingRequirementsCommonMixin(PolymerElement) as any)))) {
+class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(CommonMixin(ReportingRequirementsCommonMixin(PolymerElement) as any)) as any)) {
   [x: string]: any;
   static get template() {
     return html`

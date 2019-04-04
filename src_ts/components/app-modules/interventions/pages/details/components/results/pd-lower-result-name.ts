@@ -12,7 +12,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class PdLowerResultName extends (EndpointsMixin(PolymerElement)) {
+class PdLowerResultName extends (EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

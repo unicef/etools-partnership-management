@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
@@ -19,7 +18,7 @@ import { Indicator } from '../../../../../../../typings/intervention.types';
  * @customElement
  * @appliesMixin IndicatorsCommonMixin
  */
-class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement)) {
+class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

@@ -43,7 +43,8 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(PolymerElement)))))) {
+class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFiltersMixin(ListsCommonMixin
+(PaginationMixin(PolymerElement))))) as any) {
 
 
   static get template() {

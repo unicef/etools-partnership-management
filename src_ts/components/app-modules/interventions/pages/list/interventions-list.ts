@@ -44,7 +44,8 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin PaginationMixin
  */
-class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFiltersMixin(ListsCommonMixin(FrNumbersConsistencyMixin(PaginationMixin(PolymerElement))))))) {
+class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFiltersMixin(ListsCommonMixin
+(FrNumbersConsistencyMixin(PaginationMixin(PolymerElement)))) as any))) {
 
   static get template() {
     return html`

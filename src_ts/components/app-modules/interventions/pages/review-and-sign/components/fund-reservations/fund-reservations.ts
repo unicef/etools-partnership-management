@@ -28,7 +28,7 @@ import {getArraysDiff} from '../../../../../../utils/array-helper.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
+class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement))) as any) {
   [x: string]: any;
   static get template() {
     return html`

@@ -23,7 +23,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-er
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AttachmentDialog extends (EndpointsMixin(PolymerElement)) {
+class AttachmentDialog extends (EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {
