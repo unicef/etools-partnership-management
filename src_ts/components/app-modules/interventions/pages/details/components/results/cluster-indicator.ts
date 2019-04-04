@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
@@ -17,10 +16,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
  * @appliesMixin IndicatorsCommonMixin
  * @appliesMixin EndpointsMixin
  */
-class ClusterIndicator extends connect(store)(EtoolsMixinFactory.combineMixins([
-  IndicatorsCommonMixin,
-  EndpointsMixin,
-], PolymerElement)) {
+class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMixin(PolymerElement))) as any) {
   [x: string]: any;
 
   static get template() {

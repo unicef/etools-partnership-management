@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import CommonMixin from '../../../../../../mixins/common-mixin.js';
 
@@ -21,22 +20,13 @@ import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin ReduxInAmendmentMixin
  * @appliesMixin EtoolsMixins.DynamicDialogMixin
  * @appliesMixin Common
  */
-const InterventionAmendmentsMixin = EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  CommonMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin InterventionAmendmentsMixin
- */
-class PdAmendments extends connect(store)(InterventionAmendmentsMixin) {
+class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(PolymerElement))) {
   [x: string]: any;
   static get template() {
     return html`

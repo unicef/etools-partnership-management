@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 declare const moment: any;
 import 'etools-dialog/etools-dialog.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-date-time/calendar-lite';
 import 'etools-date-time/datepicker-lite.js';
@@ -26,9 +25,7 @@ import { logError } from 'etools-behaviors/etools-logging';
  * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EndpointsMixin
  */
-class EditHruDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement)) {
+class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

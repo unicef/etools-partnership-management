@@ -2,7 +2,6 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-content-panel/etools-content-panel.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-data-table/etools-data-table.js';
@@ -20,21 +19,14 @@ import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-he
 import { store } from '../../../../../../store.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin CommonMixin
- */
-const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
-  CommonMixin
-], PolymerElement);
 
 /**
  * @customElement
  * @polymer
- * @appliesMixin AssessmentsItemsRequiredMixins
+ * @mixinFunction
+ * @appliesMixin CommonMixin
  */
-class AssessmentsItems extends AssessmentsItemsRequiredMixins {
+class AssessmentsItems extends (CommonMixin(PolymerElement)) {
   [x: string]: any;
 
   static get template() {

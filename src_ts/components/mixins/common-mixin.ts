@@ -1,14 +1,14 @@
-import { Constructor } from '../../typings/globals.types.js';
-import { PolymerElement } from '@polymer/polymer';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {prettyDate} from '../utils/date-utils';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
-     class commonClass extends baseClass {
+  class commonClass extends baseClass {
       /**
        * Prepare and return the string value we have to display on the interface.
        * Ex: partners and agreements lists data values.
@@ -79,6 +79,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
     };
+
   return commonClass;
 }
 

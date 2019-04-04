@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
@@ -20,23 +19,16 @@ import CONSTANTS from '../../../../../../../config/app-constants';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../../utils/ajax-errors-parser";
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin EndpointsMixin
- */
-const AddAmendmentDialogMixin = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin AddAmendmentDialogMixin
+ * @mixinFunction
+ * @appliesMixin EndpointsMixin
  */
-class AddAmendmentDialog extends connect(store)(AddAmendmentDialogMixin) {
+class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles}

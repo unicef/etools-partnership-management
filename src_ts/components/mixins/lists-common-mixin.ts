@@ -1,8 +1,10 @@
 import {property} from '@polymer/decorators';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
 import { fireEvent } from '../utils/fire-custom-event';
 import { PolymerElement } from '@polymer/polymer';
 import { updateAppState } from '../utils/navigation-helper';
+import { PolymerElement } from '@polymer/polymer';
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
  class listCommonMixin extends baseClass {
@@ -65,24 +67,11 @@ _listDataChanged() {
         rows[i].set('detailsOpened', false);
       }
     }
-  }
-}
 
-_sortOrderChanged(e: CustomEvent) {
-  this.set('debounceTime', 150);
-  this.set('sortOrder', e.detail);
-}
-
-// List fade in fade out effect
-_listChanged(filteredList: any, oldFilteredList: any) {
-  let classList = this.$.list.classList;
-  if (filteredList instanceof Array && classList.contains('hidden')) {
-    classList.remove('hidden');
-  }
-  if (typeof oldFilteredList === 'undefined') {
-    this.set('showQueryLoading', true);
-  }
-}
+    _sortOrderChanged(e: CustomEvent) {
+      this.set('debounceTime', 150);
+      this.set('sortOrder', e.detail);
+    }
 
 /**
  * At page refresh Dexie DBs might be wiped out and the list
@@ -107,19 +96,17 @@ _requiredDataHasBeenLoaded(event: PolymerElEvent) {
   this._init(this.active);
 }
 
-listAttachedCallback(active: boolean, loadingMsg: string, loadingSource: any) {
-  this.set('stampListData', true);
-  if (active) {
-    fireEvent(this, 'global-loading', {
-      message: loadingMsg,
-      active: true,
-      loadingSource: loadingSource
-    });
-  } else {
-    this.set('showQueryLoading', true);
-  }
-}
-
+    // List fade in fade out effect
+    _listChanged(filteredList: any, oldFilteredList: any) {
+      let classList = this.$.list.classList;
+      if (filteredList instanceof Array && classList.contains('hidden')) {
+        classList.remove('hidden');
+      }
+      if (typeof oldFilteredList === 'undefined') {
+        this.set('showQueryLoading', true);
+      }
+    }
+ 
 /**
  * Make sure you define _sortableFieldNames on *-list element properties level.
  * Ex for partners:
@@ -133,76 +120,134 @@ _isValidSortField(fieldName: string) {
   return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
 }
 
-initSortFieldsValues(defaultSortData: any, urlQueryParamsSortData: any) {
-  if (urlQueryParamsSortData) {
-    let p = urlQueryParamsSortData.split('.');
-    if (this._isValidSortField(p[0])) {
-      return {field: p[0], direction: p[1]};
-    }
-  }
-  return defaultSortData;
-}
-
-_getFilterUrlValuesAsArray(types: string) {
-  return types ? types.split('|') : [];
-}
-
-// Outputs the query string for the list
-_buildUrlQueryString(filters: GenericObject) {
-  let queryParams = [];
-
-  for (let field in filters) {
-    if (filters[field]) {
-      let filterValue = filters[field];
-      let filterUrlValue;
-
-      let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
-      switch (filterValType) {
-        case 'array':
-          if (filterValue instanceof Array && filterValue.length) {
-            filterUrlValue = filterValue.join('|');
-          }
-          break;
-        case 'object':
-          if (field === 'sort' && filterValue.field && filterValue.direction) {
-            filterUrlValue = filterValue.field + '.' + filterValue.direction;
-          }
-          break;
-        default:
-          if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
-            filterUrlValue = String(filterValue).trim();
-          }
-      }
-
-      if (filterUrlValue) {
-        queryParams.push(field + '=' + filterUrlValue);
+    listAttachedCallback(active: boolean, loadingMsg: string, loadingSource: any) {
+      this.set('stampListData', true);
+      if (active) {
+        fireEvent(this, 'global-loading', {
+          message: loadingMsg,
+          active: true,
+          loadingSource: loadingSource
+        });
+      } else {
+        this.set('showQueryLoading', true);
       }
     }
-  }
 
-  return queryParams.join('&');
-}
+    /**
+     * Make sure you define _sortableFieldNames on *-list element properties level.
+     * Ex for partners:
+     * _sortableFieldNames: {
+     *    type: Array,
+     *    value: ['vendor_number', 'name']
+     *  }
+     */
+    _isValidSortField(fieldName: string) {
+      return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
+    }
 
-_buildExportQueryString(params: GenericObject) {
-  let qsParams = [];
-  for (let pKey in params) {
-    if (params[pKey]) {
-      if (params[pKey] instanceof Array && !params[pKey]) {
-        qsParams.push(pKey + '=' + params[pKey].join(','));
+    initSortFieldsValues(defaultSortData: any, urlQueryParamsSortData: any) {
+      if (urlQueryParamsSortData) {
+        let p = urlQueryParamsSortData.split('.');
+        if (this._isValidSortField(p[0])) {
+          return {field: p[0], direction: p[1]};
+        }
       }
-      if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
-        let filterStrVal = String(params[pKey]).trim();
-        qsParams.push(pKey + '=' + filterStrVal);
+      return defaultSortData;
+    }
+
+    _getFilterUrlValuesAsArray(types: string) {
+      return types ? types.split('|') : [];
+    }
+
+    // Outputs the query string for the list
+    _buildUrlQueryString(filters: GenericObject) {
+      let queryParams = [];
+
+      for (let field in filters) {
+        if (filters[field]) {
+          let filterValue = filters[field];
+          let filterUrlValue;
+
+          let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+          switch (filterValType) {
+            case 'array':
+              if (filterValue instanceof Array && filterValue.length) {
+                filterUrlValue = filterValue.join('|');
+              }
+              break;
+            case 'object':
+              if (field === 'sort' && filterValue.field && filterValue.direction) {
+                filterUrlValue = filterValue.field + '.' + filterValue.direction;
+              }
+              break;
+            default:
+              if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+                filterUrlValue = String(filterValue).trim();
+              }
+          }
+
+          if (filterUrlValue) {
+            queryParams.push(field + '=' + filterUrlValue);
+          }
+        }
+      }
+
+      return queryParams.join('&');
+    }
+
+    _buildExportQueryString(params: GenericObject) {
+      let qsParams = [];
+      for (let pKey in params) {
+        if (params[pKey]) {
+          if (params[pKey] instanceof Array && !params[pKey]) {
+            qsParams.push(pKey + '=' + params[pKey].join(','));
+          }
+          if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
+            let filterStrVal = String(params[pKey]).trim();
+            qsParams.push(pKey + '=' + filterStrVal);
+          }
+        }
+      }
+      qsParams.push('format=csv');
+      return qsParams.join('&');
+    }
+
+    _buildCsvExportUrl(params: GenericObject, endpointUrl: string) {
+      return endpointUrl + '?' + this._buildExportQueryString(params);
+    }
+
+    _canFilterData() {
+      return this.requiredDataLoaded && this.initComplete;
+    }
+
+    // Updates URL state with new query string, and launches query
+    _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, qs: string, filterData: () => void) {
+      if (qs !== lastUrlQueryStr) {
+        // update URL
+        updateAppState(currentPageUrlPath, qs, true);
+        // filter agreements
+        if (this.requiredDataLoaded) {
+          filterData();
+        }
+      } else {
+        if (location.search === '') {
+          // only update URL query string, without location change event being fired(no page refresh)
+          // used to keep prev list filters values when navigating from details to list page
+          updateAppState(currentPageUrlPath, qs, false);
+        }
+        if (this.forceDataRefresh && this.requiredDataLoaded) {
+          // re-filter list data
+          // this will only execute when [list-data]-loaded event is received
+          filterData();
+          this.set('forceDataRefresh', false);
+        }
       }
     }
-  }
-  qsParams.push('format=csv');
-  return qsParams.join('&');
+
+};
+return listsCommonClass;
 }
 
-_buildCsvExportUrl(params: GenericObject, endpointUrl: string) {
-  return endpointUrl + '?' + this._buildExportQueryString(params);
-}
 
 _canFilterData() {
   return this.requiredDataLoaded && this.initComplete;
@@ -235,4 +280,5 @@ _updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, q
 };
  return listCommonMixin;
 }
+
 export default ListsCommonMixin;

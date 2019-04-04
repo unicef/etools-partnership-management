@@ -3,8 +3,6 @@ import CONSTANTS from '../../config/app-constants';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
 
-
-
 function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
   class paginationClass extends baseClass {
@@ -63,6 +61,7 @@ function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       this.setPageSize(urlParams.size ? parseInt(urlParams.size) : CONSTANTS.DEFAULT_LIST_SIZE);
     }
 
+   
     _pageInsidePaginationRange(page: number, totalResults: string) {
       if (page < 1) {
         this.resetPageNumber();

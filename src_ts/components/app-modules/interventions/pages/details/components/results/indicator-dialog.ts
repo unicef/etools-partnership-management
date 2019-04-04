@@ -7,8 +7,7 @@ import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import EnvironmentFlags from '../../../../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../../../../environment-flags/environment-flags-mixin';
 import UserPermissionsMixin from '../../../../../../user/user-permissions-mixin';
 import SaveIndicatorMixin from './mixins/save-indicator-mixin';
 import IndicatorDialogTabsMixin from './mixins/indicator-dialog-tabs-mixin';
@@ -36,14 +35,9 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax
  * @appliesMixin IndicatorDialogTabs
  * @appliesMixin SaveIndicator
  * @appliesMixin UserPermissions
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  */
-class IndicatorDialog extends connect(store)(EtoolsMixinFactory.combineMixins([
-  IndicatorDialogTabsMixin,
-  SaveIndicatorMixin,
-  UserPermissionsMixin,
-  EnvironmentFlags
-], PolymerElement)) {
+class IndicatorDialog extends connect(store)((IndicatorDialogTabsMixin(SaveIndicatorMixin(UserPermissionsMixin(EnvironmentFlagsMixin(PolymerElement))))) as any) {
 
   static get template() {
     return html`

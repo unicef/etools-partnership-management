@@ -23,6 +23,8 @@ import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
+import AgreementItemData from './data/agreement-item-data.js';
+import AgreementDetails from './pages/details/agreement-details.js';
 
 /**
  * @polymer
@@ -232,12 +234,12 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     this._agreementSaveErrors = this._agreementSaveErrors.bind(this);
     this._handleAgreementSelectionLoadingMsg = this._handleAgreementSelectionLoadingMsg.bind(this);
 
-    this.addEventListener('agreement-save-error', this._agreementSaveErrors);
+    this.addEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
     this.addEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
   }
 
   _removeListeners() {
-    this.removeEventListener('agreement-save-error', this._agreementSaveErrors);
+    this.removeEventListener('agreement-save-error', this._agreementSaveErrors as EventListenerOrEventListenerObject);
     this.removeEventListener('trigger-agreement-loading-msg', this._handleAgreementSelectionLoadingMsg);
   }
 
@@ -280,7 +282,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!agreementData.id) {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
-    this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this))
+    (this.$.agreementData as unknown as AgreementItemData).saveAgreement(agreementData, this._newAgreementSaved.bind(this))
         .then((successfull: boolean) => {
           if (successfull) {
             store.dispatch({type: RESET_UNSAVED_UPLOADS});
@@ -290,7 +292,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   _updateAgreementStatus(e: CustomEvent) {
     e.stopImmediatePropagation();
-    this.$.agreementData.updateAgreementStatus(e.detail);
+    (this.$.agreementData as unknown as AgreementItemData).updateAgreementStatus(e.detail);
   }
 
   // Go to details page once the new agreement has been saved
@@ -357,7 +359,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    let agreementDetailsEl = this.shadowRoot.querySelector('#agreementDetails');
+    let agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails);
     if (!agreementDetailsEl) {
       return false;
     }
@@ -504,7 +506,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   _deleteAgreement(e: CustomEvent) {
-    this.$.agreementData.deleteAgreement(e.detail.id);
+    (this.$.agreementData as unknown as AgreementItemData).deleteAgreement(e.detail.id);
   }
 
 }
