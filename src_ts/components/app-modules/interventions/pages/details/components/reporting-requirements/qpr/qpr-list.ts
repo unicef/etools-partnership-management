@@ -11,6 +11,7 @@ import { reportingRequirementsListStyles } from '../styles/reporting-requirement
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
 import { PolymerElEvent } from '../../../../../../../../typings/globals.types.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -19,7 +20,7 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingReqPastDatesCheckMixin
  */
-class QprList extends (CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement) as any)) {
+class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -57,18 +58,12 @@ class QprList extends (CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElemen
     `;
   }
 
-  static get properties() {
-    return {
-      qprData: {
-        type: Array,
-        value: []
-      },
-      preventPastDateEdit: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  qprData: [] = [];
+
+  @property({type: Boolean})
+  preventPastDateEdit: boolean = false;
+
 
   static get observers() {
     return [
