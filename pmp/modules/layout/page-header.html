@@ -12,6 +12,8 @@
 <link rel="import" href="../redux/etools-data-redux-store.html">
 <link rel="import" href="../config/config.html">
 <link rel="import" href="../config/dexie-db-config.html">
+<link rel="import" href="../layout/components/support-btn.html">
+
 <dom-module id="page-header">
   <template>
     <style>
@@ -29,11 +31,13 @@
         --countries-dropdown-color: var(--header-secondary-text-color);
       }
 
+      support-btn,
       etools-profile-dropdown,
       #refresh {
         color: var(--header-secondary-text-color);
       }
 
+      support-btn,
       etools-profile-dropdown {
         margin-left: 24px;
       }
@@ -91,6 +95,8 @@
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
             current-country="[[profile.country]]"></countries-dropdown>
+
+        <support-btn></support-btn>
 
         <etools-profile-dropdown
           sections="[[allSections]]"
