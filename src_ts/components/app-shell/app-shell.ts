@@ -109,6 +109,7 @@ setRootPath(BASE_URL);
  * @appliesMixin LoadingMixin
  * @appliesMixin UtilsMixin
  */
+// @ts-ignore
 class AppShell extends connect(store)(
   GestureEventListeners(
   AppMenuMixin(
@@ -118,6 +119,7 @@ class AppShell extends connect(store)(
   ScrollControl(
   AmendmentModeUIMixin(
   UserDataMixin(
+  // @ts-ignore
   LoadingMixin(
   UtilsMixin(
   UploadsMixin(
