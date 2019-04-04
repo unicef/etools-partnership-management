@@ -248,3 +248,5 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
 }
 
 window.customElements.define(DataRefreshDialog.is, DataRefreshDialog);
+
+export {DataRefreshDialog};

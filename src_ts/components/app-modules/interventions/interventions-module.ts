@@ -686,3 +686,5 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
 
 window.customElements.define('interventions-module', InterventionsModule);
 
+export {InterventionsModule};
+
