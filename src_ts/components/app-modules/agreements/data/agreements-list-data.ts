@@ -1,4 +1,3 @@
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import { PolymerElement } from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
@@ -12,21 +11,15 @@ import { MinimalAgreement } from '../agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin ListDataMixin
- */
-const AgreementsListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  ListDataMixin
-], PolymerElement);
 
  /**
  * @polymer
  * @customElement
- * @appliesMixin AgreementsListDataRequiredMixins
+  * @mixinFunction
+  * @appliesMixin ListDataMixin
  */
-class AgreementsListData extends AgreementsListDataRequiredMixins {
+// @ts-ignore
+class AgreementsListData extends ListDataMixin(PolymerElement) {
   [x: string]: any;
 
   static get properties() {
@@ -168,3 +161,5 @@ class AgreementsListData extends AgreementsListDataRequiredMixins {
 }
 
 window.customElements.define('agreements-list-data', AgreementsListData);
+
+export {AgreementsListData};

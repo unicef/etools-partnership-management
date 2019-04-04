@@ -1,4 +1,3 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';

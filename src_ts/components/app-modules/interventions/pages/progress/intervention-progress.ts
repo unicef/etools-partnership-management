@@ -6,7 +6,6 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-progress-bar.js';
@@ -31,27 +30,18 @@ import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 declare const moment: any;
 
+
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
-const InterventionProgressMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  EndpointsMixin,
-  CommonMixin,
-  UtilsMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin InterventionProgressMixins
- */
-class InterventionProgress extends connect(store)(InterventionProgressMixins) {
+class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(CommonMixin
+(UtilsMixin(PolymerElement)))) as any) {
   [x: string]: any;
 
   static get template() {

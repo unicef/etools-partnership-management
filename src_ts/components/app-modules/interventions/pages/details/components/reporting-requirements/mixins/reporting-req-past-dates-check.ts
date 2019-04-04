@@ -1,5 +1,6 @@
 import { Constructor } from '../../../../../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 declare const moment: any;
 //import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
@@ -12,15 +13,12 @@ declare const moment: any;
 function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
   class reportingReqPastDatesCheckClass extends baseClass {
-    static get properties() {
-      return {
-        inAmendment: Boolean,
-        editMode: {
-          type: Boolean,
-          value: false
-        }
-      };
-    }
+
+    @property({type: Boolean})
+    inAmendment!: boolean;
+
+    @property({type: Boolean})
+    editMode: boolean = false;
 
     _uneditableStyles(inAmendment: boolean, dueDate: any, id: number) {
       return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id)

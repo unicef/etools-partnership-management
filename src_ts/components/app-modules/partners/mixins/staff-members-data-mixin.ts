@@ -8,6 +8,7 @@ import { Constructor } from '../../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 
 
+
 /**
  * @polymer
  * @mixinFunction

@@ -13,7 +13,6 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
@@ -45,14 +44,8 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin PaginationMixin
  */
-class InterventionsList extends connect(store)(EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  CommonMixin,
-  ListFiltersMixin,
-  ListsCommonMixin,
-  FrNumbersConsistencyMixin,
-  PaginationMixin
-], PolymerElement)) {
+class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFiltersMixin(ListsCommonMixin
+(FrNumbersConsistencyMixin(PaginationMixin(PolymerElement)))) as any))) {
 
   static get template() {
     return html`

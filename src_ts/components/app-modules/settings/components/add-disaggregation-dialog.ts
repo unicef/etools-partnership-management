@@ -3,7 +3,6 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
@@ -22,23 +21,14 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixin
  */
-const AddDisaggregationDialogMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsAjaxRequestMixin,
-  EndpointsMixin,
-  RepeatableDataSetsMixin,
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin AddDisaggregationDialogMixins
- */
-class AddDisaggregationDialog extends connect(store)(AddDisaggregationDialogMixins) {
+class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(EndpointsMixin
+(RepeatableDataSetsMixin(PolymerElement) as any)) as any) {
 
   static get template() {
     // language=HTML

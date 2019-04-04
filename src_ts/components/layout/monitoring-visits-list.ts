@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-loading/etools-loading.js';
 declare const moment: any;
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CommonMixin from '../mixins/common-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { isEmptyObject } from '../utils/utils';
@@ -10,23 +9,15 @@ import { gridLayoutStyles } from '../styles/grid-layout-styles';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 
-/**
-* @polymer
-* @mixinFunction
-* @appliesMixin EndpointsMixin
-* @appliesMixin CommonMixin
-*/
-const MonitoringVisitsListMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  CommonMixin
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin MonitoringVisitsListMixins
+ * @mixinFunction
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin CommonMixin
  */
-class MonitoringVisitsList extends MonitoringVisitsListMixins {
+class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) as any) {
   [x: string]: any;
 
   static get template() {

@@ -49,7 +49,6 @@ import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
-import 'etools-behaviors/etools-mixin-factory.js';
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 

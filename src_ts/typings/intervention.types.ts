@@ -115,7 +115,7 @@ export class FrsDetails {
   latest_end_date: string | null = null;
   multi_curr_flag: boolean = false;
   total_actual_amt: number = 0;
-  total_frs_amt: number = 0;
+  total_frs_amt: string = '0';
   total_intervention_amt: number = 0;
   total_outstanding_amt: number = 0;
 }

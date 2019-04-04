@@ -6,7 +6,6 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CONSTANTS from '../../../config/app-constants';
 import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
@@ -51,17 +50,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @appliesMixin InterventionPermissionsMixin
  * @appliesMixin SaveInterventionMixin
  */
-class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  EnvironmentFlagsMixin,
-  EndpointsMixin,
-  ScrollControl,
-  ModuleMainElCommonFunctionalityMixin,
-  ModuleRoutingMixin,
-  InterventionPageTabsMixin,
-  InterventionPermissionsMixin,
-  SaveInterventionMixin
-], PolymerElement)) {
+class InterventionsModule extends connect(store)((DynamicDialogMixin(EnvironmentFlagsMixin(EndpointsMixin(ScrollControl(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(InterventionPageTabsMixin(InterventionPermissionsMixin(SaveInterventionMixin(PolymerElement))))) as any))))) as any) {
   [x: string]: any;
 
   static get template() {

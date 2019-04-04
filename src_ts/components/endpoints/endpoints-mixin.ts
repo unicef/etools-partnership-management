@@ -16,8 +16,9 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     // @ts-ignore
-    class endpointsMixin extends (EtoolsAjaxRequestMixin(baseClass) as Constructor<PolymerElement>) {
+    class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
       [x: string]: any;
+
 
       // TODO: polymer 3 - remove properties from here
       static get properties() {
