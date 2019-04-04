@@ -4,10 +4,9 @@ import { PolymerElEvent, GenericObject, Constructor } from '../../typings/global
 import { fireEvent } from '../utils/fire-custom-event';
 import { PolymerElement } from '@polymer/polymer';
 import { updateAppState } from '../utils/navigation-helper';
-import { PolymerElement } from '@polymer/polymer';
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
- class listCommonMixin extends baseClass {
+  class listsCommonClass extends baseClass {
 
     @property({type: Object})
     urlParams!: GenericObject;
@@ -46,25 +45,27 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     stampListData!: boolean;
 
 
-connectedCallback() {
-  super.connectedCallback();
-  this._sortOrderChanged = this._sortOrderChanged.bind(this);
-  this.addEventListener('sort-changed', this._sortOrderChanged as EventListenerOrEventListenerObject);
-}
+    connectedCallback() {
+      super.connectedCallback();
+      this._sortOrderChanged = this._sortOrderChanged.bind(this);
+      this.addEventListener('sort-changed', this._sortOrderChanged as EventListenerOrEventListenerObject);
+    }
 
-disconnectedCallback() {
-  super.disconnectedCallback();
-  this.removeEventListener('sort-changed', this._sortOrderChanged as EventListenerOrEventListenerObject);
-}
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this.removeEventListener('sort-changed', this._sortOrderChanged as EventListenerOrEventListenerObject);
+    }
 
-// When the list data rows are changing check and close any details opened
-_listDataChanged() {
-  let rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement>;
-  if (rows && rows.length) {
-    for (let i = 0; i < rows.length; i++) {
-      // @ts-ignore
-      if (rows[i].detailsOpened) {
-        rows[i].set('detailsOpened', false);
+    // When the list data rows are changing check and close any details opened
+    _listDataChanged() {
+      let rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement>;
+      if (rows && rows.length) {
+        for (let i = 0; i < rows.length; i++) {
+          // @ts-ignore
+          if (rows[i].detailsOpened) {
+            rows[i].set('detailsOpened', false);
+          }
+        }
       }
     }
 
@@ -72,29 +73,6 @@ _listDataChanged() {
       this.set('debounceTime', 150);
       this.set('sortOrder', e.detail);
     }
-
-/**
- * At page refresh Dexie DBs might be wiped out and the list
- *(filteredPartners,filteredAgreements etc) will be empty.
- * Because of this we need to refilter after list data is saved locally.
- * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
- */
-_requiredDataHasBeenLoaded(event: PolymerElEvent) {
-  event.stopImmediatePropagation();
-
-  let listDataPath = event.target.getAttribute('list-data-path');
-  let list = this.get(listDataPath);
-
-  if (typeof list === 'undefined' ||
-      (Array.isArray(list) && list.length === 0)) {
-    this.set('forceDataRefresh', true);
-  }
-  // recheck params to trigger agreements filtering
-  this.set('initComplete', false); // TODO : 2 flags that seem very similar..great..
-  this.set('requiredDataLoaded', true);
-  // @ts-ignore
-  this._init(this.active);
-}
 
     // List fade in fade out effect
     _listChanged(filteredList: any, oldFilteredList: any) {
@@ -106,19 +84,29 @@ _requiredDataHasBeenLoaded(event: PolymerElEvent) {
         this.set('showQueryLoading', true);
       }
     }
- 
-/**
- * Make sure you define _sortableFieldNames on *-list element properties level.
- * Ex for partners:
- * _sortableFieldNames: {
- *    type: Array,
- *    value: ['vendor_number', 'name']
- *  }
- */
-_isValidSortField(fieldName: string) {
-  // @ts-ignore
-  return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
-}
+
+    /**
+     * At page refresh Dexie DBs might be wiped out and the list
+     *(filteredPartners,filteredAgreements etc) will be empty.
+    * Because of this we need to refilter after list data is saved locally.
+    * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
+    */
+    _requiredDataHasBeenLoaded(event: PolymerElEvent) {
+      event.stopImmediatePropagation();
+
+      let listDataPath = event.target.getAttribute('list-data-path');
+      let list = this.get(listDataPath);
+
+      if (typeof list === 'undefined' ||
+          (Array.isArray(list) && list.length === 0)) {
+        this.set('forceDataRefresh', true);
+      }
+      // recheck params to trigger agreements filtering
+      this.set('initComplete', false); // TODO : 2 flags that seem very similar..great..
+      this.set('requiredDataLoaded', true);
+      // @ts-ignore
+      this._init(this.active);
+    }
 
     listAttachedCallback(active: boolean, loadingMsg: string, loadingSource: any) {
       this.set('stampListData', true);
@@ -133,6 +121,7 @@ _isValidSortField(fieldName: string) {
       }
     }
 
+
     /**
      * Make sure you define _sortableFieldNames on *-list element properties level.
      * Ex for partners:
@@ -142,6 +131,7 @@ _isValidSortField(fieldName: string) {
      *  }
      */
     _isValidSortField(fieldName: string) {
+      // @ts-ignore
       return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
     }
 
@@ -243,42 +233,8 @@ _isValidSortField(fieldName: string) {
         }
       }
     }
-
-};
-return listsCommonClass;
-}
-
-
-_canFilterData() {
-  return this.requiredDataLoaded && this.initComplete;
-}
-
-// Updates URL state with new query string, and launches query
-_updateUrlAndDislayedData(currentPageUrlPath: string, lastUrlQueryStr: string, qs: string, filterData: () => void) {
-  if (qs !== lastUrlQueryStr) {
-    // update URL
-    updateAppState(currentPageUrlPath, qs, true);
-    // filter agreements
-    if (this.requiredDataLoaded) {
-      filterData();
-    }
-  } else {
-    if (location.search === '') {
-      // only update URL query string, without location change event being fired(no page refresh)
-      // used to keep prev list filters values when navigating from details to list page
-      updateAppState(currentPageUrlPath, qs, false);
-    }
-    if (this.forceDataRefresh && this.requiredDataLoaded) {
-      // re-filter list data
-      // this will only execute when [list-data]-loaded event is received
-      filterData();
-      this.set('forceDataRefresh', false);
-    }
-  }
-}
-
-};
- return listCommonMixin;
+  };
+  return listsCommonClass;
 }
 
 export default ListsCommonMixin;
