@@ -63,7 +63,8 @@ import UserDataMixin from '../user/user-data-mixin';
 
 import './menu/app-menu.js';
 import './header/page-header.js'
-import './header/data-refresh-dialog'
+import './header/data-refresh-dialog';
+import {DataRefreshDialog} from './header/data-refresh-dialog';
 import './footer/page-footer.js'
 
 import '../environment-flags/environment-flags';
@@ -91,7 +92,7 @@ import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { objectsAreTheSame } from '../utils/utils.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
+import { AppDrawerElement } from '@polymer/app-layout/app-drawer/app-drawer.js';
 setRootPath(BASE_URL);
 
 /**
@@ -108,20 +109,20 @@ setRootPath(BASE_URL);
  * @appliesMixin LoadingMixin
  * @appliesMixin UtilsMixin
  */
-class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
-  GestureEventListeners,
-  AppMenuMixin,
-  CommonData,
-  ToastNotifications,
-  EnvironmentFlagsMixin,
-  ScrollControl,
-  AmendmentModeUIMixin,
-  UserDataMixin,
-  LoadingMixin,
-  UtilsMixin,
-  DynamicDialogMixin,
-  UploadsMixin
-], PolymerElement) as any) {
+class AppShell extends connect(store)(
+  GestureEventListeners(
+  AppMenuMixin(
+  CommonData(
+  ToastNotifications(
+  EnvironmentFlagsMixin(
+  ScrollControl(
+  AmendmentModeUIMixin(
+  UserDataMixin(
+  LoadingMixin(
+  UtilsMixin(
+  UploadsMixin(
+  DynamicDialogMixin(
+  PolymerElement))))))))))))) {
 
   public static get template() {
     // main template
@@ -306,7 +307,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
 
     this._initListeners();
     this._createLeavePageDialog();
-    window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
+    window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
 
     if (this.module !== 'not-found') {
       /*
@@ -406,15 +407,15 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     this._openDataRefreshDialog = this._openDataRefreshDialog.bind(this);
 
     this.addEventListener('404', this._pageNotFound);
-    this.addEventListener('update-main-path', this._updateMainPath);
+    this.addEventListener('update-main-path', this._updateMainPath as any);
     this.addEventListener('forbidden', this._onForbidden);
     this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
   }
 
   private _removeListeners() {
     this.removeEventListener('404', this._pageNotFound);
-    this.removeEventListener('update-main-path', this._updateMainPath);
-    this.removeEventListener('update-route-query-params', this._updateQueryParams);
+    this.removeEventListener('update-main-path', this._updateMainPath as any);
+    this.removeEventListener('update-route-query-params', this._updateQueryParams as any);
     this.removeEventListener('forbidden', this._onForbidden);
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
   }
@@ -464,7 +465,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   private _openDataRefreshDialog() {
-    this.$.dataRefreshDialog.open();
+    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {
@@ -512,8 +513,9 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
     });
 
     // Close a non-persistent drawer when the module & route are changed.
-    if (!this.$.drawer.persistent) {
-      this.$.drawer.close();
+    let appDrawer = this.$.drawer as AppDrawerElement;
+    if (!appDrawer.persistent) {
+      appDrawer.close();
     }
   }
 
@@ -570,7 +572,7 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
   }
 
   private _getModuleMainElement(moduleId: string) {
-    return this.shadowRoot.querySelector('#' + moduleId);
+    return this.shadowRoot!.querySelector('#' + moduleId);
   }
 
   /**
@@ -656,8 +658,8 @@ class AppShell extends connect(store)(EtoolsMixinFactory.combineMixins([
       this.appLocRoute = JSON.parse(JSON.stringify(this.route));
 
       fireEvent(this, 'clear-loading-messages', {bubbles: true, composed: true});
-      this.shadowRoot.querySelector('app-menu')
-          .shadowRoot.querySelector('iron-selector').select(this.routeData.module);
+      this.shadowRoot!.querySelector('app-menu')!
+          .shadowRoot!.querySelector('iron-selector')!.select(this.routeData.module);
     }
   }
 }

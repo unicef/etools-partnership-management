@@ -697,3 +697,5 @@ class InterventionsModule extends connect(store)(EtoolsMixinFactory.combineMixin
 
 window.customElements.define('interventions-module', InterventionsModule);
 
+export {InterventionsModule};
+

@@ -256,3 +256,5 @@ class DataRefreshDialog extends DataRefreshDialogMixin {
 }
 
 window.customElements.define(DataRefreshDialog.is, DataRefreshDialog);
+
+export {DataRefreshDialog};
