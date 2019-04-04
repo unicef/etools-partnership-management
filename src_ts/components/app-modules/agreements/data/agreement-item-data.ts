@@ -19,6 +19,7 @@ import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
  */
+// @ts-ignore
 class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) {
   static get template() {
     return null;
