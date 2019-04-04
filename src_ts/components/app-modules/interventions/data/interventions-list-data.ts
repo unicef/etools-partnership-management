@@ -171,3 +171,5 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
 }
 
 window.customElements.define('interventions-list-data', InterventionsListData);
+
+export {InterventionsListData};

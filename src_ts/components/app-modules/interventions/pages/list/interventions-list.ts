@@ -27,6 +27,7 @@ import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
 import { listFilterStyles } from '../../../../styles/list-filter-styles';
 import { frWarningsStyles } from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
+import {InterventionsListData} from '../../data/interventions-list-data.js';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
@@ -686,7 +687,7 @@ class InterventionsList extends connect(store)(
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
-          let interventions = this.shadowRoot!.querySelector('#interventions') as PolymerElement & { query(...args: any[]): any };
+          let interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
           if (!interventions) {
             return;
           }
