@@ -47,9 +47,7 @@ const AgreementsModuleRequiredMixins =
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
-// @ts-ignore
 class AgreementsModule extends AgreementsModuleRequiredMixins {
-  [x: string]: any;
 
   public static get template() {
     // language=HTML
@@ -194,42 +192,6 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   @property({type: Array})
   authorizedOfficers: [] = [];
-
-
-  // static get properties() {
-  //   return {
-  //     agreementsTabs: {
-  //       type: Array,
-  //       value: [{
-  //         tab: 'details',
-  //         tabLabel: 'Agreement Details',
-  //         hidden: false
-  //       }]
-  //     },
-  //     permissions: {
-  //       type: Object
-  //     },
-  //     selectedAgreementId: {
-  //       type: Number
-  //     },
-  //     csvDownloadUrl: {
-  //       type: String
-  //     },
-  //     newAgreementActive: {
-  //       type: Boolean,
-  //       computed: '_updateNewItemPageFlag(routeData, listActive)'
-  //     },
-  //     agreement: {
-  //       type: Object,
-  //       observer: '_agreementChanged'
-  //     },
-  //     moduleName: {
-  //       type: String,
-  //       value: 'agreements'
-  //     },
-  //     authorizedOfficers: Array
-  //   };
-  // }
 
   static get observers() {
     return [

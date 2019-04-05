@@ -388,75 +388,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   allowAoEditForSSFA: boolean = false;
 
   @property({type: String})
-  uploadEndpoint: string = ;
-
-  // static get properties() {
-  //   return {
-  //     agreement: {
-  //       type: Object,
-  //       notify: true,
-  //       observer: '_agreementChanged'
-  //     },
-  //     editMode: {
-  //       type: Boolean,
-  //       value: false,
-  //       observer: '_editModeChanged'
-  //     },
-  //     isNewAgreement: {
-  //       type: Boolean,
-  //       value: false,
-  //       observer: '_isNewAgreementChanged'
-  //     },
-  //     partnersDropdownData: {
-  //       type: Array,
-  //       value: [],
-  //       statePath: 'partnersDropdownData'
-  //     },
-  //     agreementTypes: {
-  //       type: Array,
-  //       value: [],
-  //       statePath: 'agreementTypes'
-  //     },
-  //     staffMembers: {
-  //       type: Array,
-  //       value: []
-  //     },
-  //     authorizedOfficers: {
-  //       type: Array,
-  //       value: [],
-  //       notify: true
-  //     },
-  //     originalAgreementData: {
-  //       type: Object,
-  //       value: null
-  //     },
-  //     amendments: {
-  //       type: Array,
-  //       value: []
-  //     },
-  //     oldSelectedPartnerId: {
-  //       type: Number
-  //     },
-  //     enableEditForAuthorizedOfficers: {
-  //       type: Boolean,
-  //       value: false
-  //     },
-  //     generatePCAMessage: {
-  //       type: String,
-  //       value: 'Save before generating the PCA template'
-  //     },
-  //     allowAoEditForSSFA: {
-  //       type: Boolean,
-  //       value: false
-  //     },
-  //     uploadEndpoint: {
-  //       type: String,
-  //       value: function() {
-  //         return pmpEndpoints.attachmentsUpload.url;
-  //       }
-  //     }
-  //   };
-  // }
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
   static get observers() {
     return [

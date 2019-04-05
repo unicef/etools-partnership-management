@@ -9,13 +9,13 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @customElement
  */
 class AddAgAmendmentDialog extends PolymerElement {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -97,55 +97,41 @@ class AddAgAmendmentDialog extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      opened: {
-        type: Boolean,
-        value: false
-      },
-      datePickerOpen: {
-        type: Boolean,
-        value: false
-      },
-      uploadEndpoint: {
-        type: String,
-        value: () => pmpEndpoints.attachmentsUpload.url
-      },
-      amendmentTypes: {
-        type: Array,
-        value: []
-      },
-      amendment: Object,
-      autoValidate: {
-        type: Boolean,
-        value: false
-      },
-      showAuthorizedOfficers: {
-        type: Boolean,
-        value: false
-      },
-      authorizedOfficersOptions: {
-        type: Array,
-        value: []
-      },
-      authorizedOfficers: {
-        type: Array,
-        value: []
-      },
-      _aoTypeSelected: {
-        type: Boolean,
-        value: false
-      },
-      _validationSelectors: {
-        type: Array,
-        value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
-      },
-      uploadInProgress: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Boolean})
+  opened: boolean = false;
+
+  @property({type: Boolean})
+  datePickerOpen: boolean = false;
+
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Array})
+  amendmentTypes: [] = [];
+
+  @property({type: Object})
+  amendment: object = {};
+
+  @property({type: Boolean})
+  autoValidate: boolean = false;
+
+  @property({type: Boolean})
+  showAuthorizedOfficers: boolean = false;
+
+  @property({type: Array})
+  authorizedOfficersOptions: [] = [];
+
+  @property({type: Array})
+  authorizedOfficers: [] = [];
+
+  @property({type: Boolean})
+  _aoTypeSelected: boolean = false;
+
+  @property({type: Array})
+  _validationSelectors: [] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
 
   initData(authorizedOfficers: any, showAuthorizedOfficers: any, amendmentTypes: any) {
     this.set('amendment', new AgreementAmendment());

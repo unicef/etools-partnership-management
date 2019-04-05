@@ -18,6 +18,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -175,46 +176,32 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: { // TODO: check/implement delete option
-        type: String,
-        value: 'agreementAmendmentsDelete',
-        readOnly: true
-      },
-      agreementType: {
-        type: String,
-        value: ''
-      },
-      _amendmentTypes: {
-        type: Array,
-        statePath: 'agreementAmendmentTypes'
-      },
-      legacyAmendmentTypes: {
-        type: Object,
-        value: {
-          'CP extension': 'Extension of Country Programme Cycle'
-        }
-      },
-      _addAgAmendmentDialog: Object,
-      authorizedOfficers: {
-        type: Array,
-        value: []
-      },
-      showAuthorizedOfficers: {
-        type: Boolean,
-        value: false
-      },
-      selectedAo: {
-        type: Array,
-        notify: true
-      },
-      editMode: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String, readOnly: true})              // TODO: check/implement delete option
+  _deleteEpName: string = 'agreementAmendmentsDelete';
+
+  @property({type: String})
+  agreementType: string = '';
+
+  @property({type: Array})
+  _amendmentTypes: [] = [];
+
+  @property({type: Object})
+  legacyAmendmentTypes: {} = {'CP extension': 'Extension of Country Programme Cycle'};
+
+  @property({type: Object})
+  _addAgAmendmentDialog: {} = {};
+
+  @property({type: Array})
+  authorizedOfficers: [] = [];
+
+  @property({type: Boolean})
+  showAuthorizedOfficers: boolean = false;
+
+  @property({type: Array, notify: true})
+  selectedAo: [] = [];
+
+  @property({type: Boolean})
+  editMode: boolean = false;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this._amendmentTypes, state.commonData!.agreementAmendmentTypes)) {

@@ -14,7 +14,6 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EtoolsStatusCommonMixin
  */
 class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
-  [x: string]: any;
   static get template() {
     return html`
         <style>
@@ -77,62 +76,6 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
   @property({type:String})
   deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
 
-
-  // static get properties() {
-  //   return {
-  //     agreementId: {
-  //       value: null
-  //     },
-  //     agreementType: {
-  //       type: String,
-  //       value: ''
-  //     },
-  //     newAgreement: {
-  //       type: Boolean,
-  //       value: false
-  //     },
-  //     possibleStatuses: {
-  //       type: Array,
-  //       value: []
-  //     },
-  //     possibleActions: {
-  //       type: Array,
-  //       value: [
-  //         {
-  //           label: 'Save',
-  //           hidden: true,
-  //           primary: true,
-  //           event: 'save-agreement'
-  //           // save-agreement event is handeled by the parnent
-  //         },
-  //         {
-  //           label: 'Suspend',
-  //           hidden: true,
-  //           event: 'agreement-suspend-event'
-  //         },
-  //         {
-  //           label: 'Unsuspend',
-  //           hidden: true,
-  //           event: 'agreement-unsuspend-event'
-  //         },
-  //         {
-  //           label: 'Terminate',
-  //           hidden: true,
-  //           event: 'agreement-terminate-event'
-  //         },
-  //         {
-  //           label: 'Delete',
-  //           hidden: true,
-  //           event: 'agreement-delete-event'
-  //         }
-  //       ]
-  //     },
-  //     deleteWarningMessage: {
-  //       type: String,
-  //       value: 'Are you sure you want to delete this agreement?'
-  //     }
-  //   };
-  // }
 
   static get observers() {
     return [

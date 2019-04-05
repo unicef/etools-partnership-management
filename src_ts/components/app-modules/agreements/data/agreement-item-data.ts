@@ -9,6 +9,7 @@ import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 import { GenericObject } from '../../../../typings/globals.types.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -25,39 +26,27 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
     return null;
   }
 
-  static get properties() {
-    return {
-      agreementEndpoints: {
-        type: Object,
-        value: {
-          DETAILS: 'agreementDetails',
-          CREATE: 'agreements',
-          DELETE: 'agreementDelete'
-        }
-      },
-      agreement: {
-        type: Object,
-        readOnly: true,
-        notify: true
-      },
-      _partners: {
-        type: Object
-      },
+  @property({type: Object})
+  agreementEndpoints: {} = {
+      DETAILS: 'agreementDetails',
+      CREATE: 'agreements',
+      DELETE: 'agreementDelete'
+  };
 
-      agreementId: {
-        type: Number,
-        notify: true,
-        observer: '_agreementIdChanged'
-      },
+  @property({type: Agreement, readOnly: true, notify: true})
+  agreement: Agreement = {};
 
-      handleSuccResponseAdditionalCallback: Object,
-      // ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
-      ajaxLoadingMsgSource: {
-        type: String,
-        value: 'ag-data'
-      }
-    };
-  }
+  @property({type: Object})
+  _partners: {} = {};
+
+  @property({type: Number, notify: true, observer: '_agreementIdChanged'})
+  agreementId: number | null = null;
+
+  @property({type: Object})
+  handleSuccResponseAdditionalCallback: {} = {};
+
+  @property({type: String})
+  ajaxLoadingMsgSource: string = 'ag-data';
 
   _triggerAgreementRequest(options: any) {
     let ajaxMethod = options.method || 'GET';

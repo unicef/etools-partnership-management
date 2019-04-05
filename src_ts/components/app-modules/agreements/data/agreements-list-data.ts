@@ -10,50 +10,31 @@ import { setAgreements } from '../../../../actions/agreements';
 import { MinimalAgreement } from '../agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
 
 
- /**
- * @polymer
- * @customElement
-  * @mixinFunction
-  * @appliesMixin ListDataMixin
- */
-// @ts-ignore
+/**
+* @polymer
+* @customElement
+* @mixinFunction
+* @appliesMixin ListDataMixin
+*/
 class AgreementsListData extends ListDataMixin(PolymerElement) {
-  [x: string]: any;
 
-  static get properties() {
-    return {
-      endpointName: {
-        type: String,
-        value: 'agreements'
-      },
+  @property({type: String})
+  endpointName: string = 'agreements';
 
-      dataLoadedEventName: {
-        type: String,
-        value: 'agreements-loaded'
-      },
+  @property({type: String})
+  dataLoadedEventName: string = 'agreements-loaded';
 
-      filteredAgreements: {
-        type: Array,
-        readOnly: true,
-        notify: true
-      },
+  @property({type: Array, notify: true, readOnly: true})
+  filteredAgreements: [] = [];
 
-      totalResults: {
-        type: Number,
-        readOnly: true,
-        notify: true
-      },
+  @property({type: Number, readOnly: true, notify: true})
+  totalResults: number | null = null;
 
-      currentQuery: {
-        type: Object,
-        value: null
-      }
-    };
-  }
-
-   public endpointName: string = 'agreements';
+  @property({type: Object})
+  currentQuery: object | null = null;
 
   _handleMyResponse(res: any) {
     this._handleResponse(res);

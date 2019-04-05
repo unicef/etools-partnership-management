@@ -3,6 +3,7 @@ import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import 'etools-dialog/etools-dialog.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -31,28 +32,17 @@ class GeneratePcaDialog extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      agreementId: {
-        type: String
-      },
-      templateOptions: {
-        type: Array,
-        value: function() {
-          return [{value: 'english', label: 'English'},
-            {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
-            {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
-            {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
-        }
-      },
-      selectedTemplate: {
-        type: String
-      }
-    };
-  }
+  @property({type: String})
+  agreementId: string | null = null;
 
-  public agreementId: string | number | null = null;
-  public selectedTemplate: string | null = null;
+  @property({type: Array})
+  templateOptions: [] = [{value: 'english', label: 'English'},
+      {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
+      {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
+      {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
+
+  @property({type: String})
+  selectedTemplate: string | null = null;
 
   open() {
     // @ts-ignore
