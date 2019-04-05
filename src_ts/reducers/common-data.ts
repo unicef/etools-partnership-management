@@ -34,7 +34,7 @@ import {
   CommonDataAction
 } from '../actions/common-data';
 import { CpOutput, Disaggregation } from '../typings/intervention.types';
-import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags } from '../typings/globals.types';
+import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags, Office } from '../typings/globals.types';
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
@@ -46,7 +46,7 @@ export class CommonDataState {
   sections: GenericObject[] = [];
   unicefUsersData: MinimalUser[] = [];
   locations: Location[] = [];
-  offices: {id: number, name: string, zonal_chief: any}[] = [];
+  offices: Office[] = [];
   agreementsDropdownData: object[] = []; // TODO - is empty
   agencyChoices: LabelAndValue[] = [];
   agreementAmendmentTypes: LabelAndValue[] = [];

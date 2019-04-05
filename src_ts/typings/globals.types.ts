@@ -44,7 +44,7 @@ export class MinimalUser {
 }
 
 export class User extends MinimalUser {
-  country!: object;
+  country!: MinimalCountry;
   country_override!: number;
   countries_available!: MinimalCountry[];
   groups!: UserGroup[];
@@ -125,3 +125,9 @@ export type EnvFlags = {
   active_flags?: object[];
 }
 
+export type Office = {
+  id: number,
+  name: string,
+  email: string,
+  username: string
+}

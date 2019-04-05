@@ -9,6 +9,7 @@ import { logError } from 'etools-behaviors/etools-logging';
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -16,15 +17,10 @@ import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin'
  */
 function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
   // @ts-ignore
-  class commonData extends EndpointsMixin(EnvironmentFlagsMixin(baseClass)) {
+  class commonData extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
 
-      public static get properties() {
-        return {
-          commonDataEndpoints: Object
-        };
-      }
-
-      public commonDataEndpoints: {
+      @property({type: Object})
+      commonDataEndpoints: {
         pmp: string[],
         pmpPrpSections: string[],
         prp: string[]
@@ -35,13 +31,13 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
         prp: ['getPRPCountries']
       };
 
+
       public loadCommonData() {
         // get PMP static data
         this._getStaticData(this.commonDataEndpoints.pmp);
         this._handlePrpData();
       }
 
-      // @ts-ignore
       protected _getStaticData(endpointsNames: string[]) {
         endpointsNames.forEach((endpointName: string) => {
           this._makeRequest(endpointName, this._getEndpointSuccessHandler(endpointName), this._errorHandler);
