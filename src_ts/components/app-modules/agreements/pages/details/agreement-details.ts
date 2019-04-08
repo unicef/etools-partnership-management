@@ -55,7 +55,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(UploadsMixin(PolymerElement)))  as any) {
+class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(UploadsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
