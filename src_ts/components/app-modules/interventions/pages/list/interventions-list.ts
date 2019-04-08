@@ -55,12 +55,7 @@ class InterventionsList extends connect(store)(
       CommonMixin(
           PaginationMixin(
             FrNumbersConsistencyMixin(
-  PolymerElement)
-   )
-   )
-   )
-   )
-  ) {
+  PolymerElement)))))) {
 
   static get template() {
     return html`

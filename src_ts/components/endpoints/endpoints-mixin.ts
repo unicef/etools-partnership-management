@@ -5,9 +5,10 @@ import {RootState} from '../../store';
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
-import { Constructor } from '../../typings/globals.types';
+import { Constructor, User, GenericObject } from '../../typings/globals.types';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -17,16 +18,13 @@ import { PolymerElement } from '@polymer/polymer';
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     // @ts-ignore
     class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
-      [x: string]: any;
 
+      @property({type: Object})
+      prpCountries!: GenericObject[]
 
-      // TODO: polymer 3 - remove properties from here
-      static get properties() {
-        return {
-          prpCountries: Object,
-          currentUser: Object
-        };
-      }
+      @property({type: Object})
+      currentUser!: User
+
 
       public endStateChanged(state: RootState) {
         if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)) {
@@ -42,7 +40,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           return (country as any).id === this.currentUser.country.id;
         });
         let prpCountry = this.prpCountries.find((prpCountry: object) => {
-          return (prpCountry as any).business_area_code === currentCountry.business_area_code;
+          return (prpCountry as any).business_area_code === currentCountry!.business_area_code;
         });
 
         if (!prpCountry) {

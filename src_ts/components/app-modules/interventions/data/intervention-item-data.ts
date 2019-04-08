@@ -18,68 +18,58 @@ import {
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
-
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxServerErrorsMixin
- * @appliesMixin EnvironmentFlagsMixin
- */
-const InterventionItemDataRequiredMixins = EnvironmentFlagsMixin(EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)));
+import { property } from '@polymer/decorators';
+import { Office, GenericObject } from '../../../../typings/globals.types';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin InterventionItemDataRequiredMixins
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin AjaxServerErrorsMixin
+ * @appliesMixin EnvironmentFlagsMixin
  */
 // @ts-ignore
-class InterventionItemData extends connect(store)(InterventionItemDataRequiredMixins) {
+class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)))) {
 
-  static get properties() {
-    return {
-      pdEndpoints: {
-        type: Object,
-        value: {
-          DETAILS: 'interventionDetails',
-          CREATE: 'interventions',
-          AGREEMENT_DETAILS: 'agreementDetails',
-          DELETE: 'interventionDelete'
-        }
-      },
-      intervention: {
-        type: Object,
-        readOnly: true,
-        notify: true
-      },
-      originalIntervention: {
-        type: Object
-      },
-      interventionId: {
-        type: Number,
-        notify: true,
-        observer: '_interventionIdChanged'
-      },
-      handleResponseAdditionalCallback: {
-        type: Object
-      },
-      offices: {
-        type: Array,
-        statePath: 'offices'
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      /**
-       * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
-       */
-      ajaxLoadingMsgSource: {
-        type: String,
-        value: 'pd-ssfa-data'
-      }
+  @property({type: Object})
+  pdEndpoints: {
+      DETAILS: string,
+      CREATE: string,
+      AGREEMENT_DETAILS: string,
+      DELETE: string
+    } = {
+      DETAILS: 'interventionDetails',
+      CREATE: 'interventions',
+      AGREEMENT_DETAILS: 'agreementDetails',
+      DELETE: 'interventionDelete'
     };
-  }
+
+  @property({type: Object, readOnly: true, notify: true})
+  intervention!: Intervention;
+
+  @property({type: Object})
+  originalIntervention!: Intervention;
+
+  @property({type: Number, notify: true, observer: InterventionItemData.prototype._interventionIdChanged})
+  interventionId!: number;
+
+  @property({type: Object})
+  handleResponseAdditionalCallback!: object;
+
+  @property({type: Array})
+  offices!: Office[];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  /**
+   * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+   */
+  @property({type: String})
+  ajaxLoadingMsgSource: string = 'pd-ssfa-data';
+
+  // Defined
+
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
@@ -112,7 +102,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     });
   }
 
-  _interventionIdChanged(newId: string) {
+  _interventionIdChanged(newId: any, _old: any) {
     if (!newId) {
       return;
     }
@@ -126,6 +116,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
   }
 
   _handleErrorResponse(response: any, ajaxMethod: string) {
+    // @ts-ignore
     this.handleErrorResponse(response, ajaxMethod, true);
     if (this.intervention && this.originalIntervention) {
       this._restoreUnsuccessfullyDeletedFrs();
@@ -171,6 +162,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
    * Handle received data from request
    */
   _handleResponse(response: any, ajaxMethod: string) {
+    // @ts-ignore
     this._setIntervention(this._handleDataConversions(response));
 
     // call additional callback, if any
@@ -463,6 +455,7 @@ class InterventionItemData extends connect(store)(InterventionItemDataRequiredMi
     this.fireRequest(this.pdEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
       this._handleInterventionDeleteSuccess(id);
     }).catch((reqError: any) => {
+      // @ts-ignore
       this.handleErrorResponse(reqError, reqMethod);
     });
   }
