@@ -8,7 +8,6 @@ import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import EnvironmentFlagsMixin from '../../../../../../environment-flags/environment-flags-mixin';
-import UserPermissionsMixin from '../../../../../../user/user-permissions-mixin';
 import SaveIndicatorMixin from './mixins/save-indicator-mixin';
 import IndicatorDialogTabsMixin from './mixins/indicator-dialog-tabs-mixin';
 import { connect } from 'pwa-helpers/connect-mixin';
@@ -28,16 +27,16 @@ import './cluster-indicator.js';
 import './non-cluster-indicator.js';
 import { Indicator } from '../../../../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import { userIsPme } from '../../../../../../user/user-permissions';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin IndicatorDialogTabs
  * @appliesMixin SaveIndicator
- * @appliesMixin UserPermissions
  * @appliesMixin EnvironmentFlagsMixin
  */
-class IndicatorDialog extends connect(store)((IndicatorDialogTabsMixin(SaveIndicatorMixin(UserPermissionsMixin(EnvironmentFlagsMixin(PolymerElement))))) as any) {
+class IndicatorDialog extends connect(store)((IndicatorDialogTabsMixin(SaveIndicatorMixin(EnvironmentFlagsMixin(PolymerElement)))) as any) {
 
   static get template() {
     return html`
@@ -399,7 +398,7 @@ class IndicatorDialog extends connect(store)((IndicatorDialogTabsMixin(SaveIndic
   }
 
   _hideAddDisaggreations(isCluster: boolean, currentUser: User) {
-    return isCluster || !this.userIsPme(currentUser);
+    return isCluster || !userIsPme(currentUser);
   }
 
 }

@@ -92,6 +92,8 @@ import UploadsMixin from '../mixins/uploads-mixin.js';
 import { fireEvent } from '../utils/fire-custom-event.js';
 import { objectsAreTheSame } from '../utils/utils.js';
 import { AppDrawerElement } from '@polymer/app-layout/app-drawer/app-drawer.js';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../typings/globals.types.js';
 setRootPath(BASE_URL);
 
 /**
@@ -108,22 +110,19 @@ setRootPath(BASE_URL);
  * @appliesMixin LoadingMixin
  * @appliesMixin UtilsMixin
  */
-// @ts-ignore
 class AppShell extends connect(store)(
+  CommonData(
+  UserDataMixin(
+  UploadsMixin(
   GestureEventListeners(
   AppMenuMixin(
-  CommonData(
   ToastNotifications(
-  EnvironmentFlagsMixin(
   ScrollControl(
   AmendmentModeUIMixin(
-  UserDataMixin(
-  // @ts-ignore
   LoadingMixin(
   UtilsMixin(
-  UploadsMixin(
   DynamicDialogMixin(
-  PolymerElement))))))))))))) {
+  PolymerElement)))))))))))) {
 
   public static get template() {
     // main template
@@ -237,64 +236,67 @@ class AppShell extends connect(store)(
     `;
   }
 
-  public static get properties() {
-    return {
-      _drawerOpened: Boolean,
-      _page: String,
+  @property({type: Boolean})
+  _drawerOpened: boolean = false;
 
-      /**
-       * `module` property represents the current displayed module of the PMP app.
-       * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
-       * Main modules will have other pages and routing (prefixed by app-shell route).
-       */
-      module: {
-        type: String,
-        reflectToAttribute: true,
-        observer: '_moduleChanged'
-      },
-      route: {
-        type: Object
-      },
-      routeData: Object,
-      subroute: Object,
-      // This shouldn't be neccessary, but the Analyzer isn't picking up
-      // Polymer.Element#rootPath
-      rootPath: String,
-      narrow: {
-        type: Boolean,
-        reflectToAttribute: true
-      },
-      user: Object,
-      permissions: {
-        type: Object,
-        value: null
-      },
-      _lastActivePartnersModule: String,
-      _prpModules: {
-        type: Array,
-        value: ['reports', 'settings']
-      },
-      _appModuleMainElUrlTmpl: {
-        type: String,
-        value: '../app-modules/##module##/##main-el-name##-module.js'
-      },
-      appLocRoute: {
-        type: Object,
-        observer: 'appLocRouteChanged'
-      },
-      leavePageDialog: {
-        type: Object
-      },
-      appLocQueryParams: Object,
-      appLocPath: String
+  @property({type: String})
+  _page: string = '';
 
-    };
-  }
+  /**
+   * `module` property represents the current displayed module of the PMP app.
+   * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
+   * Main modules will have other pages and routing (prefixed by app-shell route).
+   */
+  @property({type: String, reflectToAttribute: true, observer: AppShell.prototype._moduleChanged})
+  module!: string;
 
-  // @ts-ignore
-  private _page: string = '';
-  // @ts-ignore
-  private _drawerOpened: boolean = false;
+  @property({type: Object})
+  route!: GenericObject;
+
+  @property({type: Object})
+  routeData!: { module: string};
+
+  @property({type: Object})
+  subroute!: object;
+
+  // This shouldn't be neccessary, but the Analyzer isn't picking up
+  // Polymer.Element#rootPath
+  @property({type: String})
+  rootPath!: string;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  narrow!: boolean;
+
+  @property({type: Object})
+  user!: Object;
+
+  @property({type: Object})
+  permissions: object | null = null;
+
+  @property({type: String})
+  _lastActivePartnersModule!: string;
+
+  @property({type: Array})
+  _prpModules: string[] = ['reports', 'settings'];
+
+  @property({type: String})
+  _appModuleMainElUrlTmpl: string = '../app-modules/##module##/##main-el-name##-module.js';
+
+  @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
+  appLocRoute!: {
+    path: string,
+    __queryParams: GenericObject
+  };
+
+  @property({type: Object})
+  leavePageDialog!: object;
+
+  @property({type: Object})
+  appLocQueryParams!: object;
+
+  @property({type: String})
+  appLocPath!: string;
+
 
   public static get observers() {
     return [
@@ -520,8 +522,7 @@ class AppShell extends connect(store)(
     }
   }
 
-  // @ts-ignore
-  private _moduleChanged(module: string) {
+  private _moduleChanged(module: any, _oldModule: any) {
     // Load module import on demand. Show 404 page if fails
     this._importAppModuleMainEl(module);
     // set last partners active page... needed to make a difference between partners and government-partners

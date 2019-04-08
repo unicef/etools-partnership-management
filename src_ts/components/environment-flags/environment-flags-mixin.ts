@@ -1,6 +1,7 @@
 import {RootState} from '../../store';
 import { EnvFlags, Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -9,13 +10,8 @@ import { PolymerElement } from '@polymer/polymer';
 function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class environFlags extends baseClass {
 
-    public static get properties() {
-      return {
-        environmentFlags: Object
-      };
-    }
-
-    public environmentFlags: EnvFlags | null = null;
+    @property({type: Object})
+    environmentFlags: EnvFlags | null = null;
 
     public envStateChanged(state: RootState) {
       if (!state.commonData) {
