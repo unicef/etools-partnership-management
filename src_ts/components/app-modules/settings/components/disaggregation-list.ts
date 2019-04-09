@@ -6,7 +6,6 @@ import 'etools-content-panel/etools-content-panel';
 import 'etools-data-table/etools-data-table';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import UserPermissionsMixin from '../../../user/user-permissions-mixin';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
@@ -19,7 +18,8 @@ import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { EnvFlags } from '../../../../typings/globals.types';
+import { EnvFlags, User } from '../../../../typings/globals.types';
+import { userIsPme } from '../../../user/user-permissions';
 
 
 /**
@@ -27,13 +27,12 @@ import { EnvFlags } from '../../../../typings/globals.types';
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin UserPermissionsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMixin(EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(FrontendPaginationMixin(EndpointsMixin(PolymerElement)))))) as any) {
+class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequestMixin(
+    EnvironmentFlagsMixin(FrontendPaginationMixin(PolymerElement)))) as any) {
 
   static get template() {
     // language=HTML
@@ -260,6 +259,10 @@ class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMi
   _addDisaggregation() {
     this.disaggregationModal.initializeDisaggregation();
     this._openModal();
+  }
+
+  userIsPme(currentUser: User) {
+    return userIsPme(currentUser);
   }
 
 }

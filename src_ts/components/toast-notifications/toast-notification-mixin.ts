@@ -2,6 +2,7 @@
 import './etools-toast'
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -9,17 +10,15 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T) {
   class toastNotifs extends baseClass {
-    static get properties() {
-      return {
-        _toast: Object,
-        _toastQueue: Array,
-        currentToastMessage: String
-      };
-    }
 
-    protected _toast: object | null = null;
-    protected _toastQueue: object[] = [];
-    public currentToastMessage: string = '';
+    @property({type: Object})
+    _toast: object | null = null;
+
+    @property({type: Array})
+    _toastQueue: object[] = [];
+
+    @property({type: String})
+    currentToastMessage: string = '';
 
     public connectedCallback() {
       super.connectedCallback();

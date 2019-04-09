@@ -9,13 +9,15 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
 import '../../../../../../layout/icons-actions.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
+import { property } from '@polymer/decorators';
+import { Indicator, Location, Disaggregation, DisaggregationValue } from '../../../../../../../typings/intervention.types';
+import { GenericObject } from '../../../../../../../typings/globals.types';
 
 /**
  * @polymer
  * @customElement
  */
 class AppliedIndicator extends connect(store)(PolymerElement) {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -127,41 +129,33 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      indicator: {
-        type: Object
-      },
-      inAmendment: {
-        type: Boolean,
-        statePath: 'pageData.in_amendment'
-      },
-      locations: {
-        type: Array,
-        statePath: 'locations'
-      },
-      locationNames: {
-        type: Array,
-        value: []
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      disaggregations: {
-        type: Array,
-        statePath: 'disaggregations'
-      },
-      disaggregationNames: {
-        type: Array,
-        value: ['—']
-      },
-      editMode: {
-        type: Boolean
-      },
-      interventionStatus: String
-    };
-  }
+  @property({type: Object})
+  indicator!: Indicator;
+
+  @property({type: Boolean})
+  inAmendment!: boolean;
+
+  @property({type: Array})
+  locations!: Location[];
+
+  @property({type: Array})
+  locationNames: {name: string, adminLevel: string}[] = [];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  @property({type: Array})
+  disaggregations!: Disaggregation[];
+
+  @property({type: Array})
+  disaggregationNames: {name: string, groups: string}[] = [];
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: String})
+  interventionStatus!: string;
+
 
   static get observers() {
     return [
@@ -299,8 +293,8 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
       this.disaggregationNames = [];
       return;
     }
-    let disaggregs = this.disaggregations.filter((d: any) => {
-      return this.indicator.disaggregation.indexOf(parseInt(d.id)) > -1;
+    let disaggregs = this.disaggregations.filter((d: Disaggregation) => {
+      return this.indicator.disaggregation.indexOf(d.id!) > -1;
     });
     let disaggregNames = disaggregs.map((d: any) => {
       return {name: d.name, groups: this._getDisaggregGroups(d.disaggregation_values)};
@@ -308,7 +302,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     this.disaggregationNames = disaggregNames;
   }
 
-  _getDisaggregGroups(disaggregGroups: any) {
+  _getDisaggregGroups(disaggregGroups: DisaggregationValue[]) {
     if (!disaggregGroups || !disaggregGroups.length) {
       return '—';
     }

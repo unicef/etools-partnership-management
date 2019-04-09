@@ -46,9 +46,11 @@ import {property} from '@polymer/decorators';
  * @appliesMixin PaginationMixin
  */
 //@ts-ignore
-class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFiltersMixin(ListsCommonMixin
-(PaginationMixin(PolymerElement)))))) {
-
+class AgreementsList extends connect(store)(CommonMixin(
+  EndpointsMixin(
+    ListFiltersMixin(
+      ListsCommonMixin(
+        PaginationMixin(PolymerElement)))))) {
 
   static get template() {
     return html`
