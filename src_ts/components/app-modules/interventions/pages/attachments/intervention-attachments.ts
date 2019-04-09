@@ -6,7 +6,6 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-content-panel/etools-content-panel.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
@@ -30,23 +29,13 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-error
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-const InterventionAttachmentsMixins = EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  EndpointsMixin,
-  CommonMixin,
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin InterventionAttachmentsMixins
- */
-class InterventionAttachments extends connect(store)(InterventionAttachmentsMixins) {
+class InterventionAttachments extends connect(store)(DynamicDialogMixin(EndpointsMixin(CommonMixin(PolymerElement)) as any)) {
   [x: string]: any;
 
   static get template() {

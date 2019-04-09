@@ -1,18 +1,19 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import { ListQueryParams } from '../../../typings/route.types.js';//TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
+import { Constructor } from '../../../typings/globals.types.js';
   /**
    * Module main elements common functionality
    * @polymer
    * @mixinFunction
    */
-  const ModuleMainElCommonFunctionalityMixin = dedupingMixin(
+  function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       // @ts-ignore
-    (superClass: any) => class extends (superClass) {
+    class moduleMainElCommonFunctionalityClass extends baseClass {
       static get properties() {
         return {
           /* Gets updated by app-route */
@@ -45,16 +46,16 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
         this._setServerErrors = this._setServerErrors.bind(this);
         this._reloadListData = this._reloadListData.bind(this);
 
-        this.addEventListener('clear-server-errors', this._clearServerErrors);
-        this.addEventListener('set-server-errors', this._setServerErrors);
-        this.addEventListener('reload-list', this._reloadListData);
+        this.addEventListener('clear-server-errors', this._clearServerErrors as EventListenerOrEventListenerObject);
+        this.addEventListener('set-server-errors', this._setServerErrors as EventListenerOrEventListenerObject);
+        this.addEventListener('reload-list', this._reloadListData as EventListenerOrEventListenerObject);
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('clear-server-errors', this._clearServerErrors);
-        this.removeEventListener('set-server-errors', this._setServerErrors);
-        this.removeEventListener('reload-list', this._reloadListData);
+        this.removeEventListener('set-server-errors', this._setServerErrors as EventListenerOrEventListenerObject);
+        this.removeEventListener('reload-list', this._reloadListData as EventListenerOrEventListenerObject);
       }
 
       _clearServerErrors() {
@@ -67,6 +68,7 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
 
       _handleQueryParams(params: ListQueryParams) {
         if (params !== null && Object.keys(params).length &&
+        // @ts-ignore
             this.routeData.tab !== 'reports') {
           this.set('preservedListQueryParams', params);
         }
@@ -84,9 +86,9 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
         return page !== 'list';
       }
 
-      _showTabChangeLoadingMsg(e: CustomEvent, loadingSource: string, tabPrefix: string, tab: string) {
-        let clickedTabName = tab ? tab : e.detail.item.getAttribute('name');
-        let tabEl = this.shadowRoot.querySelector(tabPrefix + clickedTabName);
+      _showTabChangeLoadingMsg(e: CustomEvent | null, loadingSource: string, tabPrefix: string, tab?: string) {
+        let clickedTabName = tab ? tab : e!.detail.item.getAttribute('name');
+        let tabEl = this.shadowRoot!.querySelector(tabPrefix + clickedTabName);
         if (tabEl instanceof PolymerElement) {
           // tab element already loaded, no need for loading messages
           return;
@@ -110,15 +112,18 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
       _reloadListData(e: CustomEvent) {
         e.stopImmediatePropagation();
         try {
-          let listElem = this.shadowRoot.querySelector('#list');
+          let listElem = (this.shadowRoot!.querySelector('#list') as PolymerElement & {_filterListData(forceNoLoading: boolean): void});
           if (listElem && listElem._filterListData) {
             listElem._filterListData(true);
           }
         } catch (err) {
+          // @ts-ignore
           logWarn('List refresh error occurred', '[' + this.moduleName +'-module]', err);
         }
       }
 
-    });
+    };
+    return moduleMainElCommonFunctionalityClass;
+  }
 
-    export default ModuleMainElCommonFunctionalityMixin;
+  export default ModuleMainElCommonFunctionalityMixin;

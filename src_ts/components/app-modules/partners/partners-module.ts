@@ -4,13 +4,12 @@ import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/app-route/app-route';
 
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../../store";
-import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../../store';
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
-import ScrollControl from "../../mixins/scroll-control-mixin";
+import ScrollControl from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
 import '../../layout/page-content-header';
@@ -19,42 +18,31 @@ import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
-import {UserPermissions} from "../../../typings/globals.types";
+import {UserPermissions} from '../../../typings/globals.types';
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {SharedStyles} from "../../styles/shared-styles";
-import {buttonsStyles} from "../../styles/buttons-styles";
+import {SharedStyles} from '../../styles/shared-styles';
+import {buttonsStyles} from '../../styles/buttons-styles';
 import { isEmptyObject } from '../../utils/utils';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
-
 import {Partner} from '../../../models/partners.models';
+
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin GestureEventListeners
  * @appliesMixin ScrollControl
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionality
  */
-const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
-  GestureEventListeners,
-  ScrollControl,
-  ModuleRoutingMixin,
-  ModuleMainElCommonFunctionalityMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin PartnersModuleRequiredMixins
- */
-class PartnersModule extends connect(store)(PartnersModuleRequiredMixins as any) {
+class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(PolymerElement)) as any)))) {
 
   public static get template() {
     // main template

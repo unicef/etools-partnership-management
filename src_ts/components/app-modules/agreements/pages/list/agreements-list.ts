@@ -17,7 +17,6 @@ import 'etools-date-time/datepicker-lite.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
@@ -31,31 +30,23 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import '../../data/agreements-list-data.js';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import {AgreementsListData} from '../../data/agreements-list-data';
 
-/**
-     * @polymer
-     * @mixinFunction
-     * @appliesMixin CommonMixin
-     * @appliesMixin EndpointsMixin
-     * @appliesMixin ListFiltersMixin
-     * @appliesMixin ListsCommonMixin
-     * @appliesMixin PaginationMixin
-     */
-    const AgreementsListRequiredMixins = EtoolsMixinFactory.combineMixins([
-      CommonMixin,
-      EndpointsMixin,
-      ListFiltersMixin,
-      ListsCommonMixin,
-      PaginationMixin
-    ], PolymerElement);
 
-   let _agreementsLastNavigated: string = '';
+ let _agreementsLastNavigated: string = '';
 /**
  * @polymer
  * @customElement
- * @appliesMixin AgreementsListRequiredMixins
+ * @mixinFunction
+ * @appliesMixin CommonMixin
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin ListFiltersMixin
+ * @appliesMixin ListsCommonMixin
+ * @appliesMixin PaginationMixin
  */
-class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
+//@ts-ignore
+class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFiltersMixin(ListsCommonMixin
+(PaginationMixin(PolymerElement)))))) {
 
 
   static get template() {
@@ -537,7 +528,7 @@ class AgreementsList extends connect(store)(AgreementsListRequiredMixins) {
     this.queryDebouncer = Debouncer.debounce(this.queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
-          let agreements = this.shadowRoot.querySelector('#agreements');
+          let agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
           if (!agreements) {
             return;
           }

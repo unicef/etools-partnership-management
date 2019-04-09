@@ -4,7 +4,6 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -20,7 +19,7 @@ import UploadsMixin from '../../../../mixins/uploads-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin';
-import EnvironmentFlags from '../../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../../environment-flags/environment-flags-mixin';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import { Agreement } from '../../../agreements/agreement.types';
@@ -48,24 +47,18 @@ import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVE
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 
+
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  * @appliesMixin StaffMembersData
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin MissingDropdownOptions
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixins([
-  CommonMixin,
-  StaffMembersData,
-  EnvironmentFlags,
-  MissingDropdownOptionsMixin,
-  FrNumbersConsistencyMixin,
-  UploadsMixin
-], PolymerElement)) {
+class InterventionDetails extends connect(store)(CommonMixin(StaffMembersData(EnvironmentFlagsMixin(MissingDropdownOptionsMixin(FrNumbersConsistencyMixin(UploadsMixin(PolymerElement))))) as any)) {
   [x: string]: any;
 
   static get template() {
@@ -986,3 +979,5 @@ class InterventionDetails extends connect(store)(EtoolsMixinFactory.combineMixin
 }
 
 window.customElements.define('intervention-details', InterventionDetails);
+
+export default InterventionDetails;

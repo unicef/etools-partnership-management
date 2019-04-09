@@ -1,6 +1,5 @@
 import {PolymerElement} from "@polymer/polymer/polymer-element.js";
 
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
@@ -12,23 +11,15 @@ import {Partner} from "../../../../models/partners.models";
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { tryGetResponseError, formatServerErrorAsText } from '../../../utils/ajax-errors-parser.js';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxServerErrorsMixin
- */
-const PartnerItemDataRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  AjaxServerErrorsMixin
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin PartnerItemDataRequiredMixins
+ * @mixinFunction
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin AjaxServerErrorsMixin
  */
-class PartnerItemData extends (PartnerItemDataRequiredMixins as any) {
+class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) as any) {
 
   static get properties() {
     return {

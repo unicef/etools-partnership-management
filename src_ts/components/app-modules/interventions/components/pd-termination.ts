@@ -1,5 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import EnvironmentFlags from '../../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import pmpEndpoints from '../../../endpoints/endpoints';
 declare const moment: any;
 import 'etools-dialog/etools-dialog';
@@ -15,9 +15,9 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EnvironmentFlags
+ * @appliesMixin EnvironmentFlagsMixin
  */
-class PdTermination extends (EnvironmentFlags(PolymerElement) as any) {
+class PdTermination extends (EnvironmentFlagsMixin(PolymerElement) as any) {
 
   static get template() {
     return html`

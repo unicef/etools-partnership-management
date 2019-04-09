@@ -7,31 +7,24 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
 import {_checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../actions/app';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-profile-dropdown/etools-profile-dropdown';
 import 'etools-app-selector/etools-app-selector'
 import '../header/countries-dropdown';
 import ProfileOperations from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import { fireEvent } from '../../utils/fire-custom-event';
-import {GenericObject} from "../../../typings/globals.types";
+import {GenericObject} from '../../../typings/globals.types';
+import '../../layout/support-btn';
 
-/**
- * page header mixin
- * @polymer
- * @mixinFunction
- * @appliesMixin GestureEventListeners
- * @appliesMixin ProfileOperations
- */
-const PageHeaderMixins = EtoolsMixinFactory.combineMixins([
-    GestureEventListeners, ProfileOperations], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin PageHeaderMixins
+ * @mixinFunction
+ * @appliesMixin GestureEventListeners
+ * @appliesMixin ProfileOperations
  */
-class PageHeader extends connect(store)(PageHeaderMixins) {
+class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations(PolymerElement)) as any)) {
 
   public static get template() {
     // main template
@@ -52,6 +45,7 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
           --countries-dropdown-color: var(--light-secondary-text-color);
         }
 
+        support-btn,
         etools-profile-dropdown,
         #refresh {
           color: var(--light-secondary-text-color);
@@ -89,6 +83,14 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
           font-size: 18px;
         }
 
+        support-btn {
+          margin-left: 24px;
+        }
+
+        etools-profile-dropdown {
+          margin-left: 16px;
+        }
+
         @media (min-width: 850px) {
           #menuButton {
             display: none;
@@ -109,6 +111,8 @@ class PageHeader extends connect(store)(PageHeaderMixins) {
           <countries-dropdown id="countries" countries="[[countries]]"
                               current-country="[[profile.country]]">
           </countries-dropdown>
+
+          <support-btn></support-btn>
 
           <etools-profile-dropdown
               sections="[[allSections]]"

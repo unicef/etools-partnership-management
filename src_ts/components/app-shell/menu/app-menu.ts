@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import EnvironmentFlags from '../../environment-flags/environment-flags-mixin';
+import EnvironmentFlagsMixin from '../../environment-flags/environment-flags-mixin';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/social-icons.js';
 import '@polymer/iron-icons/av-icons.js';
@@ -10,7 +10,7 @@ import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 
 import './styles/nav-menu-styles';
-import {pmpMainIcon} from '../../styles/pmp-custom-icons';
+import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
@@ -19,7 +19,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) as any) {
+class AppMenu extends (GestureEventListeners(EnvironmentFlagsMixin(PolymerElement)) as any) {
 
   public static get template() {
     // main template
@@ -34,7 +34,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) a
       </span>
 
         <span class="ripple-wrapper main">
-        <span id="menu-header-top-icon" on-tap="_toggleSmallMenu">${pmpMainIcon}</span>
+        <span id="menu-header-top-icon" on-tap="_toggleSmallMenu">${pmpMainIcons}</span>
         <paper-ripple class="circle" center></paper-ripple>
       </span>
 
@@ -71,7 +71,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) a
             </paper-tooltip>
             <div class="name">Agreements</div>
           </a>
-          
+
           <a class="nav-menu-item" menu-name="interventions" href$="[[rootPath]]interventions/list">
             <iron-icon id="interventions-icon" icon="description"></iron-icon>
             <paper-tooltip for="interventions-icon" position="right">
@@ -79,7 +79,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) a
             </paper-tooltip>
             <div class="name">PD/SSFA</div>
           </a>
-          
+
           <a class="nav-menu-item" menu-name="government-partners" href$="[[rootPath]]government-partners/list">
             <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
             <paper-tooltip for="gov-icon" position="right">
@@ -87,7 +87,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) a
             </paper-tooltip>
             <div class="name">Government</div>
           </a>
-          
+
           <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
             <a class="nav-menu-item" menu-name="reports" href$="[[rootPath]]reports/list">
               <iron-icon id="reports-icon" icon="assignment"></iron-icon>
@@ -96,7 +96,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) a
               </paper-tooltip>
               <div class="name">Reports</div>
             </a>
-          
+
             <a class="nav-menu-item" menu-name="settings" href$="[[rootPath]]settings">
               <iron-icon id="settings-icon" icon="settings"></iron-icon>
               <paper-tooltip for="settings-icon" position="right">
@@ -105,7 +105,7 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlags(PolymerElement)) a
               <div class="name">Settings</div>
             </a>
           </template>
-          
+
         </iron-selector>
 
         <div class="nav-menu-item section-title">

@@ -1,55 +1,56 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import {connect} from 'pwa-helpers/connect-mixin';
-import {RootState, store} from '../../store';
-import { EnvFlags } from '../../typings/globals.types';
+import {RootState} from '../../store';
+import { EnvFlags, Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  */
-const EnvironmentFlags = dedupingMixin((baseClass: any) =>
-    class extends connect(store)(baseClass) {
+function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class environFlags extends baseClass {
 
-      public static get properties() {
-        return {
-          environmentFlags: Object
-        };
+    public static get properties() {
+      return {
+        environmentFlags: Object
+      };
+    }
+
+    public environmentFlags: EnvFlags | null = null;
+
+    public envStateChanged(state: RootState) {
+      if (!state.commonData) {
+          return;
       }
-
-      public environmentFlags: EnvFlags | null = null;
-
-      public envStateChanged(state: RootState) {
-        if (!state.commonData) {
-            return;
-        }
-        if (JSON.stringify(this.environmentFlags) !== JSON.stringify(state.commonData.envFlags)) {
-          this.environmentFlags = {...state.commonData.envFlags} as EnvFlags;
-        }
+      if (JSON.stringify(this.environmentFlags) !== JSON.stringify(state.commonData.envFlags)) {
+        this.environmentFlags = {...state.commonData.envFlags} as EnvFlags;
       }
+    }
 
-      public envFlagsLoaded() {
-        return typeof this.environmentFlags !== 'undefined' && this.environmentFlags !== null;
-      }
+    public envFlagsLoaded() {
+      return typeof this.environmentFlags !== 'undefined' && this.environmentFlags !== null;
+    }
 
-      public  showPrpReports() {
-        return this.environmentFlags && !this.environmentFlags.prp_mode_off;
-      }
+    public  showPrpReports() {
+      return this.environmentFlags && !this.environmentFlags.prp_mode_off;
+    }
 
-      public  prpServerIsOn() {
-        return this.environmentFlags && this.environmentFlags.prp_server_on;
-      }
+    public  prpServerIsOn() {
+      return this.environmentFlags && this.environmentFlags.prp_server_on;
+    }
 
-      public  _waitForEnvFlagsToLoad() {
-        return new Promise((resolve) => {
-          let envFlagsCheck = setInterval(() => {
-            if (this.envFlagsLoaded()) {
-              clearInterval(envFlagsCheck);
-              resolve(true);
-            }
-          }, 50);
-        });
-      }
+    public  _waitForEnvFlagsToLoad() {
+      return new Promise((resolve) => {
+        let envFlagsCheck = setInterval(() => {
+          if (this.envFlagsLoaded()) {
+            clearInterval(envFlagsCheck);
+            resolve(true);
+          }
+        }, 50);
+      });
+    }
 
-    });
+  };
+  return environFlags;
+}
 
-export default EnvironmentFlags;
+export default EnvironmentFlagsMixin;

@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { PolymerElEvent } from '../../../../../../../typings/globals.types';
@@ -14,10 +13,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
   * @appliesMixin DynamicDialogMixin
   * @appliesMixin RepeatableDataSetsMixin
   */
-class AppliedIndicators extends EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  RepeatableDataSetsMixin,
-], PolymerElement) {
+class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(PolymerElement) as any)) {
   [x: string]: any;
 
   static get template() {
