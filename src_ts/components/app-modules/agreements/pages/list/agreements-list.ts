@@ -45,9 +45,11 @@ import {AgreementsListData} from '../../data/agreements-list-data';
  * @appliesMixin PaginationMixin
  */
 //@ts-ignore
-class AgreementsList extends connect(store)(CommonMixin(EndpointsMixin(ListFiltersMixin(ListsCommonMixin
-(PaginationMixin(PolymerElement)))))) {
-
+class AgreementsList extends connect(store)(CommonMixin(
+  EndpointsMixin(
+    ListFiltersMixin(
+      ListsCommonMixin(
+        PaginationMixin(PolymerElement)))))) {
 
   static get template() {
     return html`

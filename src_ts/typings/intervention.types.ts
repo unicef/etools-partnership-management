@@ -227,7 +227,7 @@ export class Indicator {// Indicator
   baseline: {v?: string, d?: string} = {};
   target: {v?: string, d: string} = {d: '1'};
   means_of_verification: string | null = null;
-  locations: string[] = [];
+  locations: number[] = [];
   disaggregation: string[] = [];
 
   cluster_name: string | null = null;
@@ -262,7 +262,7 @@ export class PlannedVisit {
 }
 
 export class Disaggregation {
-  id: number | null = null;
+  id: string | null = null;
   name: string = '';
   active: boolean = true;
   disaggregation_values: DisaggregationValue[] = [];
@@ -275,7 +275,7 @@ export type DisaggregationValue = {
 }
 
 export type Location = {
-  id: number;
+  id: string;
   name: string;
   p_code: string;
   gateway: AdminLevel;

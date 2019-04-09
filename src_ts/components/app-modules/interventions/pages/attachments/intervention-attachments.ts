@@ -6,15 +6,14 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-content-panel/etools-content-panel.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { InterventionAttachment } from '../../../../../typings/intervention.types.js';
+import { InterventionAttachment, InterventionPermissionsFields } from '../../../../../typings/intervention.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { PolymerElEvent } from '../../../../../typings/globals.types.js';
+import { PolymerElEvent, IdAndName, IPermission } from '../../../../../typings/globals.types.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
@@ -22,9 +21,11 @@ import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-hea
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store } from '../../../../../store.js';
 import { RootState } from '../../../../../store.js';
-import { isJsonStrMatch } from '../../../../utils/utils.js';
+import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
+import { property } from '@polymer/decorators';
+import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 
 
 /**
@@ -35,8 +36,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-error
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class InterventionAttachments extends connect(store)(DynamicDialogMixin(EndpointsMixin(CommonMixin(PolymerElement)) as any)) {
-  [x: string]: any;
+class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(PolymerElement))) {
 
   static get template() {
     return html`
@@ -145,43 +145,39 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     `;
   }
 
-  static get properties() {
-    return {
-      active: {
-        type: Boolean
-      },
-      permissions: {
-        type: Object,
-        statePath: 'pageData.permissions'
-      },
-      interventionId: {
-        type: Number,
-        observer: '_interventionIdChanged'
-      },
-      interventionStatus: {
-        type: String
-      },
-      attachments: {
-        type: Array,
-        value: []
-      },
-      fileTypes: {
-        type: Array,
-        statePath: 'fileTypes'
-      },
-      showInvalid: {
-        type: Boolean,
-        value: false
-      },
-      newIntervention: {
-        type: Boolean,
-        value: false
-      },
-      attachmentDialog: Object,
-      attDeleteConfirmDialog: Object,
-      attMarkedToBeDeleted: Object
-    };
-  }
+  @property({type: Object})
+  active!: boolean;
+
+  @property({type: Object})
+  permissions!: IPermission<InterventionPermissionsFields>;
+
+  @property({type: Number, observer: InterventionAttachments.prototype._interventionIdChanged})
+  interventionId!: number;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Array})
+  attachments: [] = [];
+
+  @property({type: Array})
+  fileTypes!: IdAndName[];
+
+  @property({type: Boolean})
+  showInvalid: boolean = false;
+
+  @property({type: Boolean})
+  newIntervention: boolean = false;
+
+  @property({type: Object})
+  attachmentDialog!: any;
+
+  @property({type: Object})
+  attDeleteConfirmDialog!: any;
+
+  @property({type: Object})
+  attMarkedToBeDeleted!: any;
+
 
   static get observers() {
     return [
@@ -193,6 +189,10 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     if (!isJsonStrMatch(this.fileTypes, state.commonData!.fileTypes)) {
       this.fileTypes = [...state.commonData!.fileTypes];
     }
+    if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
+      this.permissions = copy(state.pageData!.permissions);
+    }
+
   }
 
   connectedCallback() {
@@ -218,7 +218,7 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     const warnDeleteAttachment = document.createElement('span');
     warnDeleteAttachment.innerHTML = 'Are you sure you want to delete this attachment?';
     // this.attDeleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteAttachment);
-    this.attDeleteConfirmDialog = this.createDynamicDialog({
+    this.attDeleteConfirmDialog = createDynamicDialog({
       title: null,
       size: 'md',
       okBtnText: 'Yes',
@@ -294,7 +294,7 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     }
   }
 
-  _interventionIdChanged(id: string) {
+  _interventionIdChanged(id: any, _oldId: any) {
     if (!id || isNaN(parseInt(id, 10))) {
       this.set('attachments', []);
       return;

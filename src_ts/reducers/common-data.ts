@@ -33,7 +33,7 @@ import {
   UPDATE_CURRENT_USER,
   CommonDataAction
 } from '../actions/common-data';
-import { CpOutput, Disaggregation } from '../typings/intervention.types';
+import { CpOutput, Disaggregation, Location } from '../typings/intervention.types';
 import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags, Office } from '../typings/globals.types';
 
 export class CommonDataState {

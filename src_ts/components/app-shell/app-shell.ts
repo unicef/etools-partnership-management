@@ -50,12 +50,9 @@ import '@polymer/app-route/app-route.js';
 import {AppShellStyles} from './app-shell-styles';
 
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
 import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
-import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin.js';
 import ScrollControl from '../mixins/scroll-control-mixin.js';
 import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
 import UserDataMixin from '../user/user-data-mixin';
@@ -93,7 +90,8 @@ import { fireEvent } from '../utils/fire-custom-event.js';
 import { objectsAreTheSame } from '../utils/utils.js';
 import { AppDrawerElement } from '@polymer/app-layout/app-drawer/app-drawer.js';
 import { property } from '@polymer/decorators';
-import { GenericObject } from '../../typings/globals.types.js';
+import { GenericObject, User, UserPermissions } from '../../typings/globals.types.js';
+import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 setRootPath(BASE_URL);
 
 /**
@@ -121,8 +119,7 @@ class AppShell extends connect(store)(
   AmendmentModeUIMixin(
   LoadingMixin(
   UtilsMixin(
-  DynamicDialogMixin(
-  PolymerElement)))))))))))) {
+  PolymerElement))))))))))) {
 
   public static get template() {
     // main template
@@ -268,10 +265,10 @@ class AppShell extends connect(store)(
   narrow!: boolean;
 
   @property({type: Object})
-  user!: Object;
+  user!: User;
 
   @property({type: Object})
-  permissions: object | null = null;
+  permissions!: UserPermissions;
 
   @property({type: String})
   _lastActivePartnersModule!: string;
@@ -289,7 +286,7 @@ class AppShell extends connect(store)(
   };
 
   @property({type: Object})
-  leavePageDialog!: object;
+  leavePageDialog!: {opened: boolean};
 
   @property({type: Object})
   appLocQueryParams!: object;
@@ -642,7 +639,7 @@ class AppShell extends connect(store)(
       closeCallback: this._onLeavePageConfirmation.bind(this),
       content: msg
     };
-    this.leavePageDialog = this.createDynamicDialog(conf);
+    this.leavePageDialog = createDynamicDialog(conf);
   }
 
   private _openLeavePageDialog() {
