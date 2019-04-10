@@ -4,8 +4,6 @@ import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
-
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import CONSTANTS from '../../../config/app-constants';
 import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
@@ -35,7 +33,10 @@ import { setInAmendment, setPageDataPermissions } from '../../../actions/page-da
 import { store, RootState } from '../../../store';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { fireEvent } from '../../utils/fire-custom-event';
-
+import { property } from '@polymer/decorators';
+import { Agreement } from '../agreements/agreement.types';
+import InterventionItemData from './data/intervention-item-data.js';
+import { createDynamicDialog, removeDialog } from 'etools-dialog/dynamic-dialog';
 
 /**
  * @polymer
@@ -50,8 +51,15 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @appliesMixin InterventionPermissionsMixin
  * @appliesMixin SaveInterventionMixin
  */
-class InterventionsModule extends connect(store)((DynamicDialogMixin(EnvironmentFlagsMixin(EndpointsMixin(ScrollControl(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(InterventionPageTabsMixin(InterventionPermissionsMixin(SaveInterventionMixin(PolymerElement))))) as any))))) as any) {
-  [x: string]: any;
+class InterventionsModule extends connect(store)(
+  EnvironmentFlagsMixin(
+    EndpointsMixin(
+      ScrollControl(
+        ModuleMainElCommonFunctionalityMixin(
+          ModuleRoutingMixin(
+            InterventionPageTabsMixin(
+              InterventionPermissionsMixin(
+                SaveInterventionMixin(PolymerElement))))))))) {
 
   static get template() {
     return html`
@@ -255,66 +263,68 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
     `;
   }
 
-  static get properties() {
-    return {
-      /**
-       * User permissions at this level
-       * TODO: rename to userPermissions
-       */
-      permissions: {
-        type: Object
-      },
-      selectedInterventionId: {
-        type: Number
-      },
-      intervention: {
-        type: Object,
-        notify: true
-      },
-      originalIntervention: {
-        type: Object
-      },
-      agreement: {
-        type: Object
-      },
-      csvDownloadQs: {
-        type: String
-      },
-      newInterventionActive: {
-        type: Boolean,
-        computed: '_updateNewItemPageFlag(routeData, listActive)'
-      },
-      editMode: {
-        type: Boolean
-      },
-      _redirectToNewIntervPageInProgress: Boolean,
-      errorMsgBoxTitle: {
-        type: String,
-        value: 'Errors Saving PD/SSFA'
-      },
-      saved: {
-        type: Object,
-        value: function() {
-          return {
-            interventionId: null,
-            justSaved: false
-          };
-        }
-      },
-      _forceDetUiValidationOnAttach: Boolean,
-      _forceReviewUiValidationOnAttach: Boolean,
-      reportsPrevParams: Object,
 
-      moduleName: {
-        type: String,
-        value: 'interventions'
-      },
-      // This shouldn't be neccessary, but the Analyzer isn't picking up
-      // Polymer.Element#rootPath
-      rootPath: String
-    };
-  }
+  /**
+   * User permissions at this level
+   * TODO: rename to userPermissions
+   */
+  @property({type: Object})
+  permissions!: UserPermissions;
 
+  @property({type: Number})
+  selectedInterventionId!: number;
+
+  @property({type: Object, notify: true})
+  intervention!: Intervention;
+
+  @property({type: Object})
+  originalIntervention!: Intervention;
+
+  @property({type: Object})
+  agreement!: Agreement;
+
+  @property({type: String})
+  csvDownloadQs!: string;
+
+  @property({type: Boolean, computed: '_updateNewItemPageFlag(routeData, listActive)'})
+  newInterventionActive!: boolean;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: Boolean})
+  _redirectToNewIntervPageInProgress!: boolean;
+
+  @property({type: String})
+  errorMsgBoxTitle: string = 'Errors Saving PD/SSFA';
+
+  @property({type: Object})
+  saved: {
+    interventionId: any,
+    justSaved: boolean
+  } = {
+        interventionId: null,
+        justSaved: false
+      };
+
+  @property({type: Boolean})
+  _forceDetUiValidationOnAttach!: boolean;
+
+  @property({type: Boolean})
+  _forceReviewUiValidationOnAttach!: boolean;
+
+  @property({type: Object})
+  reportsPrevParams!: object;
+
+  @property({type: String})
+  moduleName: string = 'interventions';
+
+  // This shouldn't be neccessary, but the Analyzer isn't picking up
+  // Polymer.Element#rootPath
+  @property({type: String})
+  rootPath!: string
+
+  private finalizeAmendmentConfirmationDialog! : PolymerElement & {opened: boolean};
   private _pageChangeDebouncer!: Debouncer;
 
   static get observers() {
@@ -360,19 +370,19 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
     this._refreshInterventionPermissions = this._refreshInterventionPermissions.bind(this);
     this._amendmentAddedHandler = this._amendmentAddedHandler.bind(this);
 
-    this.addEventListener('intervention-save-error', this._interventionSaveErrors);
+    this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.addEventListener('tab-content-attached', this._interventionPageAttached);
     this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
-    this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions);
-    this.addEventListener('new-amendment-added', this._amendmentAddedHandler);
+    this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
+    this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
   }
 
   _removeInterventionsModuleListeners() {
-    this.removeEventListener('intervention-save-error', this._interventionSaveErrors);
+    this.removeEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.removeEventListener('tab-content-attached', this._interventionPageAttached);
     this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
-    this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions);
-    this.removeEventListener('new-amendment-added', this._amendmentAddedHandler);
+    this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
+    this.removeEventListener('new-amendment-added', this._amendmentAddedHandler as any);
   }
 
   _createFinalizeAmendConfirmDialog() {
@@ -380,15 +390,22 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
     let dialog = document.createElement('div');
     dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
     dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
-    this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
-        this._finalizeAmendmentConfirmationCallback, dialog);
+    let conf: any = {
+      title: 'Finalize Amendment',
+      size: 'md',
+      okBtnText: 'Yes',
+      cancelBtnText: 'Cancel',
+      closeCallback: this._finalizeAmendmentConfirmationCallback,
+      content: dialog
+    };
+    this.finalizeAmendmentConfirmationDialog = createDynamicDialog(conf);
   }
 
   _removeFinalizeAmendConfirmDialog() {
     if (this.finalizeAmendmentConfirmationDialog) {
       this.finalizeAmendmentConfirmationDialog.removeEventListener('close',
-          this._finalizeAmendmentConfirmationCallback);
-      this.removeDialog(this.finalizeAmendmentConfirmationDialog);
+          this._finalizeAmendmentConfirmationCallback as any);
+      removeDialog(this.finalizeAmendmentConfirmationDialog);
     }
   }
 
@@ -525,7 +542,7 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
     let preparedData: GenericObject = {id: this.intervention.id, in_amendment: false};
 
     if (event.detail.confirmed) {
-      return this.$.interventionData.saveIntervention(preparedData as Intervention,
+      return (this.$.interventionData as InterventionItemData).saveIntervention(preparedData as Intervention,
           this._newInterventionSaved.bind(this))
           .then((successfull: boolean) => {
               if (successfull) {
@@ -545,7 +562,7 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
 
   _refreshInterventionPermissions(e: CustomEvent) {
     e.stopImmediatePropagation();
-    this.$.interventionData._reqInterventionDataWithoutRespHandling()
+    (this.$.interventionData as InterventionItemData)._reqInterventionDataWithoutRespHandling()
         .then((resp: any) => {
           if (!isEmptyObject(resp.permissions)) {
             this.set('intervention.permissions', resp.permissions);
@@ -561,11 +578,11 @@ class InterventionsModule extends connect(store)((DynamicDialogMixin(Environment
 
   _updateInterventionStatus(e: CustomEvent) {
     e.stopImmediatePropagation();
-    this.$.interventionData.updateInterventionStatus(e.detail);
+    (this.$.interventionData as InterventionItemData).updateInterventionStatus(e.detail);
   }
 
   _deleteIntervention(e: CustomEvent) {
-    this.$.interventionData.deleteIntervention(e.detail.id);
+    (this.$.interventionData as InterventionItemData).deleteIntervention(e.detail.id);
   }
 
   _userHasEditPermissions(permissions: UserPermissions) {
