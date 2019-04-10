@@ -7,7 +7,8 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
-import { Status, Action } from '../../../typings/etools-status.types';
+import { Status, StatusAction } from '../../../typings/etools-status.types';
+import EtoolsDialog from 'etools-dialog';
 declare const ShadyCSS: any;
 
 /**
@@ -45,13 +46,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       possibleStatuses!: Status[];
 
       @property({type: Array})
-      possibleActions!: Action[];
+      possibleActions!: StatusAction[];
 
       @property({type: Object})
-      warningDialog!: PolymerElement & {opened: boolean};
+      warningDialog!: EtoolsDialog;
 
       @property({type: Object})
-      deleteConfirmDialog!: PolymerElement & {opened: boolean};
+      deleteConfirmDialog!: EtoolsDialog;
 
       @property({type: String})
       deleteWarningMessage!: string

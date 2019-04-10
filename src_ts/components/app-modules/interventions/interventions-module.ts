@@ -36,6 +36,7 @@ import { property } from '@polymer/decorators';
 import { Agreement } from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import { createDynamicDialog, removeDialog } from 'etools-dialog/dynamic-dialog';
+import EtoolsDialog from 'etools-dialog';
 
 /**
  * @polymer
@@ -322,7 +323,7 @@ class InterventionsModule extends connect(store)(
   @property({type: String})
   rootPath!: string
 
-  private finalizeAmendmentConfirmationDialog! : PolymerElement & {opened: boolean};
+  private finalizeAmendmentConfirmationDialog! : EtoolsDialog;
   private _pageChangeDebouncer!: Debouncer;
 
   static get observers() {
