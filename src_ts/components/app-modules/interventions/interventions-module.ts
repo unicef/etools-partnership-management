@@ -8,7 +8,6 @@ import CONSTANTS from '../../../config/app-constants';
 import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import { Intervention } from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import EnvironmentFlagsMixin from '../../environment-flags/environment-flags-mixin';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
@@ -52,14 +51,13 @@ import { createDynamicDialog, removeDialog } from 'etools-dialog/dynamic-dialog'
  * @appliesMixin SaveInterventionMixin
  */
 class InterventionsModule extends connect(store)(
-  EnvironmentFlagsMixin(
-    EndpointsMixin(
+  InterventionPermissionsMixin(
       ScrollControl(
         ModuleMainElCommonFunctionalityMixin(
           ModuleRoutingMixin(
             InterventionPageTabsMixin(
-              InterventionPermissionsMixin(
-                SaveInterventionMixin(PolymerElement))))))))) {
+              SaveInterventionMixin(
+                  EndpointsMixin(PolymerElement)))))))) {
 
   static get template() {
     return html`

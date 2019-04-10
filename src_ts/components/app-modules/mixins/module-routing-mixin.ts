@@ -100,7 +100,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
        * @param {function} appendBasePathAdditionalFolder
        * @return {string}
        */
-      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object) {
+      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object | null) {
         let baseUrl = currentModule + '/pages/' + page + '/';
         if (typeof appendBasePathAdditionalFolder === 'function') {
           // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
@@ -127,7 +127,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       }
 
       setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab?: object,
-                    appendBasePathAdditionalFolder?: object, successfulImportCallback?: object) {
+                    appendBasePathAdditionalFolder?: object | null, successfulImportCallback?: object) {
         let page = listActive ? 'list' : tab;
 
         if (listActive) {
@@ -184,7 +184,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         });
       }
 
-      isActiveModule(moduleName: string) {
+      isActiveModule(moduleName?: string) {
         // @ts-ignore
         const mName = !moduleName ? this.moduleName : moduleName;
         // @ts-ignore

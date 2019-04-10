@@ -16,7 +16,6 @@ import { property } from '@polymer/decorators';
  * @appliesMixin EtoolsAjaxRequestMixin
  */
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    // @ts-ignore
     class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
 
       @property({type: Object})
