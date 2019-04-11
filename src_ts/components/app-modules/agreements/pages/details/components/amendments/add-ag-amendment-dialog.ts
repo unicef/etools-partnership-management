@@ -10,6 +10,7 @@ import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -110,7 +111,7 @@ class AddAgAmendmentDialog extends PolymerElement {
   amendmentTypes: [] = [];
 
   @property({type: Object})
-  amendment: any = {};
+  amendment!: AgreementAmendment;
 
   @property({type: Boolean})
   autoValidate: boolean = false;
@@ -127,13 +128,15 @@ class AddAgAmendmentDialog extends PolymerElement {
   @property({type: Boolean})
   _aoTypeSelected: boolean = false;
 
-  @property({type: Array})
-  _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
-
   @property({type: Boolean})
   uploadInProgress: boolean = false;
 
-  initData(authorizedOfficers: any, showAuthorizedOfficers: any, amendmentTypes: any) {
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+
+  private _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
+
+  initData(authorizedOfficers: any, showAuthorizedOfficers: boolean, amendmentTypes: LabelAndValue[]) {
     this.set('amendment', new AgreementAmendment());
     this.set('amendmentTypes', amendmentTypes);
     this.set('authorizedOfficersOptions',
@@ -208,3 +211,5 @@ class AddAgAmendmentDialog extends PolymerElement {
 }
 
 window.customElements.define('add-ag-amendment-dialog', AddAgAmendmentDialog);
+
+export {AddAgAmendmentDialog};

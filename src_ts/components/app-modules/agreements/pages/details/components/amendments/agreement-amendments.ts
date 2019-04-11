@@ -20,6 +20,8 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
+import EtoolsDialog from 'etools-dialog';
+import { AddAgAmendmentDialog } from './add-ag-amendment-dialog.js';
 
 
 /**
@@ -190,7 +192,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   legacyAmendmentTypes: { [key: string]: string } = {'CP extension': 'Extension of Country Programme Cycle'};
 
   @property({type: Object})
-  _addAgAmendmentDialog: any = {};
+  _addAgAmendmentDialog!: AddAgAmendmentDialog;
 
   @property({type: Array})
   authorizedOfficers: [] = [];
@@ -219,16 +221,16 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
   _createAddAgAmendmentDialog() {
     this.saveNewAmendment = this.saveNewAmendment.bind(this);
-    this._addAgAmendmentDialog = document.createElement('add-ag-amendment-dialog');
+    this._addAgAmendmentDialog = document.createElement('add-ag-amendment-dialog') as any;
     this._addAgAmendmentDialog.setAttribute('id', 'addAgAmendmentDialog');
     this._addAgAmendmentDialog.toastEventSource = this;
-    this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment);
+    this._addAgAmendmentDialog.addEventListener('update-amendment-and-ao', this.saveNewAmendment as any);
     document.querySelector('body')!.appendChild(this._addAgAmendmentDialog);
   }
 
   _removeAddAgAmendmentDialog() {
     if (this._addAgAmendmentDialog) {
-      this._addAgAmendmentDialog.removeEventListener('update-amendment-and-ao', this.saveNewAmendment);
+      this._addAgAmendmentDialog.removeEventListener('update-amendment-and-ao', this.saveNewAmendment as any);
       document.querySelector('body')!.removeChild(this._addAgAmendmentDialog);
     }
   }

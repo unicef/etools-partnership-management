@@ -4,6 +4,8 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import 'etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../../typings/globals.types';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
@@ -36,7 +38,7 @@ class GeneratePcaDialog extends PolymerElement {
   agreementId: string | null = null;
 
   @property({type: Array})
-  templateOptions: any[] = [{value: 'english', label: 'English'},
+  templateOptions: LabelAndValue[] = [{value: 'english', label: 'English'},
       {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
       {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
       {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
@@ -46,7 +48,7 @@ class GeneratePcaDialog extends PolymerElement {
 
   open() {
     // @ts-ignore
-    this.$.etoolsDialog.opened = true;
+    (this.$.etoolsDialog as EtoolsDialog).opened = true;
   }
 
   _handleDialogClosed(closingReason: any) {

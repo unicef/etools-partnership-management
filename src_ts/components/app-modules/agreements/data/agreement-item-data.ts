@@ -123,7 +123,6 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       if (!detail.hasOwnProperty(propName)) {
         logWarn('Mapping property not found');
       } else {
-        // @ts-ignore
         minimalAgrData[propName] = detail[propName];
       }
     }

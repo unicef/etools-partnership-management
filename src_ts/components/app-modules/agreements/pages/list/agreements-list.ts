@@ -73,7 +73,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
       </template>
 
       <div id="filters" class="paper-material" elevation="1">
-        
+
         <div id="filters-fields">
           <paper-input id="query"
                       class="filter"
@@ -319,7 +319,8 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
     }
   }
 
-  _initFiltersMenuList(partnersDropdownData: number[], agreementStatuses: number[], agreementTypes: number[], countryProgrammes: number[]) {
+  _initFiltersMenuList(partnersDropdownData: number[], agreementStatuses: string[], agreementTypes: string[],
+     countryProgrammes: number[]) {
     if (!partnersDropdownData || !agreementStatuses || !agreementTypes || !countryProgrammes) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
@@ -453,7 +454,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
   }
 
 
-  _updateSelectedFiltersValues() {    
+  _updateSelectedFiltersValues() {
      this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
         timeOut.after(20),
         () => {

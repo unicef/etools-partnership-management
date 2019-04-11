@@ -7,19 +7,19 @@ import { StaffMember } from '../../../typings/partner.types';
 
 // TODO: refactor this...
 export class MinimalAgreement {
-  id?: number | null = undefined;
-  agreement_number?: string = undefined;
-  agreement_number_status?: string = undefined;
+  id?: number | null;
+  agreement_number?: string;
+  agreement_number_status?: string;
   agreement_type?: string | null = null;
-  end?: string | null= undefined;
+  end?: string | null;
   partner?: number | null = null;
-  partner_name?: string | null= undefined;
+  partner_name?: string | null;
   signed_by_unicef_date?: string | null = null;
   signed_by_partner_date?: string | null = null;
   signed_by?: string | null = null;
-  start?: string | null = undefined;
-  status?: string = undefined;
-  country_programme?: string = undefined;
+  start?: string | null;
+  status?: string;
+  country_programme?: string;
   special_conditions_pca?: boolean = false;
   [key: string]: undefined | null | number | string | boolean;
 }
@@ -40,7 +40,7 @@ export class Agreement extends MinimalAgreement {
 export class AgreementAmendment {
   id: number | null = null;
   signed_date: string | null = null;
-  types: [] = [];
+  types: string[] = [];
   signed_amendment_attachment: number | string | null = null;
 }
 
