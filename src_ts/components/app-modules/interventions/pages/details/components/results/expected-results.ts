@@ -24,6 +24,8 @@ import './indicator-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
 import { logError } from 'etools-behaviors/etools-logging';
+import { property } from '@polymer/decorators';
+import { IndicatorDialogEl } from './indicator-dialog.js';
 
 /**
  * @polymer
@@ -32,7 +34,9 @@ import { logError } from 'etools-behaviors/etools-logging';
  * @appliesMixin Results
  * @appliesMixin LowerResults
  */
-class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMixin(LowerResultsMixin(PolymerElement)  as any))) as any) {
+class ExpectedResults extends connect(store)(RepeatableDataSetsMixin(
+  ResultsMixin(
+    LowerResultsMixin(PolymerElement)))) {
   [x: string]: any;
 
   static get template() {
@@ -114,39 +118,32 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: {
-        type: String,
-        value: 'interventionResultLinkDelete',
-        readOnly: true
-      },
-      interventionStatus: String,
-      editableCpoRamIndicators: {
-        type: Boolean
-      },
-      editMode: {
-        type: Boolean
-      },
-      indicatorDialog: {
-        type: Object
-      },
-      indicatorLocationOptions: {
-        type: Array
-      },
-      indicatorSectionOptions: {
-        type: Array
-      },
-      detailsOpened: {
-        type: Boolean,
-        value: true
-      },
-      showInactiveIndicators: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String, readOnly: true})
+  _deleteEpName: string = 'interventionResultLinkDelete';
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Boolean})
+  editableCpoRamIndicators!: boolean;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: Object})
+  indicatorDialog!: IndicatorDialogEl;
+
+  @property({type: Array})
+  indicatorLocationOptions!: [];
+
+  @property({type: Array})
+  indicatorSectionOptions!: [];
+
+  @property({type: Boolean})
+  detailsOpened: boolean = true;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
 
   static get observers() {
     return [
@@ -180,19 +177,19 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
 
   _createIndicatorDialog() {
     // init indicator dialog data
-    this.indicatorDialog = document.createElement('indicator-dialog');
+    this.indicatorDialog = document.createElement('indicator-dialog') as any;
     this.indicatorDialog.setAttribute('id', 'indicatorDialog');
 
     // attach close handler
     this.indicatorDialogDataReceived = this.indicatorDialogDataReceived.bind(this);
-    this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
-    document.querySelector('body')!.appendChild(this.indicatorDialog);
+    this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived as any);
+    document.querySelector('body')!.appendChild(this.indicatorDialog as any);
   }
 
   _removeIndicatorDialog() {
     if (this.indicatorDialog) {
-      this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
-      document.querySelector('body')!.removeChild(this.indicatorDialog);
+      this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived as any);
+      document.querySelector('body')!.removeChild(this.indicatorDialog as any);
     }
   }
 

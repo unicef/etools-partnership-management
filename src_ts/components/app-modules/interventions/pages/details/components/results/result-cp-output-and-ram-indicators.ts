@@ -286,3 +286,4 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
 }
 
 window.customElements.define('result-cp-output-and-ram-indicators', ResultCpOutputAndRamIndicators);
+export {ResultCpOutputAndRamIndicators as ResultCpOutputAndRamIndicatorsEl}

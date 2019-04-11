@@ -60,7 +60,9 @@ export type UserGroup = {
 export interface EtoolsTab {
   tab: string;
   tabLabel: string;
-  hidden: boolean;
+  hidden?: boolean;
+  showTabCounter?: boolean;
+  counter?: number;
 }
 
 export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in polymer declarations

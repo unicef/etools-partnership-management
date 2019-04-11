@@ -1,32 +1,27 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import { MinimalStaffMember } from '../../../../typings/partner.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  */
 function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
-  class staffMembersData extends EndpointsMixin(EtoolsAjaxRequestMixin(baseClass)) {
-    static get properties() {
-      return {
-        staffMembers: Array,
-        staffLoadingMsgSource: String
-      };
-    }
 
-    public staffMembers: any[] = [];
-    public staffLoadingMsgSource: string = 'staff-m';
+  class staffMembersData extends EndpointsMixin(baseClass) {
+
+    @property({type: Array})
+    staffMembers!: [];
+
+    @property({type: String})
+    staffLoadingMsgSource: string = 'staff-m';
 
     // This method will be used in the main element as observer for agreement.partner
     // or in other partner id changed observer
@@ -60,10 +55,8 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
         }).filter(function(sMember) {
           return sMember.active;
         });
-        // @ts-ignore
         this.set('staffMembers', activeStaffMembers);
       }
-      // @ts-ignore
       fireEvent(this, 'global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
     }
   };

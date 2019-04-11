@@ -51,6 +51,9 @@ import { ExpectedResultsEl } from './components/results/expected-results.js';
 import { AgreementSelector } from './components/agreement-selector.js';
 import { GroupedLocationsDialog } from './components/grouped-locations-dialog.js';
 import { PlannedBudgetEl } from './components/planned-budget.js';
+import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure.js';
+import { PlannedVisitsEl } from './components/planned-visits.js';
+import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
 
 
 /**
@@ -63,12 +66,13 @@ import { PlannedBudgetEl } from './components/planned-budget.js';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionDetails extends connect(store)(CommonMixin(
+class InterventionDetails extends connect(store)(
   StaffMembersData(
     EnvironmentFlagsMixin(
       MissingDropdownOptionsMixin(
-        FrNumbersConsistencyMixin(
-          UploadsMixin(PolymerElement))))))) {
+        CommonMixin(
+          UploadsMixin(
+            FrNumbersConsistencyMixin(PolymerElement))))))) {
 
   static get template() {
     return html`
@@ -441,6 +445,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
     `;
   }
 
+  // @ts-ignore
   @property({type: Object, notify: true, observer: InterventionDetails.prototype._interventionChanged})
   intervention!: Intervention;
 
@@ -707,7 +712,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
     (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
     (this.$.documentType as any).resetInvalidState();
     (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
-    this.$.cpStructure.resetCpDropdownInvalidState();
+    (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
     let fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
       'partnerFocalPts', 'intStart', 'intEnd'];
@@ -720,7 +725,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
     this._resetIETitleFieldValidation();
 
-    let plannedVisitsEl = this.shadowRoot!.querySelector('#plannedVisits');
+    let plannedVisitsEl = this.shadowRoot!.querySelector('#plannedVisits') as unknown as PlannedVisitsEl;
     if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
       plannedVisitsEl.resetValidations();
     }
@@ -784,9 +789,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
     // reset partner focal points options and value
     this.set('intervention.partner_focal_points', []);
     this.set('staffMembers', []);
-    let partnerFpDropDown = this.$.partnerFocalPts;
+    let partnerFpDropDown = this.$.partnerFocalPts as unknown as EtoolsDropdownEl;
     if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
-      partnerFpDropDown.value = null;
       partnerFpDropDown.selected = null;
     }
   }

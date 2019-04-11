@@ -5,6 +5,8 @@ import { RootState } from '../../../../../../../../store';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../../../../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+import { ResultCpOutputAndRamIndicatorsEl } from '../result-cp-output-and-ram-indicators';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -16,32 +18,24 @@ import { PolymerElement } from '@polymer/polymer';
 function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class resultsClass extends baseClass {
 
-    [x: string]: any;
+    @property({type: Number})
+    interventionId!: number;
 
-    static get properties() {
-      return {
-        interventionId: {
-          type: Number
-        },
-        cpOutputRamIndicatorsEditElem: Object,
-        selectedCpStructure: {
-          type: String
-        },
-        cpOutputs: {
-          type: Array,
-          statePath: 'cpOutputs'
-        },
-        availableCpOutputs: {
-          type: Array,
-          value: [],
-          computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'
-        },
-        alreadySelectedCpOutputs: {
-          type: Array,
-          value: []
-        }
-      };
-    }
+    @property({type: Object})
+    cpOutputRamIndicatorsEditElem!: ResultCpOutputAndRamIndicatorsEl;
+
+    @property({type: String})
+    selectedCpStructure!: string;
+
+    @property({type: Array})
+    cpOutputs!: CpOutput[];
+
+    @property({type: Array, computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'})
+    availableCpOutputs!: CpOutput[];
+
+    @property({type: Array})
+    alreadySelectedCpOutputs: [] = [];
+
 
     resultsStateChanged(state: RootState) {
       if (!isJsonStrMatch(this.cpOutputs, state.commonData!.cpOutputs)) {
@@ -93,15 +87,16 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
             this._handleNewResultAdded);
         this.cpOutputRamIndicatorsEditElem.removeEventListener('expected-result-updated',
             this._handleResultUpdated);
-        document.querySelector('body')!.removeChild(this.cpOutputRamIndicatorsEditElem);
+        document.querySelector('body')!.removeChild(this.cpOutputRamIndicatorsEditElem as any);
       }
     }
 
     createAddEditCpOutputRamIndicatorsElement() {
       this.cpOutputRamIndicatorsEditElem = document.querySelector('body')!
-          .querySelector('#cpOutputRamIndicatorsEditElem');
-      if (!this.cpOutputRamIndicatorsEditElem) {
-        this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
+          .querySelector('#cpOutputRamIndicatorsEditElem') as any;
+
+          if (!this.cpOutputRamIndicatorsEditElem) {
+        this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators') as any;
         this.cpOutputRamIndicatorsEditElem.setAttribute('id', 'cpOutputRamIndicatorsEditElem');
 
         this.cpOutputRamIndicatorsEditElem.set('toastEventSource', this);
@@ -113,7 +108,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this._handleResultUpdated = this._handleResultUpdated.bind(this);
         this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated', this._handleResultUpdated);
 
-        document.querySelector('body')!.appendChild(this.cpOutputRamIndicatorsEditElem);
+        document.querySelector('body')!.appendChild(this.cpOutputRamIndicatorsEditElem as any);
       }
     }
 

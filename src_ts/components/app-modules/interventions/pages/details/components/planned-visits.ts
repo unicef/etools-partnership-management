@@ -343,3 +343,5 @@ class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('planned-visits', PlannedVisits);
+
+export {PlannedVisits as PlannedVisitsEl};

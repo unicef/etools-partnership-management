@@ -9,8 +9,9 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  */
 function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
+
   class missingDropdownOptionsClass extends EndpointsMixin(baseClass) {
+
     public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
       let self = this;
       setTimeout(function() {

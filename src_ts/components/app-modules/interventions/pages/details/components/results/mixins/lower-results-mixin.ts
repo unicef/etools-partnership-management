@@ -2,6 +2,8 @@
 import { GenericObject, Constructor } from '../../../../../../../../typings/globals.types';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+import { PdLowerResultNameEl } from '../pd-lower-result-name';
 
 /**
  * @polymer
@@ -9,13 +11,10 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class lowerResultsClass extends baseClass {
-    [x: string]: any;
 
-    static get properties() {
-      return {
-        lowerResultNameEditElem: Object
-      };
-    }
+    @property({type: Object})
+    lowerResultNameEditElem!: PdLowerResultNameEl;
+
 
     static get observers() {
       /* _makeSureDataItemsAreValid is a method from repeatable data sets mixin */
@@ -48,22 +47,22 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
     }
 
     createLowerResultNameDialog() {
-      this.lowerResultNameEditElem = document.querySelector('body')!.querySelector('#pdLowerResultName');
+      this.lowerResultNameEditElem = document.querySelector('body')!.querySelector('#pdLowerResultName') as any;
       if (!this.lowerResultNameEditElem) {
-        this.lowerResultNameEditElem = document.createElement('pd-lower-result-name');
+        this.lowerResultNameEditElem = document.createElement('pd-lower-result-name') as any;
         this.lowerResultNameEditElem.setAttribute('id', 'pdLowerResultName');
         this.lowerResultNameEditElem.set('toastEventSource', this);
 
         this._lowerResultSaved = this._lowerResultSaved.bind(this);
         this.lowerResultNameEditElem.addEventListener('lower-result-saved', this._lowerResultSaved);
-        document.querySelector('body')!.appendChild(this.lowerResultNameEditElem);
+        document.querySelector('body')!.appendChild(this.lowerResultNameEditElem as any);
       }
     }
 
     removeLowerResultNameDialog() {
       if (this.lowerResultNameEditElem) {
         this.lowerResultNameEditElem.removeEventListener('lower-result-saved', this._lowerResultSaved);
-        document.querySelector('body')!.removeChild(this.lowerResultNameEditElem);
+        document.querySelector('body')!.removeChild(this.lowerResultNameEditElem as any);
       }
     }
 
@@ -92,6 +91,7 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
               'lower-results-behavior');
           return;
         }
+        // @ts-ignore
         let expectedResultIndex = this._getDataIndex(e.detail.expectedResultId, this.dataItems);
         let validExpectedResultsIndex = expectedResultIndex >= 0;
         if (!validExpectedResultsIndex) {

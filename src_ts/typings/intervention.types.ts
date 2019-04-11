@@ -223,10 +223,10 @@ export class Indicator {// Indicator
   id: number | null = null;
   is_active: boolean = true;
   is_high_frequency: boolean = false;
-  indicator = new IndicatorIndicator();
+  indicator: IndicatorIndicator | null = new IndicatorIndicator();
   section: number | null = null;
-  baseline: {v?: string, d?: string} = {};
-  target: {v?: string, d: string} = {d: '1'};
+  baseline: {v?: string | number, d?: string | number} = {};
+  target: {v?: string | number, d: string | number} = {d: '1'};
   means_of_verification: string | null = null;
   locations: number[] = [];
   disaggregation: string[] = [];
@@ -235,6 +235,8 @@ export class Indicator {// Indicator
   cluster_indicator_id: number | null = null;
   cluster_indicator_title: string | null = null;
   response_plan_name: string | null = null;
+  numerator_label: string = '';
+  denominator_label: string = '';
 }
 
 
