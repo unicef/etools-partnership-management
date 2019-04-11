@@ -20,7 +20,7 @@ export class ListFilterOption {
 
   filterName: string = '';
   type: string = '';
-  selectionOptions?: string[] | number[];
+  selectionOptions?: string[] | number[] | any[];
   optionValue?: string;
   optionLabel?: string;
   alreadySelected?: [] | null;

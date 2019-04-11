@@ -33,17 +33,14 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
     public getPartnerStaffMembers(newId: number) {
       if (newId > 0) {
 
-        // @ts-ignore
         fireEvent(this, 'global-loading', {
           message: 'Loading...',
           active: true,
           loadingSource: this.staffLoadingMsgSource
         });
-        // @ts-ignore
         let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
         let self = this;
 
-        // @ts-ignore
         this.sendRequest({
           endpoint: endpoint
         }).then(function(response: any) {
