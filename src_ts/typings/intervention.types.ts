@@ -40,9 +40,9 @@ export class Intervention {
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: IPermission<InterventionPermissionsFields>;
-  [key: string] : any;
+  [key: string]: any;
 
-  //Domain driven design idea
+  //TODOO
   public isDraft() {
     return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
         status === '';
@@ -196,6 +196,7 @@ export class InterventionPermissionsFields {
 
   // attachments
   attachments: boolean = false;
+  [x: string] : boolean;
 }
 
 export type ExpectedResult = {

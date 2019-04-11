@@ -246,7 +246,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   /**
    * Update intervention status. In addition set a callback to be called after request is complete.
    */
-  updateInterventionStatus(data: any, callback: any) {
+  updateInterventionStatus(data: any, callback?: any) {
     if (!data.interventionId) {
       fireEvent(this, 'toast', {text: 'Invalid intervention ID', showCloseBtn: true});
     } else {

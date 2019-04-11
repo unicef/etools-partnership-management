@@ -2,59 +2,64 @@
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControl from '../../mixins/scroll-control-mixin';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin';
+import {removeDialog, createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+import { Status, StatusAction } from '../../../typings/etools-status.types';
+import EtoolsDialog from 'etools-dialog';
 declare const ShadyCSS: any;
 
 /**
  * Common functionality for etools status element
  * @polymer
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin ScrollControl
  **/
 function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
-  class etoolsStatusCommonClass extends ScrollControl(
-        DynamicDialogMixin(baseClass) as Constructor<PolymerElement>) {
-      [x: string]: any;
 
-      static get properties() {
-        return {
-          status: {
-            type: String,
-            value: ''
-          },
-          newStatus: {
-            type: String,
-            value: ''
-          },
-          warningMessage: {
-            type: String,
-            value: ''
-          },
-          editMode: {
-            type: Boolean,
-            value: true
-          },
-          active: {
-            type: Boolean
-          },
-          minimumDistanceFromWindowTop: {
-            type: Number,
-            value: 76
-          },
-          sectionName: String, // PD/SSFA, Partners, Agreements
-          possibleStatuses: Array,
-          possibleActions: Array,
-          warningDialog: Object,
-          statusChangeWarningDialogContent: Object,
-          deleteConfirmDialog: Object,
-          deleteWarningMessage: String
-        };
-      }
+  class etoolsStatusCommonClass extends ScrollControl(baseClass as Constructor<PolymerElement>) {
+
+      @property({type: String})
+      status: string = '';
+
+      @property({type: String})
+      newStatus: string = '';
+
+      @property({type: String})
+      warningMessage: string = '';
+
+      @property({type: Boolean})
+      editMode: boolean = true;
+
+      @property({type: Boolean})
+      active!: boolean;
+
+      @property({type: Number})
+      minimumDistanceFromWindowTop: number = 76;
+
+      @property({type: String})
+      sectionName!: string; // PD/SSFA, Partners, Agreements
+
+      @property({type: Array})
+      possibleStatuses!: Status[];
+
+      @property({type: Array})
+      possibleActions!: StatusAction[];
+
+      @property({type: Object})
+      warningDialog!: EtoolsDialog;
+
+      @property({type: Object})
+      deleteConfirmDialog!: EtoolsDialog;
+
+      @property({type: String})
+      deleteWarningMessage!: string
+
+      private _resetStatusActionsDebouncer!: Debouncer;
+      private _statusActiveChangeDebouncer!: Debouncer;
+      private statusChangeWarningDialogContent!: HTMLElement;
 
       static get observers() {
         return [
@@ -66,11 +71,11 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       disconnectedCallback() {
         super.disconnectedCallback();
         if (this.warningDialog) {
-          this.warningDialog.removeEventListener('close', this._statusChangeConfirmationCallback);
-          this.removeDialog(this.warningDialog);
+          this.warningDialog.removeEventListener('close', this._statusChangeConfirmationCallback as any);
+          removeDialog(this.warningDialog);
         }
         if (this.deleteConfirmDialog) {
-          this.removeDialog(this.deleteConfirmDialog);
+          removeDialog(this.deleteConfirmDialog);
         }
         this._resetScrollHandler();
         this._resetResizeHandler();
@@ -175,8 +180,15 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
         this.statusChangeWarningDialogContent = document.createElement('p');
         this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
         this._statusChangeConfirmationCallback = this._statusChangeConfirmationCallback.bind(this);
-        this.warningDialog = this.createDialog(this.sectionName + ' status change', 'md', 'Yes', 'No',
-            this._statusChangeConfirmationCallback, this.statusChangeWarningDialogContent);
+        let conf: any = {
+          title: this.sectionName + ' status change',
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'Cancel',
+          closeCallback: this._statusChangeConfirmationCallback,
+          content: this.statusChangeWarningDialogContent
+        }
+        this.warningDialog = createDynamicDialog(conf);
       }
 
       _showStatusChangeConfirmationDialog() {
@@ -267,7 +279,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       _createDeleteConfirmationDialog() {
         let warnDeleteContent = document.createElement('div');
         warnDeleteContent.innerHTML = this.deleteWarningMessage;
-        this.deleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteContent);
+        let conf: any = {
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'No',
+          content: warnDeleteContent
+        }
+        this.deleteConfirmDialog = createDynamicDialog(conf);
       }
 
       _openDeleteConfirmation() {

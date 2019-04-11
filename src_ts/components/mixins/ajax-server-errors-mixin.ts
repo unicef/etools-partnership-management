@@ -21,7 +21,7 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
     @property({type: Boolean})
     useToastEvent: boolean = true;
 
-    @property({type: String, observer: ajaxServerErrors.prototype._errorEventNameChange}) // TODOOOO!!!!
+    @property({type: String, observer: ajaxServerErrors.prototype._errorEventNameChange})
     errorEventName: string|null = null;
 
     @property({type: String})

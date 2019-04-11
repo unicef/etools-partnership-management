@@ -306,3 +306,5 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
 }
 
 window.customElements.define('expected-results', ExpectedResults);
+
+export {ExpectedResults as ExpectedResultsEl};

@@ -6,6 +6,7 @@ import {PolymerElement} from '@polymer/polymer/polymer-element';
 import { fireEvent } from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
 import {logError} from 'etools-behaviors/etools-logging';
+import { property } from '@polymer/decorators';
 /**
  * Module main elements common functionality
  * @polymer
@@ -14,36 +15,37 @@ import {logError} from 'etools-behaviors/etools-logging';
 function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     class moduleRoutingClass extends (baseClass) {
 
-      static get properties() {
-        return {
-          listActive: Boolean,
-          tabsActive: Boolean,
-          route: Object,
-          routeData: Object,
-          rootPath: String,
-          moduleName: String,
-          activePage: {
-            type: String,
-            notify: true,
-            observer: '_activePageChanged'
-          },
-          /**
-           * This flag is used to make sure status sidebar doesn't show before tab content is loaded.
-           * The flag is updated:
-           *    - true: when the main tab element fires tab-content-attached event (_requestedTabContentHasBeenAttached)
-           *    - false: - when activePage is changed and it's one of the main tabs &&
-           *             - the previous activePage value is not the list &&
-           *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
-           */
-          tabAttached: {
-            type: Boolean,
-            value: false
-          }
-        };
-      }
+      @property({type: Boolean})
+      listActive!: boolean;
 
-      public listActive!: boolean;
-      public activePage!: string;
+      @property({type: Boolean})
+      tabsActive!: boolean;
+
+      @property({type: Object})
+      route!: object;
+
+      @property({type: Object})
+      routeData!: object;
+
+      @property({type: String})
+      rootPath!: string;
+
+      @property({type: String})
+      moduleName!: string;
+
+      @property({type: String, notify: true, observer: ModuleRoutingMixin.prototype._activePageChanged})
+      activePage!: string;
+
+      /**
+       * This flag is used to make sure status sidebar doesn't show before tab content is loaded.
+       * The flag is updated:
+       *    - true: when the main tab element fires tab-content-attached event (_requestedTabContentHasBeenAttached)
+       *    - false: - when activePage is changed and it's one of the main tabs &&
+       *             - the previous activePage value is not the list &&
+       *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
+       */
+      @property({type: Boolean})
+      tabAttached: boolean = false;
 
       ready() {
         super.ready();
@@ -98,7 +100,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
        * @param {function} appendBasePathAdditionalFolder
        * @return {string}
        */
-      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object) {
+      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object | null) {
         let baseUrl = currentModule + '/pages/' + page + '/';
         if (typeof appendBasePathAdditionalFolder === 'function') {
           // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
@@ -125,7 +127,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       }
 
       setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab?: object,
-                    appendBasePathAdditionalFolder?: object, successfulImportCallback?: object) {
+                    appendBasePathAdditionalFolder?: object | null, successfulImportCallback?: object) {
         let page = listActive ? 'list' : tab;
 
         if (listActive) {
@@ -182,7 +184,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         });
       }
 
-      isActiveModule(moduleName: string) {
+      isActiveModule(moduleName?: string) {
         // @ts-ignore
         const mName = !moduleName ? this.moduleName : moduleName;
         // @ts-ignore
