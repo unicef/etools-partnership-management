@@ -1,20 +1,20 @@
 import { PolymerElement, html } from '@polymer/polymer';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import './applied-indicator.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import { property } from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog';
 
 
 /**
   * @polymer
   * @customElement
-  * @appliesMixin DynamicDialogMixin
   * @appliesMixin RepeatableDataSetsMixin
   */
-class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(PolymerElement) as any)) {
-  [x: string]: any;
+class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -43,22 +43,32 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: {
-        type: String,
-        value: 'getEditDeleteIndicator',
-        readOnly: true
-      },
-      resultLinkIndex: Number,
-      editMode: Boolean,
-      interventionStatus: String,
-      cpOutputId: Number,
-      deactivateConfirmDialog: Object,
-      indicToDeactivateIndex: String,
-      showInactiveIndicators: Boolean
-    };
-  }
+  @property({type: String, readOnly: true})
+  _deleteEpName: string = 'getEditDeleteIndicator';
+
+  @property({type: String})
+  resultLinkIndex!: string | number;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Number})
+  cpOutputId!: number;
+
+  @property({type: Object})
+  deactivateConfirmDialog!: EtoolsDialog;
+
+  @property({type: Number})
+  indicToDeactivateIndex!: number;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
+
+
+  private _onDeactivateHandler!: (...args: any[]) => any;
 
   ready() {
     super.ready();
@@ -66,7 +76,7 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
     let deactivateDialog = document.querySelector('body')!
         .querySelector('etools-dialog#deactivateIndicatorDialog');
     if (deactivateDialog) {
-      this.deactivateConfirmDialog = deactivateDialog;
+      this.deactivateConfirmDialog = deactivateDialog as EtoolsDialog;
     } else {
       this._createDeactivateConfirmDialog();
     }
@@ -82,7 +92,7 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
   _createDeactivateConfirmDialog() {
     let dialogContent = document.createElement('div');
     dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
-    this.deactivateConfirmDialog = this.createDynamicDialog({
+    this.deactivateConfirmDialog = createDynamicDialog({
       title: 'Deactivate confirmation',
       okBtnText: 'Deactivate',
       cancelBtnText: 'Cancel',
@@ -95,6 +105,7 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
 
   _editIndicator(event: PolymerElEvent) {
     let indicatorIndex = parseInt(event.target.getAttribute('data-args'), 10);
+    // @ts-ignore
     let llResultIndex = parseInt(this.resultLinkIndex, 10);
     let indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
 
@@ -110,13 +121,13 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
 
   _openDeactivateConfirmation(event: PolymerElEvent) {
     this.indicToDeactivateIndex = parseInt(event.target.getAttribute('data-args'), 10);
-    this.onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
-    this.deactivateConfirmDialog.addEventListener('close', this.onDeactivateHandler);
+    this._onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
+    this.deactivateConfirmDialog.addEventListener('close', this._onDeactivateHandler);
     this.deactivateConfirmDialog.opened = true;
   }
 
   _onDeactivateConfirmation(event: CustomEvent) {
-    this.deactivateConfirmDialog.removeEventListener('close', this.onDeactivateHandler);
+    this.deactivateConfirmDialog.removeEventListener('close', this._onDeactivateHandler);
 
     if (!event.detail.confirmed) {
       this.indicToDeactivateIndex = -1;

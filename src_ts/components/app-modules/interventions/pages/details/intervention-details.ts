@@ -47,9 +47,10 @@ import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVE
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 import { property } from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog';
 import { ExpectedResultsEl } from './components/results/expected-results.js';
 import { AgreementSelector } from './components/agreement-selector.js';
+import { GroupedLocationsDialog } from './components/grouped-locations-dialog.js';
+import { PlannedBudgetEl } from './components/planned-budget.js';
 
 
 /**
@@ -506,7 +507,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
   @property({type: Boolean})
   showInactiveIndicators: boolean = false;
 
-  private locationsDialog!: EtoolsDialog;
+  private locationsDialog!: GroupedLocationsDialog;
 
   static get observers() {
     return [
@@ -704,8 +705,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
   _resetValidations() {
     (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
-    (this.$.documentType as unknown as).resetInvalidState();
-    this.$.plannedBudget.resetValidations();
+    (this.$.documentType as any).resetInvalidState();
+    (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
     this.$.cpStructure.resetCpDropdownInvalidState();
 
     let fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
@@ -719,7 +720,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
     this._resetIETitleFieldValidation();
 
-    let plannedVisitsEl = this.shadowRoot.querySelector('#plannedVisits');
+    let plannedVisitsEl = this.shadowRoot!.querySelector('#plannedVisits');
     if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
       plannedVisitsEl.resetValidations();
     }
@@ -842,7 +843,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
       fieldSelectors.push('#ref-year');
     }
     fieldSelectors.forEach((selector: string) => {
-      let field = this.shadowRoot!.querySelector(selector);
+      let field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }

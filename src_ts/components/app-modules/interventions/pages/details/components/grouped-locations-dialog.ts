@@ -108,7 +108,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   adminLevels!: {id: number, name: string, admin_level: any}[];
 
   @property({type: String, observer: GroupedLocationsDialog.prototype.adminLevelChanged})
-  adminLevel!: string;
+  adminLevel!: string | null;
 
   @property({type: Array})
   locations!: Location[];
@@ -259,3 +259,5 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
 }
 
 window.customElements.define('grouped-locations-dialog', GroupedLocationsDialog);
+
+export {GroupedLocationsDialog};
