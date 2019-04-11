@@ -19,6 +19,7 @@ import { store, RootState } from '../../../../../../../store';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../../../typings/globals.types';
 
 
 /**
@@ -183,13 +184,13 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   agreementType: string = '';
 
   @property({type: Array})
-  _amendmentTypes: [] = [];
+  _amendmentTypes: LabelAndValue[] = [];
 
   @property({type: Object})
-  legacyAmendmentTypes: {} = {'CP extension': 'Extension of Country Programme Cycle'};
+  legacyAmendmentTypes: { [key: string]: string } = {'CP extension': 'Extension of Country Programme Cycle'};
 
   @property({type: Object})
-  _addAgAmendmentDialog: {} = {};
+  _addAgAmendmentDialog: any = {};
 
   @property({type: Array})
   authorizedOfficers: [] = [];

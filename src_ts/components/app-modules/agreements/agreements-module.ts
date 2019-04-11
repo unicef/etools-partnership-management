@@ -173,7 +173,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   }];
 
   @property({type: Object})
-  permissions: {} = {};
+  permissions = {} as UserPermissions;
 
   @property({type: Number})
   selectedAgreementId: number | null = null;
@@ -192,6 +192,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   @property({type: Array})
   authorizedOfficers: [] = [];
+
+  originalAgreementData: Agreement = {};
 
   static get observers() {
     return [
@@ -450,8 +452,10 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       }
       if (this._objectFieldIsModified('amendments')) {
         // keep only new amendments
+        if(this.agreement.amendments) {
         changes.amendments = this.agreement.amendments.filter(
             (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
+        }
       }
     }
 

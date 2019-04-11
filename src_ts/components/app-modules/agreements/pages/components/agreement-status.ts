@@ -7,13 +7,13 @@ import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
+class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
         <style>
@@ -41,10 +41,10 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
   newAgreement: boolean = false;
 
   @property({type: Array})
-  possibleStatuses: [] = [];
+  possibleStatuses: any = [];
 
   @property({type: Array})
-  possibleActions: [] = [
+  possibleActions: any = [
       {
       label: 'Save',
       hidden: true,

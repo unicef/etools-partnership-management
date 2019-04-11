@@ -21,19 +21,19 @@ import {property} from '@polymer/decorators';
  * @appliedMixin Constants
  */
 // @ts-ignore
-class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) {
+class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return null;
   }
 
   @property({type: Object})
-  agreementEndpoints: {} = {
+  agreementEndpoints = {
       DETAILS: 'agreementDetails',
       CREATE: 'agreements',
       DELETE: 'agreementDelete'
   };
 
-  @property({type: Agreement, readOnly: true, notify: true})
+  @property({type: Object, readOnly: true, notify: true})
   agreement: Agreement = {};
 
   @property({type: Object})
@@ -77,6 +77,7 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
 
   // Handle received data from request
   _handleSuccResponse(response: any, ajaxMethod: string) {
+    // @ts-ignore
     this._setAgreement(response);
 
     // call additional callback, if any
@@ -243,7 +244,7 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
     this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
       this._handleAgreementDeleteSuccess(id);
     }).catch((reqError: any) => {
-      this.handleErrorResponse(reqError, reqMethod);
+      this.handleErrorResponse(reqError, reqMethod, false);
     });
   }
 

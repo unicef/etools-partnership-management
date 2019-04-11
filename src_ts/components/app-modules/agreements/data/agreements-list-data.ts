@@ -11,7 +11,7 @@ import { MinimalAgreement } from '../agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-
+import { GenericObject } from '../../../../typings/globals.types';
 
 /**
 * @polymer
@@ -31,10 +31,10 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
   filteredAgreements: [] = [];
 
   @property({type: Number, readOnly: true, notify: true})
-  totalResults: number | null = null;
+  totalResults!: number;
 
   @property({type: Object})
-  currentQuery: object | null = null;
+  currentQuery: GenericObject | null = null;
 
   _handleMyResponse(res: any) {
     this._handleResponse(res);
@@ -123,6 +123,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
+          // @ts-ignore
           self._setTotalResults(count);
         });
       });
@@ -132,6 +133,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
           .limit(pageSize)
           .toArray();
     }).then(function(result: any) {
+      // @ts-ignore
       self._setFilteredAgreements(result);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     }).catch(function(error: any) {

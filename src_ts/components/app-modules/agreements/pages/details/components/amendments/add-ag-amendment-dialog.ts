@@ -110,7 +110,7 @@ class AddAgAmendmentDialog extends PolymerElement {
   amendmentTypes: [] = [];
 
   @property({type: Object})
-  amendment: object = {};
+  amendment: any = {};
 
   @property({type: Boolean})
   autoValidate: boolean = false;
@@ -128,7 +128,7 @@ class AddAgAmendmentDialog extends PolymerElement {
   _aoTypeSelected: boolean = false;
 
   @property({type: Array})
-  _validationSelectors: [] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
+  _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
 
   @property({type: Boolean})
   uploadInProgress: boolean = false;

@@ -20,8 +20,8 @@ import 'etools-dropdown/etools-dropdown.js';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
-import CommonMixin from '../../../../mixins/common-mixin';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
+import CommonMixin from '../../../../mixins/common-mixin';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 
 import {SharedStyles} from '../../../../styles/shared-styles.js';
@@ -32,7 +32,8 @@ import { partnersDropdownDataSelector } from '../../../../../reducers/partners.j
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {property} from '@polymer/decorators';
-
+import { LabelAndValue, CpStructure } from '../../../../../typings/globals.types.js';
+import { ListFilterOption } from '../../../../../typings/filter.types.js';
 
  let _agreementsLastNavigated: string = '';
 /**
@@ -46,13 +47,10 @@ import {property} from '@polymer/decorators';
  * @appliesMixin PaginationMixin
  */
 //@ts-ignore
-class AgreementsList extends connect(store)(CommonMixin(
-  EndpointsMixin(
-    ListFiltersMixin(
-      ListsCommonMixin(
-        PaginationMixin(PolymerElement)))))) {
+class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
+  EndpointsMixin(PolymerElement)))))) {
 
-  static get template() {
+    static get template() {
     return html`
       ${SharedStyles} ${listFilterStyles} ${gridLayoutStyles}
       <style include="paper-material-styles data-table-styles">
@@ -75,7 +73,7 @@ class AgreementsList extends connect(store)(CommonMixin(
       </template>
 
       <div id="filters" class="paper-material" elevation="1">
-
+        
         <div id="filters-fields">
           <paper-input id="query"
                       class="filter"
@@ -277,19 +275,22 @@ class AgreementsList extends connect(store)(CommonMixin(
   partnersDropdownData: [] = [];
 
   @property({type: Array})
-  countryProgrammes: [] = [];
+  countryProgrammes: CpStructure[] = [];
 
   @property({type: Array})
-  agreementTypes: [] = [];
+  agreementTypes: LabelAndValue[] = [];
 
   @property({type: Array})
-  agreementStatuses: [] = [];
+  agreementStatuses: LabelAndValue[] = [];
 
   @property({type: Array})
-  _sortableFieldNames: [] = ['agreement_number', 'partner_name', 'start', 'end'];
+  _sortableFieldNames: string[] = ['agreement_number', 'partner_name', 'start', 'end'];
 
   @property({type: String})
   isSpecialConditionsPca: string | null = null;
+
+  _updateFiltersValsDebouncer!: Debouncer | null;
+  _queryDebouncer!: Debouncer | null;
 
   static get observers() {
     return [
@@ -318,14 +319,14 @@ class AgreementsList extends connect(store)(CommonMixin(
     }
   }
 
-  _initFiltersMenuList(partnersDropdownData: [], agreementStatuses: [], agreementTypes: [], countryProgrammes: []) {
+  _initFiltersMenuList(partnersDropdownData: number[], agreementStatuses: number[], agreementTypes: number[], countryProgrammes: number[]) {
     if (!partnersDropdownData || !agreementStatuses || !agreementTypes || !countryProgrammes) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
     }
     // init list filter options
-    this.initListFiltersData([
-      {
+    this.initListFiltersData ([
+      new ListFilterOption({
         filterName: 'CP Structure',
         type: 'esmm', // etools-dropdown-multi
         selectionOptions: countryProgrammes,
@@ -336,15 +337,15 @@ class AgreementsList extends connect(store)(CommonMixin(
         selected: true,
         minWidth: '400px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Ends Before',
         type: 'datepicker',
         dateSelected: '',
         path: 'endDate',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Partner',
         type: 'esmm', // etools-dropdown-multi
         selectionOptions: partnersDropdownData,
@@ -355,15 +356,15 @@ class AgreementsList extends connect(store)(CommonMixin(
         selected: false,
         minWidth: '400px',
         hideSearch: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Starts After',
         type: 'datepicker',
         dateSelected: '',
         path: 'startDate',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Status',
         type: 'esmm', // etools-dropdown-multi
         selectionOptions: agreementStatuses,
@@ -374,8 +375,8 @@ class AgreementsList extends connect(store)(CommonMixin(
         selected: true,
         minWidth: '160px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Type',
         type: 'esmm', // etools-dropdown-multi
         selectionOptions: agreementTypes,
@@ -386,8 +387,8 @@ class AgreementsList extends connect(store)(CommonMixin(
         selected: true,
         minWidth: '350px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Special Conditions PCA',
         type: 'etools-dropdown',
         singleSelection: true,
@@ -396,10 +397,11 @@ class AgreementsList extends connect(store)(CommonMixin(
         optionLabel: 'label',
         alreadySelected: null,
         path: 'isSpecialConditionsPca',
+        selected: true,
         minWidth: '350px',
         hideSearch: true,
         allowEmpty: true
-      }
+      })
     ]);
     this._updateSelectedFiltersValues();
   }
@@ -451,8 +453,8 @@ class AgreementsList extends connect(store)(CommonMixin(
   }
 
 
-  _updateSelectedFiltersValues() {
-    this.updateShownFilterDebouncer = Debouncer.debounce(this.updateShownFilterDebouncer,
+  _updateSelectedFiltersValues() {    
+     this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
         timeOut.after(20),
         () => {
           let filtersValues = [
@@ -504,10 +506,10 @@ class AgreementsList extends connect(store)(CommonMixin(
     }
   }
 
-  _filterListData(forceNoLoading: boolean) {
+  _filterListData(forceNoLoading?: boolean) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
-    this.queryDebouncer = Debouncer.debounce(this.queryDebouncer,
+    this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
           let agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;

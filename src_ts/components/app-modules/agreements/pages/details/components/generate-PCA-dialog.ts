@@ -36,7 +36,7 @@ class GeneratePcaDialog extends PolymerElement {
   agreementId: string | null = null;
 
   @property({type: Array})
-  templateOptions: [] = [{value: 'english', label: 'English'},
+  templateOptions: any[] = [{value: 'english', label: 'English'},
       {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
       {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
       {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];

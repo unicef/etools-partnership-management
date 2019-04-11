@@ -46,6 +46,8 @@ import { isJsonStrMatch } from '../../../../utils/utils';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../typings/globals.types';
+import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure';
 
 /**
  * @polymer
@@ -55,7 +57,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(UploadsMixin(PolymerElement)))) {
+class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersData(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -349,7 +351,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   }
 
   @property({type: Object, observer: '_agreementChanged', notify: true})
-  agreement: object = {};
+  agreement: any = {};
 
   @property({type: Boolean, observer: '_editModeChanged'})
   editMode: boolean = false;
@@ -358,10 +360,10 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   isNewAgreement: boolean = false;
 
   @property({type: Array})
-  partnersDropdownData: [] = [];
+  partnersDropdownData: any[] = [];
 
   @property({type: Array})
-  agreementTypes: [] = [];
+  agreementTypes: LabelAndValue[] = [];
 
   @property({type: Array})
   staffMembers: [] = [];
@@ -370,7 +372,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   authorizedOfficers: [] = [];
 
   @property({type: Object})
-  originalAgreementData: object | null = null;
+  originalAgreementData: any | null = null;
 
   @property({type: Array})
   amendments: [] = [];
@@ -389,6 +391,8 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
 
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+  
+  _generatePCADialog: any = null;
 
   static get observers() {
     return [
@@ -415,10 +419,10 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
 
   ready() {
     super.ready();
-    this.generatePCADialog = document.createElement('generate-pca-dialog');
-    this.generatePCADialog.setAttribute('id', 'generatePCADialog');
+    this._generatePCADialog = document.createElement('generate-pca-dialog');
+    this._generatePCADialog.setAttribute('id', 'generatePCADialog');
     // @ts-ignore
-    document.querySelector('body')!.appendChild(this.generatePCADialog);
+    document.querySelector('body')!.appendChild(this._generatePCADialog);
   }
 
   connectedCallback() {
@@ -432,9 +436,9 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.generatePCADialog) {
+    if (this._generatePCADialog) {
       // @ts-ignore
-      document.querySelector('body')!.removeChild(this.generatePCADialog);
+      document.querySelector('body')!.removeChild(this._generatePCADialog);
     }
   }
 
@@ -483,8 +487,8 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   // When agreement data is changed we need to check and prepare attached agreement file and
   // display amendments if needed
   _agreementChanged(agreement: Agreement) {
-    if (this.generatePCADialog) {
-      this.generatePCADialog.agreementId = agreement.id;
+    if (this._generatePCADialog) {
+      this._generatePCADialog.agreementId = agreement.id;
     }
 
     this.set('allowAoEditForSSFA', false);
@@ -497,10 +501,10 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
 
       // keep a copy of the agreement before changes are made and use it later to save only the changes
       this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
-
-      let cpField = this.shadowRoot.querySelector('#cpStructure');
+      
+      let cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
       if (cpField) {
-        cpField.resetCpDropdownInvalidState();
+          cpField.resetCpDropdownInvalidState();
       }
       this.set('enableEditForAuthorizedOfficers', false);
       this.resetAttachedAgreementElem(agreement);
@@ -523,7 +527,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   }
 
   _resetDropdown(selector: string) {
-    let field = this.fieldValidationReset(selector);
+    let field = this.fieldValidationReset(selector, true);
     if (field) {
       field.set('selected', null);
     }
@@ -563,19 +567,19 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   }
 
   _partnerChanged(currentPartnerId: string) {
-    if (typeof currentPartnerId === 'undefined') {
+    if (typeof currentPartnerId === 'undefined' || isNaN(parseInt(currentPartnerId))) {
       return;
     }
-
+    const partnerId = parseInt(currentPartnerId);
     this.set('staffMembers', []);
-    if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
+    if (this.agreement && partnerId !== this.oldSelectedPartnerId) {
       // partner not set or changed, reset related fields
       this.set('agreement.partner_manager', null);
       this.set('authorizedOfficers', []);
       this.set('agreement.authorized_officers', []);
       this.set('oldSelectedPartnerId', currentPartnerId);
     }
-    this.getPartnerStaffMembers(currentPartnerId);
+    this.getPartnerStaffMembers(partnerId);
   }
 
   // Validate agreements fields on change
@@ -597,7 +601,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
         // this.set('agreement.start', null);
         // this.set('agreement.end', null);
       } else {
-        let cpField = this.shadowRoot.querySelector('#cpStructure');
+        let cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
         if (cpField) {
           cpField.setDefaultSelectedCpStructure();
         }
@@ -659,10 +663,10 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
   }
 
   _openGeneratePCADialog() {
-    if (!this.generatePCADialog.agreementId) {
-      this.generatePCADialog.set('agreementId', this.agreement.id);
+    if (!this._generatePCADialog.agreementId) {
+      this._generatePCADialog.set('agreementId', this.agreement.id);
     }
-    this.generatePCADialog.open();
+    this._generatePCADialog.open();
   }
 
   _initAuthorizedOfficers(authOfficers: StaffMember[]) {
@@ -699,7 +703,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
 
   _cancelAoEdit() {
     this._initAuthorizedOfficers(this.agreement.authorized_officers);
-    this.$.officers.resetInvalidState();
+    (this.$.officers as any).resetInvalidState();
     this.set('allowAoEditForSSFA', false);
   }
 

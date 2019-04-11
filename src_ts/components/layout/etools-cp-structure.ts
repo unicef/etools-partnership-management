@@ -17,7 +17,7 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
  * @polymer
  * @customElement
  */
-class EtoolsCpStructure
+export class EtoolsCpStructure
     extends connect(store)(PolymerElement) {
   [x: string]: any;
   static get template() {
