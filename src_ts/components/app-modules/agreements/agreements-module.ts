@@ -452,7 +452,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       }
       if (this._objectFieldIsModified('amendments')) {
         // keep only new amendments
-        if(this.agreement.amendments) {
+        if (this.agreement.amendments) {
         changes.amendments = this.agreement.amendments.filter(
             (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
         }
