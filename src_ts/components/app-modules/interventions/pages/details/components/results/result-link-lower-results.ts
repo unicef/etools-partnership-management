@@ -17,14 +17,14 @@ import './pd-lower-result-name.js';
 import './applied-indicators.js';
 import { Indicator } from '../../../../../../../typings/intervention.types.js';
 import { logError } from 'etools-behaviors/etools-logging';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin RepeatableDataSetsMixin
  */
-class ResultLinkLowerResults extends (RepeatableDataSetsMixin(PolymerElement) as any) {
-  [x: string]: any;
+class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -172,30 +172,30 @@ class ResultLinkLowerResults extends (RepeatableDataSetsMixin(PolymerElement) as
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: {
-        type: String,
-        value: 'lowerResultsDelete',
-        readOnly: true
-      },
-      interventionStatus: String,
-      cpOutputId: {
-        type: Number
-      },
-      editMode: {
-        type: Boolean,
-        value: false
-      },
-      expectedResultId: Number,
-      thereAreIndicators: {
-        type: Boolean,
-        value: false
-      },
-      showInactiveIndicators: Boolean,
-      forceVisibilityRecalc: Boolean
-    };
-  }
+  @property({type: String, readOnly: true})
+  _deleteEpName: string = 'lowerResultsDelete';
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Number})
+  cpOutputId!: number;
+
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Number})
+  expectedResultId!: number;
+
+  @property({type: Boolean})
+  thereAreIndicators: Boolean = false;
+
+  @property({type: Boolean})
+  showInactiveIndicators!: boolean;
+
+  @property({type: Boolean})
+  forceVisibilityRecalc!: boolean
+
 
   static get observers() {
     return [

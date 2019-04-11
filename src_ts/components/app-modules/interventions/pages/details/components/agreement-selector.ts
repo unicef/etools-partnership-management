@@ -10,15 +10,17 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { isJsonStrMatch, copy } from '../../../../../utils/utils';
 import { csoPartnersSelector } from '../../../../../../reducers/partners';
 import CONSTANTS from '../../../../../../config/app-constants';
-import { IdAndName } from '../../../../../../typings/globals.types';
+import { IdAndName, IPermission } from '../../../../../../typings/globals.types';
+import { property } from '@polymer/decorators';
+import { InterventionPermissionsFields } from '../../../../../../typings/intervention.types';
+import { EtoolsDropdownEl } from 'etools-dropdown';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as any){
-  [x: string]: any;
+class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
 
   static get template() {
     return html`
@@ -92,45 +94,29 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
     `;
   }
 
-  static get properties() {
-    return {
-      agreementId: {
-        type: Number,
-        observer: '_agreementIdChanged',
-        notify: true
-      },
-      filteredAgreements: {
-        type: Array,
-        value: []
-      },
-      partnersDropdownData: {
-        type: Array,
-        statePath: 'csoPartners', // 'setPartnersDropdown' Do we need to use only CSO type partners?
-        observer: '_partnersDropdownDataChanged'
-      },
-      agreements: {
-        type: Array,
-        statePath: 'agreementsList',
-        // Covers issues on refresh when agreements is populated after the rest of the observers run
-        observer: '_agreementsChanged'
-      },
-      partnerId: {
-        type: Number,
-        notify: true,
-        observer: '_partnerSelected'
-      },
-      selectedAgreement: {
-        type: Object,
-        value: null,
-        notify: true
-      },
-      intervention: Object,
-      permissions: {
-        type: Object,
-        statePath: 'pageData.permissions'
-      }
-    };
-  }
+  @property({type: Number, notify: true, observer: '_agreementIdChanged'})
+  agreementId!: number;
+
+  @property({type: Array, observer: '_partnersDropdownDataChanged'})
+  filteredAgreements: [] = [];
+
+  @property({type: Array})
+  partnersDropdownData!: any[]; // 'setPartnersDropdown' Do we need to use only CSO type partners?
+
+  @property({type: Array, observer: '_agreementsChanged'})
+  agreements!: MinimalAgreement[];   // Covers issues on refresh when agreements is populated after the rest of the observers run
+
+  @property({type: Number, notify: true, observer: '_partnerSelected'})
+  partnerId!: number;
+
+  @property({type: Object, notify: true})
+  selectedAgreement: MinimalAgreement | null= null;
+
+  @property({type: Object})
+  intervention!: Object;
+
+  @property({type: Object})
+  permissions!: IPermission<InterventionPermissionsFields>;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.agreements, state.agreements!.list)) {
@@ -170,7 +156,7 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
 
     if (this.intervention && this.permissions && !this.permissions.edit.agreement) {
       // in case agreement selector is in readonly mode we need to set partner id to trigger staff members request
-      this.set('partnerId', agreement.partner);
+      this.set('partnerId', agreement!.partner);
     }
 
     if (this.partnersDropdownData && this.partnersDropdownData.length) {
@@ -179,12 +165,12 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
   }
 
   _setSelectedPartnerId() {
-    let agreement = this.selectedAgreement;
+    let agreement = this.selectedAgreement as MinimalAgreement;
     if (!agreement || !agreement.partner || this.partnerId === agreement.partner) {
       return;
     }
     let partner = this.partnersDropdownData.find((partner: IdAndName) => {
-      return partner.id === agreement.partner;
+      return partner.id.toString() === agreement!.partner!.toString();
     });
     if (!partner) {
       let partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name +
@@ -233,11 +219,11 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
   }
 
   resetValidations() {
-    let agEl = this.shadowRoot.querySelector('#agreements');
+    let agEl = this.shadowRoot!.querySelector('#agreements') as EtoolsDropdownEl;
     if (agEl) {
       agEl.resetInvalidState();
     }
-    let pEl = this.shadowRoot.querySelector('#partner');
+    let pEl = this.shadowRoot!.querySelector('#partner') as EtoolsDropdownEl;
     if (pEl) {
       pEl.resetInvalidState();
     }
@@ -247,14 +233,14 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
     let valid = true;
     if (!this.agreementId) {
       valid = false;
-      let agEl = this.shadowRoot.querySelector('#agreements');
+      let agEl = this.shadowRoot!.querySelector('#agreements') as EtoolsDropdownEl;
       if (agEl) {
         agEl.invalid = true;
       }
     }
     if (!this.partnerId) {
       valid = false;
-      let pEl = this.shadowRoot.querySelector('#partner');
+      let pEl = this.shadowRoot!.querySelector('#partner') as EtoolsDropdownEl;
       if (pEl) {
         pEl.invalid = true;
       }
