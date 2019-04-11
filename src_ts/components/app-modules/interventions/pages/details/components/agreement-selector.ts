@@ -269,3 +269,5 @@ class AgreementSelector extends connect(store)((CommonMixin(PolymerElement)) as 
 }
 
 window.customElements.define('agreement-selector', AgreementSelector);
+
+export {AgreementSelector};

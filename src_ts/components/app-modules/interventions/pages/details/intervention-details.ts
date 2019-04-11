@@ -49,6 +49,7 @@ import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 import { property } from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog';
 import { ExpectedResultsEl } from './components/results/expected-results.js';
+import { AgreementSelector } from './components/agreement-selector.js';
 
 
 /**
@@ -702,8 +703,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
   }
 
   _resetValidations() {
-    this.$.agreementSelector.resetValidations();
-    this.$.documentType.resetInvalidState();
+    (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
+    (this.$.documentType as unknown as).resetInvalidState();
     this.$.plannedBudget.resetValidations();
     this.$.cpStructure.resetCpDropdownInvalidState();
 
