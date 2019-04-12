@@ -91,8 +91,8 @@ class EtoolsToast extends PolymerElement {
     }));
   }
 
-  public getMessageWrapper(): Element {
-    return (this.$.toast as PaperToastElement).$.label;
+  public getMessageWrapper() {
+    return (this.$.toast as PaperToastElement).$.label  as HTMLSpanElement;
   }
 
   protected _isMultiLine(message: string) {
