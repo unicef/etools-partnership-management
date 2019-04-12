@@ -52,7 +52,6 @@ import { AgreementSelector } from './components/agreement-selector.js';
 import { GroupedLocationsDialog } from './components/grouped-locations-dialog.js';
 import { PlannedBudgetEl } from './components/planned-budget.js';
 import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure.js';
-import { PlannedVisitsEl } from './components/planned-visits.js';
 import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
 import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
 
@@ -717,7 +716,7 @@ class InterventionDetails extends connect(store)(
 
   _resetValidations() {
     (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
-    (this.$.documentType as any).resetInvalidState();
+    (this.$.documentType as EtoolsDropdownEl).resetInvalidState();
     (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
     (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
@@ -732,10 +731,6 @@ class InterventionDetails extends connect(store)(
 
     this._resetIETitleFieldValidation();
 
-    let plannedVisitsEl = this.shadowRoot!.querySelector('#plannedVisits') as unknown as PlannedVisitsEl;
-    if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
-      plannedVisitsEl.resetValidations();
-    }
     this.set('fieldsResetted', true);
   }
 

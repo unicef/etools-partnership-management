@@ -2,6 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
+import { PaperToastElement } from '@polymer/paper-toast/paper-toast.js';
+import { PaperButtonElement } from '@polymer/paper-button/paper-button.js';
 
 /**
  * @polymer
@@ -68,13 +70,11 @@ class EtoolsToast extends PolymerElement {
   public fitInto: object | null = null;
 
   public show(details: object) {
-    // @ts-ignore
-    return this.$.toast.show(details);
+    return (this.$.toast as PaperToastElement).show(details);
   }
 
   public toggle() {
-    // @ts-ignore
-    return this.$.toast.toggle();
+    return (this.$.toast as PaperToastElement).toggle();
   }
 
   public confirmToast() {
@@ -91,9 +91,8 @@ class EtoolsToast extends PolymerElement {
     }));
   }
 
-  public getMessageWrapper() {
-    // @ts-ignore
-    return this.$.toast.$.label;
+  public getMessageWrapper(): Element {
+    return (this.$.toast as PaperToastElement).$.label;
   }
 
   protected _isMultiLine(message: string) {
@@ -104,7 +103,7 @@ class EtoolsToast extends PolymerElement {
   }
 
   prepareToastAndGetShowProperties(detail: any) {
-    let closeToastBtn = this.$.confirmBtn;
+    let closeToastBtn = this.$.confirmBtn as PaperButtonElement;
     let toast = this.$.toast;
 
     if (this._isMultiLine(detail.text)) {
@@ -120,7 +119,7 @@ class EtoolsToast extends PolymerElement {
       closeToastBtn.classList.remove('toast-dismiss-btn-multi-line');
       closeToastBtn.classList.add('toast-dismiss-btn');
     }
-    // @ts-ignore
+
     closeToastBtn.updateStyles();
 
     // clone detail obj
@@ -147,3 +146,5 @@ class EtoolsToast extends PolymerElement {
 }
 
 window.customElements.define('etools-toast', EtoolsToast);
+
+export {EtoolsToast as EtoolsToastEl};
