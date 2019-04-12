@@ -1,11 +1,10 @@
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
-import { MinimalStaffMember } from '../../../../typings/partner.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
-
+import { MinimalStaffMember } from '../../../../models/partners.models.js';
 
 
 /**
@@ -50,8 +49,7 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
     public _handleStaffMembersResponse(res: any) {
       if (res instanceof Array && res.length) {
         let activeStaffMembers = res.map(function(sMember) {
-          return new MinimalStaffMember(sMember.id, sMember.first_name,
-              sMember.last_name, sMember.active);
+          return new MinimalStaffMember(sMember);
         }).filter(function(sMember) {
           return sMember.active;
         });
