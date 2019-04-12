@@ -54,14 +54,14 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
         this.lowerResultNameEditElem.set('toastEventSource', this);
 
         this._lowerResultSaved = this._lowerResultSaved.bind(this);
-        this.lowerResultNameEditElem.addEventListener('lower-result-saved', this._lowerResultSaved);
+        this.lowerResultNameEditElem.addEventListener('lower-result-saved', this._lowerResultSaved as any);
         document.querySelector('body')!.appendChild(this.lowerResultNameEditElem as any);
       }
     }
 
     removeLowerResultNameDialog() {
       if (this.lowerResultNameEditElem) {
-        this.lowerResultNameEditElem.removeEventListener('lower-result-saved', this._lowerResultSaved);
+        this.lowerResultNameEditElem.removeEventListener('lower-result-saved', this._lowerResultSaved as any);
         document.querySelector('body')!.removeChild(this.lowerResultNameEditElem as any);
       }
     }

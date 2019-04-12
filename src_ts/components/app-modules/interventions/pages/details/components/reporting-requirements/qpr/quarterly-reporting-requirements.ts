@@ -11,7 +11,6 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 import './edit-qpr-dialog.js';
 import './qpr-list.js';
 import { property } from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog';
 import { EditQprDialogEl } from './edit-qpr-dialog.js';
 
 

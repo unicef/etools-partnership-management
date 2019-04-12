@@ -1,4 +1,4 @@
-import { Constructor, GenericObject } from '../../typings/globals.types';
+import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
 
@@ -6,7 +6,7 @@ function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClas
   class frontendPaginationClass extends baseClass {
 
     @property({type: Object})
-    pagination: GenericObject = {
+    pagination = {
       pageSize: 10,
       pageNumber: 1,
       totalResults: null

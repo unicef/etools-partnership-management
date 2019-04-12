@@ -23,7 +23,9 @@ import { HruListEl } from './hru-list.js';
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin FrontendPagination
  */
-class HumanitarianReportingReqUnicef extends ReportingRequirementsCommonMixin(FrontendPaginationMixin(PolymerElement)) {
+class HumanitarianReportingReqUnicef extends
+  FrontendPaginationMixin(
+    ReportingRequirementsCommonMixin(PolymerElement)) {
 
   static get template() {
     return html`
