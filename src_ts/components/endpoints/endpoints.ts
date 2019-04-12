@@ -269,6 +269,9 @@ const pmpEdpoints = {
   },
   patchPartnerAssessment: {
     template: '/api/v2/partners/assessments/<%=assessmentId%>/'
+  },
+  expectedResultsExport: {
+    template: '/api/v2/reports/interventions/results/<%=intervention_id%>/?format=docx_table'
   }
 };
 
