@@ -347,7 +347,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
     if (agreement && typeof agreement === 'object' && Object.keys(agreement).length > 0) {
       let authorizedOfficerData = agreement.authorized_officers!.map((officer) => {
         return {
-          value: parseInt(officer.id, 10),
+          value: typeof officer.id  === 'string' ? parseInt(officer.id, 10) : officer.id,
           label: officer.first_name + ' ' + officer.last_name
         };
       });
