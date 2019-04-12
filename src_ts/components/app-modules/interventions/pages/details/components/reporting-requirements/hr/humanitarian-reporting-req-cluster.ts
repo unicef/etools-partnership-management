@@ -8,6 +8,7 @@ import { isEmptyObject } from '../../../../../../../utils/utils';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
 import { logError } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -17,8 +18,8 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @appliesMixin EndpointsMixin
  * @appliesMixin Common
  */
-class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(PolymerElement))) as any) {
-  [x: string]: any;
+class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${gridLayoutStyles}
@@ -54,30 +55,24 @@ class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(Polym
     `;
   }
 
-  static get properties() {
-    return {
-      reportingRequirements: {
-        type: Array,
-        observer: 'reportingRequirementsChanged'
-      },
-      interventionId: {
-        type: String,
-        observer: 'interventionIdChanged'
-      },
-      requirementsCount: {
-        type: Number,
-        value: 0,
-        notify: true
-      },
-      expectedResults: Array
-    };
-  }
+  @property({type: Array, observer: HumanitarianReportingReqCluster.prototype.reportingRequirementsChanged})
+  reportingRequirements!: [];
+
+  // @ts-ignore
+  @property({type: String, observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged})
+  interventionId!: string;
+
+  @property({type: Number, notify: true})
+  requirementsCount: number = 0;
+
+  @property({type: Array})
+  expectedResults!: [];
 
   ready() {
     super.ready();
   }
 
-  interventionIdChanged(newId: string) {
+  interventionIdChanged(newId: string, _oldId: string) {
     if (!newId) {
       this.reportingRequirements = [];
       return;

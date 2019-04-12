@@ -3,12 +3,13 @@ import 'etools-data-table/etools-data-table.js';
 
 import '../../../../../../../layout/icons-actions.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
-import {PolymerElEvent} from '../../../../../../../../typings/globals.types.js';
+import {PolymerElEvent, GenericObject} from '../../../../../../../../typings/globals.types.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
 import ReportingReqPastDatesCheckMixin from '../mixins/reporting-req-past-dates-check.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import {isEmptyObject} from '../../../../../../../utils/utils.js';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -16,8 +17,7 @@ import {isEmptyObject} from '../../../../../../../utils/utils.js';
  * @appliesMixin Common
  * @appliesMixin ReportingReqPastDatesCheck
  */
-class HruList extends (CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement) as any)) {
-  [x: string]: any;
+class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement)) {
 
   static get template() {
     // language=HTML
@@ -55,27 +55,20 @@ class HruList extends (CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElemen
     `;
   }
 
-  static get properties() {
-    return {
-      hruData: {
-        type: Array,
-        value: []
-      },
-      _listItemEditable: {
-        type: Boolean,
-        value: false
-      },
-      hruMainEl: Object,
-      usePaginationIndex: {
-        type: Boolean,
-        value: false
-      },
-      disableSorting: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  hruData: GenericObject[] = [];
+
+  @property({type: Boolean})
+  _listItemEditable: boolean = false;
+
+  @property({type: Object})
+  hruMainEl!: PolymerElement & {_getIndex(idx: any): number | string};
+
+  @property({type: Boolean})
+  usePaginationIndex: boolean = false;
+
+  @property({type: Boolean})
+  disableSorting: boolean = false;
 
   static get observers() {
     return [
@@ -113,4 +106,6 @@ class HruList extends (CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElemen
 }
 
 window.customElements.define('hru-list', HruList);
+
+export {HruList as HruListEl}
 

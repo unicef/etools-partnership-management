@@ -10,6 +10,9 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event';
 
 import './edit-qpr-dialog.js';
 import './qpr-list.js';
+import { property } from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog';
+import { EditQprDialogEl } from './edit-qpr-dialog.js';
 
 
 /**
@@ -19,9 +22,10 @@ import './qpr-list.js';
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin GenerateQuarterlyReportingRequirements
  */
-class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
-(GenerateQuarterlyReportingRequirementsMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class QuarterlyReportingRequirements extends
+   GenerateQuarterlyReportingRequirementsMixin(
+    ReportingRequirementsCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${buttonsStyles} ${gridLayoutStyles}
@@ -48,14 +52,18 @@ class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
     `;
   }
 
-  static get properties() {
-    return {
-      interventionStart: String,
-      interventionEnd: String,
-      editQprDialog: Object,
-      editMode: Boolean
-    };
-  }
+  @property({type: String})
+  interventionStart!: string;
+
+  @property({type: String})
+  interventionEnd!: string;
+
+  @property({type: Object})
+  editQprDialog!: EditQprDialogEl;
+
+  @property({type: Boolean})
+  editMode!: Boolean;
+
 
   ready() {
     super.ready();
@@ -68,16 +76,16 @@ class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
   }
 
   _createEditQprDialog() {
-    this.editQprDialog = document.createElement('edit-qpr-dialog');
+    this.editQprDialog = document.createElement('edit-qpr-dialog') as any;
     this.editQprDialog.set('toastMsgLoadingSource', this);
     this._onReportingRequirementsSaved = this._onReportingRequirementsSaved.bind(this);
-    this.editQprDialog.addEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved);
+    this.editQprDialog.addEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved as any);
     document.querySelector('body')!.appendChild(this.editQprDialog);
   }
 
   _removeEditQprDialog() {
     if (this.editQprDialog) {
-      this.editQprDialog.removeEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved);
+      this.editQprDialog.removeEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved as any);
       document.querySelector('body')!.removeChild(this.editQprDialog);
     }
   }

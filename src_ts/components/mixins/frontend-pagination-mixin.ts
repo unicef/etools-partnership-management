@@ -1,24 +1,19 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import { Constructor } from '../../typings/globals.types';
+import { Constructor, GenericObject } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class frontendPaginationClass extends baseClass {
-    [x: string]: any;
 
-    public static get properties() {
-      return {
-        pagination: Object,
-        dataItems: Array
-      }
-    }
-
-    // TODO: polymer3 - use just one paginator mixin
-    public pagination = {
+    @property({type: Object})
+    pagination: GenericObject = {
       pageSize: 10,
       pageNumber: 1,
       totalResults: null
     };
+
+    @property({type: Array})
+    dataItems!: [];
 
     public _pageSizeChanged(ev: CustomEvent) {
       this.set('pagination.pageNumber', 1);
