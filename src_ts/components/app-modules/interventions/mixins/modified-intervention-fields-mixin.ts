@@ -1,7 +1,6 @@
 // @ts-ignore
 import difference from 'lodash-es/difference';
 import { GenericObject, Constructor } from '../../../../typings/globals.types';
-import { isEmptyObject } from '../../../utils/utils';
 import { PolymerElement } from '@polymer/polymer';
 
 /**

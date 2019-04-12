@@ -33,7 +33,7 @@ export class Partner extends ModelsCommon {
   rating: string = '';
   shared_with: string[] = [];
   short_name: string = '';
-  staff_members: StaffMember[] = []; // TODO: move StaffMember from types file
+  staff_members: StaffMember[] = [];
   street_address: string = '';
   total_ct_cp: string = '';
   total_ct_cy: string = '';
