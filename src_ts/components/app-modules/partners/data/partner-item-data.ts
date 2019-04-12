@@ -1,7 +1,6 @@
-import {PolymerElement} from "@polymer/polymer/polymer-element.js";
-
+import { PolymerElement } from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
-
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {store} from '../../../../store.js';
@@ -18,46 +17,40 @@ import { tryGetResponseError, formatServerErrorAsText } from '../../../utils/aja
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
-class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) as any) {
+class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(PolymerElement))) {
 
-  static get properties() {
-    return {
-      partnerEndpoints: {
-        type: Object,
-        value: {
-          DETAILS: 'partnerDetails',
-          CREATE: 'createPartner',
-          DELETE: 'deletePartner'
-        }
-      },
-      partner: {
-        type: Object,
-        readOnly: true,
-        notify: true
-      },
-      partnerId: {
-        type: Number,
-        notify: true,
-        observer: '_partnerIdChanged'
-      },
-      deletedPartnerId: {
-        type: Number
-      },
-      handleSuccResponseAdditionalCallback: Object,
-      handleErrResponseAdditionalCallback: Object,
-      _skipDefaultErrorHandler: Boolean,
-      /**
-       * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
-       */
-      ajaxLoadingMsgSource: {
-        type: String,
-        value: 'partner-data'
-      }
-    };
+  @property({type: Object})
+  partnerEndpoints = {
+      DETAILS: 'partnerDetails',
+      CREATE: 'createPartner',
+      DELETE: 'deletePartner'
   }
+
+  @property({type: Object, readOnly: true, notify: true})
+  partner: any = {}; //dci ??? TODO: create Partner class
+
+  @property({type: Number, notify: true, observer: '_partnerIdChanged'})
+  partnerId: number | null = null;
+
+  @property({type: Number})
+  deletedPartnerId: number = -1;
+
+  @property({type: Object})
+  handleSuccResponseAdditionalCallback: {} = {};
+  
+  @property({type: Object})
+  handleErrResponseAdditionalCallback: {} = {};
+
+  @property()
+  _skipDefaultErrorHandler: boolean = false;
+
+  @property({type: String})
+  ajaxLoadingMsgSource: string = 'partner-data';
+
   _partnerIdChanged(newId: any) {
     if (newId) {
       // set an empty partner
+      // @ts-ignore
       this._setPartner({});
       // set the new endpoint
       fireEvent(this, 'global-loading', {
@@ -81,6 +74,7 @@ class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerEleme
   }
 
   public _handleSuccResponse(response: any, ajaxMethod: any) {
+    // @ts-ignore
     this._setPartner(response);
 
     if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
@@ -159,8 +153,8 @@ class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerEleme
       this.handleErrResponseAdditionalCallback.bind(this,
           formatServerErrorAsText(tryGetResponseError(response)))();
     }
-    this.handleErrResponseAdditionalCallback = null;
-    this.handleSuccResponseAdditionalCallback = null;
+    this.handleErrResponseAdditionalCallback = {};
+    this.handleSuccResponseAdditionalCallback = {};
   }
 
   public createPartner(vendorNoObj: any, successCallback: any, errorCallback: any) {
