@@ -44,20 +44,10 @@ export class Partner extends ModelsCommon {
 
   constructor(partnerDataObj: GenericObject) {
     super();
-    this.setObjProperties(partnerDataObj, Object.keys(this as object));
-    this._normalizePartnerData();
-  }
-
-  public getPartnerSaveReqPayload(type: string,
-                                  data: GenericObject): Partner | StaffMemberSaveReqPayload | CVASaveReqPayload {
-    switch (type) {
-      case 'staff_members':
-        return new StaffMemberSaveReqPayload(this.id, data);
-      case 'core_values_assessments':
-        return new CVASaveReqPayload(this.id, data);
-      default:
-        return this;
+    if (partnerDataObj && Object.keys(partnerDataObj)) {
+      this.setObjProperties(partnerDataObj);
     }
+    this._normalizePartnerData();
   }
 
   private _normalizePartnerData() {
@@ -68,7 +58,9 @@ export class Partner extends ModelsCommon {
       });
       this.staff_members = sm;
     }
-    // TODO: normalize the other prop data that contains partner types
+    //TODO1  Do we need to do this? are we using this fields in a maner that requires this extra work?
+
+    //TODO2 dependent on TODO1= true: normalize the other prop data that contains partner types
     // assessments, core_values_assessments, interventions, planned_engagement
   }
 
@@ -115,7 +107,7 @@ export class PartnerCoreValAssessment extends ModelsCommon {
 
   constructor(data: GenericObject) {
     super();
-    this.setObjProperties(data, Object.keys(this as object));
+    this.setObjProperties(data);
   }
 }
 
@@ -132,10 +124,11 @@ export class MinimalStaffMember extends ModelsCommon {
   name: string = '';
   first_name: string = '';
   last_name: string = '';
+  active: boolean = true;
 
   constructor(staffMemberData: GenericObject) {
     super();
-    this.setObjProperties(staffMemberData, Object.keys(this as object));
+    this.setObjProperties(staffMemberData);
     this.name = this.first_name + ' ' + this.last_name;
   }
 }
@@ -144,10 +137,9 @@ export class StaffMember extends MinimalStaffMember {
   title: string = '';
   email: string = '';
   phone: string = '';
-  active: boolean = true;
 
   constructor(staffMemberData: GenericObject) {
     super(staffMemberData);
-    this.setObjProperties(staffMemberData, Object.keys(this as object));
+    this.setObjProperties(staffMemberData);
   }
 }

@@ -22,7 +22,7 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
       if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
         // Covers dropdown arrays which can have same content but with changed order
         // @ts-ignore
-        if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
+        if (arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
           isModified = false;
         }
       }
@@ -42,18 +42,6 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
         return value.toString();
       }
       return value;
-    }
-    _arraysAreEqual(array1: [], array2: []) {
-      let differencesArray = [];
-      if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
-        return false;
-      }
-      if (array1.length > array2.length) {
-        differencesArray = difference(array1, array2);
-      } else {
-        differencesArray = difference(array2, array1);
-      }
-      return isEmptyObject(differencesArray);
     }
 
     _primitiveFieldIsModified(fieldName: string) {

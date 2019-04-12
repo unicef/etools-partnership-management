@@ -82,7 +82,7 @@ class PartnerItemData extends (EndpointsMixin(AjaxServerErrorsMixin(PolymerEleme
   }
 
   public _handleSuccResponse(response: any, ajaxMethod: any) {
-    const partner: Partner = new Partner(response);
+    const partner = new Partner(response);
     this._setPartner(partner);
 
     if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
