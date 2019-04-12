@@ -41,10 +41,10 @@ import {SharedStyles} from '../../../../styles/shared-styles.js';
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
 import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
-import { StaffMember, MinimalStaffMember } from '../../../../../typings/partner.types';
 import { isJsonStrMatch } from '../../../../utils/utils';
 import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
 import { fireEvent } from '../../../../utils/fire-custom-event';
+import { MinimalStaffMember, StaffMember } from '../../../../../models/partners.models';
 
 /**
  * @polymer
@@ -630,19 +630,19 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
     }
   }
 
-  _getAvailableAuthOfficers(staffMembers: Array<MinimalStaffMember>, agreementAuthorizedOfficers: Array<StaffMember>) {
+  _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: StaffMember[]) {
     if (staffMembers instanceof Array && staffMembers.length) {
       return staffMembers;
     }
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
-      return agreementAuthorizedOfficers.map(function(s:StaffMember) {
-        return new MinimalStaffMember(s.id, s.first_name, s.last_name, s.active);
+      return agreementAuthorizedOfficers.map(function(s: StaffMember) {
+        return new MinimalStaffMember(s);
       });
     }
     return [];
   }
 
-  _getReadonlySignedByPartner(staffMembers: Array<MinimalStaffMember>, selectedId: string) {
+  _getReadonlySignedByPartner(staffMembers: MinimalStaffMember[], selectedId: string) {
     if (!this.agreement) {
       return '';
     }
@@ -659,7 +659,7 @@ class AgreementDetails extends connect(store)(StaffMembersData(CommonMixin(Uploa
     return '';
   }
 
-  _getReadonlyAuthorizedOfficers(agreement: Agreement, selection: [], staffMembers: Array<MinimalStaffMember>) {
+  _getReadonlyAuthorizedOfficers(agreement: Agreement, selection: [], staffMembers: MinimalStaffMember[]) {
     let ao = [];
     const aoSelected = selection instanceof Array && selection.length > 0;
     if (aoSelected) {
