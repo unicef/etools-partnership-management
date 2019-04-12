@@ -53,6 +53,6 @@ const spawnOptions = {
  * Gulp task to run `tsc --watch` and `polymer serve` in parallel.
  */
 gulp.task('serve', () => {
-  spawn('tsc', ['--watch'], spawnOptions);
+  spawn('tsc --skipLibCheck', ['--watch'], spawnOptions);
   spawn('polymer', ['serve -H 0.0.0.0 -p 8080'], spawnOptions);
 });
