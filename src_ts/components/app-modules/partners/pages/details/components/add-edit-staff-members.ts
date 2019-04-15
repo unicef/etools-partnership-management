@@ -10,11 +10,13 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+
 /**
  * @polymer
  * @customElement
  */
-class AddEditStaffMembers extends (PolymerElement as any) {
+class AddEditStaffMembers extends PolymerElement {
 
   static get template() {
     // language=HTML
@@ -107,18 +109,15 @@ class AddEditStaffMembers extends (PolymerElement as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      item: Object,
-      dataItems: Array
-    }
-  }
+  @property({type: Object})
+  item: any = {};
 
-  public dataItems: object[] = [];
+  @property({type: Array})
+  dataItems: any[] = [];
 
   open() {
     this.resetValidations();
-    this.$.staffMemberDialog.opened = true;
+    (this.$.staffMemberDialog as any).opened = true;
   }
 
   _isNewStaffMember(item: {id: number | null}) {
@@ -213,14 +212,16 @@ class AddEditStaffMembers extends (PolymerElement as any) {
     let fields = ['#firstName', '#lastName', '#email', '#phone', '#title'];
     for (let i = 0; i < fields.length; i++) {
       let el = this.$.staffMemberDialog.querySelector(fields[i]);
-      el.invalid = false;
+      if(el){
+        (el as any).invalid = false;
+      }
     }
   }
 
   _savePartnerContact() {
     if (this.validate()) {
       fireEvent(this, 'save-partner-contact', this.item);
-      this.$.staffMemberDialog.opened = false;
+      (this.$.staffMemberDialog as any).opened = false;
     }
   }
 

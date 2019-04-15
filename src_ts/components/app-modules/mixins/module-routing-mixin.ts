@@ -7,6 +7,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
 import {logError} from 'etools-behaviors/etools-logging';
 import { property } from '@polymer/decorators';
+import { Route } from '../../../typings/route.types';
 /**
  * Module main elements common functionality
  * @polymer
@@ -22,7 +23,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       tabsActive!: boolean;
 
       @property({type: Object})
-      route!: object;
+      route!: Route;
 
       @property({type: Object})
       routeData!: object;

@@ -18,7 +18,7 @@ import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import { store } from '../../../../../../store.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
-
+import {property} from '@polymer/decorators';
 
 /**
  * @customElement
@@ -142,34 +142,23 @@ class AssessmentsItems extends (CommonMixin(PolymerElement)) {
     `;
   }
 
-  static get properties() {
-    return {
-      partnerId: {
-        type: Number
-      },
-      open: {
-        type: Boolean,
-        value: true,
-        reflectToAttribute: true
-      },
-      editMode: {
-        type: Boolean,
-        reflectToAttribute: true,
-        observer: '_editModeChanged'
-      },
-      showArchived: {
-        type: Boolean,
-        value: false
-      },
-      assessmentDialog: {
-        type: Object
-      },
-      showDelete: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Number})
+  partnerId: number | null = null;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  open: boolean = true;
+
+  @property({type: Boolean,  reflectToAttribute: true, observer: '_editModeChanged'})
+  editMode: boolean = true;
+
+  @property({type: Boolean})
+  showArchived: boolean = false;
+
+  @property({type: Object})
+  assessmentDialog: any = {};
+  
+  @property({type: Boolean})
+  showDelete: boolean = false;
 
   ready() {
     super.ready();

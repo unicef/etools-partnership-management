@@ -28,8 +28,9 @@ import './components/edit-core-values-assessment';
 import './components/staff-members';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import {convertDate} from '../../../../utils/date-utils';
+import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../typings/globals.types.js';
 declare const moment: any;
-
 
 /**
  * @polymer
@@ -38,7 +39,7 @@ declare const moment: any;
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement)) as any) {
+class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement))) {
 
   static get template() {
     // language=HTML
@@ -226,45 +227,36 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     `;
   }
 
-  static get properties() {
-    return {
-      partner: {
-        type: Object,
-        notify: true,
-        observer: '_partnerChanged'
-      },
-      editMode: Boolean,
-      csoTypes: {
-        type: Array,
-        statePath: 'csoTypes'
-      },
-      partnerTypes: {
-        type: Array,
-        statePath: 'partnerTypes'
-      },
-      sharedPartenerValues: {
-        type: Array,
-        statePath: 'sharedPartenerValues'
-      },
-      showCoreValuesAssessmentAttachment: Boolean,
-      _partnerComputedType: {
-        type: String,
-        computed: '_computePartnerType(partner)'
-      },
-      showArchivedAssessments: Boolean,
-      showDelete: Boolean,
-      editCVADialog: {
-        type: Object
-      }
-    };
-  }
+  @property({type: Object, notify: true, observer: '_partnerChanged'})
+  partner: any = {};
 
-  public partner: object = {};
-  public editMode: boolean = false;
-  public showCoreValuesAssessmentAttachment: boolean = false;
-  public showArchivedAssessments: boolean = false;
-  public showDelete: boolean = false;
+  @property({type: Boolean})
+  editMode: boolean = false;
 
+  @property({type: Array}) //statePath: 'csoTypes'  
+  csoTypes: LabelAndValue[] = [];
+
+  @property({type: Array}) //statePath: 'partnerTypes'
+  partnerTypes: LabelAndValue[] = [];
+
+  @property({type: Array}) //statePath: 'sharedPartenerValues'
+  sharedPartenerValues: LabelAndValue[] = [];
+
+  @property({type: Boolean})
+  showCoreValuesAssessmentAttachment: boolean = false;
+
+  @property({type: String, computed: '_computePartnerType(partner)'})
+  _partnerComputedType: string = '';
+
+  @property({type: Boolean})
+  showArchivedAssessments: boolean = false;
+
+  @property({type: Boolean})
+  showDelete: boolean = false;
+
+  @property({type: Object})
+  editCVADialog: any = null;
+  
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
       this.csoTypes = state.commonData!.csoTypes;

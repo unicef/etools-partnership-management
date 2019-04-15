@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import { fireEvent } from '../../../utils/fire-custom-event';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -33,18 +33,11 @@ class NewPartnerDialog extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      vendorNumber: String,
-      vendorNumberIsEmpty: {
-        type: Boolean,
-        computed: '_vendorNumberIsEmpty(vendorNumber)'
-      }
-    }
-  }
+  @property({type: String})
+  vendorNumber: string = '';
 
-  public vendorNumber: string = '';
-  public vendorNumberIsEmpty: boolean = true;
+  @property({type: Boolean, computed: '_vendorNumberIsEmpty(vendorNumber)'})
+  vendorNumberIsEmpty: boolean = true;
 
   // @ts-ignore
   private _vendorNumberIsEmpty(): boolean {

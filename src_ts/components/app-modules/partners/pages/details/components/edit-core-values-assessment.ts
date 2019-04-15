@@ -11,13 +11,13 @@ import CommonMixin from '../../../../../mixins/common-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class EditCoreValuesAssessment extends (CommonMixin(PolymerElement) as any) {
+class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 
   static get template() {
     // language=HTML
@@ -54,28 +54,29 @@ class EditCoreValuesAssessment extends (CommonMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      item: Object,
-      parent: Object,
-      uploadEndpoint: String,
-      uploadInProgress: Boolean
-    };
-  }
+  @property({type: Object})
+  item: any = {};
 
-  public uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;
-  public uploadInProgress: boolean = false;
+  @property({type: Object})
+  parent: any = {};
+
+  @property({type: String})
+  uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
 
   open() {
-    this.$.cvaDialog.opened = true;
+    (this.$.cvaDialog as any).opened = true;
   }
 
   _saveCoreValueAssessment() {
-    if (!this.shadowRoot.querySelector('#attachment').validate()) {
+    let attach = this.shadowRoot!.querySelector('#attachment') as any;
+    if (!attach || !attach.validate()) {
       return;
     }
     fireEvent(this.parent, 'save-core-values-assessment', this.item);
-    this.$.cvaDialog.opened = false;
+    (this.$.cvaDialog as any).opened = false;
   }
 
   _uploadFinished(e: CustomEvent) {

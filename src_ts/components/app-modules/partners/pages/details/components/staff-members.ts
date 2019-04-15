@@ -12,13 +12,14 @@ import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-he
 import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
+import { StaffMember } from '../../../partners.types';
 /**
  * @polymer
  * @customElement
  */
-class StaffMembers extends (PolymerElement as any) {
-
+class StaffMembers extends PolymerElement {
+  
   static get template() {
     // language=HTML
     return html`
@@ -134,17 +135,22 @@ class StaffMembers extends (PolymerElement as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      showInactive: Boolean,
-      addEditDialog: Object,
-      showDelete: Boolean,
-      editMode: Boolean
-    }
-  }
+  @property({type: Boolean})
+  showInactive: boolean = false;
 
-  public showInactive: boolean = false;
-  public showDelete: boolean = false;
+  @property({type: Object})
+  addEditDialog: any = {};
+
+  @property({type: Boolean})
+  showDelete: boolean = false;
+
+  @property({type: Boolean})
+  editMode: boolean = false;
+  
+  @property({type: Array})
+  dataItems: any[] = [];
+
+  dataSetModel: StaffMember = new StaffMember();
 
   static get observers() {
     return [
@@ -154,15 +160,6 @@ class StaffMembers extends (PolymerElement as any) {
 
   ready() {
     super.ready();
-    this.dataSetModel = {
-      id: null,
-      title: null,
-      first_name: null,
-      last_name: null,
-      phone: null,
-      email: null,
-      active: true
-    };
     this._createAddEditDialog();
   }
 

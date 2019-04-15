@@ -32,7 +32,8 @@ import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
 import '../../data/partners-list-data.js';
 import { isJsonStrMatch } from '../../../../utils/utils';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../typings/globals.types';
 
 let _partnersLastNavigated: string = '';
 
@@ -47,8 +48,12 @@ let _partnersLastNavigated: string = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(PaginationMixin(CommonMixin(ListsCommonMixin
-(ListFiltersMixin(PolymerElement)))))) as any){
+class PartnersList extends 
+      connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
+        EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
+
+          //connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
+    //EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
 
   static get template() {
     // language=HTML
@@ -233,47 +238,44 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
     `;
   }
 
-  static get properties() {
-    return {
-      filteredPartners: {
-        type: Array,
-        notify: true,
-        observer: '_listChanged'
-      },
-      csoTypes: {
-        type: Array,
-        statePath: 'csoTypes'
-      },
-      partnerTypes: {
-        type: Array,
-        statePath: 'partnerTypes'
-      },
-      riskRatings: {
-        type: Array,
-        statePath: 'partnerRiskRatings'
-      },
-      selectedPartnerTypes: Array,
-      selectedCsoTypes: Array,
-      selectedRiskRatings: Array,
-      showHidden: {
-        type: Boolean
-      },
-      showOnlyGovernmentType: {
-        type: Boolean,
-        observer: '_showOnlyGovernmentTypeFlagChanged'
-      },
-      currentModule: String,
-      _sortableFieldNames: Array,
-      _governmentLockedPartnerTypes: Array
-    };
-  }
+  @property({type: Array, notify: true, observer: '_listChanged'})
+  filteredPartners: any[] = [];
 
-  public selectedPartnerTypes: any[] = [];
-  public selectedCsoTypes: any[] = [];
-  public selectedRiskRatings: any[] = [];
-  public showOnlyGovernmentType: boolean = false;
-  public _sortableFieldNames: string[] = ['vendor_number', 'name'];
-  public _governmentLockedPartnerTypes: string[] = ['Government'];
+  @property({type: Array}) //statePath: 'csoTypes'
+  csoTypes: LabelAndValue[] = [];
+
+  @property({type: Array}) //statePath: 'partnerTypes'  
+  partnerTypes: LabelAndValue[] = [];
+
+  @property({type: Array}) //statePath: 'partnerRiskRatings'
+  riskRatings: LabelAndValue[] = [];
+
+  @property({type: Array})
+  selectedPartnerTypes: any[] = [];
+
+  @property({type: Array})
+  selectedCsoTypes: any[] = [];
+
+  @property({type: Array})
+  selectedRiskRatings: any[] = [];
+
+  @property({type: Boolean})
+  showHidden: boolean = false;
+
+  @property({type: Boolean, observer: '_showOnlyGovernmentTypeFlagChanged'})
+  showOnlyGovernmentType: boolean = false;
+
+  @property({type: String})
+  currentModule: string = '';
+
+  @property({type: Array})
+  _sortableFieldNames: string[] = ['vendor_number', 'name'];
+
+  @property({type: Array})
+  _governmentLockedPartnerTypes: string[] = ['Government'];
+  
+  private updateShownFilterDebouncer!: Debouncer;
+  private _actionsChangedDebouncer!: Debouncer;
 
   public static get observers() {
     return [
@@ -432,7 +434,7 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
     if (this._canFilterData()) {
       this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
       let qs = this._buildQueryString();
-
+      
       this._updateUrlAndDislayedData(this.currentModule + '/list',
           _partnersLastNavigated,
           qs,
@@ -442,7 +444,7 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
     }
   }
 
-  public _filterListData(forceNoLoading: any) {
+  public _filterListData(forceNoLoading?: any) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer,
@@ -453,7 +455,7 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
   }
 
   public _handleFilterPartnersData(forceNoLoading: boolean) {
-    let partners = this.shadowRoot.querySelector('#partners');
+    let partners = this.shadowRoot!.querySelector('#partners') as any;
     if (!partners) {
       return;
     }

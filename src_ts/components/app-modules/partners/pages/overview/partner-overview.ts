@@ -16,7 +16,7 @@ import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js'
 import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
 import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 import {fireEvent} from '../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -251,12 +251,9 @@ class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumb
     `;
   }
 
-  static get properties() {
-    return {
-      partner: Object
-    };
-  }
-
+  @property({type: Object})
+  partner: any = {};
+  
   public connectedCallback() {
     super.connectedCallback();
     /**

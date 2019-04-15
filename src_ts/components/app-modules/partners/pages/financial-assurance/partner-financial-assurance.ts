@@ -27,7 +27,7 @@ import {AP_DOMAIN} from '../../../../../config/config.js';
 import './components/assessments-items.js';
 import '../../../../layout/monitoring-visits-list.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -41,7 +41,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
  * @appliesMixin RiskRatingMixin
  */
 class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin
-(PaginationMixin(RiskRatingMixin(PolymerElement))))) as any)) {
+(PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`
@@ -433,41 +433,29 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     `;
   }
 
-  static get properties() {
-    return {
-      auditorPortalBasePath: String,
-      engagements: Array,
-      allEngagements: Array,
-      partner: {
-        type: Object,
-        observer: '_partnerReceived'
-      },
-      TYPES: Object,
-      basisOptions: Array,
-      auditOptions: Array,
-      editMode: Boolean
-    };
-  }
+  @property({type: String})
+  auditorPortalBasePath: string = AP_DOMAIN;
+  
+  @property({type: Array})
+  engagements: any[] = [];
 
-  public auditorPortalBasePath: string = AP_DOMAIN;
-  public engagements: any[] = [];
-  public TYPES: object = {
-    'audit': 'Audit',
-    'ma': 'Micro Assessment',
-    'sc': 'Spot Check',
-    'sa': 'Special Audit'
-  };
-  public basisOptions: any[] = [];
-  public auditOptions: any[] = [
-    {
-      label: 'NO',
-      value: 'NO'
-    },
-    {
-      label: 'YES',
-      value: 'YES'
-    }
-  ];
+  @property({type: Array})
+  allEngagements: any[] = [];
+
+  @property({type: Object,  reflectToAttribute: true, observer: '_partnerReceived'})
+  partner: any = {};
+
+  @property({type: Object})
+  TYPES: any = {'audit': 'Audit', 'ma': 'Micro Assessment', 'sc': 'Spot Check', 'sa': 'Special Audit'};
+
+  @property({type: Array})
+  basisOptions: any[] = [];
+
+  @property({type: Array})
+  auditOptions: any[] = [ { label: 'NO', value: 'NO' }, { label: 'YES', value: 'YES' } ];
+
+  @property({type: Boolean})
+  editMode: boolean = false;
 
   static get observers() {
     return [

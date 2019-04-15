@@ -6,7 +6,8 @@ import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import { logWarn } from 'etools-behaviors/etools-logging';
-
+import { property } from '@polymer/decorators';
+import { StatusAction, Status } from '../../../../typings/etools-status.types.js';
 
 /**
  * @polymer
@@ -14,7 +15,7 @@ import { logWarn } from 'etools-behaviors/etools-logging';
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerElement as any))) {
+class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerElement)) {
 
   static get template() {
     // language=HTML
@@ -50,22 +51,20 @@ class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerE
     `;
   }
 
-  static get properties() {
-    return {
-      partner: {
-        type: Object,
-        notify: true
-      },
-      editMode: Boolean,
-      deleteWarningDialogContent: Object,
-      possibleStatuses: Array,
-      possibleActions: Array
-    }
-  }
+  @property({type: Object, notify: true})
+  partner: any = null;
 
-  public editMode: boolean = false;
-  public possibleStatuses: object[] = [];
-  public possibleActions: any[] = [
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Object})
+  deleteWarningDialogContent: any = null;
+
+  @property({type: Array})
+  possibleStatuses: Status[] = [];
+
+  @property({type: Array})
+  possibleActions: StatusAction[] = [
     {
       label: 'Save',
       hidden: true,

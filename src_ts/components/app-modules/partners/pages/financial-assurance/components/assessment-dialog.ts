@@ -15,14 +15,16 @@ import {RootState, store} from '../../../../../../store';
 import {isJsonStrMatch} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
-
+import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../../typings/globals.types.js';
+import { AssessmentModel } from '../../../partners.types.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
+class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -94,36 +96,28 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     `;
   }
 
-  static get properties() {
-    return {
-      assessment: Object,
-      uploadEndpoint: String,
-      opened: {
-        type: Boolean,
-        notify: true
-      },
-      uploadInProgress: Boolean,
-      assessmentModel: Object,
-      assessmentTypes: Array,
-      _validationSelectors: Array
-    };
+  @property({type: Object})
+  assessment: any = null;
 
-  }
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
-  public assessmentModel: any = {
-    type: null,
-    completed_date: null,
-    current: false,
-    report_attachment: null,
-    active: true,
-    partner: null
-  };
-  public uploadInProgress: boolean = false;
-  public opened: boolean = false;
-  public uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
-  public assessment: any = null;
-  public assessmentTypes: any[] = [];
+  @property({type: Boolean, notify: true})
+  opened: boolean = false;
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
+
+  @property({type: Object})
+  assessmentModel: AssessmentModel = new AssessmentModel();
+
+  @property({type: Array})
+  assessmentTypes: LabelAndValue[] = [];
+
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+  
+  _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
 
   public stateChanged(state: RootState) {
     if (!state.commonData) {
@@ -151,7 +145,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     this._validationSelectors.forEach((selector) => {
       // @ts-ignore
       let el = this.shadowRoot.querySelector(selector);
-      if (el && !el.validate()) {
+      if (el && !(el as any).validate()) {
         isValid = false;
       }
     });
@@ -234,7 +228,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
       // @ts-ignore
       let el = this.shadowRoot.querySelector(selector);
       if (el) {
-        el.invalid = false;
+        (el as any).invalid = false;
       }
     });
   }
