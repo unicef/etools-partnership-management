@@ -102,7 +102,7 @@ class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerEl
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback);
+    this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback as any);
   }
 
   setPossibleStatuses() {
