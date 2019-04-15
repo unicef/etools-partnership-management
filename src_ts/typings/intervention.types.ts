@@ -94,11 +94,6 @@ export class SelectedSection {
   }
 }
 
-export type Section = {
-  id: string,
-  name: string
-}
-
 export class InterventionAttachment  {
   id?: number;
   active: boolean = true;
