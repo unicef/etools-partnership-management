@@ -102,3 +102,4 @@ class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
 }
 
 window.customElements.define('qpr-list', QprList);
+export {QprList as QprListEl};

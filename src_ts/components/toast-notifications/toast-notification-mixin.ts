@@ -3,6 +3,7 @@ import './etools-toast'
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
+import { EtoolsToastEl } from './etools-toast';
 
 /**
  * @polymer
@@ -12,7 +13,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
   class toastNotifs extends baseClass {
 
     @property({type: Object})
-    _toast: object | null = null;
+    _toast: EtoolsToastEl | null = null;
 
     @property({type: Array})
     _toastQueue: object[] = [];
@@ -29,12 +30,11 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
 
     public disconnectedCallback() {
       super.disconnectedCallback();
-      // @ts-ignore
-      this.removeEventListener('toast', this.queueToast);
+
+      this.removeEventListener('toast', this.queueToast as any);
       if (this._toast) {
-        // @ts-ignore
+
         this._toast.removeEventListener('toast-confirm', this._toggleToast);
-        // @ts-ignore
         this._toast.removeEventListener('toast-closed', this.dequeueToast);
       }
     }
@@ -64,7 +64,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     public createToastNotificationElement() {
-      this._toast = document.createElement('etools-toast');
+      this._toast = document.createElement('etools-toast') as any;
       this._toggleToast = this._toggleToast.bind(this);
       // @ts-ignore
       this._toast.addEventListener('toast-confirm', this._toggleToast);
@@ -77,8 +77,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       if (this._toast !== null) {
         // alter message wrapper css
         setTimeout(() => {
-          // @ts-ignore
-          let messageWrapper = this._toast.getMessageWrapper();
+          let messageWrapper = this._toast!.getMessageWrapper();
           if (messageWrapper) {
             messageWrapper.style.whiteSpace = 'pre-wrap';
           }

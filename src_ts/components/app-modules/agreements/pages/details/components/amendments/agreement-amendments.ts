@@ -20,7 +20,6 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
-import EtoolsDialog from 'etools-dialog';
 import { AddAgAmendmentDialog } from './add-ag-amendment-dialog.js';
 
 

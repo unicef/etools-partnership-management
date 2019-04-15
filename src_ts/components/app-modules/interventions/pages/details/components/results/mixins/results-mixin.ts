@@ -84,9 +84,9 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     removeCpOutputRamIndicatorsDialog() {
       if (this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem.removeEventListener('new-expected-result-added',
-            this._handleNewResultAdded);
+            this._handleNewResultAdded as any);
         this.cpOutputRamIndicatorsEditElem.removeEventListener('expected-result-updated',
-            this._handleResultUpdated);
+            this._handleResultUpdated as any);
         document.querySelector('body')!.removeChild(this.cpOutputRamIndicatorsEditElem as any);
       }
     }
@@ -103,10 +103,10 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
         this._handleNewResultAdded = this._handleNewResultAdded.bind(this);
         this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
-            this._handleNewResultAdded);
+            this._handleNewResultAdded as any);
 
         this._handleResultUpdated = this._handleResultUpdated.bind(this);
-        this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated', this._handleResultUpdated);
+        this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated', this._handleResultUpdated as any);
 
         document.querySelector('body')!.appendChild(this.cpOutputRamIndicatorsEditElem as any);
       }

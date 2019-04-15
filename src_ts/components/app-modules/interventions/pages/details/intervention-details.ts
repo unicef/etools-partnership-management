@@ -52,8 +52,8 @@ import { AgreementSelector } from './components/agreement-selector.js';
 import { GroupedLocationsDialog } from './components/grouped-locations-dialog.js';
 import { PlannedBudgetEl } from './components/planned-budget.js';
 import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure.js';
-import { PlannedVisitsEl } from './components/planned-visits.js';
 import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
+import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
 
 
 /**
@@ -78,7 +78,7 @@ class InterventionDetails extends connect(store)(
     return html`
       ${pmpCustomIcons}
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
-      ${buttonsStyles} ${frWarningsStyles}
+      ${buttonsStyles} ${frWarningsStyles} ${etoolsCpHeaderActionsBarStyles}
       <style>
       :host {
         @apply --layout-vertical;
@@ -136,12 +136,13 @@ class InterventionDetails extends connect(store)(
         padding-right: 10px;
       }
 
-      div[slot="panel-btns"]#add-show-inactive-btns {
-        @apply --layout-horizontal;
-      }
-
       datepicker-lite {
         min-width: 100px; /*IE fix*/
+      }
+
+      .export-res-btn {
+        height: 28px;
+        margin-top: 4px;
       }
 
     </style>
@@ -382,7 +383,12 @@ class InterventionDetails extends connect(store)(
       <etools-content-panel class="content-section"
                             panel-title="PD Output or SSFA Expected Results ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
-          <div slot="panel-btns" id="add-show-inactive-btns">
+          <div slot="panel-btns" class="cp-header-actions-bar">
+            <paper-button title="Export results" class="white-btn export-res-btn"
+             hidden$="[[!showExportResults(intervention.status)]]" on-click="exportExpectedResults">
+                   Export
+            </paper-button>
+            <div class="separator" hidden$="[[!showExportResults(intervention.status)]]"></div>
             <paper-toggle-button id="showInactive"
                                 hidden$="[[!thereAreInactiveIndicators]]"
                                 checked="{{showInactiveIndicators}}">
@@ -710,7 +716,7 @@ class InterventionDetails extends connect(store)(
 
   _resetValidations() {
     (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
-    (this.$.documentType as any).resetInvalidState();
+    (this.$.documentType as EtoolsDropdownEl).resetInvalidState();
     (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
     (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
@@ -725,10 +731,6 @@ class InterventionDetails extends connect(store)(
 
     this._resetIETitleFieldValidation();
 
-    let plannedVisitsEl = this.shadowRoot!.querySelector('#plannedVisits') as unknown as PlannedVisitsEl;
-    if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
-      plannedVisitsEl.resetValidations();
-    }
     this.set('fieldsResetted', true);
   }
 
@@ -967,6 +969,17 @@ class InterventionDetails extends connect(store)(
   showActivationLetterDeleteBtn(status: string) {
     return this._isDraft(status) && !!this.originalIntervention
             && !this.originalIntervention.activation_letter_attachment;
+  }
+
+  showExportResults(status: string) {
+    return [CONSTANTS.STATUSES.Draft.toLowerCase(),
+            CONSTANTS.STATUSES.Signed.toLowerCase(),
+            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+  }
+
+  exportExpectedResults() {
+    let endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
+    window.open(endpoint, '_blank');
   }
 
 }

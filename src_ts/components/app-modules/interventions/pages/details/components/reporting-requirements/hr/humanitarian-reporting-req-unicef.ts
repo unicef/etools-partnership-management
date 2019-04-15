@@ -11,6 +11,9 @@ import FrontendPaginationMixin from '../../../../../../../mixins/frontend-pagina
 import { ExpectedResult } from '../../../../../../../../typings/intervention.types';
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import { property } from '@polymer/decorators';
+import { EditHruDialog } from './edit-hru-dialog.js';
+import { HruListEl } from './hru-list.js';
 
 
 /**
@@ -20,8 +23,10 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
  * @appliesMixin ReportingRequirementsCommon
  * @appliesMixin FrontendPagination
  */
-class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(FrontendPaginationMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class HumanitarianReportingReqUnicef extends
+  FrontendPaginationMixin(
+    ReportingRequirementsCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${buttonsStyles} ${gridLayoutStyles}
@@ -66,15 +71,19 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
     `;
   }
 
-  static get properties() {
-    return {
-      editHruDialog: Object,
-      expectedResults: Array,
-      interventionStart: Date,
-      editMode: Boolean
+  @property({type: Object})
+  editHruDialog!: EditHruDialog;
 
-    };
-  }
+  @property({type: Array})
+  expectedResults!: [];
+
+  @property({type: Date})
+  interventionStart!: Date;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+
   static get observers() {
     return [
       'setTotalResults(interventionId, reportingRequirements)',
@@ -85,7 +94,7 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
   ready() {
     super.ready();
     this._createEditHruDialog();
-    this.$.hruList.set('hruMainEl', this);
+    (this.$.hruList as HruListEl).set('hruMainEl', this);
   }
 
   disconnectedCallback() {
@@ -95,15 +104,15 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
 
   _createEditHruDialog() {
     this._reportingRequirementsSaved = this._reportingRequirementsSaved.bind(this);
-    this.editHruDialog = document.createElement('edit-hru-dialog');
+    this.editHruDialog = document.createElement('edit-hru-dialog') as any;
     this.editHruDialog.set('toastMsgLoadingSource', this);
-    this.editHruDialog.addEventListener('reporting-requirements-saved', this._reportingRequirementsSaved);
+    this.editHruDialog.addEventListener('reporting-requirements-saved', this._reportingRequirementsSaved as any);
     document.querySelector('body')!.appendChild(this.editHruDialog);
   }
 
   _removeEditHruDialog() {
     if (this.editHruDialog) {
-      this.editHruDialog.removeEventListener('reporting-requirements-saved', this._reportingRequirementsSaved);
+      this.editHruDialog.removeEventListener('reporting-requirements-saved', this._reportingRequirementsSaved as any);
       document.querySelector('body')!.removeChild(this.editHruDialog);
     }
   }

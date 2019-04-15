@@ -92,7 +92,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
     this._createDeleteConfirmationDialog();
 
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm);
+    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm  as any);
 
     // has to be run async for shadycss to load
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -100,7 +100,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm);
+    this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm as any);
   }
 
   setPossibleStatuses() {

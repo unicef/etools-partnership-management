@@ -12,12 +12,11 @@ import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
-
 import '../../layout/page-content-header';
 import '../../layout/page-content-header-slotted-styles';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
-import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles.js';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
 import {UserPermissions, EtoolsTab} from '../../../typings/globals.types';
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
@@ -32,6 +31,8 @@ import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
 import { property } from '@polymer/decorators';
+import {Partner, StaffMemberSaveReqPayload, CVASaveReqPayload} from '../../../models/partners.models';
+import { PartnerItemData } from './data/partner-item-data.js';
 
 /**
  * @polymer
@@ -263,17 +264,11 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _savePartnerContact(e: CustomEvent) {
-    this._savePartner({
-      id: this.partner.id,
-      staff_members: [e.detail]
-    });
+    this._savePartner(new StaffMemberSaveReqPayload(this.partner.id, e.detail));
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
-    this._savePartner({
-      id: this.partner.id,
-      core_values_assessments: [e.detail]
-    });
+    this._savePartner(new CVASaveReqPayload(this.partner.id, e.detail));
   }
 
   public _createNewPartnerDialog() {
@@ -316,10 +311,10 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _savePartner(newPartnerData: any) {
-    let partnerData = this.shadowRoot!.querySelector('#partnerData');
+    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData ;
     if (partnerData) {
-      (partnerData as any).savePartner(newPartnerData).then((successfull: any) => {
-        if (successfull) {
+      partnerData.savePartner(newPartnerData).then((successful: any) => {
+        if (successful) {
           store.dispatch({type: RESET_UNSAVED_UPLOADS});
         }
       });
@@ -383,9 +378,9 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _createPartner(event: CustomEvent) {
-    let partnerData = this.shadowRoot!.querySelector('#partnerData');
+    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
-      (partnerData as any).createPartner(event.detail, this._newPartnerCreated,
+      partnerData.createPartner(event.detail, this._newPartnerCreated,
           this._handleCreatePartnerError);
     }
   }
@@ -410,8 +405,9 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
         active: false,
         loadingSource: 'partner-data'
       });
+
       // keep a copy of loaded partner to be able to check changed data
-      this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
+      this.set('originalPartnerData', new Partner(partner));
     }
     fireEvent(this, 'clear-server-errors');
   }
@@ -424,42 +420,25 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     }
 
     // both partner details and financial assurance data is valid
-    let partnerChanges = this._cleanUpdateData(this.partner);
+    // TODO: move _getModifiedData in Partner class then use
+    let partnerChanges = this._getModifiedData(this.partner);
     partnerChanges.id = this.partner.id;
     this._savePartner(partnerChanges);
-
   }
 
-  public _cleanUpdateData(partner: any) {
+  public _getModifiedData(partner: any) {
     let updatableFields = [
       'alternate_name',
       'shared_with',
-      'staff_members',
-      'assessments',
       'planned_engagement',
       'basis_for_risk_rating'
     ];
     let changes: any = {};
     updatableFields.forEach((fieldName) => {
-      // TODO: improve this
-      if (['shared_with', 'assessments', 'staff_members', 'planned_engagement'].indexOf(fieldName) > -1) {
+
+      if (['shared_with', 'planned_engagement'].indexOf(fieldName) > -1) {
         if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
-          if (fieldName === 'assessments') {
-            changes[fieldName] = [...this._getNewOrWithReportChangedAssessments(partner[fieldName]),
-              ...this._getModIgnoringAttachChanges(partner[fieldName])];
-            if (changes[fieldName].length === 0) {
-              delete changes[fieldName];
-            } else {
-              // TODO: remove this once old upload properties are removed from backend
-              changes[fieldName] = changes[fieldName].map((a: any) => {
-                delete a.report;
-                delete a.report_file;
-                return a;
-              });
-            }
-          } else {
-            changes[fieldName] = partner[fieldName];
-          }
+          changes[fieldName] = partner[fieldName];
         }
       } else {
         if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
@@ -468,35 +447,6 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
       }
     });
     return changes;
-  }
-
-  /**
-   * Get all new assessments or those with report attachment changed
-   */
-  public _getNewOrWithReportChangedAssessments(assessmentsList: any) {
-    return assessmentsList.filter(
-        (a:any) => typeof a.report_attachment === 'number' && a.report_attachment > 0);
-  }
-
-  /**
-   * Get all assessments with data changed ignoring attachment changes
-   */
-  public _getModIgnoringAttachChanges(assessmentsList: any) {
-    const alreadySavedAssessments = assessmentsList.filter(
-        (a: any) => typeof a.report_attachment === 'string' && a.report_attachment !== '');
-    const modifiedAssessments: any[] = [];
-    if (alreadySavedAssessments.length > 0) {
-      alreadySavedAssessments.forEach((a: any) => {
-        // get original assessment data
-        const originalA = this.originalPartnerData.assessments.find((oA: any) => oA.id === a.id);
-        // check for new updates
-        if (originalA && JSON.stringify(originalA) !== JSON.stringify(a)) {
-          delete a.report_attachment; // to avoid BE valid report file ID check
-          modifiedAssessments.push(a);
-        }
-      });
-    }
-    return modifiedAssessments;
   }
 
   public _handleTabSelectAction(e: CustomEvent) {

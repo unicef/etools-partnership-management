@@ -92,6 +92,7 @@ import { AppDrawerElement } from '@polymer/app-layout/app-drawer/app-drawer.js';
 import { property } from '@polymer/decorators';
 import { GenericObject, User, UserPermissions } from '../../typings/globals.types.js';
 import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
+import EtoolsDialog from 'etools-dialog';
 setRootPath(BASE_URL);
 
 /**
@@ -286,7 +287,7 @@ class AppShell extends connect(store)(
   };
 
   @property({type: Object})
-  leavePageDialog!: {opened: boolean};
+  leavePageDialog!: EtoolsDialog;
 
   @property({type: Object})
   appLocQueryParams!: object;

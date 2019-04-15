@@ -219,7 +219,6 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     warnDeleteAttachment.innerHTML = 'Are you sure you want to delete this attachment?';
     // this.attDeleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteAttachment);
     this.attDeleteConfirmDialog = createDynamicDialog({
-      title: null,
       size: 'md',
       okBtnText: 'Yes',
       cancelBtnText: 'No',
