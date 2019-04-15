@@ -17,6 +17,7 @@ import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styl
 import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import { Partner } from '../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -252,7 +253,7 @@ class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumb
   }
 
   @property({type: Object})
-  partner: any = {};
+  partner = {} as Partner;
   
   public connectedCallback() {
     super.connectedCallback();
