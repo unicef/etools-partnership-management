@@ -3,6 +3,7 @@ import { PolymerElEvent, GenericObject, Constructor } from '../../typings/global
 import { fireEvent } from '../utils/fire-custom-event';
 import { updateAppState } from '../utils/navigation-helper';
 import { PolymerElement } from '@polymer/polymer';
+import { isEmptyObject } from '../utils/utils';
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class listsCommonClass extends baseClass {
@@ -200,7 +201,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       let qsParams = [];
       for (let pKey in params) {
         if (params[pKey]) {
-          if (params[pKey] instanceof Array && !params[pKey]) {
+          if (params[pKey] instanceof Array && !isEmptyObject(params[pKey])) {
             qsParams.push(pKey + '=' + params[pKey].join(','));
           }
           if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
