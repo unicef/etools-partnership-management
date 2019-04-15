@@ -241,13 +241,13 @@ class PartnersList extends
   @property({type: Array, notify: true, observer: '_listChanged'})
   filteredPartners: any[] = [];
 
-  @property({type: Array}) //statePath: 'csoTypes'
+  @property({type: Array})
   csoTypes: LabelAndValue[] = [];
 
-  @property({type: Array}) //statePath: 'partnerTypes'  
+  @property({type: Array})  
   partnerTypes: LabelAndValue[] = [];
 
-  @property({type: Array}) //statePath: 'partnerRiskRatings'
+  @property({type: Array})
   riskRatings: LabelAndValue[] = [];
 
   @property({type: Array})

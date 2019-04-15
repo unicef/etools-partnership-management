@@ -233,13 +233,13 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   @property({type: Boolean})
   editMode: boolean = false;
 
-  @property({type: Array}) //statePath: 'csoTypes'  
+  @property({type: Array}) 
   csoTypes: LabelAndValue[] = [];
 
-  @property({type: Array}) //statePath: 'partnerTypes'
+  @property({type: Array})
   partnerTypes: LabelAndValue[] = [];
 
-  @property({type: Array}) //statePath: 'sharedPartenerValues'
+  @property({type: Array})
   sharedPartenerValues: LabelAndValue[] = [];
 
   @property({type: Boolean})
