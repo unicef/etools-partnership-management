@@ -31,7 +31,7 @@ import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
 import { property } from '@polymer/decorators';
-import {Partner, StaffMemberSaveReqPayload, CVASaveReqPayload} from '../../../models/partners.models';
+import {Partner} from '../../../models/partners.models';
 import { PartnerItemData } from './data/partner-item-data.js';
 import { NewPartnerDialog } from './components/new-partner-dialog.js';
 
