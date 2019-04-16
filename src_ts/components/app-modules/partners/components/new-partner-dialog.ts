@@ -8,7 +8,7 @@ import { property } from '@polymer/decorators';
  * @polymer
  * @customElement
  */
-class NewPartnerDialog extends PolymerElement {
+export class NewPartnerDialog extends PolymerElement {
 
   static get template() {
     // language=HTML

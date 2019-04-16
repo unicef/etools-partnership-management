@@ -33,6 +33,7 @@ import { fireEvent } from '../../utils/fire-custom-event';
 import { property } from '@polymer/decorators';
 import {Partner, StaffMemberSaveReqPayload, CVASaveReqPayload} from '../../../models/partners.models';
 import { PartnerItemData } from './data/partner-item-data.js';
+import { NewPartnerDialog } from './components/new-partner-dialog.js';
 
 /**
  * @polymer
@@ -213,7 +214,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   @property({type: Object})
   originalPartnerData: any = null;
 
-  newPartnerDialog: any = null;
+  newPartnerDialog = {} as NewPartnerDialog;
 
   public static get observers() {
     return [
@@ -272,18 +273,18 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _createNewPartnerDialog() {
-    this.newPartnerDialog = document.createElement('new-partner-dialog');
+    this.newPartnerDialog = document.createElement('new-partner-dialog') as NewPartnerDialog;
     this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
     // @ts-ignore
     document.querySelector('body')!.appendChild(this.newPartnerDialog);
 
     this._createPartner = this._createPartner.bind(this);
-    this.newPartnerDialog.addEventListener('create-partner', this._createPartner);
+    this.newPartnerDialog.addEventListener('create-partner', this._createPartner as any);
   }
 
   public _removeNewPartnerDialogFromDom() {
     if (this.newPartnerDialog) {
-      this.newPartnerDialog.removeEventListener('create-partner', this._createPartner);
+      this.newPartnerDialog.removeEventListener('create-partner', this._createPartner as any);
       // @ts-ignore
       document.querySelector('body')!.removeChild(this.newPartnerDialog);
     }

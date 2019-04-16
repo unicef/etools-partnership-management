@@ -37,10 +37,10 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   deletedPartnerId: number = -1;
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback: {} = {};
+  handleSuccResponseAdditionalCallback: {} | null = null;
   
   @property({type: Object})
-  handleErrResponseAdditionalCallback: {} = {};
+  handleErrResponseAdditionalCallback: {} | null = null;
 
   @property()
   _skipDefaultErrorHandler: boolean = false;
@@ -155,8 +155,8 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
       this.handleErrResponseAdditionalCallback.bind(this,
           formatServerErrorAsText(tryGetResponseError(response)))();
     }
-    this.handleErrResponseAdditionalCallback = {};
-    this.handleSuccResponseAdditionalCallback = {};
+    this.handleErrResponseAdditionalCallback = null;
+    this.handleSuccResponseAdditionalCallback = null;
   }
 
   public createPartner(vendorNoObj: any, successCallback: any, errorCallback: any) {

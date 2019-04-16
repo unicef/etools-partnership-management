@@ -97,7 +97,12 @@ export class PartnerListItem {
 }
 
 export class PartnerAssessment {
-
+  type: any | null = null;
+  completed_date: any | null = null;
+  current: any | null = null;
+  report_attachment: any | null = null;
+  active: any | null = null;
+  partner: any | null = null;
 }
 
 export class PartnerCoreValAssessment extends ModelsCommon {

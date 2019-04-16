@@ -13,7 +13,8 @@ import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { StaffMember } from '../../../partners.types';
+import { StaffMember } from '../../../../../../models/partners.models';
+
 /**
  * @polymer
  * @customElement
@@ -150,7 +151,7 @@ class StaffMembers extends PolymerElement {
   @property({type: Array})
   dataItems: any[] = [];
 
-  dataSetModel: StaffMember = new StaffMember();
+  dataSetModel = {} as StaffMember;
 
   static get observers() {
     return [

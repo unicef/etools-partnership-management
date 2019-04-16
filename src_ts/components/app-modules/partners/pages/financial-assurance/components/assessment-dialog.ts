@@ -17,7 +17,7 @@ import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../../typings/globals.types.js';
-import { AssessmentModel } from '../../../partners.types.js';
+import { PartnerAssessment } from '../../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -109,7 +109,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   uploadInProgress: boolean = false;
 
   @property({type: Object})
-  assessmentModel: AssessmentModel = new AssessmentModel();
+  assessmentModel = {} as PartnerAssessment;
 
   @property({type: Array})
   assessmentTypes: LabelAndValue[] = [];
