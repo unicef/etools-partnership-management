@@ -30,7 +30,7 @@ import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
-import {Partner, StaffMemberSaveReqPayload, CVASaveReqPayload} from '../../../models/partners.models';
+import {Partner} from '../../../models/partners.models';
 
 
 /**
@@ -267,11 +267,11 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _savePartnerContact(e: CustomEvent) {
-    this._savePartner(new StaffMemberSaveReqPayload(this.partner.id, e.detail));
+    this._savePartner(this.partner.getSaveStaffMemberRequestPayload(e.detail));
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
-    this._savePartner(new CVASaveReqPayload(this.partner.id, e.detail));
+    this._savePartner(this.partner.getSaveCVARequestPayload(e.detail));
   }
 
   public _createNewPartnerDialog() {
