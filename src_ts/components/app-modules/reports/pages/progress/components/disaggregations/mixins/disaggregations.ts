@@ -1,4 +1,7 @@
-import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import { Constructor } from '../../../../../../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
+
+//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 
 /**
@@ -6,8 +9,8 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
  * @polymer
  * @mixinFunction
  */
-const DisaggregationsMixin = dedupingMixin(
-(superClass: any) => class extends superClass {
+function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class disaggregationsClass extends baseClass {
   // Used to display rows for two and three disaggregations.
   // It will NOT work for one and zero disaggregations.
   _determineRows(self: any, rows: any, columns: any) {
@@ -57,7 +60,9 @@ const DisaggregationsMixin = dedupingMixin(
 
     return '(' + sortedString + ')';
   }
-});
+};
+return disaggregationsClass;
+}
 
 export default DisaggregationsMixin;
 

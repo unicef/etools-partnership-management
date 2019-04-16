@@ -3,7 +3,6 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-data-table/etools-data-table.js';
 
 import 'etools-dialog/dynamic-dialog-mixin.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
@@ -19,6 +18,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
 
 
 /**
+ * @customElement
  * @polymer
  * @mixinFunction
  * @appliesMixin DynamicDialogMixin
@@ -26,19 +26,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingRequirementsCommonMixin
  */
-const SpecialReportingRequirementsMixins = EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  EndpointsMixin,
-  CommonMixin,
-  ReportingRequirementsCommonMixin
-], PolymerElement);
-
-/**
- * @customElement
- * @polymer
- * @appliesMixin SpecialReportingRequirementsMixins
- */
-class SpecialReportingRequirements extends SpecialReportingRequirementsMixins {
+class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(CommonMixin(ReportingRequirementsCommonMixin(PolymerElement) as any)) as any)) {
   [x: string]: any;
   static get template() {
     return html`

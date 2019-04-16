@@ -2,7 +2,6 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import 'etools-content-panel/etools-content-panel.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import CommonMixin from '../../../../mixins/common-mixin.js';
@@ -18,33 +17,23 @@ import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styl
 import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 import {fireEvent} from '../../../../utils/fire-custom-event';
 
+
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  * @appliesMixin FrNumbersConsistencyixin
  */
-const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
-  EtoolsCurrency,
-  CommonMixin,
-  RiskRatingMixin,
-  FrNumbersConsistencyMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin PartnerOverviewRequiredMixins
- */
-class PartnerOverview extends PartnerOverviewRequiredMixins{
+class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement))))) {
 
   static get template() {
     // language=HTML
     return html`
       ${pmpCustomIcons}
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${pmpCustomIcons}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
       ${frWarningsStyles}
       <style>
         :host {

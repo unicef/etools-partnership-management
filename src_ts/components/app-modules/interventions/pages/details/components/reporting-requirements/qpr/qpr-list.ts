@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-data-table/etools-data-table.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import '../../../../../../../layout/icons-actions.js';
 import '../mixins/reporting-req-past-dates-check.js';
@@ -12,6 +11,7 @@ import { reportingRequirementsListStyles } from '../styles/reporting-requirement
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
 import { PolymerElEvent } from '../../../../../../../../typings/globals.types.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -20,10 +20,7 @@ import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingReqPastDatesCheckMixin
  */
-class QprList extends EtoolsMixinFactory.combineMixins([
-      CommonMixin,
-      ReportingReqPastDatesCheckMixin],
-    PolymerElement) {
+class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -61,18 +58,12 @@ class QprList extends EtoolsMixinFactory.combineMixins([
     `;
   }
 
-  static get properties() {
-    return {
-      qprData: {
-        type: Array,
-        value: []
-      },
-      preventPastDateEdit: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  qprData: [] = [];
+
+  @property({type: Boolean})
+  preventPastDateEdit: boolean = false;
+
 
   static get observers() {
     return [

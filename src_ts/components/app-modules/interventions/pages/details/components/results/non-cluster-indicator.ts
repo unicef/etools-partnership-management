@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer';
-
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
@@ -7,7 +6,6 @@ import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
@@ -20,9 +18,7 @@ import { Indicator } from '../../../../../../../typings/intervention.types';
  * @customElement
  * @appliesMixin IndicatorsCommonMixin
  */
-class NonClusterIndicator extends EtoolsMixinFactory.combineMixins([
-  IndicatorsCommonMixin
-], PolymerElement) {
+class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

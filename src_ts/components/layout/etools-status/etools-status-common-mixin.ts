@@ -1,9 +1,11 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
+import { Constructor } from '../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 declare const ShadyCSS: any;
 
 /**
@@ -13,10 +15,10 @@ declare const ShadyCSS: any;
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin ScrollControl
  **/
-const EtoolsStatusCommonMixin = dedupingMixin(
-    (superClass: any) => class extends (ScrollControl(
-        // @ts-ignore
-        DynamicDialogMixin(superClass)) as any) {
+function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  // @ts-ignore
+  class etoolsStatusCommonClass extends ScrollControl(
+        DynamicDialogMixin(baseClass) as Constructor<PolymerElement>) {
       [x: string]: any;
 
       static get properties() {
@@ -128,12 +130,13 @@ const EtoolsStatusCommonMixin = dedupingMixin(
       }
 
       _setNotStickyStyles() {
-        let statusElem = this.shadowRoot.querySelector('etools-status');
-        statusElem.classList.remove('sticky-status');
+        let statusElem = this.shadowRoot!.querySelector('etools-status');
+        statusElem!.classList.remove('sticky-status');
       }
 
       _resetScrollHandler() {
         if (this.contentContainer) {
+          // @ts-ignore
           this.contentContainer.onscroll = null;
         }
       }
@@ -141,11 +144,11 @@ const EtoolsStatusCommonMixin = dedupingMixin(
       _scrollChangedHandler() {
         this._waitForBoundingClientRectToBeSet()
             .then((containerDistanceFromViewportTop) => {
-              let statusElem = this.shadowRoot.querySelector('etools-status');
+              let statusElem = this.shadowRoot!.querySelector('etools-status');
               if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-                statusElem.classList.add('sticky-status');
+                statusElem!.classList.add('sticky-status');
               } else {
-                statusElem.classList.remove('sticky-status');
+                statusElem!.classList.remove('sticky-status');
               }
             });
       }
@@ -270,6 +273,8 @@ const EtoolsStatusCommonMixin = dedupingMixin(
       _openDeleteConfirmation() {
         this.deleteConfirmDialog.opened = true;
       }
-    });
+    };
+    return etoolsStatusCommonClass;
+  }
 
 export default EtoolsStatusCommonMixin;

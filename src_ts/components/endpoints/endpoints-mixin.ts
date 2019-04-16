@@ -1,23 +1,24 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
 import {RootState} from '../../store';
 
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
-import { User } from '../../typings/globals.types';
+import { Constructor } from '../../typings/globals.types';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import { PolymerElement } from '@polymer/polymer';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
  */
-const EndpointsMixin = dedupingMixin((baseClass: any) =>
+function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     // @ts-ignore
-    class extends (EtoolsAjaxRequestMixin(baseClass)) {
+    class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
       [x: string]: any;
+
 
       // TODO: polymer 3 - remove properties from here
       static get properties() {
@@ -32,7 +33,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
           this.prpCountries = [...state.commonData!.PRPCountryData];
         }
         if (!isJsonStrMatch(state.commonData!.currentUser, this.currentUser)) {
-          this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser)) as User;
+          this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser));
         }
       }
 
@@ -208,7 +209,7 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
       }
 
       public fireRequest(endpoint: any, endpointTemplateData: object,
-                         requestAdditionalOptions: object, activeReqKey: string) {
+                         requestAdditionalOptions?: object, activeReqKey?: string) {
         if (!endpoint) {
           logError('Endpoint name is missing.', 'Endpoints:fireRequest');
           return;
@@ -229,6 +230,8 @@ const EndpointsMixin = dedupingMixin((baseClass: any) =>
         return defer.promise;
       }
 
-    });
+    };
+    return endpointsMixin;
+  }
 
 export default EndpointsMixin;
