@@ -50,6 +50,21 @@ export class Partner extends ModelsCommon {
     this._normalizePartnerData();
   }
 
+  getSaveStaffMemberRequestPayload(staffMemberData : GenericObject) {
+     return {
+       id: this.id,
+       staff_members: [new StaffMember(staffMemberData)]
+     };
+  }
+
+  getSaveCVARequestPayload(cvaData: GenericObject){
+    return {
+      id: this.id,
+      core_values_assessments: [new PartnerCoreValAssessment(cvaData)]
+    }
+  }
+
+
   private _normalizePartnerData() {
     if (this.staff_members.length > 0) {
       const sm: StaffMember[] = [];
@@ -66,31 +81,6 @@ export class Partner extends ModelsCommon {
 
 }
 
-export class StaffMemberSaveReqPayload {
-  id: number = 0;
-  staff_members: StaffMember[] = [];
-
-  constructor(id: number | null, staffMemberData: GenericObject) {
-    if (!id) {
-      throw new Error('StaffMemberSaveReqPayload: invalid partner id!');
-    }
-    this.id = id;
-    this.staff_members = [new StaffMember(staffMemberData)];
-  }
-}
-
-export class CVASaveReqPayload {
-  id: number = 0;
-  core_values_assessments: PartnerCoreValAssessment[] = [];
-
-  constructor(id: number | null, cvaData: GenericObject) {
-    if (!id) {
-      throw new Error('CVASaveReqPayload: invalid partner id!');
-    }
-    this.id = id;
-    this.core_values_assessments = [new PartnerCoreValAssessment(cvaData)];
-  }
-}
 
 export class PartnerListItem {
 

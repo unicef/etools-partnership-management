@@ -20,6 +20,7 @@ import { CpOutput, ExpectedResult, Intervention } from '../../../../../typings/i
 import { GenericObject } from '../../../../../typings/globals.types.js';
 import { property } from '@polymer/decorators';
 import { Agreement } from '../../../agreements/agreement.types.js';
+import { GenericObject, IdAndName } from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -137,8 +138,10 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
       </etools-content-panel>
 
       <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Visits">
-        <monitoring-visits-list intervention-or-partner-id="[[intervention.id]]"
-                                endpoint-name="monitoringVisits">
+        <monitoring-visits-list intervention-id="[[intervention.id]]"
+                                partner-id="[[intervention.partner_id]]"
+                                intervention-overview
+                                show-tpm-visits>
         </monitoring-visits-list>
       </etools-content-panel>
 
@@ -236,6 +239,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
   _getIntervSectionNames() {
     let interventionSections = this.intervention.sections.map((sectionId: string) =>  parseInt(sectionId, 10));
     let sectionNames: string[] = [];
+
 
     this.sections.forEach(function(section: GenericObject) {
       if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {

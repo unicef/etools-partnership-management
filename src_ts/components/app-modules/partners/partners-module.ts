@@ -35,6 +35,7 @@ import {Partner, StaffMemberSaveReqPayload, CVASaveReqPayload} from '../../../mo
 import { PartnerItemData } from './data/partner-item-data.js';
 import { NewPartnerDialog } from './components/new-partner-dialog.js';
 
+
 /**
  * @polymer
  * @customElement
@@ -265,11 +266,11 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _savePartnerContact(e: CustomEvent) {
-    this._savePartner(new StaffMemberSaveReqPayload(this.partner.id, e.detail));
+    this._savePartner(this.partner.getSaveStaffMemberRequestPayload(e.detail));
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
-    this._savePartner(new CVASaveReqPayload(this.partner.id, e.detail));
+    this._savePartner(this.partner.getSaveCVARequestPayload(e.detail));
   }
 
   public _createNewPartnerDialog() {
