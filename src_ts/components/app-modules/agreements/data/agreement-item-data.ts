@@ -43,7 +43,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   agreementId: number | null = null;
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback: {} = {};
+  handleSuccResponseAdditionalCallback!: (e: any) => void;
 
   @property({type: String})
   ajaxLoadingMsgSource: string = 'ag-data';

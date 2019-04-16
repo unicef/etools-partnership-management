@@ -37,10 +37,10 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   deletedPartnerId: number = -1;
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback: {} | null = null;
+  handleSuccResponseAdditionalCallback!: ((...args: any) => void) | null;
   
   @property({type: Object})
-  handleErrResponseAdditionalCallback: {} | null = null;
+  handleErrResponseAdditionalCallback!: ((...args: any) => void) | null;
 
   @property()
   _skipDefaultErrorHandler: boolean = false;
