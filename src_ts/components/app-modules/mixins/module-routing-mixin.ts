@@ -14,7 +14,7 @@ import { Route } from '../../../typings/route.types';
  * @mixinFunction
  */
 function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    class moduleRoutingClass extends (baseClass) {
+    class moduleRoutingClass extends baseClass {
 
       @property({type: Boolean})
       listActive!: boolean;
@@ -34,7 +34,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       @property({type: String})
       moduleName!: string;
 
-      @property({type: String, notify: true, observer: ModuleRoutingMixin.prototype._activePageChanged})
+      @property({type: String, notify: true, observer: moduleRoutingClass.prototype._activePageChanged})
       activePage!: string;
 
       /**
@@ -186,9 +186,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       }
 
       isActiveModule(moduleName?: string) {
-        // @ts-ignore
         const mName = !moduleName ? this.moduleName : moduleName;
-        // @ts-ignore
         return this.rootPath + mName === this.route.prefix;
       }
 

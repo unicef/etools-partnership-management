@@ -30,6 +30,8 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import {convertDate} from '../../../../utils/date-utils';
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../typings/globals.types.js';
+import { EditCoreValuesAssessmentEl } from './components/edit-core-values-assessment';
+import { Partner } from '../../../../../models/partners.models.js';
 declare const moment: any;
 
 /**
@@ -228,12 +230,12 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   }
 
   @property({type: Object, notify: true, observer: '_partnerChanged'})
-  partner: any = {};
+  partner!: Partner;
 
   @property({type: Boolean})
   editMode: boolean = false;
 
-  @property({type: Array}) 
+  @property({type: Array})
   csoTypes: LabelAndValue[] = [];
 
   @property({type: Array})
@@ -255,8 +257,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   showDelete: boolean = false;
 
   @property({type: Object})
-  editCVADialog: any = null;
-  
+  editCVADialog!: EditCoreValuesAssessmentEl;
+
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
       this.csoTypes = state.commonData!.csoTypes;
@@ -284,7 +286,6 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   public disconnectedCallback() {
     super.disconnectedCallback();
     if (this.editCVADialog) {
-      // @ts-ignore
       document.querySelector('body')!.removeChild(this.editCVADialog);
     }
   }
@@ -297,15 +298,14 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   }
 
   public _createEditCoreValuesAssessmentsDialog() {
-    this.editCVADialog = document.createElement('edit-core-values-assessment');
+    this.editCVADialog = document.createElement('edit-core-values-assessment') as any;
     this.editCVADialog.parent = this;
-    // @ts-ignore
+
     document.querySelector('body')!.appendChild(this.editCVADialog);
   }
 
   public _editCoreValuesAssessment(e: CustomEvent) {
-    // @ts-ignore
-    this.editCVADialog.item = JSON.parse(e.target.getAttribute('item'));
+    this.editCVADialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
     this.editCVADialog.open();
   }
 
@@ -334,11 +334,10 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   }
 
   public _sortCvaDescByDate() {
-    // @ts-ignore
     if (!this.partner.core_values_assessments || this.partner.core_values_assessments.length <= 1) {
       return;
     }
-    // @ts-ignore
+
     this.partner.core_values_assessments.sort((a: any, b: any) => {
       // @ts-ignore
       return new Date(b.date) - new Date(a.date);

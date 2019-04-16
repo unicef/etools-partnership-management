@@ -12,6 +12,7 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
 /**
  * @polymer
  * @customElement
@@ -58,7 +59,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
   item: any = {};
 
   @property({type: Object})
-  parent: any = {};
+  parent!: PolymerElement;
 
   @property({type: String})
   uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;
@@ -67,7 +68,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
   uploadInProgress: boolean = false;
 
   open() {
-    (this.$.cvaDialog as any).opened = true;
+    (this.$.cvaDialog as EtoolsDialog).opened = true;
   }
 
   _saveCoreValueAssessment() {
@@ -76,7 +77,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
       return;
     }
     fireEvent(this.parent, 'save-core-values-assessment', this.item);
-    (this.$.cvaDialog as any).opened = false;
+    (this.$.cvaDialog as EtoolsDialog).opened = false;
   }
 
   _uploadFinished(e: CustomEvent) {
@@ -89,3 +90,5 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 }
 
 window.customElements.define('edit-core-values-assessment', EditCoreValuesAssessment);
+
+export {EditCoreValuesAssessment as EditCoreValuesAssessmentEl}

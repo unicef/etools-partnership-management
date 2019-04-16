@@ -201,10 +201,10 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   selectedPartnerId: number | null = null;
 
   @property({type: Object, observer: '_partnerChanged'})
-  partner: any = null;
+  partner!: Partner;
 
   @property({type: Object})
-  permissions: any = null;
+  permissions!: UserPermissions;
 
   @property({type: Boolean})
   showOnlyGovernmentType: boolean = false;
@@ -213,9 +213,9 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   currentModule: string = '';
 
   @property({type: Object})
-  originalPartnerData: any = null;
+  originalPartnerData!: Partner;
 
-  newPartnerDialog = {} as NewPartnerDialog;
+  newPartnerDialog!: NewPartnerDialog;
 
   public static get observers() {
     return [
@@ -276,7 +276,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   public _createNewPartnerDialog() {
     this.newPartnerDialog = document.createElement('new-partner-dialog') as NewPartnerDialog;
     this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
-    // @ts-ignore
+
     document.querySelector('body')!.appendChild(this.newPartnerDialog);
 
     this._createPartner = this._createPartner.bind(this);
@@ -286,7 +286,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   public _removeNewPartnerDialogFromDom() {
     if (this.newPartnerDialog) {
       this.newPartnerDialog.removeEventListener('create-partner', this._createPartner as any);
-      // @ts-ignore
+
       document.querySelector('body')!.removeChild(this.newPartnerDialog);
     }
   }
@@ -331,9 +331,9 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
       loadingSource: 'partner-data'
     });
 
-    let partnerData = this.shadowRoot!.querySelector('#partnerData');
+    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
-      (partnerData as any).deletePartner(this.partner);
+      partnerData.deletePartner(this.partner);
     }
   }
 
@@ -366,7 +366,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
-      fireEvent(this, 'set-server-errors', event.detail as any);
+      fireEvent(this, 'set-server-errors', event.detail);
       this.scrollToTop();
     }
   }

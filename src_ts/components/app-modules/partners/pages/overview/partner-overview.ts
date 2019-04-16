@@ -28,7 +28,7 @@ import { Partner } from '../../../../../models/partners.models.js';
  * @appliesMixin RiskRatingMixin
  * @appliesMixin FrNumbersConsistencyixin
  */
-class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement))))) {
+class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
 
   static get template() {
     // language=HTML
@@ -254,16 +254,15 @@ class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumb
 
   @property({type: Object})
   partner = {} as Partner;
-  
+
   public connectedCallback() {
     super.connectedCallback();
     /**
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    // @ts-ignore
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
-    // @ts-ignore
+
     fireEvent(this, 'tab-content-attached');
   }
 

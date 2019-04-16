@@ -14,13 +14,14 @@ import './add-edit-staff-members';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import { StaffMember } from '../../../../../../models/partners.models';
+import { AddEditStaffMembersEl } from './add-edit-staff-members';
 
 /**
  * @polymer
  * @customElement
  */
 class StaffMembers extends PolymerElement {
-  
+
   static get template() {
     // language=HTML
     return html`
@@ -140,18 +141,16 @@ class StaffMembers extends PolymerElement {
   showInactive: boolean = false;
 
   @property({type: Object})
-  addEditDialog: any = {};
+  addEditDialog!: AddEditStaffMembersEl;
 
   @property({type: Boolean})
   showDelete: boolean = false;
 
   @property({type: Boolean})
   editMode: boolean = false;
-  
-  @property({type: Array})
-  dataItems: any[] = [];
 
-  dataSetModel = {} as StaffMember;
+  @property({type: Array})
+  dataItems: StaffMember[] = [];
 
   static get observers() {
     return [
@@ -184,28 +183,25 @@ class StaffMembers extends PolymerElement {
 
   _createAddEditDialog() {
     this._savePartnerContact = this._savePartnerContact.bind(this);
-    this.addEditDialog = document.createElement('add-edit-staff-members');
-    this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact);
-    // @ts-ignore
-    document.querySelector('body').appendChild(this.addEditDialog);
+    this.addEditDialog = document.createElement('add-edit-staff-members') as any;
+    this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact as any);
+    document.querySelector('body')!.appendChild(this.addEditDialog);
   }
 
   _removeAddEditDialog() {
     if (this.addEditDialog) {
-      this.addEditDialog.removeEventListener('save-partner-contact', this._savePartnerContact);
-      // @ts-ignore
-      document.querySelector('body').removeChild(this.addEditDialog);
+      this.addEditDialog.removeEventListener('save-partner-contact', this._savePartnerContact as any);
+      document.querySelector('body')!.removeChild(this.addEditDialog);
     }
   }
 
   _addPartnerContact() {
-    this.addEditDialog.item = JSON.parse(JSON.stringify(this.dataSetModel));
+    this.addEditDialog.item = new StaffMember({});
     this.openAddEditDialog();
   }
 
   _editPartnerContact(e: Event) {
-    // @ts-ignore
-    this.addEditDialog.item = JSON.parse(e.target.getAttribute('item'));
+    this.addEditDialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
     this.openAddEditDialog();
   }
 
