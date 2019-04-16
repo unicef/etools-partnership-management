@@ -418,8 +418,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
       </etools-content-panel>
 
       <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
-        <monitoring-visits-list intervention-or-partner-id="[[partner.id]]"
-                                endpoint-name="partnerT2fProgrammaticVisits"
+        <monitoring-visits-list partner-id="[[partner.id]]"
                                 show-tpm-visits>
         </monitoring-visits-list>
       </etools-content-panel>
