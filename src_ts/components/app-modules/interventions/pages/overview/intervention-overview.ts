@@ -16,8 +16,8 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
-import { CpOutput, ExpectedResult, Section } from '../../../../../typings/intervention.types.js';
-import { GenericObject } from '../../../../../typings/globals.types.js';
+import { CpOutput, ExpectedResult } from '../../../../../typings/intervention.types.js';
+import { GenericObject, IdAndName } from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -136,8 +136,10 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
       </etools-content-panel>
 
       <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Visits">
-        <monitoring-visits-list intervention-or-partner-id="[[intervention.id]]"
-                                endpoint-name="monitoringVisits">
+        <monitoring-visits-list intervention-id="[[intervention.id]]"
+                                partner-id="[[intervention.partner_id]]"
+                                intervention-overview
+                                show-tpm-visits>
         </monitoring-visits-list>
       </etools-content-panel>
 
@@ -245,7 +247,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
     let interventionSections = this.intervention.sections.map((sectionId: string) =>  parseInt(sectionId, 10));
     let sectionNames: string[] = [];
 
-    this.sections.forEach(function(section: Section) {
+    this.sections.forEach(function(section: IdAndName) {
       if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
         sectionNames.push(section.name);
       }
