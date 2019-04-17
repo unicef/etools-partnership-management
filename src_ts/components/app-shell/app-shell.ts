@@ -110,8 +110,6 @@ setRootPath(BASE_URL);
  * @appliesMixin UtilsMixin
  */
 class AppShell extends connect(store)(
-  CommonData(
-  UserDataMixin(
   UploadsMixin(
   GestureEventListeners(
   AppMenuMixin(
@@ -120,6 +118,8 @@ class AppShell extends connect(store)(
   AmendmentModeUIMixin(
   LoadingMixin(
   UtilsMixin(
+  UserDataMixin(
+  CommonData(
   PolymerElement))))))))))) {
 
   public static get template() {
@@ -328,6 +328,7 @@ class AppShell extends connect(store)(
 
     this.requestUserData();
     // trigger common data load requests
+    // @ts-ignore
     this.loadCommonData();
 
     // installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
@@ -344,6 +345,7 @@ class AppShell extends connect(store)(
     this.amdStateChanged(state);
     this.uploadsStateChanged(state);
 
+    // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
   }
 
@@ -484,7 +486,9 @@ class AppShell extends connect(store)(
       defer.resolve(true);
     } else {
       // only prp modules can have access restricted
-      this._waitForEnvFlagsToLoad().then(() => {
+      // @ts-ignore
+      this.waitForEnvFlagsToLoad().then(() => {
+        // @ts-ignore
         defer.resolve(this.showPrpReports());
       });
     }

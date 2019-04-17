@@ -231,8 +231,8 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   _uploadFinished(e: CustomEvent) {
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
-      // @ts-ignore
-      const assessmentIndex = Number(e.target.getAttribute('data-args-index'));
+
+      const assessmentIndex = Number((e.target as any).getAttribute('data-args-index')); // TODO - who is e.target
       const uploadResponse = JSON.parse(e.detail.success);
       this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});

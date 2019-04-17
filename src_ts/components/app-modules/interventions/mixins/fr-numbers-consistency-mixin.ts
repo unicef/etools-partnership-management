@@ -122,7 +122,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
     }
 
     checkFrsAndIntervDateConsistency(intervDateStr: string, frsDateStr: string | null,
-      fieldName?: string, returnMsg?: string) {
+      fieldName?: string, returnMsg?: boolean) {
       if (!this.validateFrsVsInterventionDates(intervDateStr, frsDateStr)) {
         return returnMsg
             ? this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,

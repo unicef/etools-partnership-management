@@ -68,12 +68,12 @@ import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
  * @appliesMixin UploadsMixin
  */
 class InterventionDetails extends connect(store)(
-  StaffMembersData(
     EnvironmentFlagsMixin(
-      MissingDropdownOptionsMixin(
         CommonMixin(
           UploadsMixin(
-            FrNumbersConsistencyMixin(PolymerElement))))))) {
+            FrNumbersConsistencyMixin(
+              StaffMembersData(
+                MissingDropdownOptionsMixin(PolymerElement))))))) {
 
   static get template() {
     return html`
@@ -570,6 +570,7 @@ class InterventionDetails extends connect(store)(
      * triggered by parent element on stamp or by click event on tabs
      */
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    // @ts-ignore
     this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
     fireEvent(this, 'tab-content-attached');
   }
@@ -783,6 +784,7 @@ class InterventionDetails extends connect(store)(
       // Prevent reset on changes caused by initialization of the fields
       this._resetDropdowns();
     }
+    // @ts-ignore
     this.getPartnerStaffMembers(id);
   }
 
@@ -879,7 +881,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _checkFrsStartConsistency(frsEarliestStartDate: string, interventionStart: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention)
+    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
         || interventionStatus === 'closed') {
       this.set('_frsStartConsistencyWarning', null);
       (this.$.intStart as PolymerElement).updateStyles();
@@ -891,7 +893,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _checkFrsEndConsistency(frsLatestEndDate: string, interventionEnd: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention)
+    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
         || interventionStatus === 'closed') {
       this.set('_frsEndConsistencyWarning', '');
       (this.$.intEnd as PolymerElement).updateStyles();
@@ -979,6 +981,7 @@ class InterventionDetails extends connect(store)(
   }
 
   exportExpectedResults() {
+    // @ts-ignore
     let endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
     window.open(endpoint, '_blank');
   }

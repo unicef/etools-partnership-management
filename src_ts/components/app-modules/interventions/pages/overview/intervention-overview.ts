@@ -17,10 +17,9 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
 import { CpOutput, ExpectedResult, Intervention } from '../../../../../typings/intervention.types.js';
-import { GenericObject } from '../../../../../typings/globals.types.js';
 import { property } from '@polymer/decorators';
 import { Agreement } from '../../../agreements/agreement.types.js';
-import { GenericObject, IdAndName } from '../../../../../typings/globals.types.js';
+import { GenericObject } from '../../../../../typings/globals.types.js';
 
 
 /**

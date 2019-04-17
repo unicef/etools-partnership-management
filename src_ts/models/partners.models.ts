@@ -117,7 +117,7 @@ export class PartnerPlannedEngagement {
 }
 
 export class MinimalStaffMember extends ModelsCommon {
-  id?: number;
+  id: number | null= null;
   name: string = '';
   first_name: string = '';
   last_name: string = '';

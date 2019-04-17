@@ -171,7 +171,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       endpoint: this._pickEndpoint(isNew, this.assessment.id),
       body: this._getBody(isNew)
     };
-    // @ts-ignore
+
     this.sendRequest(options)
         .then((resp: any) => {
           this._handleResponse(resp, isNew);

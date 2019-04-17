@@ -682,14 +682,17 @@ class InterventionsModule extends connect(store)(
   }
 
   _exportPdBudget() {
+    // @ts-ignore TODO-convert EtoolsAjaxRequestMixin to module in order for EndpointsMixin members to be visible
     this._exportPD(this.getEndpoint('interventions').url);
   }
 
   _exportPdResult() {
+    // @ts-ignore
     this._exportPD(this.getEndpoint('resultExports').url);
   }
 
   _exportPdLocations() {
+    // @ts-ignore
     this._exportPD(this.getEndpoint('pdLocationsExport').url);
   }
 
