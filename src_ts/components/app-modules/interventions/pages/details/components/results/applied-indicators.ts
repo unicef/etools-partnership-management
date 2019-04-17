@@ -1,12 +1,12 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import './applied-indicator.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { property } from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog';
+import { AppliedIndicatorEl } from './applied-indicator.js';
 
 
 /**
@@ -103,8 +103,8 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     document.querySelector('body')!.appendChild(this.deactivateConfirmDialog);
   }
 
-  _editIndicator(event: PolymerElEvent) {
-    let indicatorIndex = parseInt(event.target.getAttribute('data-args'), 10);
+  _editIndicator(event: CustomEvent) {
+    let indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
     // @ts-ignore
     let llResultIndex = parseInt(this.resultLinkIndex, 10);
     let indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
@@ -119,8 +119,8 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     fireEvent(this, 'open-indicator-dialog', resultMap);
   }
 
-  _openDeactivateConfirmation(event: PolymerElEvent) {
-    this.indicToDeactivateIndex = parseInt(event.target.getAttribute('data-args'), 10);
+  _openDeactivateConfirmation(event: CustomEvent) {
+    this.indicToDeactivateIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
     this._onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
     this.deactivateConfirmDialog.addEventListener('close', this._onDeactivateHandler);
     this.deactivateConfirmDialog.opened = true;

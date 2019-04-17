@@ -8,7 +8,7 @@ import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import { InterventionAttachment } from '../../../../../../typings/intervention.types.js';
-import { PolymerElEvent, IdAndName } from '../../../../../../typings/globals.types.js';
+import { IdAndName } from '../../../../../../typings/globals.types.js';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
@@ -17,6 +17,7 @@ import { logWarn } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 import  EtoolsDialog from 'etools-dialog/etools-dialog.js';
 import { property } from '@polymer/decorators';
+import { PaperCheckboxElement } from '@polymer/paper-checkbox/paper-checkbox.js';
 
 
 /**
@@ -202,8 +203,8 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
     return id && Number(id) > 0;
   }
 
-  _invalidChanged(e: PolymerElEvent) {
-    this.set('attachment.active', !e.target.checked);
+  _invalidChanged(e: CustomEvent) {
+    this.set('attachment.active', !(e.target as PaperCheckboxElement).checked);
   }
 
 }

@@ -1,7 +1,11 @@
 import { ListFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
 import { PolymerElement } from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import { DomRepeatEvent, PolymerElEvent, Constructor } from '../../typings/globals.types';
+import { DomRepeatEvent, Constructor } from '../../typings/globals.types';
+import { EtoolsDropdownMultiEl } from 'etools-dropdown/etools-dropdown-multi';
+import { EtoolsDropdownEl } from 'etools-dropdown';
+import { PaperToggleButtonElement } from '@polymer/paper-toggle-button';
+import DatePickerLite from 'etools-date-time/datepicker-lite';
 declare const moment: any;
 /**
   * @polymer
@@ -149,9 +153,10 @@ declare const moment: any;
 
 
     // filter value changed, update filter path with the new value
-    filterValueChanged(event: PolymerElEvent) {
-      let filterPath = event.target.getAttribute('data-filter-path');
-      let filterVal = event.target.selected;
+    filterValueChanged(event: CustomEvent) {
+      let dropdown = event.target as EtoolsDropdownEl;
+      let filterPath = dropdown.getAttribute('data-filter-path')!;
+      let filterVal = dropdown.selected;
       this.set(filterPath, filterVal);
     }
 
@@ -167,21 +172,23 @@ declare const moment: any;
     }
 
     // 'esmm' (etools-dropdown-multi) filter value changed
-    esmmValueChanged(e: PolymerElEvent) {
-      let filterPath = e.target.getAttribute('data-filter-path');
-      let filterVal = e.detail.selectedItems.map((v: any) => v[e.target.optionValue]);
+    esmmValueChanged(e: CustomEvent) {
+      let dropdownMultiEl = e.target as EtoolsDropdownMultiEl;
+      let filterPath = dropdownMultiEl.getAttribute('data-filter-path')!;
+      let filterVal = e.detail.selectedItems.map((v: any) => v[dropdownMultiEl.optionValue!]);
       this.set(filterPath, filterVal);
     }
 
-    toggleValueChanged(e: PolymerElEvent) {
-      let filterPath = e.target.getAttribute('data-filter-path');
-      let filterVal = e.target.checked;
+    toggleValueChanged(e: CustomEvent) {
+      let toggleEl = e.target as PaperToggleButtonElement;
+      let filterPath = toggleEl.getAttribute('data-filter-path')!;
+      let filterVal = toggleEl.checked;
       this.set(filterPath, filterVal);
     }
 
     // change event for a etoold-datepicker filter
-    _filterDateHasChanged(event: PolymerElEvent) {
-      let filterPath = event.target.getAttribute('data-filter-path');
+    _filterDateHasChanged(event: CustomEvent) {
+      let filterPath = (event.target as DatePickerLite).getAttribute('data-filter-path')!;
       if (!event.detail.date) {
         this.set(filterPath, '');
         return;

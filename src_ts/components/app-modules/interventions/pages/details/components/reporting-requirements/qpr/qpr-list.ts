@@ -9,9 +9,9 @@ import ReportingReqPastDatesCheckMixin from '../mixins/reporting-req-past-dates-
 import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
 import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
 import { isEmptyObject } from '../../../../../../../utils/utils.js';
-import { PolymerElEvent } from '../../../../../../../../typings/globals.types.js';
 import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
 import { property } from '@polymer/decorators';
+import { IconsActionsEl } from '../../../../../../../layout/icons-actions.js';
 
 
 /**
@@ -91,12 +91,12 @@ class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
     });
   }
 
-  _editQprReq(e: PolymerElEvent) {
-    fireEvent(this, 'edit-qpr', {index: e.target.getAttribute('data-args')});
+  _editQprReq(e: CustomEvent) {
+    fireEvent(this, 'edit-qpr', {index: (e.target as IconsActionsEl).getAttribute('data-args')});
   }
 
-  _deleteQprReq(e: PolymerElEvent) {
-    fireEvent(this, 'delete-qpr', {index: e.target.getAttribute('data-args')});
+  _deleteQprReq(e: CustomEvent) {
+    fireEvent(this, 'delete-qpr', {index: (e.target as IconsActionsEl).getAttribute('data-args')});
   }
 
 }

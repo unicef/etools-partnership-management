@@ -25,7 +25,7 @@ import CONSTANTS from '../../../../../config/app-constants';
 import { Agreement } from '../../../agreements/agreement.types';
 import { Intervention, ExpectedResult, InterventionPermissionsFields, Location } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-import { PolymerElEvent, LabelAndValue, IPermission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
+import { LabelAndValue, IPermission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store';
 import { pageCommonStyles } from '../../../../styles/page-common-styles';
@@ -54,6 +54,7 @@ import { PlannedBudgetEl } from './components/planned-budget.js';
 import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure.js';
 import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
 import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 
 
 /**
@@ -751,8 +752,8 @@ class InterventionDetails extends connect(store)(
     }
   }
 
-  _activateAutoValidation(e: PolymerElEvent) {
-    e.target.set('autoValidate', true);
+  _activateAutoValidation(e: CustomEvent) {
+    (e.target as PaperInputElement).set('autoValidate', true);
   }
 
   _setYears(interventionStart: string, interventionEnd: string) {

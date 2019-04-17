@@ -14,10 +14,10 @@ import { SharedStyles } from '../../../../../styles/shared-styles.js';
 import '../../../../../layout/icons-actions.js';
 
 import './assessment-dialog.js';
-import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import { store } from '../../../../../../store.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
+import { IconsActionsEl } from '../../../../../layout/icons-actions.js';
 
 
 /**
@@ -223,9 +223,9 @@ class AssessmentsItems extends (CommonMixin(PolymerElement)) {
     }
   }
 
-  _editAssessment(e: PolymerElEvent) {
+  _editAssessment(e: CustomEvent) {
     let assessment = this.dataItems
-        .find((a: any) => a.id === Number(e.target.getAttribute('item-id')));
+        .find((a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
     this.assessmentDialog.opened = true;
   }

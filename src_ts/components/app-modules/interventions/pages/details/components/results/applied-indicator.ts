@@ -380,3 +380,4 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
 }
 
 window.customElements.define('applied-indicator', AppliedIndicator);
+export {AppliedIndicator as AppliedIndicatorEl}

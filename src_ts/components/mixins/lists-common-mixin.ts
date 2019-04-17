@@ -1,6 +1,5 @@
 import {property} from '@polymer/decorators';
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
+import { GenericObject, Constructor } from '../../typings/globals.types';
 import { fireEvent } from '../utils/fire-custom-event';
 import { PolymerElement } from '@polymer/polymer';
 import { updateAppState } from '../utils/navigation-helper';
@@ -93,10 +92,10 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     * Because of this we need to refilter after list data is saved locally.
     * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
     */
-    _requiredDataHasBeenLoaded(event: PolymerElEvent) {
+    _requiredDataHasBeenLoaded(event: CustomEvent) {
       event.stopImmediatePropagation();
 
-      let listDataPath = event.target.getAttribute('list-data-path');
+      let listDataPath = (event.target as any).getAttribute('list-data-path');
       let list = this.get(listDataPath);
 
       if (typeof list === 'undefined' ||
