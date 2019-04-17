@@ -65,13 +65,8 @@ export interface EtoolsTab {
   counter?: number;
 }
 
-export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in polymer declarations
+export interface DomRepeatEvent extends CustomEvent {//TODO- should be in polymer declarations
   model: any;
-}
-
-export interface PolymerElEvent extends CustomEvent {//TODO - should be in polymer type declarions
-  target: any;
-  currentTarget: any;
 }
 
 export class Paginator {

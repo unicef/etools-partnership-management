@@ -6,73 +6,75 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import { fireEvent } from '../utils/fire-custom-event';
 
  /**
-     * @polymer
-     * @customElement
-     */
-    class IconsActions extends PolymerElement {
+ * @polymer
+ * @customElement
+ */
+class IconsActions extends PolymerElement {
 
-      static get template() {
-        return html`
-          <style>
-            [hidden] {
-              display: none !important;
-            }
+  static get template() {
+    return html`
+      <style>
+        [hidden] {
+          display: none !important;
+        }
 
-            :host {
-              @apply --layout-horizontal;
-              @apply --layout-center;
-              background-color: var(--list-second-bg-color);
-              position: absolute;
-              top: 1px;
-              right: 0;
-              bottom: 1px;
+        :host {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          background-color: var(--list-second-bg-color);
+          position: absolute;
+          top: 1px;
+          right: 0;
+          bottom: 1px;
 
-              @apply --icons-actions;
-            }
+          @apply --icons-actions;
+        }
 
-            paper-icon-button {
-              color: var(--dark-icon-color, #6f6f70);
-            }
-          </style>
+        paper-icon-button {
+          color: var(--dark-icon-color, #6f6f70);
+        }
+      </style>
 
-          <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
-          <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
-          <paper-icon-button hidden$="[[!showDeactivate]]" icon="block" on-tap="_onDeactivate"></paper-icon-button>
-          `;
+      <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
+      <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
+      <paper-icon-button hidden$="[[!showDeactivate]]" icon="block" on-tap="_onDeactivate"></paper-icon-button>
+      `;
+  }
+
+  static get properties() {
+    return {
+      itemDetails: {
+        type: Object
+      },
+      showEdit: {
+        type: Boolean,
+        value: true
+      },
+      showDelete: {
+        tye: Boolean,
+        value: true
+      },
+      showDeactivate: {
+        tye: Boolean,
+        value: false
       }
+    };
+  }
 
-      static get properties() {
-        return {
-          itemDetails: {
-            type: Object
-          },
-          showEdit: {
-            type: Boolean,
-            value: true
-          },
-          showDelete: {
-            tye: Boolean,
-            value: true
-          },
-          showDeactivate: {
-            tye: Boolean,
-            value: false
-          }
-        };
-      }
+  _onEdit() {
+    fireEvent(this, 'edit');
+  }
 
-      _onEdit() {
-        fireEvent(this, 'edit');
-      }
+  _onDelete() {
+    fireEvent(this, 'delete');
+  }
 
-      _onDelete() {
-        fireEvent(this, 'delete');
-      }
+  _onDeactivate() {
+    fireEvent(this, 'deactivate');
+  }
 
-      _onDeactivate() {
-        fireEvent(this, 'deactivate');
-      }
+}
 
-    }
+window.customElements.define('icons-actions', IconsActions);
 
-    window.customElements.define('icons-actions', IconsActions);
+export {IconsActions as IconsActionsEl}

@@ -1,3 +1,4 @@
+
 export class ListFilterOption {
   constructor(item: ListFilterOption) {
     this.filterName = item.filterName;
@@ -46,4 +47,5 @@ export type SelectedFilterOption = {
   disableMenuOption?: boolean
 }
 
-export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;
+export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;// TODO
+

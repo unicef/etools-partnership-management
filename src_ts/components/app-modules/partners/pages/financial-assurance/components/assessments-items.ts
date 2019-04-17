@@ -20,6 +20,8 @@ import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../..
 import {property} from '@polymer/decorators';
 import { PartnerAssessment } from '../../../../../../models/partners.models.js';
 import { AssessmentDialog } from './assessment-dialog.js';
+import { IconsActionsEl } from '../../../../../layout/icons-actions.js';
+
 
 /**
  * @customElement
@@ -217,7 +219,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 
   _editAssessment(e: CustomEvent) {
     let assessment = this.dataItems
-        .find((a: any) => a.id === Number((e.target as PolymerElement).getAttribute('item-id')));
+        .find((a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
     this.assessmentDialog.opened = true;
   }

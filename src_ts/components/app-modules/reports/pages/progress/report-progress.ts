@@ -16,10 +16,10 @@ import UtilsMixin from '../../../../mixins/utils-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
 import { pageCommonStyles } from '../../../../styles/page-common-styles';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
-import { PolymerElEvent } from '../../../../../typings/globals.types';
 import { isEmptyObject } from '../../../../utils/utils';
 import { CpOutput } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
+import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
 
 
 /**
@@ -217,8 +217,8 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
     return opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
-  _toggle(e: PolymerElEvent) {
-    let toggles = e.target.getAttribute('toggles-ind-details');
+  _toggle(e: CustomEvent) {
+    let toggles = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
     let indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {toggle(): void};
     if (indicatorCollapsibleContent) {
       indicatorCollapsibleContent.toggle();

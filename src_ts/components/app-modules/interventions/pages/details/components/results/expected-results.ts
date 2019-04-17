@@ -8,7 +8,6 @@ import '@polymer/paper-input/paper-input.js';
 import 'etools-data-table/etools-data-table.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
 import LowerResultsMixin from './mixins/lower-results-mixin.js';
@@ -26,6 +25,7 @@ import { store, RootState } from '../../../../../../../store';
 import { logError } from 'etools-behaviors/etools-logging';
 import { property } from '@polymer/decorators';
 import { IndicatorDialogEl } from './indicator-dialog.js';
+import { IconsActionsEl } from '../../../../../../layout/icons-actions.js';
 
 /**
  * @polymer
@@ -210,9 +210,9 @@ class ExpectedResults extends connect(store)(RepeatableDataSetsMixin(
     this.openCpOutputAndRamIndicatorsDialog();
   }
 
-  _editCpOutputAndRamIndicators(e: PolymerElEvent) {
+  _editCpOutputAndRamIndicators(e: CustomEvent) {
     e.stopPropagation();
-    let index = parseInt(e.target.getAttribute('data-args'), 10);
+    let index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
       logError('Can not edit, invalid index selected', 'expected-results');
       return;
