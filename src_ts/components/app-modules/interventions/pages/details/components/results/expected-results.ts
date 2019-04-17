@@ -34,10 +34,10 @@ import { IconsActionsEl } from '../../../../../../layout/icons-actions.js';
  * @appliesMixin Results
  * @appliesMixin LowerResults
  */
-class ExpectedResults extends connect(store)(RepeatableDataSetsMixin(
+class ExpectedResults extends connect(store)(
   ResultsMixin(
-    LowerResultsMixin(PolymerElement)))) {
-  [x: string]: any;
+    LowerResultsMixin(
+      RepeatableDataSetsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -118,7 +118,7 @@ class ExpectedResults extends connect(store)(RepeatableDataSetsMixin(
     `;
   }
 
-  @property({type: String, readOnly: true})
+  @property({type: String})
   _deleteEpName: string = 'interventionResultLinkDelete';
 
   @property({type: String})

@@ -97,7 +97,7 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
   @property({type: Number, notify: true, observer: '_agreementIdChanged'})
   agreementId!: number;
 
-  @property({type: Array, observer: '_partnersDropdownDataChanged'})
+  @property({type: Array})
   filteredAgreements: [] = [];
 
   @property({type: Array})
@@ -118,6 +118,11 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
   @property({type: Object})
   permissions!: IPermission<InterventionPermissionsFields>;
 
+  static get observers() {
+    return [
+      '_setSelectedPartnerId(selectedAgreement, partnersDropdownData)'
+    ];
+  }
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.agreements, state.agreements!.list)) {
       this.agreements = [...state.agreements!.list];
@@ -128,13 +133,6 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
     if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
       this.permissions = copy(state.pageData!.permissions);
     }
-  }
-
-  _partnersDropdownDataChanged(partnersDropdownData: IdAndName[]) {
-    if (typeof partnersDropdownData === 'undefined') {
-      return;
-    }
-    this._setSelectedPartnerId();
   }
 
   _agreementsChanged() {
@@ -154,17 +152,18 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
     });
     this.set('selectedAgreement', agreement);
 
-    if (this.intervention && this.permissions && !this.permissions.edit.agreement) {
-      // in case agreement selector is in readonly mode we need to set partner id to trigger staff members request
-      this.set('partnerId', agreement!.partner);
-    }
-
-    if (this.partnersDropdownData && this.partnersDropdownData.length) {
-      this._setSelectedPartnerId();
-    }
   }
 
   _setSelectedPartnerId() {
+    if (!this.selectedAgreement || !this.partnersDropdownData || !this.partnersDropdownData.length) {
+      return;
+    }
+
+    if (this.intervention && this.permissions && !this.permissions.edit.agreement) {
+      // in case agreement selector is in readonly mode we need to set partner id to trigger staff members request
+      this.set('partnerId', this.selectedAgreement!.partner);
+    }
+
     let agreement = this.selectedAgreement as MinimalAgreement;
     if (!agreement || !agreement.partner || this.partnerId === agreement.partner) {
       return;

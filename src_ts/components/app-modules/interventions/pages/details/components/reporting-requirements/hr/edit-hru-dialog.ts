@@ -28,7 +28,6 @@ import { GenericObject } from '../../../../../../../../typings/globals.types.js'
  * @appliesMixin EndpointsMixin
  */
 class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-  [x: string]: any;
 
   static get template() {
     return html`

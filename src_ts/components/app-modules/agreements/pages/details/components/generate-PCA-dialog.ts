@@ -64,3 +64,4 @@ class GeneratePcaDialog extends PolymerElement {
 }
 
 window.customElements.define('generate-pca-dialog', GeneratePcaDialog);
+export {GeneratePcaDialog as GeneratePcaDialogEl}

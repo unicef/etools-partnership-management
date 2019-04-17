@@ -191,17 +191,21 @@ class AddEditStaffMembers extends PolymerElement {
 
   validate() {
     let valid = true;
-    let fields = ['#firstName', '#lastName', '#email', '#title'];
+
+    let fieldSelectors = ['#firstName', '#lastName', '#email', '#title'];
+
     let elements = [];
-    for (let i = 0; i < fields.length; i++) {
-      elements[i] = this.$.staffMemberDialog.querySelector(fields[i]);
+
+    for (let i = 0; i < fieldSelectors.length; i++) {
+      elements[i] = this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
       elements[i].validate();
+      if (fieldSelectors[i] === '#email') {
+        elements[i].invalid = elements[i].invalid || this._emailAlreadyUsed(this.item.email);
+      }
     }
 
-    [].push.apply(fields, ['#email', '#title'] as any);
-
-    for (let i = 0; i < fields.length; i++) {
-      let el = elements[i] || this.$.staffMemberDialog.querySelector(fields[i]);
+    for (let i = 0; i < fieldSelectors.length; i++) {
+      let el = elements[i] || this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
       if (el && el.invalid) {
         valid = false;
         break;
@@ -211,9 +215,9 @@ class AddEditStaffMembers extends PolymerElement {
   }
 
   resetValidations() {
-    let fields = ['#firstName', '#lastName', '#email', '#phone', '#title'];
-    for (let i = 0; i < fields.length; i++) {
-      let el = this.$.staffMemberDialog.querySelector(fields[i]) as PolymerElement & {invalid: boolean};
+    let fieldSelectors = ['#firstName', '#lastName', '#email', '#phone', '#title'];
+    for (let i = 0; i < fieldSelectors.length; i++) {
+      let el = this.$.staffMemberDialog.querySelector(fieldSelectors[i]) as PolymerElement & {invalid: boolean};
       if(el){
         el.invalid = false;
       }

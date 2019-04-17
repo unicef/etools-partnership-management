@@ -109,11 +109,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   @property({type: Boolean})
   uploadInProgress: boolean = false;
 
-  @property({type: Object})
-  assessmentModel = {} as PartnerAssessment;
-
   @property({type: Array})
-  assessmentTypes: LabelAndValue[] = [];
+  assessmentTypes!: LabelAndValue[];
 
   @property({type: Object})
   toastEventSource!: PolymerElement;
@@ -187,8 +184,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     if (!this.assessment) {
       return null;
     }
+    delete this.assessment.report;
+
     if (!isNew) {
-      delete this.assessment.report;
       delete this.assessment.report_attachment;
     }
     return this.assessment;
@@ -234,7 +232,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   public initAssessment(assessment: any, partnerId?: any) {
     if (!assessment) {
-      assessment = JSON.parse(JSON.stringify(this.assessmentModel));
+      assessment = new PartnerAssessment();
       assessment.partner = partnerId;
     }
 

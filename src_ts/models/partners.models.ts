@@ -88,12 +88,12 @@ export class PartnerListItem {
 }
 
 export class PartnerAssessment {
-  id?: number;
+  id: number| null = null;
   type: string | null = null;
   completed_date: string | null = null;
   report_attachment: any | null = null;
   report: any | null = null;
-  active: boolean | null = null;
+  active: boolean = true;
   partner: number | null = null;
 }
 

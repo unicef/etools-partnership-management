@@ -43,7 +43,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
 
     private _deleteDialog!: EtoolsDialog;
     private elToDeleteIndex!: number;
-    public _deleteEpName!: string; // Define din component
+
 
     public connectedCallback() {
       super.connectedCallback();
@@ -136,6 +136,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
 
         if (id) {
+          // @ts-ignore
           if (!this._deleteEpName) {
             logError('You must define _deleteEpName property to be able to remove existing records');
             return;
@@ -148,6 +149,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
           });
 
           let self = this;
+          // @ts-ignore
           let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
           this.sendRequest({
             method: 'DELETE',
