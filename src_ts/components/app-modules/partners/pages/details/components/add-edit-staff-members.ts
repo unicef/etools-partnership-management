@@ -11,6 +11,8 @@ import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import { StaffMember } from '../../../../../../models/partners.models';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
 
 /**
  * @polymer
@@ -110,14 +112,14 @@ class AddEditStaffMembers extends PolymerElement {
   }
 
   @property({type: Object})
-  item: any = {};
+  item!: StaffMember;
 
   @property({type: Array})
-  dataItems: any[] = [];
+  dataItems: StaffMember[] = [];
 
   open() {
     this.resetValidations();
-    (this.$.staffMemberDialog as any).opened = true;
+    (this.$.staffMemberDialog as EtoolsDialog).opened = true;
   }
 
   _isNewStaffMember(item: {id: number | null}) {
@@ -211,9 +213,9 @@ class AddEditStaffMembers extends PolymerElement {
   resetValidations() {
     let fields = ['#firstName', '#lastName', '#email', '#phone', '#title'];
     for (let i = 0; i < fields.length; i++) {
-      let el = this.$.staffMemberDialog.querySelector(fields[i]);
+      let el = this.$.staffMemberDialog.querySelector(fields[i]) as PolymerElement & {invalid: boolean};
       if(el){
-        (el as any).invalid = false;
+        el.invalid = false;
       }
     }
   }
@@ -221,10 +223,12 @@ class AddEditStaffMembers extends PolymerElement {
   _savePartnerContact() {
     if (this.validate()) {
       fireEvent(this, 'save-partner-contact', this.item);
-      (this.$.staffMemberDialog as any).opened = false;
+      (this.$.staffMemberDialog as EtoolsDialog).opened = false;
     }
   }
 
 }
 
 window.customElements.define('add-edit-staff-members', AddEditStaffMembers);
+
+export {AddEditStaffMembers as AddEditStaffMembersEl}

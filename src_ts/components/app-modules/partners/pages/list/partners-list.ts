@@ -34,6 +34,7 @@ import { isJsonStrMatch } from '../../../../utils/utils';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../typings/globals.types';
+import { PartnersListDataEl } from '../../data/partners-list-data.js';
 
 let _partnersLastNavigated: string = '';
 
@@ -48,12 +49,9 @@ let _partnersLastNavigated: string = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class PartnersList extends 
+class PartnersList extends
       connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
         EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
-
-          //connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
-    //EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
 
   static get template() {
     // language=HTML
@@ -244,7 +242,7 @@ class PartnersList extends
   @property({type: Array})
   csoTypes: LabelAndValue[] = [];
 
-  @property({type: Array})  
+  @property({type: Array})
   partnerTypes: LabelAndValue[] = [];
 
   @property({type: Array})
@@ -273,8 +271,8 @@ class PartnersList extends
 
   @property({type: Array})
   _governmentLockedPartnerTypes: string[] = ['Government'];
-  
-  private updateShownFilterDebouncer!: Debouncer;
+
+  private _updateShownFilterDebouncer!: Debouncer;
   private _actionsChangedDebouncer!: Debouncer;
 
   public static get observers() {
@@ -368,7 +366,7 @@ class PartnersList extends
   }
 
   public _updateSelectedFiltersValues() {
-    this.updateShownFilterDebouncer = Debouncer.debounce(this.updateShownFilterDebouncer,
+    this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer,
         timeOut.after(20),
         () => {
           let filtersValues = [
@@ -434,7 +432,7 @@ class PartnersList extends
     if (this._canFilterData()) {
       this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
       let qs = this._buildQueryString();
-      
+
       this._updateUrlAndDislayedData(this.currentModule + '/list',
           _partnersLastNavigated,
           qs,
@@ -455,7 +453,7 @@ class PartnersList extends
   }
 
   public _handleFilterPartnersData(forceNoLoading: boolean) {
-    let partners = this.shadowRoot!.querySelector('#partners') as any;
+    let partners = this.shadowRoot!.querySelector('#partners') as PartnersListDataEl;
     if (!partners) {
       return;
     }
@@ -513,7 +511,7 @@ class PartnersList extends
     }
   }
 
-  public _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType: any) {
+  public _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType: boolean) {
     if (showOnlyGovernmentType) {
       // lock list to government partners only
       this.set('selectedPartnerTypes', this._governmentLockedPartnerTypes);

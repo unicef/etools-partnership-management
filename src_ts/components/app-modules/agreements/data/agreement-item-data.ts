@@ -20,7 +20,6 @@ import {property} from '@polymer/decorators';
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
  */
-// @ts-ignore
 class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return null;
@@ -43,7 +42,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   agreementId: number | null = null;
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback!: (e: any) => void;
+  handleSuccResponseAdditionalCallback!: (response: any) => void;
 
   @property({type: String})
   ajaxLoadingMsgSource: string = 'ag-data';

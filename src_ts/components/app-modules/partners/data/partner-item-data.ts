@@ -38,12 +38,11 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
 
   @property({type: Object})
   handleSuccResponseAdditionalCallback!: ((...args: any) => void) | null;
-  
+
   @property({type: Object})
   handleErrResponseAdditionalCallback!: ((...args: any) => void) | null;
 
-  @property()
-  _skipDefaultErrorHandler: boolean = false;
+  private _skipDefaultErrorHandler: boolean = false;
 
   @property({type: String})
   ajaxLoadingMsgSource: string = 'partner-data';

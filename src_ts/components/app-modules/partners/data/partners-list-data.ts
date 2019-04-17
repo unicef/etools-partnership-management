@@ -24,7 +24,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
   dataLoadedEventName: string = 'partners-loaded';
 
   @property({type: Array, readOnly: true, notify: true})
-  filteredPartners: any[] = [];
+  filteredPartners!: any[];
 
   @property({type: Number, readOnly: true, notify: true})
   totalResults!: number;
@@ -33,36 +33,19 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
   currentQuery: GenericObject | null = null;
 
   @property({type: Array, notify: true})
-  partnersDropdownData: any[] = [];
+  partnersDropdownData: any[] = [];// TODO - seems to not be used anymore
 
   @property({type: Array, notify: true})
-  partnersFilteredDropdownData: any[] = [];
+  partnersFilteredDropdownData: any[] = [];// TODO - seems to not be used anymore
 
   @property({type: Boolean})
   prepareDropdownData: boolean = false;
-  
+
 
   public _handleMyResponse(res: any) {
     this._handleResponse(res);
     if (res && res.length) {
       store.dispatch(setPartners(res));
-      // let preparedData = [];
-      // let civilSocietyOrganizationPartners = [];
-      // res.forEach(function(p) {
-      //   if (!p.hidden && p.partner_type === 'Civil Society Organization') {
-      //     civilSocietyOrganizationPartners.push(p);
-      //   }
-      //   if (!p.hidden) {
-      //     preparedData.push({
-      //       value: p.id,
-      //       label: p.name
-      //     });
-      //   }
-      // });
-
-      // TODO - replaced by selector - to test
-      // store.dispatch('setPartnersDropdown', preparedData);
-      // store.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
     }
   }
 
@@ -165,3 +148,5 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
 }
 
 window.customElements.define('partners-list-data', PartnersListData);
+
+export {PartnersListData as PartnersListDataEl}

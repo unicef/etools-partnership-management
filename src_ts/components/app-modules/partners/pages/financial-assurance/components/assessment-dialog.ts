@@ -18,6 +18,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-er
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../../typings/globals.types.js';
 import { PartnerAssessment } from '../../../../../../models/partners.models.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
@@ -97,7 +98,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   @property({type: Object})
-  assessment: any = null;
+  assessment!: PartnerAssessment;
 
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
@@ -116,8 +117,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   @property({type: Object})
   toastEventSource!: PolymerElement;
-  
-  _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
+
+  private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
 
   public stateChanged(state: RootState) {
     if (!state.commonData) {
@@ -203,9 +204,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   public _handleResponse(response: any, isNew: boolean) {
-    // @ts-ignore
+
     this.set('opened', false);
-    // @ts-ignore
+
     fireEvent(this, isNew ? 'assessment-added' : 'assessment-updated', response);
   }
 
@@ -214,13 +215,11 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   public startSpinner() {
-    // @ts-ignore
-    this.$.assessmentDialog.startSpinner();
+    (this.$.assessmentDialog as EtoolsDialog).startSpinner();
   }
 
   public stopSpinner() {
-    // @ts-ignore
-    this.$.assessmentDialog.stopSpinner();
+    (this.$.assessmentDialog as EtoolsDialog).stopSpinner();
   }
 
   public resetValidations() {
@@ -233,7 +232,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     });
   }
 
-  public initAssessment(assessment: any, partnerId: any) {
+  public initAssessment(assessment: any, partnerId?: any) {
     if (!assessment) {
       assessment = JSON.parse(JSON.stringify(this.assessmentModel));
       assessment.partner = partnerId;
@@ -260,3 +259,4 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 }
 
 window.customElements.define('assessment-dialog', AssessmentDialog);
+export {AssessmentDialog}

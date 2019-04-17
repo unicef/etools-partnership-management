@@ -8,6 +8,7 @@ import { fireEvent } from '../../../utils/fire-custom-event.js';
 import { logWarn } from 'etools-behaviors/etools-logging';
 import { property } from '@polymer/decorators';
 import { StatusAction, Status } from '../../../../typings/etools-status.types.js';
+import { Partner } from '../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -52,7 +53,7 @@ class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerEl
   }
 
   @property({type: Object, notify: true})
-  partner: any = null;
+  partner!: Partner;
 
   @property({type: Boolean})
   editMode: boolean = false;
@@ -187,8 +188,7 @@ class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerEl
     }
   }
 
-  // @ts-ignore
-  _computeAvailableActions(hidden: boolean, editMode: boolean) {
+  _computeAvailableActions(_hidden: boolean, editMode: boolean) {
     if (!editMode || !this.partner) {
       return;
     }
@@ -227,7 +227,6 @@ class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerEl
     }
 
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
-      // @ts-ignore
       if (this.possibleStatuses[key].label === activeStatus) {
         this.set(['possibleStatuses', key, 'completed'], true);
         this.set(['possibleStatuses', key, 'hidden'], false);

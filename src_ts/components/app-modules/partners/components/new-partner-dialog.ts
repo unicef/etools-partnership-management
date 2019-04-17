@@ -3,6 +3,8 @@ import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import { property } from '@polymer/decorators';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
@@ -45,10 +47,8 @@ export class NewPartnerDialog extends PolymerElement {
   }
 
   openNewPartnerDialog() {
-    // @ts-ignore
-    this.$.vendorNo.invalid = false;
-    // @ts-ignore
-    this.$.newPartnerDialog.opened = true;
+    (this.$.vendorNo as PaperInputElement).invalid = false;
+    (this.$.newPartnerDialog as EtoolsDialog).opened = true;
   }
 
   _handleDialogClosed(closingReason: CustomEvent) {
