@@ -250,7 +250,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
         return false;
       }
 
-      _computeAvailableActions(_status: string) {
+      _computeAvailableActions(..._arg: any) {
         // children should overwrite this
       }
 

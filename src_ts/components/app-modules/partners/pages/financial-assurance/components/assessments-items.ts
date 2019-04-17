@@ -17,6 +17,9 @@ import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import { store } from '../../../../../../store.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
+import {property} from '@polymer/decorators';
+import { PartnerAssessment } from '../../../../../../models/partners.models.js';
+import { AssessmentDialog } from './assessment-dialog.js';
 import { IconsActionsEl } from '../../../../../layout/icons-actions.js';
 
 
@@ -26,8 +29,7 @@ import { IconsActionsEl } from '../../../../../layout/icons-actions.js';
  * @mixinFunction
  * @appliesMixin CommonMixin
  */
-class AssessmentsItems extends (CommonMixin(PolymerElement)) {
-  [x: string]: any;
+class AssessmentsItems extends CommonMixin(PolymerElement) {
 
   static get template() {
     // language=HTML
@@ -142,34 +144,26 @@ class AssessmentsItems extends (CommonMixin(PolymerElement)) {
     `;
   }
 
-  static get properties() {
-    return {
-      partnerId: {
-        type: Number
-      },
-      open: {
-        type: Boolean,
-        value: true,
-        reflectToAttribute: true
-      },
-      editMode: {
-        type: Boolean,
-        reflectToAttribute: true,
-        observer: '_editModeChanged'
-      },
-      showArchived: {
-        type: Boolean,
-        value: false
-      },
-      assessmentDialog: {
-        type: Object
-      },
-      showDelete: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  dataItems!: PartnerAssessment[];
+
+  @property({type: Number})
+  partnerId: number | null = null;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  open: boolean = true;
+
+  @property({type: Boolean,  reflectToAttribute: true, observer: '_editModeChanged'})
+  editMode!: boolean;
+
+  @property({type: Boolean})
+  showArchived: boolean = false;
+
+  @property({type: Object})
+  assessmentDialog!: AssessmentDialog;
+
+  @property({type: Boolean})
+  showDelete: boolean = false;
 
   ready() {
     super.ready();
@@ -182,22 +176,22 @@ class AssessmentsItems extends (CommonMixin(PolymerElement)) {
   }
 
   _createAssessmentDialog() {
-    this.assessmentDialog = document.createElement('assessment-dialog');
+    this.assessmentDialog = document.createElement('assessment-dialog') as any;
     this.assessmentDialog.setAttribute('id', 'assessmentDialog');
     this.assessmentDialog.toastEventSource = this;
 
     this.newAssessmentAdded = this.newAssessmentAdded.bind(this);
     this.assessmentUpdated = this.assessmentUpdated.bind(this);
-    this.assessmentDialog.addEventListener('assessment-added', this.newAssessmentAdded);
-    this.assessmentDialog.addEventListener('assessment-updated', this.assessmentUpdated);
+    this.assessmentDialog.addEventListener('assessment-added', this.newAssessmentAdded as any);
+    this.assessmentDialog.addEventListener('assessment-updated', this.assessmentUpdated as any);
 
     document.querySelector('body')!.appendChild(this.assessmentDialog);
   }
 
   _removeAssessmentDialog() {
     if (this.assessmentDialog) {
-      this.assessmentDialog.removeEventListener('assessment-added', this.newAssessmentAdded);
-      this.assessmentDialog.removeEventListener('assessment-updated', this.assessmentUpdated);
+      this.assessmentDialog.removeEventListener('assessment-added', this.newAssessmentAdded as any);
+      this.assessmentDialog.removeEventListener('assessment-updated', this.assessmentUpdated as any);
       document.querySelector('body')!.removeChild(this.assessmentDialog);
     }
   }

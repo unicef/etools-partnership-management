@@ -18,7 +18,7 @@ import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
-import {UserPermissions} from '../../../typings/globals.types';
+import {UserPermissions, EtoolsTab} from '../../../typings/globals.types';
 import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
@@ -30,7 +30,10 @@ import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
 import { fireEvent } from '../../utils/fire-custom-event';
+import { property } from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
+import { PartnerItemData } from './data/partner-item-data.js';
+import { NewPartnerDialog } from './components/new-partner-dialog.js';
 
 
 /**
@@ -42,7 +45,8 @@ import {Partner} from '../../../models/partners.models';
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionality
  */
-class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(PolymerElement)) as any)))) {
+class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl(ModuleRoutingMixin
+  (ModuleMainElCommonFunctionalityMixin(PolymerElement)))))) {
 
   public static get template() {
     // main template
@@ -170,53 +174,48 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     `;
   }
 
-  public static get properties() {
-    return {
-      partnerTabs: {
-        type: Array,
-        value: [
-          {
-            tab: 'overview',
-            tabLabel: 'Overview',
-            hidden: false
-          },
-          {
-            tab: 'details',
-            tabLabel: 'Partner Details',
-            hidden: false
-          },
-          {
-            tab: 'financial-assurance',
-            tabLabel: 'Assurance',
-            hidden: false
-          }
-        ]
-      },
-      moduleName: {
-        type: String,
-        value: 'partners'
-      },
-      csvDownloadUrl: {
-        type: String
-      },
-      selectedPartnerId: {
-        type: Number
-      },
-      partner: {
-        type: Object,
-        observer: '_partnerChanged'
-      },
-      permissions: {
-        type: Object
-      },
-      showOnlyGovernmentType: {
-        type: Boolean,
-        value: false
-      },
-      currentModule: String,
-      originalPartnerData: Object
-    };
-  }
+  @property({type: Array})
+  partnerTabs: EtoolsTab[] = [{
+      tab: 'overview',
+      tabLabel: 'Overview',
+      hidden: false
+    },
+    {
+      tab: 'details',
+      tabLabel: 'Partner Details',
+      hidden: false
+    },
+    {
+      tab: 'financial-assurance',
+      tabLabel: 'Assurance',
+      hidden: false
+    }];
+
+  @property({type: String})
+  moduleName: string = 'partners';
+
+  @property({type: String})
+  csvDownloadUrl: string = '';
+
+  @property({type: Number})
+  selectedPartnerId: number | null = null;
+
+  @property({type: Object, observer: '_partnerChanged'})
+  partner!: Partner;
+
+  @property({type: Object})
+  permissions!: UserPermissions;
+
+  @property({type: Boolean})
+  showOnlyGovernmentType: boolean = false;
+
+  @property({type: String})
+  currentModule: string = '';
+
+  @property({type: Object})
+  originalPartnerData!: Partner;
+
+  newPartnerDialog!: NewPartnerDialog;
 
   public static get observers() {
     return [
@@ -253,16 +252,16 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
     this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
 
-    this.addEventListener('partner-save-error', this._partnerSaveError);
-    this.addEventListener('save-partner-contact', this._savePartnerContact);
-    this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
+    this.addEventListener('partner-save-error', this._partnerSaveError as any);
+    this.addEventListener('save-partner-contact', this._savePartnerContact as any);
+    this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
   }
 
   public _removeListeners() {
-    this.removeEventListener('partner-save-error', this._partnerSaveError);
-    this.removeEventListener('save-partner-contact', this._savePartnerContact);
-    this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment);
+    this.removeEventListener('partner-save-error', this._partnerSaveError as any);
+    this.removeEventListener('save-partner-contact', this._savePartnerContact as any);
+    this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
   }
 
@@ -275,19 +274,19 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _createNewPartnerDialog() {
-    this.newPartnerDialog = document.createElement('new-partner-dialog');
+    this.newPartnerDialog = document.createElement('new-partner-dialog') as NewPartnerDialog;
     this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
-    // @ts-ignore
+
     document.querySelector('body')!.appendChild(this.newPartnerDialog);
 
     this._createPartner = this._createPartner.bind(this);
-    this.newPartnerDialog.addEventListener('create-partner', this._createPartner);
+    this.newPartnerDialog.addEventListener('create-partner', this._createPartner as any);
   }
 
   public _removeNewPartnerDialogFromDom() {
     if (this.newPartnerDialog) {
-      this.newPartnerDialog.removeEventListener('create-partner', this._createPartner);
-      // @ts-ignore
+      this.newPartnerDialog.removeEventListener('create-partner', this._createPartner as any);
+
       document.querySelector('body')!.removeChild(this.newPartnerDialog);
     }
   }
@@ -314,7 +313,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _savePartner(newPartnerData: any) {
-    let partnerData = this.shadowRoot.querySelector('#partnerData');
+    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData ;
     if (partnerData) {
       partnerData.savePartner(newPartnerData).then((successful: any) => {
         if (successful) {
@@ -332,7 +331,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
       loadingSource: 'partner-data'
     });
 
-    let partnerData = this.shadowRoot.querySelector('#partnerData');
+    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
       partnerData.deletePartner(this.partner);
     }
@@ -367,7 +366,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
         (typeof event.detail === 'string' && event.detail !== '')) {
-      fireEvent(this, 'set-server-errors', event.detail as any);
+      fireEvent(this, 'set-server-errors', event.detail);
       this.scrollToTop();
     }
   }
@@ -381,7 +380,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _createPartner(event: CustomEvent) {
-    let partnerData = this.shadowRoot.querySelector('#partnerData');
+    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
       partnerData.createPartner(event.detail, this._newPartnerCreated,
           this._handleCreatePartnerError);

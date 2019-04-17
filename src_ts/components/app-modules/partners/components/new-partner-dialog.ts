@@ -2,13 +2,15 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import { fireEvent } from '../../../utils/fire-custom-event';
-
+import { property } from '@polymer/decorators';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
  * @customElement
  */
-class NewPartnerDialog extends PolymerElement {
+export class NewPartnerDialog extends PolymerElement {
 
   static get template() {
     // language=HTML
@@ -33,18 +35,11 @@ class NewPartnerDialog extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      vendorNumber: String,
-      vendorNumberIsEmpty: {
-        type: Boolean,
-        computed: '_vendorNumberIsEmpty(vendorNumber)'
-      }
-    }
-  }
+  @property({type: String})
+  vendorNumber: string = '';
 
-  public vendorNumber: string = '';
-  public vendorNumberIsEmpty: boolean = true;
+  @property({type: Boolean, computed: '_vendorNumberIsEmpty(vendorNumber)'})
+  vendorNumberIsEmpty: boolean = true;
 
   // @ts-ignore
   private _vendorNumberIsEmpty(): boolean {
@@ -52,10 +47,8 @@ class NewPartnerDialog extends PolymerElement {
   }
 
   openNewPartnerDialog() {
-    // @ts-ignore
-    this.$.vendorNo.invalid = false;
-    // @ts-ignore
-    this.$.newPartnerDialog.opened = true;
+    (this.$.vendorNo as PaperInputElement).invalid = false;
+    (this.$.newPartnerDialog as EtoolsDialog).opened = true;
   }
 
   _handleDialogClosed(closingReason: CustomEvent) {

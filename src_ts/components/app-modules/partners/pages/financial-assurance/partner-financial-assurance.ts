@@ -27,7 +27,8 @@ import {AP_DOMAIN} from '../../../../../config/config.js';
 import './components/assessments-items.js';
 import '../../../../layout/monitoring-visits-list.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
+import { PartnerAssessment } from '../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -41,7 +42,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
  * @appliesMixin RiskRatingMixin
  */
 class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin
-(PaginationMixin(RiskRatingMixin(PolymerElement))))) as any)) {
+(PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`
@@ -432,41 +433,29 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     `;
   }
 
-  static get properties() {
-    return {
-      auditorPortalBasePath: String,
-      engagements: Array,
-      allEngagements: Array,
-      partner: {
-        type: Object,
-        observer: '_partnerReceived'
-      },
-      TYPES: Object,
-      basisOptions: Array,
-      auditOptions: Array,
-      editMode: Boolean
-    };
-  }
+  @property({type: String})
+  auditorPortalBasePath: string = AP_DOMAIN;
 
-  public auditorPortalBasePath: string = AP_DOMAIN;
-  public engagements: any[] = [];
-  public TYPES: object = {
-    'audit': 'Audit',
-    'ma': 'Micro Assessment',
-    'sc': 'Spot Check',
-    'sa': 'Special Audit'
-  };
-  public basisOptions: any[] = [];
-  public auditOptions: any[] = [
-    {
-      label: 'NO',
-      value: 'NO'
-    },
-    {
-      label: 'YES',
-      value: 'YES'
-    }
-  ];
+  @property({type: Array})
+  engagements: any[] = [];
+
+  @property({type: Array})
+  allEngagements: any[] = [];
+
+  @property({type: Object,  reflectToAttribute: true, observer: '_partnerReceived'})
+  partner: any = {};
+
+  @property({type: Object})
+  TYPES: any = {'audit': 'Audit', 'ma': 'Micro Assessment', 'sc': 'Spot Check', 'sa': 'Special Audit'};
+
+  @property({type: Array})
+  basisOptions: any[] = [];
+
+  @property({type: Array})
+  auditOptions: any[] = [ { label: 'NO', value: 'NO' }, { label: 'YES', value: 'YES' } ];
+
+  @property({type: Boolean})
+  editMode!: boolean;
 
   static get observers() {
     return [
@@ -480,18 +469,18 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
      * Disable loading message for details tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    // @ts-ignore
+
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
-    // @ts-ignore
+
     fireEvent(this, 'tab-content-attached');
   }
 
   public _init(engagements: any) {
-    // @ts-ignore
+
     this.set('allEngagements', engagements);
-    // @ts-ignore
+
     this.set('engagements', []);
-    // @ts-ignore
+
     this.set('paginator', JSON.parse(JSON.stringify({
       count: engagements.length,
       page: 1,
@@ -501,13 +490,11 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
   }
 
   public _displayType(type: any) {
-    // @ts-ignore
     return this.TYPES[type];
   }
 
   public _getEngagementsRequestOptions(partnerId: any) {
     return {
-      // @ts-ignore
       endpoint: this.getEndpoint('engagements'),
       params: {
         ordering: 'unique_id',
@@ -523,56 +510,44 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
       return;
     }
     let requestOptions = this._getEngagementsRequestOptions(partner.id);
-    // @ts-ignore
+
     this.sendRequest(requestOptions)
         .then((results: any) => this._init(results))
         // @ts-ignore
         .catch((err: any) => this.handleErrorResponse(err));
 
-    // @ts-ignore
     this.set('basisOptions', []);
     this._addBasisFromPartner();
   }
 
   public _addBasisFromPartner() {
-    // @ts-ignore
     this.set('basisOptions', [
       ...this.basisOptions,
-      // @ts-ignore
-      ...this.partner.assessments.map(a => ({
-        // @ts-ignore
-        label: `${a.type} - ${this.getDateDisplayValue(a.completed_date)}`,
-        // @ts-ignore
-        value: `${a.type} - ${this.getDateDisplayValue(a.completed_date)}`
+      ...this.partner.assessments.map((a: PartnerAssessment) => ({
+        label: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`,
+        value: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`
       }))
     ]);
   }
 
   public _addBasisFromEngagements(engagements: any) {
-    // @ts-ignore
     this.set('basisOptions', [
       ...this.basisOptions,
       ...engagements.map((e: any) => ({
-        // @ts-ignore
         label: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`,
-        // @ts-ignore
         value: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`
       }))
     ]);
   }
 
   public _paginate(pageNumber: number, pageSize: number) {
-    // @ts-ignore
     if (!this.allEngagements) {
       return;
     }
-    // @ts-ignore
     let engagements = this.allEngagements;
     engagements = engagements
-        // @ts-ignore
         .sort((a, b) => moment(b.status_date) - moment(a.status_date))
         .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-    // @ts-ignore
     this.set('engagements', engagements);
   }
 

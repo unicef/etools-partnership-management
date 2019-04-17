@@ -41,6 +41,7 @@ export class Partner extends ModelsCommon {
   type_of_assessment: string = '';
   vendor_number: string = '';
   vision_synced: boolean = false;
+  [key: string]: any;
 
   constructor(partnerDataObj: GenericObject) {
     super();
@@ -87,7 +88,13 @@ export class PartnerListItem {
 }
 
 export class PartnerAssessment {
-
+  id?: number;
+  type: string | null = null;
+  completed_date: string | null = null;
+  report_attachment: any | null = null;
+  report: any | null = null;
+  active: boolean | null = null;
+  partner: number | null = null;
 }
 
 export class PartnerCoreValAssessment extends ModelsCommon {
@@ -110,7 +117,7 @@ export class PartnerPlannedEngagement {
 }
 
 export class MinimalStaffMember extends ModelsCommon {
-  id: number | null = null;
+  id?: number;
   name: string = '';
   first_name: string = '';
   last_name: string = '';
@@ -118,8 +125,11 @@ export class MinimalStaffMember extends ModelsCommon {
 
   constructor(staffMemberData: GenericObject) {
     super();
-    this.setObjProperties(staffMemberData);
-    this.name = this.first_name + ' ' + this.last_name;
+
+    if (Object.keys(staffMemberData)) {
+      this.setObjProperties(staffMemberData);
+      this.name = this.first_name + ' ' + this.last_name;
+    }
   }
 }
 
@@ -130,6 +140,9 @@ export class StaffMember extends MinimalStaffMember {
 
   constructor(staffMemberData: GenericObject) {
     super(staffMemberData);
-    this.setObjProperties(staffMemberData);
+
+    if (Object.keys(staffMemberData)) {
+      this.setObjProperties(staffMemberData);
+    }
   }
 }

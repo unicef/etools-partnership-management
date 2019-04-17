@@ -10,11 +10,15 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import { StaffMember } from '../../../../../../models/partners.models';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
+
 /**
  * @polymer
  * @customElement
  */
-class AddEditStaffMembers extends (PolymerElement as any) {
+class AddEditStaffMembers extends PolymerElement {
 
   static get template() {
     // language=HTML
@@ -107,18 +111,15 @@ class AddEditStaffMembers extends (PolymerElement as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      item: Object,
-      dataItems: Array
-    }
-  }
+  @property({type: Object})
+  item!: StaffMember;
 
-  public dataItems: object[] = [];
+  @property({type: Array})
+  dataItems: StaffMember[] = [];
 
   open() {
     this.resetValidations();
-    this.$.staffMemberDialog.opened = true;
+    (this.$.staffMemberDialog as EtoolsDialog).opened = true;
   }
 
   _isNewStaffMember(item: {id: number | null}) {
@@ -212,18 +213,22 @@ class AddEditStaffMembers extends (PolymerElement as any) {
   resetValidations() {
     let fields = ['#firstName', '#lastName', '#email', '#phone', '#title'];
     for (let i = 0; i < fields.length; i++) {
-      let el = this.$.staffMemberDialog.querySelector(fields[i]);
-      el.invalid = false;
+      let el = this.$.staffMemberDialog.querySelector(fields[i]) as PolymerElement & {invalid: boolean};
+      if(el){
+        el.invalid = false;
+      }
     }
   }
 
   _savePartnerContact() {
     if (this.validate()) {
       fireEvent(this, 'save-partner-contact', this.item);
-      this.$.staffMemberDialog.opened = false;
+      (this.$.staffMemberDialog as EtoolsDialog).opened = false;
     }
   }
 
 }
 
 window.customElements.define('add-edit-staff-members', AddEditStaffMembers);
+
+export {AddEditStaffMembers as AddEditStaffMembersEl}

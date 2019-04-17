@@ -6,7 +6,9 @@ import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import { logWarn } from 'etools-behaviors/etools-logging';
-
+import { property } from '@polymer/decorators';
+import { StatusAction, Status } from '../../../../typings/etools-status.types.js';
+import { Partner } from '../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -14,7 +16,7 @@ import { logWarn } from 'etools-behaviors/etools-logging';
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerElement as any))) {
+class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerElement)) {
 
   static get template() {
     // language=HTML
@@ -50,22 +52,20 @@ class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerE
     `;
   }
 
-  static get properties() {
-    return {
-      partner: {
-        type: Object,
-        notify: true
-      },
-      editMode: Boolean,
-      deleteWarningDialogContent: Object,
-      possibleStatuses: Array,
-      possibleActions: Array
-    }
-  }
+  @property({type: Object, notify: true})
+  partner!: Partner;
 
-  public editMode: boolean = false;
-  public possibleStatuses: object[] = [];
-  public possibleActions: any[] = [
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Object})
+  deleteWarningDialogContent: any = null;
+
+  @property({type: Array})
+  possibleStatuses: Status[] = [];
+
+  @property({type: Array})
+  possibleActions: StatusAction[] = [
     {
       label: 'Save',
       hidden: true,
@@ -103,7 +103,7 @@ class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerE
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback);
+    this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback as any);
   }
 
   setPossibleStatuses() {
@@ -188,8 +188,7 @@ class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerE
     }
   }
 
-  // @ts-ignore
-  _computeAvailableActions(hidden: boolean, editMode: boolean) {
+  _computeAvailableActions(_hidden: boolean, editMode: boolean) {
     if (!editMode || !this.partner) {
       return;
     }
@@ -228,7 +227,6 @@ class PartnerStatus extends (DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerE
     }
 
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
-      // @ts-ignore
       if (this.possibleStatuses[key].label === activeStatus) {
         this.set(['possibleStatuses', key, 'completed'], true);
         this.set(['possibleStatuses', key, 'hidden'], false);

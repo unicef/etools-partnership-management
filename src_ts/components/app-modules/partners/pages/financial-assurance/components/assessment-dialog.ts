@@ -15,14 +15,17 @@ import {RootState, store} from '../../../../../../store';
 import {isJsonStrMatch} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
-
+import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../../typings/globals.types.js';
+import { PartnerAssessment } from '../../../../../../models/partners.models.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
+class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -94,36 +97,28 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     `;
   }
 
-  static get properties() {
-    return {
-      assessment: Object,
-      uploadEndpoint: String,
-      opened: {
-        type: Boolean,
-        notify: true
-      },
-      uploadInProgress: Boolean,
-      assessmentModel: Object,
-      assessmentTypes: Array,
-      _validationSelectors: Array
-    };
+  @property({type: Object})
+  assessment!: PartnerAssessment;
 
-  }
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Boolean, notify: true})
+  opened: boolean = false;
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
+
+  @property({type: Object})
+  assessmentModel = {} as PartnerAssessment;
+
+  @property({type: Array})
+  assessmentTypes: LabelAndValue[] = [];
+
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
 
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
-  public assessmentModel: any = {
-    type: null,
-    completed_date: null,
-    current: false,
-    report_attachment: null,
-    active: true,
-    partner: null
-  };
-  public uploadInProgress: boolean = false;
-  public opened: boolean = false;
-  public uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
-  public assessment: any = null;
-  public assessmentTypes: any[] = [];
 
   public stateChanged(state: RootState) {
     if (!state.commonData) {
@@ -151,7 +146,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     this._validationSelectors.forEach((selector) => {
       // @ts-ignore
       let el = this.shadowRoot.querySelector(selector);
-      if (el && !el.validate()) {
+      if (el && !(el as any).validate()) {
         isValid = false;
       }
     });
@@ -209,9 +204,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
   }
 
   public _handleResponse(response: any, isNew: boolean) {
-    // @ts-ignore
+
     this.set('opened', false);
-    // @ts-ignore
+
     fireEvent(this, isNew ? 'assessment-added' : 'assessment-updated', response);
   }
 
@@ -220,13 +215,11 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
   }
 
   public startSpinner() {
-    // @ts-ignore
-    this.$.assessmentDialog.startSpinner();
+    (this.$.assessmentDialog as EtoolsDialog).startSpinner();
   }
 
   public stopSpinner() {
-    // @ts-ignore
-    this.$.assessmentDialog.stopSpinner();
+    (this.$.assessmentDialog as EtoolsDialog).stopSpinner();
   }
 
   public resetValidations() {
@@ -234,12 +227,12 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
       // @ts-ignore
       let el = this.shadowRoot.querySelector(selector);
       if (el) {
-        el.invalid = false;
+        (el as any).invalid = false;
       }
     });
   }
 
-  public initAssessment(assessment: any, partnerId: any) {
+  public initAssessment(assessment: any, partnerId?: any) {
     if (!assessment) {
       assessment = JSON.parse(JSON.stringify(this.assessmentModel));
       assessment.partner = partnerId;
@@ -266,3 +259,4 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
 }
 
 window.customElements.define('assessment-dialog', AssessmentDialog);
+export {AssessmentDialog}
