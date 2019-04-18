@@ -172,6 +172,10 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
       inteventionSections: {
         type: Array,
         value: []
+      },
+      resultLinks: {
+        type: Array,
+        value: []
       }
     };
   }
@@ -179,7 +183,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
   static get observers() {
     return [
       '_parseSections(sections.length, intervention.sections.length)',
-      '_parseCpOutputs(cpOutputs.length, intervention.result_links.length)'
+      '_parseCpOutputs(cpOutputs.length, resultLinks.length)'
     ];
   }
 
@@ -208,12 +212,12 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
       this.set('interventionCpOutputs', []);
       return;
     }
-    let resultLinks = this.intervention.result_links;
+
     let ids: GenericObject = {};
     let uniqueIds: number[] = [];
     let interventionCpOutputs: CpOutput[] = [];
 
-    resultLinks.forEach(function(res: ExpectedResult) {
+    this.resultLinks.forEach(function(res: ExpectedResult) {
       ids[res.cp_output] = true;
     });
 
