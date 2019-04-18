@@ -1,6 +1,6 @@
 //import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import { ExpectedResult, CpOutput } from '../../../../../../../../typings/intervention.types';
-import { isEmptyObject, isJsonStrMatch } from '../../../../../../../utils/utils';
+import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../../../utils/utils';
 import { RootState } from '../../../../../../../../store';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../../../../../../../typings/globals.types';
@@ -163,6 +163,9 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       let resultLink = e.detail.result;
       this._initializeToBeAbleToAddLowerResult(resultLink);
       this.push('dataItems', resultLink);
+
+      // To mke sure all req. observers are triggered
+      this.dataItems = copy(this.dataItems);
     }
 
     _initializeToBeAbleToAddLowerResult(resultLink: ExpectedResult) {

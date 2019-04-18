@@ -6,6 +6,7 @@ import { fireEvent } from '../utils/fire-custom-event.js';
 import { GenericObject, Constructor } from '../../typings/globals.types.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import { PolymerElement } from '@polymer/polymer';
+import { copy } from '../utils/utils.js';
 
 
 /**
@@ -179,6 +180,9 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       let index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
+
+        // To mke sure all req. observers are triggered
+        this.dataItems = copy(this.dataItems);
 
         fireEvent(this, 'delete-confirm', {index: this.elToDeleteIndex});
       }
