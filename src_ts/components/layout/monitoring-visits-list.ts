@@ -150,11 +150,20 @@ class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) 
         type: Array,
         value: []
       },
-      interventionOrPartnerId: {
+      interventionId: {
         type: Number,
-        observer: '_interventionOrPartnerIdChanged'
+        observer: '_interventionIdChanged'
+      },
+      partnerId: {
+        type: Number,
+        observer: '_partnerIdChanged'
       },
       showTpmVisits: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      interventionOverview: {
         type: Boolean,
         value: false,
         reflectToAttribute: true
@@ -163,17 +172,29 @@ class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) 
   }
 
   static get observers() {
-    return ['showTpmVisitsAndIdChanged(interventionOrPartnerId, showTpmVisits)'];
+    return [
+             'showTpmVisitsAndIdChanged(partnerId, showTpmVisits)'
+           ];
   }
 
-  _interventionOrPartnerIdChanged(newId: string) {
-    if (!newId) {
+  _interventionIdChanged(intervId: string) {
+    this._getT2fVisits(intervId, 'monitoringVisits');
+  }
+
+  _partnerIdChanged(partnerId: string) {
+    if (!this.interventionOverview) {
+      this._getT2fVisits(partnerId, 'partnerT2fProgrammaticVisits');
+    }
+  }
+
+  _getT2fVisits(interventionOrPartnerId: string , endpointName: string) {
+    if (!interventionOrPartnerId) {
       return;
     }
 
     this.set('showLoading', true);
-    let monitoringVisitsEndpoint = this.getEndpoint(this.endpointName, {
-      id: newId, year: moment().year()
+    let monitoringVisitsEndpoint = this.getEndpoint(endpointName, {
+      id: interventionOrPartnerId, year: moment().year()
     });
     let self = this;
     this.sendRequest({
@@ -186,6 +207,7 @@ class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) 
       parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
+
 
   _hideMonitoringVisits(t2flength: number, tpmLength: number) {
     let shouldHide = t2flength === 0;
