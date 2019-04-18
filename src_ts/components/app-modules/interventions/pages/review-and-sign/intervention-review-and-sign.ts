@@ -30,6 +30,7 @@ import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -41,8 +42,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin UploadsMixin
  */
 class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdownOptionsMixin
-(UploadsMixin(PolymerElement))) as any) {
-  [x: string]: any;
+(UploadsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -248,45 +248,33 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
     `;
   }
 
-  static get properties() {
-    return {
-      originalIntervention: Object,
-      intervention: {
-        type: Object,
-        notify: true,
-        observer: '_interventionChanged'
-      },
-      permissions: {
-        type: Object,
-        statePath: 'pageData.permissions'
-      },
-      signedByUnicefUsers: {
-        type: Array,
-        statePath: 'unicefUsersData'
-      },
-      agreement: {
-        type: Object,
-        value: null,
-        observer: '_agreementChanged'
-      },
-      agreementAuthorizedOfficers: {
-        type: Array,
-        value: []
-      },
-      _lockSubmitToPrc: {
-        type: Boolean,
-        value: false
-      },
-      partnerDateValidatorErrorMessage: {
-        type: String,
-        value: ''
-      },
-      unicefDateValidatorErrorMessage: {
-        type: String,
-        value: ''
-      }
-    };
-  }
+  @property({type: Object})
+  originalIntervention!: object;
+
+  @property({type: Object, notify: true, observer: '_interventionChanged'})
+  intervention!: object;
+
+  @property({type: Object})
+  permissions!: object;
+
+  @property({type: Array})
+  signedByUnicefUsers!: [];
+
+  @property({type: Agreement, observer: '_agreementChanged'})
+  agreement!: Agreement;
+
+  @property({type: Array})
+  agreementAuthorizedOfficers!: [];
+
+  @property({type: Boolean})
+  _lockSubmitToPrc: boolean = false;
+
+  @property({type: String})
+  partnerDateValidatorErrorMessage!: string;
+
+  @property({type: String})
+  unicefDateValidatorErrorMessage!: string;
+
 
   static get observers() {
     return [
@@ -362,7 +350,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
       '#signedByUnicefDateField', '#signedIntervFile'];
 
     fieldSelectors.forEach((selector: string) => {
-      let field = this.shadowRoot.querySelector(selector);
+      let field = this.shadowRoot!.querySelector(selector);
       if (field && !field.validate()) {
         valid = false;
       }

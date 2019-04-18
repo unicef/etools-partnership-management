@@ -16,6 +16,7 @@ import { store, RootState } from '../../../../../../../store.js';
 import { setInAmendment } from '../../../../../../../actions/page-data.js';
 import { isJsonStrMatch } from '../../../../../../utils/utils.js';
 import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -143,37 +144,29 @@ class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(Polymer
     `;
   }
 
-  static get properties() {
-    return {
-      amendments: {
-        type: Array,
-        value: [],
-        notify: true
-      },
-      filteredAmendmentTypes: Object,
-      amendmentTypes: {
-        type: Object,
-        statePath: 'interventionAmendmentTypes'
-      },
-      interventionDocumentType: {
-        type: String
-      },
-      inAmendment: {
-        type: Boolean,
-        statePath: 'pageData.in_amendment'
-      },
-      addAmendmentDialog: {
-        type: Object
-      },
-      editMode: {
-        type: Boolean,
-        reflectToAttribute: true
-      },
-      interventionId: {
-        type: Number
-      }
-    };
-  }
+  @property({type: Array, notify: true})
+  amendments: [] = [];
+
+  @property({type: Object})
+  filteredAmendmentTypes: object = {};
+
+  @property({type: Object})
+  amendmentTypes: object = {};
+
+  @property({type: String})
+  interventionDocumentType: string = '';
+
+  @property({type: Boolean})
+  inAmendment: boolean = false;
+
+  @property({type: Object})
+  addAmendmentDialog: object = {};
+
+  @property({type: Boolean, reflectToAttribute: true})
+  editMode: boolean = false;
+
+  @property({type: Number})
+  interventionId: number | null = null;
 
   static get observers() {
     return [

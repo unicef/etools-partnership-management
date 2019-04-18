@@ -11,6 +11,7 @@ import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
 import { buttonsStyles } from '../../../../../../styles/buttons-styles';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -18,7 +19,7 @@ import { buttonsStyles } from '../../../../../../styles/buttons-styles';
  * @customElement
  * @appliesMixin RepeatableDataSetsMixin
  */
-class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
+class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
@@ -99,29 +100,21 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      editMode: {
-        type: Boolean,
-        value: true
-      },
-      deleteDialog: {
-        type: Object,
-        observer: '_delConfirmationDialogChange'
-      },
-      deleteConfirmationMessage: {
-        type: String,
-        value: 'Are you sure you want to delete this FR Number?'
-      },
-      disableConfirmBtn: {
-        type: Boolean,
-        value: true
-      },
-      interventionStatus: {
-        type: String
-      }
-    };
-  }
+  @property({type: Boolean})
+  editMode: boolean = true;
+
+  // TODO: check if deleteDialog is still used
+  // @property({type: Object, observer: '_delConfirmationDialogChange'})
+  // deleteDialog!: object;
+
+  @property({type: String})
+  deleteConfirmationMessage: string = 'Are you sure you want to delete this FR Number?';
+
+  @property({type: Boolean})
+  disableConfirmBtn: boolean = true;
+
+  @property({type: String})
+  interventionStatus!: string;
 
   static get observers() {
     return ['_itemsLengthChanged(dataItems.length)'];
@@ -136,13 +129,13 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     return !(interventionStatus === 'active' && dataItemsLength === 1);
   }
 
-  _delConfirmationDialogChange() {
-    if (!this.deleteDialog) {
-      return;
-    }
-    // update delete confirmation dialog size
-    this.deleteDialog.set('size', 'sm');
-  }
+  // _delConfirmationDialogChange() {
+  //   if (!this.deleteDialog) {
+  //     return;
+  //   }
+  //   // update delete confirmation dialog size
+  //   this.deleteDialog.set('size', 'sm');
+  // }
 
   openDialog() {
     this.$.frsDialog.opened = true;

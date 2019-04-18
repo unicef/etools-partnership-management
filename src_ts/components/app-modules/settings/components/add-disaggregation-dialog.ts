@@ -17,6 +17,7 @@ import {addDisaggregation} from '../../../../actions/common-data';
 import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
 import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {property} from "@polymer/decorators/lib/decorators";
 
 
 /**
@@ -28,7 +29,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @appliesMixin RepeatableDataSetsMixin
  */
 class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(EndpointsMixin
-(RepeatableDataSetsMixin(PolymerElement) as any)) as any) {
+(RepeatableDataSetsMixin(PolymerElement)))) {
 
   static get template() {
     // language=HTML
@@ -99,24 +100,17 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Endp
     `;
   }
 
-  static get properties() {
-    return {
-      disaggregation: {
-        type: Object,
-        observer: '_disaggregationChanged'
-      },
-      dataItems: {
-        type: Array
-      },
-      toastEventSource: {
-        type: Object
-      },
-      disableConfirmBtn: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Object, observer: '_disaggregationChanged'})
+  disaggregation!: object;
+
+  @property({type: Array})
+  dataItems!: [];
+
+  @property({type: Object})
+  toastEventSource!: object;
+
+  @property({type: Boolean})
+  disableConfirmBtn: boolean = false;
 
   ready() {
     super.ready();
@@ -216,11 +210,11 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Endp
   }
 
   validate() {
-    return this.shadowRoot.querySelector('#disaggregateByEl').validate();
+    return this.shadowRoot!.querySelector('#disaggregateByEl')!.validate();
   }
 
   resetValidations() {
-    this.shadowRoot.querySelector('#disaggregateByEl').invalid = false;
+    this.shadowRoot!.querySelector('#disaggregateByEl')!.invalid = false;
   }
 
 }

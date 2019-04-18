@@ -13,11 +13,12 @@ import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
 import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
-import { FrsDetails, Fr } from '../../../../../../../typings/intervention.types.js';
+import {FrsDetails, Fr, Intervention} from '../../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import {getArraysDiff} from '../../../../../../utils/array-helper.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -28,8 +29,7 @@ import {getArraysDiff} from '../../../../../../utils/array-helper.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement))) as any) {
-  [x: string]: any;
+class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
   static get template() {
     return html`
       ${pmpCustomIcons}
@@ -96,39 +96,32 @@ class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsi
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object
-      },
-      editMode: {
-        type: Boolean
-      },
-      frsDialogEl: {
-        type: Object
-      },
-      frsConfirmationsDialog: {
-        type: Object
-      },
-      _frsDetailsRequestEndpoint: {
-        type: Object
-      },
-      _lastFrsDetailsReceived: {
-        type: Object
-      },
-      _frsConsistencyWarning: {
-        type: String,
-        value: ''
-      },
-      _frsConfirmationsDialogMessage: {
-        type: String
-      },
-      _frsNrsLoadingMsgSource: {
-        type: String,
-        value: 'fr-nrs-check'
-      }
-    };
-  }
+  @property({type: Intervention})
+  intervention!: Intervention;
+
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Object})
+  frsDialogEl!: object;
+
+  @property({type: Object})
+  frsConfirmationsDialog!: object;
+
+  @property({type: Object})
+  _frsDetailsRequestEndpoint!: object;
+
+  @property({type: Object})
+  _lastFrsDetailsReceived!: object;
+
+  @property({type: String})
+  _frsConsistencyWarning!: string;
+
+  @property({type: String})
+  _frsConfirmationsDialogMessage!: string;
+
+  @property({type: String})
+  _frsNrsLoadingMsgSource: string = 'fr-nrs-check';
 
   static get observers() {
     return [

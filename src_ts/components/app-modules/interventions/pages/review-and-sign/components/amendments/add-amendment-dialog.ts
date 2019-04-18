@@ -20,6 +20,7 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -125,65 +126,44 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
     `;
   }
 
-  static get properties() {
-    return {
-      endpointName: {
-        type: String,
-        value: 'interventionAmendmentAdd'
-      },
-      toastEventSource: {
-        type: Object
-      },
-      datePickerOpen: {
-        type: Boolean,
-        value: false
-      },
-      opened: {
-        type: Boolean,
-        notify: true,
-        observer: '_resetFields'
-      },
-      interventionId: {
-        type: Number
-      },
-      interventionDocumentType: {
-        type: String
-      },
-      amendmentTypes: {
-        type: Object,
-        statePath: 'interventionAmendmentTypes'
-      },
-      filteredAmendmentTypes: {
-        type: Object
-      },
-      newAmendment: {
-        type: Object
-      },
-      uploadEndpoint: {
-        type: String,
-        value: function() {
-          return pmpEndpoints.attachmentsUpload.url;
-        }
-      },
-      _validationSelectors: {
-        type: Array,
-        value: ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other']
-      },
-      uploadInProgress: {
-        type: Boolean,
-        value: false,
-        computed: 'getUploadInProgress(amdUploadInProgress, prcUploadInProgress)'
-      },
-      amdUploadInProgress: {
-        type: Boolean,
-        value: false
-      },
-      prcUploadInProgress: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String})
+  endpointName: string = 'interventionAmendmentAdd';
+
+  @property({type: Object})
+  toastEventSource: object = {};
+
+  @property({type: Boolean})
+  datePickerOpen: boolean = false;
+
+  @property({type: Boolean, notify: true, observer: '_resetFields'})
+  opened: boolean = false;
+
+  @property({type: Number})
+  interventionId: number | null = null;
+
+  @property({type: String})
+  interventionDocumentType: string = '';
+
+  @property({type: Object})
+  amendmentTypes: object = {};
+
+  @property({type: Object})
+  newAmendment: object = {};
+
+  @property({type: String})
+  uploadEndpoint: string =  pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Array})
+  _validationSelectors: [] = ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other'];
+
+  @property({type: Boolean, computed: 'getUploadInProgress(amdUploadInProgress, prcUploadInProgress)'})
+  uploadInProgress: boolean = false;
+
+  @property({type: Boolean})
+  amdUploadInProgress: boolean = false;
+
+  @property({type: Boolean})
+  prcUploadInProgress: boolean = false;
 
   static get observers() {
     return [

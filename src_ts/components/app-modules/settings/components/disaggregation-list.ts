@@ -20,6 +20,7 @@ import {Disaggregation} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import { EnvFlags, User } from '../../../../typings/globals.types';
 import { userIsPme } from '../../../user/user-permissions';
+import {property} from "@polymer/decorators/lib/decorators";
 
 
 /**
@@ -32,7 +33,7 @@ import { userIsPme } from '../../../user/user-permissions';
  * @appliesMixin FrontendPaginationMixin
  */
 class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(FrontendPaginationMixin(PolymerElement)))) as any) {
+    EnvironmentFlagsMixin(FrontendPaginationMixin(PolymerElement))))) {
 
   static get template() {
     // language=HTML
@@ -122,29 +123,20 @@ class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequest
     `;
   }
 
-  static get properties() {
-    return {
-      disaggregations: {
-        type: Array,
-        statePath: 'disaggregations'
-      },
-      disaggregationModal: {
-        type: Object
-      },
-      filteredDisaggregations: {
-        type: Array,
-        computed: '_filterData(disaggregations, q)'
-      },
-      q: {
-        type: String,
-        value: ''
-      },
-      totalResults: {
-        type: Number,
-        computed: '_computeResults(filteredDisaggregations)'
-      }
-    };
-  }
+  @property({type: Array})
+  disaggregations!: [];
+
+  @property({type: Object})
+  disaggregationModal!: object;
+
+  @property({type: Array, computed: '_filterData(disaggregations, q)'})
+  filteredDisaggregations!: [];
+
+  @property({type: String})
+  q: string = '';
+
+  @property({type: Number, computed: '_computeResults(filteredDisaggregations)'})
+  totalResults!: number;
 
   static get observers() {
     return [
@@ -219,7 +211,7 @@ class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequest
       store.dispatch(patchDisaggregation(response));
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {
-      self.shadowRoot.querySelector('#showActive-' + e.model.item.id).checked = !e.model.item.active;
+      self.shadowRoot!.querySelector('#showActive-' + e.model.item.id)!.checked = !e.model.item.active;
       parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource ? self.toastEventSource : self);
     });
   }
