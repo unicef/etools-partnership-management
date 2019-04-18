@@ -160,6 +160,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       this.push('dataItems', resultLink);
 
       // To mke sure all req. observers are triggered
+      // @ts-ignore dataIems is defined in component
       this.dataItems = copy(this.dataItems);
     }
 
