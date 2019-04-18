@@ -1,47 +1,51 @@
+import { Constructor } from '../../../../../../../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+
 declare const moment: any;
-import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 /**
  * Common reporting requirements past dates check used for UI
  * @polymer
  * @mixinFunction
  */
-const ReportingReqPastDatesCheckMixin = dedupingMixin((superClass: any) => class extends superClass {
+function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  static get properties() {
-    return {
-      inAmendment: Boolean,
-      editMode: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  class reportingReqPastDatesCheckClass extends baseClass {
 
-  _uneditableStyles(inAmendment: boolean, dueDate: any, id: number) {
-    return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id)
-        ? this._getUneditableStyles()
-        : '';
-  }
+    @property({type: Boolean})
+    inAmendment!: boolean;
 
-  _getUneditableStyles() {
-    return 'color: var(--secondary-text-color)';
-  }
+    @property({type: Boolean})
+    editMode: boolean = false;
 
-  _pastDueDate(dueDate: string) {
-    let now = moment().format('YYYY-MM-DD');
-    let dueD = moment(new Date(dueDate)).format('YYYY-MM-DD');
-    return moment(dueD).isBefore(now);
-  }
+    _uneditableStyles(inAmendment: boolean, dueDate: any, id: number) {
+      return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id)
+          ? this._getUneditableStyles()
+          : '';
+    }
 
-  _canEdit(editMode: boolean, inAmendment: boolean, dueDate: string, id: number) {
-    return editMode && !this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id);
-  }
+    _getUneditableStyles() {
+      return 'color: var(--secondary-text-color)';
+    }
 
-  _noInAmendmentPastDatesEdit(inAmendment: boolean, dueDate: string, id: number) {
-    return inAmendment && this._pastDueDate(dueDate) && id > 0;
-  }
+    _pastDueDate(dueDate: string) {
+      let now = moment().format('YYYY-MM-DD');
+      let dueD = moment(new Date(dueDate)).format('YYYY-MM-DD');
+      return moment(dueD).isBefore(now);
+    }
 
-});
+    _canEdit(editMode: boolean, inAmendment: boolean, dueDate: string, id: number) {
+      return editMode && !this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id);
+    }
+
+    _noInAmendmentPastDatesEdit(inAmendment: boolean, dueDate: string, id: number) {
+      return inAmendment && this._pastDueDate(dueDate) && id > 0;
+    }
+
+  };
+  return reportingReqPastDatesCheckClass;
+}
 
 export default ReportingReqPastDatesCheckMixin;

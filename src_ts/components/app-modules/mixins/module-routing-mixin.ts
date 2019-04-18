@@ -1,5 +1,5 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import { GenericObject } from '../../../typings/globals.types'; // TODO - load using tsconfig
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+import { GenericObject, Constructor } from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 
 import {PolymerElement} from '@polymer/polymer/polymer-element';
@@ -11,9 +11,8 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @polymer
  * @mixinFunction
  */
-const ModuleRoutingMixin = dedupingMixin(
-    // @ts-ignore
-    (superClass: any) => class extends (superClass) {
+function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+    class moduleRoutingClass extends (baseClass) {
 
       static get properties() {
         return {
@@ -42,6 +41,9 @@ const ModuleRoutingMixin = dedupingMixin(
           }
         };
       }
+
+      public listActive!: boolean;
+      public activePage!: string;
 
       ready() {
         super.ready();
@@ -74,7 +76,7 @@ const ModuleRoutingMixin = dedupingMixin(
        * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
        */
       _resetTabAttachedFlagIfNeeded(currentModule: string, previousPage: string) {
-        let selectedTab = this.shadowRoot.querySelector('[name="' + currentModule + '"]');
+        let selectedTab = this.shadowRoot!.querySelector('[name="' + currentModule + '"]');
         if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
           this.set('tabAttached', false);
         }
@@ -96,7 +98,7 @@ const ModuleRoutingMixin = dedupingMixin(
        * @param {function} appendBasePathAdditionalFolder
        * @return {string}
        */
-      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder: object) {
+      _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object) {
         let baseUrl = currentModule + '/pages/' + page + '/';
         if (typeof appendBasePathAdditionalFolder === 'function') {
           // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
@@ -105,7 +107,7 @@ const ModuleRoutingMixin = dedupingMixin(
         return baseUrl;
       }
 
-      _handleSuccessfulImport(page: string, successCallback: object) {
+      _handleSuccessfulImport(page: string, successCallback?: object) {
         // set active page
         this.set('activePage', page);
         if (typeof successCallback === 'function') {
@@ -122,8 +124,8 @@ const ModuleRoutingMixin = dedupingMixin(
         fireEvent(this, '404');
       }
 
-      setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab: object,
-                    appendBasePathAdditionalFolder: object, successfulImportCallback: object) {
+      setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab?: object,
+                    appendBasePathAdditionalFolder?: object, successfulImportCallback?: object) {
         let page = listActive ? 'list' : tab;
 
         if (listActive) {
@@ -160,7 +162,7 @@ const ModuleRoutingMixin = dedupingMixin(
 
       importPageElement(fileName: string, baseUrl: string) {
         return new Promise((resolve, reject) => {
-          let customElement = this.shadowRoot.querySelector(fileName);
+          let customElement = this.shadowRoot!.querySelector(fileName);
           if (customElement instanceof PolymerElement === false) {
 
             /* Imports are resolved relative to the current module, in this case module-routing-mixin,
@@ -181,10 +183,14 @@ const ModuleRoutingMixin = dedupingMixin(
       }
 
       isActiveModule(moduleName: string) {
+        // @ts-ignore
         const mName = !moduleName ? this.moduleName : moduleName;
+        // @ts-ignore
         return this.rootPath + mName === this.route.prefix;
       }
 
-    });
+    };
+    return moduleRoutingClass;
+}
 
 export default ModuleRoutingMixin;

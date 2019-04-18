@@ -90,7 +90,7 @@ export const _checkEnvironment = () => {
 
 export const getDomainByEnv = () => {
   if (window.location.port === '8082') {
-    return 'http://localhost:8082/pmp_poly3';
+    return 'http://localhost:8082/pmp';
   }
   if (isStagingServer()) {
     return 'https://etools-staging.unicef.org/pmp';

@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-loading/etools-loading.js';
 declare const moment: any;
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import CommonMixin from '../mixins/common-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { isEmptyObject } from '../utils/utils';
@@ -10,23 +9,15 @@ import { gridLayoutStyles } from '../styles/grid-layout-styles';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 
-/**
-* @polymer
-* @mixinFunction
-* @appliesMixin EndpointsMixin
-* @appliesMixin CommonMixin
-*/
-const MonitoringVisitsListMixins = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-  CommonMixin
-], PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin MonitoringVisitsListMixins
+ * @mixinFunction
+ * @appliesMixin EndpointsMixin
+ * @appliesMixin CommonMixin
  */
-class MonitoringVisitsList extends MonitoringVisitsListMixins {
+class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) as any) {
   [x: string]: any;
 
   static get template() {
@@ -159,11 +150,20 @@ class MonitoringVisitsList extends MonitoringVisitsListMixins {
         type: Array,
         value: []
       },
-      interventionOrPartnerId: {
+      interventionId: {
         type: Number,
-        observer: '_interventionOrPartnerIdChanged'
+        observer: '_interventionIdChanged'
+      },
+      partnerId: {
+        type: Number,
+        observer: '_partnerIdChanged'
       },
       showTpmVisits: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      interventionOverview: {
         type: Boolean,
         value: false,
         reflectToAttribute: true
@@ -172,17 +172,29 @@ class MonitoringVisitsList extends MonitoringVisitsListMixins {
   }
 
   static get observers() {
-    return ['showTpmVisitsAndIdChanged(interventionOrPartnerId, showTpmVisits)'];
+    return [
+             'showTpmVisitsAndIdChanged(partnerId, showTpmVisits)'
+           ];
   }
 
-  _interventionOrPartnerIdChanged(newId: string) {
-    if (!newId) {
+  _interventionIdChanged(intervId: string) {
+    this._getT2fVisits(intervId, 'monitoringVisits');
+  }
+
+  _partnerIdChanged(partnerId: string) {
+    if (!this.interventionOverview) {
+      this._getT2fVisits(partnerId, 'partnerT2fProgrammaticVisits');
+    }
+  }
+
+  _getT2fVisits(interventionOrPartnerId: string , endpointName: string) {
+    if (!interventionOrPartnerId) {
       return;
     }
 
     this.set('showLoading', true);
-    let monitoringVisitsEndpoint = this.getEndpoint(this.endpointName, {
-      id: newId, year: moment().year()
+    let monitoringVisitsEndpoint = this.getEndpoint(endpointName, {
+      id: interventionOrPartnerId, year: moment().year()
     });
     let self = this;
     this.sendRequest({
@@ -195,6 +207,7 @@ class MonitoringVisitsList extends MonitoringVisitsListMixins {
       parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
+
 
   _hideMonitoringVisits(t2flength: number, tpmLength: number) {
     let shouldHide = t2flength === 0;

@@ -3,7 +3,6 @@ import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-button/paper-button.js';
 
 import 'etools-dialog/etools-dialog.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
@@ -22,9 +21,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EditQprDialog extends EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement) {
+class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {
@@ -50,6 +47,7 @@ class EditQprDialog extends EtoolsMixinFactory.combineMixins([
       calendar-lite {
         position: relative;
         width: 268px;
+        height: 100%;
       }
 
     </style>

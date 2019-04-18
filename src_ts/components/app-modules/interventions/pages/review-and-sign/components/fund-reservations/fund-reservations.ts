@@ -5,7 +5,6 @@ import { timeOut } from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-content-panel/etools-content-panel.js';
 import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
@@ -23,23 +22,13 @@ import {getArraysDiff} from '../../../../../../utils/array-helper.js';
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-const InterventionFundReservationsMixins = EtoolsMixinFactory.combineMixins([
-  DynamicDialogMixin,
-  EndpointsMixin,
-  FrNumbersConsistencyMixin
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin InterventionFundReservationsMixins
- */
-class FundReservations extends InterventionFundReservationsMixins {
+class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement))) as any) {
   [x: string]: any;
   static get template() {
     return html`

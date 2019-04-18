@@ -1,5 +1,5 @@
 import {IPermission} from '../../../typings/globals.types';
-import { StaffMember } from '../../../typings/partner.types';
+import { StaffMember } from '../../../models/partners.models';
 
 // export interface MinimalAgreement {
 //   [key: string]: undefined | null | number | string | boolean;
@@ -21,7 +21,7 @@ export class MinimalAgreement {
   status?: string = undefined;
   country_programme?: string = undefined;
   special_conditions_pca?: boolean = false;
-  [key: string]: undefined | null | number | string | boolean;
+  [key: string]: any;
 }
 export class Agreement extends MinimalAgreement {
   authorized_officers?: StaffMember[] = [];

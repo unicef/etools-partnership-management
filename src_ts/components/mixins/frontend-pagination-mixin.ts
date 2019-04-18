@@ -1,7 +1,10 @@
-import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
 
-const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
-  class extends baseClass {
+function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class frontendPaginationClass extends baseClass {
+    [x: string]: any;
 
     public static get properties() {
       return {
@@ -45,6 +48,8 @@ const FrontendPaginationMixin = dedupingMixin((baseClass: any) =>
       return typeof item === 'undefined';
     }
 
-  });
+  };
+  return frontendPaginationClass;
+}
 
 export default FrontendPaginationMixin;

@@ -13,7 +13,7 @@ import { EnvFlags } from '../../typings/globals.types';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EnvironmentFlags extends connect(store)(EndpointsMixin(PolymerElement) as any) {
+class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement) as any) {
 
   public static get properties() {
     return {
@@ -66,4 +66,4 @@ class EnvironmentFlags extends connect(store)(EndpointsMixin(PolymerElement) as 
 
 }
 
-window.customElements.define('environment-flags', EnvironmentFlags);
+window.customElements.define('environment-flags', EnvironmentFlagsMixin);

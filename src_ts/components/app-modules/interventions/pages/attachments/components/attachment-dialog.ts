@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-upload/etools-upload.js';
@@ -20,19 +19,11 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-er
 
 /**
  * @polymer
+ * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-const AttachmentDialogMixin = EtoolsMixinFactory.combineMixins([
-  EndpointsMixin,
-], PolymerElement);
-
-/**
- * @polymer
- * @customElement
- * @appliesMixin AttachmentDialogMixin
- */
-class AttachmentDialog extends AttachmentDialogMixin {
+class AttachmentDialog extends (EndpointsMixin(PolymerElement) as any) {
   [x: string]: any;
 
   static get template() {

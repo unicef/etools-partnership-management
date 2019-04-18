@@ -5,7 +5,6 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
-import {EtoolsMixinFactory} from 'etools-behaviors/etools-mixin-factory';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
 import { AgreementAmendment } from '../../../../agreement.types';
@@ -21,14 +20,13 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 
 
-const AgAmendmentsMixins = [CommonMixin];
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class AgreementAmendments extends connect(store)(EtoolsMixinFactory.combineMixins(AgAmendmentsMixins, PolymerElement)) {
+class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
+  [x: string]: any;
 
   static get template() {
     return html`
