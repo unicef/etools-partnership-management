@@ -1,56 +1,79 @@
 {
   "entrypoint": "index.html",
-  "shell": "pmp/app-shell.html",
+  "shell": "src/components/app-shell/app-shell.js",
   "fragments": [
-    "pmp/modules/app-modules/partners/partners-module.html",
-    "pmp/modules/app-modules/partners/pages/list/partners-list.html",
-    "pmp/modules/app-modules/partners/pages/overview/partner-overview.html",
-    "pmp/modules/app-modules/partners/pages/details/partner-details.html",
-    "pmp/modules/app-modules/partners/pages/financial-assurance/partner-financial-assurance.html",
+    "src/components/app-modules/partners/partners-module.js",
+    "src/components/app-modules/partners/pages/list/partners-list.js",
+    "src/components/app-modules/partners/pages/overview/partner-overview.js",
+    "src/components/app-modules/partners/pages/details/partner-details.js",
+    "src/components/app-modules/partners/pages/financial-assurance/partner-financial-assurance.js",
 
-    "pmp/modules/app-modules/agreements/agreements-module.html",
-    "pmp/modules/app-modules/agreements/pages/list/agreements-list.html",
-    "pmp/modules/app-modules/agreements/pages/details/agreement-details.html",
+    "src/components/app-modules/agreements/agreements-module.js",
+    "src/components/app-modules/agreements/pages/list/agreements-list.js",
+    "src/components/app-modules/agreements/pages/details/agreement-details.js",
 
-    "pmp/modules/app-modules/interventions/interventions-module.html",
-    "pmp/modules/app-modules/interventions/pages/list/interventions-list.html",
-    "pmp/modules/app-modules/interventions/pages/overview/intervention-overview.html",
-    "pmp/modules/app-modules/interventions/pages/details/intervention-details.html",
-    "pmp/modules/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.html",
-    "pmp/modules/app-modules/interventions/pages/attachments/intervention-attachments.html",
-    "pmp/modules/app-modules/interventions/pages/reports/intervention-reports.html",
-    "pmp/modules/app-modules/interventions/pages/progress/intervention-progress.html",
+    "src/components/app-modules/interventions/interventions-module.js",
+    "src/components/app-modules/interventions/pages/list/interventions-list.js",
+    "src/components/app-modules/interventions/pages/overview/intervention-overview.js",
+    "src/components/app-modules/interventions/pages/details/intervention-details.js",
+    "src/components/app-modules/interventions/pages/review-and-sign/intervention-review-and-sign.js",
+    "src/components/app-modules/interventions/pages/attachments/intervention-attachments.js",
+    "src/components/app-modules/interventions/pages/reports/intervention-reports.js",
+    "src/components/app-modules/interventions/pages/progress/intervention-progress.js",
 
-    "pmp/modules/app-modules/reports/reports-module.html",
-    "pmp/modules/app-modules/reports/pages/list/reports-list.html",
-    "pmp/modules/app-modules/reports/pages/progress/report-progress.html",
-    "pmp/modules/app-modules/reports/pages/summary/report-summary.html",
+    "src/components/app-modules/reports/reports-module.js",
+    "src/components/app-modules/reports/pages/list/reports-list.js",
+    "src/components/app-modules/reports/pages/progress/report-progress.js",
+    "src/components/app-modules/reports/pages/summary/report-summary.js",
 
-    "pmp/modules/app-modules/settings/settings-module.html",
-    "pmp/modules/app-modules/not-found/not-found.html"
+    "src/components/app-modules/settings/settings-module.js",
+    "src/components/app-modules/not-found/not-found.js"
   ],
   "sources": [
-    "pmp/**/*",
+    "src/**/*",
     "images/**/*",
-    "bower.json"
+    "package.json"
   ],
   "extraDependencies": [
     "manifest.json",
-    "bower_components/webcomponentsjs/*.js"
+    "node_modules/@webcomponents/webcomponentsjs/**",
+    "node_modules/web-animations-js/web-animations-next-lite.min.js",
+    "node_modules/moment/min/moment.min.js"
   ],
   "lint": {
-    "rules": ["polymer-2"],
-    "ignoreWarnings": []
+    "rules": ["polymer-3"],
+    "ignoreWarnings": ["could-not-resolve-reference"]
   },
   "builds": [
     {
-      "preset": "es6-bundled",
-      "name": "pmp/es6-bundled",
-      "browserCapabilities": ["es2015"]
+      "name": "esm-bundled",
+      "browserCapabilities": [
+        "es2015",
+        "modules"
+      ],
+      "js": {
+        "minify": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
     },
     {
+      "name": "es6-bundled",
+      "preset": "es6-bundled",
+      "addServiceWorker": true
+    },
+    {
+      "name": "es5-bundled",
       "preset": "es5-bundled",
-      "name": "pmp/es5-bundled"
+      "addServiceWorker": true
     }
-  ]
+  ],
+  "moduleResolution": "node",
+  "npm": true
 }

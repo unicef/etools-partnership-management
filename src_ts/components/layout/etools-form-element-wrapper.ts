@@ -1,0 +1,127 @@
+import { PolymerElement, html } from '@polymer/polymer';
+import '@polymer/paper-input/paper-input-container.js';
+
+import {SharedStyles} from '../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles';
+
+/**
+ * @polymer
+ * @customElement
+ */
+class EtoolsFormElementWrapper extends PolymerElement {
+
+  static get template() {
+    return html`
+    ${SharedStyles} ${requiredFieldStarredStyles}
+    <style>
+        :host {
+          width: 100%;
+          max-width: var(--etools-form-element-wrapper-max-width, none);
+          --paper-input-container-underline: {
+            display: none;
+          };
+          --paper-input-container-underline-focus: {
+            display: none;
+          };
+          --paper-input-container-underline-disabled: {
+            display: none;
+          };
+          --paper-input-prefix: {
+            margin-right: 5px;
+            margin-top: -2px;
+            color: var(--dark-secondary-text-color);
+          }
+        }
+
+        :host(.right-align) paper-input-container {
+          text-align: right;
+        }
+
+        .paper-input-input {
+          @apply --layout-horizontal;
+          display: inline-block;
+        }
+
+        :host(.ie) .paper-input-input {
+          display: inline-block;
+        }
+
+        :host(.ie) .input-value {
+          line-height: 24px;
+        }
+
+        .placeholder {
+          color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+        }
+
+      </style>
+      <paper-input-container always-float-label="[[alwaysFloatLabel]]"
+                            no-label-float="[[noLabelFloat]]"
+                            required$="[[required]]">
+        <label hidden$=[[!label]] slot="label">[[label]]</label>
+        <slot name="prefix" slot="prefix"></slot>
+        <div slot="input" class="paper-input-input">
+          <span class$="input-value [[_getPlaceholderClass(value)]]">
+            [[_getDisplayValue(value)]]
+          </span>
+          <slot></slot>
+        </div>
+      </paper-input-container>
+
+    `;
+  }
+
+  static get properties() {
+    return {
+      label: String,
+      value: {
+        type: String,
+        value: ''
+      },
+      alwaysFloatLabel: {
+        type: Boolean,
+        value: true
+      },
+      noLabelFloat: Boolean,
+      required: {
+        type: Boolean,
+        reflectToAttribute: true,
+        observer: '_requiredChanged'
+      },
+      noPlaceholder: Boolean
+    };
+  }
+
+  public noPlaceholder: boolean = false;
+
+  connectedCallback() {
+    super.connectedCallback();
+    const appShell = document.querySelector('app-shell');
+    if (appShell && appShell.classList.contains('ie')) {
+      this.classList.add('ie');
+    }
+  }
+
+  _requiredChanged(req: any) {
+    if (typeof req === 'undefined') {
+      return;
+    }
+    this.updateStyles();
+  }
+
+  _getPlaceholderClass(value: string) {
+    let cssclass = ((typeof value === 'string' && value.trim() !== '')
+        ? ''
+        : (this.noPlaceholder ? '' : 'placeholder'));
+    return cssclass + ' etools-form-element-wrapper';
+  }
+
+  _getDisplayValue(value: string) {
+    return (typeof value === 'string' && value.trim() !== '')
+        ? value.trim()
+        : (this.noPlaceholder ? '' : '—');
+  }
+
+}
+
+window.customElements.define('etools-form-element-wrapper', EtoolsFormElementWrapper);
