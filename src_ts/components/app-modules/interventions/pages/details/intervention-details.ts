@@ -144,6 +144,7 @@ class InterventionDetails extends connect(store)(
       .export-res-btn {
         height: 28px;
         margin-top: 4px;
+        margin-bottom: 6px;
       }
 
     </style>
@@ -386,10 +387,10 @@ class InterventionDetails extends connect(store)(
         <template is="dom-if" if="[[!newIntervention]]">
           <div slot="panel-btns" class="cp-header-actions-bar">
             <paper-button title="Export results" class="white-btn export-res-btn"
-             hidden$="[[!showExportResults(intervention.status)]]" on-click="exportExpectedResults">
+             hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]" on-click="exportExpectedResults">
                    Export
             </paper-button>
-            <div class="separator" hidden$="[[!showExportResults(intervention.status)]]"></div>
+            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links, permissions.edit.result_links)]]"></div>
             <paper-toggle-button id="showInactive"
                                 hidden$="[[!thereAreInactiveIndicators]]"
                                 checked="{{showInactiveIndicators}}">
@@ -974,10 +975,16 @@ class InterventionDetails extends connect(store)(
             && !this.originalIntervention.activation_letter_attachment;
   }
 
-  showExportResults(status: string) {
+  showExportResults(status: string, resultLinks: []) {
     return [CONSTANTS.STATUSES.Draft.toLowerCase(),
             CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
+            && resultLinks && resultLinks.length;
+  }
+
+  showSeparator(status: string, resultLinks: [], resultLinkPermission: boolean) {
+    return this.showExportResults(status, resultLinks) && resultLinkPermission;
+
   }
 
   exportExpectedResults() {
