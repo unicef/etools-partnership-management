@@ -165,7 +165,11 @@ documentContainer.innerHTML = `
         --paper-input-container-label-floating: {
           color: var(--secondary-text-color, #737373);
         };
-  
+        
+        --paper-input-prefix: {
+          color: var(--secondary-text-color, #737373);
+        };
+
         /* In Edge, paper-input's internal value is not updated
            when it's cleared by click on x btn, so we're hiding the btn
         */

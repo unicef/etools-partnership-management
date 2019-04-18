@@ -181,6 +181,7 @@ class InterventionsModule extends connect(store)(
           <template is="dom-if" if="[[_visibleTabContent(activePage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                   intervention="[[intervention]]"
+                                  result-links="[[intervention.result_links]]"
                                   intervention-agreement="[[agreement]]">
             </intervention-overview>
           </template>
