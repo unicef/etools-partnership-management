@@ -19,7 +19,7 @@ import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-opt
 import UploadsMixin from '../../../../mixins/uploads-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { Intervention, Fr } from '../../../../../typings/intervention.types.js';
-import { Agreement } from '../../../agreements/agreement.types.js';
+import {Agreement} from '../../../agreements/agreement.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
@@ -41,8 +41,8 @@ import {property} from '@polymer/decorators';
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdownOptionsMixin
-(UploadsMixin(PolymerElement)))) {
+class InterventionReviewAndSign extends connect(store)(CommonMixin(UploadsMixin
+(MissingDropdownOptionsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -249,10 +249,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
   }
 
   @property({type: Object})
-  originalIntervention!: object;
+  originalIntervention!: Intervention;
 
   @property({type: Object, notify: true, observer: '_interventionChanged'})
-  intervention!: object;
+  intervention!: Intervention;
 
   @property({type: Object})
   permissions!: object;
@@ -260,7 +260,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
   @property({type: Array})
   signedByUnicefUsers!: [];
 
-  @property({type: Agreement, observer: '_agreementChanged'})
+  @property({type: Object, observer: '_agreementChanged'})
   agreement!: Agreement;
 
   @property({type: Array})
@@ -350,7 +350,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
       '#signedByUnicefDateField', '#signedIntervFile'];
 
     fieldSelectors.forEach((selector: string) => {
-      let field = this.shadowRoot!.querySelector(selector);
+      let field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }
