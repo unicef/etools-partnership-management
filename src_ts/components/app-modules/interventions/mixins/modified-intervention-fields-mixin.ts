@@ -2,6 +2,7 @@
 import difference from 'lodash-es/difference';
 import { GenericObject, Constructor } from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { arraysAreEqual } from '../../../utils/utils';
 
 /**
  * PD/SSFA fields prepare for save functionality
