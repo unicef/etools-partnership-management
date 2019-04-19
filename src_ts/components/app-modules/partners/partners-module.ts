@@ -251,11 +251,13 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     this._savePartnerContact = this._savePartnerContact.bind(this);
     this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
     this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
+    this._updateBasisForRiskRating = this._updateBasisForRiskRating.bind(this);
 
     this.addEventListener('partner-save-error', this._partnerSaveError as any);
     this.addEventListener('save-partner-contact', this._savePartnerContact as any);
     this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+    this.addEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
   }
 
   public _removeListeners() {
@@ -263,6 +265,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
     this.removeEventListener('save-partner-contact', this._savePartnerContact as any);
     this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+    this.removeEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
   }
 
   public _savePartnerContact(e: CustomEvent) {
@@ -271,6 +274,10 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
     this._savePartner(this.partner.getSaveCVARequestPayload(e.detail));
+  }
+
+  public _updateBasisForRiskRating(e: CustomEvent) {
+    this._savePartner({id: this.partner.id, basis_for_risk_rating : e.detail});
   }
 
   public _createNewPartnerDialog() {
