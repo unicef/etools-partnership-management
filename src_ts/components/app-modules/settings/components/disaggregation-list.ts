@@ -21,6 +21,8 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
 import { EnvFlags, User } from '../../../../typings/globals.types';
 import { userIsPme } from '../../../user/user-permissions';
 import {property} from "@polymer/decorators/lib/decorators";
+import {AddDisaggregationDialogEl} from "./add-disaggregation-dialog";
+import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button'
 
 
 /**
@@ -32,8 +34,8 @@ import {property} from "@polymer/decorators/lib/decorators";
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(FrontendPaginationMixin(PolymerElement))))) {
+class DisaggregationList extends connect(store)(FrontendPaginationMixin(EtoolsAjaxRequestMixin(
+    EnvironmentFlagsMixin(EndpointsMixin(PolymerElement))))) {
 
   static get template() {
     // language=HTML
@@ -124,19 +126,22 @@ class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequest
   }
 
   @property({type: Array})
-  disaggregations!: [];
+  disaggregations!: Disaggregation[];
 
   @property({type: Object})
-  disaggregationModal!: object;
+  disaggregationModal!: AddDisaggregationDialogEl;
 
   @property({type: Array, computed: '_filterData(disaggregations, q)'})
-  filteredDisaggregations!: [];
+  filteredDisaggregations!: Disaggregation[];
 
   @property({type: String})
   q: string = '';
 
   @property({type: Number, computed: '_computeResults(filteredDisaggregations)'})
   totalResults!: number;
+
+  @property({type: Boolean})
+  editMode!: boolean;
 
   static get observers() {
     return [
@@ -160,7 +165,7 @@ class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequest
   ready() {
     super.ready();
     this.editMode = true;
-    this.disaggregationModal = document.createElement('add-disaggregation-dialog');
+    this.disaggregationModal = document.createElement('add-disaggregation-dialog') as AddDisaggregationDialogEl;
     this.disaggregationModal.setAttribute('id', 'disaggregationModal');
     document.querySelector('body')!.appendChild(this.disaggregationModal);
   }
@@ -211,7 +216,7 @@ class DisaggregationList extends connect(store)(EndpointsMixin(EtoolsAjaxRequest
       store.dispatch(patchDisaggregation(response));
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {
-      self.shadowRoot!.querySelector('#showActive-' + e.model.item.id)!.checked = !e.model.item.active;
+      (self.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e.model.item.active;
       parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource ? self.toastEventSource : self);
     });
   }

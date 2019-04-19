@@ -7,13 +7,15 @@ import { requiredFieldStarredStyles } from '../../../styles/required-field-style
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 declare const moment: any;
+import {property} from '@polymer/decorators/lib/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRejectDialog extends (EndpointsMixin(PolymerElement) as any) {
+class ReportRejectDialog extends (EndpointsMixin(PolymerElement)) {
 
   static get is() {
     return 'report-reject-dialog';
@@ -49,34 +51,30 @@ class ReportRejectDialog extends (EndpointsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      toastEventSource: {
-        type: Object
-      },
-      comment: {
-        type: String,
-        value: ''
-      }
-    };
-  }
+  @property({type: Object})
+  report!: object;
+
+  @property({type: Object})
+  toastEventSource!: object;
+
+  @property({type: String})
+  comment: string = '';
 
   open() {
     this.set('comment', '');
-    this.$.reportRejectDialog.set('opened', true);
+    (this.$.reportRejectDialog as EtoolsDialog).set('opened', true);
   }
 
   close() {
-    this.$.reportRejectDialog.set('opened', false);
+    (this.$.reportRejectDialog as EtoolsDialog).set('opened', false);
   }
 
   startSpinner() {
-    this.$.reportRejectDialog.startSpinner();
+    (this.$.reportRejectDialog as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    this.$.reportRejectDialog.stopSpinner();
+    (this.$.reportRejectDialog as EtoolsDialog).stopSpinner();
   }
 
   getCurrentDate() {
@@ -112,3 +110,4 @@ class ReportRejectDialog extends (EndpointsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define(ReportRejectDialog.is, ReportRejectDialog);
+export {ReportRejectDialog as ReportRejectDialogEl}

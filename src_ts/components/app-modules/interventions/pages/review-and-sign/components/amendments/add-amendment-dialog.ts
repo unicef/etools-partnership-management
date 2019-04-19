@@ -146,7 +146,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   @property({type: String})
   interventionDocumentType: string = '';
 
-  @property({type: Object})
+  @property({type: Array})
   amendmentTypes!: LabelAndValue[];
 
   @property({type: Object})
@@ -164,9 +164,10 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   @property({type: Boolean})
   prcUploadInProgress: boolean = false;
 
-  private _validationSelectors: string[] = ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other'];
+  @property({type: Array})
+  filteredAmendmentTypes!: LabelAndValue[];
 
-  private filteredAmendmentTypes!: LabelAndValue[];
+  private _validationSelectors: string[] = ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other'];
 
   static get observers() {
     return [
@@ -335,3 +336,4 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 }
 
 window.customElements.define('add-amendment-dialog', AddAmendmentDialog);
+export {AddAmendmentDialog};

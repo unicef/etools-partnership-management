@@ -17,6 +17,7 @@ import { setInAmendment } from '../../../../../../../actions/page-data.js';
 import { isJsonStrMatch } from '../../../../../../utils/utils.js';
 import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
+import {AddAmendmentDialog} from "./add-amendment-dialog";
 
 
 /**
@@ -28,7 +29,6 @@ import {property} from '@polymer/decorators';
  * @appliesMixin Common
  */
 class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(PolymerElement))) {
-  [x: string]: any;
   static get template() {
     return html`
     ${SharedStyles} ${gridLayoutStyles}
@@ -147,11 +147,11 @@ class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(Polymer
   @property({type: Array, notify: true})
   amendments: [] = [];
 
-  @property({type: Object})
-  filteredAmendmentTypes: object = {};
+  @property({type: Array})
+  filteredAmendmentTypes!: LabelAndValue[];
 
-  @property({type: Object})
-  amendmentTypes: object = {};
+  @property({type: Array})
+  amendmentTypes!: LabelAndValue[];
 
   @property({type: String})
   interventionDocumentType: string = '';
@@ -160,7 +160,7 @@ class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(Polymer
   inAmendment: boolean = false;
 
   @property({type: Object})
-  addAmendmentDialog: object = {};
+  addAmendmentDialog!: AddAmendmentDialog;
 
   @property({type: Boolean, reflectToAttribute: true})
   editMode: boolean = false;
@@ -195,18 +195,18 @@ class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(Polymer
   }
 
   _createAddAmendmentDialog() {
-    this.addAmendmentDialog = document.createElement('add-amendment-dialog');
+    this.addAmendmentDialog = document.createElement('add-amendment-dialog') as any;
     this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
     this.addAmendmentDialog.toastEventSource = this;
 
     this.newAmendmentAdded = this.newAmendmentAdded.bind(this);
-    this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded);
+    this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded as any);
     document.querySelector('body')!.appendChild(this.addAmendmentDialog);
   }
 
   _removeAddAmendmentDialog() {
     if (this.addAmendmentDialog) {
-      this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded);
+      this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded as any);
       document.querySelector('body')!.removeChild(this.addAmendmentDialog);
     }
   }
