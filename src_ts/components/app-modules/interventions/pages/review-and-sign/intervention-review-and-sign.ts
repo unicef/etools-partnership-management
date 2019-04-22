@@ -18,7 +18,7 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { Intervention, Fr } from '../../../../../typings/intervention.types.js';
+import { Intervention, Fr, InterventionPermissionsFields } from '../../../../../typings/intervention.types.js';
 import {Agreement} from '../../../agreements/agreement.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
@@ -31,6 +31,7 @@ import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
+import { IPermission, MinimalUser } from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -41,8 +42,9 @@ import {property} from '@polymer/decorators';
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionReviewAndSign extends connect(store)(CommonMixin(UploadsMixin
-(MissingDropdownOptionsMixin(PolymerElement)))) {
+class InterventionReviewAndSign extends connect(store)(CommonMixin(
+  UploadsMixin(
+    MissingDropdownOptionsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -255,10 +257,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(UploadsMixin
   intervention!: Intervention;
 
   @property({type: Object})
-  permissions!: object;
+  permissions!: IPermission<InterventionPermissionsFields>;
 
   @property({type: Array})
-  signedByUnicefUsers!: [];
+  signedByUnicefUsers!: MinimalUser[];
 
   @property({type: Object, observer: '_agreementChanged'})
   agreement!: Agreement;

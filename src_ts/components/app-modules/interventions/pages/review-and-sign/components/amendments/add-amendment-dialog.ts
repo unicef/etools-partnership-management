@@ -132,7 +132,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   endpointName: string = 'interventionAmendmentAdd';
 
   @property({type: Object})
-  toastEventSource: object = {};
+  toastEventSource!: PolymerElement;
 
   @property({type: Boolean})
   datePickerOpen: boolean = false;
