@@ -69,7 +69,8 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
                 selected="{{filter.alreadySelected}}"
-                on-selected-changed="filterValueChanged"
+                trigger-value-change-event
+                on-etools-selected-item-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
                 hide-search="[[filter.hideSearch]]"
                 min-width="[[filter.minWidth]]"
