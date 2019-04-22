@@ -353,7 +353,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
       this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer,
           timeOut.after(50),
           () => {
-            this.requestReportDetails.bind(this, id)();
+            this.requestReportDetails.bind(this, id? id.toString() : '')();
           }
       );
     }, 0);
@@ -480,11 +480,11 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     super.disconnectedCallback();
 
     if (this.reportRatingDialog) {
-      this.reportRatingDialog.removeEventListener('report-accepted', this._updateReportDetailsObj);
+      this.reportRatingDialog.removeEventListener('report-accepted', this._updateReportDetailsObj as any);
       document.querySelector('body')!.removeChild(this.reportRatingDialog as any);
     }
     if (this.reportRejectDialog) {
-      this.reportRejectDialog.removeEventListener('report-rejected', this._updateReportDetailsObj);
+      this.reportRejectDialog.removeEventListener('report-rejected', this._updateReportDetailsObj as any);
       document.querySelector('body')!.removeChild(this.reportRejectDialog as any);
     }
   }
@@ -495,14 +495,14 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     this.reportRatingDialog = document.createElement('report-rating-dialog') as any;
     this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
     this.reportRatingDialog.set('toastEventSource', this);
-    this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj);
+    this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj as any);
 
     document.querySelector('body')!.appendChild(this.reportRatingDialog as any);
 
     this.reportRejectDialog = document.createElement('report-reject-dialog') as any;
     this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
     this.reportRejectDialog.set('toastEventSource', this);
-    this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj);
+    this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj as any);
 
     document.querySelector('body')!.appendChild(this.reportRejectDialog as any);
   }

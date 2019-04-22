@@ -9,6 +9,7 @@ import { fireEvent } from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
+import { GenericObject } from '../../../../typings/globals.types';
 
 
 /*
@@ -62,7 +63,7 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement)) {
   }
 
   @property({type: Object})
-  report!: object;
+  report!: GenericObject;
 
   @property({type: Object})
   toastEventSource!: object;
@@ -101,7 +102,7 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement)) {
     };
 
     this.startSpinner();
-    this.fireRequest(this, 'reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
+    this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
         .then(function(response: any) {
           fireEvent(self, 'report-accepted', {report: response});
           self.stopSpinner();

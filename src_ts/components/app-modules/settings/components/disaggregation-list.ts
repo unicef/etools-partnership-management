@@ -34,8 +34,10 @@ import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggl
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(FrontendPaginationMixin(EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(EndpointsMixin(PolymerElement))))) {
+class DisaggregationList extends connect(store)(FrontendPaginationMixin(
+  EtoolsAjaxRequestMixin(
+    EnvironmentFlagsMixin(
+      EndpointsMixin(PolymerElement))))) {
 
   static get template() {
     // language=HTML
@@ -217,7 +219,7 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(EtoolsAj
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {
       (self.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e.model.item.active;
-      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource ? self.toastEventSource : self);
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
 

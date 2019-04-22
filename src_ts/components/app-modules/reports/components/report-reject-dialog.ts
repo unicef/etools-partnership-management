@@ -9,6 +9,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
 declare const moment: any;
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
+import { GenericObject } from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -52,7 +53,7 @@ class ReportRejectDialog extends (EndpointsMixin(PolymerElement)) {
   }
 
   @property({type: Object})
-  report!: object;
+  report!: GenericObject;
 
   @property({type: Object})
   toastEventSource!: object;

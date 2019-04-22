@@ -200,7 +200,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   noPdSsfaRef: boolean = false;
 
   @property({type: Object, notify: true})
-  queryParams!: object;
+  queryParams!: GenericObject;
 
   @property({type: Number})
   debounceInterval: number = 100;
@@ -214,6 +214,8 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   @property({type: Object})
   _lastParamsUsed!: object;
 
+  private _loadReportsDataDebouncer!: Debouncer;
+
   static get observers() {
     return [
       '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size,' +
@@ -223,7 +225,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
-      this.currentUser = state.commonData!.currentUser;
+      this.currentUser = state.commonData!.currentUser!;
     }
   }
 
