@@ -6,7 +6,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-content-panel/etools-content-panel.js';
-import { createDialog, removeDialog } from 'etools-dialog/dynamic-dialog';
+import { removeDialog, createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
@@ -181,8 +181,14 @@ class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(Polymer
     this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
 
     this._frsInconsistenciesConfirmationHandler = this._frsInconsistenciesConfirmationHandler.bind(this);
-    this.frsConfirmationsDialog = createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
-        this._frsInconsistenciesConfirmationHandler, this._frsConfirmationsDialogMessage);
+    this.frsConfirmationsDialog = createDynamicDialog({
+          title: 'Fund Reservation Warning',
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'No',
+          closeCallback: this._frsInconsistenciesConfirmationHandler,
+          content:  this._frsConfirmationsDialogMessage
+        });
   }
 
   _removeFrsConfirmationsDialog() {

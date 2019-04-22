@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '../../../layout/etools-status/etools-status.js';
-import { createDialog } from 'etools-dialog/dynamic-dialog';
+import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
@@ -92,8 +92,15 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     this.deleteWarningDialogContent = document.createElement('div');
     this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
     this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
-    this.warningDialog = createDialog('Delete Confirmation', 'md', 'Yes', 'No',
-        this._dialogConfirmationCallback, this.deleteWarningDialogContent);
+    this.warningDialog = createDynamicDialog({
+          title: 'Delete Confirmation',
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'No',
+          closeCallback: this._dialogConfirmationCallback,
+          content:  this.deleteWarningDialogContent
+        });
+
     this.warningDialog.updateStyles({'--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'});
 
     this._handleStickyScroll();
