@@ -20,11 +20,7 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
   class commonData extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
 
       @property({type: Object})
-      commonDataEndpoints: {
-        pmp: string[],
-        pmpPrpSections: string[],
-        prp: string[]
-      } = {
+      commonDataEndpoints = {
         pmp: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
           'sections', 'unicefUsers', 'userCountryDetails'],
         pmpPrpSections: ['disaggregations'],

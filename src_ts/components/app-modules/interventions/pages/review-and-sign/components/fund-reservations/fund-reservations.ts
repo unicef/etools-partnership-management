@@ -13,11 +13,15 @@ import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
 import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
-import { FrsDetails, Fr } from '../../../../../../../typings/intervention.types.js';
+import {FrsDetails, Fr, Intervention} from '../../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import {getArraysDiff} from '../../../../../../utils/array-helper.js';
+import {property} from '@polymer/decorators';
+import {UpdateFrNumbersEl} from "./update-fr-numbers";
+import EtoolsDialog from "etools-dialog/etools-dialog";
+import {GenericObject} from '../../../../../../../typings/globals.types';
 
 
 /**
@@ -27,8 +31,7 @@ import {getArraysDiff} from '../../../../../../utils/array-helper.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(PolymerElement))) {
   static get template() {
     return html`
       ${pmpCustomIcons}
@@ -95,39 +98,33 @@ class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(Polymer
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object
-      },
-      editMode: {
-        type: Boolean
-      },
-      frsDialogEl: {
-        type: Object
-      },
-      frsConfirmationsDialog: {
-        type: Object
-      },
-      _frsDetailsRequestEndpoint: {
-        type: Object
-      },
-      _lastFrsDetailsReceived: {
-        type: Object
-      },
-      _frsConsistencyWarning: {
-        type: String,
-        value: ''
-      },
-      _frsConfirmationsDialogMessage: {
-        type: String
-      },
-      _frsNrsLoadingMsgSource: {
-        type: String,
-        value: 'fr-nrs-check'
-      }
-    };
-  }
+  @property({type: Object})
+  intervention!: Intervention;
+
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Object})
+  frsDialogEl!: UpdateFrNumbersEl;
+
+  @property({type: Object})
+  frsConfirmationsDialog!: EtoolsDialog;
+
+  @property({type: Object})
+  _frsDetailsRequestEndpoint!: GenericObject;
+
+  @property({type: Object})
+  _lastFrsDetailsReceived!: FrsDetails;
+
+  @property({type: String})
+  _frsConsistencyWarning!: string;
+
+  @property({type: String})
+  _frsNrsLoadingMsgSource: string = 'fr-nrs-check';
+
+  private _frsConfirmationsDialogMessage!: HTMLSpanElement;
+
+  private _frsDetailsDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -138,6 +135,7 @@ class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(Polymer
 
   ready() {
     super.ready();
+    // @ts-ignore
     this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'));
   }
 
@@ -158,19 +156,19 @@ class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(Polymer
 
   _createFrsDialogEl() {
     // init frs update element
-    this.frsDialogEl = document.createElement('update-fr-numbers');
+    this.frsDialogEl = document.createElement('update-fr-numbers') as UpdateFrNumbersEl;
     this.frsDialogEl.setAttribute('id', 'frNumbersUpdateEl');
 
     // attach frs update handler (on modal/dialog close)
     this.frNumbersUpdateHandler = this.frNumbersUpdateHandler.bind(this);
-    this.frsDialogEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler);
+    this.frsDialogEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler as any);
 
     document.querySelector('body')!.appendChild(this.frsDialogEl);
   }
 
   _removeFrsDialogEl() {
     if (this.frsDialogEl) {
-      this.frsDialogEl.removeEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler);
+      this.frsDialogEl.removeEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler as any);
       document.querySelector('body')!.removeChild(this.frsDialogEl);
     }
   }
@@ -193,7 +191,7 @@ class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(Polymer
 
   _removeFrsConfirmationsDialog() {
     if (this.frsConfirmationsDialog) {
-      this.frsConfirmationsDialog.removeEventListener('close', this._frsInconsistenciesConfirmationHandler);
+      this.frsConfirmationsDialog.removeEventListener('close', this._frsInconsistenciesConfirmationHandler as any);
       removeDialog(this.frsConfirmationsDialog);
     }
   }
@@ -289,13 +287,14 @@ class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(Polymer
    * Get FR Numbers details from server
    */
   _triggerFrsDetailsRequest(frNumbers: string[]) {
-    this.frsDialogEl.startSpinner();
+      (this.frsDialogEl as UpdateFrNumbersEl).startSpinner();
 
     let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
     if (this.intervention.id) {
       url += '&intervention=' + this.intervention.id;
     }
 
+    // @ts-ignore
     this.sendRequest({
       endpoint: {url: url}
     }).then((resp: FrsDetails) => {
