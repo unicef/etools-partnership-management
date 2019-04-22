@@ -19,6 +19,7 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
+import CONSTANTS from '../../../../../../../config/app-constants';
 
 
 /**
@@ -221,14 +222,14 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
     if (!amendmentTypes || !interventionDocumentType) {
       return;
     }
-    // if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-    //    this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment: LabelAndValue) => {
-    //    return [CONSTANTS.PD_AMENDMENT_TYPES.Dates,
-    //            CONSTANTS.PD_AMENDMENT_TYPES.Other].indexOf(newAmendment.label) > -1;
-    //          });// TODO - should we filter by some criteria?
-    // } else {
-    this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
-    //}
+    if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
+       this.filteredAmendmentTypes = this.amendmentTypes.filter((type: LabelAndValue) => {
+       return ['no_cost',
+               'other'].indexOf(type.value) > -1;
+             });
+    } else {
+      this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
+    }
     const typesDropdw = this.shadowRoot.querySelector('#amendment-types');
     if (typesDropdw) {
       typesDropdw.set('invalid', false); // to fix eager validation
@@ -286,9 +287,15 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
           messages.push('Changes to the budget of activities resulting in a change in the UNICEF contribution >20% of ' +
               'previously approved cash and/or supplies, with or without changes to the programme results.');
           break;
+        case 'no_cost':
+          messages.push('No cost extension');
+          break;
         case 'change':
           messages.push('Changes to planned results, population or geographical coverage of the programme with no ' +
               'change in UNICEF contribution.');
+          break;
+        case 'other':
+          messages.push('Other');
           break;
       }
     });
