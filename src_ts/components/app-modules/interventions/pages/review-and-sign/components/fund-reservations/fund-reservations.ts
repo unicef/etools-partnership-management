@@ -6,7 +6,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-content-panel/etools-content-panel.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import { removeDialog, createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
@@ -28,11 +28,10 @@ import {GenericObject} from '../../../../../../../typings/globals.types';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservations extends (DynamicDialogMixin(FrNumbersConsistencyMixin(EndpointsMixin(PolymerElement)))) {
+class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(PolymerElement))) {
   static get template() {
     return html`
       ${pmpCustomIcons}
@@ -180,14 +179,20 @@ class FundReservations extends (DynamicDialogMixin(FrNumbersConsistencyMixin(End
     this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
 
     this._frsInconsistenciesConfirmationHandler = this._frsInconsistenciesConfirmationHandler.bind(this);
-    this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
-        this._frsInconsistenciesConfirmationHandler, this._frsConfirmationsDialogMessage);
+    this.frsConfirmationsDialog = createDynamicDialog({
+          title: 'Fund Reservation Warning',
+          size: 'md',
+          okBtnText: 'Yes',
+          cancelBtnText: 'No',
+          closeCallback: this._frsInconsistenciesConfirmationHandler,
+          content:  this._frsConfirmationsDialogMessage
+        });
   }
 
   _removeFrsConfirmationsDialog() {
     if (this.frsConfirmationsDialog) {
       this.frsConfirmationsDialog.removeEventListener('close', this._frsInconsistenciesConfirmationHandler as any);
-      this.removeDialog(this.frsConfirmationsDialog);
+      removeDialog(this.frsConfirmationsDialog);
     }
   }
 

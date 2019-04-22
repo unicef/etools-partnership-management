@@ -2,8 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 import 'etools-data-table/etools-data-table.js';
 
-import 'etools-dialog/dynamic-dialog-mixin.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
@@ -21,12 +20,11 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @customElement
  * @polymer
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingRequirementsCommonMixin
  */
-class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(CommonMixin(ReportingRequirementsCommonMixin(PolymerElement) as any)) as any)) {
+class SpecialReportingRequirements extends (EndpointsMixin(CommonMixin(ReportingRequirementsCommonMixin(PolymerElement) as any)) as any) {
   [x: string]: any;
   static get template() {
     return html`
@@ -192,7 +190,7 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
       closeCallback: this._onDeleteConfirmation,
       content: confirmationMSg
     };
-    this._deleteConfirmationDialog = this.createDynamicDialog(confirmationDialogConf);
+    this._deleteConfirmationDialog = createDynamicDialog(confirmationDialogConf);
   }
 
   _removeDeleteConfirmationsDialog() {
