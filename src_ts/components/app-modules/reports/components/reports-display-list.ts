@@ -194,7 +194,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   interventionId: number = 0;
 
   @property({type: Array})
-  reports!: [];
+  reports: [] = [];
 
   @property({type: Boolean})
   noPdSsfaRef: boolean = false;
