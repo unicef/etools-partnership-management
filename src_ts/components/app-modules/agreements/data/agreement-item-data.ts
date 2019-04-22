@@ -20,7 +20,6 @@ import {property} from '@polymer/decorators';
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
  */
-// @ts-ignore
 class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return null;
@@ -34,16 +33,16 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   };
 
   @property({type: Object, readOnly: true, notify: true})
-  agreement: Agreement = {};
+  agreement!: Agreement;
 
   @property({type: Object})
-  _partners: {} = {};
+  _partners!: {};
 
   @property({type: Number, notify: true, observer: '_agreementIdChanged'})
   agreementId: number | null = null;
 
   @property({type: Object})
-  handleSuccResponseAdditionalCallback: {} = {};
+  handleSuccResponseAdditionalCallback!: (response: any) => void;
 
   @property({type: String})
   ajaxLoadingMsgSource: string = 'ag-data';
@@ -187,7 +186,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   }
 
   // Save agreement data
-  saveAgreement(agreement: Agreement, succCallback: any) {
+  saveAgreement(agreement: GenericObject, succCallback: any) {
     if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
       fireEvent(this, 'toast', {text: 'Invalid agreement data!', showCloseBtn: true});
       return Promise.resolve(false);

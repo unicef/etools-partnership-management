@@ -7,7 +7,6 @@ import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
-import { AgreementAmendment } from '../../../../agreement.types';
 import CommonMixin from '../../../../../../mixins/common-mixin';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../../../styles/shared-styles.js';
@@ -29,7 +28,6 @@ import { AddAgAmendmentDialog } from './add-ag-amendment-dialog.js';
  * @appliesMixin CommonMixin
  */
 class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -215,7 +213,6 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     super.ready();
     this._createAddAgAmendmentDialog();
 
-    this.dataSetModel = new AgreementAmendment();
   }
 
   _createAddAgAmendmentDialog() {

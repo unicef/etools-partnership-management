@@ -16,7 +16,6 @@ import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
  * @appliesMixin EndpointsMixin
  */
 class PdLowerResultName extends EndpointsMixin(PolymerElement) {
-  [x: string]: any;
 
   static get template() {
     return html`

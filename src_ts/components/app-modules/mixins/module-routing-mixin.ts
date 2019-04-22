@@ -7,13 +7,14 @@ import { fireEvent } from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
 import {logError} from 'etools-behaviors/etools-logging';
 import { property } from '@polymer/decorators';
+import { Route } from '../../../typings/route.types';
 /**
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
  */
 function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    class moduleRoutingClass extends (baseClass) {
+    class moduleRoutingClass extends baseClass {
 
       @property({type: Boolean})
       listActive!: boolean;
@@ -22,7 +23,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       tabsActive!: boolean;
 
       @property({type: Object})
-      route!: object;
+      route!: Route;
 
       @property({type: Object})
       routeData!: object;
@@ -33,7 +34,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       @property({type: String})
       moduleName!: string;
 
-      @property({type: String, notify: true, observer: ModuleRoutingMixin.prototype._activePageChanged})
+      @property({type: String, notify: true, observer: moduleRoutingClass.prototype._activePageChanged})
       activePage!: string;
 
       /**
@@ -185,9 +186,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       }
 
       isActiveModule(moduleName?: string) {
-        // @ts-ignore
         const mName = !moduleName ? this.moduleName : moduleName;
-        // @ts-ignore
         return this.rootPath + mName === this.route.prefix;
       }
 

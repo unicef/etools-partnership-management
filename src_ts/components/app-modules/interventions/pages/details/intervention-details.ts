@@ -25,7 +25,7 @@ import CONSTANTS from '../../../../../config/app-constants';
 import { Agreement } from '../../../agreements/agreement.types';
 import { Intervention, ExpectedResult, InterventionPermissionsFields, Location } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-import { PolymerElEvent, LabelAndValue, IPermission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
+import { LabelAndValue, IPermission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store';
 import { pageCommonStyles } from '../../../../styles/page-common-styles';
@@ -54,6 +54,7 @@ import { PlannedBudgetEl } from './components/planned-budget.js';
 import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure.js';
 import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
 import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 
 
 /**
@@ -67,12 +68,12 @@ import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-hea
  * @appliesMixin UploadsMixin
  */
 class InterventionDetails extends connect(store)(
-  StaffMembersData(
     EnvironmentFlagsMixin(
-      MissingDropdownOptionsMixin(
         CommonMixin(
           UploadsMixin(
-            FrNumbersConsistencyMixin(PolymerElement))))))) {
+            FrNumbersConsistencyMixin(
+              StaffMembersData(
+                MissingDropdownOptionsMixin(PolymerElement))))))) {
 
   static get template() {
     return html`
@@ -143,6 +144,7 @@ class InterventionDetails extends connect(store)(
       .export-res-btn {
         height: 28px;
         margin-top: 4px;
+        margin-bottom: 6px;
       }
 
     </style>
@@ -385,10 +387,10 @@ class InterventionDetails extends connect(store)(
         <template is="dom-if" if="[[!newIntervention]]">
           <div slot="panel-btns" class="cp-header-actions-bar">
             <paper-button title="Export results" class="white-btn export-res-btn"
-             hidden$="[[!showExportResults(intervention.status)]]" on-click="exportExpectedResults">
+             hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]" on-click="exportExpectedResults">
                    Export
             </paper-button>
-            <div class="separator" hidden$="[[!showExportResults(intervention.status)]]"></div>
+            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links, permissions.edit.result_links)]]"></div>
             <paper-toggle-button id="showInactive"
                                 hidden$="[[!thereAreInactiveIndicators]]"
                                 checked="{{showInactiveIndicators}}">
@@ -569,6 +571,7 @@ class InterventionDetails extends connect(store)(
      * triggered by parent element on stamp or by click event on tabs
      */
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    // @ts-ignore
     this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
     fireEvent(this, 'tab-content-attached');
   }
@@ -751,8 +754,8 @@ class InterventionDetails extends connect(store)(
     }
   }
 
-  _activateAutoValidation(e: PolymerElEvent) {
-    e.target.set('autoValidate', true);
+  _activateAutoValidation(e: CustomEvent) {
+    (e.target as PaperInputElement).set('autoValidate', true);
   }
 
   _setYears(interventionStart: string, interventionEnd: string) {
@@ -782,6 +785,7 @@ class InterventionDetails extends connect(store)(
       // Prevent reset on changes caused by initialization of the fields
       this._resetDropdowns();
     }
+    // @ts-ignore
     this.getPartnerStaffMembers(id);
   }
 
@@ -878,7 +882,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _checkFrsStartConsistency(frsEarliestStartDate: string, interventionStart: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention)
+    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
         || interventionStatus === 'closed') {
       this.set('_frsStartConsistencyWarning', null);
       (this.$.intStart as PolymerElement).updateStyles();
@@ -890,7 +894,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _checkFrsEndConsistency(frsLatestEndDate: string, interventionEnd: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention)
+    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
         || interventionStatus === 'closed') {
       this.set('_frsEndConsistencyWarning', '');
       (this.$.intEnd as PolymerElement).updateStyles();
@@ -971,13 +975,20 @@ class InterventionDetails extends connect(store)(
             && !this.originalIntervention.activation_letter_attachment;
   }
 
-  showExportResults(status: string) {
+  showExportResults(status: string, resultLinks: []) {
     return [CONSTANTS.STATUSES.Draft.toLowerCase(),
             CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
+            && resultLinks && resultLinks.length;
+  }
+
+  showSeparator(status: string, resultLinks: [], resultLinkPermission: boolean) {
+    return this.showExportResults(status, resultLinks) && resultLinkPermission;
+
   }
 
   exportExpectedResults() {
+    // @ts-ignore
     let endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
     window.open(endpoint, '_blank');
   }

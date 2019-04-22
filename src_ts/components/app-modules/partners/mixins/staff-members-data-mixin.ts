@@ -40,7 +40,7 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
         }).then(function(response: any) {
           self._handleStaffMembersResponse(response);
         }).catch(function(error: any) {
-          logError('etting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
+          logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
           fireEvent(self, 'toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
         });
       }

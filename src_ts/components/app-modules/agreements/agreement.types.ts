@@ -7,7 +7,7 @@ import { StaffMember } from '../../../models/partners.models';
 
 // TODO: refactor this...
 export class MinimalAgreement {
-  id?: number | null;
+  id: number | null = null;
   agreement_number?: string;
   agreement_number_status?: string;
   agreement_type?: string | null = null;

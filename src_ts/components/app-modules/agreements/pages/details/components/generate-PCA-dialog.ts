@@ -47,7 +47,6 @@ class GeneratePcaDialog extends PolymerElement {
   selectedTemplate: string | null = null;
 
   open() {
-    // @ts-ignore
     (this.$.etoolsDialog as EtoolsDialog).opened = true;
   }
 
@@ -65,3 +64,4 @@ class GeneratePcaDialog extends PolymerElement {
 }
 
 window.customElements.define('generate-pca-dialog', GeneratePcaDialog);
+export {GeneratePcaDialog as GeneratePcaDialogEl}

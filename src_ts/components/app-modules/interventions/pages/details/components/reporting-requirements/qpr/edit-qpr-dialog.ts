@@ -50,6 +50,7 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
       calendar-lite {
         position: relative;
         width: 268px;
+        height: 100%;
       }
 
     </style>

@@ -3,13 +3,14 @@ import 'etools-data-table/etools-data-table.js';
 
 import '../../../../../../../layout/icons-actions.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
-import {PolymerElEvent, GenericObject} from '../../../../../../../../typings/globals.types.js';
+import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
 import ReportingReqPastDatesCheckMixin from '../mixins/reporting-req-past-dates-check.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import {isEmptyObject} from '../../../../../../../utils/utils.js';
 import { property } from '@polymer/decorators';
+import { IconsActionsEl } from '../../../../../../../layout/icons-actions.js';
 
 /**
  * @polymer
@@ -100,8 +101,8 @@ class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
     return parseInt(index, 10) + 1;
   }
 
-  _deleteHruReq(e: PolymerElEvent) {
-    fireEvent(this, 'delete-hru', {index: e.target.getAttribute('data-args')});
+  _deleteHruReq(e: CustomEvent) {
+    fireEvent(this, 'delete-hru', {index: (e.target as IconsActionsEl).getAttribute('data-args')});
   }
 }
 

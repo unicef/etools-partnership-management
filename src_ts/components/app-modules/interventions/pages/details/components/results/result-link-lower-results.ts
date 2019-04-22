@@ -9,7 +9,7 @@ import '../../../../../../layout/icons-actions.js';
 
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { PolymerElEvent, DomRepeatEvent } from '../../../../../../../typings/globals.types';
+import { DomRepeatEvent } from '../../../../../../../typings/globals.types';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 
@@ -18,6 +18,8 @@ import './applied-indicators.js';
 import { Indicator } from '../../../../../../../typings/intervention.types.js';
 import { logError } from 'etools-behaviors/etools-logging';
 import { property } from '@polymer/decorators';
+import { IconsActionsEl } from '../../../../../../layout/icons-actions.js';
+import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
 
 /**
  * @polymer
@@ -261,9 +263,9 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     fireEvent(this, 'add-new-lower-result', {expectedResultId: this.expectedResultId});
   }
 
-  _editLowerResult(e: PolymerElEvent) {
+  _editLowerResult(e: CustomEvent) {
     e.stopPropagation();
-    let index = parseInt(e.target.getAttribute('data-args'), 10);
+    let index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
       logError('Can not edit, invalid index selected', 'lower-results');
       return;
@@ -291,7 +293,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     let resultMap = {
       cpOutputId: this.cpOutputId,
       llResultIndex: event.model.index,
-      llResultId: parseInt(event.target.getAttribute('data-ll-result-id'), 10),
+      llResultId: parseInt((event.target as PaperIconButtonElement).getAttribute('data-ll-result-id')!, 10),
       indicatorData: null,
       appliedIndicatorsIndex: null
     };

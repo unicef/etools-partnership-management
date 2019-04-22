@@ -41,6 +41,7 @@ export class Partner extends ModelsCommon {
   type_of_assessment: string = '';
   vendor_number: string = '';
   vision_synced: boolean = false;
+  [key: string]: any;
 
   constructor(partnerDataObj: GenericObject) {
     super();
@@ -49,6 +50,21 @@ export class Partner extends ModelsCommon {
     }
     this._normalizePartnerData();
   }
+
+  getSaveStaffMemberRequestPayload(staffMemberData : GenericObject) {
+     return {
+       id: this.id,
+       staff_members: [new StaffMember(staffMemberData)]
+     };
+  }
+
+  getSaveCVARequestPayload(cvaData: GenericObject){
+    return {
+      id: this.id,
+      core_values_assessments: [new PartnerCoreValAssessment(cvaData)]
+    }
+  }
+
 
   private _normalizePartnerData() {
     if (this.staff_members.length > 0) {
@@ -66,38 +82,19 @@ export class Partner extends ModelsCommon {
 
 }
 
-export class StaffMemberSaveReqPayload {
-  id: number = 0;
-  staff_members: StaffMember[] = [];
-
-  constructor(id: number | null, staffMemberData: GenericObject) {
-    if (!id) {
-      throw new Error('StaffMemberSaveReqPayload: invalid partner id!');
-    }
-    this.id = id;
-    this.staff_members = [new StaffMember(staffMemberData)];
-  }
-}
-
-export class CVASaveReqPayload {
-  id: number = 0;
-  core_values_assessments: PartnerCoreValAssessment[] = [];
-
-  constructor(id: number | null, cvaData: GenericObject) {
-    if (!id) {
-      throw new Error('CVASaveReqPayload: invalid partner id!');
-    }
-    this.id = id;
-    this.core_values_assessments = [new PartnerCoreValAssessment(cvaData)];
-  }
-}
 
 export class PartnerListItem {
 
 }
 
 export class PartnerAssessment {
-
+  id: number| null = null;
+  type: string | null = null;
+  completed_date: string | null = null;
+  report_attachment: any | null = null;
+  report: any | null = null;
+  active: boolean = true;
+  partner: number | null = null;
 }
 
 export class PartnerCoreValAssessment extends ModelsCommon {
@@ -120,7 +117,7 @@ export class PartnerPlannedEngagement {
 }
 
 export class MinimalStaffMember extends ModelsCommon {
-  id: number | null = null;
+  id: number | null= null;
   name: string = '';
   first_name: string = '';
   last_name: string = '';
@@ -128,8 +125,11 @@ export class MinimalStaffMember extends ModelsCommon {
 
   constructor(staffMemberData: GenericObject) {
     super();
-    this.setObjProperties(staffMemberData);
-    this.name = this.first_name + ' ' + this.last_name;
+
+    if (Object.keys(staffMemberData)) {
+      this.setObjProperties(staffMemberData);
+      this.name = this.first_name + ' ' + this.last_name;
+    }
   }
 }
 
@@ -140,6 +140,9 @@ export class StaffMember extends MinimalStaffMember {
 
   constructor(staffMemberData: GenericObject) {
     super(staffMemberData);
-    this.setObjProperties(staffMemberData);
+
+    if (Object.keys(staffMemberData)) {
+      this.setObjProperties(staffMemberData);
+    }
   }
 }

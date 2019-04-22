@@ -13,7 +13,7 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { InterventionAttachment, InterventionPermissionsFields } from '../../../../../typings/intervention.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { PolymerElEvent, IdAndName, IPermission } from '../../../../../typings/globals.types.js';
+import { IdAndName, IPermission } from '../../../../../typings/globals.types.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
@@ -26,6 +26,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 import { property } from '@polymer/decorators';
 import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
+import { IconsActionsEl } from '../../../../layout/icons-actions.js';
 
 
 /**
@@ -327,10 +328,13 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     }
   }
 
-  _editAttachment(e: PolymerElEvent) {
+  _editAttachment(e: CustomEvent) {
     if (this.attachmentDialog) {
       this.attachmentDialog.interventionId = this.interventionId;
-      const editedAttachment = this.attachments.find((a: InterventionAttachment) => a.id === Number(e.target.getAttribute('item-id')));
+
+      const editedAttachment = this.attachments.find((a: InterventionAttachment) =>
+       a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+
       this.attachmentDialog.initAttachment(editedAttachment);
       this.attachmentDialog.opened = true;
     }
@@ -339,7 +343,8 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   _confirmAttachmentDelete(e: CustomEvent) {
     if (e.target !== null) {
       this.attMarkedToBeDeleted = this.attachments
-          .find((a: InterventionAttachment) => a.id === Number((e.target as any).getAttribute('item-id')));
+          .find((a: InterventionAttachment) =>
+           a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
       if (this.attMarkedToBeDeleted) {
         this.attDeleteConfirmDialog.opened = true;
       }

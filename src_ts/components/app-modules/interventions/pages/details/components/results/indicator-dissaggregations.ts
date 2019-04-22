@@ -18,6 +18,7 @@ import { buttonsStyles } from '../../../../../../styles/buttons-styles';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { property } from '@polymer/decorators';
 import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
 
 
 /**
@@ -128,8 +129,8 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
       return;
     }
 
-    let splitElId = event.target.id.split('_');
-    let index = splitElId[splitElId.length - 1];
+    let splitElId = (event.target as EtoolsDropdownEl).id.split('_');
+    let index = parseInt(splitElId[splitElId.length - 1]);
 
     if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
       if (event.model.item.disaggregId === null) {

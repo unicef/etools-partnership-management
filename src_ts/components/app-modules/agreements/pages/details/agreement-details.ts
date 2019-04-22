@@ -47,6 +47,7 @@ import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../typings/globals.types';
 import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure';
 import { MinimalStaffMember, StaffMember } from '../../../../../models/partners.models';
+import { GeneratePcaDialogEl } from './components/generate-PCA-dialog.js';
 
 
 /**
@@ -351,7 +352,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   @property({type: Object, observer: '_agreementChanged', notify: true})
-  agreement: Agreement = {};
+  agreement!: Agreement;
 
   @property({type: Boolean, observer: '_editModeChanged'})
   editMode: boolean = false;
@@ -360,10 +361,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   isNewAgreement: boolean = false;
 
   @property({type: Array})
-  partnersDropdownData: any[] = [];
+  partnersDropdownData!: any[];
 
   @property({type: Array})
-  agreementTypes: LabelAndValue[] = [];
+  agreementTypes!: LabelAndValue[];
 
   @property({type: Array})
   staffMembers: [] = [];
@@ -372,7 +373,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   authorizedOfficers: [] = [];
 
   @property({type: Object})
-  originalAgreementData: any | null = null;
+  originalAgreementData: Agreement | null = null;
 
   @property({type: Array})
   amendments: [] = [];
@@ -392,7 +393,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  _generatePCADialog: any = null;
+  private _generatePCADialog!: GeneratePcaDialogEl;
 
   static get observers() {
     return [
@@ -419,9 +420,9 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   ready() {
     super.ready();
-    this._generatePCADialog = document.createElement('generate-pca-dialog');
+    this._generatePCADialog = document.createElement('generate-pca-dialog') as any;
     this._generatePCADialog.setAttribute('id', 'generatePCADialog');
-    // @ts-ignore
+
     document.querySelector('body')!.appendChild(this._generatePCADialog);
   }
 
@@ -437,7 +438,6 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this._generatePCADialog) {
-      // @ts-ignore
       document.querySelector('body')!.removeChild(this._generatePCADialog);
     }
   }
@@ -488,7 +488,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   // display amendments if needed
   _agreementChanged(agreement: Agreement) {
     if (this._generatePCADialog) {
-      this._generatePCADialog.agreementId = agreement.id;
+      this._generatePCADialog.agreementId = agreement.id ? agreement.id.toString() : null;
     }
 
     this.set('allowAoEditForSSFA', false);
@@ -527,7 +527,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _resetDropdown(selector: string) {
-    let field = this.fieldValidationReset(selector, true);
+    let field = this.fieldValidationReset(selector, false);
     if (field) {
       field.set('selected', null);
     }

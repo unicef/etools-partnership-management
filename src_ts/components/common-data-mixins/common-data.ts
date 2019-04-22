@@ -45,7 +45,7 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       protected _handlePrpData() {
-        this._waitForEnvFlagsToLoad().then(() => {
+        this.waitForEnvFlagsToLoad().then(() => {
           if (this.showPrpReports()) {
             this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
             if (this.prpServerIsOn()) {

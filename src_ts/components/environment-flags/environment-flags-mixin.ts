@@ -34,7 +34,7 @@ function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass:
       return this.environmentFlags && this.environmentFlags.prp_server_on;
     }
 
-    public  _waitForEnvFlagsToLoad() {
+    public  waitForEnvFlagsToLoad() {
       return new Promise((resolve) => {
         let envFlagsCheck = setInterval(() => {
           if (this.envFlagsLoaded()) {

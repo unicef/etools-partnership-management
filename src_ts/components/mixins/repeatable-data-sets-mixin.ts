@@ -6,6 +6,8 @@ import {logError} from 'etools-behaviors/etools-logging.js';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog';
+import { copy } from '../utils/utils.js';
+
 
 
 /**
@@ -43,7 +45,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
 
     private _deleteDialog!: EtoolsDialog;
     private elToDeleteIndex!: number;
-    public _deleteEpName!: string; // Define din component
+
 
     public connectedCallback() {
       super.connectedCallback();
@@ -136,6 +138,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
 
         if (id) {
+          // @ts-ignore
           if (!this._deleteEpName) {
             logError('You must define _deleteEpName property to be able to remove existing records');
             return;
@@ -148,6 +151,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
           });
 
           let self = this;
+          // @ts-ignore
           let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
           this.sendRequest({
             method: 'DELETE',
@@ -174,6 +178,9 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       let index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
+
+        // To mke sure all req. observers are triggered
+        this.dataItems = copy(this.dataItems);
 
         fireEvent(this, 'delete-confirm', {index: this.elToDeleteIndex});
       }
