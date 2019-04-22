@@ -223,10 +223,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
       return;
     }
     if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-      this.filteredAmendmentTypes = this.amendmentTypes.filter((newAmendment: LabelAndValue) => {
-        return [CONSTANTS.PD_AMENDMENT_TYPES.Dates,
-                CONSTANTS.PD_AMENDMENT_TYPES.Other].indexOf(newAmendment.label) > -1;
-      });
+      this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));// TODO - should we filter by some criteria?
     } else {
       this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
     }
