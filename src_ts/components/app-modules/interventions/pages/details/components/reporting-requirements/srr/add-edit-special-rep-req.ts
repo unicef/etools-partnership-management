@@ -141,3 +141,4 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
 }
 
 window.customElements.define('add-edit-special-rep-req', AddEditSpecialRepReq);
+export {AddEditSpecialRepReq as AddEditSpecialRepReqEl}

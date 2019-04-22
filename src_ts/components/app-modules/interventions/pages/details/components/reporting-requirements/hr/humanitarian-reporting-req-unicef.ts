@@ -186,3 +186,5 @@ class HumanitarianReportingReqUnicef extends
 }
 
 window.customElements.define('humanitarian-reporting-req-unicef', HumanitarianReportingReqUnicef);
+
+export {HumanitarianReportingReqUnicef as HumanitarianReportingReqUnicefEl}
