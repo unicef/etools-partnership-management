@@ -19,95 +19,83 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
   class saveIndicatorClass extends EndpointsMixin(baseClass) {
     [x: string]: any;
 
-    static get properties() {
-      return {
-        nonClusterIndicatorCreateModel: {
-          type: Object,
-          value: {
-            indicator: {
-              title: null,
-              unit: 'number',
-              display_type: 'percentage'
-            },
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            means_of_verification: null,
-            locations: [],
-            disaggregation: [],
-            is_high_frequency: false,
-            numerator_label: null,
-            denominator_label: null
-          }
-        },
-        nonClusterIndicatorEditModel: {
-          type: Object,
-          value: {
-            id: null,
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            means_of_verification: null,
-            locations: [],
-            disaggregation: [],
-            is_high_frequency: false,
-            numerator_label: null,
-            denominator_label: null
-          }
-        },
-        clusterIndicatorCreateModel: {
-          type: Object,
-          value: {
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            locations: [],
-            cluster_indicator_id: null,
-            cluster_indicator_title: null,
-            cluster_name: null,
-            response_plan_name: null,
-            numerator_label: null,
-            denominator_label: null
-          }
-        },
-        clusterIndicatorEditModel: {
-          type: Object,
-          value: {
-            id: null,
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            locations: [],
-            numerator_label: null,
-            denominator_label: null
-          }
-        }
-      };
-    }
+    // @ts-ignore
+    private nonClusterIndicatorCreateModel = {
+          indicator: {
+            title: null,
+            unit: 'number',
+            display_type: 'percentage'
+          },
+          section: null,
+          baseline: {
+            v: 0,
+            d: 1
+          },
+          target: {
+            v: 0,
+            d: 1
+          },
+          means_of_verification: null,
+          locations: [],
+          disaggregation: [],
+          is_high_frequency: false,
+          numerator_label: null,
+          denominator_label: null
+        };
+    // @ts-ignore
+    private nonClusterIndicatorEditModel = {
+          id: null,
+          section: null,
+          baseline: {
+            v: 0,
+            d: 1
+          },
+          target: {
+            v: 0,
+            d: 1
+          },
+          means_of_verification: null,
+          locations: [],
+          disaggregation: [],
+          is_high_frequency: false,
+          numerator_label: null,
+          denominator_label: null
+        };
+      // @ts-ignore
+      private clusterIndicatorCreateModel = {
+          section: null,
+          baseline: {
+            v: 0,
+            d: 1
+          },
+          target: {
+            v: 0,
+            d: 1
+          },
+          locations: [],
+          cluster_indicator_id: null,
+          cluster_indicator_title: null,
+          cluster_name: null,
+          response_plan_name: null,
+          numerator_label: null,
+          denominator_label: null
+        };
+      // @ts-ignore
+      private clusterIndicatorEditModel = {
+          id: null,
+          section: null,
+          baseline: {
+            v: 0,
+            d: 1
+          },
+          target: {
+            v: 0,
+            d: 1
+          },
+          locations: [],
+          numerator_label: null,
+          denominator_label: null
+        };
 
     _validateAndSaveIndicator() {
       if (!this.validate()) {

@@ -12,6 +12,7 @@ import { isEmptyObject } from '../../../../../utils/utils.js';
 import { Intervention, FrsDetails } from '../../../../../../typings/intervention.types.js';
 import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -22,7 +23,7 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
  * @appliesMixin CommonMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
+class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsistencyMixin(PolymerElement))) {
 
   static get template() {
     return html`
@@ -243,19 +244,15 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object,
-        value: null
-      },
-      frsDetails: {
-        type: Object,
-        value: null
-      },
-      _frsTotalAmountWarning: String
-    };
-  }
+  @property({type: Object})
+  intervention: Intervention | null = null;
+
+  @property({type: Object})
+  frsDetails: object | null = null;
+
+  @property({type: String})
+  _frsTotalAmountWarning!: string;
+
 
   static get observers() {
     return [

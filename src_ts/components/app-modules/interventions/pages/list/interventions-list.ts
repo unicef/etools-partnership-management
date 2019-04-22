@@ -1,4 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer';
+import {customElement, property} from '@polymer/decorators';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icon/iron-icon.js';
@@ -13,7 +14,6 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
@@ -27,9 +27,13 @@ import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
 import { listFilterStyles } from '../../../../styles/list-filter-styles';
 import { frWarningsStyles } from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
+import {InterventionsListData} from '../../data/interventions-list-data.js';
 import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
 import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import { LabelAndValue, CpStructure, MinimalUser } from '../../../../../typings/globals.types.js';
+import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
+import { ListFilterOption } from '../../../../../typings/filter.types.js';
 
 
 let _interventionsLastNavigated: string = '';
@@ -37,15 +41,21 @@ let _interventionsLastNavigated: string = '';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsCurrency
  * @appliesMixin CommonMixin
  * @appliesMixin ListFiltersMixin
  * @appliesMixin ListsCommonMixin
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin PaginationMixin
  */
-class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFiltersMixin(ListsCommonMixin
-(FrNumbersConsistencyMixin(PaginationMixin(PolymerElement)))) as any))) {
+@customElement('interventions-list')
+// @ts-ignore
+class InterventionsList extends connect(store)(
+   ListFiltersMixin(
+     ListsCommonMixin(
+      CommonMixin(
+          PaginationMixin(
+            FrNumbersConsistencyMixin(
+  PolymerElement)))))) {
 
   static get template() {
     return html`
@@ -274,133 +284,80 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
     `;
   }
 
-  static get properties() {
-    return {
-      filteredInterventions: {
-        type: Array,
-        notify: true,
-        observer: '_listChanged'
-      },
+  @property({ type: Array, notify: true, observer: InterventionsList.prototype._listChanged })
+  filteredInterventions!: ListItemIntervention[];
 
-      documentTypes: {
-        type: Array,
-        statePath: 'interventionDocTypes'
-      },
+  @property({ type: Array })
+  documentTypes!: LabelAndValue[];
 
-      selectedDocumentTypes: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array})
+  selectedDocumentTypes: string[] = [];
 
-      interventionStatuses: {
-        type: Array,
-        statePath: 'interventionStatuses'
-      },
+  @property({ type: Array })
+  interventionStatuses!: LabelAndValue[];
 
-      selectedStatuses: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array})
+  selectedStatuses: string[] = [];
 
-      startDate: {
-        type: String,
-        observer: '_filtersChanged'
-      },
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  startDate!: string;
 
-      endDate: {
-        type: String,
-        observer: '_filtersChanged'
-      },
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  endDate!: string;
 
-      endAfter: {
-        type: String,
-        observer: '_filtersChanged'
-      },
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  endAfter!: string;
 
-      cpOutputs: {
-        type: Array,
-        statePath: 'cpOutputs'
-      },
-      selectedCpOutputs: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  cpOutputs: CpOutput[] = []
 
-      countryProgrammes: {
-        type: Array,
-        statePath: 'countryProgrammes'
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
+  @property({type: Array})
+  selectedCpOutputs: number[] = [];
 
-      selectedSections: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array})
+  countryProgrammes!: CpStructure[];
 
-      unicefUsersData: {
-        type: Array,
-        statePath: 'unicefUsersData'
-      },
+  @property({type: Array})
+  sections!: object[];
 
-      selectedUnicefFocalPoints: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array})
+  selectedSections: number[] = [];
 
-      offices: {
-        type: Array,
-        statePath: 'offices'
-      },
+  @property({type: Array})
+  unicefUsersData!: MinimalUser[];
 
-      selectedOffices: {
-        type: Array,
-        value: []
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedUnicefFocalPoints: number[] = [];
 
-      donors: {
-        type: Array,
-        statePath: 'donors'
-      },
+  @property({type: Array})
+  offices!: object[];
 
-      selectedDonors: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array})
+  selectedOffices: number[] = [];
 
-      grants: {
-        type: Array,
-        statePath: 'grants'
-      },
+  @property({type: Array})
+  donors!: object[];
 
-      selectedGrants: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedDonors: string[] = [];
 
-      csvDownloadQs: {
-        type: String,
-        notify: true
-      },
+  @property({type: Array})
+  grants!: object[];
 
-      _sortableFieldNames: {
-        type: Array,
-        value: ['number', 'partner_name', 'start', 'end']
-      },
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedGrants: string[] = [];
 
-      selectedCPStructures: {
-        type: Array,
-        value: [],
-        observer: '_arrayFilterChanged'
-      }
-    };
-  }
+  @property({ type: String, notify: true })
+  csvDownloadQs!: string;
+
+  @property({type: String})
+  _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
+
+  @property({type: String, observer: InterventionsList.prototype._arrayFilterChanged})
+  selectedCPStructures: string[] = [];
+
+  _updateFiltersValsDebouncer!: Debouncer | null;
+  _queryDebouncer!: Debouncer | null;
 
   static get observers() {
     return [
@@ -479,7 +436,7 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
     // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
     // IMPORTANT!!!
     this.initListFiltersData([
-      {
+      new ListFilterOption({
         filterName: 'CP Structure',
         type: 'esmm', // etools-dropdown-multi
         selectionOptions: countryProgrammes,
@@ -490,8 +447,8 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         selected: true,
         minWidth: '400px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Country Programme Output',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -501,8 +458,8 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         path: 'selectedCpOutputs',
         selected: false,
         minWidth: '400px'
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Donors',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -512,15 +469,15 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         path: 'selectedDonors',
         selected: false,
         minWidth: '400px'
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Ends Before',
         type: 'datepicker', // datepicker-lite
         path: 'endDate',
         dateSelected: '',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Grants',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -530,8 +487,8 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         path: 'selectedGrants',
         selected: false,
         minWidth: '400px'
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Offices',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -542,8 +499,8 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         selected: true,
         minWidth: '250px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'PD/SSFA Type',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -554,8 +511,8 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         selected: true,
         minWidth: '400px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Sections',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -566,22 +523,22 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         selected: true,
         minWidth: '350px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Starts After',
         type: 'datepicker', // datepicker-lite
         path: 'startDate',
         dateSelected: '',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Ends After',
         type: 'datepicker',
         dateSelected: '',
         path: 'endAfter',
         selected: false
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'Status',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'value',
@@ -592,8 +549,8 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         selected: true,
         minWidth: '160px',
         hideSearch: true
-      },
-      {
+      }),
+      new ListFilterOption({
         filterName: 'UNICEF focal point',
         type: 'esmm', // etools-dropdown-multi
         optionValue: 'id',
@@ -603,7 +560,7 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
         path: 'selectedUnicefFocalPoints',
         selected: false,
         minWidth: '400px'
-      }
+      })
     ]);
     this._updateSelectedFiltersValues();
   }
@@ -719,13 +676,13 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
     }
   }
 
-  _filterListData(forceNoLoading: boolean) {
+  _filterListData(forceNoLoading?: boolean) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
         timeOut.after(this.debounceTime),
         () => {
-          let interventions = this.shadowRoot.querySelector('#interventions');
+          let interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
           if (!interventions) {
             return;
           }
@@ -819,4 +776,3 @@ class InterventionsList extends connect(store)(EtoolsCurrency(CommonMixin(ListFi
 
 }
 
-window.customElements.define('interventions-list', InterventionsList);

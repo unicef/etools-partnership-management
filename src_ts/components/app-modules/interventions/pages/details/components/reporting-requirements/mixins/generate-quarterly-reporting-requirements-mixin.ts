@@ -2,6 +2,7 @@ declare const moment: any;
 import {convertDate} from '../../../../../../../utils/date-utils';
 import { Constructor } from '../../../../../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -9,20 +10,13 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class generateQuarterlyReportingRequirements extends baseClass {
-    [x: string]: any;
 
-    static get properties() {
-      return {
-        DUE_DATE_DAYS_TO_ADD: {
-          type: Number,
-          value: 30
-        },
-        datesFormat: {
-          type: String,
-          value: 'YYYY-MM-DD'
-        }
-      };
-    }
+    @property({type: Number})
+    DUE_DATE_DAYS_TO_ADD: number = 30;
+
+    @property({type: String})
+    datesFormat: string = 'YYYY-MM-DD';
+
 
     /**
      * Used to generate (one time) QPR first dates set.

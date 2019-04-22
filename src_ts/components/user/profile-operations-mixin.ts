@@ -16,7 +16,6 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin UserDataMixin
  */
 function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) {
-    // @ts-ignore
     class profileOperations extends EndpointsMixin(UserDataMixin(baseClass)) {
 
       public static get properties() {
@@ -33,6 +32,7 @@ function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) 
       protected _dispatchSaveProfileRequest(profile: any) {
         let self = this;
         let config = {
+          // @ts-ignore *defined in component
           endpoint: this.getEndpoint(this.endpointName),
           method: 'PATCH',
           body: profile

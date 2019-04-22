@@ -3,29 +3,23 @@ import {store, RootState} from '../../store';
 import { DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
 import { Constructor } from '../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 /**
  * @polymer
  * @mixinFunction
  */
 function UploadsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class uploadsClass extends baseClass {
-    [x: string]: any;
-    public static get properties() {
-      return {
-        uploadEndpoint: {
-          type: String,
-          value: function() {
-            return pmpEdpoints.attachmentsUpload.url;
-          }
-        },
-        uploadsInProgress: {
-          type: Number
-        },
-        unsavedUploads: {
-          type: Boolean
-        }
-      };
-    }
+
+    @property({type: String})
+    uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;
+
+    @property({type: Number})
+    uploadsInProgress!: number;
+
+    @property({type: Number})
+    unsavedUploads!: number;
+
 
     uploadsStateChanged(state: RootState) {
       if (state.uploadStatus!.unsavedUploads !== this.unsavedUploads) {

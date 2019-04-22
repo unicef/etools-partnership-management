@@ -63,7 +63,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
        * TODO: move this method in another mixin
        * Reset field validation
        */
-      fieldValidationReset(selector: string, useValidate: boolean) {
+      fieldValidationReset(selector: string, useValidate?: boolean) {
         if (!useValidate) {
           useValidate = false;
         }
@@ -79,7 +79,8 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
     };
-    return commonClass;
+
+  return commonClass;
 }
 
 export default CommonMixin;

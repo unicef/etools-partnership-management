@@ -10,50 +10,31 @@ import { setAgreements } from '../../../../actions/agreements';
 import { MinimalAgreement } from '../agreement.types';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import { GenericObject } from '../../../../typings/globals.types';
 
-
- /**
- * @polymer
- * @customElement
-  * @mixinFunction
-  * @appliesMixin ListDataMixin
- */
-// @ts-ignore
+/**
+* @polymer
+* @customElement
+* @mixinFunction
+* @appliesMixin ListDataMixin
+*/
 class AgreementsListData extends ListDataMixin(PolymerElement) {
-  [x: string]: any;
 
-  static get properties() {
-    return {
-      endpointName: {
-        type: String,
-        value: 'agreements'
-      },
+  @property({type: String})
+  endpointName: string = 'agreements';
 
-      dataLoadedEventName: {
-        type: String,
-        value: 'agreements-loaded'
-      },
+  @property({type: String})
+  dataLoadedEventName: string = 'agreements-loaded';
 
-      filteredAgreements: {
-        type: Array,
-        readOnly: true,
-        notify: true
-      },
+  @property({type: Array, notify: true, readOnly: true})
+  filteredAgreements: [] = [];
 
-      totalResults: {
-        type: Number,
-        readOnly: true,
-        notify: true
-      },
+  @property({type: Number, readOnly: true, notify: true})
+  totalResults!: number;
 
-      currentQuery: {
-        type: Object,
-        value: null
-      }
-    };
-  }
-
-   public endpointName: string = 'agreements';
+  @property({type: Object})
+  currentQuery: GenericObject | null = null;
 
   _handleMyResponse(res: any) {
     this._handleResponse(res);
@@ -142,6 +123,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
+          // @ts-ignore
           self._setTotalResults(count);
         });
       });
@@ -151,6 +133,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
           .limit(pageSize)
           .toArray();
     }).then(function(result: any) {
+      // @ts-ignore
       self._setFilteredAgreements(result);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     }).catch(function(error: any) {
