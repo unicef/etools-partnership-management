@@ -29,6 +29,7 @@ import '../../../../layout/monitoring-visits-list.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import { PartnerAssessment } from '../../../../../models/partners.models.js';
+import { LabelAndValue } from '../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -473,6 +474,21 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
 
     fireEvent(this, 'tab-content-attached');
+    this._assessmentUpdated = this._assessmentUpdated.bind(this);
+    this._assessmentAdded = this._assessmentAdded.bind(this);
+
+    this.addEventListener('assessment-updated-step2', this._assessmentUpdated as any);
+    this.addEventListener('assessment-added-step2', this._assessmentAdded as any);
+  }
+
+  _removeListeners() {
+    this.removeEventListener('assessment-updated-step2', this._assessmentUpdated as any);
+    this.removeEventListener('assessment-added-step2', this._assessmentAdded as any);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._removeListeners();
   }
 
   public _init(engagements: any) {
@@ -557,9 +573,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
   // TODO: polymer 3 - is this still needed?
   // public _toggleRadio(e: CustomEvent) {
-  //   // @ts-ignore
   //   const checked = e.target.checked;
-  //   // @ts-ignore
   //   const quarter = e.target.getAttribute('data-idx');
   //   let spotChecksMr = assign({
   //     q1: 0,
@@ -569,7 +583,6 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
   //   }, {
   //     [quarter]: checked ? 1 : 0
   //   });
-  //   // @ts-ignore
   //   this.set('partner.planned_engagement.spot_check_mr', spotChecksMr);
   // }
 
@@ -582,6 +595,40 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     return !editMode ||
         (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
         ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1;
+  }
+
+  _assessmentUpdated(e: CustomEvent) {
+    if (!e.detail || !Object.keys(e.detail)) {
+      return;
+    }
+
+    this._updateBassisForRiskRatingOptions(e.detail.before, e.detail.after);
+  }
+
+  _updateBassisForRiskRatingOptions(oldAssessm: PartnerAssessment, updatedAssessm: PartnerAssessment) {
+    let oldBasisTxt = `${oldAssessm.type} - ${this.getDateDisplayValue(oldAssessm.completed_date!)}`;
+    let updatedBasisTxt = `${updatedAssessm.type} - ${this.getDateDisplayValue(updatedAssessm.completed_date!)}`;
+
+    if (this.partner.basis_for_risk_rating === oldBasisTxt) {
+      fireEvent(this, 'assessment-updated-step3', updatedBasisTxt);
+
+    } else {
+      let index = this.basisOptions.findIndex((b: LabelAndValue) => b.label === oldBasisTxt);
+      this.splice('basisOptions', index, 1, {label: updatedBasisTxt, value: updatedBasisTxt});
+    }
+
+  }
+
+  _assessmentAdded(e: CustomEvent) {
+    if (!e.detail || !Object.keys(e.detail)) {
+      return;
+    }
+    let basisVal = `${e.detail.type} - ${this.getDateDisplayValue(e.detail.completed_date!)}`;
+
+    this.push('basisOptions', {
+      value:  basisVal,
+      label: basisVal
+    });
   }
 }
 

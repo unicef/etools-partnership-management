@@ -12,13 +12,14 @@ import {requiredFieldStarredStyles} from '../../../../../styles/required-field-s
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../store';
-import {isJsonStrMatch} from '../../../../../utils/utils';
+import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import { LabelAndValue } from '../../../../../../typings/globals.types.js';
 import { PartnerAssessment } from '../../../../../../models/partners.models.js';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import { PaperCheckboxElement } from '@polymer/paper-checkbox/paper-checkbox';
 
 /**
  * @polymer
@@ -115,6 +116,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   @property({type: Object})
   toastEventSource!: PolymerElement;
 
+  @property({type: Object})
+  originalAssessment!: PartnerAssessment;
+
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
 
   public stateChanged(state: RootState) {
@@ -205,7 +209,15 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
     this.set('opened', false);
 
-    fireEvent(this, isNew ? 'assessment-added' : 'assessment-updated', response);
+    if (isNew) {
+      fireEvent(this, 'assessment-added', response);
+    } else {
+      fireEvent(this, 'assessment-updated', {
+        before: this.originalAssessment,
+        after: response
+      });
+    }
+
   }
 
   public _handleErrorResponse(error: any) {
@@ -237,6 +249,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
 
     this.assessment = assessment;
+    this.originalAssessment = copy(this.assessment);
     this.resetValidations();
   }
 
@@ -245,8 +258,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   public _archivedChanged(e: CustomEvent) {
-    // @ts-ignore
-    this.set('assessment.active', !e.target.checked);
+    this.set('assessment.active', !(e.target as PaperCheckboxElement).checked);
   }
 
   getCurrentDate() {

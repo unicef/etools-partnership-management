@@ -21,6 +21,7 @@ import {property} from '@polymer/decorators';
 import { PartnerAssessment } from '../../../../../../models/partners.models.js';
 import { AssessmentDialog } from './assessment-dialog.js';
 import { IconsActionsEl } from '../../../../../layout/icons-actions.js';
+import { fireEvent } from '../../../../../utils/fire-custom-event.js';
 
 
 /**
@@ -198,16 +199,19 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 
   newAssessmentAdded(e: CustomEvent) {
     this.push('dataItems', e.detail);
+    fireEvent(this, 'assessment-added-step2', e.detail);
   }
 
   assessmentUpdated(e: CustomEvent) {
-    const updatedAss = e.detail;
+    const updatedAss = e.detail.after;
     const assessments = JSON.parse(JSON.stringify(this.dataItems));
     let idx = this.dataItems.findIndex((a: any) => a.id === updatedAss.id);
     if (idx > -1) {
       assessments.splice(idx, 1, updatedAss);
     }
     this.set('dataItems', assessments);
+
+    fireEvent(this, 'assessment-updated-step2', e.detail);
   }
 
   _openAddAssessmentDialog() {
