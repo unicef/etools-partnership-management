@@ -6,7 +6,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-content-panel/etools-content-panel.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import { createDialog, removeDialog } from 'etools-dialog/dynamic-dialog';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
@@ -24,11 +24,10 @@ import {getArraysDiff} from '../../../../../../utils/array-helper.js';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement))) as any) {
+class FundReservations extends (EndpointsMixin(FrNumbersConsistencyMixin(PolymerElement)) as any) {
   [x: string]: any;
   static get template() {
     return html`
@@ -182,14 +181,14 @@ class FundReservations extends (DynamicDialogMixin(EndpointsMixin(FrNumbersConsi
     this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
 
     this._frsInconsistenciesConfirmationHandler = this._frsInconsistenciesConfirmationHandler.bind(this);
-    this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
+    this.frsConfirmationsDialog = createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
         this._frsInconsistenciesConfirmationHandler, this._frsConfirmationsDialogMessage);
   }
 
   _removeFrsConfirmationsDialog() {
     if (this.frsConfirmationsDialog) {
       this.frsConfirmationsDialog.removeEventListener('close', this._frsInconsistenciesConfirmationHandler);
-      this.removeDialog(this.frsConfirmationsDialog);
+      removeDialog(this.frsConfirmationsDialog);
     }
   }
 

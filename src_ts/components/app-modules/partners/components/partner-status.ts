@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '../../../layout/etools-status/etools-status.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import { createDialog } from 'etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
@@ -13,10 +13,9 @@ import { Partner } from '../../../../models/partners.models.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerElement)) {
+class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
   static get template() {
     // language=HTML
@@ -93,7 +92,7 @@ class PartnerStatus extends DynamicDialogMixin(EtoolsStatusCommonMixin(PolymerEl
     this.deleteWarningDialogContent = document.createElement('div');
     this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
     this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
-    this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
+    this.warningDialog = createDialog('Delete Confirmation', 'md', 'Yes', 'No',
         this._dialogConfirmationCallback, this.deleteWarningDialogContent);
     this.warningDialog.updateStyles({'--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'});
 

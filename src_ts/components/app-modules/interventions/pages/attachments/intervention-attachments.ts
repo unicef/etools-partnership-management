@@ -33,7 +33,6 @@ import { IconsActionsEl } from '../../../../layout/icons-actions.js';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
