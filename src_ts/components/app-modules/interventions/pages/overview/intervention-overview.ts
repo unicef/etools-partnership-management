@@ -16,8 +16,10 @@ import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store.js';
 import { isJsonStrMatch } from '../../../../utils/utils.js';
-import { CpOutput, ExpectedResult } from '../../../../../typings/intervention.types.js';
-import { GenericObject, IdAndName } from '../../../../../typings/globals.types.js';
+import { CpOutput, ExpectedResult, Intervention } from '../../../../../typings/intervention.types.js';
+import { property } from '@polymer/decorators';
+import { Agreement } from '../../../agreements/agreement.types.js';
+import { GenericObject } from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -25,8 +27,7 @@ import { GenericObject, IdAndName } from '../../../../../typings/globals.types.j
  * @customElement
  * @appliesMixin CommonMixin
  */
-class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as any) {
-  [x: string]: any;
+class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -146,40 +147,30 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object
-      },
-      interventionAgreement: {
-        type: Object
-      },
-      monitoringVisit: {
-        type: Array
-      },
-      cpOutputs: {
-        type: Array,
-        statePath: 'cpOutputs'
-      },
-      interventionCpOutputs: {
-        type: Array,
-        value: []
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      inteventionSections: {
-        type: Array,
-        value: []
-      },
-      resultLinks: {
-        type: Array,
-        value: []
-      }
-    };
-  }
+  @property({type: Object})
+  intervention!: Intervention;
 
+  @property({type: Object})
+  interventionAgreement!: Agreement;
+
+  @property({type: Array})
+  monitoringVisit!: [];
+
+  @property({type: Array})
+  cpOutputs!: CpOutput[];
+
+  @property({type: Array})
+  interventionCpOutputs!: string[];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  @property({type: Array})
+  inteventionSections!: [];
+  
+  @property({type: Array})
+  resultLinks: [] = [];
+    
   static get observers() {
     return [
       '_parseSections(sections.length, intervention.sections.length)',
@@ -215,7 +206,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
 
     let ids: GenericObject = {};
     let uniqueIds: number[] = [];
-    let interventionCpOutputs: CpOutput[] = [];
+    let interventionCpOutputs: string[] = [];
 
     this.resultLinks.forEach(function(res: ExpectedResult) {
       ids[res.cp_output] = true;
@@ -251,7 +242,8 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
     let interventionSections = this.intervention.sections.map((sectionId: string) =>  parseInt(sectionId, 10));
     let sectionNames: string[] = [];
 
-    this.sections.forEach(function(section: IdAndName) {
+
+    this.sections.forEach(function(section: GenericObject) {
       if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
         sectionNames.push(section.name);
       }

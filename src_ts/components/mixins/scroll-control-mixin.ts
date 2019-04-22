@@ -1,23 +1,17 @@
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
   class scrollControl extends baseClass {
-    public static get properties() {
-      return {
-        contentContainer: {
-          type: Object
-        }
-      };
-    }
 
-    public contentContainer: PolymerElement | null = window.EtoolsPmpApp.ContentContainer;
+    @property({type: Object})
+    contentContainer: PolymerElement | null = window.EtoolsPmpApp.ContentContainer;
 
     public connectedCallback() {
       super.connectedCallback();

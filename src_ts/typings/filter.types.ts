@@ -1,3 +1,4 @@
+
 export class ListFilterOption {
   constructor(item: ListFilterOption) {
     this.filterName = item.filterName;
@@ -20,7 +21,7 @@ export class ListFilterOption {
 
   filterName: string = '';
   type: string = '';
-  selectionOptions?: string[] | number[];
+  selectionOptions?: string[] | number[] | any[];
   optionValue?: string;
   optionLabel?: string;
   alreadySelected?: [] | null;
@@ -46,4 +47,5 @@ export type SelectedFilterOption = {
   disableMenuOption?: boolean
 }
 
-export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;
+export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;// TODO
+

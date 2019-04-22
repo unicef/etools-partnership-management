@@ -8,7 +8,7 @@ import '@polymer/iron-icons/av-icons.js';
 import 'etools-content-panel/etools-content-panel.js'
 import { etoolsStatusStyles } from './etools-status-styles';
 import './etools-action-button.js';
-import { Action, Status } from '../../../typings/etools-status.types';
+import { StatusAction, Status } from '../../../typings/etools-status.types';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -135,7 +135,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
         timeOut.after(10),
         () => {
           let hidden = true;
-          this.actions.forEach((elem: Action) => {
+          this.actions.forEach((elem: StatusAction) => {
             hidden = elem.hidden && hidden;
           });
           this.set('hideActions', hidden);

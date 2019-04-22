@@ -5,6 +5,7 @@ import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser';
 import { Constructor } from '../../../../../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -13,27 +14,17 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  */
 function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
-  class reportingRequirementsCommon extends EndpointsMixin(baseClass) {
-    [x: string]: any;
 
-    static get properties() {
-      return {
-        reportingRequirements: {
-          type: Array,
-          value: []
-        },
-        requirementsCount: {
-          type: Number,
-          value: 0,
-          notify: true
-        },
-        interventionId: {
-          type: Number,
-          observer: '_interventionIdChanged'
-        }
-      };
-    }
+  class reportingRequirementsCommon extends EndpointsMixin(baseClass) {
+
+    @property({type: Array})
+    reportingRequirements: [] = [];
+
+    @property({type: Number, notify: true})
+    requirementsCount: number = 0;
+
+    @property({type: Number, observer: '_interventionIdChanged'})
+    interventionId!: number;
 
     static get observers() {
       return [
@@ -57,6 +48,7 @@ function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>
         this.reportingRequirements = [];
         return;
       }
+      // @ts-ignore *Defined in the component
       let type = this._getReportType();
       let endpoint = this._getEndpointObj(newId, type);
       this.sendRequest({method: 'GET', endpoint: endpoint})
@@ -76,7 +68,9 @@ function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>
     _countReportingReq(length: number) {
       let l = (typeof length === 'number') ? length : 0;
       this.set('requirementsCount', l);
+      // @ts-ignore *Defined in the component
       if (typeof this._sortRequirementsAsc === 'function' && l > 0) {
+        // @ts-ignore *Defined in the component
         this._sortRequirementsAsc();
       }
     }

@@ -1,6 +1,7 @@
 //import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import { Constructor } from '../../../../../../../../typings/globals.types';
+import { Constructor, EtoolsTab } from '../../../../../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -9,29 +10,22 @@ import { PolymerElement } from '@polymer/polymer';
 function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class indicatorDialogTabsClass extends baseClass {
 
-    static get properties() {
-      return {
-        indicatorDataTabs: {
-          type: Array,
-          value: [
-            {
-              tab: 'details',
-              tabLabel: 'Details'
-            },
-            {
-              tab: 'disaggregations',
-              tabLabel: 'Disaggregations',
-              showTabCounter: true,
-              counter: 0
-            }
-          ]
+    @property({type: Array})
+    indicatorDataTabs: EtoolsTab[] = [
+        {
+          tab: 'details',
+          tabLabel: 'Details'
         },
-        activeTab: {
-          type: String,
-          value: 'details'
+        {
+          tab: 'disaggregations',
+          tabLabel: 'Disaggregations',
+          showTabCounter: true,
+          counter: 0
         }
-      };
-    }
+      ];
+
+    @property({type: String})
+    activeTab: string = 'details';
 
     static get observers() {
       return [

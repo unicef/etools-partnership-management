@@ -16,7 +16,8 @@ import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js'
 import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
 import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
 import {fireEvent} from '../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
+import { Partner } from '../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -27,7 +28,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
  * @appliesMixin RiskRatingMixin
  * @appliesMixin FrNumbersConsistencyixin
  */
-class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement))))) {
+class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
 
   static get template() {
     // language=HTML
@@ -251,11 +252,8 @@ class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumb
     `;
   }
 
-  static get properties() {
-    return {
-      partner: Object
-    };
-  }
+  @property({type: Object})
+  partner = {} as Partner;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -263,9 +261,8 @@ class PartnerOverview extends (EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumb
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    // @ts-ignore
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'partners-page'});
-    // @ts-ignore
+
     fireEvent(this, 'tab-content-attached');
   }
 

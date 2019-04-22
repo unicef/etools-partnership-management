@@ -8,7 +8,6 @@ import '@polymer/paper-input/paper-input.js';
 import 'etools-data-table/etools-data-table.js';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
 import LowerResultsMixin from './mixins/lower-results-mixin.js';
@@ -24,6 +23,9 @@ import './indicator-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../../../store';
 import { logError } from 'etools-behaviors/etools-logging';
+import { property } from '@polymer/decorators';
+import { IndicatorDialogEl } from './indicator-dialog.js';
+import { IconsActionsEl } from '../../../../../../layout/icons-actions.js';
 
 /**
  * @polymer
@@ -32,8 +34,10 @@ import { logError } from 'etools-behaviors/etools-logging';
  * @appliesMixin Results
  * @appliesMixin LowerResults
  */
-class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMixin(LowerResultsMixin(PolymerElement)  as any))) as any) {
-  [x: string]: any;
+class ExpectedResults extends connect(store)(
+  ResultsMixin(
+    LowerResultsMixin(
+      RepeatableDataSetsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -114,39 +118,32 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: {
-        type: String,
-        value: 'interventionResultLinkDelete',
-        readOnly: true
-      },
-      interventionStatus: String,
-      editableCpoRamIndicators: {
-        type: Boolean
-      },
-      editMode: {
-        type: Boolean
-      },
-      indicatorDialog: {
-        type: Object
-      },
-      indicatorLocationOptions: {
-        type: Array
-      },
-      indicatorSectionOptions: {
-        type: Array
-      },
-      detailsOpened: {
-        type: Boolean,
-        value: true
-      },
-      showInactiveIndicators: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String})
+  _deleteEpName: string = 'interventionResultLinkDelete';
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Boolean})
+  editableCpoRamIndicators!: boolean;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: Object})
+  indicatorDialog!: IndicatorDialogEl;
+
+  @property({type: Array})
+  indicatorLocationOptions!: [];
+
+  @property({type: Array})
+  indicatorSectionOptions!: [];
+
+  @property({type: Boolean})
+  detailsOpened: boolean = true;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
 
   static get observers() {
     return [
@@ -180,19 +177,19 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
 
   _createIndicatorDialog() {
     // init indicator dialog data
-    this.indicatorDialog = document.createElement('indicator-dialog');
+    this.indicatorDialog = document.createElement('indicator-dialog') as any;
     this.indicatorDialog.setAttribute('id', 'indicatorDialog');
 
     // attach close handler
     this.indicatorDialogDataReceived = this.indicatorDialogDataReceived.bind(this);
-    this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
-    document.querySelector('body')!.appendChild(this.indicatorDialog);
+    this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived as any);
+    document.querySelector('body')!.appendChild(this.indicatorDialog as any);
   }
 
   _removeIndicatorDialog() {
     if (this.indicatorDialog) {
-      this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
-      document.querySelector('body')!.removeChild(this.indicatorDialog);
+      this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived as any);
+      document.querySelector('body')!.removeChild(this.indicatorDialog as any);
     }
   }
 
@@ -213,9 +210,9 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
     this.openCpOutputAndRamIndicatorsDialog();
   }
 
-  _editCpOutputAndRamIndicators(e: PolymerElEvent) {
+  _editCpOutputAndRamIndicators(e: CustomEvent) {
     e.stopPropagation();
-    let index = parseInt(e.target.getAttribute('data-args'), 10);
+    let index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
       logError('Can not edit, invalid index selected', 'expected-results');
       return;
@@ -306,3 +303,5 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
 }
 
 window.customElements.define('expected-results', ExpectedResults);
+
+export {ExpectedResults as ExpectedResultsEl};
