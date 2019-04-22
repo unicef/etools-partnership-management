@@ -15,7 +15,6 @@ import { buttonsStyles } from '../../../../../../styles/buttons-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import pmpEndpoints from '../../../../../../endpoints/endpoints';
-import CONSTANTS from '../../../../../../../config/app-constants';
 import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
