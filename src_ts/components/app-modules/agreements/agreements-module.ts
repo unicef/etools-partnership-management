@@ -10,7 +10,7 @@ import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
-import {UserPermissions} from '../../../typings/globals.types';
+import {EtoolsTab, UserPermissions, GenericObject} from '../../../typings/globals.types';
 import {Agreement, AgreementAmendment} from './agreement.types.js';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box.js'
@@ -25,6 +25,7 @@ import './pages/components/agreement-status.js';
 import { fireEvent } from '../../utils/fire-custom-event.js';
 import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -46,9 +47,7 @@ const AgreementsModuleRequiredMixins =
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
-// @ts-ignore
 class AgreementsModule extends AgreementsModuleRequiredMixins {
-  [x: string]: any;
 
   public static get template() {
     // language=HTML
@@ -166,40 +165,35 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     `;
   }
 
-  static get properties() {
-    return {
-      agreementsTabs: {
-        type: Array,
-        value: [{
-          tab: 'details',
-          tabLabel: 'Agreement Details',
-          hidden: false
-        }]
-      },
-      permissions: {
-        type: Object
-      },
-      selectedAgreementId: {
-        type: Number
-      },
-      csvDownloadUrl: {
-        type: String
-      },
-      newAgreementActive: {
-        type: Boolean,
-        computed: '_updateNewItemPageFlag(routeData, listActive)'
-      },
-      agreement: {
-        type: Object,
-        observer: '_agreementChanged'
-      },
-      moduleName: {
-        type: String,
-        value: 'agreements'
-      },
-      authorizedOfficers: Array
-    };
-  }
+  @property({type: Array})
+  agreementsTabs: EtoolsTab[] = [{
+      tab: 'details',
+      tabLabel: 'Agreement Details',
+      hidden: false
+  }];
+
+  @property({type: Object})
+  permissions!: UserPermissions;
+
+  @property({type: Number})
+  selectedAgreementId!: number;
+
+  @property({type: String})
+  csvDownloadUrl!: string;
+
+  @property({type: Boolean, computed: `_updateNewItemPageFlag(routeData, listActive)`})
+  newAgreementActive!: boolean;
+
+  @property({type: Object, observer:`_agreementChanged`})
+  agreement!: Agreement;
+
+  @property({type: String})
+  moduleName: string = 'agreements';
+
+  @property({type: Array})
+  authorizedOfficers!: [];
+
+  originalAgreementData!: Agreement;
 
   static get observers() {
     return [
@@ -278,7 +272,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     return permissions && permissions.editAgreementDetails === true;
   }
 
-  _saveAgreement(agreementData: Agreement) {
+  _saveAgreement(agreementData: GenericObject) {
     if (!agreementData.id) {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
@@ -343,7 +337,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       return false;
     }
 
-    let agrDataToSave: Agreement;
+    let agrDataToSave: GenericObject;
     if (this.newAgreementActive) {
       agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement);
     } else {
@@ -412,7 +406,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   // Get agreement changed properties
   _getCurrentChanges() {
-    let changes: Agreement = {};
+    let changes: GenericObject = {};
     if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
       // prevent the possibility of checking 2 different agreements
       return {};
@@ -458,8 +452,10 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       }
       if (this._objectFieldIsModified('amendments')) {
         // keep only new amendments
+        if (this.agreement.amendments) {
         changes.amendments = this.agreement.amendments.filter(
             (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
+        }
       }
     }
 

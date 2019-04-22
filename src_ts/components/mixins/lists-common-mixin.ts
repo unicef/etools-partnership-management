@@ -1,64 +1,50 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
+import {property} from '@polymer/decorators';
+import { GenericObject, Constructor } from '../../typings/globals.types';
 import { fireEvent } from '../utils/fire-custom-event';
-import { updateAppState } from '../utils/navigation-helper';
 import { PolymerElement } from '@polymer/polymer';
+import { updateAppState } from '../utils/navigation-helper';
 import { isEmptyObject } from '../utils/utils';
+
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class listsCommonClass extends baseClass {
-    [x: string]: any;
 
-    static get properties() {
-      return {
-        urlParams: {
-          type: Object
-        },
+    @property({type: Object})
+    urlParams!: GenericObject;
 
-        q: {
-          type: String,
-          notify: true
-        },
+    @property({type: String, notify: true})
+    q!: string;
 
-        sortOrder: Object,
+    @property({type: Object})
+    sortOrder!: {field: string, direction: string};
 
-        debounceTime: {
-          type: Number,
-          value: 50
-        },
+    @property({type: Number})
+    debounceTime: number = 50;
 
-        active: Boolean,
+    @property({type: Boolean})
+    active: boolean = false;
 
-        detailsOpened: Boolean,
+    @property({type: Boolean})
+    detailsOpened!: boolean;
 
-        forceDataRefresh: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    forceDataRefresh: boolean = false;
 
-        requiredDataLoaded: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    requiredDataLoaded: boolean = false;
 
-        initComplete: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    initComplete: boolean = false;
 
-        showQueryLoading: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    showQueryLoading: boolean = false;
 
-        csvDownloadUrl: {
-          type: String,
-          notify: true
-        },
+    @property({type: String, notify: true})
+    csvDownloadUrl!: string;
 
-        stampListData: Boolean
-      };
-    }
+    @property({type: Boolean})
+    stampListData!: boolean;
+
 
     connectedCallback() {
       super.connectedCallback();
@@ -106,10 +92,10 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     * Because of this we need to refilter after list data is saved locally.
     * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
     */
-    _requiredDataHasBeenLoaded(event: PolymerElEvent) {
+    _requiredDataHasBeenLoaded(event: CustomEvent) {
       event.stopImmediatePropagation();
 
-      let listDataPath = event.target.getAttribute('list-data-path');
+      let listDataPath = (event.target as any).getAttribute('list-data-path');
       let list = this.get(listDataPath);
 
       if (typeof list === 'undefined' ||
@@ -119,6 +105,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       // recheck params to trigger agreements filtering
       this.set('initComplete', false); // TODO : 2 flags that seem very similar..great..
       this.set('requiredDataLoaded', true);
+      // @ts-ignore
       this._init(this.active);
     }
 
@@ -135,6 +122,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
     }
 
+
     /**
      * Make sure you define _sortableFieldNames on *-list element properties level.
      * Ex for partners:
@@ -144,6 +132,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
      *  }
      */
     _isValidSortField(fieldName: string) {
+      // @ts-ignore
       return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
     }
 
@@ -245,9 +234,8 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
       }
     }
-
-};
-return listsCommonClass;
+  };
+  return listsCommonClass;
 }
 
 export default ListsCommonMixin;

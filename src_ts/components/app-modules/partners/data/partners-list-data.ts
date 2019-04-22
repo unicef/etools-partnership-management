@@ -1,14 +1,13 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement } from '@polymer/polymer';
 import {store} from '../../../../store.js';
-
 import ListDataMixin from '../../../mixins/list-data-mixin';
-
 import Dexie from 'dexie';
 import {isEmptyObject} from "../../../utils/utils";
 import {setPartners} from '../../../../actions/partners.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
-
+import {property} from '@polymer/decorators';
+import { GenericObject } from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -16,62 +15,37 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @mixinFunction
  * @appliesMixin ListDataMixin
  */
-class PartnersListData extends (ListDataMixin(PolymerElement) as any) {
-  static get properties() {
-    return {
-      endpointName: String,
-      dataLoadedEventName: String,
-      filteredPartners: {
-        type: Array,
-        readOnly: true,
-        notify: true
-      },
-      totalResults: {
-        type: Number,
-        readOnly: true,
-        notify: true
-      },
-      currentQuery: {
-        type: Object,
-        value: null
-      },
-      partnersDropdownData: {
-        type: Array,
-        notify: true
-      },
-      partnersFilteredDropdownData: {
-        type: Array,
-        notify: true
-      },
-      prepareDropdownData: Boolean
-    };
-  }
+class PartnersListData extends ListDataMixin(PolymerElement) {
 
-  public endpointName: string = 'partners';
-  public dataLoadedEventName: string = 'partners-loaded';
-  public prepareDropdownData: boolean = false;
+  @property({type: String})
+  endpointName: string = 'partners';
+
+  @property({type: String})
+  dataLoadedEventName: string = 'partners-loaded';
+
+  @property({type: Array, readOnly: true, notify: true})
+  filteredPartners!: any[];
+
+  @property({type: Number, readOnly: true, notify: true})
+  totalResults!: number;
+
+  @property({type: Object})
+  currentQuery: GenericObject | null = null;
+
+  @property({type: Array, notify: true})
+  partnersDropdownData: any[] = [];// TODO - seems to not be used anymore
+
+  @property({type: Array, notify: true})
+  partnersFilteredDropdownData: any[] = [];// TODO - seems to not be used anymore
+
+  @property({type: Boolean})
+  prepareDropdownData: boolean = false;
+
 
   public _handleMyResponse(res: any) {
     this._handleResponse(res);
     if (res && res.length) {
       store.dispatch(setPartners(res));
-      // let preparedData = [];
-      // let civilSocietyOrganizationPartners = [];
-      // res.forEach(function(p) {
-      //   if (!p.hidden && p.partner_type === 'Civil Society Organization') {
-      //     civilSocietyOrganizationPartners.push(p);
-      //   }
-      //   if (!p.hidden) {
-      //     preparedData.push({
-      //       value: p.id,
-      //       label: p.name
-      //     });
-      //   }
-      // });
-
-      // TODO - replaced by selector - to test
-      // store.dispatch('setPartnersDropdown', preparedData);
-      // store.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
     }
   }
 
@@ -146,6 +120,7 @@ class PartnersListData extends (ListDataMixin(PolymerElement) as any) {
       // @ts-ignore
       Dexie.ignoreTransaction(function () {
         queryResult.count(function (count: number) {
+          // @ts-ignore
           self._setTotalResults(count);
         });
       });
@@ -156,6 +131,7 @@ class PartnersListData extends (ListDataMixin(PolymerElement) as any) {
           .toArray();
 
     }).then(function (result: any[]) {
+      // @ts-ignore
       self._setFilteredPartners(result);
       fireEvent(self, 'global-loading', {
         active: false,
@@ -172,3 +148,5 @@ class PartnersListData extends (ListDataMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('partners-list-data', PartnersListData);
+
+export {PartnersListData as PartnersListDataEl}
