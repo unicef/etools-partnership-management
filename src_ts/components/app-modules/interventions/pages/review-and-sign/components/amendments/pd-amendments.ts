@@ -16,6 +16,8 @@ import { store, RootState } from '../../../../../../../store.js';
 import { setInAmendment } from '../../../../../../../actions/page-data.js';
 import { isJsonStrMatch } from '../../../../../../utils/utils.js';
 import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
+import {property} from '@polymer/decorators';
+import {AddAmendmentDialog} from "./add-amendment-dialog";
 
 
 /**
@@ -27,7 +29,6 @@ import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
  * @appliesMixin Common
  */
 class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(PolymerElement))) {
-  [x: string]: any;
   static get template() {
     return html`
     ${SharedStyles} ${gridLayoutStyles}
@@ -143,37 +144,29 @@ class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(Polymer
     `;
   }
 
-  static get properties() {
-    return {
-      amendments: {
-        type: Array,
-        value: [],
-        notify: true
-      },
-      filteredAmendmentTypes: Object,
-      amendmentTypes: {
-        type: Object,
-        statePath: 'interventionAmendmentTypes'
-      },
-      interventionDocumentType: {
-        type: String
-      },
-      inAmendment: {
-        type: Boolean,
-        statePath: 'pageData.in_amendment'
-      },
-      addAmendmentDialog: {
-        type: Object
-      },
-      editMode: {
-        type: Boolean,
-        reflectToAttribute: true
-      },
-      interventionId: {
-        type: Number
-      }
-    };
-  }
+  @property({type: Array, notify: true})
+  amendments: [] = [];
+
+  @property({type: Array})
+  filteredAmendmentTypes!: LabelAndValue[];
+
+  @property({type: Array})
+  amendmentTypes!: LabelAndValue[];
+
+  @property({type: String})
+  interventionDocumentType: string = '';
+
+  @property({type: Boolean})
+  inAmendment: boolean = false;
+
+  @property({type: Object})
+  addAmendmentDialog!: AddAmendmentDialog;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  editMode: boolean = false;
+
+  @property({type: Number})
+  interventionId: number | null = null;
 
   static get observers() {
     return [
@@ -202,18 +195,18 @@ class PdAmendments extends connect(store)(DynamicDialogMixin(CommonMixin(Polymer
   }
 
   _createAddAmendmentDialog() {
-    this.addAmendmentDialog = document.createElement('add-amendment-dialog');
+    this.addAmendmentDialog = document.createElement('add-amendment-dialog') as any;
     this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
     this.addAmendmentDialog.toastEventSource = this;
 
     this.newAmendmentAdded = this.newAmendmentAdded.bind(this);
-    this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded);
+    this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded as any);
     document.querySelector('body')!.appendChild(this.addAmendmentDialog);
   }
 
   _removeAddAmendmentDialog() {
     if (this.addAmendmentDialog) {
-      this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded);
+      this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded as any);
       document.querySelector('body')!.removeChild(this.addAmendmentDialog);
     }
   }

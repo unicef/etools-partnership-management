@@ -20,6 +20,9 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { LabelAndValue } from '../../../../../../../typings/globals.types';
 import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from "etools-dialog/etools-dialog";
+import {EtoolsDropdownMultiEl} from "etools-dropdown/etools-dropdown-multi";
 
 
 /**
@@ -28,7 +31,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
+class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles}
@@ -125,65 +128,46 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
     `;
   }
 
-  static get properties() {
-    return {
-      endpointName: {
-        type: String,
-        value: 'interventionAmendmentAdd'
-      },
-      toastEventSource: {
-        type: Object
-      },
-      datePickerOpen: {
-        type: Boolean,
-        value: false
-      },
-      opened: {
-        type: Boolean,
-        notify: true,
-        observer: '_resetFields'
-      },
-      interventionId: {
-        type: Number
-      },
-      interventionDocumentType: {
-        type: String
-      },
-      amendmentTypes: {
-        type: Object,
-        statePath: 'interventionAmendmentTypes'
-      },
-      filteredAmendmentTypes: {
-        type: Object
-      },
-      newAmendment: {
-        type: Object
-      },
-      uploadEndpoint: {
-        type: String,
-        value: function() {
-          return pmpEndpoints.attachmentsUpload.url;
-        }
-      },
-      _validationSelectors: {
-        type: Array,
-        value: ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other']
-      },
-      uploadInProgress: {
-        type: Boolean,
-        value: false,
-        computed: 'getUploadInProgress(amdUploadInProgress, prcUploadInProgress)'
-      },
-      amdUploadInProgress: {
-        type: Boolean,
-        value: false
-      },
-      prcUploadInProgress: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String})
+  endpointName: string = 'interventionAmendmentAdd';
+
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+
+  @property({type: Boolean})
+  datePickerOpen: boolean = false;
+
+  @property({type: Boolean, notify: true, observer: '_resetFields'})
+  opened: boolean = false;
+
+  @property({type: Number})
+  interventionId: number | null = null;
+
+  @property({type: String})
+  interventionDocumentType: string = '';
+
+  @property({type: Array})
+  amendmentTypes!: LabelAndValue[];
+
+  @property({type: Object})
+  newAmendment!: InterventionAmendment;
+
+  @property({type: String})
+  uploadEndpoint: string =  pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Boolean, computed: 'getUploadInProgress(amdUploadInProgress, prcUploadInProgress)'})
+  uploadInProgress: boolean = false;
+
+  @property({type: Boolean})
+  amdUploadInProgress: boolean = false;
+
+  @property({type: Boolean})
+  prcUploadInProgress: boolean = false;
+
+  @property({type: Array})
+  filteredAmendmentTypes!: LabelAndValue[];
+
+  private _validationSelectors: string[] = ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other'];
 
   static get observers() {
     return [
@@ -211,11 +195,11 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
   }
 
   startSpinner() {
-    this.shadowRoot.querySelector('#add-amendment').startSpinner();
+    (this.shadowRoot!.querySelector('#add-amendment') as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    this.shadowRoot.querySelector('#add-amendment').stopSpinner();
+    (this.shadowRoot!.querySelector('#add-amendment') as EtoolsDialog).stopSpinner();
   }
 
   _filterAmendmentTypes(amendmentTypes: LabelAndValue[], interventionDocumentType: string) {
@@ -230,7 +214,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
     } else {
       this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
     }
-    const typesDropdw = this.shadowRoot.querySelector('#amendment-types');
+    const typesDropdw = this.shadowRoot!.querySelector('#amendment-types') as EtoolsDropdownMultiEl;
     if (typesDropdw) {
       typesDropdw.set('invalid', false); // to fix eager validation
     }
@@ -244,7 +228,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
   isValidAmendment() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (selector === '#other' && !this._showOtherInput()) {
         return;
       }
@@ -262,7 +246,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
 
   _resetAmendmentValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -352,3 +336,4 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
 }
 
 window.customElements.define('add-amendment-dialog', AddAmendmentDialog);
+export {AddAmendmentDialog};
