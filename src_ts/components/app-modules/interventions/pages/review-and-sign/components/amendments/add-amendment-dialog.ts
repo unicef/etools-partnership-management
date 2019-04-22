@@ -222,11 +222,11 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement) a
     if (!amendmentTypes || !interventionDocumentType) {
       return;
     }
-    if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-      this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));// TODO - should we filter by some criteria?
-    } else {
-      this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
-    }
+    // if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
+    //   this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));// TODO - should we filter by some criteria?
+    // } else {
+    this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
+    //}
     const typesDropdw = this.shadowRoot.querySelector('#amendment-types');
     if (typesDropdw) {
       typesDropdw.set('invalid', false); // to fix eager validation
