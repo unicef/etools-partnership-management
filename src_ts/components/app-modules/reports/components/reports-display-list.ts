@@ -187,8 +187,6 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
     `;
   }
 
-  @property({type: Object})
-  currentUser!: User;
 
   @property({type: Number})
   interventionId: number = 0;
@@ -224,9 +222,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   }
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
-      this.currentUser = state.commonData!.currentUser!;
-    }
+    this.endStateChanged(state);
   }
 
   _loadReportsData(prpCountries: any, interventionId: number, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
