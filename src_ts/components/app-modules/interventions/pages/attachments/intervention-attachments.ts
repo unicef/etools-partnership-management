@@ -33,7 +33,6 @@ import { IconsActionsEl } from '../../../../layout/icons-actions.js';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
@@ -218,7 +217,6 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     this.deleteAttachment = this.deleteAttachment.bind(this);
     const warnDeleteAttachment = document.createElement('span');
     warnDeleteAttachment.innerHTML = 'Are you sure you want to delete this attachment?';
-    // this.attDeleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteAttachment);
     this.attDeleteConfirmDialog = createDynamicDialog({
       size: 'md',
       okBtnText: 'Yes',

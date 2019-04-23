@@ -41,7 +41,6 @@ import EtoolsDialog from 'etools-dialog';
 /**
  * @polymer
  * @customElement
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl

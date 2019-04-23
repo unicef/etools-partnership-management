@@ -112,3 +112,4 @@ class QuarterlyReportingRequirements extends
 }
 
 window.customElements.define('quarterly-reporting-requirements', QuarterlyReportingRequirements);
+export {QuarterlyReportingRequirements as QuarterlyReportingRequirementsEL}
