@@ -45,10 +45,12 @@ documentContainer.innerHTML = `
   
         --light-ink-color: rgba(255, 255, 255, 0.30);
         --dark-ink-color: rgba(0, 0, 0, 0.3);
+
+        --dark-theme-background-color: #233944;
         
         --header-color: #ffffff;
-        --header-bg-color: #233944;
-        --nonprod-header-color: #373D42;
+        --header-bg-color: var(--dark-theme-background-color);
+        --nonprod-header-color: #a94442;
         --nonprod-text-warn-color: #e6e600;
         
         --amendment-mode-color: rgba(139,0,216, .99); /* .99 is to fix chrome strange bg color transparency */
