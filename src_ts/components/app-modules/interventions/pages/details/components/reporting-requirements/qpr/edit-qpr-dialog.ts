@@ -15,14 +15,17 @@ import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles
 import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
 import { logError } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../../typings/globals.types.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import { QprListEl } from './qpr-list.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
-  [x: string]: any;
+class EditQprDialog extends EndpointsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -132,44 +135,40 @@ class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: Number,
-      inAmendment: {
-        type: Boolean,
-        statePath: 'pageData.in_amendment'
-      },
-      qprData: {
-        type: Array,
-        value: []
-      },
-      addOrModifyQprDialogOpened: {
-        type: Boolean,
-        value: false
-      },
-      toastMsgLoadingSource: Object,
-      _qprDatesSetModel: {
-        type: Object,
-        value: {
-          start_date: null,
-          end_date: null,
-          due_date: null
-        }
-      },
-      _editedQprDatesSet: Object,
-      _qprDatesSetEditedIndex: {
-        type: Number,
-        value: -1
-      }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Boolean})
+  inAmendment!: boolean;
+
+  @property({type: Array})
+  qprData: GenericObject[] = [];
+
+  @property({type: Boolean})
+  addOrModifyQprDialogOpened: boolean = false;
+
+  @property({type: Object})
+  toastMsgLoadingSource!: PolymerElement;
+
+  @property({type: Object})
+  _qprDatesSetModel = {
+      start_date: null,
+      end_date: null,
+      due_date: null
     };
-  }
+
+  @property({type: Object})
+  _editedQprDatesSet!: GenericObject;
+
+  @property({type: Number})
+  _qprDatesSetEditedIndex: number = -1;
 
   openQprDialog() {
-    this.$.editQprDialog.opened = true;
+    (this.$.editQprDialog as EtoolsDialog).opened = true;
   }
 
   closeQprDialog() {
-    this.$.editQprDialog.opened = false;
+    (this.$.editQprDialog as EtoolsDialog).opened = false;
   }
 
   _addNewQpr() {
@@ -219,7 +218,7 @@ class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
   }
 
   _getEditedQprDatesSetId(index: number) {
-    return this.$.qprList.getIndex(index, this.qprData.length);
+    return (this.$.qprList as QprListEl).getIndex(index, this.qprData.length);
   }
 
   _saveModifiedQprData() {
@@ -227,7 +226,7 @@ class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
       intervId: this.interventionId,
       reportType: CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR
     });
-    let dialog = this.$.editQprDialog;
+    let dialog = this.$.editQprDialog as EtoolsDialog;
     dialog.startSpinner();
     this.sendRequest({
       method: 'POST',
@@ -251,3 +250,5 @@ class EditQprDialog extends (EndpointsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('edit-qpr-dialog', EditQprDialog);
+
+export {EditQprDialog as EditQprDialogEl};

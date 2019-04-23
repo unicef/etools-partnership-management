@@ -40,9 +40,9 @@ export class Intervention {
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: IPermission<InterventionPermissionsFields>;
-  [key: string] : any;
+  [key: string]: any;
 
-  //Domain driven design idea
+  //TODOO
   public isDraft() {
     return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
         status === '';
@@ -92,11 +92,6 @@ export class SelectedSection {
     public section_names: string[]) {
 
   }
-}
-
-export type Section = {
-  id: string,
-  name: string
 }
 
 export class InterventionAttachment  {
@@ -196,6 +191,7 @@ export class InterventionPermissionsFields {
 
   // attachments
   attachments: boolean = false;
+  [x: string] : boolean;
 }
 
 export type ExpectedResult = {
@@ -222,18 +218,20 @@ export class Indicator {// Indicator
   id: number | null = null;
   is_active: boolean = true;
   is_high_frequency: boolean = false;
-  indicator = new IndicatorIndicator();
+  indicator: IndicatorIndicator | null = new IndicatorIndicator();
   section: number | null = null;
-  baseline: {v?: string, d?: string} = {};
-  target: {v?: string, d: string} = {d: '1'};
+  baseline: {v?: string | number, d?: string | number} = {};
+  target: {v?: string | number, d: string | number} = {d: '1'};
   means_of_verification: string | null = null;
-  locations: string[] = [];
+  locations: number[] = [];
   disaggregation: string[] = [];
 
   cluster_name: string | null = null;
   cluster_indicator_id: number | null = null;
   cluster_indicator_title: string | null = null;
   response_plan_name: string | null = null;
+  numerator_label: string = '';
+  denominator_label: string = '';
 }
 
 
@@ -262,7 +260,7 @@ export class PlannedVisit {
 }
 
 export class Disaggregation {
-  id: number | null = null;
+  id: string | null = null;
   name: string = '';
   active: boolean = true;
   disaggregation_values: DisaggregationValue[] = [];
@@ -275,7 +273,7 @@ export type DisaggregationValue = {
 }
 
 export type Location = {
-  id: number;
+  id: string;
   name: string;
   p_code: string;
   gateway: AdminLevel;

@@ -6,7 +6,6 @@ import 'etools-content-panel/etools-content-panel';
 import 'etools-data-table/etools-data-table';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import UserPermissionsMixin from '../../../user/user-permissions-mixin';
 
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
@@ -19,7 +18,11 @@ import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { EnvFlags } from '../../../../typings/globals.types';
+import { EnvFlags, User } from '../../../../typings/globals.types';
+import { userIsPme } from '../../../user/user-permissions';
+import {property} from "@polymer/decorators/lib/decorators";
+import {AddDisaggregationDialogEl} from "./add-disaggregation-dialog";
+import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button'
 
 
 /**
@@ -27,13 +30,14 @@ import { EnvFlags } from '../../../../typings/globals.types';
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin UserPermissionsMixin
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMixin(EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(FrontendPaginationMixin(EndpointsMixin(PolymerElement)))))) as any) {
+class DisaggregationList extends connect(store)(FrontendPaginationMixin(
+  EtoolsAjaxRequestMixin(
+    EnvironmentFlagsMixin(
+      EndpointsMixin(PolymerElement))))) {
 
   static get template() {
     // language=HTML
@@ -123,29 +127,23 @@ class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMi
     `;
   }
 
-  static get properties() {
-    return {
-      disaggregations: {
-        type: Array,
-        statePath: 'disaggregations'
-      },
-      disaggregationModal: {
-        type: Object
-      },
-      filteredDisaggregations: {
-        type: Array,
-        computed: '_filterData(disaggregations, q)'
-      },
-      q: {
-        type: String,
-        value: ''
-      },
-      totalResults: {
-        type: Number,
-        computed: '_computeResults(filteredDisaggregations)'
-      }
-    };
-  }
+  @property({type: Array})
+  disaggregations!: Disaggregation[];
+
+  @property({type: Object})
+  disaggregationModal!: AddDisaggregationDialogEl;
+
+  @property({type: Array, computed: '_filterData(disaggregations, q)'})
+  filteredDisaggregations!: Disaggregation[];
+
+  @property({type: String})
+  q: string = '';
+
+  @property({type: Number, computed: '_computeResults(filteredDisaggregations)'})
+  totalResults!: number;
+
+  @property({type: Boolean})
+  editMode!: boolean;
 
   static get observers() {
     return [
@@ -169,7 +167,7 @@ class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMi
   ready() {
     super.ready();
     this.editMode = true;
-    this.disaggregationModal = document.createElement('add-disaggregation-dialog');
+    this.disaggregationModal = document.createElement('add-disaggregation-dialog') as AddDisaggregationDialogEl;
     this.disaggregationModal.setAttribute('id', 'disaggregationModal');
     document.querySelector('body')!.appendChild(this.disaggregationModal);
   }
@@ -220,8 +218,8 @@ class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMi
       store.dispatch(patchDisaggregation(response));
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {
-      self.shadowRoot.querySelector('#showActive-' + e.model.item.id).checked = !e.model.item.active;
-      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource ? self.toastEventSource : self);
+      (self.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e.model.item.active;
+      parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
 
@@ -260,6 +258,10 @@ class DisaggregationList extends connect(store)(EndpointsMixin(UserPermissionsMi
   _addDisaggregation() {
     this.disaggregationModal.initializeDisaggregation();
     this._openModal();
+  }
+
+  userIsPme(currentUser: User) {
+    return userIsPme(currentUser);
   }
 
 }

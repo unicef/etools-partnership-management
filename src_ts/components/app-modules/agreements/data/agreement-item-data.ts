@@ -9,6 +9,7 @@ import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
 import { GenericObject } from '../../../../typings/globals.types.js';
 import { fireEvent } from '../../../utils/fire-custom-event.js';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -19,45 +20,32 @@ import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin AjaxServerErrors
  * @appliedMixin Constants
  */
-// @ts-ignore
-class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)) {
+class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return null;
   }
 
-  static get properties() {
-    return {
-      agreementEndpoints: {
-        type: Object,
-        value: {
-          DETAILS: 'agreementDetails',
-          CREATE: 'agreements',
-          DELETE: 'agreementDelete'
-        }
-      },
-      agreement: {
-        type: Object,
-        readOnly: true,
-        notify: true
-      },
-      _partners: {
-        type: Object
-      },
+  @property({type: Object})
+  agreementEndpoints = {
+      DETAILS: 'agreementDetails',
+      CREATE: 'agreements',
+      DELETE: 'agreementDelete'
+  };
 
-      agreementId: {
-        type: Number,
-        notify: true,
-        observer: '_agreementIdChanged'
-      },
+  @property({type: Object, readOnly: true, notify: true})
+  agreement!: Agreement;
 
-      handleSuccResponseAdditionalCallback: Object,
-      // ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
-      ajaxLoadingMsgSource: {
-        type: String,
-        value: 'ag-data'
-      }
-    };
-  }
+  @property({type: Object})
+  _partners!: {};
+
+  @property({type: Number, notify: true, observer: '_agreementIdChanged'})
+  agreementId: number | null = null;
+
+  @property({type: Object})
+  handleSuccResponseAdditionalCallback!: (response: any) => void;
+
+  @property({type: String})
+  ajaxLoadingMsgSource: string = 'ag-data';
 
   _triggerAgreementRequest(options: any) {
     let ajaxMethod = options.method || 'GET';
@@ -88,6 +76,7 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
 
   // Handle received data from request
   _handleSuccResponse(response: any, ajaxMethod: string) {
+    // @ts-ignore
     this._setAgreement(response);
 
     // call additional callback, if any
@@ -133,7 +122,6 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
       if (!detail.hasOwnProperty(propName)) {
         logWarn('Mapping property not found');
       } else {
-        // @ts-ignore
         minimalAgrData[propName] = detail[propName];
       }
     }
@@ -198,7 +186,7 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
   }
 
   // Save agreement data
-  saveAgreement(agreement: Agreement, succCallback: any) {
+  saveAgreement(agreement: GenericObject, succCallback: any) {
     if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
       fireEvent(this, 'toast', {text: 'Invalid agreement data!', showCloseBtn: true});
       return Promise.resolve(false);
@@ -254,7 +242,7 @@ class AgreementItemData extends EndpointsMixin(AjaxServerErrorsMixin(PolymerElem
     this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
       this._handleAgreementDeleteSuccess(id);
     }).catch((reqError: any) => {
-      this.handleErrorResponse(reqError, reqMethod);
+      this.handleErrorResponse(reqError, reqMethod, false);
     });
   }
 

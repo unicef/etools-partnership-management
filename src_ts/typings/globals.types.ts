@@ -44,7 +44,7 @@ export class MinimalUser {
 }
 
 export class User extends MinimalUser {
-  country!: object;
+  country!: MinimalCountry;
   country_override!: number;
   countries_available!: MinimalCountry[];
   groups!: UserGroup[];
@@ -60,16 +60,13 @@ export type UserGroup = {
 export interface EtoolsTab {
   tab: string;
   tabLabel: string;
-  hidden: boolean;
+  hidden?: boolean;
+  showTabCounter?: boolean;
+  counter?: number;
 }
 
-export interface DomRepeatEvent extends PolymerElEvent {//TODO- should be in polymer declarations
+export interface DomRepeatEvent extends CustomEvent {//TODO- should be in polymer declarations
   model: any;
-}
-
-export interface PolymerElEvent extends CustomEvent {//TODO - should be in polymer type declarions
-  target: any;
-  currentTarget: any;
 }
 
 export class Paginator {
@@ -125,3 +122,9 @@ export type EnvFlags = {
   active_flags?: object[];
 }
 
+export type Office = {
+  id: number,
+  name: string,
+  email: string,
+  username: string
+}

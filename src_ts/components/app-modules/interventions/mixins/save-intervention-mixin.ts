@@ -1,12 +1,12 @@
 import { store } from '../../../../store.js';
 import { RESET_UNSAVED_UPLOADS } from '../../../../actions/upload-status';
 import CONSTANTS from '../../../../config/app-constants';
-import { Fr } from '../../../../typings/intervention.types';
+import { Intervention } from '../../../../typings/intervention.types';
 import { isEmptyObject } from '../../../utils/utils';
 import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixin';
 import { fireEvent } from '../../../utils/fire-custom-event';
 import {getArraysDiff} from '../../../utils/array-helper.js';
-import { Constructor, GenericObject } from '../../../../typings/globals.types.js';
+import { Constructor, GenericObject, UserPermissions } from '../../../../typings/globals.types.js';
 import { PolymerElement } from '@polymer/polymer';
 import InterventionItemData from '../data/intervention-item-data.js';
 import InterventionDetails from '../pages/details/intervention-details.js';
@@ -20,27 +20,27 @@ import InterventionReviewAndSign from '../pages/review-and-sign/intervention-rev
  * @appliesMixin ModifiedInterventionFields
  */
 function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class saveInterventionClass extends (ModifiedInterventionFieldsMixin(baseClass) as Constructor<PolymerElement>) {
-    [x: string]: any;
+  class saveInterventionClass extends ModifiedInterventionFieldsMixin(baseClass as Constructor<PolymerElement>) {
 
-    static get actions() {
-      return {
-
-        resetUnsavedUploads: function() {
-          return {
-            type: 'RESET_UNSAVED_UPLOADS'
-          };
-        }
-      };
-    }
+    // --- *Defined in the component
+    intervention!: Intervention;
+    originalIntervention!: Intervention;
+    saved!: {
+      interventionId: any,
+      justSaved: boolean
+    }; // TODO - remove if functionality not used anymore
+    permissions!: UserPermissions;
+    // ---
 
     _validateAndSaveIntervention(event: CustomEvent) {
       if (event) {
         event.stopImmediatePropagation();
       }
+
       this.saved.justSaved = true;
       fireEvent(this, 'clear-server-errors');
       this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
+      // @ts-ignore Defined in component
       if (!this._hasEditPermissions(this.permissions, this.intervention)) {
         return Promise.resolve(false);
       }
@@ -56,6 +56,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
       let interventionData = this._getModifiedFields();
       interventionData = this._prepareDataForSave(interventionData);
+      // @ts-ignore
       return (this.$.interventionData as InterventionItemData).saveIntervention(interventionData, this._newInterventionSaved.bind(this))
                   .then((successfull: boolean) => {
                     if (successfull) {
@@ -71,6 +72,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       let interventionData;
       let modifiedDetails = this._getModifiedInterventionDetails();
       let modifiedReviewAndSign = this._getModifiedReviewAndSign();
+      // @ts-ignore *Defined in component
       if (this._isNewIntervention()) {
         interventionData = Object.assign({}, modifiedDetails, modifiedReviewAndSign);
         interventionData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
@@ -139,7 +141,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       let fieldRequired;
       let fieldVal;
       for (i = 0; i < interventionFields.length; i++) {
-        fieldRequired = this.intervention.permissions.required[interventionFields[i]];
+        fieldRequired = this.intervention!.permissions!.required[interventionFields[i]];
         fieldVal = this.intervention[interventionFields[i]];
         if (fieldRequired && isEmptyPredicate(fieldVal)) {
           valid = false;
@@ -194,7 +196,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       fireEvent(this, 'toast', {text: msg, showCloseBtn: true});
     }
 
-    _needFrsUpdate(frs: Fr[]) {
+    _needFrsUpdate(frs: number[]) {
       let diff = getArraysDiff(this.originalIntervention.frs, frs);
       return diff.length > 0;
     }
