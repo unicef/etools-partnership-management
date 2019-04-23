@@ -28,7 +28,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   }
 
   @property({type: Object, readOnly: true, notify: true})
-  partner: any = {}; //dci ??? TODO: create Partner class
+  partner!: any; //dci ??? TODO: create Partner class
 
   @property({type: Number, notify: true, observer: '_partnerIdChanged'})
   partnerId: number | null = null;
