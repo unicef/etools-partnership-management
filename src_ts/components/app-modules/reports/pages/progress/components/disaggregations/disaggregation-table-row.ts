@@ -6,7 +6,8 @@ import '../../../../../../mixins/utils-mixin.js';
 import { disaggregationTableStyles } from './styles/disaggregation-table-styles.js';
 import { PolymerElement, html } from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -85,13 +86,14 @@ class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object,
-      indicatorType: String,
-      rowType: String
-    };
-  }
+  @property({type: Object})
+  data: GenericObject | null = null;
+
+  @property({type: String}) 
+  indicatorType: string | null = null;
+
+  @property({type: String})
+  rowType: string | null = null;
 
   _computeClass(rowType: string) {
     return rowType;

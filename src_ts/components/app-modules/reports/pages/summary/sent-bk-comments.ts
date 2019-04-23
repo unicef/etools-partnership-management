@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-dialog/etools-dialog.js';
 import '../../../../layout/etools-form-element-wrapper.js';
+import { property } from '@polymer/decorators';
 
 /*
   * @customElement
@@ -32,18 +33,11 @@ class SentBkComments extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      report: {
-        type: String,
-        value: ''
-      },
-      opened: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String})
+  report: string = '';
+
+  @property({type: Boolean})
+  opened: boolean = false;
 
   _getHeading(reviewDt: string, reviewedBy: string) {
     if (!reviewDt && !reviewedBy) {

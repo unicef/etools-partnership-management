@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
 import '../disaggregation-table-row';
 import {GenericObject} from '../../../../../../../../typings/globals.types';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -26,16 +26,14 @@ class ZeroDisaggregations extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object,
-      mapping: Array,
-      totalRow: {
-        type: Array,
-        computed: '_determineTotalRow(mapping, data)'
-      }
-    };
-  }
+  @property({type: Object})
+  data: GenericObject | null = null;
+
+  @property({type: Array})
+  mapping: any[] = [];
+
+  @property({type: Array, computed: '_determineTotalRow(mapping, data)'})
+  totalRow: any[] = [];
 
   _determineTotalRow(_: any, data: GenericObject) {
     if (typeof data === 'undefined') {

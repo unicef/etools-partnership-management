@@ -4,7 +4,7 @@ import '@polymer/paper-input/paper-input.js';
 import {GenericObject} from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {toNumericValues} from './mixins/disaggregation-field';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -51,30 +51,23 @@ class DisaggregationField extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      key: String,
+  @property({type: String})
+  key!: string;
 
-      coords: String,
+  @property({type: String})
+  coords!: string;
 
-      min: Number,
+  @property({type: Number})
+  min: number | null = null;
 
-      validator: String,
+  @property({type: String})
+  validator: string | null = null;
 
-      value: {
-        type: Number,
-        notify: true
-      },
+  @property({type: Number, notify: true})
+  value: number | null = null;
 
-      invalid: {
-        type: Boolean,
-        notify: true
-      }
-    };
-  }
-
-  public key!: string;
-  public coords!: string;
+  @property({type: Boolean, notify: true})
+  invalid: boolean | null = null;
 
   ready() {
     super.ready();

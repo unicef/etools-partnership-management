@@ -14,6 +14,8 @@ import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
 import {logError} from 'etools-behaviors/etools-logging';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -21,8 +23,7 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
   static get is() {
     return 'indicator-details';
@@ -174,37 +175,28 @@ class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as an
     `;
   }
 
-  static get properties() {
-    return {
-      indicatorReportId: Number,
-      indicatorReport: {
-        type: Object,
-        value: {}
-      },
-      loading: {
-        type: Boolean,
-        value: false
-      },
-      selected: {
-        type: Number,
-        value: 0
-      },
-      isClusterIndicator: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-      locationData: {
-        type: Array,
-        computed: '_computeLocationData(indicatorReport.indicator_location_data)'
-      }
-    };
-  }
+  @property({type: Number})
+  indicatorReportId: number | null = null;
+
+  @property({type: Object})
+  indicatorReport: GenericObject = {};
+
+  @property({type: Boolean})
+  loading: boolean = false;
+      
+  @property({type: Number})
+  selected: number = 0;
+
+  @property({type: Boolean,  reflectToAttribute: true})
+  isClusterIndicator: boolean = false;
+
+  @property({type: Array, computed: '_computeLocationData(indicatorReport.indicator_location_data)'})
+  locationData: any[] = [];
 
   _shouldRefreshIndicatorDetails() {
     return this.indicatorReportId &&
         (isEmptyObject(this.indicatorReport) ||
-          (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(this.indicatorReportId, 10)));
+          (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)));
   }
 
   getIndicatorDetails() {
@@ -213,7 +205,7 @@ class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as an
       return;
     }
 
-    let params = this._computeParams(this.indicatorReportId);
+    let params = this._computeParams(String(this.indicatorReportId));
     this._showLoading();
     let self = this;
     this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response: any) {

@@ -1,6 +1,8 @@
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import { PolymerElement, html } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -85,30 +87,20 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      target: {
-        type: Object
-      },
-      cumulativeProgress: {
-        type: String,
-        value: '-'
-      },
-      achievement: {
-        type: String,
-        value: '-'
-      },
-      bold: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-      displayType: {
-        type: String,
-        value: 'number'
-      }
-    };
-  }
+  @property({type: Object})
+  target: GenericObject | null = null;
+
+  @property({type: String})
+  cumulativeProgress: string = '-';
+
+  @property({type: String})
+  achievement: string = '-';
+
+  @property({type: Boolean, reflectToAttribute: true})
+  bold: boolean = false;
+
+  @property({type: String})
+  displayType: string = 'number';
 
   _getTargetValue(displayType: string, target: any) {
     switch (displayType) {

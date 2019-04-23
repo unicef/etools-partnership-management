@@ -4,7 +4,8 @@ import '@polymer/app-layout/app-grid/app-grid-style.js';
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
 import { disaggregationTableStyles } from './styles/disaggregation-table-styles.js';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -69,11 +70,8 @@ class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object
-    };
-  }
+  @property({type: Object})
+  data: GenericObject | null = null;
 
 }
 

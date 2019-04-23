@@ -2,7 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '../disaggregation-table-row';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -45,24 +46,20 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object,
-      mapping: Array,
-      totalRow: {
-        type: Array,
-        computed: '_determineTotalRow(data)'
-      },
-      columns: {
-        type: Array,
-        computed: '_getColumns(mapping)'
-      },
-      rows: {
-        type: Array,
-        computed: '_determineRows(columns, data)'
-      }
-    };
-  }
+  @property({type: Object})
+  data: GenericObject | null = null;
+
+  @property({type: Array})
+  mapping: any[] = [];
+
+  @property({type: Array, computed: '_determineTotalRow(data)'})
+  totalRow: any[] = [];
+
+  @property({type: Array, computed: '_getColumns(mapping)'})
+  columns: any[] = [];
+
+  @property({type: Array, computed: '_determineRows(columns, data)'})
+  rows: any[] = [];
 
   _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {

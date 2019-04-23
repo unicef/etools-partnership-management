@@ -46,8 +46,8 @@ declare const moment: any;
  * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  */
-class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
-(ReportDetailsMixin(ScrollControl(EndpointsMixin(PolymerElement)))))) {
+class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
+(ReportDetailsMixin(EndpointsMixin(PolymerElement)))))) {
 
   static get is() {
     return 'reports-module';
@@ -256,6 +256,9 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
 
   @property({type: String})
   moduleName: string = 'reports';
+
+  private mockupListLoadedDebouncer!: Debouncer;
+  private loadingReportDataDebouncer!: Debouncer;
 
   static get observers() {
     return [
