@@ -137,10 +137,6 @@ class InterventionDetails extends connect(store)(
         padding-right: 10px;
       }
 
-      datepicker-lite {
-        min-width: 100px; /*IE fix*/
-      }
-
       .export-res-btn {
         height: 28px;
         margin-top: 4px;
@@ -284,7 +280,8 @@ class InterventionDetails extends connect(store)(
                               readonly$="[[!permissions.edit.start]]"
                               required$="[[permissions.required.start]]"
                               error-message="Please select start date"
-                              auto-validate>
+                              auto-validate
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
             <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
             <span slot="message">[[_frsStartConsistencyWarning]]</span>
@@ -304,7 +301,8 @@ class InterventionDetails extends connect(store)(
                               readonly$="[[!permissions.edit.end]]"
                               required$="[[permissions.required.end]]"
                               error-message="Please select end date"
-                              auto-validate>
+                              auto-validate
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
             <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
             <span slot="message">[[_frsEndConsistencyWarning]]</span>

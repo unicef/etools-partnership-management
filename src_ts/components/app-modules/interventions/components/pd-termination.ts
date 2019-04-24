@@ -56,7 +56,8 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
                           value="{{termination.date}}"
                           error-message="Please select termination date"
                           auto-validate
-                          required>
+                          required
+                          selected-date-display-format="D MMM YYYY">
         </datepicker-lite>
       </div>
 
