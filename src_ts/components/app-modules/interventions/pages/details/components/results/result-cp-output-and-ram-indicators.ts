@@ -39,7 +39,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
 
     <etools-dialog id="cpOutputRamIndicatorsDialog"
                   size="md"
-                  dialog-title="Add/Update CP Output/CP Inidcators"
+                  dialog-title="Add/Update CP Output/CP Indicators"
                   ok-btn-text="Add/Update"
                   disable-confirm-btn="[[disableConfirmBtn]]"
                   on-confirm-btn-clicked="_saveChanges"
