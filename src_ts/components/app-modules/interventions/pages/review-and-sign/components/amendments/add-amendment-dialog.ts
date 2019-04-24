@@ -71,7 +71,8 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
                             max-date="[[getCurrentDate()]]"
                             max-date-error-msg="Date can not be in the future"
                             auto-validate
-                            required>
+                            required
+                            selected-date-display-format="D MMM YYYY">
           </datepicker-lite>
         </div>
         <div class="row-h flex-c">

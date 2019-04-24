@@ -125,7 +125,8 @@ class InterventionsList extends connect(store)(
                               value="{{filter.dateSelected}}"
                               on-date-has-changed="_filterDateHasChanged"
                               data-filter-path$="[[filter.path]]"
-                              fire-date-has-changed>
+                              fire-date-has-changed
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </template>
 

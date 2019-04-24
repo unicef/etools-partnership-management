@@ -33,6 +33,7 @@ import { store, RootState } from '../../../store';
 import {property} from '@polymer/decorators/lib/decorators';
 import {ReportRatingDialogEl} from "./components/report-rating-dialog";
 import {ReportRejectDialogEl} from "./components/report-reject-dialog";
+import { ReportsListEl } from './pages/list/reports-list';
 declare const moment: any;
 
 
@@ -270,6 +271,7 @@ class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunct
 
   stateChanged(state: RootState) {
     this.repDetailsStateChanged(state);
+    this.endStateChanged(state);
   }
 
   ready() {
@@ -383,7 +385,7 @@ class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunct
   }
 
   _exportIndicators(type: string) {
-    const reportsList = (this.shadowRoot!.querySelector('#list') as GenericObject);
+    const reportsList = (this.shadowRoot!.querySelector('#list') as ReportsListEl);
     if (reportsList instanceof PolymerElement === false) {
       return;
     }

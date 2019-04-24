@@ -444,3 +444,5 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
 }
 
 window.customElements.define(ReportsList.is, ReportsList);
+
+export {ReportsList as ReportsListEl}

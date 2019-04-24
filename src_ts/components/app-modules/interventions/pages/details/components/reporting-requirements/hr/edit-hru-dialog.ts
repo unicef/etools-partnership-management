@@ -69,7 +69,8 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
                         required
                         min-date="[[minDate]]"
                         auto-validate
-                        open="{{datePickerOpen}}">
+                        open="{{datePickerOpen}}"
+                        selected-date-display-format="D MMM YYYY">
       </datepicker-lite>
       </div>
       <div>

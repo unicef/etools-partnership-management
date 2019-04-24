@@ -176,7 +176,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     `;
   }
 
-  @property({type: String, readOnly: true})              // TODO: check/implement delete option
+  @property({type: String})              // TODO: check/implement delete option
   _deleteEpName: string = 'agreementAmendmentsDelete';
 
   @property({type: String})

@@ -43,7 +43,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     `;
   }
 
-  @property({type: String, readOnly: true})
+  @property({type: String})
   _deleteEpName: string = 'getEditDeleteIndicator';
 
   @property({type: String})
