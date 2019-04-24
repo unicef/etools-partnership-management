@@ -19,7 +19,6 @@ import './components/report-reject-dialog';
 import {GenericObject, User} from '../../../typings/globals.types';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import { pageLayoutStyles } from '../../styles/page-layout-styles';
 import { SharedStyles } from '../../styles/shared-styles';
@@ -44,11 +43,10 @@ declare const moment: any;
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRouting
  * @appliesMixin ReportDetails
- * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  */
 class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
-(ReportDetailsMixin(EndpointsMixin(PolymerElement)))))) {
+(ReportDetailsMixin(PolymerElement))))) {
 
   static get is() {
     return 'reports-module';
@@ -270,7 +268,6 @@ class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunct
   }
 
   stateChanged(state: RootState) {
-    this.repDetailsStateChanged(state);
     this.endStateChanged(state);
   }
 
