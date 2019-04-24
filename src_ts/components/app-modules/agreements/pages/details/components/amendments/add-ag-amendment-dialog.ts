@@ -46,7 +46,8 @@ class AddAgAmendmentDialog extends PolymerElement {
                               open="{{datePickerOpen}}"
                               auto-validate="[[autoValidate]]"
                               max-date="[[getCurrentDate()]]"
-                              required>
+                              required
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>

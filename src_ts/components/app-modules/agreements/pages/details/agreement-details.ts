@@ -181,7 +181,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                                 label="Start date"
                                 value="{{agreement.start}}"
                                 readonly$="[[!agreement.permissions.edit.start]]"
-                                required$="[[agreement.permissions.required.start]]">
+                                required$="[[agreement.permissions.required.start]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -189,7 +190,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                                 label="End date"
                                 value="{{agreement.end}}"
                                 readonly$="[[!agreement.permissions.edit.end]]"
-                                required$="[[agreement.permissions.required.end]]">
+                                required$="[[agreement.permissions.required.end]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
           </template>
@@ -232,7 +234,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                                 label="Signed By Partner Date"
                                 value="{{agreement.signed_by_partner_date}}"
                                 readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                                max-date="[[getCurrentDate()]]">
+                                max-date="[[getCurrentDate()]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
           </div>
@@ -248,7 +251,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                                 label="Signed By UNICEF Date"
                                 value="{{agreement.signed_by_unicef_date}}"
                                 readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                                max-date="[[getCurrentDate()]]">
+                                max-date="[[getCurrentDate()]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
           </div>
