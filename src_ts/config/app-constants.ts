@@ -18,12 +18,6 @@ const CONSTANTS = {
             SSFA: 'SSFA',
             MOU: 'MOU'
           },
-          PD_AMENDMENT_TYPES: {
-            Budget: 'Budget',
-            Dates: 'Dates',
-            Other: 'Other',
-            Results: 'Results'
-          },
           STATUSES: {
             Draft: 'Draft',
             Signed: 'Signed',

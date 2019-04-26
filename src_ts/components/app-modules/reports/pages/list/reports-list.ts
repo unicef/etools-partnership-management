@@ -19,21 +19,18 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 import { updateAppState } from '../../../../utils/navigation-helper';
+import { GenericObject, LabelAndValue, MinimalUser } from '../../../../../typings/globals.types';
+import { property } from '@polymer/decorators';
+import { CpOutput } from '../../../../../typings/intervention.types';
 
-/**
- * @polymer
- * @mixinFunction
- * @appliesMixin ListFilters
- */
-const ReportsListRequiredMixins = ListFiltersMixin(PolymerElement);
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin ReportsListRequiredMixins
+ * @appliesMixin ListFiltersMixin
  */
 // @ts-ignore
-class ReportsList extends connect(store)(ReportsListRequiredMixins) {
+class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
 
   static get is() {
     return 'reports-list';
@@ -69,7 +66,8 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
                 selected="{{filter.alreadySelected}}"
-                on-selected-changed="filterValueChanged"
+                trigger-value-change-event
+                on-etools-selected-item-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
                 hide-search="[[filter.hideSearch]]"
                 min-width="[[filter.minWidth]]"
@@ -134,71 +132,60 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
     `;
   }
 
-  static get properties() {
-    return {
-      urlParams: {
-        type: Object
-      },
-      active: {
-        type: Boolean,
-        value: false
-      },
-      csvDownloadUrl: {
-        type: String,
-        notify: true
-      },
-      // filters options
-      partners: {
-        type: Array,
-        statePath: 'partnersDropdownData'
-      },
-      cpOutputs: {
-        type: Array,
-        statePath: 'cpOutputs'
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      reportStatuses: {
-        type: Array,
-        statePath: 'reportStatuses'
-      },
-      reportTypes: {
-        type: Array,
-        statePath: 'reportTypes'
-      },
-      unicefUsersData: {
-        type: Array,
-        statePath: 'unicefUsersData'
-      },
-      // selected filters values
-      queryParams: {
-        type: Object,
-        value: {
-          pd_ref_title: null,
-          external_partner_id: null,
-          cp_output: null,
-          section: null,
-          status: [],
-          report_type: null,
-          unicef_focal_points: []
-        }
-      },
-      paginator: {
-        type: Object,
-        value: {
-          page: 1,
-          page_size: 10
-        }
-      },
-      _initComplete: {
-        type: Boolean,
-        value: false
-      },
-      _prevFiltersChangedArgs: String
-    };
-  }
+  @property({type: Object})
+  urlParams!: GenericObject;
+
+  @property({type: Boolean})
+  active: Boolean = false;
+
+  @property({type: String, notify: true})
+  csvDownloadUrl!: string;
+
+  // filters options
+  @property({type: Array})
+  partners!: LabelAndValue[];
+
+  @property({type: Array})
+  cpOutputs!: CpOutput[];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  @property({type: Array})
+  reportStatuses!: LabelAndValue[];
+
+  @property({type: Array})
+  reportTypes!: LabelAndValue[];
+
+  @property({type: Array})
+  unicefUsersData!: MinimalUser[];
+
+  // selected filters values
+  @property({type: Object})
+  queryParams: GenericObject = {
+      pd_ref_title: null,
+      external_partner_id: null,
+      cp_output: null,
+      section: null,
+      status: [],
+      report_type: null,
+      unicef_focal_points: []
+    }
+
+  @property({type: Object})
+  paginator: GenericObject =  {
+        page: 1,
+        page_size: 10
+      }
+
+  @property({type: Boolean})
+  _initComplete: boolean = false;
+
+  @property({type: String})
+  _prevFiltersChangedArgs!: string
+
+
+  private _updateFiltersValsDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -457,3 +444,5 @@ class ReportsList extends connect(store)(ReportsListRequiredMixins) {
 }
 
 window.customElements.define(ReportsList.is, ReportsList);
+
+export {ReportsList as ReportsListEl}

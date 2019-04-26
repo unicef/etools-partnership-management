@@ -1,4 +1,4 @@
-export type Action = {
+export type StatusAction = {
   label: string,
   hidden: boolean,
   event: string,

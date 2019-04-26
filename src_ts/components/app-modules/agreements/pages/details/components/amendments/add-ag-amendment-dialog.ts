@@ -9,13 +9,14 @@ import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {property} from '@polymer/decorators';
+import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
  * @customElement
  */
 class AddAgAmendmentDialog extends PolymerElement {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -45,7 +46,8 @@ class AddAgAmendmentDialog extends PolymerElement {
                               open="{{datePickerOpen}}"
                               auto-validate="[[autoValidate]]"
                               max-date="[[getCurrentDate()]]"
-                              required>
+                              required
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>
@@ -97,57 +99,45 @@ class AddAgAmendmentDialog extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      opened: {
-        type: Boolean,
-        value: false
-      },
-      datePickerOpen: {
-        type: Boolean,
-        value: false
-      },
-      uploadEndpoint: {
-        type: String,
-        value: () => pmpEndpoints.attachmentsUpload.url
-      },
-      amendmentTypes: {
-        type: Array,
-        value: []
-      },
-      amendment: Object,
-      autoValidate: {
-        type: Boolean,
-        value: false
-      },
-      showAuthorizedOfficers: {
-        type: Boolean,
-        value: false
-      },
-      authorizedOfficersOptions: {
-        type: Array,
-        value: []
-      },
-      authorizedOfficers: {
-        type: Array,
-        value: []
-      },
-      _aoTypeSelected: {
-        type: Boolean,
-        value: false
-      },
-      _validationSelectors: {
-        type: Array,
-        value: ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers']
-      },
-      uploadInProgress: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Boolean})
+  opened: boolean = false;
 
-  initData(authorizedOfficers: any, showAuthorizedOfficers: any, amendmentTypes: any) {
+  @property({type: Boolean})
+  datePickerOpen: boolean = false;
+
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Array})
+  amendmentTypes: [] = [];
+
+  @property({type: Object})
+  amendment!: AgreementAmendment;
+
+  @property({type: Boolean})
+  autoValidate: boolean = false;
+
+  @property({type: Boolean})
+  showAuthorizedOfficers: boolean = false;
+
+  @property({type: Array})
+  authorizedOfficersOptions: [] = [];
+
+  @property({type: Array})
+  authorizedOfficers: [] = [];
+
+  @property({type: Boolean})
+  _aoTypeSelected: boolean = false;
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
+
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+
+  private _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
+
+  initData(authorizedOfficers: any, showAuthorizedOfficers: boolean, amendmentTypes: LabelAndValue[]) {
     this.set('amendment', new AgreementAmendment());
     this.set('amendmentTypes', amendmentTypes);
     this.set('authorizedOfficersOptions',
@@ -222,3 +212,5 @@ class AddAgAmendmentDialog extends PolymerElement {
 }
 
 window.customElements.define('add-ag-amendment-dialog', AddAgAmendmentDialog);
+
+export {AddAgAmendmentDialog};

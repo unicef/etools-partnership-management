@@ -440,3 +440,5 @@ class PlannedBudget extends connect(store)(
 }
 
 window.customElements.define('planned-budget', PlannedBudget);
+
+export {PlannedBudget as PlannedBudgetEl};

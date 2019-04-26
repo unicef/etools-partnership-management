@@ -3,46 +3,35 @@ import {store} from '../../store';
 
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import UserPermisionsMixin from './user-permissions-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data';
 import {isEmptyObject} from '../utils/utils';
 import { fireEvent } from '../utils/fire-custom-event';
 import { logError } from 'etools-behaviors/etools-logging';
-import { Constructor } from '../../typings/globals.types';
+import { Constructor, User, UserGroup, UserPermissions } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+import { getAllPermissions } from './user-permissions';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin UserPermisionsMixin
  */
 function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    // @ts-ignore
-    class userDataClass extends EndpointsMixin(UserPermisionsMixin(EtoolsPageRefreshMixin(baseClass))) {
+    class userDataClass extends EndpointsMixin(EtoolsPageRefreshMixin(baseClass)) {
 
-      static get properties() {
-        return {
-          endpointName: String,
-          user: {
-            type: Object,
-            readOnly: true,
-            notify: true
-          },
-          userGroups: {
-            type: Array,
-            readOnly: true
-          },
-          permissions: {
-            type: Object,
-            readOnly: true,
-            notify: true
-          }
-        };
-      }
+      @property({type: String})
+      endpointName: string = 'myProfile';
 
-      public endpointName: string = 'myProfile';
+      @property({type: Object, readOnly: true, notify: true})
+      user!: User;
+
+      @property({type: Object, readOnly: true})
+      userGroups!: UserGroup[];
+
+      @property({type: Object, readOnly: true, notify: true})
+      permissions!: UserPermissions;
 
       public requestUserData() {
         this.sendRequest({
@@ -76,6 +65,7 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
                     loadingSource: 'country-update'
                   };
                   fireEvent(this, 'global-loading', eventPayload);
+                  // @ts-ignore TODOOO
                   this.refresh();
                 }
               } else {
@@ -99,16 +89,20 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       protected _resetUserAndPermissions() {
+        // @ts-ignore
         this._setUser(undefined);
+        // @ts-ignore
         this._setPermissions(undefined);
       }
 
       protected _setUserData(data: any) {
         let _user = data;
         let _permissions = {};
+        // @ts-ignore
         this._setUser(_user);
-        let permissionsList = this.getAllPermissions();
+        let permissionsList = getAllPermissions();
         if (!isEmptyObject(data)) {
+          // @ts-ignore
           this._setUserGroups(_user.groups);
           permissionsList.defaultPermissions.forEach(function (perm: any) {
             // @ts-ignore
@@ -144,6 +138,7 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           //  _permissions[perm] = true;
           // });
         }
+        // @ts-ignore
         this._setPermissions(_permissions);
       }
 

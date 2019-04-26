@@ -5,15 +5,15 @@ import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-sta
 import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
-  [x: string]: any;
+class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
         <style>
@@ -31,61 +31,51 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      agreementId: {
-        value: null
+  @property({type: Number})
+  agreementId: number | null = null;
+
+  @property({type: String})
+  agreementType: string = '';
+
+  @property({type: Boolean})
+  newAgreement: boolean = false;
+
+  @property({type: Array})
+  possibleStatuses: any = [];
+
+  @property({type: Array})
+  possibleActions: any = [
+      {
+      label: 'Save',
+      hidden: true,
+      primary: true,
+      event: 'save-agreement'
+      // save-agreement event is handeled by the parnent
       },
-      agreementType: {
-        type: String,
-        value: ''
+      {
+          label: 'Suspend',
+          hidden: true,
+          event: 'agreement-suspend-event'
       },
-      newAgreement: {
-        type: Boolean,
-        value: false
+      {
+          label: 'Unsuspend',
+          hidden: true,
+          event: 'agreement-unsuspend-event'
       },
-      possibleStatuses: {
-        type: Array,
-        value: []
+      {
+          label: 'Terminate',
+          hidden: true,
+          event: 'agreement-terminate-event'
       },
-      possibleActions: {
-        type: Array,
-        value: [
-          {
-            label: 'Save',
-            hidden: true,
-            primary: true,
-            event: 'save-agreement'
-            // save-agreement event is handeled by the parnent
-          },
-          {
-            label: 'Suspend',
-            hidden: true,
-            event: 'agreement-suspend-event'
-          },
-          {
-            label: 'Unsuspend',
-            hidden: true,
-            event: 'agreement-unsuspend-event'
-          },
-          {
-            label: 'Terminate',
-            hidden: true,
-            event: 'agreement-terminate-event'
-          },
-          {
-            label: 'Delete',
-            hidden: true,
-            event: 'agreement-delete-event'
-          }
-        ]
-      },
-      deleteWarningMessage: {
-        type: String,
-        value: 'Are you sure you want to delete this agreement?'
-      }
-    };
-  }
+      {
+          label: 'Delete',
+          hidden: true,
+          event: 'agreement-delete-event'
+      }];
+
+  @property({type:String})
+  deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
+
 
   static get observers() {
     return [
@@ -102,7 +92,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
     this._createDeleteConfirmationDialog();
 
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm);
+    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm  as any);
 
     // has to be run async for shadycss to load
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -110,7 +100,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm);
+    this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm as any);
   }
 
   setPossibleStatuses() {

@@ -9,6 +9,7 @@ import { logError } from 'etools-behaviors/etools-logging';
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -16,24 +17,16 @@ import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin'
  */
 function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
   // @ts-ignore
-  class commonData extends EndpointsMixin(EnvironmentFlagsMixin(baseClass)) {
+  class commonData extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
 
-      public static get properties() {
-        return {
-          commonDataEndpoints: Object
-        };
-      }
-
-      public commonDataEndpoints: {
-        pmp: string[],
-        pmpPrpSections: string[],
-        prp: string[]
-      } = {
+      @property({type: Object})
+      commonDataEndpoints = {
         pmp: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
           'sections', 'unicefUsers', 'userCountryDetails'],
         pmpPrpSections: ['disaggregations'],
         prp: ['getPRPCountries']
       };
+
 
       public loadCommonData() {
         // get PMP static data
@@ -41,7 +34,6 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
         this._handlePrpData();
       }
 
-      // @ts-ignore
       protected _getStaticData(endpointsNames: string[]) {
         endpointsNames.forEach((endpointName: string) => {
           this._makeRequest(endpointName, this._getEndpointSuccessHandler(endpointName), this._errorHandler);
@@ -49,7 +41,7 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       protected _handlePrpData() {
-        this._waitForEnvFlagsToLoad().then(() => {
+        this.waitForEnvFlagsToLoad().then(() => {
           if (this.showPrpReports()) {
             this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
             if (this.prpServerIsOn()) {

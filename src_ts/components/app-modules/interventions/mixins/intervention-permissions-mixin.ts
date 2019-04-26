@@ -5,8 +5,9 @@ import {store} from '../../../../store.js';
 import { setPageDataPermissions } from '../../../../actions/page-data';
 import { isEmptyObject } from '../../../utils/utils';
 import { fireEvent } from '../../../utils/fire-custom-event';
-import { Constructor } from '../../../../typings/globals.types';
+import { Constructor, IPermission } from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * PD/SSFA permissions mixin
@@ -16,19 +17,20 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class interventionPermissionsClass extends baseClass {
-    [x: string]: any;
+
     /* eslint-enable arrow-parens */
-    static get properties() {
-      return {
-        _intervNoEditPerm: {
-          type: Object,
-          value: {
-            edit: new InterventionPermissionsFields(),
-            required: new InterventionPermissionsFields()
-          }
-        }
+    @property({type: Object})
+    _intervNoEditPerm: IPermission<InterventionPermissionsFields> = {
+        edit: new InterventionPermissionsFields(),
+        required: new InterventionPermissionsFields()
       };
-    }
+
+
+    // ---*Defined in the component
+    intervention!: Intervention;
+    originalIntervention!: Intervention;
+    // ---
+
 
     ready() {
       super.ready();
@@ -93,7 +95,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       return newIntervPerm;
     }
 
-    _setPermissions(perm: InterventionPermissionsFields) {
+    _setPermissions(perm: IPermission<InterventionPermissionsFields>) {
       this.set('intervention.permissions', perm);
       store.dispatch(setPageDataPermissions(perm));
       this._updateRelatedPermStyles();
@@ -134,7 +136,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       this._setPermissions(this._getNoEditPermissionsClone());
     }
 
-    setInterventionPermissions(newIntervention: boolean, perm?: InterventionPermissionsFields) {
+    setInterventionPermissions(newIntervention: boolean, perm?: IPermission<InterventionPermissionsFields>) {
       if (newIntervention) {
         this._setPermissions(this._getNewInterventionPermissions());
       } else {

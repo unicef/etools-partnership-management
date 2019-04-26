@@ -16,6 +16,7 @@ import { store, RootState } from '../../../../store';
 import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -27,8 +28,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
-class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(PaginationMixin(PolymerElement))) as any) {
-  [x: string]: any;
+class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(EndpointsMixin(PolymerElement)))) {
   static get is() {
     return 'reports-display-list';
   }
@@ -187,41 +187,32 @@ class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(Pagin
     `;
   }
 
-  static get properties() {
-    return {
-      currentUser: {
-        type: Object,
-        statePath: 'currentUser'
-      },
-      interventionId: {
-        type: Number,
-        value: 0
-      },
-      reports: {
-        type: Array,
-        value: []
-      },
-      noPdSsfaRef: {
-        type: Boolean,
-        value: false
-      },
-      queryParams: {
-        type: Object,
-        value: null,
-        notify: true
-      },
-      debounceInterval: {
-        type: Number,
-        value: 100
-      },
-      waitQueryParamsInit: Boolean,
-      _endpointName: {
-        type: String,
-        value: 'reports'
-      },
-      _lastParamsUsed: Object
-    };
-  }
+
+  @property({type: Number})
+  interventionId: number = 0;
+
+  @property({type: Array})
+  reports: [] = [];
+
+  @property({type: Boolean})
+  noPdSsfaRef: boolean = false;
+
+  @property({type: Object, notify: true})
+  queryParams!: GenericObject;
+
+  @property({type: Number})
+  debounceInterval: number = 100;
+
+  @property({type: Boolean})
+  waitQueryParamsInit!: boolean;
+
+  @property({type: String})
+  _endpointName: string = 'reports';
+
+  @property({type: Object})
+  _lastParamsUsed!: object;
+
+  private _loadReportsDataDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -231,9 +222,7 @@ class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(Pagin
   }
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
-      this.currentUser = state.commonData!.currentUser;
-    }
+    this.endStateChanged(state);
   }
 
   _loadReportsData(prpCountries: any, interventionId: number, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
@@ -331,7 +320,7 @@ class ReportsDisplayList extends connect(store)(EndpointsMixin(CommonMixin(Pagin
   // TODO: this is the same function from lists common mixin, but we do not need that entire functionality here
   // refactor in near future
   _listDataChanged() {
-    let rows = this.shadowRoot.querySelectorAll('etools-data-table-row');
+    let rows = this.shadowRoot!.querySelectorAll('etools-data-table-row') as any; //TODO: etools-data-table typings
     if (rows && rows.length) {
       for (let i = 0; i < rows.length; i++) {
         if (rows[i].detailsOpened) {

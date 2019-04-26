@@ -1,20 +1,14 @@
 import { Paginator, Constructor } from '../../typings/globals.types';
 import CONSTANTS from '../../config/app-constants';
 import { PolymerElement } from '@polymer/polymer';
-
+import { property } from '@polymer/decorators';
 
 function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+
   class paginationClass extends baseClass {
-    [x: string]: any;
-    static get properties() {
-      return {
-        paginator: {
-          type: Object,
-          value: () => new Paginator(),
-          notify: true
-        }
-      };
-    }
+
+     @property({type: Object, notify: true})
+     paginator = new Paginator();
 
     static get observers() {
       return [
@@ -67,6 +61,7 @@ function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       this.setPageSize(urlParams.size ? parseInt(urlParams.size) : CONSTANTS.DEFAULT_LIST_SIZE);
     }
 
+   
     _pageInsidePaginationRange(page: number, totalResults: string) {
       if (page < 1) {
         this.resetPageNumber();

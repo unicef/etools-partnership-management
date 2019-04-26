@@ -15,13 +15,16 @@ import { SharedStyles } from '../../../../../styles/shared-styles.js';
 import { repeatableDataSetsStyles } from '../../../../../styles/repeatable-data-sets-styles.js';
 import { buttonsStyles } from '../../../../../styles/buttons-styles.js';
 import { fireEvent } from '../../../../../utils/fire-custom-event.js';
+import { property } from '@polymer/decorators';
+import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin RepeatableDataSets
  */
-class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
+class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -199,18 +202,13 @@ class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      years: {
-        type: Array,
-        value: []
-      },
-      editMode: {
-        type: Boolean,
-        observer: '_editModeChanged'
-      }
-    };
-  }
+  @property({type: Array})
+  years: [] = [];
+
+  // @ts-ignore
+  @property({type: Boolean, observer: PlannedVisits.prototype._editModeChanged})
+  editMode!: boolean;
+
 
   static get observers() {
     return [
@@ -254,7 +252,7 @@ class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
 
   _validateYear(index: number) {
     let valid = true;
-    let yearEl = this.shadowRoot.querySelector('#year_' + index);
+    let yearEl = this.shadowRoot!.querySelector('#year_' + index) as EtoolsDropdownEl;
 
     if (yearEl && !yearEl.validate()) {
       valid = false;
@@ -264,10 +262,10 @@ class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
 
   _validateQuarters(item: PlannedVisit, index: number) {
     let valid = true;
-    let q1 = this.shadowRoot.querySelector('#visit_' + index + '_q1');
-    let q2 = this.shadowRoot.querySelector('#visit_' + index + '_q2');
-    let q3 = this.shadowRoot.querySelector('#visit_' + index + '_q3');
-    let q4 = this.shadowRoot.querySelector('#visit_' + index + '_q4');
+    let q1 = this.shadowRoot!.querySelector('#visit_' + index + '_q1') as PaperInputElement;
+    let q2 = this.shadowRoot!.querySelector('#visit_' + index + '_q2') as PaperInputElement;
+    let q3 = this.shadowRoot!.querySelector('#visit_' + index + '_q3') as PaperInputElement;
+    let q4 = this.shadowRoot!.querySelector('#visit_' + index + '_q4') as PaperInputElement;
 
     [q1, q2, q3, q4].forEach(function(q) {
       if (q) {
@@ -310,7 +308,7 @@ class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     let yearSelected = event.detail.selectedItem
         ? event.detail.selectedItem.value
         : null;
-    let yearDropdown = this.shadowRoot.querySelector('#year_' + event.model.index);
+    let yearDropdown = this.shadowRoot!.querySelector('#year_' + event.model.index);
 
     if (this.isAlreadySelected(yearSelected, event.model.index, 'year')) {
       fireEvent(this, 'toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
@@ -343,3 +341,5 @@ class PlannedVisits extends (RepeatableDataSetsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('planned-visits', PlannedVisits);
+
+export {PlannedVisits as PlannedVisitsEl};
