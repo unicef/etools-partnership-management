@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import { DomRepeatEvent } from '../../../typings/globals.types';
+import { DomRepeatEvent, GenericObject } from '../../../typings/globals.types';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -10,13 +10,13 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import { fireEvent } from '../../utils/fire-custom-event';
+import { property } from '@polymer/decorators';
 
  /**
  * @polymer
  * @customElement
  */
 class EtoolsActionButton extends PolymerElement {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -113,29 +113,22 @@ class EtoolsActionButton extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      actions: {
-        type: Array,
-        value: []
-      },
-      primaryAction: {
-        type: Object
-      },
-      secondaryActions: {
-        type: Array,
-        value: []
-      },
-      disabled: {
-        type: Boolean,
-        value: false
-      },
-      showInfoIcon: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  actions: any[] = [];
+
+  @property({type: Object})
+  primaryAction!: GenericObject;
+
+  @property({type: Array})
+  secondaryActions: any[] = [];
+
+  @property({type: Boolean})
+  disabled: boolean = false;
+
+  @property({type: Boolean})
+  showInfoIcon: boolean = false;
+
+  private _actionsChangedDebouncer!: Debouncer;
 
   static get observers() {
     return ['_actionsChanged(actions, actions.*)'];
