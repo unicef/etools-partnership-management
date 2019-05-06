@@ -6,7 +6,7 @@ import EndpointsMixin from '../endpoints/endpoints-mixin';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -14,7 +14,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement) as any) {
+class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
   static get is() {
     return 'etools-ram-indicators';
   }
@@ -64,24 +64,19 @@ class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: {
-        type: Number
-      },
-      cpId: {
-        type: Number
-      },
-      ramIndicators: {
-        type: Array,
-        value: []
-      },
-      loading: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Number})
+  cpId!: number;
+
+  @property({type: Array})
+  ramIndicators: any[] = [];
+
+  @property({type: Boolean})
+  loading: boolean = false;
+
+  private _debounceRamIndRequest!: Debouncer;
 
   static get observers() {
     return [

@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer';
 import 'etools-dropdown/etools-dropdown.js'
 import {SharedStyles} from '../styles/shared-styles.js';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles.js';
+import { property } from '@polymer/decorators';
 
 /**
  *
@@ -43,22 +44,14 @@ class YearDropdown extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      label: {
-        type: String,
-        value: 'Year'
-      },
-      selectedYear: {
-        type: Number,
-        notify: true
-      },
-      years: {
-        type: Array,
-        value: []
-      }
-    };
-  }
+  @property({type: String})
+  label: string = 'Year';
+
+  @property({type: Number, notify: true})
+  selectedYear!: number;
+
+  @property({type: Array})
+  years: any[] = [];
 
   ready() {
     super.ready();

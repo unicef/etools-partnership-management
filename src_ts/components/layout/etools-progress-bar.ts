@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-progress/paper-progress';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -67,22 +68,14 @@ class EtoolsProgressBar extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      value: {
-        type: Number,
-        value: 0
-      },
-      progressValue: {
-        type: Number,
-        readOnly: true,
-        computed: '_getProgress(value)'
-      },
-      noDecimals: Boolean
-    };
-  }
+  @property({type: Number})
+  value: number = 0;
 
-  public noDecimals: boolean = false;
+  @property({type: Number, readOnly: true, computed: '_getProgress(value)'})
+  progressValue!: number;
+
+  @property({type: Boolean})
+  noDecimals: boolean = false;
 
   _getProgress(value: any) {
     value = parseFloat(parseFloat(value).toFixed(2));
