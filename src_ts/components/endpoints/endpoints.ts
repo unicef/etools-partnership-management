@@ -192,8 +192,8 @@ const pmpEdpoints = {
     template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/',
     token: 'prp'
   },
-  reportAttachment: {
-    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachment/',
+  reportAttachments: {
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachments/',
     token: 'prp'
   },
   reportIndicatorsDetails: {
