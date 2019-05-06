@@ -10,6 +10,8 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
 import { GenericObject } from '../../../../typings/globals.types';
+import { RootState, store } from '../../../../store';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 
 /*
@@ -22,7 +24,7 @@ import { GenericObject } from '../../../../typings/globals.types';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRatingDialog extends (EndpointsMixin(PolymerElement)) {
+class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -70,6 +72,10 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement)) {
 
   @property({type: String})
   selectedOverallStatus: string = '';
+
+  stateChanged(state: RootState) {
+    this.endStateChanged(state);
+  }
 
   open() {
     this.set('selectedOverallStatus', '');
