@@ -9,17 +9,16 @@ import {store, RootState} from '../../store';
 import {SharedStyles} from '../styles/shared-styles'
 import {requiredFieldStarredStyles} from '../styles/required-field-styles'
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
-import {CpStructure} from '../../typings/globals.types';
+import {CpStructure, GenericObject} from '../../typings/globals.types';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
  * @customElement
  */
-export class EtoolsCpStructure
-    extends connect(store)(PolymerElement) {
-  [x: string]: any;
+export class EtoolsCpStructure extends connect(store)(PolymerElement) {
+
   static get template() {
     return html`
           ${SharedStyles} ${requiredFieldStarredStyles}
@@ -53,43 +52,28 @@ export class EtoolsCpStructure
         `;
   }
 
-  static get properties() {
-    return {
-      countryProgrammes: {
-        type: Array,
-        statePath: 'countryProgrammes'
-      },
-      sortedCountryProgrammes: {
-        type: Array
-      },
-      selectedCp: {
-        type: Number,
-        notify: true
-      },
-      /**
-       * appModuleItem could be agreement or intervention
-       */
-      appModuleItem: {
-        type: Object,
-        value: null
-      },
-      /**
-       * module will indicate the appmodule where cp selector is used;
-       * could be 'agreements' or 'intervention'
-       */
-      module: {
-        type: String
-      },
-      editMode: {
-        type: Boolean,
-        value: false
-      },
-      required: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  countryProgrammes!: CpStructure[];
+
+  @property({type: Array})
+  sortedCountryProgrammes!: CpStructure[];
+
+  @property({type: String, notify: true})
+  selectedCp!: string;
+
+  @property({type: Object})
+  appModuleItem: GenericObject | null = null;
+
+  @property({type: String})
+  module!: string;
+
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Boolean})
+  required: boolean = false;
+
+  private cpInitDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -192,10 +176,10 @@ export class EtoolsCpStructure
     let msg = '';
     switch (this.module) {
       case 'agreements':
-        msg = `Agreement ${this.appModuleItem.agreement_number}`;
+        msg = 'Agreement ' +  this.appModuleItem ? this.appModuleItem!.agreement_number : '';
         break;
       case 'interventions':
-        msg = `PD/SSFA ${this.appModuleItem.number}`;
+        msg = 'PD/SSFA ' +  this.appModuleItem ? this.appModuleItem!.number : '';
         break;
     }
     return msg + ' has an old/expired CP Structure!';

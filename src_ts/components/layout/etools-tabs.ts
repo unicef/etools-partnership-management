@@ -6,6 +6,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-tabs/paper-tabs';
 
 import {EtoolsTab} from '../../typings/globals.types';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -78,18 +79,11 @@ class EtoolsTabs extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      activeTab: {
-        type: String,
-        notify: true
-      },
-      tabs: Array
-    };
-  }
+  @property({type: String, notify: true})
+  activeTab: string | null = null;
 
-  public activeTab: string | null = null;
-  public tabs: EtoolsTab[] = [];
+  @property({type: Array})
+  tabs: EtoolsTab[] = [];
 
   private _debouncer: Debouncer | null = null;
 
