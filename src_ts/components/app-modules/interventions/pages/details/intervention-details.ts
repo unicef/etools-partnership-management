@@ -347,11 +347,12 @@ class InterventionDetails extends connect(store)(
 
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
         <div class="row-h flex-c">
-          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-            <template is="dom-repeat" items="[[intervention.cluster_names]]">
-              <span class="names-padding">[[item]]</span>
-            </template>
-          </etools-form-element-wrapper>
+          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To" no-placeholder>
+             <template is="dom-repeat" items="[[intervention.cluster_names]]">
+               <span class="names-padding">[[item]]</span>
+             </template>
+             <span hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">—</span>
+           </etools-form-element-wrapper>
         </div>
       </template>
 

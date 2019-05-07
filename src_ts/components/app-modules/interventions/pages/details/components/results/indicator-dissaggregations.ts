@@ -103,7 +103,7 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.preDefinedDisaggregtions, state.commonData!.disaggregations)) {
-      this.preDefinedDisaggregtions = [...state.commonData!.disaggregations];
+      this.preDefinedDisaggregtions = [...state.commonData!.disaggregations.filter(x => x.active)];
     }
   }
 
