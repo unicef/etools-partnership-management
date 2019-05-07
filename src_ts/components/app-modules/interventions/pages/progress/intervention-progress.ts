@@ -222,7 +222,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
                         </div>
                         <div class="col-data col-3 progress-bar">
                           <etools-progress-bar class="report-progress-bar"
-                                                value="[[indicatorReport.reportable.progress_percentage]]">
+                                                value="[[getProgressPercentage(indicatorReport.reportable.progress_percentage)]]">
                           </etools-progress-bar>
                         </div>
                       </div>
@@ -450,6 +450,10 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
 
   _convertToDisplayFormat(strDt: string) {
     return moment(EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+  }
+
+  getProgressPercentage(progress_percentage: number) {
+    return progress_percentage * 100;
   }
 
 }

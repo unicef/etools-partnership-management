@@ -4,6 +4,8 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import { fireEvent } from '../utils/fire-custom-event';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../typings/globals.types';
 
  /**
  * @polymer
@@ -41,25 +43,17 @@ class IconsActions extends PolymerElement {
       `;
   }
 
-  static get properties() {
-    return {
-      itemDetails: {
-        type: Object
-      },
-      showEdit: {
-        type: Boolean,
-        value: true
-      },
-      showDelete: {
-        tye: Boolean,
-        value: true
-      },
-      showDeactivate: {
-        tye: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Object})
+  itemDetails!: GenericObject;
+
+  @property({type: Boolean})
+  showEdit: boolean = true;
+
+  @property({type: Boolean})
+  showDelete: boolean = true;
+
+  @property({type: Boolean})
+  showDeactivate: boolean = false;
 
   _onEdit() {
     fireEvent(this, 'edit');
