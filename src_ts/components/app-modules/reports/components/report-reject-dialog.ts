@@ -10,13 +10,15 @@ declare const moment: any;
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
 import { GenericObject } from '../../../../typings/globals.types';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../store';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRejectDialog extends (EndpointsMixin(PolymerElement)) {
+class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get is() {
     return 'report-reject-dialog';
@@ -60,6 +62,11 @@ class ReportRejectDialog extends (EndpointsMixin(PolymerElement)) {
 
   @property({type: String})
   comment: string = '';
+
+
+  stateChanged(state: RootState) {
+    this.endStateChanged(state);
+  }
 
   open() {
     this.set('comment', '');
