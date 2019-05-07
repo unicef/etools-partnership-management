@@ -82,7 +82,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             <datepicker-lite id="submissionDateField"
                               label="Document Submission Date"
                               value="{{intervention.submission_date}}"
-                              readonly$="[[!permissions.edit.submission_date]]">
+                              readonly$="[[!permissions.edit.submission_date]]"
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
           <div class="col col-3">
@@ -103,7 +104,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
               <datepicker-lite id="submissionDatePrcField"
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
-                                readonly$="[[!permissions.edit.submission_date_prc]]">
+                                readonly$="[[!permissions.edit.submission_date_prc]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -111,7 +113,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
               <datepicker-lite id="reviewDatePrcField"
                                 label="Review Date by PRC"
                                 value="{{intervention.review_date_prc}}"
-                                readonly$="[[!permissions.edit.review_date_prc]]">
+                                readonly$="[[!permissions.edit.review_date_prc]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
             <div class="col col-6">
@@ -155,7 +158,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               auto-validate
                               error-message="Date is required"
                               max-date-error-msg="Date can not be in the future"
-                              max-date="[[getCurrentDate()]]">
+                              max-date="[[getCurrentDate()]]"
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>
@@ -176,7 +180,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               auto-validate
                               error-message="Date is required"
                               max-date-error-msg="Date can not be in the future"
-                              max-date="[[getCurrentDate()]]">
+                              max-date="[[getCurrentDate()]]"
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>

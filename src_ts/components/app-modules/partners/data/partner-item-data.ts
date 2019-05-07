@@ -28,7 +28,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   }
 
   @property({type: Object, readOnly: true, notify: true})
-  partner = {} as Partner;
+  partner!: Partner;
 
   @property({type: Number, notify: true, observer: '_partnerIdChanged'})
   partnerId: number | null = null;

@@ -50,6 +50,7 @@ import '@polymer/app-route/app-route.js';
 import {AppShellStyles} from './app-shell-styles';
 
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
+import 'etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonData from '../common-data-mixins/common-data.js'
 import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
@@ -129,6 +130,12 @@ class AppShell extends connect(store)(
     ${AppShellStyles}
 
     <environment-flags></environment-flags>
+
+    <etools-piwik-analytics
+        page="[[subroute.prefix]]"
+        user="[[user]]"
+        toast="[[currentToastMessage]]">
+    </etools-piwik-analytics>
 
     <app-location
         route="{{appLocRoute}}"
@@ -224,13 +231,6 @@ class AppShell extends connect(store)(
 
     <partners-list-data></partners-list-data>
     <agreements-list-data></agreements-list-data>
-
-    <!--<etools-piwik-analytics-->
-        <!--page="[[subroute.prefix]]"-->
-        <!--user="[[user]]"-->
-        <!--toast="[[currentToastMessage]]">-->
-    <!--</etools-piwik-analytics>-->
-
     `;
   }
 

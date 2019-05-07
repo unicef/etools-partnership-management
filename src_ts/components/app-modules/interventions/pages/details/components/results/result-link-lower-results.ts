@@ -174,7 +174,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     `;
   }
 
-  @property({type: String, readOnly: true})
+  @property({type: String})
   _deleteEpName: string = 'lowerResultsDelete';
 
   @property({type: String})

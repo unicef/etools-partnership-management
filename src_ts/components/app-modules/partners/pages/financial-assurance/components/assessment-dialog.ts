@@ -71,7 +71,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
                                auto-validate
                                max-date-error-msg="Date can not be in the future"
                                max-date="[[getCurrentDate()]]"
-                               required>
+                               required
+                               selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>

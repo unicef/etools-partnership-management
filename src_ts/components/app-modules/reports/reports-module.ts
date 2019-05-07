@@ -19,7 +19,6 @@ import './components/report-reject-dialog';
 import {GenericObject, User} from '../../../typings/globals.types';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import ScrollControl from '../../mixins/scroll-control-mixin';
 import { pageLayoutStyles } from '../../styles/page-layout-styles';
 import { SharedStyles } from '../../styles/shared-styles';
@@ -33,6 +32,7 @@ import { store, RootState } from '../../../store';
 import {property} from '@polymer/decorators/lib/decorators';
 import {ReportRatingDialogEl} from "./components/report-rating-dialog";
 import {ReportRejectDialogEl} from "./components/report-reject-dialog";
+import { ReportsListEl } from './pages/list/reports-list';
 declare const moment: any;
 
 
@@ -43,11 +43,10 @@ declare const moment: any;
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRouting
  * @appliesMixin ReportDetails
- * @appliesMixin EndpointsMixin
  * @appliesMixin ScrollControl
  */
 class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
-(ReportDetailsMixin(EndpointsMixin(PolymerElement)))))) {
+(ReportDetailsMixin(PolymerElement))))) {
 
   static get is() {
     return 'reports-module';
@@ -269,7 +268,7 @@ class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunct
   }
 
   stateChanged(state: RootState) {
-    this.repDetailsStateChanged(state);
+    this.endStateChanged(state);
   }
 
   ready() {
@@ -383,7 +382,7 @@ class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunct
   }
 
   _exportIndicators(type: string) {
-    const reportsList = (this.shadowRoot!.querySelector('#list') as GenericObject);
+    const reportsList = (this.shadowRoot!.querySelector('#list') as ReportsListEl);
     if (reportsList instanceof PolymerElement === false) {
       return;
     }

@@ -1,10 +1,8 @@
 import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {RootState} from '../../../../store';
-import {isJsonStrMatch, copy} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { Constructor, GenericObject, User } from '../../../../typings/globals.types';
+import { Constructor, GenericObject} from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
 
@@ -48,12 +46,6 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     @property({type: String})
     _logMsgPrefix = 'report-details-behavior';
-
-    repDetailsStateChanged(state: RootState) {
-      if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
-        this.currentUser = copy(state.commonData!.currentUser);
-      }
-    }
 
     requestReportDetails(id: string) {
       if (!this.currentUser) {

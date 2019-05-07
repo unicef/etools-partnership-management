@@ -27,6 +27,8 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-error
 import { property } from '@polymer/decorators';
 import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
 import { IconsActionsEl } from '../../../../layout/icons-actions.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { timeOut } from '@polymer/polymer/lib/utils/async';
 
 
 /**
@@ -178,6 +180,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   @property({type: Object})
   attMarkedToBeDeleted!: any;
 
+  private _debouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -237,7 +240,6 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     this.attachmentDialog = document.createElement('attachment-dialog');
     this.attachmentDialog.setAttribute('id', 'addAmendmentDialog');
     this.attachmentDialog.toastEventSource = this;
-    this.attachmentDialog.fileTypes = this.fileTypes;
 
     this.newAttachmentAdded = this.newAttachmentAdded.bind(this);
     this.newAttachmentUpdated = this.newAttachmentUpdated.bind(this);
@@ -283,13 +285,17 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     if (typeof fileTypes === 'undefined') {
       return;
     }
-    if (active && !fileTypes.length) {
-      // there are no file types in the current workspace
-      fireEvent(this, 'toast', {
-        text: 'File Type data required to save attachments is missing from current workspace!',
-        showCloseBtn: true
-      });
-    }
+    this._debouncer = Debouncer.debounce(this._debouncer,
+      timeOut.after(200), () => {
+
+        if (active && !fileTypes.length) {
+          // there are no file types in the current workspace
+          fireEvent(this, 'toast', {
+            text: 'File Type data required to save attachments is missing from current workspace!',
+            showCloseBtn: true
+          });
+        }
+    });
   }
 
   _interventionIdChanged(id: any, _oldId: any) {
@@ -321,6 +327,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   _addAttachment() {
     if (this.attachmentDialog) {
       this.attachmentDialog.interventionId = this.interventionId;
+      this.attachmentDialog.fileTypes = this.fileTypes;
       this.attachmentDialog.initAttachment();
       this.attachmentDialog.opened = true;
     }
@@ -329,6 +336,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   _editAttachment(e: CustomEvent) {
     if (this.attachmentDialog) {
       this.attachmentDialog.interventionId = this.interventionId;
+      this.attachmentDialog.fileTypes = this.fileTypes;
 
       const editedAttachment = this.attachments.find((a: InterventionAttachment) =>
        a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));

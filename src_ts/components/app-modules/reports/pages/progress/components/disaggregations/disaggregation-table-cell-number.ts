@@ -30,7 +30,7 @@ class DisaggregationTableCellNumber extends UtilsMixin(PolymerElement) {
   }
 
   @property({type: Object})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
 }
 window.customElements.define(DisaggregationTableCellNumber.is, DisaggregationTableCellNumber);
