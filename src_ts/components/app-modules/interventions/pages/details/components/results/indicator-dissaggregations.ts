@@ -15,10 +15,10 @@ import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
 import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-import { isJsonStrMatch } from '../../../../../../utils/utils';
 import { property } from '@polymer/decorators';
 import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
+import { flaggedSortedDisaggregs } from '../../../../../../../reducers/common-data';
 
 
 /**
@@ -102,8 +102,8 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
   preDefinedDisaggregtions!: Disaggregation[];
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.preDefinedDisaggregtions, state.commonData!.disaggregations)) {
-      this.preDefinedDisaggregtions = [...state.commonData!.disaggregations.filter(x => x.active)];
+    if (state.commonData!.disaggregations) {
+      this.preDefinedDisaggregtions = flaggedSortedDisaggregs(state);
     }
   }
 
