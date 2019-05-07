@@ -71,7 +71,7 @@ class EtoolsProgressBar extends PolymerElement {
   @property({type: Number})
   value: number = 0;
 
-  @property({type: Number, readOnly: true, computed: '_getProgress(value)'})
+  @property({type: Number, computed: '_getProgress(value)'})
   progressValue!: number;
 
   @property({type: Boolean})
