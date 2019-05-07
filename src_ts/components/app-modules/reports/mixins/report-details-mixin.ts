@@ -2,7 +2,7 @@ import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { Constructor, GenericObject} from '../../../../typings/globals.types';
+import { Constructor, GenericObject, User} from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
 

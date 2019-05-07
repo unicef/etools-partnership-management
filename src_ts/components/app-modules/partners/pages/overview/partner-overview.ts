@@ -253,7 +253,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
   }
 
   @property({type: Object})
-  partner = {} as Partner;
+  partner!: Partner;
 
   public connectedCallback() {
     super.connectedCallback();
