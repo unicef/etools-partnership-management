@@ -210,14 +210,14 @@ class ReportsModule extends connect(store)(ScrollControl(ModuleMainElCommonFunct
             <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
               <report-summary name="summary"
                               report="[[report]]"
-                              report-attachment="[[reportAttachment]]"></report-summary>
+                              report-attachments="[[reportAttachments]]"></report-summary>
             </template>
 
             <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
               <report-progress id="reportDetails"
                               name="progress"
                               report="[[report]]"
-                              report-attachment="[[reportAttachment]]"></report-progress>
+                              report-attachments="[[reportAttachments]]"></report-progress>
             </template>
           </iron-pages>
 

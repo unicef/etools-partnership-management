@@ -194,7 +194,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
                 <div slot="row-data" class="p-relative">
                   <span class="col-data col-4">
-                    [[getDateDisplayValue(item.date)]]
+                    <span hidden$="[[_isEmptyDate(item.date)]]">[[getDateDisplayValue(item.date)]]</span>
                     <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
                   </span>
                   <span class="col-data col-6">

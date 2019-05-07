@@ -8,7 +8,7 @@ import { SharedStyles } from '../styles/shared-styles';
 import { gridLayoutStyles } from '../styles/grid-layout-styles';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -17,8 +17,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -131,45 +130,32 @@ class MonitoringVisitsList extends (EndpointsMixin(CommonMixin(PolymerElement)) 
     `;
   }
 
-  static get properties() {
-    return {
-      endpointName: String,
-      initComplete: {
-        type: Boolean,
-        value: false
-      },
-      showLoading: {
-        type: Boolean,
-        value: true
-      },
-      monitoringVisits: {
-        type: Array,
-        value: []
-      },
-      tpmMonitoringVisits: {
-        type: Array,
-        value: []
-      },
-      interventionId: {
-        type: Number,
-        observer: '_interventionIdChanged'
-      },
-      partnerId: {
-        type: Number,
-        observer: '_partnerIdChanged'
-      },
-      showTpmVisits: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-      interventionOverview: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      }
-    };
-  }
+  @property({type: String})
+  endpointName!: string;
+
+  @property({type: Boolean})
+  initComplete: boolean = false;
+
+  @property({type: Boolean})
+  showLoading: boolean = true;
+
+  @property({type: Array})
+  monitoringVisits: any[] = [];
+
+  @property({type: Array})
+  tpmMonitoringVisits: any[] = [];
+
+  @property({type: Number,  observer: '_interventionIdChanged'})
+  interventionId!: number;
+
+  @property({type: Number,  observer: '_partnerIdChanged'})
+  partnerId!: number;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  showTpmVisits: boolean = false;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  interventionOverview: boolean = false;
 
   static get observers() {
     return [

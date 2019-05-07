@@ -18,8 +18,8 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     @property({type: Object})
     report!: GenericObject;
 
-    @property({type: Object})
-    reportAttachment!: GenericObject;
+    @property({type: Array})
+    reportAttachments!: any[];
 
     @property({type: Object})
     currentUser!: User;
@@ -53,7 +53,7 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         return;
       }
 
-      this.set('reportAttachment', null);
+      this.set('reportAttachments', []);
 
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
@@ -80,13 +80,11 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         active: true,
         loadingSource: this._loadingMsgSource
       });
-      this.set('reportAttachment', null);
-      this.fireRequest('reportAttachment', {reportId: reportId}).then((response: any) => {
+      this.set('reportAttachments', []);
+      this.fireRequest('reportAttachments', {reportId: reportId}).then((response: any) => {
         fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
 
-        if (!this._attachmentHasNullFields(response)) {
-          this.set('reportAttachment', response);
-        }
+        this.set('reportAttachments', response);
 
       }).catch((error: any) => {
         let errMsg = 'Report attachment request failed!';
@@ -98,13 +96,6 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         }
         fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
       });
-    }
-
-    _attachmentHasNullFields(att: any) {
-      if (!att) {
-        return true;
-      }
-      return (!att.file_name && !att.path);
     }
 
   };

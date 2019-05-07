@@ -9,6 +9,7 @@ import 'etools-content-panel/etools-content-panel.js'
 import { etoolsStatusStyles } from './etools-status-styles';
 import './etools-action-button.js';
 import { StatusAction, Status } from '../../../typings/etools-status.types';
+import { property } from '@polymer/decorators';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -16,7 +17,6 @@ import { StatusAction, Status } from '../../../typings/etools-status.types';
  * @customElement
  */
 class EtoolsStatus extends connect(store)(PolymerElement) {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -51,37 +51,29 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      statuses: {
-        type: Array,
-        value: []
-      },
-      availableStatuses: {
-        type: Array
-      },
-      actions: {
-        type: Array,
-        value: []
-      },
-      hideActions: {
-        type: Boolean,
-        value: true
-      },
-      uploadsInProgress: {
-        type: Number,
-        statePath: 'uploadsInProgress'
-      },
-      unsavedUploads: {
-        type: Boolean,
-        statePath: 'unsavedUploads'
-      },
-      showInfoIcon: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  statuses: Status[] = [];
+
+  @property({type: Array})
+  availableStatuses!: Status[];
+
+  @property({type: Array})
+  actions: StatusAction[] = [];
+
+  @property({type: Boolean})
+  hideActions: boolean = true;
+
+  @property({type: Number})
+  uploadsInProgress!: number;
+
+  @property({type: Number})
+  unsavedUploads!: number;
+
+  @property({type: Boolean})
+  showInfoIcon: boolean = false;
+
+  private _statusChangedDebouncer!: Debouncer;
+  private _actionsOptionsChangedDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -153,7 +145,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return '';
   }
 
-  _getStatusCssClass(status: any, index: number) {
+  _getStatusCssClass(status: Status, index: number) {
     let cls = '';
     if (status.completed && !status.icon) {
       cls = 'completed';

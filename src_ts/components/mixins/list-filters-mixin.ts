@@ -296,7 +296,7 @@ declare const moment: any;
     getFilterValuesByProperty(filterOptions: Array<ListFilterOption>, prop: string, selected: any, selectedProp: string) {
       let selectedValues = this._convertToInt(selected);
       selectedProp = selectedProp || 'id';
-      return ((!filterOptions || ! filterOptions.length) && !selectedValues)
+      return (filterOptions && filterOptions.length && selectedValues && selectedValues.length)
           ? filterOptions.filter(opt => selectedValues.indexOf(opt[selectedProp]) > -1).map(opt => opt[prop])
           : [];
     }
