@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 
-import {GenericObject, PolymerElEvent} from '../../../../../../../typings/globals.types';
+import {GenericObject} from '../../../../../../../typings/globals.types';
 import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import {toNumericValues} from './mixins/disaggregation-field';
 
@@ -101,10 +101,10 @@ class DisaggregationField extends PolymerElement {
     return this.$.field;
   }
 
-  _handleInput(e: PolymerElEvent) {
+  _handleInput(e: CustomEvent) {
     let change: GenericObject = {};
 
-    change[this.key] = e.target.value;
+    change[this.key] = (e.target as any).value;
 
     fireEvent(this, 'field-value-changed', {
       key: this.coords,

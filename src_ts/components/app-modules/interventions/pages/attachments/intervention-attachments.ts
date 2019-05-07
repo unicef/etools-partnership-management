@@ -6,15 +6,14 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-content-panel/etools-content-panel.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { InterventionAttachment } from '../../../../../typings/intervention.types.js';
+import { InterventionAttachment, InterventionPermissionsFields } from '../../../../../typings/intervention.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { PolymerElEvent } from '../../../../../typings/globals.types.js';
+import { IdAndName, IPermission } from '../../../../../typings/globals.types.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
@@ -22,21 +21,24 @@ import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-hea
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store } from '../../../../../store.js';
 import { RootState } from '../../../../../store.js';
-import { isJsonStrMatch } from '../../../../utils/utils.js';
+import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
+import { property } from '@polymer/decorators';
+import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
+import { IconsActionsEl } from '../../../../layout/icons-actions.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { timeOut } from '@polymer/polymer/lib/utils/async';
 
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class InterventionAttachments extends connect(store)(DynamicDialogMixin(EndpointsMixin(CommonMixin(PolymerElement)) as any)) {
-  [x: string]: any;
+class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(PolymerElement))) {
 
   static get template() {
     return html`
@@ -145,43 +147,40 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     `;
   }
 
-  static get properties() {
-    return {
-      active: {
-        type: Boolean
-      },
-      permissions: {
-        type: Object,
-        statePath: 'pageData.permissions'
-      },
-      interventionId: {
-        type: Number,
-        observer: '_interventionIdChanged'
-      },
-      interventionStatus: {
-        type: String
-      },
-      attachments: {
-        type: Array,
-        value: []
-      },
-      fileTypes: {
-        type: Array,
-        statePath: 'fileTypes'
-      },
-      showInvalid: {
-        type: Boolean,
-        value: false
-      },
-      newIntervention: {
-        type: Boolean,
-        value: false
-      },
-      attachmentDialog: Object,
-      attDeleteConfirmDialog: Object,
-      attMarkedToBeDeleted: Object
-    };
-  }
+  @property({type: Object})
+  active!: boolean;
+
+  @property({type: Object})
+  permissions!: IPermission<InterventionPermissionsFields>;
+
+  @property({type: Number, observer: InterventionAttachments.prototype._interventionIdChanged})
+  interventionId!: number;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Array})
+  attachments: [] = [];
+
+  @property({type: Array})
+  fileTypes!: IdAndName[];
+
+  @property({type: Boolean})
+  showInvalid: boolean = false;
+
+  @property({type: Boolean})
+  newIntervention: boolean = false;
+
+  @property({type: Object})
+  attachmentDialog!: any;
+
+  @property({type: Object})
+  attDeleteConfirmDialog!: any;
+
+  @property({type: Object})
+  attMarkedToBeDeleted!: any;
+
+  private _debouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -193,6 +192,10 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     if (!isJsonStrMatch(this.fileTypes, state.commonData!.fileTypes)) {
       this.fileTypes = [...state.commonData!.fileTypes];
     }
+    if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
+      this.permissions = copy(state.pageData!.permissions);
+    }
+
   }
 
   connectedCallback() {
@@ -217,9 +220,7 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     this.deleteAttachment = this.deleteAttachment.bind(this);
     const warnDeleteAttachment = document.createElement('span');
     warnDeleteAttachment.innerHTML = 'Are you sure you want to delete this attachment?';
-    // this.attDeleteConfirmDialog = this.createDialog(null, 'md', 'Yes', 'No', null, warnDeleteAttachment);
-    this.attDeleteConfirmDialog = this.createDynamicDialog({
-      title: null,
+    this.attDeleteConfirmDialog = createDynamicDialog({
       size: 'md',
       okBtnText: 'Yes',
       cancelBtnText: 'No',
@@ -239,7 +240,6 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     this.attachmentDialog = document.createElement('attachment-dialog');
     this.attachmentDialog.setAttribute('id', 'addAmendmentDialog');
     this.attachmentDialog.toastEventSource = this;
-    this.attachmentDialog.fileTypes = this.fileTypes;
 
     this.newAttachmentAdded = this.newAttachmentAdded.bind(this);
     this.newAttachmentUpdated = this.newAttachmentUpdated.bind(this);
@@ -285,16 +285,20 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
     if (typeof fileTypes === 'undefined') {
       return;
     }
-    if (active && !fileTypes.length) {
-      // there are no file types in the current workspace
-      fireEvent(this, 'toast', {
-        text: 'File Type data required to save attachments is missing from current workspace!',
-        showCloseBtn: true
-      });
-    }
+    this._debouncer = Debouncer.debounce(this._debouncer,
+      timeOut.after(200), () => {
+
+        if (active && !fileTypes.length) {
+          // there are no file types in the current workspace
+          fireEvent(this, 'toast', {
+            text: 'File Type data required to save attachments is missing from current workspace!',
+            showCloseBtn: true
+          });
+        }
+    });
   }
 
-  _interventionIdChanged(id: string) {
+  _interventionIdChanged(id: any, _oldId: any) {
     if (!id || isNaN(parseInt(id, 10))) {
       this.set('attachments', []);
       return;
@@ -323,15 +327,20 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
   _addAttachment() {
     if (this.attachmentDialog) {
       this.attachmentDialog.interventionId = this.interventionId;
+      this.attachmentDialog.fileTypes = this.fileTypes;
       this.attachmentDialog.initAttachment();
       this.attachmentDialog.opened = true;
     }
   }
 
-  _editAttachment(e: PolymerElEvent) {
+  _editAttachment(e: CustomEvent) {
     if (this.attachmentDialog) {
       this.attachmentDialog.interventionId = this.interventionId;
-      const editedAttachment = this.attachments.find((a: InterventionAttachment) => a.id === Number(e.target.getAttribute('item-id')));
+      this.attachmentDialog.fileTypes = this.fileTypes;
+
+      const editedAttachment = this.attachments.find((a: InterventionAttachment) =>
+       a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+
       this.attachmentDialog.initAttachment(editedAttachment);
       this.attachmentDialog.opened = true;
     }
@@ -340,7 +349,8 @@ class InterventionAttachments extends connect(store)(DynamicDialogMixin(Endpoint
   _confirmAttachmentDelete(e: CustomEvent) {
     if (e.target !== null) {
       this.attMarkedToBeDeleted = this.attachments
-          .find((a: InterventionAttachment) => a.id === Number((e.target as any).getAttribute('item-id')));
+          .find((a: InterventionAttachment) =>
+           a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
       if (this.attMarkedToBeDeleted) {
         this.attDeleteConfirmDialog.opened = true;
       }

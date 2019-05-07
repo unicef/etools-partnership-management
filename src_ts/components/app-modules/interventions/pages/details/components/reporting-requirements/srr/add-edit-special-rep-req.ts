@@ -11,6 +11,9 @@ import 'etools-date-time/calendar-lite.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 import { logError } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../../typings/globals.types';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 
 /**
@@ -19,9 +22,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement) as any) {
-
-  [x: string]: any;
+class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
 
   static get template() {
     // language=HTML
@@ -75,20 +76,18 @@ class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      opened: {
-        type: Boolean
-      },
-      interventionId: {
-        type: Number
-      },
-      item: {
-        type: Object
-      },
-      toastMsgLoadingSource: Object
-    };
-  }
+  @property({type: Boolean})
+  opened!: boolean;
+
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Object})
+  item!: GenericObject;
+
+  @property({type: Object})
+  toastMsgLoadingSource!: PolymerElement;
+
 
   _isNew() {
     return !this.item.id;
@@ -105,7 +104,7 @@ class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement) as any) {
   }
 
   _save() {
-    let dialog = this.$.addEditDialog;
+    let dialog = this.$.addEditDialog as EtoolsDialog;
     dialog.startSpinner();
 
     let endpoint = this._getEndpoint();
@@ -142,3 +141,4 @@ class AddEditSpecialRepReq extends (EndpointsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('add-edit-special-rep-req', AddEditSpecialRepReq);
+export {AddEditSpecialRepReq as AddEditSpecialRepReqEl}

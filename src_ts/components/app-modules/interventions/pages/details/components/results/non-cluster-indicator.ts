@@ -11,6 +11,7 @@ import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
 import { Indicator } from '../../../../../../../typings/intervention.types';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -18,8 +19,7 @@ import { Indicator } from '../../../../../../../typings/intervention.types';
  * @customElement
  * @appliesMixin IndicatorsCommonMixin
  */
-class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any) {
-  [x: string]: any;
+class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -243,28 +243,20 @@ class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any)
     `;
   }
 
-  static get properties() {
-    return {
-      indicator: {
-        type: Object,
-        observer: '_indicatorChanged'
-      },
-      readonly: {
-        type: Boolean,
-        value: false,
-        observer: '_readonlyChanged'
-      },
-      locationOptions: {
-        type: Array
-      },
-      baselineIsUnknown: {
-        type: Boolean
-      },
-      interventionStatus: {
-        type: String
-      }
-    };
-  }
+  @property({type: Object, observer: '_indicatorChanged'})
+  indicator!: Indicator;
+
+  @property({type: Boolean, observer: '_readonlyChanged'})
+  readonly: boolean = false;
+
+  @property({type: Array})
+  locationOptions!: [];
+
+  @property({type: Boolean})
+  baselineIsUnknown!: boolean;
+
+  @property({type: String})
+  interventionStatus!: string;
 
   static get observers() {
     return [
@@ -287,7 +279,7 @@ class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any)
       this.baselineIsUnknown = false;
       this.readonly = false;
     } else {
-      this.baselineIsUnknown = !(indicator.baseline) || this._isEmptyExcept0(indicator.baseline.v);
+      this.baselineIsUnknown = !(indicator.baseline) || this._isEmptyExcept0(indicator.baseline.v as any);
       this.readonly = true;
     }
   }
@@ -328,7 +320,7 @@ class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any)
 
       let i;
       for (i = 0; i < elemIds.length; i++) {
-        let elem = this.shadowRoot.querySelector('#' + elemIds[i]);
+        let elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & {invalid: boolean};
         if (elem) {
           elem.invalid = false;
         }
@@ -356,13 +348,14 @@ class NonClusterIndicator extends (IndicatorsCommonMixin(PolymerElement) as any)
   }
 
   _getIndDisplayType() {
-    return this.indicator.indicator.display_type;
+    return this.indicator.indicator!.display_type;
   }
 
   _getIndUnit() {
-    return this.indicator.indicator.unit;
+    return this.indicator.indicator!.unit;
   }
 
 }
 
 window.customElements.define('non-cluster-indicator', NonClusterIndicator);
+export {NonClusterIndicator as NonClusterIndicatorEl}

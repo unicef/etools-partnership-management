@@ -12,6 +12,8 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../store';
 
 /**
  * PMP main menu
@@ -19,7 +21,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends (GestureEventListeners(EnvironmentFlagsMixin(PolymerElement)) as any) {
+class AppMenu extends connect(store)(GestureEventListeners(EnvironmentFlagsMixin(PolymerElement)) as any) {
 
   public static get template() {
     // main template
@@ -157,6 +159,10 @@ class AppMenu extends (GestureEventListeners(EnvironmentFlagsMixin(PolymerElemen
   public selectedOption: string = '';
   public rootPath: string = '';
   public smallMenu: boolean = false;
+
+  stateChanged(state: RootState) {
+    this.envStateChanged(state);
+  }
 
   // @ts-ignore
   private _menuSizeChange(newVal: boolean, oldVal: boolean): void {

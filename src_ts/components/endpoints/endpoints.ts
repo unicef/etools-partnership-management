@@ -192,8 +192,8 @@ const pmpEdpoints = {
     template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/',
     token: 'prp'
   },
-  reportAttachment: {
-    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachment/',
+  reportAttachments: {
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachments/',
     token: 'prp'
   },
   reportIndicatorsDetails: {
@@ -269,6 +269,9 @@ const pmpEdpoints = {
   },
   patchPartnerAssessment: {
     template: '/api/v2/partners/assessments/<%=assessmentId%>/'
+  },
+  expectedResultsExport: {
+    template: '/api/v2/reports/interventions/results/<%=intervention_id%>/?format=docx_table'
   }
 };
 

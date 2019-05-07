@@ -8,13 +8,16 @@ import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import { InterventionAttachment } from '../../../../../../typings/intervention.types.js';
-import { PolymerElEvent } from '../../../../../../typings/globals.types.js';
+import { IdAndName } from '../../../../../../typings/globals.types.js';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
 import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
 import { fireEvent } from '../../../../../utils/fire-custom-event';
 import { logWarn } from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
+import  EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import { property } from '@polymer/decorators';
+import { PaperCheckboxElement } from '@polymer/paper-checkbox/paper-checkbox.js';
 
 
 /**
@@ -23,8 +26,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-er
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AttachmentDialog extends (EndpointsMixin(PolymerElement) as any) {
-  [x: string]: any;
+class AttachmentDialog extends EndpointsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -87,59 +89,45 @@ class AttachmentDialog extends (EndpointsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      toastEventSource: {
-        type: Object
-      },
-      opened: {
-        type: Boolean,
-        notify: true,
-        observer: '_resetFields'
-      },
-      interventionId: {
-        type: Number
-      },
-      fileTypes: {
-        type: Array,
-        value: []
-      },
-      attachment: {
-        type: Object
-      },
-      uploadEndpoint: {
-        type: String,
-        value: function() {
-          return pmpEndpoints.attachmentsUpload.url;
-        }
-      },
-      _validationSelectors: {
-        type: Array,
-        value: ['#document-types', '#attachment-upload']
-      },
-      uploadInProgress: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+
+  @property({type: Boolean, notify: true, observer: AttachmentDialog.prototype._resetFields})
+  opened!: boolean;
+
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Array})
+  fileTypes: IdAndName[] = [];
+
+  @property({type: Object})
+  attachment!: InterventionAttachment;
+
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
+
+  private _validationSelectors: string[] = ['#document-types', '#attachment-upload'];
 
   initAttachment(attachment?: InterventionAttachment) {
     this.set('attachment', !attachment ? new InterventionAttachment() : JSON.parse(JSON.stringify(attachment)));
   }
 
   startSpinner() {
-    this.$.attachmentDialog.startSpinner();
+    (this.$.attachmentDialog as unknown as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    this.$.attachmentDialog.stopSpinner();
+    (this.$.attachmentDialog as unknown as EtoolsDialog).stopSpinner();
   }
 
   isValidAttachment() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }
@@ -149,7 +137,7 @@ class AttachmentDialog extends (EndpointsMixin(PolymerElement) as any) {
 
   _resetAttachmentValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -215,8 +203,8 @@ class AttachmentDialog extends (EndpointsMixin(PolymerElement) as any) {
     return id && Number(id) > 0;
   }
 
-  _invalidChanged(e: PolymerElEvent) {
-    this.set('attachment.active', !e.target.checked);
+  _invalidChanged(e: CustomEvent) {
+    this.set('attachment.active', !(e.target as PaperCheckboxElement).checked);
   }
 
 }

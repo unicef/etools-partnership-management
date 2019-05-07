@@ -11,14 +11,17 @@ import { fireEvent } from '../../../../../../utils/fire-custom-event';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
 import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-
+import {property} from '@polymer/decorators';
+import EtoolsDialog from "etools-dialog/etools-dialog";
+import {PaperInputElement} from '@polymer/paper-input/paper-input';
+import {PaperDialogElement} from '@polymer/paper-dialog/paper-dialog';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin RepeatableDataSetsMixin
  */
-class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
+class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
@@ -99,29 +102,21 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      editMode: {
-        type: Boolean,
-        value: true
-      },
-      deleteDialog: {
-        type: Object,
-        observer: '_delConfirmationDialogChange'
-      },
-      deleteConfirmationMessage: {
-        type: String,
-        value: 'Are you sure you want to delete this FR Number?'
-      },
-      disableConfirmBtn: {
-        type: Boolean,
-        value: true
-      },
-      interventionStatus: {
-        type: String
-      }
-    };
-  }
+  @property({type: Boolean})
+  editMode: boolean = true;
+
+  // TODO: check if deleteDialog is still used
+  // @property({type: Object, observer: '_delConfirmationDialogChange'})
+  // deleteDialog!: object;
+
+  @property({type: String})
+  deleteConfirmationMessage: string = 'Are you sure you want to delete this FR Number?';
+
+  @property({type: Boolean})
+  disableConfirmBtn: boolean = true;
+
+  @property({type: String})
+  interventionStatus!: string;
 
   static get observers() {
     return ['_itemsLengthChanged(dataItems.length)'];
@@ -136,42 +131,42 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
     return !(interventionStatus === 'active' && dataItemsLength === 1);
   }
 
-  _delConfirmationDialogChange() {
-    if (!this.deleteDialog) {
-      return;
-    }
-    // update delete confirmation dialog size
-    this.deleteDialog.set('size', 'sm');
-  }
+  // _delConfirmationDialogChange() {
+  //   if (!this.deleteDialog) {
+  //     return;
+  //   }
+  //   // update delete confirmation dialog size
+  //   this.deleteDialog.set('size', 'sm');
+  // }
 
   openDialog() {
-    this.$.frsDialog.opened = true;
+    (this.$.frsDialog as EtoolsDialog).opened = true;
   }
 
   stopSpinner(e?: CustomEvent) {
     if (e) {
       e.stopImmediatePropagation();
     }
-    this.$.frsDialog.stopSpinner();
+    (this.$.frsDialog as EtoolsDialog).stopSpinner();
   }
 
-  startSpinner(e: CustomEvent) {
+  startSpinner(e?: CustomEvent) {
     if (e) {
       e.stopImmediatePropagation();
     }
-    this.$.frsDialog.startSpinner();
+    (this.$.frsDialog as EtoolsDialog).startSpinner();
   }
 
   closeDialog() {
     this.stopSpinner();
-    this.$.frsDialog.opened = false;
+    (this.$.frsDialog as EtoolsDialog).opened = false;
   }
 
   validate() {
     let valid = true;
     if (this.dataItems instanceof Array && this.dataItems.length > 0) {
       this.dataItems.forEach((_item, index) => {
-        let lastItem = this.shadowRoot.querySelector('#fr-nr-' + index);
+        let lastItem = this.shadowRoot!.querySelector('#fr-nr-' + index) as PaperInputElement;
         if (lastItem && !lastItem.validate()) {
           valid = false;
         }
@@ -198,11 +193,11 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
   }
 
   _updateScroll() {
-    this.$.frsDialog.scrollDown();
+    (this.$.frsDialog as EtoolsDialog).scrollDown();
   }
 
   _getPaperDialog() {
-    return this.$.frsDialog.shadowRoot.querySelector('paper-dialog');
+    return (this.$.frsDialog.shadowRoot!.querySelector('paper-dialog') as PaperDialogElement);
   }
 
   _emptyList(length: number) {
@@ -244,3 +239,4 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define('update-fr-numbers', UpdateFrNumbers);
+export {UpdateFrNumbers as UpdateFrNumbersEl}

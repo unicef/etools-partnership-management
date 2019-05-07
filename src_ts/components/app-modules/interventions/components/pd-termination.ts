@@ -10,6 +10,7 @@ import { SharedStyles } from '../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
 import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
 import {fireEvent} from '../../../utils/fire-custom-event';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -17,7 +18,7 @@ import {fireEvent} from '../../../utils/fire-custom-event';
  * @customElement
  * @appliesMixin EnvironmentFlagsMixin
  */
-class PdTermination extends (EnvironmentFlagsMixin(PolymerElement) as any) {
+class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -55,7 +56,8 @@ class PdTermination extends (EnvironmentFlagsMixin(PolymerElement) as any) {
                           value="{{termination.date}}"
                           error-message="Please select termination date"
                           auto-validate
-                          required>
+                          required
+                          selected-date-display-format="D MMM YYYY">
         </datepicker-lite>
       </div>
 
@@ -94,34 +96,34 @@ class PdTermination extends (EnvironmentFlagsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      uploadEndpoint: {
-        type: String,
-        value: function() {
-          return pmpEndpoints.attachmentsUpload.url;
-        }
-      },
-      interventionId: Number,
-      opened: Boolean,
-      warningOpened: Boolean,
-      termination: {
-        type: Object
-      },
-      _validationSelectors: {
-        type: Array,
-        value: ['#terminationDate', '#terminationNotice']
-      },
-      terminationElSource: Object,
-      uploadInProgress: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Boolean})
+  opened!: boolean;
+
+  @property({type: Boolean})
+  warningOpened!: boolean;
+
+  @property({type: Object})
+  termination!: {date: string, attachment_notice: number};
+
+  @property({type: Object})
+  terminationElSource!: PolymerElement
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
+
+
+  private _validationSelectors: string[] = ['#terminationDate', '#terminationNotice'];
+
+
   connectedCallback() {
     super.connectedCallback();
-    this.$.terminationDate.maxDate = this._getMaxDate();
+    (this.$.terminationDate as any).maxDate = this._getMaxDate();
   }
 
   _getMaxDate() {
@@ -167,7 +169,7 @@ class PdTermination extends (EnvironmentFlagsMixin(PolymerElement) as any) {
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)
   resetValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -178,7 +180,7 @@ class PdTermination extends (EnvironmentFlagsMixin(PolymerElement) as any) {
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot.querySelector(selector);
+      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }

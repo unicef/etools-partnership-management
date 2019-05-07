@@ -1,6 +1,7 @@
 //import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import { Constructor } from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * App menu functionality mixin
@@ -10,15 +11,8 @@ import { PolymerElement } from '@polymer/polymer';
 export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
  class appMenuClass extends baseClass {
 
-    public static get properties() {
-      return {
-        smallMenu: {
-          type: Boolean
-        }
-      };
-    }
-
-    public smallMenu: boolean = false;
+    @property({type: Boolean})
+    smallMenu: boolean = false;
 
     public connectedCallback() {
       super.connectedCallback();
