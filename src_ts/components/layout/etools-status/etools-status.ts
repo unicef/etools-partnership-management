@@ -52,13 +52,13 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
   }
 
   @property({type: Array})
-  statuses: any[] = [];
+  statuses: Status[] = [];
 
   @property({type: Array})
-  availableStatuses!: any[];
+  availableStatuses!: Status[];
 
   @property({type: Array})
-  actions: any[] = [];
+  actions: StatusAction[] = [];
 
   @property({type: Boolean})
   hideActions: boolean = true;
@@ -145,7 +145,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return '';
   }
 
-  _getStatusCssClass(status: any, index: number) {
+  _getStatusCssClass(status: Status, index: number) {
     let cls = '';
     if (status.completed && !status.icon) {
       cls = 'completed';

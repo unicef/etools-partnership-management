@@ -53,10 +53,10 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
   }
 
   @property({type: Array})
-  countryProgrammes!: any[];
+  countryProgrammes!: CpStructure[];
 
   @property({type: Array})
-  sortedCountryProgrammes!: any[];
+  sortedCountryProgrammes!: CpStructure[];
 
   @property({type: String, notify: true})
   selectedCp!: string;
