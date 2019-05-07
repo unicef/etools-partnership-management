@@ -295,9 +295,7 @@ export const flaggedSortedDisaggregs = createSelector(
     }
 
     return copy(disagregs).map((d: Disaggregation) => {
-      if (d.active) {
-        return d;
-      } else {
+      if (!d.active) {
         d.name = '(*Inactive) ' + d.name;
       }
       return d;
