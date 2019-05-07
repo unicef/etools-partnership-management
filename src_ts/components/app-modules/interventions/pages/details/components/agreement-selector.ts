@@ -10,7 +10,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { isJsonStrMatch, copy } from '../../../../../utils/utils';
 import { csoPartnersSelector } from '../../../../../../reducers/partners';
 import CONSTANTS from '../../../../../../config/app-constants';
-import { IdAndName, IPermission } from '../../../../../../typings/globals.types';
+import { IdAndName, Permission } from '../../../../../../typings/globals.types';
 import { property } from '@polymer/decorators';
 import { InterventionPermissionsFields } from '../../../../../../typings/intervention.types';
 import { EtoolsDropdownEl } from 'etools-dropdown';
@@ -116,7 +116,7 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
   intervention!: Object;
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   static get observers() {
     return [

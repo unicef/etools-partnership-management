@@ -13,7 +13,7 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
 import { fireEvent } from '../../../../utils/fire-custom-event.js';
 import { InterventionAttachment, InterventionPermissionsFields } from '../../../../../typings/intervention.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { IdAndName, IPermission } from '../../../../../typings/globals.types.js';
+import { IdAndName, Permission } from '../../../../../typings/globals.types.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
@@ -151,7 +151,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   active!: boolean;
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   @property({type: Number, observer: InterventionAttachments.prototype._interventionIdChanged})
   interventionId!: number;

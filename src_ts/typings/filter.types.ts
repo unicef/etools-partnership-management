@@ -39,12 +39,12 @@ export class ListFilterOption {
   [key: string]: any;
 }
 
-export type SelectedFilterOption = {
-  filterName: string,
-  selectedValue: any,
-  allowEmpty?: boolean,
-  disabled?: boolean,
-  disableMenuOption?: boolean
+export interface SelectedFilterOption {
+  filterName: string;
+  selectedValue: any;
+  allowEmpty?: boolean;
+  disabled?: boolean;
+  disableMenuOption?: boolean;
 }
 
 export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;// TODO

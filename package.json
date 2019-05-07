@@ -14,6 +14,7 @@
   "scripts": {
     "build": "export NODE_OPTIONS=--max_old_space_size=4096 && npm run tsToJs && polymer build",
     "tsToJs": "tsc --skipLibCheck",
+    "tsEslint": "eslint 'src_ts/**'",
     "start": "gulp serve",
     "initialbuild": "tsc && npm run build:prpl-server && npm run build:static",
     "build:prpl-server": "polymer build --auto-base-path && gulp prpl-server",

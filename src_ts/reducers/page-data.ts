@@ -1,10 +1,10 @@
 import * as a from '../actions/page-data.js';
 import { InterventionPermissionsFields } from '../typings/intervention.types';
-import { IPermission } from '../typings/globals.types';
+import { Permission } from '../typings/globals.types';
 import { Reducer, Action } from 'redux';
 
 export class PageDataState {
-  permissions: IPermission<InterventionPermissionsFields> | null = null;
+  permissions: Permission<InterventionPermissionsFields> | null = null;
   in_amendment: boolean = false;
 }
 

@@ -25,7 +25,7 @@ import CONSTANTS from '../../../../../config/app-constants';
 import { Agreement } from '../../../agreements/agreement.types';
 import { Intervention, ExpectedResult, InterventionPermissionsFields, Location } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
-import { LabelAndValue, IPermission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
+import { LabelAndValue, Permission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
 import { connect } from 'pwa-helpers/connect-mixin';
 import { store, RootState } from '../../../../../store';
 import { pageCommonStyles } from '../../../../styles/page-common-styles';
@@ -460,7 +460,7 @@ class InterventionDetails extends connect(store)(
   userEditPermission!: boolean;
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   @property({type: Number, notify: true, observer: InterventionDetails.prototype._selectedPartnerIdChanged})
   selectedPartnerId!: number;

@@ -15,7 +15,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
 import { SharedStyles } from '../../../../../styles/shared-styles';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
 import { frWarningsStyles } from '../../../styles/fr-warnings-styles';
-import { Country, IPermission, LabelAndValue } from '../../../../../../typings/globals.types';
+import { Country, Permission, LabelAndValue } from '../../../../../../typings/globals.types';
 import {Fr, FrsDetails, InterventionPermissionsFields, Intervention } from '../../../../../../typings/intervention.types';
 import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons';
 import {property, computed} from '@polymer/decorators';
@@ -258,7 +258,7 @@ class PlannedBudget extends connect(store)(
   }
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   static get observers() {
     return [

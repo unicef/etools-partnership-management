@@ -1,4 +1,4 @@
-import {IPermission} from '../../../typings/globals.types';
+import {Permission} from '../../../typings/globals.types';
 import { StaffMember } from '../../../models/partners.models';
 
 // export interface MinimalAgreement {
@@ -28,7 +28,7 @@ export class Agreement extends MinimalAgreement {
   amendments?: AgreementAmendment[] = [];
   reference_number_year?: number = new Date().getFullYear();
   partner_manager?: number | null = null;
-  permissions?: IPermission<AgreementPermissionFields> = {
+  permissions?: Permission<AgreementPermissionFields> = {
     edit: new AgreementPermissionFields(true),
     required: new AgreementPermissionFields(false)
   };

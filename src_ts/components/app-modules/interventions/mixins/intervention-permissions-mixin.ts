@@ -5,7 +5,7 @@ import {store} from '../../../../store.js';
 import { setPageDataPermissions } from '../../../../actions/page-data';
 import { isEmptyObject } from '../../../utils/utils';
 import { fireEvent } from '../../../utils/fire-custom-event';
-import { Constructor, IPermission } from '../../../../typings/globals.types';
+import { Constructor, Permission } from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
 import { property } from '@polymer/decorators';
 
@@ -20,7 +20,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
 
     /* eslint-enable arrow-parens */
     @property({type: Object})
-    _intervNoEditPerm: IPermission<InterventionPermissionsFields> = {
+    _intervNoEditPerm: Permission<InterventionPermissionsFields> = {
         edit: new InterventionPermissionsFields(),
         required: new InterventionPermissionsFields()
       };
@@ -95,7 +95,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       return newIntervPerm;
     }
 
-    _setPermissions(perm: IPermission<InterventionPermissionsFields>) {
+    _setPermissions(perm: Permission<InterventionPermissionsFields>) {
       this.set('intervention.permissions', perm);
       store.dispatch(setPageDataPermissions(perm));
       this._updateRelatedPermStyles();
@@ -136,7 +136,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       this._setPermissions(this._getNoEditPermissionsClone());
     }
 
-    setInterventionPermissions(newIntervention: boolean, perm?: IPermission<InterventionPermissionsFields>) {
+    setInterventionPermissions(newIntervention: boolean, perm?: Permission<InterventionPermissionsFields>) {
       if (newIntervention) {
         this._setPermissions(this._getNewInterventionPermissions());
       } else {

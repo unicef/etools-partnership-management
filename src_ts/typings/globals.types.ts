@@ -1,4 +1,4 @@
-import { PolymerElement } from '@polymer/polymer';
+import {PolymerElement} from '@polymer/polymer';
 
 /*
 * The type Constructor<T> is an alias for the construct signature
@@ -12,27 +12,27 @@ export type MixinFunction = <T extends Constructor<PolymerElement>>(baseClass: T
   new (...args: any[]): any;
 };
 
-export type GenericObject = {
-  [key: string]: any
+export interface GenericObject {
+  [key: string]: any;
 }
 
-export interface IPermission<T> {
+export interface Permission<T> {
   edit: T;
   required: T;
 }
 
-export type UserPermissions = {
-  ICT: boolean,
-  PME: boolean,
-  editAgreementDetails: boolean,
-  editInterventionDetails: boolean,
-  editPartnerDetails: boolean,
-  loggedInDefault: boolean,
-  partnershipManager: boolean,
-  userInfoMenu: boolean,
-  viewAgreementDetails: boolean,
-  viewInterventionDetails: boolean,
-  viewPartnerDetails: boolean
+export interface UserPermissions {
+  ICT: boolean;
+  PME: boolean;
+  editAgreementDetails: boolean;
+  editInterventionDetails: boolean;
+  editPartnerDetails: boolean;
+  loggedInDefault: boolean;
+  partnershipManager: boolean;
+  userInfoMenu: boolean;
+  viewAgreementDetails: boolean;
+  viewInterventionDetails: boolean;
+  viewPartnerDetails: boolean;
 }
 
 export class MinimalUser {
@@ -51,10 +51,10 @@ export class User extends MinimalUser {
 }
 
 
-export type UserGroup = {
-  id: number,
-  name: string,
-  permissions: []
+export interface UserGroup {
+  id: number;
+  name: string;
+  permissions: [];
 }
 
 export interface EtoolsTab {
@@ -65,7 +65,7 @@ export interface EtoolsTab {
   counter?: number;
 }
 
-export interface DomRepeatEvent extends CustomEvent {//TODO- should be in polymer declarations
+export interface DomRepeatEvent extends CustomEvent {// TODO- should be in polymer declarations
   model: any;
 }
 
@@ -76,7 +76,7 @@ export class Paginator {
   visible_range: [] = [];
 }
 
-export type CpStructure = {
+export interface CpStructure {
   id: string;
   name: string;
   expired: boolean;
@@ -106,25 +106,25 @@ export interface Country extends MinimalCountry {
   longitude: string;
 }
 
-export type LabelAndValue = {
+export interface LabelAndValue {
   label: string;
   value: string;
 }
 
-export type IdAndName = {
+export interface IdAndName {
   id: string;
   name: string;
 }
 
-export type EnvFlags = {
+export interface EnvFlags {
   prp_mode_off: boolean;
   prp_server_on: boolean;
   active_flags?: object[];
 }
 
-export type Office = {
-  id: number,
-  name: string,
-  email: string,
-  username: string
+export interface Office {
+  id: number;
+  name: string;
+  email: string;
+  username: string;
 }

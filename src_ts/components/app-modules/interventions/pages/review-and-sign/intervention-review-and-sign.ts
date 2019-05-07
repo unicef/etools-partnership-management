@@ -31,7 +31,7 @@ import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
 import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
-import { IPermission, MinimalUser } from '../../../../../typings/globals.types.js';
+import { Permission, MinimalUser } from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -262,7 +262,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   intervention!: Intervention;
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   @property({type: Array})
   signedByUnicefUsers!: MinimalUser[];
