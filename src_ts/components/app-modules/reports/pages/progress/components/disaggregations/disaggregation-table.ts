@@ -129,37 +129,37 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   editable: number = 0;
 
   @property({type: Object, observer: '_cloneData'})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
   @property({type: Object, computed: '_computeViewData(formattedData, totals)'})
-  viewData: GenericObject | null = null;
+  viewData!: GenericObject;
 
   @property({type: Object})
-  formattedData: any = {};
+  formattedData!: GenericObject;
 
   @property({type: Array, computed: '_computeMapping(editableBool, formattedData, mapping)'})
-  formattedMapping: any[] = [];
+  formattedMapping!: any[];
 
   @property({type: Boolean, computed: '_computeEditableBool(editable)'})
-  editableBool: boolean | null = null;
+  editableBool!: boolean;
 
   @property({type: String, computed: '_computeIndicatorType(data)'})
-  indicatorType: string | null = null;
+  indicatorType!: string;
 
   @property({type: Array})
-  fields: any[] = [];
+  fields!: any[];
 
   @property({type: Array})
-  mapping: any[] = [];
+  mapping!: any[];
 
   @property({type: Object})
-  labels: GenericObject | null = null;
+  labels!: GenericObject;
 
   @property({type: Boolean, computed: '_computeLabelVisibility(indicatorType)'})
-  viewLabel: boolean | null = null;
+  viewLabel!: boolean;
 
   @property({type: Object})
-  totals: GenericObject | null = null;
+  totals!: GenericObject;
 
   static get observers() {
     return [

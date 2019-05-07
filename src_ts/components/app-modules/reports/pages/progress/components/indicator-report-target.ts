@@ -88,7 +88,7 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   }
 
   @property({type: Object})
-  target: GenericObject | null = null;
+  target!: GenericObject;
 
   @property({type: String})
   cumulativeProgress: string = '-';

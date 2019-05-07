@@ -58,16 +58,16 @@ class DisaggregationField extends PolymerElement {
   coords!: string;
 
   @property({type: Number})
-  min: number | null = null;
+  min!: number;
 
   @property({type: String})
-  validator: string | null = null;
+  validator!: string;
 
   @property({type: Number, notify: true})
-  value: number | null = null;
+  value!: number;
 
   @property({type: Boolean, notify: true})
-  invalid: boolean | null = null;
+  invalid!: boolean;
 
   ready() {
     super.ready();

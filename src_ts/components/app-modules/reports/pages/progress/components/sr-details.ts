@@ -39,10 +39,10 @@ class SrDetails extends PolymerElement {
   }
 
   @property({type: Object})
-  report: GenericObject | null = null;
+  report!: GenericObject;
 
   @property({type: Object})
-  reportAttachment: GenericObject | null = null;
+  reportAttachment!: GenericObject;
 
 }
 

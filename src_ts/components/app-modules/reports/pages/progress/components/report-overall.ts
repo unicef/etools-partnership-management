@@ -40,10 +40,10 @@ class ReportOverall extends PolymerElement {
   }
 
   @property({type: Object})
-  lowerResultTitle: GenericObject | null = null;
+  lowerResultTitle!: GenericObject;
 
   @property({type: Object})
-  latestIndicator: GenericObject | null = null;
+  latestIndicator!: GenericObject;
 
 }
 

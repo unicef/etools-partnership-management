@@ -27,13 +27,13 @@ class ZeroDisaggregations extends PolymerElement {
   }
 
   @property({type: Object})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
   @property({type: Array})
-  mapping: any[] = [];
+  mapping!: any[];
 
   @property({type: Array, computed: '_determineTotalRow(mapping, data)'})
-  totalRow: any[] = [];
+  totalRow!: any[];
 
   _determineTotalRow(_: any, data: GenericObject) {
     if (typeof data === 'undefined') {

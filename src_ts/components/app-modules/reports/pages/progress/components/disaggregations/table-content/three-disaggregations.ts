@@ -78,28 +78,28 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
   }
 
   @property({type: Object})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
   @property({type: Array})
-  mapping: any[] = [];
+  mapping!: any[];
 
   @property({type: Object})
-  columnTotalRow: GenericObject | null = null;
+  columnTotalRow!: GenericObject;
 
   @property({type: Array, computed: '_getColumns(mapping)'})
-  columns: any[] = [];
+  columns!: any[];
 
   @property({type: Array, computed: '_getRows(mapping)'})
-  rows: any[] = [];
+  rows!: any[];
 
   @property({type: Array})
-  bottomRows: any[] = [];
+  bottomRows!: any[];
 
   @property({type: Array, computed: '_getMiddleRows(mapping)'})
-  middleRows: any[] = [];
+  middleRows!: any[];
 
   @property({type: Array, computed: '_determineOuterRows(columns, rows, data)'})
-  outerRowsForDisplay: any[] = [];
+  outerRowsForDisplay!: any[];
 
   static get observers() {
     return ['_determineTotals(columns, middleRows, data)'];

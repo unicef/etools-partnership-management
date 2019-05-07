@@ -198,10 +198,10 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
   }
 
   @property({type: Object})
-  report: GenericObject = {};
+  report!: GenericObject;
 
   @property({type: Object})
-  reportAttachment: GenericObject | null = null;
+  reportAttachment!: GenericObject;
 
   connectedCallback() {
     super.connectedCallback();

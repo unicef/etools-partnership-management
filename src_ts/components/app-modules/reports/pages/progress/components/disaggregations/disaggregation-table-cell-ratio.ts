@@ -71,7 +71,7 @@ class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
   }
 
   @property({type: Object})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
 }
 

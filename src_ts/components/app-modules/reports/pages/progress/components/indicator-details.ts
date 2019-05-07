@@ -176,7 +176,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
   }
 
   @property({type: Number})
-  indicatorReportId: number | null = null;
+  indicatorReportId!: number;
 
   @property({type: Object})
   indicatorReport: GenericObject = {};
@@ -191,7 +191,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
   isClusterIndicator: boolean = false;
 
   @property({type: Array, computed: '_computeLocationData(indicatorReport.indicator_location_data)'})
-  locationData: any[] = [];
+  locationData!: any[];
 
   _shouldRefreshIndicatorDetails() {
     return this.indicatorReportId &&

@@ -110,13 +110,13 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
   }
 
   @property({type: Object})
-  report: GenericObject | null = null;
+  report!: GenericObject;
 
   @property({type: Object})
-  reportAttachment: GenericObject | null = null;
+  reportAttachment!: GenericObject;
 
   @property({type: Object})
-  sentBkCommentsDialog: any | null = null;
+  sentBkCommentsDialog!: any;
 
   ready() {
     super.ready();

@@ -87,13 +87,13 @@ class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
   }
 
   @property({type: Object})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
   @property({type: String}) 
-  indicatorType: string | null = null;
+  indicatorType!: string;
 
   @property({type: String})
-  rowType: string | null = null;
+  rowType!: string;
 
   _computeClass(rowType: string) {
     return rowType;

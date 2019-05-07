@@ -55,22 +55,22 @@ class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)
   }
 
   @property({type: Object})
-  data: GenericObject | null = null;
+  data!: GenericObject;
 
   @property({type: Array})
-  mapping: any[] = [];
+  mapping!: any[];
 
   @property({type: Array, computed: '_getColumns(mapping)'})
-  columns: any[] = [];
+  columns!: any[];
 
   @property({type: Array, computed: '_getRows(mapping)'})
-  rows: any[] = [];
+  rows!: any[];
 
   @property({type: Object, computed: '_determineTotals(columns, data)'})
-  totalsForDisplay: GenericObject | null = null;
+  totalsForDisplay!: GenericObject;
 
   @property({type: Object, computed: '_determineRowsForDisplay(columns, rows, data)'})
-  rowsForDisplay: GenericObject | null = null;
+  rowsForDisplay!: GenericObject;
 
   _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {

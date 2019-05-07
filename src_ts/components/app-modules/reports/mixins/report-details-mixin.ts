@@ -18,13 +18,13 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
   class reportDetailsClass extends EndpointsMixin(baseClass) {
 
     @property({type: Object})
-    report: GenericObject | null = null;
+    report!: GenericObject;
 
     @property({type: Object})
-    reportAttachment: GenericObject | null = null;
+    reportAttachment!: GenericObject;
 
     @property({type: Object})
-    currentUser = {} as User;
+    currentUser!: User;
 
     @property({type: Array})
     reportActions = [
