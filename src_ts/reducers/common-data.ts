@@ -35,6 +35,9 @@ import {
 } from '../actions/common-data';
 import { CpOutput, Disaggregation, Location } from '../typings/intervention.types';
 import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags, Office } from '../typings/globals.types';
+import { RootState } from '../store';
+import { createSelector } from 'reselect';
+import { copy } from '../components/utils/utils';
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
@@ -280,5 +283,32 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return state;
   }
 };
+
+
+const disaggregationsSelector = (state: RootState) => state.commonData!.disaggregations;
+
+export const flaggedSortedDisaggregs = createSelector(
+  disaggregationsSelector,
+  (disagregs: Disaggregation[]) => {
+    if (!disagregs || !disagregs.length) {
+      return [];
+    }
+
+    return copy(disagregs).map((d: Disaggregation) => {
+      if (!d.active) {
+        d.name = '(*Inactive) ' + d.name;
+      }
+      return d;
+    }).sort((d1: Disaggregation, d2: Disaggregation) => {
+      if (d1.active === d2.active) {
+        return 0;
+      }
+      if (d1.active) {
+        return -1;
+      }
+      return 1;
+    });
+  }
+);
 
 export default commonData;
