@@ -1,9 +1,9 @@
 import {logWarn} from 'etools-behaviors/etools-logging.js';
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 
 function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class utilsClass extends baseClass {
+  class UtilsClass extends baseClass {
 
     _equals(a: any, b: any) {
       return a === b;
@@ -13,7 +13,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return Number(val);
     }
 
-    _formatNumber(val: any, placeholder: any , decimals: any, thousandsPoint: any, decimalsPoint?: any) {
+    _formatNumber(val: any, placeholder: any, decimals: any, thousandsPoint: any, decimalsPoint?: any) {
       placeholder = placeholder ? placeholder : '-';
 
       let nr: any = Number(val);
@@ -31,9 +31,9 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         logWarn('thousandsPoint and decimalsPoint should be different', 'utils-mixin');
         return nr;
       }
-      let nrParts = nr.split('.');
+      const nrParts = nr.split('.');
       if (thousandsPoint) {
-        let thousandsRegex = new RegExp('(\\d)(?=(\\d{3})+(?!\\d))', 'g');
+        const thousandsRegex = new RegExp('(\\d)(?=(\\d{3})+(?!\\d))', 'g');
         nrParts[0] = nrParts[0].replace(thousandsRegex, '$1' + thousandsPoint);
       }
       return nrParts.join(decimalsPoint);
@@ -47,7 +47,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _deferred() {
-      let defer: any = {};
+      const defer: any = {};
 
       defer.promise = new Promise(function(resolve, reject) {
         defer.resolve = resolve;
@@ -59,14 +59,14 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     _toPercentage(value: any) {
       return value == null /* undefinded & null */ ? // jshint ignore:line
-          value : Math.floor(value * 100) + '%';
+        value : Math.floor(value * 100) + '%';
     }
 
     _fieldsAreValid() {
       let valid = true;
-      let fields = [].slice.call(
-          // @ts-ignore
-          this.shadowRoot.querySelectorAll('.validate')
+      const fields = [].slice.call(
+        // @ts-ignore
+        this.shadowRoot.querySelectorAll('.validate')
       );
       // NOTE: NodeList.forEach is not supported by older browsers(min IE11),
       // using Array.prototype.forEach.call instead
@@ -98,7 +98,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       switch (displayType) {
         case 'percentage':
         {
-          let val = percentize ? Math.floor(value * 100) : value;
+          const val = percentize ? Math.floor(value * 100) : value;
           return this._formatNumber(val, '-', 2, '\,') + '%';
         }
         case 'ratio':
@@ -109,8 +109,8 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           return value;
       }
     }
-  };
-  return utilsClass;
+  }
+  return UtilsClass;
 }
 
 export default UtilsMixin;

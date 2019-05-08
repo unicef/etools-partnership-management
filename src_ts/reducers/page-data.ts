@@ -1,7 +1,7 @@
 import * as a from '../actions/page-data.js';
-import { InterventionPermissionsFields } from '../typings/intervention.types';
-import { Permission } from '../typings/globals.types';
-import { Reducer, Action } from 'redux';
+import {InterventionPermissionsFields} from '../typings/intervention.types';
+import {Permission} from '../typings/globals.types';
+import {Reducer, Action} from 'redux';
 
 export class PageDataState {
   permissions: Permission<InterventionPermissionsFields> | null = null;
@@ -10,8 +10,8 @@ export class PageDataState {
 
 const INITIAL_STATE = new PageDataState();
 
-const pageData: Reducer<PageDataState, Action<string>>  = (state = INITIAL_STATE, action: any) => {
-  switch(action.type) {
+const pageData: Reducer<PageDataState, Action<string>> = (state = INITIAL_STATE, action: any) => {
+  switch (action.type) {
     case a.SET_PAGE_DATA_PERMISSIONS:
       return {
         ...state,
@@ -25,6 +25,6 @@ const pageData: Reducer<PageDataState, Action<string>>  = (state = INITIAL_STATE
     default:
       return state;
   }
-}
+};
 
 export default pageData;

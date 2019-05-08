@@ -1,8 +1,8 @@
 
 import {createSelector} from 'reselect';
 import * as a from '../actions/partners';
-import { RootState } from '../store';
-import { Reducer, Action } from 'redux';
+import {RootState} from '../store';
+import {Reducer, Action} from 'redux';
 
 export class PartnersState {
   list: [] = [];
@@ -11,14 +11,14 @@ export class PartnersState {
 const INITIAL_STATE = new PartnersState();
 
 const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE, action: any) => {
-  switch(action.type) {
+  switch (action.type) {
     case a.SET_PARTNERS:
       return {
         list: action.partners
       };
     case a.DELETE_PARTNER: {
-      let partnersCopy = state.list.slice(0);
-      let index = partnersCopy.findIndex((p: any) => p.id === action.partnerId);
+      const partnersCopy = state.list.slice(0);
+      const index = partnersCopy.findIndex((p: any) => p.id === action.partnerId);
       if (index > -1) {
         partnersCopy.splice(index, 1);
       }
@@ -31,7 +31,7 @@ const partners: Reducer<PartnersState, Action<string>> = (state = INITIAL_STATE,
     default:
       return state;
   }
-}
+};
 
 export default partners;
 
@@ -41,15 +41,15 @@ const partnersSelector = (state: RootState) => state.partners!.list;
 const notHiddenPartnersSelector = createSelector(
   partnersSelector,
   (partners: any) => {
-    return partners.filter((p:any) => !p.hidden);
+    return partners.filter((p: any) => !p.hidden);
   }
 );
 
 export const csoPartnersSelector = createSelector(
   notHiddenPartnersSelector,
   (partners: any) => {
-    return partners.filter((p:any) =>
-     p.partner_type === 'Civil Society Organization');
+    return partners.filter((p: any) =>
+      p.partner_type === 'Civil Society Organization');
   }
 );
 

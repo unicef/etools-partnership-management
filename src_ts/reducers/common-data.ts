@@ -33,12 +33,13 @@ import {
   UPDATE_CURRENT_USER,
   CommonDataAction
 } from '../actions/common-data';
-import { CpOutput, Disaggregation, Location } from '../typings/intervention.types';
-import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags, Office } from '../typings/globals.types';
+import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
+import {LabelAndValue, CpStructure, Country, IdAndName, GenericObject,
+  MinimalUser, User, EnvFlags, Office} from '../typings/globals.types';
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
-  signedByUnicefUsers: {id: number, name: string, email: string, username: string}[] = [];
+  signedByUnicefUsers: {id: number; name: string; email: string; username: string}[] = [];
   cpOutputs: CpOutput[] = [];
   countryProgrammes: CpStructure[] = [];
   interventionDocTypes: LabelAndValue[] = [];
@@ -74,7 +75,7 @@ export class CommonDataState {
     {value: 'QPR', label: 'Quarterly Progress Reports'},
     {value: 'SR', label: 'Special Reports'}
   ];
-  locationTypes: {id: number, name: string, admin_level: any}[] = [];
+  locationTypes: {id: number; name: string; admin_level: any}[] = [];
   grants: GenericObject[] = [];
   donors: GenericObject[] = [];
   partnerRiskRatings: LabelAndValue[] = [];
@@ -85,7 +86,7 @@ const INITIAL_STATE = new CommonDataState();
 
 const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
   let disaggregsCopy;
-   let dIndex;
+  let dIndex;
 
   switch (action.type) {
     case UPDATE_COUNTRY_PROGRAMMES:

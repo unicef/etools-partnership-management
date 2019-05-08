@@ -1,16 +1,16 @@
-//import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import './etools-toast'
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
-import { EtoolsToastEl } from './etools-toast';
+// import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import './etools-toast';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {EtoolsToastEl} from './etools-toast';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class toastNotifs extends baseClass {
+  class ToastNotifsClass extends baseClass {
 
     @property({type: Object})
     _toast: EtoolsToastEl | null = null;
@@ -41,7 +41,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
 
     public queueToast(e: CustomEvent) {
       e.stopPropagation();
-      let detail = e.detail;
+      const detail = e.detail;
       if (!this._toast) {
         this.createToastNotificationElement();
       }
@@ -50,10 +50,10 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
         // @ts-ignore
         this.push('_toastQueue', detail);
         // @ts-ignore
-        let toastProperties = this._toast.prepareToastAndGetShowProperties(detail);
+        const toastProperties = this._toast.prepareToastAndGetShowProperties(detail);
         this._showToast(toastProperties);
       } else {
-        let alreadyInQueue = this._toastQueue.filter(function (toastDetail) {
+        const alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
           return JSON.stringify(toastDetail) === JSON.stringify(detail);
         });
         if (alreadyInQueue.length === 0) {
@@ -77,7 +77,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       if (this._toast !== null) {
         // alter message wrapper css
         setTimeout(() => {
-          let messageWrapper = this._toast!.getMessageWrapper();
+          const messageWrapper = this._toast!.getMessageWrapper();
           if (messageWrapper) {
             messageWrapper.style.whiteSpace = 'pre-wrap';
           }
@@ -94,7 +94,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       this.shift('_toastQueue');
       if (this._toastQueue.length) {
         // @ts-ignore
-        let toastProperties = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
+        const toastProperties = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
         this._showToast(toastProperties);
       }
     }
@@ -112,7 +112,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       // @ts-ignore
       this._toast.show(toastProperties);
     }
-  };
-  return toastNotifs;
+  }
+  return ToastNotifsClass;
 }
 export default ToastNotifications;

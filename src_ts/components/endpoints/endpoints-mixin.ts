@@ -1,14 +1,14 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
 import {RootState} from '../../store';
 
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
-import { Constructor, User, GenericObject } from '../../typings/globals.types';
+import {Constructor, User, GenericObject} from '../../typings/globals.types';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -16,10 +16,10 @@ import { property } from '@polymer/decorators';
  * @appliesMixin EtoolsAjaxRequestMixin
  */
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
+  class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
 
       @property({type: Object})
-      prpCountries!: GenericObject[]
+    prpCountries!: GenericObject[]
 
       @property({type: Object})
       currentUser!: User
@@ -35,15 +35,15 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       protected _getPrpCountryId() {
-        let currentCountry = this.currentUser.countries_available.find((country: object) => {
+        const currentCountry = this.currentUser.countries_available.find((country: object) => {
           return (country as any).id === this.currentUser.country.id;
         });
-        let prpCountry = this.prpCountries.find((prpCountry: object) => {
+        const prpCountry = this.prpCountries.find((prpCountry: object) => {
           return (prpCountry as any).business_area_code === currentCountry!.business_area_code;
         });
 
         if (!prpCountry) {
-          let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.country.name + ' country data was ' +
+          const countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.country.name + ' country data was ' +
               'not found in the available PRP countries by business_area_code!';
           throw new Error(countryNotFoundInPrpWarning);
         }
@@ -56,11 +56,11 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       public getEndpoint(endpointName: string, data?: object) {
-        let endpoint = JSON.parse(JSON.stringify((pmpEndpoints as any)[endpointName]));
-        let authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
-        let baseSite = authorizationTokenMustBeAdded
-            ? tokenEndpointsHost(endpoint.token)
-            : window.location.origin;
+        const endpoint = JSON.parse(JSON.stringify((pmpEndpoints as any)[endpointName]));
+        const authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
+        const baseSite = authorizationTokenMustBeAdded
+          ? tokenEndpointsHost(endpoint.token)
+          : window.location.origin;
 
         if (this._hasUrlTemplate(endpoint)) {
           if (data && authorizationTokenMustBeAdded && this._urlTemplateHasCountryId(endpoint.template)) {
@@ -83,8 +83,8 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
 
         if (data && Object.keys(data).length > 0) {
-          for (let k in data) {
-            let replacePattern = new RegExp('<%=' + k + '%>', 'gi');
+          for (const k in data) {
+            const replacePattern = new RegExp('<%=' + k + '%>', 'gi');
             tmpl = tmpl.replace(replacePattern, (data as any)[k]);
           }
         }
@@ -98,8 +98,8 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
       protected _getDeferrer() {
         // create defer object (utils behavior contains to many other unneeded methods to be used)
-        let defer: any = {};
-        defer.promise = new Promise(function (resolve, reject) {
+        const defer: any = {};
+        defer.promise = new Promise(function(resolve, reject) {
           defer.resolve = resolve;
           defer.reject = reject;
         });
@@ -119,13 +119,13 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       public decodeBase64Token(encodedToken: string) {
-        let base64Url = encodedToken.split('.')[1];
-        let base64 = base64Url.replace('-', '+').replace('_', '/');
+        const base64Url = encodedToken.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
         return JSON.parse(window.atob(base64));
       }
 
       public tokenIsValid(token: string) {
-        let decodedToken = this.decodeBase64Token(token);
+        const decodedToken = this.decodeBase64Token(token);
         return Date.now() < decodedToken.exp;
       }
 
@@ -158,11 +158,11 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
 
         // create defer object (utils behavior contains to many other unneeded methods to be used)
-        let defer = this._getDeferrer();
+        const defer = this._getDeferrer();
 
         if (this.authorizationTokenMustBeAdded(options.endpoint)) {
-          let tokenKey = options.endpoint.token;
-          let token = this.getCurrentToken(tokenKey);
+          const tokenKey = options.endpoint.token;
+          const token = this.getCurrentToken(tokenKey);
           // because we could have other tokens too
           if (token && this.tokenIsValid(token)) {
             // token exists and it's still valid
@@ -170,13 +170,13 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
             defer.resolve(options);
           } else {
             // request new token
-            let self = this;
-            let tokenEndpointName = this.getTokenEndpointName(tokenKey);
-            this.requestToken(this.getEndpoint(tokenEndpointName)).then(function (response: any) {
+            const self = this;
+            const tokenEndpointName = this.getTokenEndpointName(tokenKey);
+            this.requestToken(this.getEndpoint(tokenEndpointName)).then(function(response: any) {
               self.storeToken(options.endpoint.token, response.token);
               options = self._buildOptionsWithTokenHeader(options, response.token);
               defer.resolve(options);
-            }).catch(function (error: any) {
+            }).catch(function(error: any) {
               // request for getting a new token failed
               defer.reject(error);
             });
@@ -189,7 +189,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
       protected _addAdditionalRequestOptions(options: any, requestAdditionalOptions: any) {
         if (requestAdditionalOptions) {
-          Object.keys(requestAdditionalOptions).forEach(function (key) {
+          Object.keys(requestAdditionalOptions).forEach(function(key) {
             switch (key) {
               case 'endpoint':
                 break;
@@ -206,29 +206,29 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       public fireRequest(endpoint: any, endpointTemplateData: object,
-                         requestAdditionalOptions?: object, activeReqKey?: string) {
+        requestAdditionalOptions?: object, activeReqKey?: string) {
         if (!endpoint) {
           logError('Endpoint name is missing.', 'Endpoints:fireRequest');
           return;
         }
-        let defer = this._getDeferrer();
-        let self = this;
+        const defer = this._getDeferrer();
+        const self = this;
         this.addTokenToRequestOptions(endpoint, endpointTemplateData)
-            .then(function (requestOptions: any) {
-              let options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
-              return self.sendRequest(options, activeReqKey);
-            })
-            .then(function (endpointResponse: any) {
-              defer.resolve(endpointResponse);
-            })
-            .catch(function (error: any) {
-              defer.reject(error);
-            });
+          .then(function(requestOptions: any) {
+            const options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
+            return self.sendRequest(options, activeReqKey);
+          })
+          .then(function(endpointResponse: any) {
+            defer.resolve(endpointResponse);
+          })
+          .catch(function(error: any) {
+            defer.reject(error);
+          });
         return defer.promise;
       }
 
-    };
-    return endpointsMixin;
   }
+  return endpointsMixin;
+}
 
 export default EndpointsMixin;

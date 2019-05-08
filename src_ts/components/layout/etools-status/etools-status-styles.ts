@@ -1,4 +1,4 @@
-import { html } from '@polymer/polymer';
+import {html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 export const etoolsStatusStyles = html`
@@ -185,4 +185,4 @@ export const etoolsStatusStyles = html`
       }
     }
     </style>
-`
+`;

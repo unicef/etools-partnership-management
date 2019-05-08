@@ -1,18 +1,18 @@
-import { ListFilterOption, ListOrSelectedFilterOption } from '../../typings/filter.types';
-import { PolymerElement } from '@polymer/polymer';
+import {ListFilterOption, ListOrSelectedFilterOption} from '../../typings/filter.types';
+import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import { DomRepeatEvent, Constructor } from '../../typings/globals.types';
-import { EtoolsDropdownMultiEl } from 'etools-dropdown/etools-dropdown-multi';
-import { EtoolsDropdownEl } from 'etools-dropdown';
-import { PaperToggleButtonElement } from '@polymer/paper-toggle-button';
+import {DomRepeatEvent, Constructor} from '../../typings/globals.types';
+import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi';
+import {EtoolsDropdownEl} from 'etools-dropdown';
+import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from 'etools-date-time/datepicker-lite';
 declare const moment: any;
 /**
   * @polymer
   * @mixinFunction
   */
- function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass:T) {
-  class listFiltersClass extends baseClass {
+function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class ListFiltersClass extends baseClass {
 
     @property({type: Array})
     listFilterOptions!: ListFilterOption[];
@@ -34,7 +34,7 @@ declare const moment: any;
     }
 
     _isAlreadySelected(filter: any) {
-      let selectedOpt = this.selectedFilters.find(function(selectedFilter: ListFilterOption) {
+      const selectedOpt = this.selectedFilters.find(function(selectedFilter: ListFilterOption) {
         return selectedFilter.filterName === filter.filterName;
       });
       return !!selectedOpt;
@@ -154,9 +154,9 @@ declare const moment: any;
 
     // filter value changed, update filter path with the new value
     filterValueChanged(event: CustomEvent) {
-      let dropdown = event.target as EtoolsDropdownEl;
-      let filterPath = dropdown.getAttribute('data-filter-path')!;
-      let filterVal = dropdown.selected;
+      const dropdown = event.target as EtoolsDropdownEl;
+      const filterPath = dropdown.getAttribute('data-filter-path')!;
+      const filterVal = dropdown.selected;
       this.set(filterPath, filterVal);
     }
 
@@ -173,27 +173,27 @@ declare const moment: any;
 
     // 'esmm' (etools-dropdown-multi) filter value changed
     esmmValueChanged(e: CustomEvent) {
-      let dropdownMultiEl = e.target as EtoolsDropdownMultiEl;
-      let filterPath = dropdownMultiEl.getAttribute('data-filter-path')!;
-      let filterVal = e.detail.selectedItems.map((v: any) => v[dropdownMultiEl.optionValue!]);
+      const dropdownMultiEl = e.target as EtoolsDropdownMultiEl;
+      const filterPath = dropdownMultiEl.getAttribute('data-filter-path')!;
+      const filterVal = e.detail.selectedItems.map((v: any) => v[dropdownMultiEl.optionValue!]);
       this.set(filterPath, filterVal);
     }
 
     toggleValueChanged(e: CustomEvent) {
-      let toggleEl = e.target as PaperToggleButtonElement;
-      let filterPath = toggleEl.getAttribute('data-filter-path')!;
-      let filterVal = toggleEl.checked;
+      const toggleEl = e.target as PaperToggleButtonElement;
+      const filterPath = toggleEl.getAttribute('data-filter-path')!;
+      const filterVal = toggleEl.checked;
       this.set(filterPath, filterVal);
     }
 
     // change event for a etoold-datepicker filter
     _filterDateHasChanged(event: CustomEvent) {
-      let filterPath = (event.target as DatePickerLite).getAttribute('data-filter-path')!;
+      const filterPath = (event.target as DatePickerLite).getAttribute('data-filter-path')!;
       if (!event.detail.date) {
         this.set(filterPath, '');
         return;
       }
-      let selectedDate = event.detail.date;
+      const selectedDate = event.detail.date;
       this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     }
 
@@ -212,12 +212,12 @@ declare const moment: any;
 
     _findInListFilterOptions(filterName: string) {
       return this.listFilterOptions instanceof Array
-          ? this.listFilterOptions.find(f => f.filterName === filterName)
-          : null;
+        ? this.listFilterOptions.find(f => f.filterName === filterName)
+        : null;
     }
 
     // update shown filters
-    updateShownFilters(filtersToUpdate: Array<ListOrSelectedFilterOption>) {
+    updateShownFilters(filtersToUpdate: ListOrSelectedFilterOption[]) {
       if (!filtersToUpdate) {
         filtersToUpdate = [];
       }
@@ -232,7 +232,8 @@ declare const moment: any;
         if (!filterObj) {
           return;
         }
-        const idxInFilterOptions = this.listFilterOptions.findIndex((f:ListFilterOption)=> f.filterName === filterToUpdate.filterName);
+        const idxInFilterOptions = this.listFilterOptions.findIndex((f: ListFilterOption) =>
+          f.filterName === filterToUpdate.filterName);
 
         if ((filterObj.selected || this.filterHasSelectedValue(filterToUpdate.selectedValue, filterObj.type)) &&
             !this._isAlreadySelected(filterObj)) {
@@ -241,15 +242,15 @@ declare const moment: any;
           this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
         }
 
-      if (this._validFilterSelectedValue(filterToUpdate.selectedValue, filterObj.type, filterObj.allowEmpty)) {
+        if (this._validFilterSelectedValue(filterToUpdate.selectedValue, filterObj.type, filterObj.allowEmpty)) {
 
           // search it in selected filters lists and update selected value
           if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
-            let idxInSelFilters = this.selectedFilters.findIndex(f => f.filterName === filterToUpdate.filterName);
+            const idxInSelFilters = this.selectedFilters.findIndex(f => f.filterName === filterToUpdate.filterName);
 
             if (idxInSelFilters > -1) {
               this.updateSelectedValueInFilter(filterObj.type, ['selectedFilters', idxInSelFilters],
-                                              filterToUpdate.selectedValue);
+                filterToUpdate.selectedValue);
               this._disableFilterIfNeccessary(filterToUpdate, idxInSelFilters, idxInFilterOptions);
             }
           }
@@ -272,7 +273,9 @@ declare const moment: any;
           return false;
       }
     }
-    _disableFilterIfNeccessary(filter: ListOrSelectedFilterOption, idxInSelFilters: number, idxInFilterOptions: number) {
+    _disableFilterIfNeccessary(filter: ListOrSelectedFilterOption, idxInSelFilters: number,
+      idxInFilterOptions: number) {
+
       if (filter.hasOwnProperty('disabled')) {
         this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
       }
@@ -293,22 +296,22 @@ declare const moment: any;
      * @param selectedProp
      * @returns {Array}
      */
-    getFilterValuesByProperty(filterOptions: Array<ListFilterOption>, prop: string, selected: any, selectedProp: string) {
-      let selectedValues = this._convertToInt(selected);
+    getFilterValuesByProperty(filterOptions: ListFilterOption[], prop: string, selected: any, selectedProp: string) {
+      const selectedValues = this._convertToInt(selected);
       selectedProp = selectedProp || 'id';
       return (filterOptions && filterOptions.length && selectedValues && selectedValues.length)
-          ? filterOptions.filter(opt => selectedValues.indexOf(opt[selectedProp]) > -1).map(opt => opt[prop])
-          : [];
+        ? filterOptions.filter(opt => selectedValues.indexOf(opt[selectedProp]) > -1).map(opt => opt[prop])
+        : [];
     }
 
     _convertToInt(data: []) {
       return (data instanceof Array)
-          ? data.map(d => parseInt(d, 10))
-          : [];
+        ? data.map(d => parseInt(d, 10))
+        : [];
     }
 
-  };
-  return listFiltersClass;
+  }
+  return ListFiltersClass;
 }
 
 export default ListFiltersMixin;

@@ -33,7 +33,9 @@
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }]
   },
   "globals": {
     "moment": true,

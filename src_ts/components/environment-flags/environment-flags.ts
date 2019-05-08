@@ -5,7 +5,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../store';
 import {updateEnvFlags} from '../../actions/common-data';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { EnvFlags } from '../../typings/globals.types';
+import {EnvFlags} from '../../typings/globals.types';
 
 
 /**
@@ -27,14 +27,14 @@ class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement
   };
 
   protected _processAndSetEnvFlags(envFlags: EnvFlags) {
-    let flags = envFlags.active_flags;
-    let flagObject = {
+    const flags = envFlags.active_flags;
+    const flagObject = {
       prp_mode_off: false
     };
 
     // @ts-ignore
-    for (let key in flags) {
-      let flag: string | undefined = (flags as any)[key];
+    for (const key in flags) {
+      const flag: string | undefined = (flags as any)[key];
       if (flag) {
         (flagObject as any)[flag] = true;
       }
@@ -43,7 +43,7 @@ class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement
   }
 
   private _loadEnvFlagsData() {
-    let requestConfig = {
+    const requestConfig = {
       endpoint: pmpEdpoints.environmentFlags
     };
 

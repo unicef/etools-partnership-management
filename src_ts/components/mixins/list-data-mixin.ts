@@ -1,11 +1,11 @@
-//import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+// import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
-import { fireEvent } from '../utils/fire-custom-event';
-import { logWarn } from 'etools-behaviors/etools-logging';
-import { Constructor, GenericObject } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {fireEvent} from '../utils/fire-custom-event';
+import {logWarn} from 'etools-behaviors/etools-logging';
+import {Constructor, GenericObject} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -16,13 +16,13 @@ import { property } from '@polymer/decorators';
  * @appliesMixin AjaxServerErrors
  */
 function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
-  class listDataClass extends EndpointsMixin(AjaxServerErrorsMixin(baseClass)) {
+
+  class ListDataClass extends EndpointsMixin(AjaxServerErrorsMixin(baseClass)) {
 
     @property({type: Object})
     options: {
-      endpoint: GenericObject | null,
-      csrf: boolean
+      endpoint: GenericObject | null;
+      csrf: boolean;
     } = {
       endpoint: null,
       csrf: true
@@ -75,14 +75,14 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     _requestListData() {
       this.sendRequest(this.options)
-          .then((resp: any) => {
-            this._handleMyResponse(resp);
-          }).catch((error: any) => {
-            this.handleErrorResponse(error);
-          });
+        .then((resp: any) => {
+          this._handleMyResponse(resp);
+        }).catch((error: any) => {
+          this.handleErrorResponse(error);
+        });
     }
 
-// some children overwrite this function for custom data processing
+    // some children overwrite this function for custom data processing
     _handleMyResponse(res: any) {
       this._handleResponse(res);
     }
@@ -122,8 +122,8 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this._requestListData();
       }, newEndpoint.exp);
     }
-  };
-  return listDataClass;
+  }
+  return ListDataClass;
 }
 
 export default ListDataMixin;

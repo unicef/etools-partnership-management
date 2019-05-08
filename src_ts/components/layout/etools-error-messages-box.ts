@@ -1,10 +1,10 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
-import "etools-content-panel/etools-content-panel.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-button/paper-button.js";
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import 'etools-content-panel/etools-content-panel.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-button/paper-button.js';
 import {buttonsStyles} from '../styles/buttons-styles.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -92,7 +92,7 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   @property({type: Array, notify: true})
   errors = [];
 
-  @property({type: Boolean, computed: '_errorsLengthChanged(errors)',  reflectToAttribute: true})
+  @property({type: Boolean, computed: '_errorsLengthChanged(errors)', reflectToAttribute: true})
   hidden!: boolean;
 
   _startsWithEmptySpace(val: string) {
