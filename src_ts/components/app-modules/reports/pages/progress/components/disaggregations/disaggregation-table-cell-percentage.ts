@@ -4,7 +4,8 @@ import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
 import { PolymerElement, html } from '@polymer/polymer';
 import { disaggregationTableStyles } from './styles/disaggregation-table-styles.js';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -63,11 +64,8 @@ class DisaggregationTableCellPercentage extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object
-    };
-  }
+  @property({type: Object})
+  data!: GenericObject;
 
 }
 

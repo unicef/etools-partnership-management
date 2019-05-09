@@ -3,7 +3,8 @@ import { PolymerElement, html } from '@polymer/polymer';
 import UtilsMixin from '../../../../../../../mixins/utils-mixin';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../../../typings/globals.types.js';
 
 
 /**
@@ -12,7 +13,7 @@ import { disaggregationTableStyles } from '../styles/disaggregation-table-styles
  * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin
  */
-class ThreeDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement)) as any) {
+class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)) {
 
   static get is() {
     return 'three-disaggregations';
@@ -76,30 +77,29 @@ class ThreeDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerEleme
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object,
-      mapping: Array,
-      columnTotalRow: Object,
-      columns: {
-        type: Array,
-        computed: '_getColumns(mapping)'
-      },
-      rows: {
-        type: Array,
-        computed: '_getRows(mapping)'
-      },
-      bottomRows: Array,
-      middleRows: {
-        type: Array,
-        computed: '_getMiddleRows(mapping)'
-      },
-      outerRowsForDisplay: {
-        type: Array,
-        computed: '_determineOuterRows(columns, rows, data)'
-      }
-    };
-  }
+  @property({type: Object})
+  data!: GenericObject;
+
+  @property({type: Array})
+  mapping!: any[];
+
+  @property({type: Object})
+  columnTotalRow!: GenericObject;
+
+  @property({type: Array, computed: '_getColumns(mapping)'})
+  columns!: any[];
+
+  @property({type: Array, computed: '_getRows(mapping)'})
+  rows!: any[];
+
+  @property({type: Array})
+  bottomRows!: any[];
+
+  @property({type: Array, computed: '_getMiddleRows(mapping)'})
+  middleRows!: any[];
+
+  @property({type: Array, computed: '_determineOuterRows(columns, rows, data)'})
+  outerRowsForDisplay!: any[];
 
   static get observers() {
     return ['_determineTotals(columns, middleRows, data)'];

@@ -20,7 +20,8 @@ import { isEmptyObject } from '../../../../utils/utils';
 import { CpOutput } from '../../../../../typings/intervention.types';
 import { fireEvent } from '../../../../utils/fire-custom-event';
 import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -28,8 +29,7 @@ import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-bu
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
-class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
-  [x: string]: any;
+class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
   static get is() {
     return 'report-progress';
@@ -197,12 +197,11 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
     `;
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      reportAttachment: Object
-    };
-  }
+  @property({type: Object})
+  report!: GenericObject;
+
+  @property({type: Object})
+  reportAttachment!: GenericObject;
 
   connectedCallback() {
     super.connectedCallback();

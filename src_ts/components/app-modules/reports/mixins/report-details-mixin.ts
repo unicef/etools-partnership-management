@@ -1,12 +1,10 @@
 import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {RootState} from '../../../../store';
-import {isJsonStrMatch, copy} from '../../../utils/utils';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { Constructor } from '../../../../typings/globals.types';
+import { Constructor, GenericObject, User} from '../../../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
-
+import { property } from '@polymer/decorators';
 
 /**
  * @polymerMixin
@@ -14,52 +12,40 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  */
 function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
+
   class reportDetailsClass extends EndpointsMixin(baseClass) {
-    [x: string]: any;
 
-    static get properties() {
-      return {
-        report: Object,
-        reportAttachments: Array,
-        currentUser: {
-          type: Object,
-          statePath: 'currentUser'
-        },
-        reportActions: {
-          type: Array,
-          value: [
-            {
-              label: 'Accept',
-              primary: true,
-              event: 'accept-report'
-            },
-            {
-              label: 'Send back to partner',
-              event: 'send-back-to-partner'
-            },
-            {
-              label: 'Download',
-              event: 'download-report'
-            }
-          ]
-        },
-        _loadingMsgSource: {
-          type: String,
-          value: 'report-details'
-        },
-        _logMsgPrefix: {
-          type: String,
-          value: 'report-details-behavior'
-        }
-      };
-    }
+    @property({type: Object})
+    report!: GenericObject;
 
-    repDetailsStateChanged(state: RootState) {
-      if (!isJsonStrMatch(this.currentUser, state.commonData!.currentUser)) {
-        this.currentUser = copy(state.commonData!.currentUser);
+    @property({type: Array})
+    reportAttachments!: any[];
+
+    @property({type: Object})
+    currentUser!: User;
+
+    @property({type: Array})
+    reportActions = [
+      {
+        label: 'Accept',
+        primary: true,
+        event: 'accept-report'
+      },
+      {
+        label: 'Send back to partner',
+        event: 'send-back-to-partner'
+      },
+      {
+        label: 'Download',
+        event: 'download-report'
       }
-    }
+    ];
+
+    @property({type: String})
+    _loadingMsgSource = 'report-details';
+
+    @property({type: String})
+    _logMsgPrefix = 'report-details-behavior';
 
     requestReportDetails(id: string) {
       if (!this.currentUser) {

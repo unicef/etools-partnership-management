@@ -4,6 +4,8 @@ import 'etools-upload/etools-upload.js';
 
 import '../../../../../layout/etools-form-element-wrapper.js';
 import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../../typings/globals.types.js';
 import { SharedStyles } from '../../../../../styles/shared-styles.js';
 
 
@@ -54,14 +56,11 @@ class SrDetails extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      reportAttachments: {
-        type: Array
-      }
-    };
-  }
+  @property({type: Object})
+  report!: GenericObject;
+
+  @property({type: Array})
+  reportAttachments!: any[];
 
 }
 

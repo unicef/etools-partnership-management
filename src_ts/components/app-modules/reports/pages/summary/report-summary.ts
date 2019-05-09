@@ -15,7 +15,8 @@ import CONSTANTS from '../../../../../config/app-constants.js';
 import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
 import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
 import { SharedStyles } from '../../../../styles/shared-styles.js';
-
+import { property } from '@polymer/decorators';
+import { GenericObject } from '../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -24,7 +25,6 @@ import { SharedStyles } from '../../../../styles/shared-styles.js';
  * @appliesMixin EtoolsCurrency
  */
 class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
-  [x: string]: any;
 
   static get is() {
     return 'report-summary';
@@ -126,17 +126,14 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
     `;
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      reportAttachments: {
-        type: Array
-      },
-      sentBkCommentsDialog: {
-        type: Object
-      }
-    };
-  }
+  @property({type: Object})
+  report!: GenericObject;
+
+  @property({type: Array})
+  reportAttachments!: any[];
+
+  @property({type: Object})
+  sentBkCommentsDialog!: any;
 
   ready() {
     super.ready();
@@ -201,8 +198,10 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
   }
 
   _seeSentBackComments() {
-    this.sentBkCommentsDialog.report = this.report;
-    this.sentBkCommentsDialog.opened = true;
+    if(this.sentBkCommentsDialog){
+      this.sentBkCommentsDialog.report = this.report;
+      this.sentBkCommentsDialog.opened = true;
+    }
   }
 
 }
