@@ -290,9 +290,6 @@ class AppShell extends connect(store)(
   leavePageDialog!: EtoolsDialog;
 
   @property({type: Object})
-  loadingContainer: HTMLElement | null = null;
-
-  @property({type: Object})
   appLocQueryParams!: object;
 
   @property({type: String})
