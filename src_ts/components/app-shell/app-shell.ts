@@ -290,6 +290,9 @@ class AppShell extends connect(store)(
   leavePageDialog!: EtoolsDialog;
 
   @property({type: Object})
+  loadingContainer: GenericObject | null = null;
+
+  @property({type: Object})
   appLocQueryParams!: object;
 
   @property({type: String})
@@ -309,6 +312,7 @@ class AppShell extends connect(store)(
     this._initListeners();
     this._createLeavePageDialog();
     window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+    this.loadingContainer = window.EtoolsEsmmFitIntoEl;
 
     if (this.module !== 'not-found') {
       /*
@@ -316,6 +320,7 @@ class AppShell extends connect(store)(
        * This will be triggered once at page load or, after page load, on menu option tap event.
        * The loading message is disabled by *-module.html elements ready callback (in both cases)
        */
+
       fireEvent(this, 'global-loading', {
         active: true,
         loadingSource: 'main-page'
