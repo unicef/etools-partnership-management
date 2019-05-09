@@ -1,26 +1,26 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {PolymerElement, html} from '@polymer/polymer';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-content-panel/etools-content-panel.js';
-import { removeDialog, createDynamicDialog } from 'etools-dialog/dynamic-dialog';
+import {removeDialog, createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
 import FrNumbersConsistencyMixin from '../../../../mixins/fr-numbers-consistency-mixin.js';
-import { frWarningsStyles } from '../../../../styles/fr-warnings-styles.js';
+import {frWarningsStyles} from '../../../../styles/fr-warnings-styles.js';
 import {FrsDetails, Fr, Intervention} from '../../../../../../../typings/intervention.types.js';
-import { pmpCustomIcons } from '../../../../../../styles/custom-iconsets/pmp-icons.js';
-import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {pmpCustomIcons} from '../../../../../../styles/custom-iconsets/pmp-icons.js';
+import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import {getArraysDiff} from '../../../../../../utils/array-helper.js';
 import {property} from '@polymer/decorators';
-import {UpdateFrNumbersEl} from "./update-fr-numbers";
-import EtoolsDialog from "etools-dialog/etools-dialog";
+import {UpdateFrNumbersEl} from './update-fr-numbers';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../../../../typings/globals.types';
 
 
@@ -180,13 +180,13 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
 
     this._frsInconsistenciesConfirmationHandler = this._frsInconsistenciesConfirmationHandler.bind(this);
     this.frsConfirmationsDialog = createDynamicDialog({
-          title: 'Fund Reservation Warning',
-          size: 'md',
-          okBtnText: 'Yes',
-          cancelBtnText: 'No',
-          closeCallback: this._frsInconsistenciesConfirmationHandler,
-          content:  this._frsConfirmationsDialogMessage
-        });
+      title: 'Fund Reservation Warning',
+      size: 'md',
+      okBtnText: 'Yes',
+      cancelBtnText: 'No',
+      closeCallback: this._frsInconsistenciesConfirmationHandler,
+      content: this._frsConfirmationsDialogMessage
+    });
   }
 
   _removeFrsConfirmationsDialog() {
@@ -213,10 +213,10 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
     }
     if (this.frsDialogEl) {
       // populate dialog with current frs numbers deep copy
-      let currentFrs = this._getCurrentFrs();
-      let frs = currentFrs.map((fr: Fr) => {
-            return {fr_number: fr.fr_number};
-          });
+      const currentFrs = this._getCurrentFrs();
+      const frs = currentFrs.map((fr: Fr) => {
+        return {fr_number: fr.fr_number};
+      });
 
       this.frsDialogEl.set('dataItems', frs);
       this.frsDialogEl.set('interventionStatus', this.intervention.status);
@@ -225,15 +225,15 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   }
 
   // get original/initial intervention frs numbers
-  _getCurrentFrs(): Fr[]  {
+  _getCurrentFrs(): Fr[] {
     return (this.intervention.frs_details &&
             this.intervention.frs_details.frs instanceof Array)
-        ? this.intervention.frs_details.frs : [];
+      ? this.intervention.frs_details.frs : [];
   }
 
   frNumbersUpdateHandler(e: CustomEvent) {
     e.stopImmediatePropagation();
-    let frNumbers = e.detail.frs;
+    const frNumbers = e.detail.frs;
     if (frNumbers.length === 0) {
       this._handleEmptyFrsAfterUpdate();
       return;
@@ -247,7 +247,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
    * This can happen if the user removed all the existing numbers or if there is no change made
    */
   _handleEmptyFrsAfterUpdate() {
-    let frsBeforeUpdate = this._getCurrentFrs();
+    const frsBeforeUpdate = this._getCurrentFrs();
     if (frsBeforeUpdate.length !== 0) {
       // all FR Numbers have been deleted
       this._triggerPdFrsUpdate(new FrsDetails());
@@ -258,7 +258,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
    * Updates made and FR Numbers list is not empty
    */
   _handleNotEmptyFrsAfterUpdate(frNumbers: string[]) {
-    let diff = getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
+    const diff = getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
     if (!diff.length) {
       // no changes have been made to FR Numbers
       this.frsDialogEl.closeDialog();
@@ -287,7 +287,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
    * Get FR Numbers details from server
    */
   _triggerFrsDetailsRequest(frNumbers: string[]) {
-      (this.frsDialogEl as UpdateFrNumbersEl).startSpinner();
+    (this.frsDialogEl as UpdateFrNumbersEl).startSpinner();
 
     let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
     if (this.intervention.id) {
@@ -311,7 +311,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
 
     frsDetails.currencies_match = this._frsCurrenciesMatch(frsDetails.frs);
 
-    let inconsistencyMsg = this.checkFrsConsistency(frsDetails, this.intervention, true);
+    const inconsistencyMsg = this.checkFrsConsistency(frsDetails, this.intervention, true);
     this.set('_frsConsistencyWarning', inconsistencyMsg);
 
     if (inconsistencyMsg) { // there are inconsistencies
@@ -345,7 +345,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   }
 
   thereAreFrs(_frsDetails: any) {
-    let frs = this._getCurrentFrs();
+    const frs = this._getCurrentFrs();
     return !!frs.length;
   }
 
@@ -369,10 +369,10 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
       return;
     }
     this._frsDetailsDebouncer = Debouncer.debounce(this._frsDetailsDebouncer,
-        timeOut.after(10),
-        () => {
-          this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
-        });
+      timeOut.after(10),
+      () => {
+        this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
+      });
   }
 
 }

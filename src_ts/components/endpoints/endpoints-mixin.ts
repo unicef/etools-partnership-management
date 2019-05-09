@@ -16,7 +16,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EtoolsAjaxRequestMixin
  */
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class endpointsMixin extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
+  class EndpointsMixinClass extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
 
       @property({type: Object})
     prpCountries!: GenericObject[]
@@ -228,7 +228,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
   }
-  return endpointsMixin;
+  return EndpointsMixinClass;
 }
 
 export default EndpointsMixin;

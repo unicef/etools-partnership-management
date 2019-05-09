@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
@@ -7,23 +7,22 @@ import 'etools-date-time/datepicker-lite.js';
 
 import '../../../../../../layout/etools-warn-message';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
 import pmpEndpoints from '../../../../../../endpoints/endpoints';
-import { isJsonStrMatch } from '../../../../../../utils/utils';
-import { LabelAndValue } from '../../../../../../../typings/globals.types';
-import { InterventionAmendment } from '../../../../../../../typings/intervention.types';
+import {isJsonStrMatch} from '../../../../../../utils/utils';
+import {LabelAndValue} from '../../../../../../../typings/globals.types';
+import {InterventionAmendment} from '../../../../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from "etools-dialog/etools-dialog";
-import {EtoolsDropdownMultiEl} from "etools-dropdown/etools-dropdown-multi";
-
+import EtoolsDialog from 'etools-dialog/etools-dialog';
+import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi';
 
 
 /**
@@ -155,7 +154,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   newAmendment!: InterventionAmendment;
 
   @property({type: String})
-  uploadEndpoint: string =  pmpEndpoints.attachmentsUpload.url;
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
   @property({type: Boolean, computed: 'getUploadInProgress(amdUploadInProgress, prcUploadInProgress)'})
   uploadInProgress: boolean = false;
@@ -209,10 +208,10 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
       return;
     }
     if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-       this.filteredAmendmentTypes = this.amendmentTypes.filter((type: LabelAndValue) => {
-       return ['no_cost',
-               'other'].indexOf(type.value) > -1;
-             });
+      this.filteredAmendmentTypes = this.amendmentTypes.filter((type: LabelAndValue) => {
+        return ['no_cost',
+          'other'].indexOf(type.value) > -1;
+      });
     } else {
       this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
     }
@@ -224,14 +223,14 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   }
 
   _showOtherInput() {
-    let amdTypes = this.newAmendment.types;
+    const amdTypes = this.newAmendment.types;
     return amdTypes && amdTypes.indexOf('other') > -1;
   }
 
   isValidAmendment() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (selector === '#other' && !this._showOtherInput()) {
         return;
       }
@@ -249,7 +248,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
   _resetAmendmentValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -260,7 +259,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
     if (!types || !types.length) {
       return;
     }
-    let messages: string[] = [];
+    const messages: string[] = [];
     types.forEach((amdType: string) => {
       switch (amdType) {
         case 'admin_error':
@@ -300,20 +299,20 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
     if (!newAmendment.internal_prc_review) {
       delete newAmendment.internal_prc_review;
     }
-    let options = {
+    const options = {
       method: 'POST',
       endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId}),
       body: newAmendment
     };
     this.startSpinner();
     this.sendRequest(options)
-        .then((resp: InterventionAmendment) => {
-          this._handleResponse(resp);
-          this.stopSpinner();
-        }).catch((error: any) => {
-          this._handleErrorResponse(error);
-          this.stopSpinner();
-    });
+      .then((resp: InterventionAmendment) => {
+        this._handleResponse(resp);
+        this.stopSpinner();
+      }).catch((error: any) => {
+        this._handleErrorResponse(error);
+        this.stopSpinner();
+      });
   }
 
   _handleResponse(response: InterventionAmendment) {

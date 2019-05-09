@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -7,17 +7,17 @@ import 'etools-upload/etools-upload.js';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
-import { InterventionAttachment } from '../../../../../../typings/intervention.types.js';
-import { IdAndName } from '../../../../../../typings/globals.types.js';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
-import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles.js';
-import { SharedStyles } from '../../../../../styles/shared-styles.js';
-import { fireEvent } from '../../../../../utils/fire-custom-event';
-import { logWarn } from 'etools-behaviors/etools-logging';
+import {InterventionAttachment} from '../../../../../../typings/intervention.types.js';
+import {IdAndName} from '../../../../../../typings/globals.types.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
+import {SharedStyles} from '../../../../../styles/shared-styles.js';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {logWarn} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
-import  EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { property } from '@polymer/decorators';
-import { PaperCheckboxElement } from '@polymer/paper-checkbox/paper-checkbox.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import {property} from '@polymer/decorators';
+import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
 
 
 /**
@@ -127,7 +127,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
   isValidAttachment() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }
@@ -137,7 +137,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
 
   _resetAttachmentValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -168,20 +168,20 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
     }
     const endpointName = !isNewAttachment ? 'updatePdAttachment' : 'pdAttachments';
     const endpointParams = !isNewAttachment ? {attId: attachment.id} : {pdId: this.interventionId};
-    let options = {
+    const options = {
       method: !isNewAttachment ? 'PATCH' : 'POST',
       endpoint: this.getEndpoint(endpointName, endpointParams),
       body: attachment
     };
     this.startSpinner();
     this.sendRequest(options)
-        .then((resp: any) => {
-          this._handleResponse(resp, isNewAttachment);
-          this.stopSpinner();
-        }).catch((error: any) => {
-          this._handleErrorResponse(error);
-          this.stopSpinner();
-        });
+      .then((resp: any) => {
+        this._handleResponse(resp, isNewAttachment);
+        this.stopSpinner();
+      }).catch((error: any) => {
+        this._handleErrorResponse(error);
+        this.stopSpinner();
+      });
   }
 
   _handleResponse(response: any, isNewAttachment: boolean) {

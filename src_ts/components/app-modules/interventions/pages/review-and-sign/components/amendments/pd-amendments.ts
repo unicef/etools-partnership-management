@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import CommonMixin from '../../../../../../mixins/common-mixin.js';
@@ -7,16 +7,16 @@ import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
 
 import './add-amendment-dialog.js';
-import { SharedStyles } from '../../../../../../styles/shared-styles.js';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles.js';
-import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store.js';
-import { setInAmendment } from '../../../../../../../actions/page-data.js';
-import { isJsonStrMatch } from '../../../../../../utils/utils.js';
-import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
+import {SharedStyles} from '../../../../../../styles/shared-styles.js';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
+import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store.js';
+import {setInAmendment} from '../../../../../../../actions/page-data.js';
+import {isJsonStrMatch} from '../../../../../../utils/utils.js';
+import {LabelAndValue} from '../../../../../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
-import {AddAmendmentDialog} from "./add-amendment-dialog";
+import {AddAmendmentDialog} from './add-amendment-dialog';
 
 
 /**
@@ -213,11 +213,11 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     if (!types || !types.length) {
       return null;
     }
-    let amdTypes = this.amendmentTypes.filter((t: LabelAndValue) => {
+    const amdTypes = this.amendmentTypes.filter((t: LabelAndValue) => {
       return types.indexOf(t.value) > -1;
     });
     if (amdTypes.length) {
-      let amdTypesLabels = amdTypes.map((t: LabelAndValue) => {
+      const amdTypesLabels = amdTypes.map((t: LabelAndValue) => {
         return t.label;
       });
       return amdTypesLabels.join(', ');
@@ -235,7 +235,7 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
   newAmendmentAdded(event: CustomEvent) {
     event.stopImmediatePropagation();
-    let data = event.detail;
+    const data = event.detail;
     this._unlockInterventionDetailsFields();
     this.push('amendments', data);
     store.dispatch(setInAmendment(true));

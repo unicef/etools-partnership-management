@@ -1,12 +1,12 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import './applied-indicator.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog';
-import { AppliedIndicatorEl } from './applied-indicator.js';
+import {AppliedIndicatorEl} from './applied-indicator.js';
 
 
 /**
@@ -73,8 +73,8 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   ready() {
     super.ready();
 
-    let deactivateDialog = document.querySelector('body')!
-        .querySelector('etools-dialog#deactivateIndicatorDialog');
+    const deactivateDialog = document.querySelector('body')!
+      .querySelector('etools-dialog#deactivateIndicatorDialog');
     if (deactivateDialog) {
       this.deactivateConfirmDialog = deactivateDialog as EtoolsDialog;
     } else {
@@ -90,7 +90,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _createDeactivateConfirmDialog() {
-    let dialogContent = document.createElement('div');
+    const dialogContent = document.createElement('div');
     dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
     this.deactivateConfirmDialog = createDynamicDialog({
       title: 'Deactivate confirmation',
@@ -104,12 +104,12 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _editIndicator(event: CustomEvent) {
-    let indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
+    const indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
     // @ts-ignore
-    let llResultIndex = parseInt(this.resultLinkIndex, 10);
-    let indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
+    const llResultIndex = parseInt(this.resultLinkIndex, 10);
+    const indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
 
-    let resultMap = {
+    const resultMap = {
       cpOutputId: this.cpOutputId,
       llResultIndex: llResultIndex,
       llResultId: indicator.lower_result,
@@ -133,14 +133,14 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
       this.indicToDeactivateIndex = -1;
       return;
     }
-    let indicatorId = this.dataItems[this.indicToDeactivateIndex]
-        ? this.dataItems[this.indicToDeactivateIndex].id
-        : null;
+    const indicatorId = this.dataItems[this.indicToDeactivateIndex]
+      ? this.dataItems[this.indicToDeactivateIndex].id
+      : null;
     if (!indicatorId) {
       return;
     }
-    let self = this;
-    let endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
+    const self = this;
+    const endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
     this.sendRequest({
       method: 'PATCH',
       endpoint: endpoint,

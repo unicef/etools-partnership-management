@@ -1,18 +1,18 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import { connect } from 'pwa-helpers/connect-mixin';
+import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
 import {_checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../actions/app';
 import 'etools-profile-dropdown/etools-profile-dropdown';
-import 'etools-app-selector/etools-app-selector'
+import 'etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperations from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject} from '../../../typings/globals.types';
 import '../../layout/support-btn';
 
@@ -245,8 +245,8 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
     });
 
     countriesList.sort((a: string, b: string) => {
-      if((a as any).name < (b as any).name) { return -1; }
-      if((a as any).name > (b as any).name) { return 1; }
+      if ((a as any).name < (b as any).name) {return -1;}
+      if ((a as any).name > (b as any).name) {return 1;}
       return 0;
     });
 
@@ -259,7 +259,7 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
   }
 
   public _saveProfile(e: any) {
-    let modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
+    const modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
     this.saveProfile(modifiedFields);
   }
 
@@ -279,7 +279,7 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
   }
 
   protected _getModifiedFields(originalData: any, newData: any) {
-    let modifiedFields: GenericObject = {};
+    const modifiedFields: GenericObject = {};
     this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];

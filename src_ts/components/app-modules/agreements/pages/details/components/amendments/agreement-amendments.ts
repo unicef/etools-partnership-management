@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-button/paper-button.js';
@@ -13,13 +13,13 @@ import {SharedStyles} from '../../../../../../styles/shared-styles.js';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles.js';
 import '../../../../../../mixins/common-mixin.js';
 import './add-ag-amendment-dialog.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { isJsonStrMatch } from '../../../../../../utils/utils';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {isJsonStrMatch} from '../../../../../../utils/utils';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { LabelAndValue } from '../../../../../../../typings/globals.types';
-import { AddAgAmendmentDialog } from './add-ag-amendment-dialog.js';
+import {LabelAndValue} from '../../../../../../../typings/globals.types';
+import {AddAgAmendmentDialog} from './add-ag-amendment-dialog.js';
 
 
 /**
@@ -176,7 +176,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     `;
   }
 
-  @property({type: String})              // TODO: check/implement delete option
+  @property({type: String}) // TODO: check/implement delete option
   _deleteEpName: string = 'agreementAmendmentsDelete';
 
   @property({type: String})
@@ -246,7 +246,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
   _getAmendmentTypes(agreementType: any, _amendmentTypes: any) {
     if ([CONSTANTS.AGREEMENT_TYPES.PCA,
-          CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
+      CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
         !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
       return [];
     }
@@ -258,7 +258,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   }
 
   saveNewAmendment(e: CustomEvent) {
-    let unsavedAmendment = e.detail.amendment;
+    const unsavedAmendment = e.detail.amendment;
     if (unsavedAmendment) {
       this.push('dataItems', unsavedAmendment);
 
@@ -272,20 +272,20 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
 
   _getReadonlyAmendmentTypes(types: any) {
     if (types instanceof Array && types.length > 0) {
-      let legacyAmTypesFiltered = [];
+      const legacyAmTypesFiltered = [];
       let amTypesFiltered = [];
 
       // search for item amendments types
-      let amTypes = this._amendmentTypes.filter((t: any) => types.indexOf(t.value) > -1);
+      const amTypes = this._amendmentTypes.filter((t: any) => types.indexOf(t.value) > -1);
 
       if (amTypes.length) {
         // map to get the labels
         amTypesFiltered = amTypes.map((t: any) => t.label);
       }
 
-      for (let key in this.legacyAmendmentTypes) {
+      for (const key in this.legacyAmendmentTypes) {
         if (types.indexOf(key) > -1) {
-          let value = this.legacyAmendmentTypes[key];
+          const value = this.legacyAmendmentTypes[key];
           legacyAmTypesFiltered.push(value);
         }
       }

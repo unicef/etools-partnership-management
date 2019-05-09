@@ -1,9 +1,9 @@
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 declare const moment: any;
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 /**
  * Common reporting requirements past dates check used for UI
@@ -22,8 +22,8 @@ function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(
 
     _uneditableStyles(inAmendment: boolean, dueDate: any, id: number) {
       return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id)
-          ? this._getUneditableStyles()
-          : '';
+        ? this._getUneditableStyles()
+        : '';
     }
 
     _getUneditableStyles() {
@@ -31,8 +31,8 @@ function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(
     }
 
     _pastDueDate(dueDate: string) {
-      let now = moment().format('YYYY-MM-DD');
-      let dueD = moment(new Date(dueDate)).format('YYYY-MM-DD');
+      const now = moment().format('YYYY-MM-DD');
+      const dueD = moment(new Date(dueDate)).format('YYYY-MM-DD');
       return moment(dueD).isBefore(now);
     }
 
@@ -44,7 +44,7 @@ function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(
       return inAmendment && this._pastDueDate(dueDate) && id > 0;
     }
 
-  };
+  }
   return reportingReqPastDatesCheckClass;
 }
 

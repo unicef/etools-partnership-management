@@ -7,18 +7,18 @@ import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
 
-import { gridLayoutStyles } from '../../../styles/grid-layout-styles.js';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles.js';
 import {buttonsStyles} from '../../../styles/buttons-styles';
-import { SharedStyles } from '../../../styles/shared-styles.js';
-import { requiredFieldStarredStyles } from '../../../styles/required-field-styles.js';
+import {SharedStyles} from '../../../styles/shared-styles.js';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../../store';
 import {addDisaggregation} from '../../../../actions/common-data';
-import { actionIconBtnsStyles } from '../../../styles/action-icon-btns-styles.js';
+import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles.js';
 import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import {property} from "@polymer/decorators/lib/decorators";
-import EtoolsDialog from "etools-dialog/etools-dialog";
+import {property} from '@polymer/decorators/lib/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 
 
@@ -140,7 +140,7 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   }
 
   close() {
-    (this.$.etoolsDialog as EtoolsDialog).opened  = false;
+    (this.$.etoolsDialog as EtoolsDialog).opened = false;
   }
 
   startSpinner() {
@@ -169,8 +169,8 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
       return;
     }
     this.startSpinner();
-    let self = this;
-    let requestParams = {
+    const self = this;
+    const requestParams = {
       method: 'POST',
       endpoint: this.getEndpoint('disaggregations'),
       body: this._getBody()
@@ -222,4 +222,4 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
 }
 
 window.customElements.define('add-disaggregation-dialog', AddDisaggregationDialog);
-export {AddDisaggregationDialog as AddDisaggregationDialogEl}
+export {AddDisaggregationDialog as AddDisaggregationDialogEl};

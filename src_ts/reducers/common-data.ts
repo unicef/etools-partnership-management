@@ -36,9 +36,9 @@ import {
 import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
 import {LabelAndValue, CpStructure, Country, IdAndName, GenericObject,
   MinimalUser, User, EnvFlags, Office} from '../typings/globals.types';
-import { RootState } from '../store';
-import { createSelector } from 'reselect';
-import { copy } from '../components/utils/utils';
+import {RootState} from '../store';
+import {createSelector} from 'reselect';
+import {copy} from '../components/utils/utils';
 
 
 export class CommonDataState {

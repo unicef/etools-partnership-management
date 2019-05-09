@@ -1,26 +1,26 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import CommonMixin from '../../../../../mixins/common-mixin';
-import { fireEvent } from '../../../../../utils/fire-custom-event';
-import { MinimalAgreement } from '../../../../agreements/agreement.types';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../styles/shared-styles';
-import { requiredFieldStarredStyles } from '../../../../../styles/required-field-styles';
-import { store, RootState } from '../../../../../../store';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { isJsonStrMatch, copy } from '../../../../../utils/utils';
-import { csoPartnersSelector } from '../../../../../../reducers/partners';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {MinimalAgreement} from '../../../../agreements/agreement.types';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
+import {store, RootState} from '../../../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {isJsonStrMatch, copy} from '../../../../../utils/utils';
+import {csoPartnersSelector} from '../../../../../../reducers/partners';
 import CONSTANTS from '../../../../../../config/app-constants';
-import { IdAndName, Permission } from '../../../../../../typings/globals.types';
-import { property } from '@polymer/decorators';
-import { InterventionPermissionsFields } from '../../../../../../typings/intervention.types';
-import { EtoolsDropdownEl } from 'etools-dropdown';
+import {IdAndName, Permission} from '../../../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
+import {InterventionPermissionsFields} from '../../../../../../typings/intervention.types';
+import {EtoolsDropdownEl} from 'etools-dropdown';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
-class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
+class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -104,7 +104,7 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
   partnersDropdownData!: any[]; // 'setPartnersDropdown' Do we need to use only CSO type partners?
 
   @property({type: Array, observer: '_agreementsChanged'})
-  agreements!: MinimalAgreement[];   // Covers issues on refresh when agreements is populated after the rest of the observers run
+  agreements!: MinimalAgreement[]; // Covers issues on refresh when agreements is populated after the rest of the observers run
 
   @property({type: Number, notify: true, observer: '_partnerSelected'})
   partnerId!: number;
@@ -113,7 +113,7 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
   selectedAgreement: MinimalAgreement | null= null;
 
   @property({type: Object})
-  intervention!: Object;
+  intervention!: Record<string, any>;
 
   @property({type: Object})
   permissions!: Permission<InterventionPermissionsFields>;
@@ -147,7 +147,7 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
       return;
     }
 
-    let agreement = this.agreements.find((agreement: any) => {
+    const agreement = this.agreements.find((agreement: any) => {
       return agreement.id === agreementId;
     });
     this.set('selectedAgreement', agreement);
@@ -164,15 +164,15 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
       this.set('partnerId', this.selectedAgreement!.partner);
     }
 
-    let agreement = this.selectedAgreement as MinimalAgreement;
+    const agreement = this.selectedAgreement as MinimalAgreement;
     if (!agreement || !agreement.partner || this.partnerId === agreement.partner) {
       return;
     }
-    let partner = this.partnersDropdownData.find((partner: IdAndName) => {
+    const partner = this.partnersDropdownData.find((partner: IdAndName) => {
       return partner.id.toString() === agreement!.partner!.toString();
     });
     if (!partner) {
-      let partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name +
+      const partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name +
           ' is not CSO or it\'s hidden! In edit mode you will not be able to see this partner in the ' +
           'available partners organizations and nor the agreement number.';
       fireEvent(this, 'toast', {text: partnerIsHiddenOrNotCSOMsg, showCloseBtn: true});
@@ -193,17 +193,17 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
     }
 
     // set filtered agreements based on this
-    let agreements = this.agreements.filter((agreement: MinimalAgreement) => {
-          if (this.intervention) {
-            // existing intervention
-            return agreement.partner === partnerId
+    const agreements = this.agreements.filter((agreement: MinimalAgreement) => {
+      if (this.intervention) {
+        // existing intervention
+        return agreement.partner === partnerId
                 && agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU;
-          } else {
-            // new intervention
-            return agreement.partner === partnerId &&
+      } else {
+        // new intervention
+        return agreement.partner === partnerId &&
                 ['suspended', 'terminated'].indexOf(agreement.status!) === -1
                 && agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU;
-          }
+      }
 
     });
     this.set('filteredAgreements', agreements);
@@ -218,11 +218,11 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
   }
 
   resetValidations() {
-    let agEl = this.shadowRoot!.querySelector('#agreements') as EtoolsDropdownEl;
+    const agEl = this.shadowRoot!.querySelector('#agreements') as EtoolsDropdownEl;
     if (agEl) {
       agEl.resetInvalidState();
     }
-    let pEl = this.shadowRoot!.querySelector('#partner') as EtoolsDropdownEl;
+    const pEl = this.shadowRoot!.querySelector('#partner') as EtoolsDropdownEl;
     if (pEl) {
       pEl.resetInvalidState();
     }
@@ -232,14 +232,14 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)){
     let valid = true;
     if (!this.agreementId) {
       valid = false;
-      let agEl = this.shadowRoot!.querySelector('#agreements') as EtoolsDropdownEl;
+      const agEl = this.shadowRoot!.querySelector('#agreements') as EtoolsDropdownEl;
       if (agEl) {
         agEl.invalid = true;
       }
     }
     if (!this.partnerId) {
       valid = false;
-      let pEl = this.shadowRoot!.querySelector('#partner') as EtoolsDropdownEl;
+      const pEl = this.shadowRoot!.querySelector('#partner') as EtoolsDropdownEl;
       if (pEl) {
         pEl.invalid = true;
       }

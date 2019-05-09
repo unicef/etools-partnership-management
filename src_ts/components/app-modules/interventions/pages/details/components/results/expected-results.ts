@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -6,26 +6,26 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
 
 import 'etools-data-table/etools-data-table.js';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
 import LowerResultsMixin from './mixins/lower-results-mixin.js';
 import ResultsMixin from './mixins/results-mixin.js';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import './mixins/results-mixin.js';
 import './mixins/lower-results-mixin.js';
 import './result-cp-output-and-ram-indicators.js';
 import './result-link-lower-results.js';
 import './indicator-dialog.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { logError } from 'etools-behaviors/etools-logging';
-import { property } from '@polymer/decorators';
-import { IndicatorDialogEl } from './indicator-dialog.js';
-import { IconsActionsEl } from '../../../../../../layout/icons-actions.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {IndicatorDialogEl} from './indicator-dialog.js';
+import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
 
 /**
  * @polymer
@@ -194,8 +194,8 @@ class ExpectedResults extends connect(store)(
   }
 
   removeDeactivateIndicatorDialog() {
-    let body = document.querySelector('body');
-    let dialogs = body!.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
+    const body = document.querySelector('body');
+    const dialogs = body!.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
     dialogs.forEach(d => body!.removeChild(d));
   }
 
@@ -212,13 +212,13 @@ class ExpectedResults extends connect(store)(
 
   _editCpOutputAndRamIndicators(e: CustomEvent) {
     e.stopPropagation();
-    let index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
+    const index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
       logError('Can not edit, invalid index selected', 'expected-results');
       return;
     }
 
-    let result = this.dataItems[index];
+    const result = this.dataItems[index];
     if (!result) {
       logError('Result not found in data items by index: ' + index, 'expected-results');
       return;
@@ -233,8 +233,8 @@ class ExpectedResults extends connect(store)(
   indicatorDialogDataReceived(event: CustomEvent) {
     const data = event.detail;
     try {
-      let actionParams = data.actionParams;
-      let indicator = data.indicatorData;
+      const actionParams = data.actionParams;
+      const indicator = data.indicatorData;
       let i;
       for (i = 0; i < this.dataItems.length; i++) {
         // search expected result item by output id
@@ -247,7 +247,7 @@ class ExpectedResults extends connect(store)(
           } else {
             // new indicator added
             this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'],
-                indicator);
+              indicator);
           }
           break;
         }
@@ -255,14 +255,14 @@ class ExpectedResults extends connect(store)(
       this._updateInterventionLocAndClusters();
     } catch (err) {
       logError('Updating/adding new indicator data in displayed list has failed!',
-          'lower-results-behavior', err);
+        'lower-results-behavior', err);
     }
   }
 
   // open indicator dialog to add or edit indicator
   _openIndicatorDialog(event: CustomEvent) {
     event.stopImmediatePropagation();
-    let actionParams = event.detail;
+    const actionParams = event.detail;
 
     if (actionParams.appliedIndicatorsIndex === null) {
       this.indicatorDialog.setTitle('Add Indicator');

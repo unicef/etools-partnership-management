@@ -6,13 +6,13 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import 'etools-dialog/etools-dialog.js';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { PolymerElement, html } from '@polymer/polymer';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
+import {PolymerElement, html} from '@polymer/polymer';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from "etools-dialog/etools-dialog";
+import EtoolsDialog from 'etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {PaperDialogElement} from '@polymer/paper-dialog/paper-dialog';
 
@@ -166,7 +166,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
     let valid = true;
     if (this.dataItems instanceof Array && this.dataItems.length > 0) {
       this.dataItems.forEach((_item, index) => {
-        let lastItem = this.shadowRoot!.querySelector('#fr-nr-' + index) as PaperInputElement;
+        const lastItem = this.shadowRoot!.querySelector('#fr-nr-' + index) as PaperInputElement;
         if (lastItem && !lastItem.validate()) {
           valid = false;
         }
@@ -186,7 +186,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
   }
 
   _centerDialog() {
-    let d = this._getPaperDialog();
+    const d = this._getPaperDialog();
     if (d) {
       d.center();
     }
@@ -239,4 +239,4 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
 }
 
 window.customElements.define('update-fr-numbers', UpdateFrNumbers);
-export {UpdateFrNumbers as UpdateFrNumbersEl}
+export {UpdateFrNumbers as UpdateFrNumbersEl};

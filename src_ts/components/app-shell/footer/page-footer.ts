@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 /**
@@ -71,8 +71,8 @@ class PageFooter extends PolymerElement {
 
   public static get properties() {
     return {
-        rootPath: String
-    }
+      rootPath: String
+    };
   }
 
 }

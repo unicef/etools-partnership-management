@@ -1,7 +1,7 @@
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import { Constructor, EtoolsTab } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import {Constructor, EtoolsTab} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -12,17 +12,17 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
 
     @property({type: Array})
     indicatorDataTabs: EtoolsTab[] = [
-        {
-          tab: 'details',
-          tabLabel: 'Details'
-        },
-        {
-          tab: 'disaggregations',
-          tabLabel: 'Disaggregations',
-          showTabCounter: true,
-          counter: 0
-        }
-      ];
+      {
+        tab: 'details',
+        tabLabel: 'Details'
+      },
+      {
+        tab: 'disaggregations',
+        tabLabel: 'Disaggregations',
+        showTabCounter: true,
+        counter: 0
+      }
+    ];
 
     @property({type: String})
     activeTab: string = 'details';
@@ -55,7 +55,7 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
         return;
       }
       // @ts-ignore
-      let disaggregationsNr = this.isCluster ? prpDisaggregsLength : disaggregsLength;
+      const disaggregationsNr = this.isCluster ? prpDisaggregsLength : disaggregsLength;
       this._updateDisaggregationsNrInTabLabel(disaggregationsNr);
     }
 
@@ -63,7 +63,7 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
       this.set('activeTab', tab);
     }
 
-  };
+  }
   return indicatorDialogTabsClass;
 }
 

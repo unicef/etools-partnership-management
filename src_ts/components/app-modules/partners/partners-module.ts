@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/iron-pages/iron-pages';
@@ -19,21 +19,21 @@ import '../../layout/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
 import {UserPermissions, EtoolsTab} from '../../../typings/globals.types';
-import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
+import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';
 import {buttonsStyles} from '../../styles/buttons-styles';
-import { isEmptyObject } from '../../utils/utils';
+import {isEmptyObject} from '../../utils/utils';
 
 import './data/partner-item-data.js';
 import './components/new-partner-dialog.js';
 import './components/partner-status.js';
-import { fireEvent } from '../../utils/fire-custom-event';
-import { property } from '@polymer/decorators';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
-import { PartnerItemData } from './data/partner-item-data.js';
-import { NewPartnerDialog } from './components/new-partner-dialog.js';
+import {PartnerItemData} from './data/partner-item-data.js';
+import {NewPartnerDialog} from './components/new-partner-dialog.js';
 
 
 /**
@@ -46,7 +46,7 @@ import { NewPartnerDialog } from './components/new-partner-dialog.js';
  * @appliesMixin ModuleMainElCommonFunctionality
  */
 class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl(ModuleRoutingMixin
-  (ModuleMainElCommonFunctionalityMixin(PolymerElement)))))) {
+(ModuleMainElCommonFunctionalityMixin(PolymerElement)))))) {
 
   public static get template() {
     // main template
@@ -176,20 +176,20 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
 
   @property({type: Array})
   partnerTabs: EtoolsTab[] = [{
-      tab: 'overview',
-      tabLabel: 'Overview',
-      hidden: false
-    },
-    {
-      tab: 'details',
-      tabLabel: 'Partner Details',
-      hidden: false
-    },
-    {
-      tab: 'financial-assurance',
-      tabLabel: 'Assurance',
-      hidden: false
-    }];
+    tab: 'overview',
+    tabLabel: 'Overview',
+    hidden: false
+  },
+  {
+    tab: 'details',
+    tabLabel: 'Partner Details',
+    hidden: false
+  },
+  {
+    tab: 'financial-assurance',
+    tabLabel: 'Assurance',
+    hidden: false
+  }];
 
   @property({type: String})
   moduleName: string = 'partners';
@@ -277,7 +277,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _updateBasisForRiskRating(e: CustomEvent) {
-    this._savePartner({id: this.partner.id, basis_for_risk_rating : e.detail});
+    this._savePartner({id: this.partner.id, basis_for_risk_rating: e.detail});
   }
 
   public _createNewPartnerDialog() {
@@ -306,7 +306,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
 
     this.scrollToTopOnCondition(!listActive);
 
-    let fileImportDetails = {
+    const fileImportDetails = {
       filenamePrefix: 'partner',
       importErrMsg: 'Partners page import error occurred',
       errMsgPrefixTmpl: '[partner(s) ##page##]',
@@ -320,7 +320,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _savePartner(newPartnerData: any) {
-    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData ;
+    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
       partnerData.savePartner(newPartnerData).then((successful: any) => {
         if (successful) {
@@ -338,7 +338,7 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
       loadingSource: 'partner-data'
     });
 
-    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
+    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
       partnerData.deletePartner(this.partner);
     }
@@ -387,10 +387,10 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
   }
 
   public _createPartner(event: CustomEvent) {
-    let partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
+    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
       partnerData.createPartner(event.detail, this._newPartnerCreated,
-          this._handleCreatePartnerError);
+        this._handleCreatePartnerError);
     }
   }
 
@@ -430,19 +430,19 @@ class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl
 
     // both partner details and financial assurance data is valid
     // TODO: move _getModifiedData in Partner class then use
-    let partnerChanges = this._getModifiedData(this.partner);
+    const partnerChanges = this._getModifiedData(this.partner);
     partnerChanges.id = this.partner.id;
     this._savePartner(partnerChanges);
   }
 
   public _getModifiedData(partner: any) {
-    let updatableFields = [
+    const updatableFields = [
       'alternate_name',
       'shared_with',
       'planned_engagement',
       'basis_for_risk_rating'
     ];
-    let changes: any = {};
+    const changes: any = {};
     updatableFields.forEach((fieldName) => {
 
       if (['shared_with', 'planned_engagement'].indexOf(fieldName) > -1) {

@@ -2,9 +2,9 @@ import {html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 import './menu/styles/app-drawer-styles.js';
-import { pageLayoutStyles } from '../styles/page-layout-styles.js';
-import { SharedStyles } from '../styles/shared-styles.js';
-import { buttonsStyles } from '../styles/buttons-styles.js';
+import {pageLayoutStyles} from '../styles/page-layout-styles.js';
+import {SharedStyles} from '../styles/shared-styles.js';
+import {buttonsStyles} from '../styles/buttons-styles.js';
 
 // language=HTML
 export const AppShellStyles = html`

@@ -9,8 +9,8 @@ import ReportingReqPastDatesCheckMixin from '../mixins/reporting-req-past-dates-
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import {isEmptyObject} from '../../../../../../../utils/utils.js';
-import { property } from '@polymer/decorators';
-import { IconsActionsEl } from '../../../../../../../layout/icons-actions.js';
+import {property} from '@polymer/decorators';
+import {IconsActionsEl} from '../../../../../../../layout/icons-actions.js';
 
 /**
  * @polymer
@@ -108,5 +108,5 @@ class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
 
 window.customElements.define('hru-list', HruList);
 
-export {HruList as HruListEl}
+export {HruList as HruListEl};
 

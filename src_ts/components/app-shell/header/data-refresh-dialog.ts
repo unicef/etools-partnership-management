@@ -1,14 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
-import { SharedStyles } from '../../styles/shared-styles';
-import { gridLayoutStyles } from '../../styles/grid-layout-styles';
+import {SharedStyles} from '../../styles/shared-styles';
+import {gridLayoutStyles} from '../../styles/grid-layout-styles';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin';
-import { store } from '../../../store';
-import { RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {store} from '../../../store';
+import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 
 /**
@@ -146,8 +146,8 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
   }
 
   _singleSectionChanged() {
-    let allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
-    let anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
+    const allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
+    const anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
     this.set('allSelected', allSelected);
     this.set('anySelected', anySelected);
@@ -163,8 +163,8 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
 
     fireEvent(this, 'global-loading', {message: 'Refreshing data...', active: true});
 
-    let afterDataRefreshLandingPage: string = this._getAfterRefreshLandingPage();
-    let restampLandingPage: boolean = this.page === afterDataRefreshLandingPage ||
+    const afterDataRefreshLandingPage: string = this._getAfterRefreshLandingPage();
+    const restampLandingPage: boolean = this.page === afterDataRefreshLandingPage ||
         (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
     if (this.allSelected) {
@@ -174,7 +174,7 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
     }
 
     // clear only data sets
-    let self = this;
+    const self = this;
     window.EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
       function() {
         if (self.partnersSelected) {
@@ -189,7 +189,7 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
           window.EtoolsPmpApp.DexieDb.interventions.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
         }
-    }).then(function() {
+      }).then(function() {
       // transaction succeeded
       self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
     }).catch(function(error: any) {
@@ -210,7 +210,7 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
   }
 
   _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
-    let routePath = afterDataRefreshLandingPage + '/list';
+    const routePath = afterDataRefreshLandingPage + '/list';
     if (restampLandingPage) {
       this.set('page', null);
       setTimeout(() => {

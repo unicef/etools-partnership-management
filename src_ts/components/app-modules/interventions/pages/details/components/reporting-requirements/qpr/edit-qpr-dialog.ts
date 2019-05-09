@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-button/paper-button.js';
 
@@ -7,18 +7,18 @@ import 'etools-dialog/etools-dialog.js';
 import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import './qpr-list.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 
 import 'etools-date-time/calendar-lite.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
-import { logError } from 'etools-behaviors/etools-logging';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../../typings/globals.types.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { QprListEl } from './qpr-list.js';
+import {QprListEl} from './qpr-list.js';
 
 /**
  * @polymer
@@ -152,10 +152,10 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
 
   @property({type: Object})
   _qprDatesSetModel = {
-      start_date: null,
-      end_date: null,
-      due_date: null
-    };
+    start_date: null,
+    end_date: null,
+    due_date: null
+  };
 
   @property({type: Object})
   _editedQprDatesSet!: GenericObject;
@@ -177,9 +177,9 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
   }
 
   _duplicateDueDate(dueDate: any) {
-    let foundQpr = this.qprData.find((d: any) => d.due_date === dueDate);
+    const foundQpr = this.qprData.find((d: any) => d.due_date === dueDate);
     if (this._qprDatesSetEditedIndex > -1 && foundQpr) {
-      let foundQprIndex = this.qprData.indexOf(foundQpr);
+      const foundQprIndex = this.qprData.indexOf(foundQpr);
       return foundQprIndex !== +this._qprDatesSetEditedIndex;
     }
     return !!foundQpr;
@@ -189,7 +189,7 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
     if (e.detail.confirmed) {
       if (this._duplicateDueDate(this._editedQprDatesSet.due_date)) {
         fireEvent(this.toastMsgLoadingSource, 'toast',
-            {text: 'Requirement dates not added, selected Due Date is already in the list.', showCloseBtn: true});
+          {text: 'Requirement dates not added, selected Due Date is already in the list.', showCloseBtn: true});
         return;
       }
       if (this._qprDatesSetEditedIndex < 0) {
@@ -222,11 +222,11 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
   }
 
   _saveModifiedQprData() {
-    let endpoint = this.getEndpoint('reportingRequirements', {
+    const endpoint = this.getEndpoint('reportingRequirements', {
       intervId: this.interventionId,
       reportType: CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR
     });
-    let dialog = this.$.editQprDialog as EtoolsDialog;
+    const dialog = this.$.editQprDialog as EtoolsDialog;
     dialog.startSpinner();
     this.sendRequest({
       method: 'POST',

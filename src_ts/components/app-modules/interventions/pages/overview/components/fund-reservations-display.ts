@@ -1,18 +1,18 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-data-table/etools-data-table.js';
 
 import '../../../mixins/fr-numbers-consistency-mixin.js';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
-import { frWarningsStyles } from '../../../styles/fr-warnings-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {frWarningsStyles} from '../../../styles/fr-warnings-styles.js';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin.js';
-import { isEmptyObject } from '../../../../../utils/utils.js';
-import { Intervention, FrsDetails } from '../../../../../../typings/intervention.types.js';
-import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.js';
+import {isEmptyObject} from '../../../../../utils/utils.js';
+import {Intervention, FrsDetails} from '../../../../../../typings/intervention.types.js';
+import {pmpCustomIcons} from '../../../../../styles/custom-iconsets/pmp-icons.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -269,8 +269,8 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
       this.set('_frsTotalAmountWarning', '');
       return;
     }
-    let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local!,
-        frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
+    const warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local!,
+      frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
     this.set('_frsTotalAmountWarning', warn);
   }
 

@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-data-table/etools-data-table.js';
 
 import '../../../../../../../layout/icons-actions.js';
@@ -6,12 +6,12 @@ import '../mixins/reporting-req-past-dates-check.js';
 import '../styles/reporting-requirements-lists-styles.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
 import ReportingReqPastDatesCheckMixin from '../mixins/reporting-req-past-dates-check.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
-import { isEmptyObject } from '../../../../../../../utils/utils.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
-import { property } from '@polymer/decorators';
-import { IconsActionsEl } from '../../../../../../../layout/icons-actions.js';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
+import {isEmptyObject} from '../../../../../../../utils/utils.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
+import {property} from '@polymer/decorators';
+import {IconsActionsEl} from '../../../../../../../layout/icons-actions.js';
 
 
 /**

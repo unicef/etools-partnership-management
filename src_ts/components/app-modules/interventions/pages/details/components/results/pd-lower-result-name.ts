@@ -1,13 +1,13 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 
 /**
@@ -88,7 +88,7 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
     if (!(this.$.pdLowerResultNameField as PaperInputElement).validate()) {
       return false;
     }
-    let lowerResult = {
+    const lowerResult = {
       name: this.lowerResultName,
       result_link: this.expectedResultId
     };
@@ -111,7 +111,7 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
 
   _saveLowerResult(endpoint: any, method: string, lowerResultData: any, successCallback: any) {
     this.set('disableConfirmBtn', true);
-    let dialog = this.$.pdLowerResultNameDialog as EtoolsDialog;
+    const dialog = this.$.pdLowerResultNameDialog as EtoolsDialog;
     dialog.startSpinner();
     return this.sendRequest({
       method: method,
@@ -133,7 +133,7 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
   }
 
   _lowerResultSuccessfullySaved(response: any) {
-    let data = {
+    const data = {
       lowerResultId: this.lowerResultId,
       expectedResultId: this.expectedResultId,
       lowerResult: response

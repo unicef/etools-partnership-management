@@ -1,12 +1,12 @@
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import { ExpectedResult, CpOutput } from '../../../../../../../../typings/intervention.types';
-import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../../../utils/utils';
-import { RootState } from '../../../../../../../../store';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import {ExpectedResult, CpOutput} from '../../../../../../../../typings/intervention.types';
+import {isEmptyObject, isJsonStrMatch, copy} from '../../../../../../../utils/utils';
+import {RootState} from '../../../../../../../../store';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
-import { ResultCpOutputAndRamIndicatorsEl } from '../result-cp-output-and-ram-indicators';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {ResultCpOutputAndRamIndicatorsEl} from '../result-cp-output-and-ram-indicators';
 
 /**
  * Behavior used to add/edit expected results (result_links).
@@ -49,9 +49,9 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           typeof selectedCpStructure === 'undefined') {
         return;
       }
-      let selectedCpStructureId = parseInt(selectedCpStructure, 10);
+      const selectedCpStructureId = parseInt(selectedCpStructure, 10);
       return cpOutputs.filter(function(cp) {
-        let notSelected = alreadySelectedCpOutputs.indexOf(cp.id) === -1;
+        const notSelected = alreadySelectedCpOutputs.indexOf(cp.id) === -1;
         let belongsToCpStructure = true;
         if (selectedCpStructureId > 0 && selectedCpStructureId !== parseInt(cp.country_programme, 10)) {
           belongsToCpStructure = false;
@@ -70,7 +70,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     // get selected cpoutputs ids
     _getSelectedCpOutputsIds(results: ExpectedResult[]) {
-      let selectedCpOIds: number[] = [];
+      const selectedCpOIds: number[] = [];
       if (results.length > 0) {
         results.forEach(function(result) {
           if (result.cp_output) {
@@ -84,18 +84,18 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     removeCpOutputRamIndicatorsDialog() {
       if (this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem.removeEventListener('new-expected-result-added',
-            this._handleNewResultAdded as any);
+          this._handleNewResultAdded as any);
         this.cpOutputRamIndicatorsEditElem.removeEventListener('expected-result-updated',
-            this._handleResultUpdated as any);
+          this._handleResultUpdated as any);
         document.querySelector('body')!.removeChild(this.cpOutputRamIndicatorsEditElem as any);
       }
     }
 
     createAddEditCpOutputRamIndicatorsElement() {
       this.cpOutputRamIndicatorsEditElem = document.querySelector('body')!
-          .querySelector('#cpOutputRamIndicatorsEditElem') as any;
+        .querySelector('#cpOutputRamIndicatorsEditElem') as any;
 
-          if (!this.cpOutputRamIndicatorsEditElem) {
+      if (!this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators') as any;
         this.cpOutputRamIndicatorsEditElem.setAttribute('id', 'cpOutputRamIndicatorsEditElem');
 
@@ -103,7 +103,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
         this._handleNewResultAdded = this._handleNewResultAdded.bind(this);
         this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
-            this._handleNewResultAdded as any);
+          this._handleNewResultAdded as any);
 
         this._handleResultUpdated = this._handleResultUpdated.bind(this);
         this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated', this._handleResultUpdated as any);
@@ -113,7 +113,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     openCpOutputAndRamIndicatorsDialog(expectedResultId?: number, cpOutputId?: string,
-       ramIndicatorsIds?: number[], editIndex?: number) {
+      ramIndicatorsIds?: number[], editIndex?: number) {
       if (this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem.resetData();
 
@@ -126,14 +126,14 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
         }
 
-        let availableCpOutputsOptions = this.availableCpOutputs.slice(0);
+        const availableCpOutputsOptions = this.availableCpOutputs.slice(0);
         this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', availableCpOutputsOptions);
         if (cpOutputId) {
           /**
            * cpOutputId is valid => edit operation, include curent cpOutput in the availableCpOutputsOptions
            * as user might want to edit only the ram indicators
            */
-          let currentCpOutputData = this.cpOutputs.find(function(cp: any) {
+          const currentCpOutputData = this.cpOutputs.find(function(cp: any) {
             return parseInt(cp.id, 10) === parseInt(cpOutputId, 10);
           });
           if (currentCpOutputData) {
@@ -155,7 +155,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!this._canUpdateResult()) {
         return;
       }
-      let resultLink = e.detail.result;
+      const resultLink = e.detail.result;
       this._initializeToBeAbleToAddLowerResult(resultLink);
       this.push('dataItems', resultLink);
 
@@ -175,7 +175,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!this._canUpdateResult()) {
         return;
       }
-      let index = e.detail.index || 0;
+      const index = e.detail.index || 0;
       this.set(['dataItems', index, 'cp_output'], e.detail.result.cp_output);
       this.set(['dataItems', index, 'ram_indicators'], e.detail.result.ram_indicators);
       this.set(['dataItems', index, 'ram_indicator_names'], e.detail.result.ram_indicator_names);
@@ -190,7 +190,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return true;
     }
 
-  };
+  }
   return resultsClass;
 }
 

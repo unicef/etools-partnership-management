@@ -1,10 +1,10 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store, RootState} from "../../../store.js";
+import {store, RootState} from '../../../store.js';
 import 'etools-dropdown/etools-dropdown.js';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import { fireEvent } from '../../utils/fire-custom-event.js';
+import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging';
 
 
@@ -110,7 +110,7 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
 
     setTimeout(() => {
       // @ts-ignore
-      let fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
+      const fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
       this.$.countrySelector.set('fitInto', fitInto);
     }, 0);
   }
@@ -127,7 +127,7 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
     if (!e.detail.selectedItem) {
       return;
     }
-    let selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
+    const selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
     // @ts-ignore
     if (selectedCountryId !== this.currentCountry.id) {
       // send post request to change_coutry endpoint
@@ -136,7 +136,7 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
   }
 
   protected _triggerCountryChangeRequest(countryId: any) {
-    let self = this;
+    const self = this;
     fireEvent(this, 'global-loading', {
       message: 'Please wait while country data is changing...',
       active: true,
@@ -147,9 +147,9 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
       endpoint: this.getEndpoint('changeCountry'),
       method: 'POST',
       body: {country: countryId}
-    }).then(function () {
+    }).then(function() {
       self._handleResponse();
-    }).catch(function (error: any) {
+    }).catch(function(error: any) {
       self._handleError(error);
     });
   }

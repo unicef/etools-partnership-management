@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
@@ -10,13 +10,13 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import EnvironmentFlagsMixin from '../../../../../../environment-flags/environment-flags-mixin';
 import SaveIndicatorMixin from './mixins/save-indicator-mixin';
 import IndicatorDialogTabsMixin from './mixins/indicator-dialog-tabs-mixin';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../../utils/utils';
-import { User, GenericObject } from '../../../../../../../typings/globals.types';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {isEmptyObject, isJsonStrMatch, copy} from '../../../../../../utils/utils';
+import {User, GenericObject} from '../../../../../../../typings/globals.types';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dialog/etools-dialog.js';
 import './mixins/indicator-dialog-tabs-mixin.js';
@@ -25,14 +25,14 @@ import './indicator-dissaggregations.js';
 import './cluster-indicator-disaggregations.js';
 import './cluster-indicator.js';
 import './non-cluster-indicator.js';
-import { Indicator, Location } from '../../../../../../../typings/intervention.types';
+import {Indicator, Location} from '../../../../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
-import { userIsPme } from '../../../../../../user/user-permissions';
-import { property } from '@polymer/decorators';
+import {userIsPme} from '../../../../../../user/user-permissions';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
-import { ClusterIndicatorEl } from './cluster-indicator.js';
-import { NonClusterIndicatorEl } from './non-cluster-indicator.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {ClusterIndicatorEl} from './cluster-indicator.js';
+import {NonClusterIndicatorEl} from './non-cluster-indicator.js';
 
 /**
  * @polymer
@@ -362,7 +362,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
       this.updateStyles();
     }
 
-    let sectionDropdown = this.shadowRoot!.querySelector('#sectionDropdw')  as EtoolsDropdownEl;
+    const sectionDropdown = this.shadowRoot!.querySelector('#sectionDropdw') as EtoolsDropdownEl;
     sectionDropdown.resetInvalidState();
   }
 
@@ -370,7 +370,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     this.indicator = new Indicator();
     this.disaggregations = [];
     this.prpDisaggregations = [];
-    let clusterIndicEl = this.shadowRoot!.querySelector('#clusterIndicatorEl') as ClusterIndicatorEl;
+    const clusterIndicEl = this.shadowRoot!.querySelector('#clusterIndicatorEl') as ClusterIndicatorEl;
     if (this.isCluster && clusterIndicEl) {
       clusterIndicEl.resetFieldValues();
     }
@@ -384,7 +384,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     let options: GenericObject[] = [];
     if (!isEmptyObject(optionsIds) && !isEmptyObject(allOptions)) {
       // filter options
-      let ids = optionsIds.map(id => parseInt(id, 10));
+      const ids = optionsIds.map(id => parseInt(id, 10));
 
       options = allOptions.filter((opt: any) => {
         return ids.indexOf(parseInt(opt.id, 10)) > -1;
@@ -400,4 +400,4 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
 }
 
 window.customElements.define('indicator-dialog', IndicatorDialog);
-export {IndicatorDialog as IndicatorDialogEl}
+export {IndicatorDialog as IndicatorDialogEl};

@@ -1,14 +1,14 @@
-import { logWarn } from 'etools-behaviors/etools-logging';
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {logWarn} from 'etools-behaviors/etools-logging';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
- class indicatorsCommonClass extends baseClass {
+  class indicatorsCommonClass extends baseClass {
 
     @property({type: String}) // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
     numberPattern: string = '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)'
@@ -26,7 +26,7 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
       }
       // @ts-ignore
       if (this._displayTypeIsPercentage(this.indicator)) {
-        let val = this._getValidPercentageValue(baselineV);
+        const val = this._getValidPercentageValue(baselineV);
         this.set('indicator.baseline.v', val);
       }
     }
@@ -38,7 +38,7 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
       }
       // @ts-ignore
       if (this._displayTypeIsPercentage(this.indicator)) {
-        let val = this._getValidPercentageValue(targetV);
+        const val = this._getValidPercentageValue(targetV);
         this.set('indicator.target.v', val);
       }
     }
@@ -66,7 +66,7 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
     validateComponents(elemIds: string[]) {
       let valid = true;
       elemIds.forEach((elemId) => {
-        let elem = this.shadowRoot!.querySelector('#' + elemId) as PolymerElement & {validate(): boolean};
+        const elem = this.shadowRoot!.querySelector('#' + elemId) as PolymerElement & {validate(): boolean};
         if (elem) {
           valid = elem.validate() && valid;
         } else {
@@ -76,8 +76,8 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
       return valid;
     }
 
-  };
+  }
 
   return indicatorsCommonClass;
 }
- export default IndicatorsCommonMixin;
+export default IndicatorsCommonMixin;

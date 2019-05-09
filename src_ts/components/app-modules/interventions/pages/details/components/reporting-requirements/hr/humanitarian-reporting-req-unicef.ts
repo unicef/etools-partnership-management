@@ -1,19 +1,19 @@
-import { fireEvent } from '../../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 
 import '@polymer/paper-button/paper-button.js';
 
 import './edit-hru-dialog.js';
 import './hru-list.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin';
 import FrontendPaginationMixin from '../../../../../../../mixins/frontend-pagination-mixin';
-import { ExpectedResult } from '../../../../../../../../typings/intervention.types';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
-import { property } from '@polymer/decorators';
-import { EditHruDialog } from './edit-hru-dialog.js';
-import { HruListEl } from './hru-list.js';
+import {ExpectedResult} from '../../../../../../../../typings/intervention.types';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import {property} from '@polymer/decorators';
+import {EditHruDialog} from './edit-hru-dialog.js';
+import {HruListEl} from './hru-list.js';
 
 
 /**
@@ -166,7 +166,7 @@ class HumanitarianReportingReqUnicef extends
     if (!expectedResults) {
       return false;
     }
-    let hfIndicator = expectedResults.find((r: any) => {
+    const hfIndicator = expectedResults.find((r: any) => {
       return r.ll_results.find((llr: any) => {
         return llr.applied_indicators.find((i: any) => {
           return i.is_active && i.is_high_frequency;
@@ -187,4 +187,4 @@ class HumanitarianReportingReqUnicef extends
 
 window.customElements.define('humanitarian-reporting-req-unicef', HumanitarianReportingReqUnicef);
 
-export {HumanitarianReportingReqUnicef as HumanitarianReportingReqUnicefEl}
+export {HumanitarianReportingReqUnicef as HumanitarianReportingReqUnicefEl};

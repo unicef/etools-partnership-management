@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
@@ -16,15 +16,15 @@ import '../../../reports/pages/progress/components/indicator-report-target.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import UtilsMixin from '../../../../mixins/utils-mixin.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { listFilterStyles } from '../../../../styles/list-filter-styles.js';
-import { isEmptyObject } from '../../../../utils/utils.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { User } from '../../../../../typings/globals.types.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
+import {isEmptyObject} from '../../../../utils/utils.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {User} from '../../../../../typings/globals.types.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
 import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
@@ -305,7 +305,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
     if (!id || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
       return;
     }
-    let self = this;
+    const self = this;
 
     fireEvent(self, 'global-loading', {
       message: 'Loading...',
@@ -336,7 +336,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
       this.set('indicatorReports', []);
       return;
     }
-    let self = this;
+    const self = this;
     if (!this._emptyList(progress.details.cp_outputs)) {
       progress.details.cp_outputs.forEach(function(result: any) {
         if (!self._emptyList(result.ll_outputs)) {
@@ -349,7 +349,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
   }
 
   _prepareindicatorReportsData(lowerResultId: any, progressIndicatorReports: any) {
-    let indicatorReportData = {
+    const indicatorReportData = {
       lowerResultId: lowerResultId,
       reports: []
     };
@@ -373,7 +373,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
     if (this._emptyList(this.indicatorReports)) {
       return [];
     }
-    let indicatorsReports = this.indicatorReports.filter(function(indReports: any) {
+    const indicatorsReports = this.indicatorReports.filter(function(indReports: any) {
       return indReports.lowerResultId === lowerResultId;
     });
     return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
@@ -384,7 +384,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
     */
   _getLatestIndicatorReport(lowerResultId: any) {
     if (!this._emptyList(this.indicatorReports)) {
-      let indReports = this.indicatorReports.find(function(indReports: any) {
+      const indReports = this.indicatorReports.find(function(indReports: any) {
         return indReports.lowerResultId === lowerResultId;
       });
       if (indReports && indReports.reports[0]) {
@@ -396,7 +396,7 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
 
   _getLowerResultStatus(lowerResultId: any) {
     let status = null;
-    let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
+    const latestIndReport = this._getLatestIndicatorReport(lowerResultId);
     if (latestIndReport) {
       status = latestIndReport.overall_status;
     }
@@ -405,9 +405,9 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
 
   _getLowerResultStatusDate(lowerResultId: any) {
     let resultStatusDateStr = '';
-    let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
+    const latestIndReport = this._getLatestIndicatorReport(lowerResultId);
     if (latestIndReport) {
-      let d = this._convertToDisplayFormat(latestIndReport.submission_date);
+      const d = this._convertToDisplayFormat(latestIndReport.submission_date);
       resultStatusDateStr = '(' + this.getDateDisplayValue(d) + ')';
     }
     return resultStatusDateStr;
@@ -420,13 +420,13 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
   }
 
   _getTimeProgress(start: string, end: string) {
-    let today = new Date();
-    let startDt = EdgeAcceptableDateParse(start);
-    let endDt = EdgeAcceptableDateParse(end);
+    const today = new Date();
+    const startDt = EdgeAcceptableDateParse(start);
+    const endDt = EdgeAcceptableDateParse(end);
     try {
       if (dateIsBetween(startDt, endDt, today)) {
-        let intervalTotalDays = dateDiff(startDt, endDt);
-        let intervalDaysCompleted = dateDiff(startDt, today);
+        const intervalTotalDays = dateDiff(startDt, endDt);
+        const intervalDaysCompleted = dateDiff(startDt, today);
         return intervalDaysCompleted * 100 / intervalTotalDays;
       }
     } catch (err) {

@@ -9,15 +9,15 @@ import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
 
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
-import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
-import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {frWarningsStyles} from '../../../interventions/styles/fr-warnings-styles.js';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { Partner } from '../../../../../models/partners.models.js';
+import {Partner} from '../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -176,7 +176,9 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
             <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
               <div class="row-h">
                 <div class="col col-3 block word-break">
-                  <a  class="primary" href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+                  <a  class="primary" href="interventions/[[partnership.id]]/details">
+                    <strong>[[partnership.number]]</strong>
+                  </a><br>
                   <span>
                     [[partnership.title]]
                     </span>
@@ -253,7 +255,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
   }
 
   @property({type: Object})
-  partner = {} as Partner;
+  partner!: Partner;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -268,7 +270,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
-        : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+      : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
 }

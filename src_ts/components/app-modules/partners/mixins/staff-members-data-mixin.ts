@@ -1,10 +1,10 @@
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { Constructor } from '../../../../typings/globals.types.js';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
-import { MinimalStaffMember } from '../../../../models/partners.models.js';
+import {Constructor} from '../../../../typings/globals.types.js';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {MinimalStaffMember} from '../../../../models/partners.models.js';
 
 
 /**
@@ -14,7 +14,7 @@ import { MinimalStaffMember } from '../../../../models/partners.models.js';
  */
 function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class staffMembersData extends EndpointsMixin(baseClass) {
+  class StaffMembersDataClass extends EndpointsMixin(baseClass) {
 
     @property({type: Array})
     staffMembers!: [];
@@ -32,8 +32,8 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
           active: true,
           loadingSource: this.staffLoadingMsgSource
         });
-        let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
-        let self = this;
+        const endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
+        const self = this;
 
         this.sendRequest({
           endpoint: endpoint
@@ -48,7 +48,7 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     public _handleStaffMembersResponse(res: any) {
       if (res instanceof Array && res.length) {
-        let activeStaffMembers = res.map(function(sMember) {
+        const activeStaffMembers = res.map(function(sMember) {
           return new MinimalStaffMember(sMember);
         }).filter(function(sMember) {
           return sMember.active;
@@ -57,8 +57,8 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
       fireEvent(this, 'global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
     }
-  };
-  return staffMembersData;
+  }
+  return StaffMembersDataClass;
 }
 
 export default StaffMembersData;
