@@ -1,10 +1,10 @@
 import '../disaggregation-table-row.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import UtilsMixin from '../../../../../../../mixins/utils-mixin';
 import DisaggregationsMixin from '../mixins/disaggregations';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../../typings/globals.types.js';
+import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 
 
 /**
@@ -141,7 +141,7 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
     return middleRows.map((y: any) => {
       let formatted;
 
-      let columnData = columns.map((z: any) => {
+      const columnData = columns.map((z: any) => {
         formatted = this._formatDisaggregationIds([outerRowID, y.id, z.id]);
 
         return {
@@ -168,8 +168,8 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
     if (typeof columns === 'undefined' || typeof middleRows === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map((z: any) => {
-      let formatted = this._formatDisaggregationIds([z.id]);
+    const columnData = columns.map((z: any) => {
+      const formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         key: formatted,
@@ -177,7 +177,7 @@ class ThreeDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElemen
       };
     });
 
-    let columnTotalRow = {
+    const columnTotalRow = {
       title: 'total',
       data: columnData,
       total: {

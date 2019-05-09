@@ -1,8 +1,8 @@
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
-import { PolymerElement, html } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../typings/globals.types.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer

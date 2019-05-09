@@ -1,14 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin';
 
 import './table-content/three-disaggregations';
 import './table-content/two-disaggregations';
 import './table-content/one-disaggregation';
 import './table-content/zero-disaggregations';
-import { disaggregationTableStyles } from './styles/disaggregation-table-styles';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {Disaggregation} from '../../../../../../../typings/intervention.types';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -121,10 +121,10 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
     `;
   }
 
-   /**
+  /**
    * `editable` and `editableBool` is only kept here because disaggregation elements are common with PRP app,
    * it will always be `0` and `false` in PMP.
-   */ 
+   */
   @property({type: Number})
   editable: number = 0;
 
@@ -199,7 +199,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
         typeof mapping === 'undefined') {
       return;
     }
-    let reportedOn = formattedData.disaggregation_reported_on;
+    const reportedOn = formattedData.disaggregation_reported_on;
 
     return editableBool ? mapping.filter(function(disagg: Disaggregation) {
       return reportedOn.indexOf(disagg.id) !== -1;

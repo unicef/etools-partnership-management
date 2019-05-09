@@ -9,14 +9,14 @@ import '../../../../layout/etools-form-element-wrapper.js';
 
 import './sent-bk-comments.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import { PolymerElement, html } from '@polymer/polymer';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../typings/globals.types.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -179,7 +179,7 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
 
   getReportStatus(status: string, username: string) {
     let stat = '';
-    switch(status) {
+    switch (status) {
       case 'Acc':
         stat = 'Accepted by ';
         break;
@@ -198,7 +198,7 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
   }
 
   _seeSentBackComments() {
-    if(this.sentBkCommentsDialog){
+    if (this.sentBkCommentsDialog) {
       this.sentBkCommentsDialog.report = this.report;
       this.sentBkCommentsDialog.opened = true;
     }

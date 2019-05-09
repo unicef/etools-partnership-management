@@ -1,23 +1,23 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import { GenericObject, Constructor } from '../../../typings/globals.types'; // TODO - load using tsconfig
+// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+import {GenericObject, Constructor} from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 
 import {PolymerElement} from '@polymer/polymer/polymer-element';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
 import {logError} from 'etools-behaviors/etools-logging';
-import { property } from '@polymer/decorators';
-import { Route } from '../../../typings/route.types';
+import {property} from '@polymer/decorators';
+import {Route} from '../../../typings/route.types';
 /**
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
  */
 function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    class moduleRoutingClass extends baseClass {
+  class moduleRoutingClass extends baseClass {
 
       @property({type: Boolean})
-      listActive!: boolean;
+    listActive!: boolean;
 
       @property({type: Boolean})
       tabsActive!: boolean;
@@ -79,7 +79,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
        * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
        */
       _resetTabAttachedFlagIfNeeded(currentModule: string, previousPage: string) {
-        let selectedTab = this.shadowRoot!.querySelector('[name="' + currentModule + '"]');
+        const selectedTab = this.shadowRoot!.querySelector('[name="' + currentModule + '"]');
         if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
           this.set('tabAttached', false);
         }
@@ -120,7 +120,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
       _handleFailedImport(err: GenericObject, page: string, fileImportDetails: GenericObject) {
         // log page element import failed error
-        let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
+        const importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
         logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
 
         fireEvent(this, 'global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
@@ -128,8 +128,8 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       }
 
       setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab?: object,
-                    appendBasePathAdditionalFolder?: object | null, successfulImportCallback?: object) {
-        let page = listActive ? 'list' : tab;
+        appendBasePathAdditionalFolder?: object | null, successfulImportCallback?: object) {
+        const page = listActive ? 'list' : tab;
 
         if (listActive) {
           // clear server errors for the list
@@ -144,12 +144,12 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
         if (page && page !== this.activePage) {
           // import main page element
-          let importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
+          const importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
 
-          let baseUrl = this._getFileBaseUrl(fileImportDetails.filenamePrefix + 's',
-                        page, appendBasePathAdditionalFolder);
+          const baseUrl = this._getFileBaseUrl(fileImportDetails.filenamePrefix + 's',
+            page, appendBasePathAdditionalFolder);
 
-          let fileName = importFilenamePrefix + page;
+          const fileName = importFilenamePrefix + page;
 
           this.importPageElement(fileName, baseUrl).then(() => {
             this._handleSuccessfulImport(page, successfulImportCallback);
@@ -165,14 +165,14 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
       importPageElement(fileName: string, baseUrl: string) {
         return new Promise((resolve, reject) => {
-          let customElement = this.shadowRoot!.querySelector(fileName);
+          const customElement = this.shadowRoot!.querySelector(fileName);
           if (customElement instanceof PolymerElement === false) {
 
             /* Imports are resolved relative to the current module, in this case module-routing-mixin,
              * So non-absolute paths will be relative to
              * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
              */
-            let pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
+            const pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
             import(pageUrl).then(() => {
               resolve();
             }).catch((err) => {
@@ -190,8 +190,8 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         return this.rootPath + mName === this.route.prefix;
       }
 
-    };
-    return moduleRoutingClass;
+  }
+  return moduleRoutingClass;
 }
 
 export default ModuleRoutingMixin;

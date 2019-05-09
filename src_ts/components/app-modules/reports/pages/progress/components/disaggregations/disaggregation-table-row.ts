@@ -3,11 +3,11 @@ import './disaggregation-table-cell-number.js';
 import './disaggregation-table-cell-percentage.js';
 import './disaggregation-table-cell-ratio.js';
 import '../../../../../../mixins/utils-mixin.js';
-import { disaggregationTableStyles } from './styles/disaggregation-table-styles.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles.js';
+import {PolymerElement, html} from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../typings/globals.types.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -89,7 +89,7 @@ class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
   @property({type: Object})
   data!: GenericObject;
 
-  @property({type: String}) 
+  @property({type: String})
   indicatorType!: string;
 
   @property({type: String})

@@ -1,8 +1,8 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
+import {PolymerElement, html} from '@polymer/polymer';
+import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import '../disaggregation-table-row';
 import {GenericObject} from '../../../../../../../../typings/globals.types';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer

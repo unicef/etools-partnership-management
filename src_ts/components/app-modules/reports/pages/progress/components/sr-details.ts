@@ -1,12 +1,12 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import 'etools-upload/etools-upload.js';
 
 import '../../../../../layout/etools-form-element-wrapper.js';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../typings/globals.types.js';
-import { SharedStyles } from '../../../../../styles/shared-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
+import {SharedStyles} from '../../../../../styles/shared-styles.js';
 
 
 class SrDetails extends PolymerElement {

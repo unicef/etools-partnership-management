@@ -22,7 +22,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
   class EtoolsStatusCommonClass extends ScrollControl(baseClass as Constructor<PolymerElement>) {
 
       @property({type: String})
-      status: string = '';
+    status: string = '';
 
       @property({type: String})
       newStatus: string = '';

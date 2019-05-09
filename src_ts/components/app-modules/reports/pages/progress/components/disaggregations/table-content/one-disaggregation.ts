@@ -1,9 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '../disaggregation-table-row';
 import DisaggregationsMixin from '../mixins/disaggregations';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../../typings/globals.types';
+import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -86,7 +86,7 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
       return;
     }
     return columns.map((z: any) => {
-      let formatted = this._formatDisaggregationIds([z.id]);
+      const formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         title: z.value,

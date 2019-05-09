@@ -1,7 +1,7 @@
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
 
 /**
@@ -13,55 +13,55 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: 
   class disaggregationsClass extends baseClass {
   // Used to display rows for two and three disaggregations.
   // It will NOT work for one and zero disaggregations.
-  _determineRows(self: any, rows: any, columns: any) {
-    let rowsForDisplay: object[] = [];
-    rows.forEach(function(x: any) {
-      let formatted = '';
+    _determineRows(self: any, rows: any, columns: any) {
+      const rowsForDisplay: object[] = [];
+      rows.forEach(function(x: any) {
+        let formatted = '';
 
-      let rowData = columns.map(function(z: any) {
-        formatted = self._formatDisaggregationIds([x.id, z.id]);
+        const rowData = columns.map(function(z: any) {
+          formatted = self._formatDisaggregationIds([x.id, z.id]);
 
-        return {
-          key: formatted,
-          data: self.data.disaggregation[formatted]
-        };
+          return {
+            key: formatted,
+            data: self.data.disaggregation[formatted]
+          };
+        });
+
+        formatted = self._formatDisaggregationIds([x.id]);
+
+        rowsForDisplay.push({
+          title: x.value,
+          data: rowData,
+          id: x.id,
+          total: {
+            key: formatted,
+            data: self.data.disaggregation[formatted]
+          }
+        });
       });
 
-      formatted = self._formatDisaggregationIds([x.id]);
-
-      rowsForDisplay.push({
-        title: x.value,
-        data: rowData,
-        id: x.id,
-        total: {
-          key: formatted,
-          data: self.data.disaggregation[formatted]
-        }
-      });
-    });
-
-    return rowsForDisplay;
-  }
-
-  // Accepts a list of disaggregation IDs, sorts them, and
-  // structures them in "()" format for lookup.
-  _formatDisaggregationIds(unsortedIds: any) {
-    // IDs must be in ascending order.
-    let ids = unsortedIds.sort(function(a: number, b: number) {
-      return a - b;
-    });
-    let sortedString = '';
-
-    if (ids.length === 1) {
-      sortedString = ids[0] + ',';
-    } else {
-      sortedString = ids.join(', ');
+      return rowsForDisplay;
     }
 
-    return '(' + sortedString + ')';
+    // Accepts a list of disaggregation IDs, sorts them, and
+    // structures them in "()" format for lookup.
+    _formatDisaggregationIds(unsortedIds: any) {
+    // IDs must be in ascending order.
+      const ids = unsortedIds.sort(function(a: number, b: number) {
+        return a - b;
+      });
+      let sortedString = '';
+
+      if (ids.length === 1) {
+        sortedString = ids[0] + ',';
+      } else {
+        sortedString = ids.join(', ');
+      }
+
+      return '(' + sortedString + ')';
+    }
   }
-};
-return disaggregationsClass;
+  return disaggregationsClass;
 }
 
 export default DisaggregationsMixin;

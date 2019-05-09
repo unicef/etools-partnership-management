@@ -1,11 +1,11 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 
 import {GenericObject} from '../../../../../../../typings/globals.types';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {toNumericValues} from './mixins/disaggregation-field';
-import { property } from '@polymer/decorators';
-import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import {property} from '@polymer/decorators';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
@@ -95,7 +95,7 @@ class DisaggregationField extends PolymerElement {
   }
 
   _handleInput(e: CustomEvent) {
-    let change: GenericObject = {};
+    const change: GenericObject = {};
 
     change[this.key] = (e.target as any).value;
 

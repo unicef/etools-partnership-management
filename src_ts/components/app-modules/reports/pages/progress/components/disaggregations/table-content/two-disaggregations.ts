@@ -1,11 +1,11 @@
 import '../mixins/disaggregations';
 import '../disaggregation-table-row';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import UtilsMixin from '../../../../../../../mixins/utils-mixin';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../../typings/globals.types';
+import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -97,8 +97,8 @@ class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)
     if (typeof columns === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map((z) => {
-      let formatted = this._formatDisaggregationIds([z.id]);
+    const columnData = columns.map((z) => {
+      const formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         key: formatted,

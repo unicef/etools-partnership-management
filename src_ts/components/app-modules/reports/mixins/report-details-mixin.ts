@@ -2,9 +2,9 @@ import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { Constructor, GenericObject, User} from '../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor, GenericObject, User} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymerMixin
@@ -67,7 +67,7 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         // get report attachment
         this._getReportAttachment(response.id);
       }).catch((error: any) => {
-        let errMsg = 'Reports details data request failed!';
+        const errMsg = 'Reports details data request failed!';
         logError(errMsg, this._logMsgPrefix, error);
         parseRequestErrorsAndShowAsToastMsgs(error, this, true);
         fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
@@ -87,7 +87,7 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         this.set('reportAttachments', response);
 
       }).catch((error: any) => {
-        let errMsg = 'Report attachment request failed!';
+        const errMsg = 'Report attachment request failed!';
         logError(errMsg, this._logMsgPrefix, error);
         if (error.status === 404) {
           // it means there is no attachment, which seems like a weird approach
@@ -98,7 +98,7 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       });
     }
 
-  };
+  }
   return reportDetailsClass;
 }
 

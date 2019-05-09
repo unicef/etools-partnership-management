@@ -1,11 +1,11 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
-import { disaggregationTableStyles } from './styles/disaggregation-table-styles.js';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../typings/globals.types.js';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
