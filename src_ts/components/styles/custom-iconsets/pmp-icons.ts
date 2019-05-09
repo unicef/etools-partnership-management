@@ -1,5 +1,6 @@
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
 import {html} from '@polymer/polymer';
+/* eslint-disable max-len */
 
 export const pmpMainIcons = html`
  <iron-iconset-svg name="pmp-main-icons" size="36">

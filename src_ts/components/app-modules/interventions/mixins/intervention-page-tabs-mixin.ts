@@ -10,7 +10,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EnvironmentFlagsMixin
  */
 function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class interventionPageTabsClass extends EnvironmentFlagsMixin(baseClass as Constructor<PolymerElement>) {
+  class InterventionPageTabsClass extends EnvironmentFlagsMixin(baseClass as Constructor<PolymerElement>) {
 
     /**
      * Hidden tabs rules:
@@ -73,7 +73,7 @@ function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseCl
     }
 
   }
-  return interventionPageTabsClass;
+  return InterventionPageTabsClass;
 }
 
 export default InterventionPageTabsMixin;

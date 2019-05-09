@@ -30,9 +30,9 @@ import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSets
- * @appliesMixin Results
- * @appliesMixin LowerResults
+ * @appliesMixin RepeatableDataSetsMixin
+ * @appliesMixin ResultsMixin
+ * @appliesMixin LowerResultsMixin
  */
 class ExpectedResults extends connect(store)(
   ResultsMixin(

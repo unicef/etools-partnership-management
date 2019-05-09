@@ -18,7 +18,7 @@ import '../../../../layout/year-dropdown.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
-import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin';
+import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin';
 import EnvironmentFlagsMixin from '../../../../environment-flags/environment-flags-mixin';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
@@ -61,9 +61,9 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
- * @appliesMixin StaffMembersData
+ * @appliesMixin StaffMembersDataMixin
  * @appliesMixin EnvironmentFlagsMixin
- * @appliesMixin MissingDropdownOptions
+ * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
@@ -72,7 +72,7 @@ class InterventionDetails extends connect(store)(
     CommonMixin(
       UploadsMixin(
         FrNumbersConsistencyMixin(
-          StaffMembersData(
+          StaffMembersDataMixin(
             MissingDropdownOptionsMixin(PolymerElement))))))) {
 
   static get template() {

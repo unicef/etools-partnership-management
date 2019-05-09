@@ -52,9 +52,9 @@ import {AppShellStyles} from './app-shell-styles';
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import 'etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
-import CommonData from '../common-data-mixins/common-data.js';
-import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
-import ScrollControl from '../mixins/scroll-control-mixin.js';
+import CommonDataMixin from '../common-data-mixins/common-data.js';
+import ToastNotificationsMixin from '../toast-notifications/toast-notification-mixin.js';
+import ScrollControlMixin from '../mixins/scroll-control-mixin.js';
 import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
 import UserDataMixin from '../user/user-data-mixin';
 
@@ -101,10 +101,10 @@ setRootPath(BASE_URL);
  * @polymer
  * @appliesMixin GestureEventListeners
  * @appliesMixin AppMenuMixin
- * @appliesMixin CommonData
+ * @appliesMixin CommonDataMixin
  * @appliesMixin ToastNotifications
  * @appliesMixin EnvironmentFlagsMixin
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
  * @appliesMixin LoadingMixin
@@ -112,15 +112,16 @@ setRootPath(BASE_URL);
  */
 class AppShell extends connect(store)(
   UploadsMixin(
+    // eslint-disable-next-line new-cap
     GestureEventListeners(
       AppMenuMixin(
-        ToastNotifications(
-          ScrollControl(
+        ToastNotificationsMixin(
+          ScrollControlMixin(
             AmendmentModeUIMixin(
               LoadingMixin(
                 UtilsMixin(
                   UserDataMixin(
-                    CommonData(
+                    CommonDataMixin(
                       PolymerElement))))))))))) {
 
   public static get template() {

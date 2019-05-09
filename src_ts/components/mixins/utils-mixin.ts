@@ -99,12 +99,12 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         case 'percentage':
         {
           const val = percentize ? Math.floor(value * 100) : value;
-          return this._formatNumber(val, '-', 2, '\,') + '%';
+          return this._formatNumber(val, '-', 2, ',') + '%';
         }
         case 'ratio':
-          return this._formatNumber(value, '-', 2, '\,') + ':1';
+          return this._formatNumber(value, '-', 2, ',') + ':1';
         case 'number':
-          return this._formatNumber(value, '-', 0, '\,');
+          return this._formatNumber(value, '-', 0, ',');
         default:
           return value;
       }

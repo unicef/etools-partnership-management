@@ -39,7 +39,7 @@ import {SharedStyles} from '../../../../styles/shared-styles.js';
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
+import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
@@ -54,11 +54,11 @@ import {GeneratePcaDialogEl} from './components/generate-PCA-dialog.js';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin StaffMembersData
+ * @appliesMixin StaffMembersDataMixin
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersData(PolymerElement)))) {
+class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
 
   static get template() {
     return html`

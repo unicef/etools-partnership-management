@@ -24,7 +24,7 @@ import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-butt
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSetsMixin
+ * @appliesMixin RepeatableDataSetsMixinMixin
  */
 class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 

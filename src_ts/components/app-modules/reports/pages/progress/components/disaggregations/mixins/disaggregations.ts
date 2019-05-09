@@ -10,7 +10,7 @@ import {PolymerElement} from '@polymer/polymer';
  * @mixinFunction
  */
 function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class disaggregationsClass extends baseClass {
+  class DisaggregationsClass extends baseClass {
   // Used to display rows for two and three disaggregations.
   // It will NOT work for one and zero disaggregations.
     _determineRows(self: any, rows: any, columns: any) {
@@ -61,7 +61,7 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: 
       return '(' + sortedString + ')';
     }
   }
-  return disaggregationsClass;
+  return DisaggregationsClass;
 }
 
 export default DisaggregationsMixin;

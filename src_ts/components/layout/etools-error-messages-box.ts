@@ -11,6 +11,7 @@ import {property} from '@polymer/decorators';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
+/* eslint-disable new-cap */
 class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   public static get template() {
     // language=HTML

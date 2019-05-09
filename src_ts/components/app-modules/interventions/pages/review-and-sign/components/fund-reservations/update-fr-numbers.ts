@@ -19,7 +19,7 @@ import {PaperDialogElement} from '@polymer/paper-dialog/paper-dialog';
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSetsMixin
+ * @appliesMixin RepeatableDataSetsMixinMixin
  */
 class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
   static get template() {

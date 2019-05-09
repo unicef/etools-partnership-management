@@ -18,8 +18,8 @@ import {EditQprDialogEl} from './edit-qpr-dialog.js';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin ReportingRequirementsCommon
- * @appliesMixin GenerateQuarterlyReportingRequirements
+ * @appliesMixin ReportingRequirementsCommonMixin
+ * @appliesMixin GenerateQuarterlyReportingRequirementsMixin
  */
 class QuarterlyReportingRequirements extends
   GenerateQuarterlyReportingRequirementsMixin(

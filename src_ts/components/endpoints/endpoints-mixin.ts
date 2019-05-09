@@ -84,8 +84,10 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
         if (data && Object.keys(data).length > 0) {
           for (const k in data) {
-            const replacePattern = new RegExp('<%=' + k + '%>', 'gi');
-            tmpl = tmpl.replace(replacePattern, (data as any)[k]);
+            if (Object.prototype.hasOwnProperty.call(data, k)) {
+              const replacePattern = new RegExp('<%=' + k + '%>', 'gi');
+              tmpl = tmpl.replace(replacePattern, (data as any)[k]);
+            }
           }
         }
 

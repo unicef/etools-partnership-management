@@ -13,7 +13,7 @@ import {property} from '@polymer/decorators';
  */
 function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class reportDetailsClass extends EndpointsMixin(baseClass) {
+  class ReportDetailsClass extends EndpointsMixin(baseClass) {
 
     @property({type: Object})
     report!: GenericObject;
@@ -99,7 +99,7 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
   }
-  return reportDetailsClass;
+  return ReportDetailsClass;
 }
 
 export default ReportDetailsMixin;

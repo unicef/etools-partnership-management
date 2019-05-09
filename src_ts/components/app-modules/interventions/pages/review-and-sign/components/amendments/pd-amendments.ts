@@ -23,8 +23,7 @@ import {AddAmendmentDialog} from './add-amendment-dialog';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin ReduxInAmendmentMixin
- * @appliesMixin Common
+ * @appliesMixin CommonMixin
  */
 class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   static get template() {

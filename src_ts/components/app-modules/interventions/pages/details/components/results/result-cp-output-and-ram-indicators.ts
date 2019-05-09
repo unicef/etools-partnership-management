@@ -16,8 +16,7 @@ import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixins Endpoints
- * @appliesMixins MissingDropdownOptions
+ * @appliesMixins MissingDropdownOptionsMixin
  */
 class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(PolymerElement) {
 

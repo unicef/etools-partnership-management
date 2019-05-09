@@ -13,7 +13,7 @@ import EtoolsDialog from 'etools-dialog';
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsStatusCommon
+ * @appliesMixin EtoolsStatusCommonMixin
  */
 class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 

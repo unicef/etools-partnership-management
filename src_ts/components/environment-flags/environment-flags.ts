@@ -6,6 +6,7 @@ import {store} from '../../store';
 import {updateEnvFlags} from '../../actions/common-data';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {EnvFlags} from '../../typings/globals.types';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -13,32 +14,28 @@ import {EnvFlags} from '../../typings/globals.types';
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement) as any) {
+class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement)) {
 
-  public static get properties() {
-    return {
-      envFlagsDefaultValue: Object
-    };
-  }
-
-  public envFlagsDefaultValue: EnvFlags = {
+  @property({type: Object})
+  envFlagsDefaultValue: EnvFlags = {
     prp_mode_off: true,
     prp_server_on: false
   };
 
   protected _processAndSetEnvFlags(envFlags: EnvFlags) {
-    const flags = envFlags.active_flags;
-    const flagObject = {
+    const activeflags = envFlags.active_flags;
+
+    const flagObject: any = {
       prp_mode_off: false
     };
 
-    // @ts-ignore
-    for (const key in flags) {
-      const flag: string | undefined = (flags as any)[key];
-      if (flag) {
-        (flagObject as any)[flag] = true;
-      }
+    if (activeflags) {
+      activeflags.forEach((flag) => {
+        flagObject[flag] = true;
+      });
     }
+
+
     return flagObject;
   }
 

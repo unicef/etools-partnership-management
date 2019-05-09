@@ -12,7 +12,7 @@ import {AppliedIndicatorEl} from './applied-indicator.js';
 /**
   * @polymer
   * @customElement
-  * @appliesMixin RepeatableDataSetsMixin
+  * @appliesMixin RepeatableDataSetsMixinMixin
   */
 class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
 

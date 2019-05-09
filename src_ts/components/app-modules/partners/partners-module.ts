@@ -9,7 +9,7 @@ import {store} from '../../../store';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import ScrollControl from '../../mixins/scroll-control-mixin';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 
 import '../../layout/page-content-header';
@@ -41,12 +41,15 @@ import {NewPartnerDialog} from './components/new-partner-dialog.js';
  * @customElement
  * @mixinFunction
  * @appliesMixin GestureEventListeners
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
- * @appliesMixin ModuleMainElCommonFunctionality
+ * @appliesMixin ModuleMainElCommonFunctionalityMixin
  */
-class PartnersModule extends connect(store)((GestureEventListeners(ScrollControl(ModuleRoutingMixin
-(ModuleMainElCommonFunctionalityMixin(PolymerElement)))))) {
+class PartnersModule extends connect(store)(
+  // eslint-disable-next-line new-cap
+  GestureEventListeners(
+    ScrollControlMixin(ModuleRoutingMixin(
+      ModuleMainElCommonFunctionalityMixin(PolymerElement))))) {
 
   public static get template() {
     // main template

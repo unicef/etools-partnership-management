@@ -9,7 +9,7 @@ import {property} from '@polymer/decorators';
  * @mixinFunction
  */
 function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class generateQuarterlyReportingRequirements extends baseClass {
+  class GenerateQuarterlyRepReqClass extends baseClass {
 
     @property({type: Number})
     DUE_DATE_DAYS_TO_ADD: number = 30;
@@ -86,7 +86,7 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
     }
 
   }
-  return generateQuarterlyReportingRequirements;
+  return GenerateQuarterlyRepReqClass;
 }
 
 export default GenerateQuarterlyReportingRequirementsMixin;

@@ -119,7 +119,7 @@ export interface IdAndName {
 export interface EnvFlags {
   prp_mode_off: boolean;
   prp_server_on: boolean;
-  active_flags?: object[];
+  active_flags?: string[];
 }
 
 export interface Office {

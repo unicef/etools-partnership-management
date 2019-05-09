@@ -10,7 +10,7 @@ import {property} from '@polymer/decorators';
  * @mixinFunction
  */
 function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class amendmentModeUI extends baseClass {
+  class AmendmentModeUIClass extends baseClass {
     @property({type: Boolean})
     amendmentModeActive: boolean = false;
 
@@ -34,7 +34,7 @@ function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: 
       }
     }
   }
-  return amendmentModeUI;
+  return AmendmentModeUIClass;
 }
 
 export default AmendmentModeUIMixin;

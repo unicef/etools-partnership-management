@@ -7,7 +7,7 @@ import {property} from '@polymer/decorators';
  * @polymer
  * @mixinFunction
  */
-function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
+function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ScrollControlClass extends baseClass {
 
     @property({type: Object})
@@ -58,4 +58,4 @@ function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
   return ScrollControlClass;
 }
 
-export default ScrollControl;
+export default ScrollControlMixin;

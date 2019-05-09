@@ -7,7 +7,7 @@ import {GenericObject} from '../../../../../../typings/globals.types.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin Utils
+ * @appliesMixin UtilsMixin
  */
 class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
 

@@ -12,7 +12,7 @@ import {MinimalStaffMember} from '../../../../models/partners.models.js';
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
+function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
   class StaffMembersDataClass extends EndpointsMixin(baseClass) {
 
@@ -61,4 +61,4 @@ function StaffMembersData<T extends Constructor<PolymerElement>>(baseClass: T) {
   return StaffMembersDataClass;
 }
 
-export default StaffMembersData;
+export default StaffMembersDataMixin;

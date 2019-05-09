@@ -16,7 +16,7 @@ import {property} from '@polymer/decorators';
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin Common
+ * @appliesMixin CommonMixin
  */
 class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(PolymerElement)) {
 

@@ -22,12 +22,13 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
 import {isEmptyObject} from '../../../../utils/utils.js';
 import {fireEvent} from '../../../../utils/fire-custom-event.js';
-import {User} from '../../../../../typings/globals.types.js';
+import {User, GenericObject} from '../../../../../typings/globals.types.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
+import {property} from '@polymer/decorators';
 declare const moment: any;
 
 
@@ -40,9 +41,8 @@ declare const moment: any;
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
-class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(CommonMixin
-(UtilsMixin(PolymerElement)))) as any) {
-  [x: string]: any;
+class InterventionProgress extends connect(store)(
+  UtilsMixin(CommonMixin(EndpointsMixin(EtoolsCurrency(PolymerElement))))) {
 
   static get template() {
     return html`
@@ -251,34 +251,25 @@ class InterventionProgress extends connect(store)(EtoolsCurrency(EndpointsMixin(
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: {
-        type: Number
-      },
-      pdProgress: {
-        type: Number,
-        computed: '_getTimeProgress(progress.start_date, progress.end_date)'
-      },
-      cashProgress: {
-        type: Number,
-        computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
-        'latestAcceptedPr.programme_document.total_unicef_cash)'
-      },
-      progress: {
-        type: Object,
-        observer: '_progressDataObjChanged'
-      },
-      latestAcceptedPr: {
-        type: Object,
-        computed: '_computeLatestAcceptedPr(progress)'
-      },
-      indicatorReports: {
-        type: Array,
-        value: []
-      }
-    };
-  }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Number, computed: '_getTimeProgress(progress.start_date, progress.end_date)'})
+  pdProgress!: number;
+
+  @property({type: Number,  computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
+  'latestAcceptedPr.programme_document.total_unicef_cash)'})
+  cashProgress!: number;
+
+  @property({type: Object, observer: '_progressDataObjChanged'})
+  progress!: GenericObject;
+
+  @property({type: Object, computed: '_computeLatestAcceptedPr(progress)'})
+  latestAcceptedPr!: GenericObject;
+
+  @property({type: Array})
+  indicatorReports: GenericObject[] = [];
+
 
   static get observers() {
     return [

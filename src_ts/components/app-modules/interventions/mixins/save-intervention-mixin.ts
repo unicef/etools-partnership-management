@@ -17,7 +17,7 @@ import InterventionReviewAndSign from '../pages/review-and-sign/intervention-rev
  * PD/SSFA save functionality
  * @polymer
  * @mixinFunction
- * @appliesMixin ModifiedInterventionFields
+ * @appliesMixin ModifiedInterventionFieldsMixin
  */
 function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class saveInterventionClass extends ModifiedInterventionFieldsMixin(baseClass as Constructor<PolymerElement>) {

@@ -15,8 +15,8 @@ import {IconsActionsEl} from '../../../../../../../layout/icons-actions.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin Common
- * @appliesMixin ReportingReqPastDatesCheck
+ * @appliesMixin CommonMixin
+ * @appliesMixin ReportingReqPastDatesCheckMixin
  */
 class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement)) {
 

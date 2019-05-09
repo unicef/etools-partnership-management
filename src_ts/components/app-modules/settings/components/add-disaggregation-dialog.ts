@@ -28,10 +28,10 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input';
  * @mixinFunction
  * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin RepeatableDataSetsMixin
+ * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(RepeatableDataSetsMixin
-(EndpointsMixin(PolymerElement)))) {
+class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(RepeatableDataSetsMixin(
+  EndpointsMixin(PolymerElement)))) {
 
   static get template() {
     // language=HTML

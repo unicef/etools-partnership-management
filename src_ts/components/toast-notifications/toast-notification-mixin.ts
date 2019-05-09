@@ -9,7 +9,7 @@ import {EtoolsToastEl} from './etools-toast';
  * @polymer
  * @mixinFunction
  */
-function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T) {
+function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ToastNotifsClass extends baseClass {
 
     @property({type: Object})
@@ -115,4 +115,4 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
   }
   return ToastNotifsClass;
 }
-export default ToastNotifications;
+export default ToastNotificationsMixin;

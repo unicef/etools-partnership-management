@@ -22,7 +22,7 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSets
+ * @appliesMixin RepeatableDataSetsMixin
  */
 class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 

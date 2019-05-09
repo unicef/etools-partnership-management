@@ -21,7 +21,10 @@ import {store, RootState} from '../../../store';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends connect(store)(GestureEventListeners(EnvironmentFlagsMixin(PolymerElement)) as any) {
+class AppMenu extends connect(store)(
+  // eslint-disable-next-line new-cap
+  GestureEventListeners(
+    EnvironmentFlagsMixin(PolymerElement))) {
 
   public static get template() {
     // main template

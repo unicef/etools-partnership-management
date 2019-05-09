@@ -17,8 +17,7 @@ import {property} from '@polymer/decorators';
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxServerErrors
- * @appliedMixin Constants
+ * @appliesMixin AjaxServerErrorsMixin
  */
 class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   static get template() {

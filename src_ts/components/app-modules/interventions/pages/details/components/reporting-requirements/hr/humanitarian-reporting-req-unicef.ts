@@ -20,8 +20,8 @@ import {HruListEl} from './hru-list.js';
  * @customElement
  * @polymer
  * @mixinFunction
- * @appliesMixin ReportingRequirementsCommon
- * @appliesMixin FrontendPagination
+ * @appliesMixin ReportingRequirementsCommonMixin
+ * @appliesMixin FrontendPaginationMixin
  */
 class HumanitarianReportingReqUnicef extends
   FrontendPaginationMixin(

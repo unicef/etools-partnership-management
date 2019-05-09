@@ -2,6 +2,7 @@ import {RootState} from '../../store';
 import {EnvFlags, Constructor} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {copy} from '../utils/utils';
 
 /**
  * @polymer
@@ -18,7 +19,7 @@ function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass:
         return;
       }
       if (JSON.stringify(this.environmentFlags) !== JSON.stringify(state.commonData.envFlags)) {
-        this.environmentFlags = {...state.commonData.envFlags} as EnvFlags;
+        this.environmentFlags = copy(state.commonData.envFlags);
       }
     }
 

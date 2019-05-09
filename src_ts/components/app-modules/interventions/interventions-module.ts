@@ -8,7 +8,7 @@ import CONSTANTS from '../../../config/app-constants';
 import {GenericObject, UserPermissions} from '../../../typings/globals.types';
 import {Intervention} from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import ScrollControl from '../../mixins/scroll-control-mixin';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import InterventionPageTabsMixin from './mixins/intervention-page-tabs-mixin';
@@ -43,7 +43,7 @@ import EtoolsDialog from 'etools-dialog';
  * @customElement
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin InterventionPageTabsMixin
@@ -52,7 +52,7 @@ import EtoolsDialog from 'etools-dialog';
  */
 class InterventionsModule extends connect(store)(
   InterventionPermissionsMixin(
-    ScrollControl(
+    ScrollControlMixin(
       ModuleMainElCommonFunctionalityMixin(
         ModuleRoutingMixin(
           InterventionPageTabsMixin(

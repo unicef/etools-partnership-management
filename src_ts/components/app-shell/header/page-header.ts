@@ -10,7 +10,7 @@ import {updateDrawerState} from '../../../actions/app';
 import 'etools-profile-dropdown/etools-profile-dropdown';
 import 'etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
-import ProfileOperations from '../../user/profile-operations-mixin';
+import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject} from '../../../typings/globals.types';
@@ -22,9 +22,12 @@ import '../../layout/support-btn';
  * @customElement
  * @mixinFunction
  * @appliesMixin GestureEventListeners
- * @appliesMixin ProfileOperations
+ * @appliesMixin ProfileOperationsMixin
  */
-class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations(PolymerElement)) as any)) {
+class PageHeader extends connect(store)(
+  // eslint-disable-next-line new-cap
+  (GestureEventListeners(
+    ProfileOperationsMixin(PolymerElement)) as any)) {
 
   public static get template() {
     // main template

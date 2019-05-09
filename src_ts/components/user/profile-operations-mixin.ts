@@ -15,7 +15,7 @@ import {PolymerElement} from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
  */
-function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) {
+function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
 
     public static get properties() {
@@ -85,4 +85,4 @@ function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) 
   return ProfileOperationsClass;
 }
 
-export default ProfileOperations;
+export default ProfileOperationsMixin;

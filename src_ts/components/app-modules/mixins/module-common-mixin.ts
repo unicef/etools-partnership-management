@@ -14,10 +14,10 @@ import {property} from '@polymer/decorators';
  * @mixinFunction
  */
 function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class moduleMainElCommonFunctionalityClass extends baseClass {
+  class ModuleMainElCommonFunctionalityClass extends baseClass {
 
     /* Gets updated by app-route */
-    @property({type: Object, observer: moduleMainElCommonFunctionalityClass.prototype._handleQueryParams})
+    @property({type: Object, observer: ModuleMainElCommonFunctionalityClass.prototype._handleQueryParams})
     listPageQueryParams!: object;
 
     /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
@@ -118,7 +118,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
     }
 
   }
-  return moduleMainElCommonFunctionalityClass;
+  return ModuleMainElCommonFunctionalityClass;
 }
 
 export default ModuleMainElCommonFunctionalityMixin;

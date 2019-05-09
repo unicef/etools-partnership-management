@@ -37,8 +37,8 @@ import {NonClusterIndicatorEl} from './non-cluster-indicator.js';
 /**
  * @polymer
  * @customElement
- * @appliesMixin IndicatorDialogTabs
- * @appliesMixin SaveIndicator
+ * @appliesMixin IndicatorDialogTabsMixin
+ * @appliesMixin SaveIndicatorMixin
  * @appliesMixin EnvironmentFlagsMixin
  */
 class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(

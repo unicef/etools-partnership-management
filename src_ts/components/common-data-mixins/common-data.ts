@@ -15,7 +15,7 @@ import {property} from '@polymer/decorators';
  * @polymer
  * @mixinFunction
  */
-function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
+function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class CommonDataClass extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
 
       @property({type: Object})
@@ -241,4 +241,4 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
   return CommonDataClass;
 }
 
-export default CommonData;
+export default CommonDataMixin;

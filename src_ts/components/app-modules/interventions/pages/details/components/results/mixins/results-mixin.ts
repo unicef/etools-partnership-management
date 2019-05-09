@@ -16,7 +16,7 @@ import {ResultCpOutputAndRamIndicatorsEl} from '../result-cp-output-and-ram-indi
  * @mixinFunction
  */
 function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class resultsClass extends baseClass {
+  class ResultsClass extends baseClass {
 
     @property({type: Number})
     interventionId!: number;
@@ -191,7 +191,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
   }
-  return resultsClass;
+  return ResultsClass;
 }
 
 export default ResultsMixin;

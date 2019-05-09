@@ -4,7 +4,7 @@ import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../store.js';
-import ScrollControl from '../../mixins/scroll-control-mixin.js';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
@@ -30,13 +30,13 @@ import {property} from '@polymer/decorators';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins =
-  ScrollControl(
+  ScrollControlMixin(
     ModuleRoutingMixin(
       ModuleMainElCommonFunctionalityMixin(
         EndpointsMixin(
