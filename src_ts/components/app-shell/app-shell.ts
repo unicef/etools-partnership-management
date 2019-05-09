@@ -320,7 +320,6 @@ class AppShell extends connect(store)(
        * This will be triggered once at page load or, after page load, on menu option tap event.
        * The loading message is disabled by *-module.html elements ready callback (in both cases)
        */
-
       fireEvent(this, 'global-loading', {
         active: true,
         loadingSource: 'main-page'
