@@ -1,66 +1,18 @@
-eTools Partnership Management
-====================================
+[![Built with pwa–starter–kit](https://img.shields.io/badge/built_with-pwa–starter–kit_-blue.svg)](https://github.com/Polymer/pwa-starter-kit "Built with pwa–starter–kit")
 
-Installation
-------------
+# Etools Frontend Template App
 
-Using git, clone to a local directory:
+This an app shell for Unicef eTools apps, a starting point based on Polymer 3, Redux and Typescript. 
 
-```bash
-$ git clone https://github.com/unicef/etools-partnership-management.git
-```
-Assuming node and npm are already installed, make sure bower is also installed, if not run:
+## Install
+* requirements: `node`, `npm`, `polymer-cli`, `typescript`, `gulp`
+* `npm install`
+* `npm run start`
 
-```bash
-$ npm install -g bower
-```
-Also install polymer-cli:
-```bash
-$ npm install -g polymer-cli
-```
+Check `package.json` `scripts` for more...
 
-Install packages:
-```bash
-$ npm install
-$ bower install
-```
-
-or run:
-
-```bash
-$ ./dev-reinstall.sh
-```
-
-Build Application
------------------
-Lint your code:
-```bash
-$ npm run lint
-```
-and fix all ESLint and `polymer lint` errors.
-
-For `polymer lint` there are some exception:
-* `The element app-shell is not defined` - caused by file import being made in js code.
-* `data-* attributes must be accessed as attributes. i.e. you must write:  data-items$="{{...}}` - `dataItems` property 
-exists, escape or rename in future updates.
-
-To build the app, just run (**the build will fail if there are eslint errors**):
-
-```bash
-$ npm run build
-```
-
-We will be using a bundled build since we don't support
-HHTP/2 and server push.
-
-2 builds are generated: ES5 and ES6 and the server will know which build to serve 
-by browser capabilities.
-
-Run Application
----------------
-
-This application is part of [etools-infra](https://github.com/unicef/etools-infra) 
-and runs under a customized setup of etools apps. After `etools-infra` is installed the PMP ap can be accessed 
-for devs at `http://localhost:8082/pmp`
-
-
+#### TODO: 
+* Update page header element to use etools-app-selector, countries dropdown, profile menu and refresh data button
+* Improve documentation
+* Update tests
+* Test build

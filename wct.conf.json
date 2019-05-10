@@ -1,8 +1,16 @@
 {
-  "verbose": false,
+  "suites": ["test/unit"],
   "plugins": {
     "local": {
-      "browsers": ["firefox"]
+      "browserOptions": {
+        "chrome": [
+          "headless",
+          "disable-gpu"
+        ],
+        "firefox": [
+          "-headless"
+        ]
+      }
     }
   }
 }

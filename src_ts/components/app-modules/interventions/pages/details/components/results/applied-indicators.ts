@@ -1,0 +1,169 @@
+import { PolymerElement, html } from '@polymer/polymer';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
+import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
+import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import './applied-indicator.js';
+import {logError} from 'etools-behaviors/etools-logging.js';
+import { property } from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog';
+import { AppliedIndicatorEl } from './applied-indicator.js';
+
+
+/**
+  * @polymer
+  * @customElement
+  * @appliesMixin RepeatableDataSetsMixin
+  */
+class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
+
+  static get template() {
+    return html`
+      <style>
+        [hidden] {
+          display: none !important;
+        }
+
+        applied-indicator {
+          margin-right: -24px;
+        }
+      </style>
+      <template is="dom-repeat"
+                items="{{dataItems}}"
+                as="indicator" index-as="indicatorIndex">
+        <applied-indicator hidden$="[[_hideIndicator(indicator, showInactiveIndicators)]]"
+                          data-args$="[[indicatorIndex]]"
+                          on-edit-indicator="_editIndicator"
+                          on-delete-indicator="_openDeleteConfirmation"
+                          on-deactivate-indicator="_openDeactivateConfirmation"
+                          indicator="[[indicator]]"
+                          intervention-status="[[interventionStatus]]"
+                          edit-mode="[[editMode]]">
+        </applied-indicator>
+      </template>
+    `;
+  }
+
+  @property({type: String})
+  _deleteEpName: string = 'getEditDeleteIndicator';
+
+  @property({type: String})
+  resultLinkIndex!: string | number;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Number})
+  cpOutputId!: number;
+
+  @property({type: Object})
+  deactivateConfirmDialog!: EtoolsDialog;
+
+  @property({type: Number})
+  indicToDeactivateIndex!: number;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
+
+
+  private _onDeactivateHandler!: (...args: any[]) => any;
+
+  ready() {
+    super.ready();
+
+    let deactivateDialog = document.querySelector('body')!
+        .querySelector('etools-dialog#deactivateIndicatorDialog');
+    if (deactivateDialog) {
+      this.deactivateConfirmDialog = deactivateDialog as EtoolsDialog;
+    } else {
+      this._createDeactivateConfirmDialog();
+    }
+  }
+
+  _hideIndicator(indicator: any, showInactiveIndicators: boolean) {
+    if (!indicator.is_active) {
+      return !showInactiveIndicators;
+    }
+    return false;
+  }
+
+  _createDeactivateConfirmDialog() {
+    let dialogContent = document.createElement('div');
+    dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
+    this.deactivateConfirmDialog = createDynamicDialog({
+      title: 'Deactivate confirmation',
+      okBtnText: 'Deactivate',
+      cancelBtnText: 'Cancel',
+      size: 'md',
+      content: dialogContent,
+      id: 'deactivateIndicatorDialog'
+    });
+    document.querySelector('body')!.appendChild(this.deactivateConfirmDialog);
+  }
+
+  _editIndicator(event: CustomEvent) {
+    let indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
+    // @ts-ignore
+    let llResultIndex = parseInt(this.resultLinkIndex, 10);
+    let indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
+
+    let resultMap = {
+      cpOutputId: this.cpOutputId,
+      llResultIndex: llResultIndex,
+      llResultId: indicator.lower_result,
+      indicatorData: indicator,
+      appliedIndicatorsIndex: indicatorIndex
+    };
+    fireEvent(this, 'open-indicator-dialog', resultMap);
+  }
+
+  _openDeactivateConfirmation(event: CustomEvent) {
+    this.indicToDeactivateIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
+    this._onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
+    this.deactivateConfirmDialog.addEventListener('close', this._onDeactivateHandler);
+    this.deactivateConfirmDialog.opened = true;
+  }
+
+  _onDeactivateConfirmation(event: CustomEvent) {
+    this.deactivateConfirmDialog.removeEventListener('close', this._onDeactivateHandler);
+
+    if (!event.detail.confirmed) {
+      this.indicToDeactivateIndex = -1;
+      return;
+    }
+    let indicatorId = this.dataItems[this.indicToDeactivateIndex]
+        ? this.dataItems[this.indicToDeactivateIndex].id
+        : null;
+    if (!indicatorId) {
+      return;
+    }
+    let self = this;
+    let endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
+    this.sendRequest({
+      method: 'PATCH',
+      endpoint: endpoint,
+      body: {
+        is_active: false
+      }
+    }).then(function(resp: any) {
+      self._handleDeactivateResponse(resp);
+    }).catch(function(error: any) {
+      self._handleDeactivateError(error.response);
+    });
+  }
+
+  _handleDeactivateResponse(resp: any) {
+    this.set(['dataItems', this.indicToDeactivateIndex], resp);
+    this.indicToDeactivateIndex = -1;
+  }
+
+  _handleDeactivateError(err: any) {
+    fireEvent(this, 'toast', {text: 'Deactivate indicator error occurred', showCloseBtn: true});
+    logError('Deactivate indicator error occurred.', 'applies-indicators', err);
+    this.indicToDeactivateIndex = -1;
+  }
+}
+
+window.customElements.define('applied-indicators', AppliedIndicators);
