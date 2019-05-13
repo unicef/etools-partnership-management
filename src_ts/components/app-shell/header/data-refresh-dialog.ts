@@ -9,7 +9,8 @@ import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin';
 import { store } from '../../../store';
 import { RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
 import { fireEvent } from '../../utils/fire-custom-event';
-
+import { property } from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
@@ -17,8 +18,8 @@ import { fireEvent } from '../../utils/fire-custom-event';
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) {
-  [x: string]: any;
+class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
+
   static get is() {
     return 'data-refresh-dialog';
   }
@@ -92,34 +93,23 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
     `;
   }
 
-  static get properties() {
-    return {
-      interventionsSelected: {
-        type: Boolean,
-        value: false
-      },
-      partnersSelected: {
-        type: Boolean,
-        value: false
-      },
-      agreementsSelected: {
-        type: Boolean,
-        value: false
-      },
-      allSelected: {
-        type: Boolean,
-        value: false
-      },
-      anySelected: {
-        type: Boolean,
-        value: false
-      },
-      page: {
-        type: String,
-        notify: true
-      }
-    };
-  }
+  @property({type: Boolean})
+  interventionsSelected: boolean = false;
+
+  @property({type: Boolean})
+  partnersSelected: boolean = false;
+
+  @property({type: Boolean})
+  agreementsSelected: boolean = false;
+
+  @property({type: Boolean})
+  allSelected: boolean = false;
+
+  @property({type: Boolean})
+  anySelected: boolean = false;
+
+  @property({type: String, notify: true})
+  page!: string;
 
   static get observers() {
     return [
@@ -129,8 +119,8 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
   }
 
   open() {
-    if (!this.$.refreshDialog.opened) {
-      this.$.refreshDialog.opened = true;
+    if (!(this.$.refreshDialog as EtoolsDialog).opened) {
+      (this.$.refreshDialog as EtoolsDialog).opened = true;
     }
   }
 
@@ -238,6 +228,7 @@ class DataRefreshDialog extends (EtoolsPageRefreshMixin(PolymerElement) as any) 
     if (this.interventionsSelected) {
       return 'interventions';
     }
+    return this.page;
   }
 
   _resetRefreshSelection() {
