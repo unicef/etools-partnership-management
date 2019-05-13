@@ -310,6 +310,7 @@ class AppShell extends connect(store)(
     this._initListeners();
     this._createLeavePageDialog();
     window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+    this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
 
     if (this.module !== 'not-found') {
       /*
