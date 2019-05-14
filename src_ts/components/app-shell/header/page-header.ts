@@ -144,11 +144,11 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
   @property({type: Array})
   users: MinimalUser[] = [];
 
-  @property({type: Object,  notify: true, computed: '_convertCollection(sections)'})
-  allSections: GenericObject = {};
+  @property({type: Array,  notify: true, computed: '_convertCollection(sections)'})
+  allSections: LabelAndValue[] = [];
 
-  @property({type: Object,  notify: true, computed: '_convertCollection(offices)'})
-  allOffices: GenericObject = {};
+  @property({type: Array,  notify: true, computed: '_convertCollection(offices)'})
+  allOffices: LabelAndValue[] = [];
 
   @property({type: Array,  notify: true, computed: '_convertUsers(users)'})
   allUsers: LabelAndValue[] = [];
