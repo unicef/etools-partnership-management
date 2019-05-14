@@ -13,7 +13,7 @@ import '../header/countries-dropdown';
 import ProfileOperations from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import { fireEvent } from '../../utils/fire-custom-event';
-import {GenericObject, User} from '../../../typings/globals.types';
+import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
 import { property } from '@polymer/decorators';
 
@@ -142,7 +142,7 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
   sections: any[] = [];
 
   @property({type: Array})
-  users: any[] = [];
+  users: MinimalUser[] = [];
 
   @property({type: Object,  notify: true, computed: '_convertCollection(sections)'})
   allSections: GenericObject = {};
@@ -150,14 +150,14 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
   @property({type: Object,  notify: true, computed: '_convertCollection(offices)'})
   allOffices: GenericObject = {};
 
-  @property({type: Object,  notify: true, computed: '_convertUsers(users)'})
-  allUsers: GenericObject = {};
+  @property({type: Array,  notify: true, computed: '_convertUsers(users)'})
+  allUsers: LabelAndValue[] = [];
 
   @property({type: String})
   environment: string | null = _checkEnvironment();
 
   @property({type: Object})
-  profile: GenericObject | null = null;
+  profile: User | null = null;
 
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
@@ -191,8 +191,8 @@ class PageHeader extends connect(store)((GestureEventListeners(ProfileOperations
         !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
 
-      if (this.profile && (this.profile as User).countries_available) {
-        this.countries = this._updateCountriesList((this.profile as User).countries_available);
+      if (this.profile && this.profile.countries_available) {
+        this.countries = this._updateCountriesList(this.profile.countries_available);
       }
     }
   }
