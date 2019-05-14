@@ -8,6 +8,7 @@ import { fireEvent } from '../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 import { Constructor } from '../../typings/globals.types';
 import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -18,16 +19,11 @@ import { PolymerElement } from '@polymer/polymer';
 function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) {
     class profileOperations extends EndpointsMixin(UserDataMixin(baseClass)) {
 
-      public static get properties() {
-        return {
-          _saveActionInProgress: Boolean,
-          profileSaveLoadingMsgSource: String,
-        };
-      }
+      @property({type: Boolean})
+      _saveActionInProgress: boolean = false;
 
-      protected _saveActionInProgress: boolean = false;
-      public profileSaveLoadingMsgSource: string = 'profile-modal';
-
+      @property({type: String})
+      profileSaveLoadingMsgSource: string = 'profile-modal';
 
       protected _dispatchSaveProfileRequest(profile: any) {
         let self = this;
