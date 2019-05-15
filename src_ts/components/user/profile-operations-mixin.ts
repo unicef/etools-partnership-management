@@ -6,8 +6,9 @@ import UserDataMixin from './user-data-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data.js';
 import {fireEvent} from '../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-import {Constructor} from '../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
+import { Constructor } from '../../typings/globals.types';
+import { PolymerElement } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
 
 /**
  * @polymer
@@ -18,16 +19,11 @@ import {PolymerElement} from '@polymer/polymer';
 function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
 
-    public static get properties() {
-      return {
-        _saveActionInProgress: Boolean,
-        profileSaveLoadingMsgSource: String
-      };
-    }
+    @property({type: Boolean})
+    _saveActionInProgress: boolean = false;
 
-    protected _saveActionInProgress: boolean = false;
-    public profileSaveLoadingMsgSource: string = 'profile-modal';
-
+    @property({type: String})
+    profileSaveLoadingMsgSource: string = 'profile-modal';
 
     protected _dispatchSaveProfileRequest(profile: any) {
       const self = this;

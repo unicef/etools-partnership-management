@@ -12,9 +12,10 @@ import 'etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {GenericObject} from '../../../typings/globals.types';
+import { fireEvent } from '../../utils/fire-custom-event';
+import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -24,10 +25,11 @@ import '../../layout/support-btn';
  * @appliesMixin GestureEventListeners
  * @appliesMixin ProfileOperationsMixin
  */
+
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  (GestureEventListeners(
-    ProfileOperationsMixin(PolymerElement)) as any)) {
+  GestureEventListeners(
+    ProfileOperationsMixin(PolymerElement))) {
 
   public static get template() {
     // main template
@@ -131,66 +133,41 @@ class PageHeader extends connect(store)(
     `;
   }
 
-  public static get properties() {
-    return {
-      // This shouldn't be neccessary, but the polymer lint isn't picking up
-      rootPath: String,
+  @property({type: String})
+  rootPath!: string;
 
-      countries: Array,
-      offices: Array,
-      sections: Array,
-      users: Array,
+  @property({type: Array})
+  countries!: any[];
 
-      allSections: {
-        type: Object,
-        notify: true,
-        computed: '_convertCollection(sections)'
-      },
-      allOffices: {
-        type: Object,
-        notify: true,
-        computed: '_convertCollection(offices)'
-      },
-      allUsers: {
-        type: Object,
-        notify: true,
-        computed: '_convertUsers(users)'
-      },
-      environment: {
-        type: String,
-        value: () => _checkEnvironment()
-      },
+  @property({type: Array})
+  offices: any[] = [];
 
-      profile: Object,
+  @property({type: Array})
+  sections: any[] = [];
 
-      editableFields: {
-        type: Array,
-        value: [
-          'office',
-          'section',
-          'job_title',
-          'phone_number',
-          'oic',
-          'supervisor'
-        ]
-      },
+  @property({type: Array})
+  users: MinimalUser[] = [];
 
-      userProfileDialog: Object
-    };
-  }
+  @property({type: Array,  notify: true, computed: '_convertCollection(sections)'})
+  allSections: LabelAndValue[] = [];
 
-  // @ts-ignore
+  @property({type: Array,  notify: true, computed: '_convertCollection(offices)'})
+  allOffices: LabelAndValue[] = [];
 
-  public sections: object[] = [];
-  public allSections: object = {};
+  @property({type: Array,  notify: true, computed: '_convertUsers(users)'})
+  allUsers: LabelAndValue[] = [];
 
-  public offices: object[] = [];
-  public allOffices: object = {};
+  @property({type: String})
+  environment: string | null = _checkEnvironment();
 
-  public users: object[] = [];
-  public allUsers: object = {};
+  @property({type: Object})
+  profile: User | null = null;
 
-  public profile: object | null = null;
+  @property({type: Array})
+  editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
+
+  @property({type: Object})
+  userProfileDialog!: GenericObject;
 
   public static get observers() {
     return ['_updateCountriesList(profile.countries_available)'];
@@ -217,8 +194,9 @@ class PageHeader extends connect(store)(
     if (state.commonData.currentUser !== null &&
         !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
-      if (this.profile && (this.profile as any).countries_available) {
-        this.countries = this._updateCountriesList((this.profile as any).countries_available);
+
+      if (this.profile && this.profile.countries_available) {
+        this.countries = this._updateCountriesList(this.profile.countries_available);
       }
     }
   }
@@ -230,14 +208,13 @@ class PageHeader extends connect(store)(
   public _setBgColor() {
     // If not production environment, changing header color to red
     if (this.environment) {
-      // @ts-ignore
       this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
     }
   }
 
   private _updateCountriesList(countries: any[]) {
     if (!countries) {
-      return;
+      return [];
     }
 
     const countriesList: any[] = countries.map((arrayItem) => {

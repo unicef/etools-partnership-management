@@ -12,8 +12,9 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../store';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../store';
+import { property } from '@polymer/decorators';
 
 /**
  * PMP main menu
@@ -147,21 +148,14 @@ class AppMenu extends connect(store)(
     `;
   }
 
-  public static get properties() {
-    return {
-      selectedOption: String,
-      rootPath: String,
-      smallMenu: {
-        type: Boolean,
-        reflectToAttribute: true,
-        observer: '_menuSizeChange'
-      }
-    };
-  }
+  @property({type: String})
+  selectedOption: string = '';
 
-  public selectedOption: string = '';
-  public rootPath: string = '';
-  public smallMenu: boolean = false;
+  @property({type: String})
+  rootPath: string = '';
+
+  @property({type: Boolean, reflectToAttribute: true, observer: '_menuSizeChange'})
+  smallMenu: boolean = false;
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
