@@ -62,11 +62,6 @@ class EtoolsToast extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-    };
-  }
-
   public fitInto: object | null = null;
 
   public show(details: object) {

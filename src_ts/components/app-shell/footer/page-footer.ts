@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import { property } from '@polymer/decorators';
 
 /**
  * page footer element
@@ -69,11 +70,8 @@ class PageFooter extends PolymerElement {
     `;
   }
 
-  public static get properties() {
-    return {
-        rootPath: String
-    }
-  }
+  @property({type: String})
+  rootPath!: string;
 
 }
 
