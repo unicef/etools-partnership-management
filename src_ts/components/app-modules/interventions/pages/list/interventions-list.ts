@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import {customElement, property} from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icon/iron-icon.js';
@@ -47,15 +47,14 @@ let _interventionsLastNavigated = '';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin PaginationMixin
  */
-@customElement('interventions-list')
-// @ts-ignore
+
 class InterventionsList extends connect(store)(
-    ListFiltersMixin(
-      ListsCommonMixin(
-        CommonMixin(
-          PaginationMixin(
-            FrNumbersConsistencyMixin(
-              PolymerElement)))))) {
+  ListFiltersMixin(
+    ListsCommonMixin(
+      CommonMixin(
+        PaginationMixin(
+          FrNumbersConsistencyMixin(
+            PolymerElement)))))) {
 
   static get template() {
     return html`
@@ -781,3 +780,4 @@ class InterventionsList extends connect(store)(
 
 }
 
+window.customElements.define('interventions-list', InterventionsList);

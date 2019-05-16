@@ -231,8 +231,7 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
     return !this.disaggregations || !this.disaggregations.length;
   }
 
-  // @ts-ignore
-  _disagregationsChanged(disaggregs: Disaggregation[], environmentFlags: EnvFlags) {
+  _disagregationsChanged(disaggregs: Disaggregation[], _environmentFlags: EnvFlags) {
     if (!disaggregs || !disaggregs.length) {
       this.dataItems = [];
       return;

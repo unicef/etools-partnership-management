@@ -28,6 +28,11 @@ import {
 
 // Lazy loading CommonData reducer.
 import commonData from '../../reducers/common-data.js';
+import pageData from '../../reducers/page-data.js';
+import uploadStatus from '../../reducers/upload-status.js';
+import agreements from '../../reducers/agreements.js';
+import partners from '../../reducers/partners.js';
+
 store.addReducers({
   // @ts-ignore
   commonData,
@@ -75,17 +80,12 @@ import UtilsMixin from '../mixins/utils-mixin.js';
 // import global config and dexie db config
 import '../../config/config.js';
 import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../actions/upload-status.js';
-import uploadStatus from '../../reducers/upload-status.js';
-import agreements from '../../reducers/agreements.js';
-import partners from '../../reducers/partners.js';
-
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
 
 import {BASE_URL} from '../../config/config';
 import {setInAmendment} from '../../actions/page-data.js';
-import pageData from '../../reducers/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import {fireEvent} from '../utils/fire-custom-event.js';
 import {objectsAreTheSame} from '../utils/utils.js';

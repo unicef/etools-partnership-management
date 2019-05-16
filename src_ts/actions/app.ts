@@ -21,7 +21,7 @@ export type AppAction = AppActionUpdatePage | AppActionUpdateDrawerState;
 type ThunkResult = ThunkAction<void, RootState, undefined, AppAction>;
 
 // @ts-ignore
-export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch) => {
+export const navigate: ActionCreator<ThunkResult> = (_path: string) => (dispatch) => {
 //   // Extract the page name from path.
 //   const p: string = path.replace('/pmp', '');
 //   const page = p === '/' ? 'page-one' : p.slice(1);
@@ -35,7 +35,7 @@ export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch)
 };
 
 // @ts-ignore
-const loadPage: ActionCreator<ThunkResult> = (page: string) => (dispatch) => {
+const loadPage: ActionCreator<ThunkResult> = (_page: string) => (dispatch) => {
 //   switch(page) {
 //     case 'page-one':
 //       import('../components/pages/page-one.js').then(() => {

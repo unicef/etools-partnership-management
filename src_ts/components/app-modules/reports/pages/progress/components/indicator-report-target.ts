@@ -107,7 +107,7 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   _getTargetValue(displayType: string, target: any) {
     switch (displayType) {
       case 'number':
-        return this._formatNumber(target.v, '-', 0, '\,');
+        return this._formatNumber(target.v, '-', 0, ',');
       case 'ratio':
         return target.v + '/' + target.d;
       case 'percentage':

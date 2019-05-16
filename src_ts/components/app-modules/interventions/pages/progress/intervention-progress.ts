@@ -42,7 +42,9 @@ declare const moment: any;
  * @appliesMixin UtilsMixin
  */
 class InterventionProgress extends connect(store)(
-  UtilsMixin(CommonMixin(EndpointsMixin(EtoolsCurrency(PolymerElement))))) {
+  UtilsMixin(CommonMixin(EndpointsMixin(
+    // eslint-disable-next-line new-cap
+    EtoolsCurrency(PolymerElement))))) {
 
   static get template() {
     return html`
@@ -412,7 +414,9 @@ class InterventionProgress extends connect(store)(
 
   _getTimeProgress(start: string, end: string) {
     const today = new Date();
+    // eslint-disable-next-line new-cap
     const startDt = EdgeAcceptableDateParse(start);
+    // eslint-disable-next-line new-cap
     const endDt = EdgeAcceptableDateParse(end);
     try {
       if (dateIsBetween(startDt, endDt, today)) {
@@ -440,6 +444,7 @@ class InterventionProgress extends connect(store)(
   }
 
   _convertToDisplayFormat(strDt: string) {
+    // eslint-disable-next-line new-cap
     return moment(EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
   }
 
