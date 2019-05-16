@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -6,19 +6,19 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-dropdown/etools-dropdown.js';
 
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { DomRepeatEvent } from '../../../../../../../typings/globals.types';
-import { Disaggregation } from '../../../../../../../typings/intervention.types';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-import { property } from '@polymer/decorators';
-import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
-import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
-import { flaggedSortedDisaggregs } from '../../../../../../../reducers/common-data';
+import {DomRepeatEvent} from '../../../../../../../typings/globals.types';
+import {Disaggregation} from '../../../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {property} from '@polymer/decorators';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {flaggedSortedDisaggregs} from '../../../../../../../reducers/common-data';
 
 
 /**
@@ -124,13 +124,13 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
   }
 
   _onDisaggregationSelected(event: DomRepeatEvent) {
-    let selectedDisagreg = event.detail.selectedItem;
+    const selectedDisagreg = event.detail.selectedItem;
     if (!selectedDisagreg) {
       return;
     }
 
-    let splitElId = (event.target as EtoolsDropdownEl).id.split('_');
-    let index = parseInt(splitElId[splitElId.length - 1]);
+    const splitElId = (event.target as EtoolsDropdownEl).id.split('_');
+    const index = parseInt(splitElId[splitElId.length - 1]);
 
     if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
       if (event.model.item.disaggregId === null) {
@@ -146,7 +146,7 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
 
   }
 
-  _displayDisaggregationGroups(selectedDisagreg: Disaggregation, index: number){
+  _displayDisaggregationGroups(selectedDisagreg: Disaggregation, index: number) {
     this._getDisagregGroupElem(index).value =
         selectedDisagreg.disaggregation_values.map(d => d.value).join('; ');
   }

@@ -7,7 +7,7 @@ import 'etools-data-table/etools-data-table';
 import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
-import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import FrontendPaginationMixin from '../../../mixins/frontend-pagination-mixin';
 
 import './add-disaggregation-dialog';
@@ -18,11 +18,11 @@ import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
-import { EnvFlags, User } from '../../../../typings/globals.types';
-import { userIsPme } from '../../../user/user-permissions';
-import {property} from "@polymer/decorators/lib/decorators";
-import {AddDisaggregationDialogEl} from "./add-disaggregation-dialog";
-import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button'
+import {EnvFlags, User} from '../../../../typings/globals.types';
+import {userIsPme} from '../../../user/user-permissions';
+import {property} from '@polymer/decorators/lib/decorators';
+import {AddDisaggregationDialogEl} from './add-disaggregation-dialog';
+import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 
 
 /**
@@ -206,9 +206,9 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
   }
 
   _toggleActive(e: any) {
-    let self = this;
+    const self = this;
 
-    let requestParams = {
+    const requestParams = {
       method: 'PATCH',
       endpoint: this.getEndpoint('patchDisaggregations', {id: e.model.item.id}),
       body: {active: e.model.item.active}
@@ -231,8 +231,7 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
     return !this.disaggregations || !this.disaggregations.length;
   }
 
-  // @ts-ignore
-  _disagregationsChanged(disaggregs: Disaggregation[], environmentFlags: EnvFlags) {
+  _disagregationsChanged(disaggregs: Disaggregation[], _environmentFlags: EnvFlags) {
     if (!disaggregs || !disaggregs.length) {
       this.dataItems = [];
       return;

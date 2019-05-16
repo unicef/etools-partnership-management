@@ -9,16 +9,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 // import { LitElement, html, property, PropertyValues } from '@polymer/lit-element';
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
-import { setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
+import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 // import {installRouter} from 'pwa-helpers/router.js';
 
 // This element is connected to the Redux store.
-import { store, RootState } from '../../store.js';
+import {store, RootState} from '../../store.js';
 
 // These are the actions needed by this element.
 import {
@@ -28,6 +28,11 @@ import {
 
 // Lazy loading CommonData reducer.
 import commonData from '../../reducers/common-data.js';
+import pageData from '../../reducers/page-data.js';
+import uploadStatus from '../../reducers/upload-status.js';
+import agreements from '../../reducers/agreements.js';
+import partners from '../../reducers/partners.js';
+
 store.addReducers({
   // @ts-ignore
   commonData,
@@ -52,17 +57,17 @@ import {AppShellStyles} from './app-shell-styles';
 import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
 import 'etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
-import CommonData from '../common-data-mixins/common-data.js'
-import ToastNotifications from '../toast-notifications/toast-notification-mixin.js';
-import ScrollControl from '../mixins/scroll-control-mixin.js';
+import CommonDataMixin from '../common-data-mixins/common-data.js';
+import ToastNotificationsMixin from '../toast-notifications/toast-notification-mixin.js';
+import ScrollControlMixin from '../mixins/scroll-control-mixin.js';
 import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
 import UserDataMixin from '../user/user-data-mixin';
 
 import './menu/app-menu.js';
-import './header/page-header.js'
+import './header/page-header.js';
 import './header/data-refresh-dialog';
 import {DataRefreshDialog} from './header/data-refresh-dialog';
-import './footer/page-footer.js'
+import './footer/page-footer.js';
 
 import '../environment-flags/environment-flags';
 import '../app-modules/partners/data/partners-list-data.js';
@@ -74,25 +79,20 @@ import UtilsMixin from '../mixins/utils-mixin.js';
 
 // import global config and dexie db config
 import '../../config/config.js';
-import { RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
-import uploadStatus from '../../reducers/upload-status.js';
-import agreements from '../../reducers/agreements.js';
-import partners from '../../reducers/partners.js';
-
+import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../actions/upload-status.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
 
 import {BASE_URL} from '../../config/config';
-import { setInAmendment } from '../../actions/page-data.js';
-import pageData from '../../reducers/page-data.js';
+import {setInAmendment} from '../../actions/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
-import { fireEvent } from '../utils/fire-custom-event.js';
-import { objectsAreTheSame } from '../utils/utils.js';
-import { AppDrawerElement } from '@polymer/app-layout/app-drawer/app-drawer.js';
-import { property } from '@polymer/decorators';
-import { GenericObject, User, UserPermissions } from '../../typings/globals.types.js';
-import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
+import {fireEvent} from '../utils/fire-custom-event.js';
+import {objectsAreTheSame} from '../utils/utils.js';
+import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
+import {property} from '@polymer/decorators';
+import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import EtoolsDialog from 'etools-dialog';
 setRootPath(BASE_URL);
 
@@ -101,10 +101,10 @@ setRootPath(BASE_URL);
  * @polymer
  * @appliesMixin GestureEventListeners
  * @appliesMixin AppMenuMixin
- * @appliesMixin CommonData
+ * @appliesMixin CommonDataMixin
  * @appliesMixin ToastNotifications
  * @appliesMixin EnvironmentFlagsMixin
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin AmendmentModeUIMixin
  * @appliesMixin UserDataMixin
  * @appliesMixin LoadingMixin
@@ -112,16 +112,17 @@ setRootPath(BASE_URL);
  */
 class AppShell extends connect(store)(
   UploadsMixin(
-  GestureEventListeners(
-  AppMenuMixin(
-  ToastNotifications(
-  ScrollControl(
-  AmendmentModeUIMixin(
-  LoadingMixin(
-  UtilsMixin(
-  UserDataMixin(
-  CommonData(
-  PolymerElement))))))))))) {
+    // eslint-disable-next-line new-cap
+    GestureEventListeners(
+      AppMenuMixin(
+        ToastNotificationsMixin(
+          ScrollControlMixin(
+            AmendmentModeUIMixin(
+              LoadingMixin(
+                UtilsMixin(
+                  UserDataMixin(
+                    CommonDataMixin(
+                      PolymerElement))))))))))) {
 
   public static get template() {
     // main template
@@ -282,8 +283,8 @@ class AppShell extends connect(store)(
 
   @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
   appLocRoute!: {
-    path: string,
-    __queryParams: GenericObject
+    path: string;
+    __queryParams: GenericObject;
   };
 
   @property({type: Object})
@@ -334,7 +335,7 @@ class AppShell extends connect(store)(
 
     // installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
     installMediaQueryWatcher(`(min-width: 460px)`,
-        () => store.dispatch(updateDrawerState(false)));
+      () => store.dispatch(updateDrawerState(false)));
 
     this.createToastNotificationElement();
   }
@@ -399,7 +400,7 @@ class AppShell extends connect(store)(
   }
 
   public isInterventionReports(path: string) {
-    let pattern = new RegExp('\\/pmp\\/interventions\\/\\d*\\/reports', 'i');
+    const pattern = new RegExp('\\/pmp\\/interventions\\/\\d*\\/reports', 'i');
     return pattern.test(path);
   }
 
@@ -475,13 +476,13 @@ class AppShell extends connect(store)(
   private _canAccessPage(module: string) {
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
-    let defer: any = {};
+    const defer: any = {};
     defer.promise = new Promise(function(resolve, reject) {
       defer.resolve = resolve;
       defer.reject = reject;
     });
 
-    let isPrpModule = this._prpModules.indexOf(module) > -1;
+    const isPrpModule = this._prpModules.indexOf(module) > -1;
 
     if (!isPrpModule) {
       defer.resolve(true);
@@ -519,7 +520,7 @@ class AppShell extends connect(store)(
     });
 
     // Close a non-persistent drawer when the module & route are changed.
-    let appDrawer = this.$.drawer as AppDrawerElement;
+    const appDrawer = this.$.drawer as AppDrawerElement;
     if (!appDrawer.persistent) {
       appDrawer.close();
     }
@@ -555,12 +556,12 @@ class AppShell extends connect(store)(
       return;
     }
     // resolve element import url
-    let appModuleMainElId = this._getAppModuleMainElId(module);
-    let pageUrl = this._getModuleMainElUrl(appModuleMainElId);
+    const appModuleMainElId = this._getAppModuleMainElId(module);
+    const pageUrl = this._getModuleMainElUrl(appModuleMainElId);
 
     // import main module element if needed
-    let moduleMainEl = this._getModuleMainElement(appModuleMainElId);
-    let isPolymerElement = moduleMainEl instanceof PolymerElement;
+    const moduleMainEl = this._getModuleMainElement(appModuleMainElId);
+    const isPolymerElement = moduleMainEl instanceof PolymerElement;
     if (!isPolymerElement) {
       // moduleMainEl is null => make the import
       import(pageUrl).then(() => {
@@ -588,14 +589,14 @@ class AppShell extends connect(store)(
   private _successfulImportCallback(moduleId: string) {
     // moduleMainEl will be available only after import successfully completes
     // @ts-ignore
-    let moduleMainEl = this._getModuleMainElement(moduleId);
+    const moduleMainEl = this._getModuleMainElement(moduleId);
     // make sure to redirect to list page if necessary
     afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
   }
 
   // @ts-ignore
   private _activeModuleIs(activeModule: string, expectedModule: string) {
-    let pagesToMatch = expectedModule.split('|');
+    const pagesToMatch = expectedModule.split('|');
     return pagesToMatch.indexOf(activeModule) > -1;
   }
 
@@ -635,9 +636,9 @@ class AppShell extends connect(store)(
   }
 
   private _createLeavePageDialog() {
-    let msg = document.createElement('span');
+    const msg = document.createElement('span');
     msg.innerText = 'Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!';
-    let conf: any = {
+    const conf: any = {
       title: 'Are you sure you want to leave this page?',
       size: 'md',
       okBtnText: 'Leave',
@@ -664,7 +665,7 @@ class AppShell extends connect(store)(
 
       fireEvent(this, 'clear-loading-messages', {bubbles: true, composed: true});
       this.shadowRoot!.querySelector('app-menu')!
-          .shadowRoot!.querySelector('iron-selector')!.select(this.routeData.module);
+        .shadowRoot!.querySelector('iron-selector')!.select(this.routeData.module);
     }
   }
 }

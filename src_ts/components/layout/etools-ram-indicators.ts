@@ -1,12 +1,12 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import 'etools-loading/etools-loading.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -87,15 +87,15 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
   _getRamIndicatorsData(interventionId: number, cpId: number) {
     // Debounce to make sure the request is called only after both params are updated
     this._debounceRamIndRequest = Debouncer.debounce(this._debounceRamIndRequest,
-        timeOut.after(100),
-        () => {
-          const validIds = interventionId > 0 && cpId > 0;
-          if (!validIds) {
-            return;
-          }
+      timeOut.after(100),
+      () => {
+        const validIds = interventionId > 0 && cpId > 0;
+        if (!validIds) {
+          return;
+        }
 
-          this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
-        });
+        this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+      });
   }
 
   _requestRamIndicatorsData(reqPayload: any) {

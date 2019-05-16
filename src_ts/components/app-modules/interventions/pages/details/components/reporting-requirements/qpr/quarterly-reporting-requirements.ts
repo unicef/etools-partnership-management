@@ -1,28 +1,28 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin';
 import CONSTANTS from '../../../../../../../../config/app-constants';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import GenerateQuarterlyReportingRequirementsMixin from '../mixins/generate-quarterly-reporting-requirements-mixin';
 
 import '@polymer/paper-button/paper-button.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 
 import './edit-qpr-dialog.js';
 import './qpr-list.js';
-import { property } from '@polymer/decorators';
-import { EditQprDialogEl } from './edit-qpr-dialog.js';
+import {property} from '@polymer/decorators';
+import {EditQprDialogEl} from './edit-qpr-dialog.js';
 
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin ReportingRequirementsCommon
- * @appliesMixin GenerateQuarterlyReportingRequirements
+ * @appliesMixin ReportingRequirementsCommonMixin
+ * @appliesMixin GenerateQuarterlyReportingRequirementsMixin
  */
 class QuarterlyReportingRequirements extends
-   GenerateQuarterlyReportingRequirementsMixin(
+  GenerateQuarterlyReportingRequirementsMixin(
     ReportingRequirementsCommonMixin(PolymerElement)) {
 
   static get template() {
@@ -61,7 +61,7 @@ class QuarterlyReportingRequirements extends
   editQprDialog!: EditQprDialogEl;
 
   @property({type: Boolean})
-  editMode!: Boolean;
+  editMode!: boolean;
 
 
   ready() {
@@ -112,4 +112,4 @@ class QuarterlyReportingRequirements extends
 }
 
 window.customElements.define('quarterly-reporting-requirements', QuarterlyReportingRequirements);
-export {QuarterlyReportingRequirements as QuarterlyReportingRequirementsEL}
+export {QuarterlyReportingRequirements as QuarterlyReportingRequirementsEL};

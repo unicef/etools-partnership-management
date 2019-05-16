@@ -8,12 +8,14 @@ import 'etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
-import { isEmptyObject } from '../../../../../utils/utils.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {isEmptyObject} from '../../../../../utils/utils.js';
+import {PolymerElement, html} from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
 import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -21,8 +23,7 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
   static get is() {
     return 'indicator-details';
@@ -174,37 +175,28 @@ class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as an
     `;
   }
 
-  static get properties() {
-    return {
-      indicatorReportId: Number,
-      indicatorReport: {
-        type: Object,
-        value: {}
-      },
-      loading: {
-        type: Boolean,
-        value: false
-      },
-      selected: {
-        type: Number,
-        value: 0
-      },
-      isClusterIndicator: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-      locationData: {
-        type: Array,
-        computed: '_computeLocationData(indicatorReport.indicator_location_data)'
-      }
-    };
-  }
+  @property({type: Number})
+  indicatorReportId!: number;
+
+  @property({type: Object})
+  indicatorReport: GenericObject = {};
+
+  @property({type: Boolean})
+  loading: boolean = false;
+
+  @property({type: Number})
+  selected: number = 0;
+
+  @property({type: Boolean, reflectToAttribute: true})
+  isClusterIndicator: boolean = false;
+
+  @property({type: Array, computed: '_computeLocationData(indicatorReport.indicator_location_data)'})
+  locationData!: any[];
 
   _shouldRefreshIndicatorDetails() {
     return this.indicatorReportId &&
         (isEmptyObject(this.indicatorReport) ||
-          (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(this.indicatorReportId, 10)));
+          (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)));
   }
 
   getIndicatorDetails() {
@@ -213,14 +205,14 @@ class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as an
       return;
     }
 
-    let params = this._computeParams(this.indicatorReportId);
+    const params = this._computeParams(String(this.indicatorReportId));
     this._showLoading();
-    let self = this;
+    const self = this;
     this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response: any) {
       self.set('indicatorReport', (response && response[0]) ? response[0] : {});
       self._hideLoading();
     }).catch(function(error: any) {
-      logError('Indicator details data request failed!', 'reports-indicator-details', error)
+      logError('Indicator details data request failed!', 'reports-indicator-details', error);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
       self._hideLoading();
     });
@@ -242,32 +234,32 @@ class IndicatorDetails extends (EndpointsMixin(UtilsMixin(PolymerElement)) as an
   }
 
   _computeLocationData(rawLocationData: any) {
-    let byLocation = (rawLocationData || [])
-        .reduce(function(acc: any, location: any) {
-          let locationId = location.location.id;
+    const byLocation = (rawLocationData || [])
+      .reduce(function(acc: any, location: any) {
+        const locationId = location.location.id;
 
-          if (typeof acc[locationId] === 'undefined') {
-            acc[locationId] = {
-              title: location.location.title,
-              byEntity: [],
-              selected: 0
-            };
-          }
+        if (typeof acc[locationId] === 'undefined') {
+          acc[locationId] = {
+            title: location.location.title,
+            byEntity: [],
+            selected: 0
+          };
+        }
 
-          acc[locationId].byEntity.push(location);
-          if (acc[locationId].byEntity.length >= 2) {
-            acc[locationId].selected = acc[locationId].byEntity.length - 1;
-          }
-          return acc;
-        }, {});
+        acc[locationId].byEntity.push(location);
+        if (acc[locationId].byEntity.length >= 2) {
+          acc[locationId].selected = acc[locationId].byEntity.length - 1;
+        }
+        return acc;
+      }, {});
 
     return Object.keys(byLocation)
-        .map(function(key) {
-          return byLocation[key];
-        })
-        .sort(function(a, b) {
-          return b.is_master_location_data - a.is_master_location_data;
-        });
+      .map(function(key) {
+        return byLocation[key];
+      })
+      .sort(function(a, b) {
+        return b.is_master_location_data - a.is_master_location_data;
+      });
   }
 
   _computeLocationStatus(location: any) {

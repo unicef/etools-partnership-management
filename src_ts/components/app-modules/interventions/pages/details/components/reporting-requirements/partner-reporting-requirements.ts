@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-selector/iron-selector.js';
@@ -12,12 +12,12 @@ import './qpr/quarterly-reporting-requirements.js';
 import './hr/humanitarian-reporting-req-unicef.js';
 import './hr/humanitarian-reporting-req-cluster.js';
 import './srr/special-reporting-requirements.js';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store.js';
-import { property } from '@polymer/decorators';
-import { HumanitarianReportingReqUnicefEl } from './hr/humanitarian-reporting-req-unicef.js';
-import { QuarterlyReportingRequirementsEL } from './qpr/quarterly-reporting-requirements.js';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store.js';
+import {property} from '@polymer/decorators';
+import {HumanitarianReportingReqUnicefEl} from './hr/humanitarian-reporting-req-unicef.js';
+import {QuarterlyReportingRequirementsEL} from './qpr/quarterly-reporting-requirements.js';
 
 
 /**
@@ -208,7 +208,7 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
     (this.$.hru as HumanitarianReportingReqUnicefEl).openUnicefHumanitarianRepReqDialog();
   }
 
-  _hideRepReqEditBtn(editMode: boolean, qprCount: Number) {
+  _hideRepReqEditBtn(editMode: boolean, qprCount: number) {
     return qprCount === 0 || !editMode;
   }
 

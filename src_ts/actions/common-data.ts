@@ -44,139 +44,139 @@ export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
-  countryProgrammes: object[]
-};
+  countryProgrammes: object[];
+}
 
 export interface CommonDataActionUpdateDisaggregations extends Action<'UPDATE_DISAGGREGATIONS'> {
-  disaggregations: object[]
-};
+  disaggregations: object[];
+}
 
 export interface CommonDataActionPatchDisaggregation extends Action<'PATCH_DISAGGREGATION'> {
   disaggregation: object;
-};
+}
 
 export interface CommonDataActionAddDisaggregation extends Action<'ADD_DISAGGREGATION'> {
   disaggregation: object;
-};
+}
 
 export interface CommonDataActionUpdateFileTypes extends Action<'UPDATE_FILE_TYPES'> {
-  fileTypes: object[]
-};
+  fileTypes: object[];
+}
 
 export interface CommonDataActionUpdateCpOutputs extends Action<'UPDATE_CP_OUTPUTS'> {
-  cpOutputs: object[]
-};
+  cpOutputs: object[];
+}
 
 export interface CommonDataActionUpdateSignedByUnicefUsers extends Action<'UPDATE_SIGNED_BY_UNICEF_USERS'> {
-  signedByUnicefUsers: object[]
-};
+  signedByUnicefUsers: object[];
+}
 
 export interface CommonDataActionUpdateDonors extends Action<'UPDATE_DONORS'> {
-  donors: object[]
-};
+  donors: object[];
+}
 
 export interface CommonDataActionUpdateGrants extends Action<'UPDATE_GRANTS'> {
-  grants: object[]
-};
+  grants: object[];
+}
 
 export interface CommonDataActionUpdateInterventionDocTypes extends Action<'UPDATE_INTERVENTION_DOC_TYPES'> {
-  intDocTypes: object[]
-};
+  intDocTypes: object[];
+}
 
 export interface CommonDataActionUpdateInterventionStatuses extends Action<'UPDATE_INTERVENTION_STATUSES'> {
-  statuses: object[]
-};
+  statuses: object[];
+}
 
 export interface CommonDataActionUpdateCurrencies extends Action<'UPDATE_CURRENCIES'> {
-  currencies: object[]
-};
+  currencies: object[];
+}
 
 export interface CommonDataActionUpdateAgreementTypes extends Action<'UPDATE_AGREEMENT_TYPES'> {
-  types: object[]
-};
+  types: object[];
+}
 
 export interface CommonDataActionUpdateAgreementStatuses extends Action<'UPDATE_AGREEMENT_STATUSES'> {
-  statuses: object[]
-};
+  statuses: object[];
+}
 
 export interface CommonDataActionUpdateAgencyChoices extends Action<'UPDATE_AGENCY_CHOICES'> {
-  agencyChoices: object[]
-};
+  agencyChoices: object[];
+}
 
 export interface CommonDataActionUpdateAgreementAmendmentTypes extends Action<'UPDATE_AGREEMENT_AMENDMENT_TYPES'> {
-  types: object[]
-};
+  types: object[];
+}
 
 export interface CommonDataActionUpdateCsoTypes extends Action<'UPDATE_CSO_TYPES'> {
-  csoTypes: object[]
-};
+  csoTypes: object[];
+}
 
 export interface CommonDataActionUpdatePartnerTypes extends Action<'UPDATE_PARTNER_TYPES'> {
-  partnerTypes: object[]
-};
+  partnerTypes: object[];
+}
 
 export interface CommonDataActionUpdateAssessmentTypes extends Action<'UPDATE_ASSESSMENT_TYPES'> {
-  assessmentTypes: object[]
-};
+  assessmentTypes: object[];
+}
 
 export interface CommonDataActionUpdateInterventionAmendmentTypes extends Action<'UPDATE_INTERVENTION_AMENDMENT_TYPES'> {
-  intAmendTypes: object[]
-};
+  intAmendTypes: object[];
+}
 
 export interface CommonDataActionUpdateLocationTypes extends Action<'UPDATE_LOCATION_TYPES'> {
-  locationTypes: object[]
-};
+  locationTypes: object[];
+}
 
 export interface CommonDataActionUpdatePartnerRiskRatings extends Action<'UPDATE_PARTNER_RISK_RATINGS'> {
-  ratings: object[]
-};
+  ratings: object[];
+}
 
 export interface CommonDataActionUpdateLocations extends Action<'UPDATE_LOCATIONS'> {
-  locations: object[]
-};
+  locations: object[];
+}
 
 export interface CommonDataActionUpdateOffices extends Action<'UPDATE_OFFICES'> {
-  offices: object[]
-};
+  offices: object[];
+}
 
 export interface CommonDataActionUpdatePRPCountries extends Action<'UPDATE_PRP_COUNTRIES'> {
-  PRPCountryData: object[]
-};
+  PRPCountryData: object[];
+}
 
 export interface CommonDataActionUpdateSections extends Action<'UPDATE_SECTIONS'> {
-  sections: object[]
-};
+  sections: object[];
+}
 
 export interface CommonDataActionUpdateUnicefUsers extends Action<'UPDATE_UNICEF_USERS'> {
-  unicefUsersData: object[]
-};
+  unicefUsersData: object[];
+}
 
 export interface CommonDataActionUpdateUserCountryData extends Action<'UPDATE_USER_COUNTRY_DATA'> {
-  countryData: object
-};
+  countryData: object;
+}
 
 export interface CommonDataActionUpdateEnvFlags extends Action<'UPDATE_ENV_FLAGS'> {
-  envFlags: object
-};
+  envFlags: object;
+}
 
 
 export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURRENT_USER'> {
-  user: object
-};
+  user: object;
+}
 
 export type CommonDataAction = CommonDataActionUpdateCountryProgrammes | CommonDataActionUpdateDisaggregations |
-    CommonDataActionPatchDisaggregation | CommonDataActionAddDisaggregation | CommonDataActionUpdateFileTypes |
-    CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers | CommonDataActionUpdateDonors |
-    CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
-    CommonDataActionUpdateInterventionStatuses | CommonDataActionUpdateCurrencies |
-    CommonDataActionUpdateAgreementTypes | CommonDataActionUpdateAgreementStatuses |
-    CommonDataActionUpdateAgencyChoices | CommonDataActionUpdateAgreementAmendmentTypes |
-    CommonDataActionUpdateCsoTypes | CommonDataActionUpdatePartnerTypes | CommonDataActionUpdateAssessmentTypes |
-    CommonDataActionUpdateInterventionAmendmentTypes | CommonDataActionUpdateLocationTypes |
-    CommonDataActionUpdatePartnerRiskRatings | CommonDataActionUpdateLocations | CommonDataActionUpdateOffices |
-    CommonDataActionUpdateSections | CommonDataActionUpdateUnicefUsers | CommonDataActionUpdateUserCountryData |
-    CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags |
-    CommonDataActionUpdateCurrentUser;
+CommonDataActionPatchDisaggregation | CommonDataActionAddDisaggregation | CommonDataActionUpdateFileTypes |
+CommonDataActionUpdateCpOutputs | CommonDataActionUpdateSignedByUnicefUsers | CommonDataActionUpdateDonors |
+CommonDataActionUpdateGrants | CommonDataActionUpdateInterventionDocTypes |
+CommonDataActionUpdateInterventionStatuses | CommonDataActionUpdateCurrencies |
+CommonDataActionUpdateAgreementTypes | CommonDataActionUpdateAgreementStatuses |
+CommonDataActionUpdateAgencyChoices | CommonDataActionUpdateAgreementAmendmentTypes |
+CommonDataActionUpdateCsoTypes | CommonDataActionUpdatePartnerTypes | CommonDataActionUpdateAssessmentTypes |
+CommonDataActionUpdateInterventionAmendmentTypes | CommonDataActionUpdateLocationTypes |
+CommonDataActionUpdatePartnerRiskRatings | CommonDataActionUpdateLocations | CommonDataActionUpdateOffices |
+CommonDataActionUpdateSections | CommonDataActionUpdateUnicefUsers | CommonDataActionUpdateUserCountryData |
+CommonDataActionUpdatePRPCountries | CommonDataActionUpdateEnvFlags |
+CommonDataActionUpdateCurrentUser;
 
 // @ts-ignore - for now
 type ThunkResult = ThunkAction<void, RootState, undefined, CommonDataAction>;
@@ -416,8 +416,8 @@ export const updateEnvFlags: ActionCreator<CommonDataActionUpdateEnvFlags> =
 
 export const updateCurrentUser: ActionCreator<CommonDataActionUpdateCurrentUser> =
     (user: object) => {
-      return{
+      return {
         type: UPDATE_CURRENT_USER,
         user
-      }
+      };
     };

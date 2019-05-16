@@ -1,11 +1,11 @@
 
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '../../../reports/components/reports-display-list.js';
-import { isEmptyObject } from '../../../../utils/utils.js';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { updateAppState } from '../../../../utils/navigation-helper.js';
+import {isEmptyObject} from '../../../../utils/utils.js';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {updateAppState} from '../../../../utils/navigation-helper.js';
 
 
 /**
@@ -56,7 +56,7 @@ class InterventionReports extends PolymerElement {
       * triggered by parent element on stamp or by tap event on tabs
       */
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
-    fireEvent(this,'tab-content-attached');
+    fireEvent(this, 'tab-content-attached');
   }
 
   _init(active: boolean) {
@@ -65,8 +65,8 @@ class InterventionReports extends PolymerElement {
       return;
     }
 
-    let page = (this.prevParams && this.prevParams.page) ? Number(this.prevParams.page) : 1;
-    let pageSize = (this.prevParams && this.prevParams.page_size) ? Number(this.prevParams.page_size) : 10;
+    const page = (this.prevParams && this.prevParams.page) ? Number(this.prevParams.page) : 1;
+    const pageSize = (this.prevParams && this.prevParams.page_size) ? Number(this.prevParams.page_size) : 10;
     this.set('paginator.page', page);
     this.set('paginator.page_size', pageSize);
 
@@ -87,16 +87,16 @@ class InterventionReports extends PolymerElement {
     }
 
     this._debounceUrlUpdate = Debouncer.debounce(this._debounceUrlUpdate,
-        timeOut.after(20),
-        () => {
-          // prevent url change if active is changed to false before debounce func is executed
-          if (!this.active) {
-            return;
-          }
-          let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
-          updateAppState('interventions/' + interventionId + '/reports', qs, true);
-          this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
-        });
+      timeOut.after(20),
+      () => {
+        // prevent url change if active is changed to false before debounce func is executed
+        if (!this.active) {
+          return;
+        }
+        const qs = 'page=' + page + '&' + 'page_size=' + pageSize;
+        updateAppState('interventions/' + interventionId + '/reports', qs, true);
+        this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
+      });
   }
 }
 

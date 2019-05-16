@@ -1,17 +1,17 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import 'etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import { SharedStyles } from '../../../styles/shared-styles';
+import {SharedStyles} from '../../../styles/shared-styles';
 declare const moment: any;
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
-import { GenericObject } from '../../../../typings/globals.types';
-import { RootState, store } from '../../../../store';
-import { connect } from 'pwa-helpers/connect-mixin';
+import {GenericObject} from '../../../../typings/globals.types';
+import {RootState, store} from '../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
 
 
 /*
@@ -99,8 +99,8 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   }
 
   saveStatus() {
-    let self = this;
-    let requestBody = {
+    const self = this;
+    const requestBody = {
       status: 'Acc',
       overall_status: this.selectedOverallStatus,
       reviewed_by_name: this.currentUser.name,
@@ -109,13 +109,13 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
     this.startSpinner();
     this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
-        .then(function(response: any) {
-          fireEvent(self, 'report-accepted', {report: response});
-          self.stopSpinner();
-          self.close();
-        }).catch(function(error: any) {
-      self._handleErrorResponse(error);
-    });
+      .then(function(response: any) {
+        fireEvent(self, 'report-accepted', {report: response});
+        self.stopSpinner();
+        self.close();
+      }).catch(function(error: any) {
+        self._handleErrorResponse(error);
+      });
   }
 
   _handleErrorResponse(error: any) {
@@ -125,4 +125,4 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 }
 
 window.customElements.define(ReportRatingDialog.is, ReportRatingDialog);
-export {ReportRatingDialog as ReportRatingDialogEl}
+export {ReportRatingDialog as ReportRatingDialogEl};

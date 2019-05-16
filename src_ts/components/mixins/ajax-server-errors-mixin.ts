@@ -1,16 +1,16 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import { fireEvent } from '../utils/fire-custom-event.js';
+// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
+import {fireEvent} from '../utils/fire-custom-event.js';
 import {getErrorsArray, tryGetResponseError} from '../utils/ajax-errors-parser.js';
-import { Constructor } from '../../typings/globals.types.js';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor} from '../../typings/globals.types.js';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class ajaxServerErrors extends baseClass {
+  class AjaxServerErrorsClass extends baseClass {
 
     @property({type: Array, notify: true})
     serverErrors!: [];
@@ -21,7 +21,7 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
     @property({type: Boolean})
     useToastEvent: boolean = true;
 
-    @property({type: String, observer: ajaxServerErrors.prototype._errorEventNameChange})
+    @property({type: String, observer: AjaxServerErrorsClass.prototype._errorEventNameChange})
     errorEventName: string|null = null;
 
     @property({type: String})
@@ -39,7 +39,7 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
         loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
       });
 
-      let errors = tryGetResponseError(response);
+      const errors = tryGetResponseError(response);
 
       // @ts-ignore
       let errorMessage = this.globalMessage;
@@ -82,8 +82,8 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
       }
     }
 
-  };
-  return ajaxServerErrors
+  }
+  return AjaxServerErrorsClass;
 }
 
 export default AjaxServerErrorsMixin;

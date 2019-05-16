@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -10,25 +10,25 @@ import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { InterventionAttachment, InterventionPermissionsFields } from '../../../../../typings/intervention.types.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {InterventionAttachment, InterventionPermissionsFields} from '../../../../../typings/intervention.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { IdAndName, IPermission } from '../../../../../typings/globals.types.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store } from '../../../../../store.js';
-import { RootState } from '../../../../../store.js';
-import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
+import {IdAndName, Permission} from '../../../../../typings/globals.types.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../../../../store.js';
+import {RootState} from '../../../../../store.js';
+import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
-import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
-import { IconsActionsEl } from '../../../../layout/icons-actions.js';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {property} from '@polymer/decorators';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
+import {IconsActionsEl} from '../../../../layout/icons-actions.js';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 
 
 /**
@@ -151,7 +151,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   active!: boolean;
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   @property({type: Number, observer: InterventionAttachments.prototype._interventionIdChanged})
   interventionId!: number;
@@ -295,7 +295,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
             showCloseBtn: true
           });
         }
-    });
+      });
   }
 
   _interventionIdChanged(id: any, _oldId: any) {
@@ -339,7 +339,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
       this.attachmentDialog.fileTypes = this.fileTypes;
 
       const editedAttachment = this.attachments.find((a: InterventionAttachment) =>
-       a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+        a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
 
       this.attachmentDialog.initAttachment(editedAttachment);
       this.attachmentDialog.opened = true;
@@ -349,8 +349,8 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   _confirmAttachmentDelete(e: CustomEvent) {
     if (e.target !== null) {
       this.attMarkedToBeDeleted = this.attachments
-          .find((a: InterventionAttachment) =>
-           a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+        .find((a: InterventionAttachment) =>
+          a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
       if (this.attMarkedToBeDeleted) {
         this.attDeleteConfirmDialog.opened = true;
       }

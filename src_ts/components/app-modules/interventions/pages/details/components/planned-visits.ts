@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -8,21 +8,21 @@ import '@polymer/paper-button/paper-button.js';
 import 'etools-dropdown/etools-dropdown.js';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import RepeatableDataSetsMixin from '../../../../../mixins/repeatable-data-sets-mixin';
-import { DomRepeatEvent } from '../../../../../../typings/globals.types';
-import { PlannedVisit } from '../../../../../../typings/intervention.types';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../../styles/shared-styles.js';
-import { repeatableDataSetsStyles } from '../../../../../styles/repeatable-data-sets-styles.js';
-import { buttonsStyles } from '../../../../../styles/buttons-styles.js';
-import { fireEvent } from '../../../../../utils/fire-custom-event.js';
-import { property } from '@polymer/decorators';
-import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
-import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import {DomRepeatEvent} from '../../../../../../typings/globals.types';
+import {PlannedVisit} from '../../../../../../typings/intervention.types';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../../styles/shared-styles.js';
+import {repeatableDataSetsStyles} from '../../../../../styles/repeatable-data-sets-styles.js';
+import {buttonsStyles} from '../../../../../styles/buttons-styles.js';
+import {fireEvent} from '../../../../../utils/fire-custom-event.js';
+import {property} from '@polymer/decorators';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSets
+ * @appliesMixin RepeatableDataSetsMixin
  */
 class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
@@ -187,7 +187,8 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
                 </div>
                 <div class="col col-4"
-                    hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)]]">
+                    hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3,
+                               item.programmatic_q4)]]">
                   <div class="error-msg">Total has to be greater than 0</div>
                 </div>
               </div>
@@ -232,7 +233,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     return (Number(q1) || 0) + (Number(q2) || 0) + (Number(q3) || 0) + (Number(q4) || 0);
   }
 
-  _showErrorMsg(year:string, q1: string, q2: string, q3: string, q4: string) {
+  _showErrorMsg(year: string, q1: string, q2: string, q3: string, q4: string) {
     if (!year) {
       return false;
     }
@@ -252,7 +253,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   _validateYear(index: number) {
     let valid = true;
-    let yearEl = this.shadowRoot!.querySelector('#year_' + index) as EtoolsDropdownEl;
+    const yearEl = this.shadowRoot!.querySelector('#year_' + index) as EtoolsDropdownEl;
 
     if (yearEl && !yearEl.validate()) {
       valid = false;
@@ -262,10 +263,10 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   _validateQuarters(item: PlannedVisit, index: number) {
     let valid = true;
-    let q1 = this.shadowRoot!.querySelector('#visit_' + index + '_q1') as PaperInputElement;
-    let q2 = this.shadowRoot!.querySelector('#visit_' + index + '_q2') as PaperInputElement;
-    let q3 = this.shadowRoot!.querySelector('#visit_' + index + '_q3') as PaperInputElement;
-    let q4 = this.shadowRoot!.querySelector('#visit_' + index + '_q4') as PaperInputElement;
+    const q1 = this.shadowRoot!.querySelector('#visit_' + index + '_q1') as PaperInputElement;
+    const q2 = this.shadowRoot!.querySelector('#visit_' + index + '_q2') as PaperInputElement;
+    const q3 = this.shadowRoot!.querySelector('#visit_' + index + '_q3') as PaperInputElement;
+    const q4 = this.shadowRoot!.querySelector('#visit_' + index + '_q4') as PaperInputElement;
 
     [q1, q2, q3, q4].forEach(function(q) {
       if (q) {
@@ -299,16 +300,16 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     if (!editMode || !this.dataItems || !this.dataItems.length) {
       return false;
     }
-    let plannedVisit = this.dataItems[index];
-    let plannedVisitId = parseInt(plannedVisit.id, 10);
+    const plannedVisit = this.dataItems[index];
+    const plannedVisitId = parseInt(plannedVisit.id, 10);
     return !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0);
   }
 
   _yearChanged(event: DomRepeatEvent) {
-    let yearSelected = event.detail.selectedItem
-        ? event.detail.selectedItem.value
-        : null;
-    let yearDropdown = this.shadowRoot!.querySelector('#year_' + event.model.index);
+    const yearSelected = event.detail.selectedItem
+      ? event.detail.selectedItem.value
+      : null;
+    const yearDropdown = this.shadowRoot!.querySelector('#year_' + event.model.index);
 
     if (this.isAlreadySelected(yearSelected, event.model.index, 'year')) {
       fireEvent(this, 'toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});

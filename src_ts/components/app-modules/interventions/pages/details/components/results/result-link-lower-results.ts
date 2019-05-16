@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -8,23 +8,23 @@ import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
 
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { DomRepeatEvent } from '../../../../../../../typings/globals.types';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {DomRepeatEvent} from '../../../../../../../typings/globals.types';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
 
 import './pd-lower-result-name.js';
 import './applied-indicators.js';
-import { Indicator } from '../../../../../../../typings/intervention.types.js';
-import { logError } from 'etools-behaviors/etools-logging';
-import { property } from '@polymer/decorators';
-import { IconsActionsEl } from '../../../../../../layout/icons-actions.js';
-import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
+import {Indicator} from '../../../../../../../typings/intervention.types.js';
+import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
+import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSetsMixin
+ * @appliesMixin RepeatableDataSetsMixinMixin
  */
 class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
@@ -190,7 +190,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
   expectedResultId!: number;
 
   @property({type: Boolean})
-  thereAreIndicators: Boolean = false;
+  thereAreIndicators: boolean = false;
 
   @property({type: Boolean})
   showInactiveIndicators!: boolean;
@@ -228,7 +228,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
     this.forceVisibilityRecalc = true;
 
-    for (let i in this.dataItems) {
+    for (const i in this.dataItems) {
       if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
         this.thereAreIndicators = true;
         break;
@@ -238,7 +238,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
   allIndicatorsAreInactive(indicators: Indicator[]) {
     this.forceVisibilityRecalc = false;
-    let allIndicatorsAreDeactivated = indicators instanceof Array && indicators.length > 0 &&
+    const allIndicatorsAreDeactivated = indicators instanceof Array && indicators.length > 0 &&
         indicators.every(i => !i.is_active);
     return allIndicatorsAreDeactivated ? !this.showInactiveIndicators : false;
   }
@@ -265,13 +265,13 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
   _editLowerResult(e: CustomEvent) {
     e.stopPropagation();
-    let index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
+    const index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
       logError('Can not edit, invalid index selected', 'lower-results');
       return;
     }
 
-    let lowerResult = this.dataItems[index];
+    const lowerResult = this.dataItems[index];
     if (!lowerResult) {
       logError('Lower result not found in data items by index: ' + index, 'lower-results');
       return;
@@ -290,7 +290,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
   _addNewIndicator(event: DomRepeatEvent) {
     // build a map (actionParams) to know where to put indicator data at add/edit
-    let resultMap = {
+    const resultMap = {
       cpOutputId: this.cpOutputId,
       llResultIndex: event.model.index,
       llResultId: parseInt((event.target as PaperIconButtonElement).getAttribute('data-ll-result-id')!, 10),

@@ -8,14 +8,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-
-declare global {
-  interface Window {
-    process?: Object;
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
-
 import {
   createStore,
   compose,
@@ -24,18 +16,26 @@ import {
   Reducer,
   StoreEnhancer
 } from 'redux';
-import thunk, { ThunkMiddleware } from 'redux-thunk';
-import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
+import thunk, {ThunkMiddleware} from 'redux-thunk';
+import {lazyReducerEnhancer} from 'pwa-helpers/lazy-reducer-enhancer.js';
 
-import app, { AppState } from './reducers/app.js';
-import { AppAction } from './actions/app.js';
+import app, {AppState} from './reducers/app.js';
+import {AppAction} from './actions/app.js';
 
-import { CommonDataState } from './reducers/common-data.js';
-import { UploadStatusState } from './reducers/upload-status.js';
-import { CommonDataAction } from "./actions/common-data.js";
-import { PartnersState } from './reducers/partners.js';
-import { AgreementsState } from './reducers/agreements.js';
-import { PageDataState } from './reducers/page-data.js';
+import {CommonDataState} from './reducers/common-data.js';
+import {UploadStatusState} from './reducers/upload-status.js';
+import {CommonDataAction} from './actions/common-data.js';
+import {PartnersState} from './reducers/partners.js';
+import {AgreementsState} from './reducers/agreements.js';
+import {PageDataState} from './reducers/page-data.js';
+
+declare global {
+  interface Window {
+    process?: Record<string, any>;
+    /* eslint-disable-next-line no-undef */
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
 
 // Overall state extends static states and partials lazy states.
 export interface RootState {

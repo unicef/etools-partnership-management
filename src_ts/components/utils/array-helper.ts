@@ -22,10 +22,10 @@ export function getArraysDiff(base: any[], valuesToVerify: any[], basePropertyTo
     }
 
     let diffVals: any[] = [];
-    let valuesToCheck = JSON.parse(JSON.stringify(valuesToVerify));
+    const valuesToCheck = JSON.parse(JSON.stringify(valuesToVerify));
     base.forEach(function(arrayVal) {
-      let valToSearch = basePropertyToVerify ? arrayVal[basePropertyToVerify] : arrayVal;
-      let searchedIdx = valuesToCheck.indexOf(valToSearch);
+      const valToSearch = basePropertyToVerify ? arrayVal[basePropertyToVerify] : arrayVal;
+      const searchedIdx = valuesToCheck.indexOf(valToSearch);
       if (searchedIdx === -1) {
         diffVals.push(valToSearch);
       } else {
@@ -39,7 +39,7 @@ export function getArraysDiff(base: any[], valuesToVerify: any[], basePropertyTo
 
     return diffVals;
   } catch (err) {
-    logError('ArrayHelper.getArraysDiff error occurred', 'array-helper-mixin',err);
+    logError('ArrayHelper.getArraysDiff error occurred', 'array-helper-mixin', err);
   }
   return [];
 }

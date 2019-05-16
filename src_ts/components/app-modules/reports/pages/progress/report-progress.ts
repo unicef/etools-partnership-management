@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
@@ -14,13 +14,14 @@ import './components/sr-details';
 
 import UtilsMixin from '../../../../mixins/utils-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
-import { pageCommonStyles } from '../../../../styles/page-common-styles';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
-import { isEmptyObject } from '../../../../utils/utils';
-import { CpOutput } from '../../../../../typings/intervention.types';
-import { fireEvent } from '../../../../utils/fire-custom-event';
-import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
-
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {isEmptyObject} from '../../../../utils/utils';
+import {CpOutput} from '../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -28,8 +29,7 @@ import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-bu
  * @appliesMixin CommonMixin
  * @appliesMixin UtilsMixin
  */
-class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
-  [x: string]: any;
+class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
   static get is() {
     return 'report-progress';
@@ -197,12 +197,11 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
     `;
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      reportAttachment: Object
-    };
-  }
+  @property({type: Object})
+  report!: GenericObject;
+
+  @property({type: Object})
+  reportAttachment!: GenericObject;
 
   connectedCallback() {
     super.connectedCallback();
@@ -218,16 +217,16 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
   }
 
   _toggle(e: CustomEvent) {
-    let toggles = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
-    let indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {toggle(): void};
+    const toggles = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
+    const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {toggle(): void};
     if (indicatorCollapsibleContent) {
       indicatorCollapsibleContent.toggle();
     }
   }
 
   _indicatorDetailsTransitioningComplete(e: CustomEvent) {
-    let indicatorCollapsibleContent = e.target as Element;
-    let indicatorDetails = indicatorCollapsibleContent!.querySelector('indicator-details');
+    const indicatorCollapsibleContent = e.target as Element;
+    const indicatorDetails = indicatorCollapsibleContent!.querySelector('indicator-details');
     if (indicatorDetails && !e.detail.value && (indicatorCollapsibleContent as any)!.opened) {
       // trigger indicator details request
       // @ts-ignore
@@ -247,7 +246,7 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
     if (!lowerResultId || isEmptyObject(this.report.indicator_reports)) {
       return {};
     }
-    let latestIndicatorReport = this.report.indicator_reports.find((rep: any) => {
+    const latestIndicatorReport = this.report.indicator_reports.find((rep: any) => {
       return rep.reportable_object_id === lowerResultId;
     });
     return latestIndicatorReport ? latestIndicatorReport : {};
@@ -262,7 +261,7 @@ class ReportProgress extends (CommonMixin(UtilsMixin(PolymerElement))) {
     });
   }
 
-    _calculationFormulaAcrossPeriods(indicator: any) {
+  _calculationFormulaAcrossPeriods(indicator: any) {
     return indicator.reportable.blueprint.display_type === 'ratio'
       ? 'latest' : indicator.reportable.blueprint.calculation_formula_across_periods;
   }

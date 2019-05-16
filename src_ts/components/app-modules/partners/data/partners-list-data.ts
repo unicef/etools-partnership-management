@@ -1,13 +1,13 @@
-import { PolymerElement } from '@polymer/polymer';
+import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store.js';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import Dexie from 'dexie';
-import {isEmptyObject} from "../../../utils/utils";
+import {isEmptyObject} from '../../../utils/utils';
 import {setPartners} from '../../../../actions/partners.js';
-import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
-import { GenericObject } from '../../../../typings/globals.types';
+import {GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -50,8 +50,8 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
   }
 
   public query(field: string, order: string, searchString: string, partnerTypes: string[], csoTypes: string[],
-               riskRatings: string[], pageNumber: number, pageSize: number, showHidden: boolean,
-               showQueryLoading: boolean) {
+    riskRatings: string[], pageNumber: number, pageSize: number, showHidden: boolean,
+    showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
     // a new one
@@ -59,7 +59,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       this.currentQuery.abort();
     }
 
-    let self = this;
+    const self = this;
 
     if (showQueryLoading) {
       fireEvent(this, 'global-loading', {
@@ -69,8 +69,8 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       });
     }
 
-    let partnersDexieTable = window.EtoolsPmpApp.DexieDb.partners;
-    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function () {
+    const partnersDexieTable = window.EtoolsPmpApp.DexieDb.partners;
+    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function() {
       self.currentQuery = Dexie.currentTransaction;
 
       let queryResult = partnersDexieTable;
@@ -82,7 +82,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
         queryResult = queryResult.reverse();
       }
 
-      queryResult = queryResult.filter(function (partner: any) {
+      queryResult = queryResult.filter(function(partner: any) {
         if (!isEmptyObject(partnerTypes) && partnerTypes.indexOf(partner.partner_type) === -1) {
           return false;
         }
@@ -118,26 +118,26 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
       // @ts-ignore
-      Dexie.ignoreTransaction(function () {
-        queryResult.count(function (count: number) {
+      Dexie.ignoreTransaction(function() {
+        queryResult.count(function(count: number) {
           // @ts-ignore
           self._setTotalResults(count);
         });
       });
 
       return queryResult
-          .offset((pageNumber - 1) * pageSize)
-          .limit(pageSize)
-          .toArray();
+        .offset((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .toArray();
 
-    }).then(function (result: any[]) {
+    }).then(function(result: any[]) {
       // @ts-ignore
       self._setFilteredPartners(result);
       fireEvent(self, 'global-loading', {
         active: false,
         loadingSource: 'partners-list'
       });
-    }).catch(function (error: any) {
+    }).catch(function(error: any) {
       logError('Error querying partners!', 'partners-list-data', error);
       fireEvent(self, 'global-loading', {
         active: false,
@@ -149,4 +149,4 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
 
 window.customElements.define('partners-list-data', PartnersListData);
 
-export {PartnersListData as PartnersListDataEl}
+export {PartnersListData as PartnersListDataEl};
