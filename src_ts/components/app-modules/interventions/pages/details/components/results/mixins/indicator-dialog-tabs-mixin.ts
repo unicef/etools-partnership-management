@@ -1,37 +1,31 @@
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import {Constructor, EtoolsTab} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class indicatorDialogTabsClass extends baseClass {
+  class IndicatorDialogTabsClass extends baseClass {
 
-    static get properties() {
-      return {
-        indicatorDataTabs: {
-          type: Array,
-          value: [
-            {
-              tab: 'details',
-              tabLabel: 'Details'
-            },
-            {
-              tab: 'disaggregations',
-              tabLabel: 'Disaggregations',
-              showTabCounter: true,
-              counter: 0
-            }
-          ]
-        },
-        activeTab: {
-          type: String,
-          value: 'details'
-        }
-      };
-    }
+    @property({type: Array})
+    indicatorDataTabs: EtoolsTab[] = [
+      {
+        tab: 'details',
+        tabLabel: 'Details'
+      },
+      {
+        tab: 'disaggregations',
+        tabLabel: 'Disaggregations',
+        showTabCounter: true,
+        counter: 0
+      }
+    ];
+
+    @property({type: String})
+    activeTab: string = 'details';
 
     static get observers() {
       return [
@@ -61,7 +55,7 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
         return;
       }
       // @ts-ignore
-      let disaggregationsNr = this.isCluster ? prpDisaggregsLength : disaggregsLength;
+      const disaggregationsNr = this.isCluster ? prpDisaggregsLength : disaggregsLength;
       this._updateDisaggregationsNrInTabLabel(disaggregationsNr);
     }
 
@@ -69,8 +63,8 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
       this.set('activeTab', tab);
     }
 
-  };
-  return indicatorDialogTabsClass;
+  }
+  return IndicatorDialogTabsClass;
 }
 
 export default IndicatorDialogTabsMixin;

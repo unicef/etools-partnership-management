@@ -1,67 +1,62 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
+import {createDynamicDialog, removeDialog} from 'etools-dialog/dynamic-dialog';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import { fireEvent } from '../utils/fire-custom-event.js';
-import { GenericObject, Constructor } from '../../typings/globals.types.js';
+import {fireEvent} from '../utils/fire-custom-event.js';
+import {GenericObject, Constructor} from '../../typings/globals.types.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { PolymerElement } from '@polymer/polymer';
-import { copy } from '../utils/utils.js';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog';
+import {copy} from '../utils/utils.js';
 
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin EtoolsAjaxRequestMixin
  */
 function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
-  class repeatableDataSetsClass extends EndpointsMixin(
-                                        DynamicDialogMixin(EtoolsAjaxRequestMixin(baseClass) as Constructor<PolymerElement>)) {
-    [x: string]: any;
 
-    public static get properties() {
-      return {
-        dataItems: {
-          type: Array,
-          notify: true
-        },
-        dataSetModel: Object,
-        editMode: {
-          type: Boolean,
-          reflectToAttribute: true,
-        },
-        deleteConfirmationTitle: String,
-        deleteConfirmationMessage: String,
-        deleteLoadingSource: String,
-        deleteActionLoadingMsg: String,
-        deleteActionDefaultErrMsg: String
-      };
-    }
+  class RepeatableDataSetsClass extends EndpointsMixin(baseClass) {
 
-    public dataItems: any[] = [];
-    public dataSetModel: object | null= null;
-    public deleteConfirmationTitle: string = 'Delete confirmation';
-    public deleteConfirmationMessage: string = 'Are you sure you want to delete this item?';
-    public deleteLoadingSource: string = 'delete-data-set';
-    public deleteActionLoadingMsg: string = 'Deleting items from server...';
-    public deleteActionDefaultErrMsg: string = 'Deleting items from server action has failed!';
+    @property({type: Array, notify: true})
+    dataItems!: any[];
 
-    // @ts-ignore
-    private connectedCallback() {
+    @property({type: Object})
+    dataSetModel!: object | null;
+
+    @property({type: Boolean, reflectToAttribute: true})
+    editMode!: boolean;
+
+    @property({type: String})
+    deleteConfirmationTitle: string = 'Delete confirmation';
+
+    @property({type: String})
+    deleteConfirmationMessage: string = 'Are you sure you want to delete this item?';
+
+    @property({type: String})
+    deleteLoadingSource: string = 'delete-data-set';
+
+    @property({type: String})
+    deleteActionLoadingMsg: string = 'Deleting items from server...';
+
+    @property({type: String})
+    deleteActionDefaultErrMsg: string = 'Deleting items from server action has failed!';
+
+    private _deleteDialog!: EtoolsDialog;
+    private elToDeleteIndex!: number;
+
+
+    public connectedCallback() {
       super.connectedCallback();
       // create delete confirmation dialog
       this._createDeleteConfirmationDialog();
     }
 
-    // @ts-ignore
-    private disconnectedCallback() {
+    public disconnectedCallback() {
       super.disconnectedCallback();
       // remove delete confirmation dialog when the element is detached
-      this.deleteDialog.removeEventListener('close', this._onDeleteConfirmation);
-      this.removeDialog(this.deleteDialog);
+      this._deleteDialog.removeEventListener('close', this._onDeleteConfirmation);
+      removeDialog(this._deleteDialog);
     }
 
     /**
@@ -70,7 +65,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
      * itemValueName - the name of property to compare selValue against
      */
     public isAlreadySelected(selValue: any, selIndex: any, itemValueName: any) {
-      let duplicateItems = this.dataItems.filter(function(item, index) {
+      const duplicateItems = this.dataItems.filter(function(item, index) {
         return parseInt(item[itemValueName]) === parseInt(selValue)
             && parseInt(String(index)) !== parseInt(selIndex);
       });
@@ -86,7 +81,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         return null;
       }
       if (this.dataSetModel === null) {
-        let newObj: GenericObject = {};
+        const newObj: GenericObject = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
           Object.keys(this.dataItems[0]).forEach(function(property) {
             newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
@@ -105,7 +100,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       }
       this._makeSureDataItemsAreValid();
 
-      let newObj = this._getItemModelObject(addNull);
+      const newObj = this._getItemModelObject(addNull);
       this.push('dataItems', newObj);
     }
 
@@ -115,7 +110,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         return;
       }
       this.elToDeleteIndex = parseInt(event.target.getAttribute('data-args'), 10);
-      this.deleteDialog.opened = true;
+      this._deleteDialog.opened = true;
     }
 
     public _handleDeleteResponse() {
@@ -137,11 +132,12 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     public _onDeleteConfirmation(event: any) {
-      this.deleteDialog.opened = false;
+      this._deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
-        let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
+        const id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
 
         if (id) {
+          // @ts-ignore
           if (!this._deleteEpName) {
             logError('You must define _deleteEpName property to be able to remove existing records');
             return;
@@ -153,8 +149,9 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             loadingSource: this.deleteLoadingSource
           });
 
-          let self = this;
-          let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
+          const self = this;
+          // @ts-ignore
+          const deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
           this.sendRequest({
             method: 'DELETE',
             endpoint: deleteEndpoint,
@@ -177,7 +174,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       if (!this.editMode) {
         return;
       }
-      let index = this.elToDeleteIndex;
+      const index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
 
@@ -189,11 +186,17 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     public _createDeleteConfirmationDialog() {
-      let deleteConfirmationContent = document.createElement('div');
+      const deleteConfirmationContent = document.createElement('div');
       deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
       this._onDeleteConfirmation = this._onDeleteConfirmation.bind(this);
-      this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
-          'No', this._onDeleteConfirmation, deleteConfirmationContent);
+
+      this._deleteDialog = createDynamicDialog({
+        title: this.deleteConfirmationTitle,
+        size: 'md',
+        okBtnText: 'Yes',
+        cancelBtnText: 'No',
+        closeCallback: this._onDeleteConfirmation,
+        content: deleteConfirmationContent});
     }
 
     /**
@@ -212,14 +215,14 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
      * Check is dataItems is Array, if not init with empty Array
      */
     public _makeSureDataItemsAreValid(dataItems?: any) {
-      let items = dataItems ? dataItems : this.dataItems;
+      const items = dataItems ? dataItems : this.dataItems;
       if (!Array.isArray(items)) {
         this.set('dataItems', []);
       }
     }
 
-  };
-  return repeatableDataSetsClass;
+  }
+  return RepeatableDataSetsClass;
 }
 
 export default RepeatableDataSetsMixin;

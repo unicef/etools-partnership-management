@@ -1,27 +1,30 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin';
 import CONSTANTS from '../../../../../../../../config/app-constants';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import GenerateQuarterlyReportingRequirementsMixin from '../mixins/generate-quarterly-reporting-requirements-mixin';
 
 import '@polymer/paper-button/paper-button.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 
 import './edit-qpr-dialog.js';
 import './qpr-list.js';
+import {property} from '@polymer/decorators';
+import {EditQprDialogEl} from './edit-qpr-dialog.js';
 
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin ReportingRequirementsCommon
- * @appliesMixin GenerateQuarterlyReportingRequirements
+ * @appliesMixin ReportingRequirementsCommonMixin
+ * @appliesMixin GenerateQuarterlyReportingRequirementsMixin
  */
-class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
-(GenerateQuarterlyReportingRequirementsMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class QuarterlyReportingRequirements extends
+  GenerateQuarterlyReportingRequirementsMixin(
+    ReportingRequirementsCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${buttonsStyles} ${gridLayoutStyles}
@@ -48,14 +51,18 @@ class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
     `;
   }
 
-  static get properties() {
-    return {
-      interventionStart: String,
-      interventionEnd: String,
-      editQprDialog: Object,
-      editMode: Boolean
-    };
-  }
+  @property({type: String})
+  interventionStart!: string;
+
+  @property({type: String})
+  interventionEnd!: string;
+
+  @property({type: Object})
+  editQprDialog!: EditQprDialogEl;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
 
   ready() {
     super.ready();
@@ -68,16 +75,16 @@ class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
   }
 
   _createEditQprDialog() {
-    this.editQprDialog = document.createElement('edit-qpr-dialog');
+    this.editQprDialog = document.createElement('edit-qpr-dialog') as any;
     this.editQprDialog.set('toastMsgLoadingSource', this);
     this._onReportingRequirementsSaved = this._onReportingRequirementsSaved.bind(this);
-    this.editQprDialog.addEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved);
+    this.editQprDialog.addEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved as any);
     document.querySelector('body')!.appendChild(this.editQprDialog);
   }
 
   _removeEditQprDialog() {
     if (this.editQprDialog) {
-      this.editQprDialog.removeEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved);
+      this.editQprDialog.removeEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved as any);
       document.querySelector('body')!.removeChild(this.editQprDialog);
     }
   }
@@ -105,3 +112,4 @@ class QuarterlyReportingRequirements extends (ReportingRequirementsCommonMixin
 }
 
 window.customElements.define('quarterly-reporting-requirements', QuarterlyReportingRequirements);
+export {QuarterlyReportingRequirements as QuarterlyReportingRequirementsEL};

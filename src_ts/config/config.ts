@@ -4,7 +4,7 @@ import Dexie from 'dexie';
  * For db versioning check: http://dexie.org/docs/Tutorial/Design
  */
 declare global {
-  interface Window { EtoolsPmpApp: any; EtoolsRequestCacheDb: any; EtoolsLogsLevel: any; EtoolsEsmmFitIntoEl: any; }
+  interface Window { EtoolsPmpApp: any; EtoolsRequestCacheDb: any; EtoolsLogsLevel: any; EtoolsEsmmFitIntoEl: any }
 }
 
 window.EtoolsLogsLevel = 'INFO';
@@ -25,22 +25,22 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
 // configure app dexie db to be used for caching
 window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || window.EtoolsPmpApp.DexieDb;
 
-export const BASE_URL: string = '/pmp/';
+export const BASE_URL = '/pmp/';
 
-const PROD_DOMAIN: string = 'etools.unicef.org';
-const STAGING_DOMAIN: string = 'etools-staging.unicef.org';
-const DEV_DOMAIN: string = 'etools-dev.unicef.org';
-const DEMO_DOMAIN: string = 'etools-demo.unicef.org';
-const LOCAL_DOMAIN: string = 'localhost:8082';
-export const AP_DOMAIN: string = '/ap/';
+const PROD_DOMAIN = 'etools.unicef.org';
+const STAGING_DOMAIN = 'etools-staging.unicef.org';
+const DEV_DOMAIN = 'etools-dev.unicef.org';
+const DEMO_DOMAIN = 'etools-demo.unicef.org';
+const LOCAL_DOMAIN = 'localhost:8082';
+export const AP_DOMAIN = '/ap/';
 
 export const isProductionServer = () => {
-  let location = window.location.href;
+  const location = window.location.href;
   return location.indexOf(PROD_DOMAIN) > -1;
 };
 
 export const isStagingServer = () => {
-  let location = window.location.href;
+  const location = window.location.href;
   return location.indexOf(STAGING_DOMAIN) > -1;
 };
 
@@ -51,28 +51,8 @@ export const isDemoServer = () => {
   return window.location.href.indexOf(DEMO_DOMAIN) > -1;
 };
 
-export const tokenEndpointsHost = (host: string) => {
-  if (host === 'prp') {
-    switch (_checkEnvironment()) {
-      case 'LOCAL':
-        return 'http://127.0.0.1:8080';
-      case 'DEVELOPMENT':
-        return 'https://dev.partnerreportingportal.org';
-      case 'DEMO':
-        return 'https://demo.partnerreportingportal.org';
-      case 'STAGING':
-        return 'https://demo.partnerreportingportal.org';
-      case null:
-        return 'https://www.partnerreportingportal.org';
-      default:
-        return 'https://dev.partnerreportingportal.org';
-    }
-  }
-  return null;
-};
-
 export const _checkEnvironment = () => {
-  let location = window.location.href;
+  const location = window.location.href;
   if (location.indexOf(STAGING_DOMAIN) > -1) {
     return 'STAGING';
   }
@@ -84,6 +64,26 @@ export const _checkEnvironment = () => {
   }
   if (location.indexOf(LOCAL_DOMAIN) > -1) {
     return 'LOCAL';
+  }
+  return null;
+};
+
+export const tokenEndpointsHost = (host: string) => {
+  if (host === 'prp') {
+    switch (_checkEnvironment()) {
+      case 'LOCAL':
+        return 'https://dev.partnerreportingportal.org';
+      case 'DEVELOPMENT':
+        return 'https://dev.partnerreportingportal.org';
+      case 'DEMO':
+        return 'https://demo.partnerreportingportal.org';
+      case 'STAGING':
+        return 'https://demo.partnerreportingportal.org';
+      case null:
+        return 'https://www.partnerreportingportal.org';
+      default:
+        return 'https://dev.partnerreportingportal.org';
+    }
   }
   return null;
 };
@@ -105,7 +105,7 @@ export const getDomainByEnv = () => {
     return 'https://etools.unicef.org/pmp';
   }
   return 'https://etools-dev.unicef.org/pmp';
-}
+};
 
 export const tokenStorageKeys = {
   prp: 'etoolsPrpToken'

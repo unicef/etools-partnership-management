@@ -1,48 +1,37 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../store';
 
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import UserPermisionsMixin from './user-permissions-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data';
 import {isEmptyObject} from '../utils/utils';
-import { fireEvent } from '../utils/fire-custom-event';
-import { logError } from 'etools-behaviors/etools-logging';
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {fireEvent} from '../utils/fire-custom-event';
+import {logError} from 'etools-behaviors/etools-logging';
+import {Constructor, User, UserGroup, UserPermissions} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {getAllPermissions} from './user-permissions';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EtoolsPageRefreshMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin UserPermisionsMixin
  */
 function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-    // @ts-ignore
-    class userDataClass extends EndpointsMixin(UserPermisionsMixin(EtoolsPageRefreshMixin(baseClass))) {
+  class UserDataClass extends EndpointsMixin(EtoolsPageRefreshMixin(baseClass)) {
 
-      static get properties() {
-        return {
-          endpointName: String,
-          user: {
-            type: Object,
-            readOnly: true,
-            notify: true
-          },
-          userGroups: {
-            type: Array,
-            readOnly: true
-          },
-          permissions: {
-            type: Object,
-            readOnly: true,
-            notify: true
-          }
-        };
-      }
+      @property({type: String})
+    endpointName: string = 'myProfile';
 
-      public endpointName: string = 'myProfile';
+      @property({type: Object, readOnly: true, notify: true})
+      user!: User;
+
+      @property({type: Object, readOnly: true})
+      userGroups!: UserGroup[];
+
+      @property({type: Object, readOnly: true, notify: true})
+      permissions!: UserPermissions;
 
       public requestUserData() {
         this.sendRequest({
@@ -62,30 +51,31 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       public checkDexieCountryIsUserCountry(user: any) {
-        let country = {
+        const country = {
           id: user.country.id,
           name: user.country.name
         };
         window.EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.where('cacheKey').equals('currentCountry').toArray()
-            .then((response: any) => {
-              if (response.length > 0) {
-                if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
-                  let eventPayload = {
-                    message: 'Please wait while data is refreshed...',
-                    active: true,
-                    loadingSource: 'country-update'
-                  };
-                  fireEvent(this, 'global-loading', eventPayload);
-                  this.refresh();
-                }
-              } else {
-                this.addCountryInIndexedDb(country);
+          .then((response: any) => {
+            if (response.length > 0) {
+              if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
+                const eventPayload = {
+                  message: 'Please wait while data is refreshed...',
+                  active: true,
+                  loadingSource: 'country-update'
+                };
+                fireEvent(this, 'global-loading', eventPayload);
+                // @ts-ignore TODOOO
+                this.refresh();
               }
-            });
+            } else {
+              this.addCountryInIndexedDb(country);
+            }
+          });
       }
 
       public addCountryInIndexedDb(country: any) {
-        let dataToCache = {
+        const dataToCache = {
           cacheKey: 'currentCountry',
           data: country
         };
@@ -99,41 +89,45 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       protected _resetUserAndPermissions() {
+        // @ts-ignore
         this._setUser(undefined);
+        // @ts-ignore
         this._setPermissions(undefined);
       }
 
       protected _setUserData(data: any) {
-        let _user = data;
-        let _permissions = {};
+        const _user = data;
+        const _permissions = {};
+        // @ts-ignore
         this._setUser(_user);
-        let permissionsList = this.getAllPermissions();
+        const permissionsList = getAllPermissions();
         if (!isEmptyObject(data)) {
+          // @ts-ignore
           this._setUserGroups(_user.groups);
-          permissionsList.defaultPermissions.forEach(function (perm: any) {
+          permissionsList.defaultPermissions.forEach(function(perm: any) {
             // @ts-ignore
             _permissions[perm] = true;
           });
           if (this._findGroup('UNICEF User')) {
-            permissionsList.unicefUserPermissions.forEach(function (perm: any) {
+            permissionsList.unicefUserPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('Partnership Manager')) {
-            permissionsList.partnershipManagerPermissions.forEach(function (perm: any) {
+            permissionsList.partnershipManagerPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('PME')) {
-            permissionsList.PMEPermissions.forEach(function (perm: any) {
+            permissionsList.PMEPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
           }
           if (this._findGroup('ICT')) {
-            permissionsList.ICTPermissions.forEach(function (perm: any) {
+            permissionsList.ICTPermissions.forEach(function(perm: any) {
               // @ts-ignore
               _permissions[perm] = true;
             });
@@ -144,11 +138,12 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           //  _permissions[perm] = true;
           // });
         }
+        // @ts-ignore
         this._setPermissions(_permissions);
       }
 
-    };
-    return userDataClass;
+  }
+  return UserDataClass;
 }
 
 export default UserDataMixin;

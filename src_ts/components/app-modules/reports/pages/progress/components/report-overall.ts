@@ -1,9 +1,11 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import '../../../../../styles/grid-layout-styles.js';
 
 import '../../../components/report-status.js';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -37,12 +39,11 @@ class ReportOverall extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      lowerResultTitle: Object,
-      latestIndicator: Object
-    };
-  }
+  @property({type: Object})
+  lowerResultTitle!: GenericObject;
+
+  @property({type: Object})
+  latestIndicator!: GenericObject;
 
 }
 

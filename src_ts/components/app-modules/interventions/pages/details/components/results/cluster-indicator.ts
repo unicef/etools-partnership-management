@@ -1,14 +1,18 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { RootState, store } from '../../../../../../../store';
-import { connect } from 'pwa-helpers/connect-mixin';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {RootState, store} from '../../../../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types';
+import {Indicator} from '../../../../../../../typings/intervention.types';
+import {PaperInputElement} from '@polymer/paper-input/paper-input';
 
 /**
  * @polymer
@@ -16,8 +20,7 @@ import { connect } from 'pwa-helpers/connect-mixin';
  * @appliesMixin IndicatorsCommonMixin
  * @appliesMixin EndpointsMixin
  */
-class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMixin(PolymerElement))) as any) {
-  [x: string]: any;
+class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMixin(PolymerElement))) {
 
   static get template() {
     return html`
@@ -225,51 +228,42 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
     `;
   }
 
-  static get properties() {
-    return {
-      indicator: {
-        type: Object,
-        observer: 'indicatorChanged'
-      },
-      isNewIndicator: {
-        type: Boolean
-      },
-      clusters: {
-        type: Array
-      },
-      clusterId: {
-        type: String
-      },
-      locationOptions: {
-        type: Array
-      },
-      responsePlanId: {
-        type: String
-      },
-      cluster: {
-        type: String,
-        observer: '_clusterChanged'
-      },
-      prpClusterIndicators: {
-        type: Array
-      },
-      responsePlan: {
-        type: Object,
-        observer: '_responsePlanChanged'
-      },
-      responsePlans: {
-        type: Array
-      },
-      prpClusterIndicator: {
-        type: Object,
-        observer: '_selectedPrpClusterIndicatorChanged'
-      },
-      prpDisaggregations: {
-        type: Array,
-        notify: true
-      }
-    };
-  }
+  @property({type: Object, observer: 'indicatorChanged'})
+  indicator!: Indicator;
+
+  @property({type: Boolean})
+  isNewIndicator!: boolean;
+
+  @property({type: Array})
+  clusters!: [];
+
+  @property({type: String})
+  clusterId!: string | undefined;
+
+  @property({type: Array})
+  locationOptions!: [];
+
+  @property({type: String})
+  responsePlanId!: string | undefined;
+
+  @property({type: String, observer: '_clusterChanged'})
+  cluster!: string;
+
+  @property({type: Array})
+  prpClusterIndicators!: [];
+
+  @property({type: Object, observer: '_responsePlanChanged'})
+  responsePlan!: object;
+
+  @property({type: Array})
+  responsePlans!: GenericObject[];
+
+  @property({type: Object, observer: '_selectedPrpClusterIndicatorChanged'})
+  prpClusterIndicator!: GenericObject;
+
+  @property({type: Array, notify: true})
+  prpDisaggregations!: [];
+
 
   static get observers() {
     return [
@@ -285,14 +279,14 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
   connectedCallback() {
     super.connectedCallback();
 
-    let self = this;
+    const self = this;
     this.fireRequest('getResponsePlans', {})
-        .then(function(response: any) {
-          self.responsePlans = response;
-        })
-        .catch(function(error: any) {
-          fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
-        });
+      .then(function(response: any) {
+        self.responsePlans = response;
+      })
+      .catch(function(error: any) {
+        fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
+      });
 
     this.resetValidations();
   }
@@ -313,16 +307,16 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
 
   _getPrpClusterIndicator(clusterIndicId: string) {
     fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
-    let self = this;
+    const self = this;
     this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
-        .then(function(response: any) {
-          self.prpClusterIndicator = response;
-          fireEvent(self, 'stop-spinner');
-        })
-        .catch(function(error: any) {
-          fireEvent(self, 'stop-spinner');
-          fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
-        });
+      .then(function(response: any) {
+        self.prpClusterIndicator = response;
+        fireEvent(self, 'stop-spinner');
+      })
+      .catch(function(error: any) {
+        fireEvent(self, 'stop-spinner');
+        fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
+      });
   }
 
   _responsePlanChanged(responsePlan: any) {
@@ -361,15 +355,15 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
       return;
     }
     fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
-    let self = this;
+    const self = this;
     this.fireRequest('getPrpClusterIndicators', {id: clusterId})
-        .then(function(response: any) {
-          self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
-          fireEvent(self, 'stop-spinner');
-        }).catch(function(error: any) {
-      fireEvent(self, 'stop-spinner');
-      fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
-    });
+      .then(function(response: any) {
+        self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
+        fireEvent(self, 'stop-spinner');
+      }).catch(function(error: any) {
+        fireEvent(self, 'stop-spinner');
+        fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
+      });
   }
 
   /* ESM dropdown can't process a nested property as option-label
@@ -386,7 +380,7 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
       this.set('prpDisaggregations', []);
       if (this.indicator) {
         this.indicator.baseline = {};
-        this.indicator.target = {};
+        this.indicator.target = {d: '1'};
       }
       return;
     }
@@ -415,7 +409,7 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
   }
 
   validate() {
-    let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
+    const elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
     ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
@@ -439,7 +433,7 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
 
       this._resetInvalid('#targetEl');
 
-      let targetNumerator = this.shadowRoot.querySelector('#targetNumerator');
+      const targetNumerator = this.shadowRoot!.querySelector('#targetNumerator') as PaperInputElement;
       if (targetNumerator) {
         targetNumerator.invalid = false;
 
@@ -452,7 +446,7 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
   }
 
   _resetInvalid(elSelector: string) {
-    let elem = this.shadowRoot.querySelector(elSelector);
+    const elem = this.shadowRoot!.querySelector(elSelector) as PolymerElement & {invalid: boolean};
     if (elem) {
       elem.invalid = false;
     }
@@ -474,3 +468,4 @@ class ClusterIndicator extends connect(store)((IndicatorsCommonMixin(EndpointsMi
 }
 
 window.customElements.define('cluster-indicator', ClusterIndicator);
+export {ClusterIndicator as ClusterIndicatorEl};

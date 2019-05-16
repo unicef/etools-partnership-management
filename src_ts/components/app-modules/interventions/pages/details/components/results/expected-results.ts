@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -6,34 +6,38 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
 
 import 'etools-data-table/etools-data-table.js';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { PolymerElEvent } from '../../../../../../../typings/globals.types';
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
 import LowerResultsMixin from './mixins/lower-results-mixin.js';
 import ResultsMixin from './mixins/results-mixin.js';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import './mixins/results-mixin.js';
 import './mixins/lower-results-mixin.js';
 import './result-cp-output-and-ram-indicators.js';
 import './result-link-lower-results.js';
 import './indicator-dialog.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { logError } from 'etools-behaviors/etools-logging';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {IndicatorDialogEl} from './indicator-dialog.js';
+import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin RepeatableDataSets
- * @appliesMixin Results
- * @appliesMixin LowerResults
+ * @appliesMixin RepeatableDataSetsMixin
+ * @appliesMixin ResultsMixin
+ * @appliesMixin LowerResultsMixin
  */
-class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMixin(LowerResultsMixin(PolymerElement)  as any))) as any) {
-  [x: string]: any;
+class ExpectedResults extends connect(store)(
+  ResultsMixin(
+    LowerResultsMixin(
+      RepeatableDataSetsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -114,39 +118,32 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: {
-        type: String,
-        value: 'interventionResultLinkDelete',
-        readOnly: true
-      },
-      interventionStatus: String,
-      editableCpoRamIndicators: {
-        type: Boolean
-      },
-      editMode: {
-        type: Boolean
-      },
-      indicatorDialog: {
-        type: Object
-      },
-      indicatorLocationOptions: {
-        type: Array
-      },
-      indicatorSectionOptions: {
-        type: Array
-      },
-      detailsOpened: {
-        type: Boolean,
-        value: true
-      },
-      showInactiveIndicators: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: String})
+  _deleteEpName: string = 'interventionResultLinkDelete';
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Boolean})
+  editableCpoRamIndicators!: boolean;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: Object})
+  indicatorDialog!: IndicatorDialogEl;
+
+  @property({type: Array})
+  indicatorLocationOptions!: [];
+
+  @property({type: Array})
+  indicatorSectionOptions!: [];
+
+  @property({type: Boolean})
+  detailsOpened: boolean = true;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
 
   static get observers() {
     return [
@@ -180,25 +177,25 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
 
   _createIndicatorDialog() {
     // init indicator dialog data
-    this.indicatorDialog = document.createElement('indicator-dialog');
+    this.indicatorDialog = document.createElement('indicator-dialog') as any;
     this.indicatorDialog.setAttribute('id', 'indicatorDialog');
 
     // attach close handler
     this.indicatorDialogDataReceived = this.indicatorDialogDataReceived.bind(this);
-    this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
-    document.querySelector('body')!.appendChild(this.indicatorDialog);
+    this.indicatorDialog.addEventListener('indicator-dialog-close', this.indicatorDialogDataReceived as any);
+    document.querySelector('body')!.appendChild(this.indicatorDialog as any);
   }
 
   _removeIndicatorDialog() {
     if (this.indicatorDialog) {
-      this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived);
-      document.querySelector('body')!.removeChild(this.indicatorDialog);
+      this.indicatorDialog.removeEventListener('indicator-dialog-close', this.indicatorDialogDataReceived as any);
+      document.querySelector('body')!.removeChild(this.indicatorDialog as any);
     }
   }
 
   removeDeactivateIndicatorDialog() {
-    let body = document.querySelector('body');
-    let dialogs = body!.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
+    const body = document.querySelector('body');
+    const dialogs = body!.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
     dialogs.forEach(d => body!.removeChild(d));
   }
 
@@ -213,15 +210,15 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
     this.openCpOutputAndRamIndicatorsDialog();
   }
 
-  _editCpOutputAndRamIndicators(e: PolymerElEvent) {
+  _editCpOutputAndRamIndicators(e: CustomEvent) {
     e.stopPropagation();
-    let index = parseInt(e.target.getAttribute('data-args'), 10);
+    const index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
       logError('Can not edit, invalid index selected', 'expected-results');
       return;
     }
 
-    let result = this.dataItems[index];
+    const result = this.dataItems[index];
     if (!result) {
       logError('Result not found in data items by index: ' + index, 'expected-results');
       return;
@@ -236,8 +233,8 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
   indicatorDialogDataReceived(event: CustomEvent) {
     const data = event.detail;
     try {
-      let actionParams = data.actionParams;
-      let indicator = data.indicatorData;
+      const actionParams = data.actionParams;
+      const indicator = data.indicatorData;
       let i;
       for (i = 0; i < this.dataItems.length; i++) {
         // search expected result item by output id
@@ -250,7 +247,7 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
           } else {
             // new indicator added
             this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'],
-                indicator);
+              indicator);
           }
           break;
         }
@@ -258,14 +255,14 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
       this._updateInterventionLocAndClusters();
     } catch (err) {
       logError('Updating/adding new indicator data in displayed list has failed!',
-          'lower-results-behavior', err);
+        'lower-results-behavior', err);
     }
   }
 
   // open indicator dialog to add or edit indicator
   _openIndicatorDialog(event: CustomEvent) {
     event.stopImmediatePropagation();
-    let actionParams = event.detail;
+    const actionParams = event.detail;
 
     if (actionParams.appliedIndicatorsIndex === null) {
       this.indicatorDialog.setTitle('Add Indicator');
@@ -306,3 +303,5 @@ class ExpectedResults extends connect(store)((RepeatableDataSetsMixin(ResultsMix
 }
 
 window.customElements.define('expected-results', ExpectedResults);
+
+export {ExpectedResults as ExpectedResultsEl};

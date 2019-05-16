@@ -1,33 +1,33 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 import 'etools-data-table/etools-data-table.js';
 
-import 'etools-dialog/dynamic-dialog-mixin.js';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
-import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin.js';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
-import { logError } from 'etools-behaviors/etools-logging';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {property} from '@polymer/decorators';
+import {AddEditSpecialRepReqEl} from './add-edit-special-rep-req.js';
+import EtoolsDialog from 'etools-dialog';
 
 
 /**
  * @customElement
  * @polymer
  * @mixinFunction
- * @appliesMixin DynamicDialogMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin ReportingRequirementsCommonMixin
  */
-class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(CommonMixin(ReportingRequirementsCommonMixin(PolymerElement) as any)) as any)) {
-  [x: string]: any;
+class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${buttonsStyles} ${gridLayoutStyles} ${reportingRequirementsListStyles}
@@ -71,16 +71,15 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
     `;
   }
 
-  static get properties() {
-    return {
-      addEditDialog: Object,
-      _deleteConfirmationDialog: Object,
-      _itemToDeleteIndex: {
-        type: Number,
-        value: -1
-      }
-    };
-  }
+  @property({type: Object})
+  addEditDialog!: AddEditSpecialRepReqEl;
+
+  @property({type: Object})
+  _deleteConfirmationDialog!: EtoolsDialog;
+
+  @property({type: Number})
+  _itemToDeleteIndex: number = -1;
+
 
   ready() {
     super.ready();
@@ -93,13 +92,13 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
     this._onEdit = this._onEdit.bind(this);
     this._onDelete = this._onDelete.bind(this);
 
-    this.addEventListener('edit', this._onEdit);
-    this.addEventListener('delete', this._onDelete);
+    this.addEventListener('edit', this._onEdit as any);
+    this.addEventListener('delete', this._onDelete as any);
   }
 
   _removeEventListeners() {
-    this.removeEventListener('edit', this._onEdit);
-    this.removeEventListener('delete', this._onDelete);
+    this.removeEventListener('edit', this._onEdit as any);
+    this.removeEventListener('delete', this._onDelete as any);
   }
 
   disconnectedCallback() {
@@ -128,8 +127,8 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
     if (this._deleteConfirmationDialog) {
       if (e.target !== null) {
         // @ts-ignore
-        let itemToDelete = JSON.parse(e.target.getAttribute('item'));
-        let index = this._getIndexById(itemToDelete.id);
+        const itemToDelete = JSON.parse(e.target.getAttribute('item'));
+        const index = this._getIndexById(itemToDelete.id);
         this.set('_itemToDeleteIndex', index);
       }
       this._deleteConfirmationDialog.opened = true;
@@ -143,8 +142,8 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
     }
 
     if (this._itemToDeleteIndex > -1) {
-      let itemToDelete = this.reportingRequirements[this._itemToDeleteIndex];
-      let endpoint = this.getEndpoint('specialReportingRequirementsUpdate', {reportId: itemToDelete.id});
+      const itemToDelete = this.reportingRequirements[this._itemToDeleteIndex] as any;
+      const endpoint = this.getEndpoint('specialReportingRequirementsUpdate', {reportId: itemToDelete.id});
       this.sendRequest({
         method: 'DELETE',
         endpoint: endpoint
@@ -152,7 +151,7 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
         this.splice('reportingRequirements', this._itemToDeleteIndex, 1);
       }).catch((error: any) => {
         logError('Failed to delete special report requirement!',
-            'special-reporting-requirements', error);
+          'special-reporting-requirements', error);
         parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         // delete complete, reset _itemToDeleteIndex
@@ -164,10 +163,10 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
   }
 
   _createAddEditDialog() {
-    this.addEditDialog = document.createElement('add-edit-special-rep-req');
+    this.addEditDialog = document.createElement('add-edit-special-rep-req') as AddEditSpecialRepReqEl;
     this.addEditDialog.set('toastMsgLoadingSource', this);
     this._onSpecialReportingRequirementsSaved = this._onSpecialReportingRequirementsSaved.bind(this);
-    this.addEditDialog.addEventListener('reporting-requirements-saved', this._onSpecialReportingRequirementsSaved);
+    this.addEditDialog.addEventListener('reporting-requirements-saved', this._onSpecialReportingRequirementsSaved as any);
 
     document.querySelector('body')!.appendChild(this.addEditDialog);
   }
@@ -175,16 +174,16 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
   _removeAddEditDialog() {
     if (this.addEditDialog) {
       this.addEditDialog.removeEventListener('reporting-requirements-saved',
-          this._onSpecialReportingRequirementsSaved);
+        this._onSpecialReportingRequirementsSaved as any);
       document.querySelector('body')!.removeChild(this.addEditDialog);
     }
   }
 
   _createDeleteConfirmationsDialog() {
     this._onDeleteConfirmation = this._onDeleteConfirmation.bind(this);
-    let confirmationMSg = document.createElement('span');
+    const confirmationMSg = document.createElement('span');
     confirmationMSg.innerText = 'Are you sure you want to delete this Special Reporting Requirement?';
-    let confirmationDialogConf = {
+    const confirmationDialogConf = {
       title: 'Delete Special Reporting Requirement',
       size: 'md',
       okBtnText: 'Yes',
@@ -192,12 +191,12 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
       closeCallback: this._onDeleteConfirmation,
       content: confirmationMSg
     };
-    this._deleteConfirmationDialog = this.createDynamicDialog(confirmationDialogConf);
+    this._deleteConfirmationDialog = createDynamicDialog(confirmationDialogConf);
   }
 
   _removeDeleteConfirmationsDialog() {
     if (this._deleteConfirmationDialog) {
-      this._deleteConfirmationDialog.removeEventListener('close', this._onDeleteConfirmation);
+      this._deleteConfirmationDialog.removeEventListener('close', this._onDeleteConfirmation as any);
       document.querySelector('body')!.removeChild(this._deleteConfirmationDialog);
     }
   }
@@ -224,8 +223,8 @@ class SpecialReportingRequirements extends (DynamicDialogMixin(EndpointsMixin(Co
   }
 
   _onSpecialReportingRequirementsSaved(e: CustomEvent) {
-    let savedReqItem = e.detail;
-    let index = this._getIndexById(savedReqItem.id);
+    const savedReqItem = e.detail;
+    const index = this._getIndexById(savedReqItem.id);
     if (index > -1) {
       // edit
       this.splice('reportingRequirements', index, 1, savedReqItem);

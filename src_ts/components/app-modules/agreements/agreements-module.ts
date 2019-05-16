@@ -4,51 +4,50 @@ import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
 import {store} from '../../../store.js';
-import ScrollControl from '../../mixins/scroll-control-mixin.js';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
-import {UserPermissions} from '../../../typings/globals.types';
+import {EtoolsTab, UserPermissions, GenericObject} from '../../../typings/globals.types';
 import {Agreement, AgreementAmendment} from './agreement.types.js';
 import '../../layout/etools-tabs';
-import '../../layout/etools-error-messages-box.js'
+import '../../layout/etools-error-messages-box.js';
 import '../../layout/page-content-header';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
-import {pageLayoutStyles} from '../../styles/page-layout-styles'
+import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';
 import {buttonsStyles} from '../../styles/buttons-styles';
-import { RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status.js';
+import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status.js';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
-import { fireEvent } from '../../utils/fire-custom-event.js';
+import {fireEvent} from '../../utils/fire-custom-event.js';
 import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin EndpointsMixin
  */
 const AgreementsModuleRequiredMixins =
-  ScrollControl(
-  ModuleRoutingMixin(
-  ModuleMainElCommonFunctionalityMixin(
-  EndpointsMixin(
-  PolymerElement))));
+  ScrollControlMixin(
+    ModuleRoutingMixin(
+      ModuleMainElCommonFunctionalityMixin(
+        EndpointsMixin(
+          PolymerElement))));
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin AgreementsModuleRequiredMixins
  */
-// @ts-ignore
 class AgreementsModule extends AgreementsModuleRequiredMixins {
-  [x: string]: any;
 
   public static get template() {
     // language=HTML
@@ -166,40 +165,35 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     `;
   }
 
-  static get properties() {
-    return {
-      agreementsTabs: {
-        type: Array,
-        value: [{
-          tab: 'details',
-          tabLabel: 'Agreement Details',
-          hidden: false
-        }]
-      },
-      permissions: {
-        type: Object
-      },
-      selectedAgreementId: {
-        type: Number
-      },
-      csvDownloadUrl: {
-        type: String
-      },
-      newAgreementActive: {
-        type: Boolean,
-        computed: '_updateNewItemPageFlag(routeData, listActive)'
-      },
-      agreement: {
-        type: Object,
-        observer: '_agreementChanged'
-      },
-      moduleName: {
-        type: String,
-        value: 'agreements'
-      },
-      authorizedOfficers: Array
-    };
-  }
+  @property({type: Array})
+  agreementsTabs: EtoolsTab[] = [{
+    tab: 'details',
+    tabLabel: 'Agreement Details',
+    hidden: false
+  }];
+
+  @property({type: Object})
+  permissions!: UserPermissions;
+
+  @property({type: Number})
+  selectedAgreementId!: number;
+
+  @property({type: String})
+  csvDownloadUrl!: string;
+
+  @property({type: Boolean, computed: `_updateNewItemPageFlag(routeData, listActive)`})
+  newAgreementActive!: boolean;
+
+  @property({type: Object, observer: `_agreementChanged`})
+  agreement!: Agreement;
+
+  @property({type: String})
+  moduleName: string = 'agreements';
+
+  @property({type: Array})
+  authorizedOfficers!: [];
+
+  originalAgreementData!: Agreement;
 
   static get observers() {
     return [
@@ -220,7 +214,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this,'global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
     // fire agreement page loading message
     this._showAgreementsPageLoadingMessage();
   }
@@ -254,7 +248,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
     this.scrollToTopOnCondition(!listActive);
 
-    let fileImportDetails = {
+    const fileImportDetails = {
       filenamePrefix: 'agreement',
       importErrMsg: 'Agreements page import error occurred',
       errMsgPrefixTmpl: '[agreement(s) ##page##]',
@@ -278,16 +272,16 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     return permissions && permissions.editAgreementDetails === true;
   }
 
-  _saveAgreement(agreementData: Agreement) {
+  _saveAgreement(agreementData: GenericObject) {
     if (!agreementData.id) {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
     (this.$.agreementData as unknown as AgreementItemData).saveAgreement(agreementData, this._newAgreementSaved.bind(this))
-        .then((successfull: boolean) => {
-          if (successfull) {
-            store.dispatch({type: RESET_UNSAVED_UPLOADS});
-          }
-        });
+      .then((successfull: boolean) => {
+        if (successfull) {
+          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+        }
+      });
   }
 
   _updateAgreementStatus(e: CustomEvent) {
@@ -343,7 +337,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       return false;
     }
 
-    let agrDataToSave: Agreement;
+    let agrDataToSave: GenericObject;
     if (this.newAgreementActive) {
       agrDataToSave = this._prepareNewAgreementDataForSave(this.agreement);
     } else {
@@ -359,7 +353,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    let agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails);
+    const agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails);
     if (!agreementDetailsEl) {
       return false;
     }
@@ -412,7 +406,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   // Get agreement changed properties
   _getCurrentChanges() {
-    let changes: Agreement = {};
+    const changes: GenericObject = {};
     if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
       // prevent the possibility of checking 2 different agreements
       return {};
@@ -435,7 +429,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       }
     }
     if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
-      let signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
+      const signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
         'attachment'];
       signedByFields.forEach((fieldName: string) => {
         if (this._primitiveFieldIsModified(fieldName)) {
@@ -458,8 +452,10 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       }
       if (this._objectFieldIsModified('amendments')) {
         // keep only new amendments
-        changes.amendments = this.agreement.amendments.filter(
+        if (this.agreement.amendments) {
+          changes.amendments = this.agreement.amendments.filter(
             (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
+        }
       }
     }
 
@@ -471,7 +467,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   _authorizedOfficersChanged() {
-    let initialAuthOfficers = this._getInitialAuthorizedOfficersIds();
+    const initialAuthOfficers = this._getInitialAuthorizedOfficersIds();
     return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
   }
 
@@ -483,7 +479,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this.originalAgreementData.authorized_officers) {
       return null;
     }
-    return this.originalAgreementData.authorized_officers.map(function (off: any) {
+    return this.originalAgreementData.authorized_officers.map(function(off: any) {
       return off.id.toString();
     });
   }

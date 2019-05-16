@@ -1,7 +1,8 @@
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/image-icons.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators/lib/decorators';
 
 /**
  * @polymer
@@ -65,42 +66,29 @@ class ReportStatus extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      status: {
-        value: null
-      },
-      noLabel: {
-        type: Boolean,
-        value: false
-      },
-      noIcon: {
-        type: Boolean,
-        value: false
-      },
-      statusType: {
-        type: String,
-        computed: '_computeStatusType(status)',
-        reflectToAttribute: true
-      },
-      label: {
-        type: String,
-        computed: '_computeLabel(status, final, reportType)'
-      },
-      icon: {
-        type: String,
-        computed: '_computeIcon(statusType)'
-      },
-      final: {
-        type: Boolean,
-        value: false
-      },
-      reportType: {
-        type: String,
-        value: ''
-      }
-    };
-  }
+  @property({type: String})
+  status!: string;
+
+  @property({type: Boolean})
+  noLabel: boolean = false;
+
+  @property({type: Boolean})
+  noIcon: boolean = false;
+
+  @property({type: String, computed: '_computeStatusType(status)', reflectToAttribute: true})
+  statusType!: string;
+
+  @property({type: String, computed: '_computeLabel(status, final, reportType)'})
+  label!: string;
+
+  @property({type: String, computed: '_computeIcon(statusType)'})
+  icon!: string;
+
+  @property({type: Boolean})
+  final: boolean = false;
+
+  @property({type: String})
+  reportType: string = '';
 
   _computeStatusType(status: null | undefined | string) {
     if (status === null || typeof status === 'undefined') {

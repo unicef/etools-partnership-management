@@ -1,59 +1,40 @@
-import { PolymerElement } from '@polymer/polymer';
+import {PolymerElement} from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
 import Dexie from 'dexie';
 
 declare const moment: any;
 
-import { isEmptyObject } from '../../../utils/utils';
-import { setAgreements } from '../../../../actions/agreements';
-import { MinimalAgreement } from '../agreement.types';
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {isEmptyObject} from '../../../utils/utils';
+import {setAgreements} from '../../../../actions/agreements';
+import {MinimalAgreement} from '../agreement.types';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../typings/globals.types';
 
-
- /**
- * @polymer
- * @customElement
-  * @mixinFunction
-  * @appliesMixin ListDataMixin
- */
-// @ts-ignore
+/**
+* @polymer
+* @customElement
+* @mixinFunction
+* @appliesMixin ListDataMixin
+*/
 class AgreementsListData extends ListDataMixin(PolymerElement) {
-  [x: string]: any;
 
-  static get properties() {
-    return {
-      endpointName: {
-        type: String,
-        value: 'agreements'
-      },
+  @property({type: String})
+  endpointName: string = 'agreements';
 
-      dataLoadedEventName: {
-        type: String,
-        value: 'agreements-loaded'
-      },
+  @property({type: String})
+  dataLoadedEventName: string = 'agreements-loaded';
 
-      filteredAgreements: {
-        type: Array,
-        readOnly: true,
-        notify: true
-      },
+  @property({type: Array, notify: true, readOnly: true})
+  filteredAgreements: [] = [];
 
-      totalResults: {
-        type: Number,
-        readOnly: true,
-        notify: true
-      },
+  @property({type: Number, readOnly: true, notify: true})
+  totalResults!: number;
 
-      currentQuery: {
-        type: Object,
-        value: null
-      }
-    };
-  }
-
-   public endpointName: string = 'agreements';
+  @property({type: Object})
+  currentQuery: GenericObject | null = null;
 
   _handleMyResponse(res: any) {
     this._handleResponse(res);
@@ -61,16 +42,16 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
   }
 
   query(field: string, order: string, searchString: string, agreementTypes: string[],
-        agreementStatuses: string[], selectedPartnerNames: string[], startDate: string,
-        endDate: string, cpStructures: string[], isSpecialConditionsPca: string,
-        pageNumber: number, pageSize: number, showQueryLoading: boolean) {
+    agreementStatuses: string[], selectedPartnerNames: string[], startDate: string,
+    endDate: string, cpStructures: string[], isSpecialConditionsPca: string,
+    pageNumber: number, pageSize: number, showQueryLoading: boolean) {
     // If an active query transaction exists, abort it and start
     // a new one
     if (this.currentQuery) {
       this.currentQuery.abort();
     }
 
-    let self = this;
+    const self = this;
 
     if (showQueryLoading) {
       fireEvent(this, 'global-loading', {
@@ -79,7 +60,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
         loadingSource: 'ag-list'
       });
     }
-    let agreementsDexieTable = window.EtoolsPmpApp.DexieDb.agreements;
+    const agreementsDexieTable = window.EtoolsPmpApp.DexieDb.agreements;
     window.EtoolsPmpApp.DexieDb.transaction('r', agreementsDexieTable, function() {
       self.currentQuery = Dexie.currentTransaction;
 
@@ -142,15 +123,17 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
+          // @ts-ignore
           self._setTotalResults(count);
         });
       });
 
       return queryResult
-          .offset((pageNumber - 1) * pageSize)
-          .limit(pageSize)
-          .toArray();
+        .offset((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .toArray();
     }).then(function(result: any) {
+      // @ts-ignore
       self._setFilteredAgreements(result);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
     }).catch(function(error: any) {

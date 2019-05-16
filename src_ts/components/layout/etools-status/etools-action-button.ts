@@ -1,7 +1,7 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import { DomRepeatEvent } from '../../../typings/globals.types';
+import {DomRepeatEvent, GenericObject} from '../../../typings/globals.types';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -9,14 +9,14 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
 
- /**
+/**
  * @polymer
  * @customElement
  */
 class EtoolsActionButton extends PolymerElement {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -113,29 +113,22 @@ class EtoolsActionButton extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      actions: {
-        type: Array,
-        value: []
-      },
-      primaryAction: {
-        type: Object
-      },
-      secondaryActions: {
-        type: Array,
-        value: []
-      },
-      disabled: {
-        type: Boolean,
-        value: false
-      },
-      showInfoIcon: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  actions: any[] = [];
+
+  @property({type: Object})
+  primaryAction!: GenericObject;
+
+  @property({type: Array})
+  secondaryActions: any[] = [];
+
+  @property({type: Boolean})
+  disabled: boolean = false;
+
+  @property({type: Boolean})
+  showInfoIcon: boolean = false;
+
+  private _actionsChangedDebouncer!: Debouncer;
 
   static get observers() {
     return ['_actionsChanged(actions, actions.*)'];
@@ -146,14 +139,14 @@ class EtoolsActionButton extends PolymerElement {
       return;
     }
     this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer,
-        timeOut.after(10),
-        () => {
-          this._handleActionsChanged();
-        });
+      timeOut.after(10),
+      () => {
+        this._handleActionsChanged();
+      });
   }
 
   _handleActionsChanged() {
-    let actions = this.actions;
+    const actions = this.actions;
     if (!actions.length) {
       return;
     }
@@ -165,7 +158,7 @@ class EtoolsActionButton extends PolymerElement {
       return elem.primary && !elem.hidden;
     });
 
-    let secondaryActions = actions.filter((elem: any) => {
+    const secondaryActions = actions.filter((elem: any) => {
       return !elem.primary && !elem.hidden;
     });
 
@@ -178,7 +171,7 @@ class EtoolsActionButton extends PolymerElement {
   }
 
   _handleSecondaryClick(event: DomRepeatEvent) {
-    let action = event.model.item;
+    const action = event.model.item;
     fireEvent(this, action.event);
   }
 

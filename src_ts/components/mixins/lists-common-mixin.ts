@@ -1,64 +1,50 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import { PolymerElEvent, GenericObject, Constructor } from '../../typings/globals.types';
-import { fireEvent } from '../utils/fire-custom-event';
-import { updateAppState } from '../utils/navigation-helper';
-import { PolymerElement } from '@polymer/polymer';
-import { isEmptyObject } from '../utils/utils';
+import {property} from '@polymer/decorators';
+import {GenericObject, Constructor} from '../../typings/globals.types';
+import {fireEvent} from '../utils/fire-custom-event';
+import {PolymerElement} from '@polymer/polymer';
+import {updateAppState} from '../utils/navigation-helper';
+import {isEmptyObject} from '../utils/utils';
+
 
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class listsCommonClass extends baseClass {
-    [x: string]: any;
+  class ListsCommonClass extends baseClass {
 
-    static get properties() {
-      return {
-        urlParams: {
-          type: Object
-        },
+    @property({type: Object})
+    urlParams!: GenericObject;
 
-        q: {
-          type: String,
-          notify: true
-        },
+    @property({type: String, notify: true})
+    q!: string;
 
-        sortOrder: Object,
+    @property({type: Object})
+    sortOrder!: {field: string; direction: string};
 
-        debounceTime: {
-          type: Number,
-          value: 50
-        },
+    @property({type: Number})
+    debounceTime: number = 50;
 
-        active: Boolean,
+    @property({type: Boolean})
+    active: boolean = false;
 
-        detailsOpened: Boolean,
+    @property({type: Boolean})
+    detailsOpened!: boolean;
 
-        forceDataRefresh: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    forceDataRefresh: boolean = false;
 
-        requiredDataLoaded: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    requiredDataLoaded: boolean = false;
 
-        initComplete: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    initComplete: boolean = false;
 
-        showQueryLoading: {
-          type: Boolean,
-          value: false
-        },
+    @property({type: Boolean})
+    showQueryLoading: boolean = false;
 
-        csvDownloadUrl: {
-          type: String,
-          notify: true
-        },
+    @property({type: String, notify: true})
+    csvDownloadUrl!: string;
 
-        stampListData: Boolean
-      };
-    }
+    @property({type: Boolean})
+    stampListData!: boolean;
+
 
     connectedCallback() {
       super.connectedCallback();
@@ -73,7 +59,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     // When the list data rows are changing check and close any details opened
     _listDataChanged() {
-      let rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement>;
+      const rows = this.$.list.querySelectorAll('etools-data-table-row') as NodeListOf<PolymerElement>;
       if (rows && rows.length) {
         for (let i = 0; i < rows.length; i++) {
           // @ts-ignore
@@ -91,7 +77,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     // List fade in fade out effect
     _listChanged(filteredList: any, oldFilteredList: any) {
-      let classList = this.$.list.classList;
+      const classList = this.$.list.classList;
       if (filteredList instanceof Array && classList.contains('hidden')) {
         classList.remove('hidden');
       }
@@ -106,11 +92,11 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     * Because of this we need to refilter after list data is saved locally.
     * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
     */
-    _requiredDataHasBeenLoaded(event: PolymerElEvent) {
+    _requiredDataHasBeenLoaded(event: CustomEvent) {
       event.stopImmediatePropagation();
 
-      let listDataPath = event.target.getAttribute('list-data-path');
-      let list = this.get(listDataPath);
+      const listDataPath = (event.target as any).getAttribute('list-data-path');
+      const list = this.get(listDataPath);
 
       if (typeof list === 'undefined' ||
           (Array.isArray(list) && list.length === 0)) {
@@ -119,6 +105,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       // recheck params to trigger agreements filtering
       this.set('initComplete', false); // TODO : 2 flags that seem very similar..great..
       this.set('requiredDataLoaded', true);
+      // @ts-ignore
       this._init(this.active);
     }
 
@@ -135,6 +122,7 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
     }
 
+
     /**
      * Make sure you define _sortableFieldNames on *-list element properties level.
      * Ex for partners:
@@ -144,12 +132,13 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
      *  }
      */
     _isValidSortField(fieldName: string) {
+      // @ts-ignore
       return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
     }
 
     initSortFieldsValues(defaultSortData: any, urlQueryParamsSortData: any) {
       if (urlQueryParamsSortData) {
-        let p = urlQueryParamsSortData.split('.');
+        const p = urlQueryParamsSortData.split('.');
         if (this._isValidSortField(p[0])) {
           return {field: p[0], direction: p[1]};
         }
@@ -163,14 +152,14 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     // Outputs the query string for the list
     _buildUrlQueryString(filters: GenericObject) {
-      let queryParams = [];
+      const queryParams = [];
 
-      for (let field in filters) {
+      for (const field in filters) {
         if (filters[field]) {
-          let filterValue = filters[field];
+          const filterValue = filters[field];
           let filterUrlValue;
 
-          let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+          const filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
           switch (filterValType) {
             case 'array':
               if (filterValue instanceof Array && filterValue.length) {
@@ -198,14 +187,14 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _buildExportQueryString(params: GenericObject) {
-      let qsParams = [];
-      for (let pKey in params) {
+      const qsParams = [];
+      for (const pKey in params) {
         if (params[pKey]) {
           if (params[pKey] instanceof Array && !isEmptyObject(params[pKey])) {
             qsParams.push(pKey + '=' + params[pKey].join(','));
           }
           if (['string', 'number'].indexOf(typeof params[pKey]) > -1) {
-            let filterStrVal = String(params[pKey]).trim();
+            const filterStrVal = String(params[pKey]).trim();
             qsParams.push(pKey + '=' + filterStrVal);
           }
         }
@@ -245,9 +234,8 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
       }
     }
-
-};
-return listsCommonClass;
+  }
+  return ListsCommonClass;
 }
 
 export default ListsCommonMixin;

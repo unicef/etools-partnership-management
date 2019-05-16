@@ -1,23 +1,24 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { logError } from 'etools-behaviors/etools-logging';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixins Endpoints
- * @appliesMixins MissingDropdownOptions
+ * @appliesMixins MissingDropdownOptionsMixin
  */
-class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOptionsMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -37,7 +38,7 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
 
     <etools-dialog id="cpOutputRamIndicatorsDialog"
                   size="md"
-                  dialog-title="Add/Update CP Output/CP Inidcators"
+                  dialog-title="Add/Update CP Output/CP Indicators"
                   ok-btn-text="Add/Update"
                   disable-confirm-btn="[[disableConfirmBtn]]"
                   on-confirm-btn-clicked="_saveChanges"
@@ -78,54 +79,51 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: Number,
-      expectedResultId: Number,
-      availableCpOutputs: {
-        type: Array,
-        value: []
-      },
-      selectedCpOutputId: {
-        type: Number,
-        observer: '_cpOutputSelected'
-      },
-      cpOutputRamIndicators: {
-        type: Array,
-        value: []
-      },
-      selectedRamIndicatorsIds: {
-        type: Array,
-        value: []
-      },
-      autovalidateActive: {
-        type: Boolean,
-        value: false
-      },
-      ramIndicatorsLoadingMsg: {
-        type: String,
-        value: 'Loading...'
-      },
-      saveResultLoadingMsg: {
-        type: String,
-        value: 'Saving...'
-      },
-      opened: {
-        type: Boolean,
-        value: false
-      },
-      preventRamIndicatorReset: Boolean,
-      editIndex: {
-        value: null
-      },
-      disableConfirmBtn: {
-        type: Boolean,
-        value: false
-      },
-      toastEventSource: Object,
-      disableCpoField: Boolean
-    };
-  }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Number})
+  expectedResultId!: number;
+
+  @property({type: Array})
+  availableCpOutputs: [] = [];
+
+  @property({type: Number, observer: '_cpOutputSelected'})
+  selectedCpOutputId!: number;
+
+  @property({type: Array})
+  cpOutputRamIndicators: [] = [];
+
+  @property({type: Array})
+  selectedRamIndicatorsIds: [] = [];
+
+  @property({type: Boolean})
+  autovalidateActive: boolean = false;
+
+  @property({type: String})
+  ramIndicatorsLoadingMsg: string = 'Loading...';
+
+  @property({type: String})
+  saveResultLoadingMsg: string = 'Saving...';
+
+  @property({type: Boolean})
+  opened: boolean = false;
+
+  @property({type: Boolean})
+  preventRamIndicatorReset!: boolean;
+
+  @property({type: String})
+  editIndex: string | null = null;
+
+  @property({type: Boolean})
+  disableConfirmBtn: boolean = false;
+
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+
+  @property({type: Boolean})
+  disableCpoField!: boolean;
+
 
   ready() {
     super.ready();
@@ -142,8 +140,8 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
       this._setRamIndicatorsSpinnerText(this.ramIndicatorsLoadingMsg);
       this._showRamIndicatorsLoadingSpinner(true);
 
-      let ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: cpOutputId});
-      let self = this;
+      const ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: cpOutputId});
+      const self = this;
       this.sendRequest({
         endpoint: ramIndicatorsEndpoint
       }).then(function(response: any) {
@@ -156,13 +154,13 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
   }
 
   _handleRamIndicatorsReqResponse(response: any) {
-    if (this._thereAreSelectedIndicators() &&  // to prevent triggering validation
+    if (this._thereAreSelectedIndicators() && // to prevent triggering validation
         !this.preventRamIndicatorReset) {
       this.set('selectedRamIndicatorsIds', []);
     }
     this.set('preventRamIndicatorReset', false);
     this.set('cpOutputRamIndicators', response);
-    this.$.indicators.invalid = false;
+    (this.$.indicators as EtoolsDropdownMultiEl).invalid = false;
     this._showRamIndicatorsLoadingSpinner(false);
   }
 
@@ -172,22 +170,22 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
 
   _showRamIndicatorsLoadingSpinner(show: boolean) {
     if (show) {
-      this.$.cpOutputRamIndicatorsDialog.startSpinner();
+      (this.$.cpOutputRamIndicatorsDialog as EtoolsDialog).startSpinner();
     } else {
-      this.$.cpOutputRamIndicatorsDialog.stopSpinner();
+      (this.$.cpOutputRamIndicatorsDialog as EtoolsDialog).stopSpinner();
     }
   }
 
   _setRamIndicatorsSpinnerText(text: string) {
-    this.$.cpOutputRamIndicatorsDialog.spinnerText = text;
+    (this.$.cpOutputRamIndicatorsDialog as EtoolsDialog).spinnerText = text;
   }
 
   openDialog() {
-    this.$.cpOutputRamIndicatorsDialog.set('opened', true);
+    (this.$.cpOutputRamIndicatorsDialog as EtoolsDialog).set('opened', true);
   }
 
   closeDialog() {
-    this.$.cpOutputRamIndicatorsDialog.set('opened', false);
+    (this.$.cpOutputRamIndicatorsDialog as EtoolsDialog).set('opened', false);
   }
 
   resetData() {
@@ -199,15 +197,15 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
     this.set('cpOutputRamIndicators', []);
     this.set('selectedRamIndicatorsIds', []);
 
-    this.$.cpOutput.set('invalid', false);
-    this.$.indicators.set('invalid', false);
+    (this.$.cpOutput as EtoolsDropdownEl).set('invalid', false);
+    (this.$.indicators as EtoolsDropdownMultiEl).set('invalid', false);
   }
 
   _saveChanges() {
-    this.$.cpOutput.validate();
-    this.$.indicators.validate();
+    (this.$.cpOutput as EtoolsDropdownEl).validate();
+    (this.$.indicators as EtoolsDropdownMultiEl).validate();
 
-    let result = {
+    const result = {
       intervention: this.interventionId,
       cp_output: this.selectedCpOutputId,
       ram_indicators: (this.selectedRamIndicatorsIds instanceof Array) ? this.selectedRamIndicatorsIds : []
@@ -243,16 +241,16 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
     return !this.expectedResultId;
   }
 
-  _getResultsEndpoint(interventionId: string) {
+  _getResultsEndpoint(interventionId: number) {
     return this.getEndpoint('pdExpectedResults', {pdId: interventionId});
   }
 
-  _getResultDetailsEndpoint(resultId: string) {
+  _getResultDetailsEndpoint(resultId: number) {
     return this.getEndpoint('pdExpectedResultDetails', {resultId: resultId});
   }
 
   _saveExpectedResult(endpoint: any, method: string, result: any, successCallback: any) {
-    let self = this;
+    const self = this;
     this._setRamIndicatorsSpinnerText(this.saveResultLoadingMsg);
     this._showRamIndicatorsLoadingSpinner(true);
     this.set('disableConfirmBtn', true);
@@ -286,3 +284,4 @@ class ResultCpOutputAndRamIndicators extends (EndpointsMixin(MissingDropdownOpti
 }
 
 window.customElements.define('result-cp-output-and-ram-indicators', ResultCpOutputAndRamIndicators);
+export {ResultCpOutputAndRamIndicators as ResultCpOutputAndRamIndicatorsEl};

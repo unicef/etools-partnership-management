@@ -1,21 +1,23 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-data-table/etools-data-table.js';
 import CONSTANTS from '../../../../../../../config/app-constants';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { isEmptyObject, isJsonStrMatch } from '../../../../../../utils/utils';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {isEmptyObject, isJsonStrMatch} from '../../../../../../utils/utils';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
 import '../../../../../../layout/icons-actions.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {property} from '@polymer/decorators';
+import {Indicator, Location, Disaggregation, DisaggregationValue} from '../../../../../../../typings/intervention.types';
+import {GenericObject} from '../../../../../../../typings/globals.types';
 
 /**
  * @polymer
  * @customElement
  */
 class AppliedIndicator extends connect(store)(PolymerElement) {
-  [x: string]: any;
 
   static get template() {
     return html`
@@ -127,41 +129,33 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      indicator: {
-        type: Object
-      },
-      inAmendment: {
-        type: Boolean,
-        statePath: 'pageData.in_amendment'
-      },
-      locations: {
-        type: Array,
-        statePath: 'locations'
-      },
-      locationNames: {
-        type: Array,
-        value: []
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      disaggregations: {
-        type: Array,
-        statePath: 'disaggregations'
-      },
-      disaggregationNames: {
-        type: Array,
-        value: ['—']
-      },
-      editMode: {
-        type: Boolean
-      },
-      interventionStatus: String
-    };
-  }
+  @property({type: Object})
+  indicator!: Indicator;
+
+  @property({type: Boolean})
+  inAmendment!: boolean;
+
+  @property({type: Array})
+  locations!: Location[];
+
+  @property({type: Array})
+  locationNames: {name: string; adminLevel: string}[] = [];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  @property({type: Array})
+  disaggregations!: Disaggregation[];
+
+  @property({type: Array})
+  disaggregationNames: {name: string; groups: string}[] = [];
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: String})
+  interventionStatus!: string;
+
 
   static get observers() {
     return [
@@ -265,10 +259,10 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     if (!this.locations) {
       return;
     }
-    let locations = this.locations.filter((loc: any) => {
+    const locations = this.locations.filter((loc: any) => {
       return this.indicator.locations.indexOf(parseInt(loc.id)) > -1;
     });
-    let locNames = locations.map((l: any) => {
+    const locNames = locations.map((l: any) => {
       return {
         name: l.name.substring(0, l.name.indexOf('[')),
         adminLevel: l.name.substring(l.name.indexOf('['))
@@ -280,7 +274,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   getSectionName(sectionId: string) {
     let sectionName = '—';
     if (sectionId && !isEmptyObject(this.sections)) {
-      let section = this.sections.find(function(s: any) {
+      const section = this.sections.find(function(s: any) {
         return parseInt(s.id) === parseInt(sectionId);
       });
       if (section) {
@@ -299,20 +293,20 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
       this.disaggregationNames = [];
       return;
     }
-    let disaggregs = this.disaggregations.filter((d: any) => {
-      return this.indicator.disaggregation.indexOf(parseInt(d.id)) > -1;
+    const disaggregs = this.disaggregations.filter((d: Disaggregation) => {
+      return this.indicator.disaggregation.indexOf(d.id!) > -1;
     });
-    let disaggregNames = disaggregs.map((d: any) => {
+    const disaggregNames = disaggregs.map((d: any) => {
       return {name: d.name, groups: this._getDisaggregGroups(d.disaggregation_values)};
     });
     this.disaggregationNames = disaggregNames;
   }
 
-  _getDisaggregGroups(disaggregGroups: any) {
+  _getDisaggregGroups(disaggregGroups: DisaggregationValue[]) {
     if (!disaggregGroups || !disaggregGroups.length) {
       return '—';
     }
-    let groups = disaggregGroups.reduce(function(flattened: string, current: any) {
+    const groups = disaggregGroups.reduce(function(flattened: string, current: any) {
       return flattened + ', ' + current.value;
     }, '');
 
@@ -386,3 +380,4 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
 }
 
 window.customElements.define('applied-indicator', AppliedIndicator);
+export {AppliedIndicator as AppliedIndicatorEl};

@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/maps-icons.js';
 import '@polymer/iron-label/iron-label.js';
@@ -9,15 +9,17 @@ import 'etools-content-panel/etools-content-panel.js';
 import '../../../../layout/monitoring-visits-list.js';
 import './components/fund-reservations-display.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
-import { isJsonStrMatch } from '../../../../utils/utils.js';
-import { CpOutput, ExpectedResult } from '../../../../../typings/intervention.types.js';
-import { GenericObject, IdAndName } from '../../../../../typings/globals.types.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
+import {isJsonStrMatch} from '../../../../utils/utils.js';
+import {CpOutput, ExpectedResult, Intervention} from '../../../../../typings/intervention.types.js';
+import {property} from '@polymer/decorators';
+import {Agreement} from '../../../agreements/agreement.types.js';
+import {GenericObject} from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -25,8 +27,7 @@ import { GenericObject, IdAndName } from '../../../../../typings/globals.types.j
  * @customElement
  * @appliesMixin CommonMixin
  */
-class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as any) {
-  [x: string]: any;
+class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -146,39 +147,29 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object
-      },
-      interventionAgreement: {
-        type: Object
-      },
-      monitoringVisit: {
-        type: Array
-      },
-      cpOutputs: {
-        type: Array,
-        statePath: 'cpOutputs'
-      },
-      interventionCpOutputs: {
-        type: Array,
-        value: []
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      inteventionSections: {
-        type: Array,
-        value: []
-      },
-      resultLinks: {
-        type: Array,
-        value: []
-      }
-    };
-  }
+  @property({type: Object})
+  intervention!: Intervention;
+
+  @property({type: Object})
+  interventionAgreement!: Agreement;
+
+  @property({type: Array})
+  monitoringVisit!: [];
+
+  @property({type: Array})
+  cpOutputs!: CpOutput[];
+
+  @property({type: Array})
+  interventionCpOutputs!: string[];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  @property({type: Array})
+  inteventionSections!: [];
+
+  @property({type: Array})
+  resultLinks: [] = [];
 
   static get observers() {
     return [
@@ -213,9 +204,9 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
       return;
     }
 
-    let ids: GenericObject = {};
-    let uniqueIds: number[] = [];
-    let interventionCpOutputs: CpOutput[] = [];
+    const ids: GenericObject = {};
+    const uniqueIds: number[] = [];
+    const interventionCpOutputs: string[] = [];
 
     this.resultLinks.forEach(function(res: ExpectedResult) {
       ids[res.cp_output] = true;
@@ -248,10 +239,11 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement) as
   }
 
   _getIntervSectionNames() {
-    let interventionSections = this.intervention.sections.map((sectionId: string) =>  parseInt(sectionId, 10));
-    let sectionNames: string[] = [];
+    const interventionSections = this.intervention.sections.map((sectionId: string) => parseInt(sectionId, 10));
+    const sectionNames: string[] = [];
 
-    this.sections.forEach(function(section: IdAndName) {
+
+    this.sections.forEach(function(section: GenericObject) {
       if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
         sectionNames.push(section.name);
       }

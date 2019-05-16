@@ -1,9 +1,11 @@
 import '../mixins/disaggregations';
 import '../disaggregation-table-row';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import UtilsMixin from '../../../../../../../mixins/utils-mixin';
-import { disaggregationTableStyles } from '../styles/disaggregation-table-styles';
+import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -11,7 +13,7 @@ import { disaggregationTableStyles } from '../styles/disaggregation-table-styles
  * @appliesMixin UtilsMixin
  * @appliesMixin DisaggregationsMixin
  */
-class TwoDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement)) as any) {
+class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)) {
 
   static get is() {
     return 'two-disaggregations';
@@ -52,28 +54,23 @@ class TwoDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement
     `;
   }
 
-  static get properties() {
-    return {
-      data: Object,
-      mapping: Array,
-      columns: {
-        type: Array,
-        computed: '_getColumns(mapping)'
-      },
-      rows: {
-        type: Array,
-        computed: '_getRows(mapping)'
-      },
-      totalsForDisplay: {
-        type: Object,
-        computed: '_determineTotals(columns, data)'
-      },
-      rowsForDisplay: {
-        type: Object,
-        computed: '_determineRowsForDisplay(columns, rows, data)'
-      }
-    };
-  }
+  @property({type: Object})
+  data!: GenericObject;
+
+  @property({type: Array})
+  mapping!: any[];
+
+  @property({type: Array, computed: '_getColumns(mapping)'})
+  columns!: any[];
+
+  @property({type: Array, computed: '_getRows(mapping)'})
+  rows!: any[];
+
+  @property({type: Object, computed: '_determineTotals(columns, data)'})
+  totalsForDisplay!: GenericObject;
+
+  @property({type: Object, computed: '_determineRowsForDisplay(columns, rows, data)'})
+  rowsForDisplay!: GenericObject;
 
   _getColumns(mapping: any) {
     if (typeof mapping === 'undefined') {
@@ -100,8 +97,8 @@ class TwoDisaggregations extends (UtilsMixin(DisaggregationsMixin(PolymerElement
     if (typeof columns === 'undefined' || typeof data === 'undefined') {
       return;
     }
-    let columnData = columns.map((z) => {
-      let formatted = this._formatDisaggregationIds([z.id]);
+    const columnData = columns.map((z) => {
+      const formatted = this._formatDisaggregationIds([z.id]);
 
       return {
         key: formatted,

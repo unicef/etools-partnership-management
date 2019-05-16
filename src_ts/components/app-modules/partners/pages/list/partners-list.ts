@@ -1,7 +1,7 @@
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {store, RootState} from '../../../../../store';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
@@ -30,11 +30,13 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
 
 import '../../data/partners-list-data.js';
-import { isJsonStrMatch } from '../../../../utils/utils';
-import { fireEvent } from '../../../../utils/fire-custom-event';
+import {isJsonStrMatch} from '../../../../utils/utils';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {LabelAndValue} from '../../../../../typings/globals.types';
+import {PartnersListDataEl} from '../../data/partners-list-data.js';
 
-
-let _partnersLastNavigated: string = '';
+let _partnersLastNavigated = '';
 
 /**
  * @polymer
@@ -47,8 +49,9 @@ let _partnersLastNavigated: string = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(PaginationMixin(CommonMixin(ListsCommonMixin
-(ListFiltersMixin(PolymerElement)))))) as any){
+class PartnersList extends
+  connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
+    EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
 
   static get template() {
     // language=HTML
@@ -233,47 +236,44 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
     `;
   }
 
-  static get properties() {
-    return {
-      filteredPartners: {
-        type: Array,
-        notify: true,
-        observer: '_listChanged'
-      },
-      csoTypes: {
-        type: Array,
-        statePath: 'csoTypes'
-      },
-      partnerTypes: {
-        type: Array,
-        statePath: 'partnerTypes'
-      },
-      riskRatings: {
-        type: Array,
-        statePath: 'partnerRiskRatings'
-      },
-      selectedPartnerTypes: Array,
-      selectedCsoTypes: Array,
-      selectedRiskRatings: Array,
-      showHidden: {
-        type: Boolean
-      },
-      showOnlyGovernmentType: {
-        type: Boolean,
-        observer: '_showOnlyGovernmentTypeFlagChanged'
-      },
-      currentModule: String,
-      _sortableFieldNames: Array,
-      _governmentLockedPartnerTypes: Array
-    };
-  }
+  @property({type: Array, notify: true, observer: '_listChanged'})
+  filteredPartners: any[] = [];
 
-  public selectedPartnerTypes: any[] = [];
-  public selectedCsoTypes: any[] = [];
-  public selectedRiskRatings: any[] = [];
-  public showOnlyGovernmentType: boolean = false;
-  public _sortableFieldNames: string[] = ['vendor_number', 'name'];
-  public _governmentLockedPartnerTypes: string[] = ['Government'];
+  @property({type: Array})
+  csoTypes: LabelAndValue[] = [];
+
+  @property({type: Array})
+  partnerTypes: LabelAndValue[] = [];
+
+  @property({type: Array})
+  riskRatings: LabelAndValue[] = [];
+
+  @property({type: Array})
+  selectedPartnerTypes: any[] = [];
+
+  @property({type: Array})
+  selectedCsoTypes: any[] = [];
+
+  @property({type: Array})
+  selectedRiskRatings: any[] = [];
+
+  @property({type: Boolean})
+  showHidden: boolean = false;
+
+  @property({type: Boolean, observer: '_showOnlyGovernmentTypeFlagChanged'})
+  showOnlyGovernmentType: boolean = false;
+
+  @property({type: String})
+  currentModule: string = '';
+
+  @property({type: Array})
+  _sortableFieldNames: string[] = ['vendor_number', 'name'];
+
+  @property({type: Array})
+  _governmentLockedPartnerTypes: string[] = ['Government'];
+
+  private _updateShownFilterDebouncer!: Debouncer;
+  private _actionsChangedDebouncer!: Debouncer;
 
   public static get observers() {
     return [
@@ -366,48 +366,48 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
   }
 
   public _updateSelectedFiltersValues() {
-    this.updateShownFilterDebouncer = Debouncer.debounce(this.updateShownFilterDebouncer,
-        timeOut.after(20),
-        () => {
-          let filtersValues = [
-            {
-              filterName: 'Partner Type',
-              selectedValue: this.selectedPartnerTypes,
-              disabled: this.showOnlyGovernmentType,
-              allowEmpty: true,
-              disableMenuOption: this.showOnlyGovernmentType
-            },
-            {
-              filterName: 'CSO Type',
-              selectedValue: this.selectedCsoTypes,
-              allowEmpty: true
-            },
-            {
-              filterName: 'Risk Rating',
-              selectedValue: this.selectedRiskRatings,
-              allowEmpty: true
-            },
-            {
-              filterName: 'Show hidden',
-              selectedValue: this.showHidden,
-              allowEmpty: true
-            }
-          ];
-          this.updateShownFilters(filtersValues);
-        });
+    this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer,
+      timeOut.after(20),
+      () => {
+        const filtersValues = [
+          {
+            filterName: 'Partner Type',
+            selectedValue: this.selectedPartnerTypes,
+            disabled: this.showOnlyGovernmentType,
+            allowEmpty: true,
+            disableMenuOption: this.showOnlyGovernmentType
+          },
+          {
+            filterName: 'CSO Type',
+            selectedValue: this.selectedCsoTypes,
+            allowEmpty: true
+          },
+          {
+            filterName: 'Risk Rating',
+            selectedValue: this.selectedRiskRatings,
+            allowEmpty: true
+          },
+          {
+            filterName: 'Show hidden',
+            selectedValue: this.showHidden,
+            allowEmpty: true
+          }
+        ];
+        this.updateShownFilters(filtersValues);
+      });
   }
 
   public _getSelectedPartnerTypes(selectedPartnerTypes: any) {
     return this.showOnlyGovernmentType
-        ? this._governmentLockedPartnerTypes
-        : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
+      ? this._governmentLockedPartnerTypes
+      : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
   }
 
   // Input: URL query params
   // Initializes the properties of the list at page load
   // to the params interpretted from the URL string.
   public _init(active: any) {
-    let urlQueryParams = this.urlParams;
+    const urlQueryParams = this.urlParams;
     if (!active || !urlQueryParams) {
       return;
     }
@@ -421,7 +421,7 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
     // format of sort param is sort=field.order ex: sort=name.asc
-    let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
+    const result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
     this.set('sortOrder', result);
     this.set('initComplete', true);
     this._updateSelectedFiltersValues();
@@ -431,43 +431,43 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
   public _updateUrlAndData() {
     if (this._canFilterData()) {
       this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-      let qs = this._buildQueryString();
+      const qs = this._buildQueryString();
 
       this._updateUrlAndDislayedData(this.currentModule + '/list',
-          _partnersLastNavigated,
-          qs,
-          this._filterListData.bind(this));
+        _partnersLastNavigated,
+        qs,
+        this._filterListData.bind(this));
 
       _partnersLastNavigated = qs || _partnersLastNavigated;
     }
   }
 
-  public _filterListData(forceNoLoading: any) {
+  public _filterListData(forceNoLoading?: any) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer,
-        timeOut.after(this.debounceTime),
-        () => {
-          this._handleFilterPartnersData(forceNoLoading);
-        });
+      timeOut.after(this.debounceTime),
+      () => {
+        this._handleFilterPartnersData(forceNoLoading);
+      });
   }
 
   public _handleFilterPartnersData(forceNoLoading: boolean) {
-    let partners = this.shadowRoot.querySelector('#partners');
+    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListDataEl;
     if (!partners) {
       return;
     }
     partners.query(
-        this.sortOrder.field,
-        this.sortOrder.direction,
-        this.q.toLowerCase(),
-        this.selectedPartnerTypes,
-        this.selectedCsoTypes,
-        this.selectedRiskRatings,
-        this.paginator.page,
-        this.paginator.page_size,
-        this.showHidden,
-        forceNoLoading ? false : this.showQueryLoading
+      this.sortOrder.field,
+      this.sortOrder.direction,
+      this.q.toLowerCase(),
+      this.selectedPartnerTypes,
+      this.selectedCsoTypes,
+      this.selectedRiskRatings,
+      this.paginator.page,
+      this.paginator.page_size,
+      this.showHidden,
+      forceNoLoading ? false : this.showQueryLoading
     );
   }
 
@@ -486,8 +486,8 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
   }
 
   public _buildCsvDownloadUrl() {
-    let endpointUrl = this.getEndpoint('partners').url;
-    let params = {
+    const endpointUrl = this.getEndpoint('partners').url;
+    const params = {
       search: this.q,
       partner_type: this.selectedPartnerTypes,
       cso_type: this.selectedCsoTypes,
@@ -511,7 +511,7 @@ class PartnersList extends connect(store)(EtoolsCurrency(EndpointsMixin(Paginati
     }
   }
 
-  public _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType: any) {
+  public _showOnlyGovernmentTypeFlagChanged(showOnlyGovernmentType: boolean) {
     if (showOnlyGovernmentType) {
       // lock list to government partners only
       this.set('selectedPartnerTypes', this._governmentLockedPartnerTypes);

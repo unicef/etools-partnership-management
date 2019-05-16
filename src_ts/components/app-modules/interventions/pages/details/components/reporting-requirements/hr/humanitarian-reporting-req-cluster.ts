@@ -1,13 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import uniq from 'lodash-es/uniq';
 import 'etools-data-table/etools-data-table.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../../../../../mixins/common-mixin';
-import { ResultLinkLowerResult, ExpectedResult } from '../../../../../../../../typings/intervention.types';
-import { isEmptyObject } from '../../../../../../../utils/utils';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
-import { logError } from 'etools-behaviors/etools-logging';
+import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typings/intervention.types';
+import {isEmptyObject} from '../../../../../../../utils/utils';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -15,10 +16,10 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/a
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin Common
+ * @appliesMixin CommonMixin
  */
-class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(PolymerElement))) as any) {
-  [x: string]: any;
+class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${gridLayoutStyles}
@@ -54,36 +55,30 @@ class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(Polym
     `;
   }
 
-  static get properties() {
-    return {
-      reportingRequirements: {
-        type: Array,
-        observer: 'reportingRequirementsChanged'
-      },
-      interventionId: {
-        type: String,
-        observer: 'interventionIdChanged'
-      },
-      requirementsCount: {
-        type: Number,
-        value: 0,
-        notify: true
-      },
-      expectedResults: Array
-    };
-  }
+  @property({type: Array, observer: HumanitarianReportingReqCluster.prototype.reportingRequirementsChanged})
+  reportingRequirements!: [];
+
+  // @ts-ignore
+  @property({type: String, observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged})
+  interventionId!: string;
+
+  @property({type: Number, notify: true})
+  requirementsCount: number = 0;
+
+  @property({type: Array})
+  expectedResults!: [];
 
   ready() {
     super.ready();
   }
 
-  interventionIdChanged(newId: string) {
+  interventionIdChanged(newId: string, _oldId: string) {
     if (!newId) {
       this.reportingRequirements = [];
       return;
     }
 
-    let clusterIndicIds = this._getClusterIndicIds();
+    const clusterIndicIds = this._getClusterIndicIds();
     if (isEmptyObject(clusterIndicIds)) {
       this.reportingRequirements = [];
       return;
@@ -105,7 +100,7 @@ class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(Polym
     if (isEmptyObject(this.expectedResults)) {
       return [];
     }
-    let clusterIndicIds: any[] = [];
+    const clusterIndicIds: any[] = [];
     this.expectedResults.forEach((r: ExpectedResult) => {
       return r.ll_results.forEach((llr: ResultLinkLowerResult) => {
         return llr.applied_indicators.forEach((i) => {
@@ -131,7 +126,7 @@ class HumanitarianReportingReqCluster extends ((EndpointsMixin(CommonMixin(Polym
       if (!dates.length) {
         return '';
       }
-      let formatedDates = dates.map(d => this.getDateDisplayValue(d));
+      const formatedDates = dates.map(d => this.getDateDisplayValue(d));
       return formatedDates.join(', ');
     } else {
       return this.getDateDisplayValue(dates);

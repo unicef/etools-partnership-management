@@ -1,27 +1,32 @@
-import { fireEvent } from '../../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 
 import '@polymer/paper-button/paper-button.js';
 
 import './edit-hru-dialog.js';
 import './hru-list.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin';
 import FrontendPaginationMixin from '../../../../../../../mixins/frontend-pagination-mixin';
-import { ExpectedResult } from '../../../../../../../../typings/intervention.types';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
+import {ExpectedResult} from '../../../../../../../../typings/intervention.types';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import {property} from '@polymer/decorators';
+import {EditHruDialog} from './edit-hru-dialog.js';
+import {HruListEl} from './hru-list.js';
 
 
 /**
  * @customElement
  * @polymer
  * @mixinFunction
- * @appliesMixin ReportingRequirementsCommon
- * @appliesMixin FrontendPagination
+ * @appliesMixin ReportingRequirementsCommonMixin
+ * @appliesMixin FrontendPaginationMixin
  */
-class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(FrontendPaginationMixin(PolymerElement)) as any) {
-  [x: string]: any;
+class HumanitarianReportingReqUnicef extends
+  FrontendPaginationMixin(
+    ReportingRequirementsCommonMixin(PolymerElement)) {
+
   static get template() {
     return html`
     ${buttonsStyles} ${gridLayoutStyles}
@@ -66,15 +71,19 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
     `;
   }
 
-  static get properties() {
-    return {
-      editHruDialog: Object,
-      expectedResults: Array,
-      interventionStart: Date,
-      editMode: Boolean
+  @property({type: Object})
+  editHruDialog!: EditHruDialog;
 
-    };
-  }
+  @property({type: Array})
+  expectedResults!: [];
+
+  @property({type: Date})
+  interventionStart!: Date;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+
   static get observers() {
     return [
       'setTotalResults(interventionId, reportingRequirements)',
@@ -85,7 +94,7 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
   ready() {
     super.ready();
     this._createEditHruDialog();
-    this.$.hruList.set('hruMainEl', this);
+    (this.$.hruList as HruListEl).set('hruMainEl', this);
   }
 
   disconnectedCallback() {
@@ -95,15 +104,15 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
 
   _createEditHruDialog() {
     this._reportingRequirementsSaved = this._reportingRequirementsSaved.bind(this);
-    this.editHruDialog = document.createElement('edit-hru-dialog');
+    this.editHruDialog = document.createElement('edit-hru-dialog') as any;
     this.editHruDialog.set('toastMsgLoadingSource', this);
-    this.editHruDialog.addEventListener('reporting-requirements-saved', this._reportingRequirementsSaved);
+    this.editHruDialog.addEventListener('reporting-requirements-saved', this._reportingRequirementsSaved as any);
     document.querySelector('body')!.appendChild(this.editHruDialog);
   }
 
   _removeEditHruDialog() {
     if (this.editHruDialog) {
-      this.editHruDialog.removeEventListener('reporting-requirements-saved', this._reportingRequirementsSaved);
+      this.editHruDialog.removeEventListener('reporting-requirements-saved', this._reportingRequirementsSaved as any);
       document.querySelector('body')!.removeChild(this.editHruDialog);
     }
   }
@@ -157,7 +166,7 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
     if (!expectedResults) {
       return false;
     }
-    let hfIndicator = expectedResults.find((r: any) => {
+    const hfIndicator = expectedResults.find((r: any) => {
       return r.ll_results.find((llr: any) => {
         return llr.applied_indicators.find((i: any) => {
           return i.is_active && i.is_high_frequency;
@@ -177,3 +186,5 @@ class HumanitarianReportingReqUnicef extends (ReportingRequirementsCommonMixin(F
 }
 
 window.customElements.define('humanitarian-reporting-req-unicef', HumanitarianReportingReqUnicef);
+
+export {HumanitarianReportingReqUnicef as HumanitarianReportingReqUnicefEl};

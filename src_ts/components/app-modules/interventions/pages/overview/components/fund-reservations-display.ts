@@ -1,17 +1,18 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-data-table/etools-data-table.js';
 
 import '../../../mixins/fr-numbers-consistency-mixin.js';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles.js';
-import { frWarningsStyles } from '../../../styles/fr-warnings-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {frWarningsStyles} from '../../../styles/fr-warnings-styles.js';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin.js';
-import { isEmptyObject } from '../../../../../utils/utils.js';
-import { Intervention, FrsDetails } from '../../../../../../typings/intervention.types.js';
-import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons.js';
+import {isEmptyObject} from '../../../../../utils/utils.js';
+import {Intervention, FrsDetails} from '../../../../../../typings/intervention.types.js';
+import {pmpCustomIcons} from '../../../../../styles/custom-iconsets/pmp-icons.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -22,7 +23,7 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
  * @appliesMixin CommonMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
+class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsistencyMixin(PolymerElement))) {
 
   static get template() {
     return html`
@@ -117,7 +118,8 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
                 <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                     icon-first
                                     custom-icon
-                                    hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
+                                    hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency,
+                                                    intervention.planned_budget.currency)]]">
                   <span slot="field">[[fr.currency]]</span>
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">
@@ -179,7 +181,8 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
               <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                   icon-first
                                   custom-icon
-                                  hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
+                                  hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs,
+                                                  intervention.planned_budget.currency)]]">
                 <span slot="field" class$="[[getFrsValueNAClass(frsDetails.currencies_match)]]">
                   [[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]
                 </span>
@@ -192,7 +195,8 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
               <etools-info-tooltip class="fr-nr-warn"
                                   custom-icon
                                   icon-first
-                                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
+                                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs,
+                                                   intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
                 <span slot="field" class$="[[getFrsValueNAClass(frsDetails.currencies_match)]]">
                   [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_frs_amt)]]
                 </span>
@@ -243,19 +247,15 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object,
-        value: null
-      },
-      frsDetails: {
-        type: Object,
-        value: null
-      },
-      _frsTotalAmountWarning: String
-    };
-  }
+  @property({type: Object})
+  intervention: Intervention | null = null;
+
+  @property({type: Object})
+  frsDetails: object | null = null;
+
+  @property({type: String})
+  _frsTotalAmountWarning!: string;
+
 
   static get observers() {
     return [
@@ -272,8 +272,8 @@ class FundReservationsDisplay extends (EtoolsCurrency(CommonMixin(FrNumbersConsi
       this.set('_frsTotalAmountWarning', '');
       return;
     }
-    let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local!,
-        frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
+    const warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local!,
+      frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
     this.set('_frsTotalAmountWarning', warn);
   }
 

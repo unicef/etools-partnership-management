@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -6,16 +6,19 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import 'etools-dropdown/etools-dropdown.js';
 
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { DomRepeatEvent } from '../../../../../../../typings/globals.types';
-import { Disaggregation } from '../../../../../../../typings/intervention.types';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { repeatableDataSetsStyles } from '../../../../../../styles/repeatable-data-sets-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-import { isJsonStrMatch } from '../../../../../../utils/utils';
+import {DomRepeatEvent} from '../../../../../../../typings/globals.types';
+import {Disaggregation} from '../../../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {property} from '@polymer/decorators';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {flaggedSortedDisaggregs} from '../../../../../../../reducers/common-data';
 
 
 /**
@@ -23,7 +26,7 @@ import { isJsonStrMatch } from '../../../../../../utils/utils';
  * @customElement
  * @applies MixinRepeatableDataSets
  */
-class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(PolymerElement) as any) {
+class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -46,7 +49,7 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
         }
 
       </style>
-      <div hidden$="[[_emptyList(dataItems, dataItems.length)]]">
+      <div hidden$="[[_isEmptyList(dataItems, dataItems.length)]]">
         <template is="dom-repeat" items="{{dataItems}}">
           <div class="row-h item-container no-h-margin">
             <div class="item-actions-container">
@@ -82,7 +85,7 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
       </div>
 
 
-      <div class="row-padding-v" hidden$="[[!_emptyList(dataItems, dataItems.length)]]">
+      <div class="row-padding-v" hidden$="[[!_isEmptyList(dataItems, dataItems.length)]]">
         <p>There are no disaggregations added.</p>
       </div>
 
@@ -95,18 +98,12 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
     `;
   }
 
-  static get properties() {
-    return {
-      preDefinedDisaggregtions: {
-        type: Array,
-        statePath: 'disaggregations'
-      }
-    };
-  }
+  @property({type: Array})
+  preDefinedDisaggregtions!: Disaggregation[];
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.preDefinedDisaggregtions, state.commonData!.disaggregations)) {
-      this.preDefinedDisaggregtions = [...state.commonData!.disaggregations];
+    if (state.commonData!.disaggregations) {
+      this.preDefinedDisaggregtions = flaggedSortedDisaggregs(state);
     }
   }
 
@@ -116,7 +113,8 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
     this.editMode = true;
   }
 
-  _emptyList(disaggregations: Disaggregation[], disaggregLength: number) {
+
+  _isEmptyList(disaggregations: Disaggregation[], disaggregLength: number) {
     return (!disaggregations || !disaggregLength);
   }
 
@@ -126,13 +124,13 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
   }
 
   _onDisaggregationSelected(event: DomRepeatEvent) {
-    let selectedDisagreg = event.detail.selectedItem;
+    const selectedDisagreg = event.detail.selectedItem;
     if (!selectedDisagreg) {
       return;
     }
 
-    let splitElId = event.target.id.split('_');
-    let index = splitElId[splitElId.length - 1];
+    const splitElId = (event.target as EtoolsDropdownEl).id.split('_');
+    const index = parseInt(splitElId[splitElId.length - 1]);
 
     if (this.isAlreadySelected(selectedDisagreg.id, index, 'disaggregId')) {
       if (event.model.item.disaggregId === null) {
@@ -148,7 +146,7 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
 
   }
 
-  _displayDisaggregationGroups(selectedDisagreg: Disaggregation, index: number){
+  _displayDisaggregationGroups(selectedDisagreg: Disaggregation, index: number) {
     this._getDisagregGroupElem(index).value =
         selectedDisagreg.disaggregation_values.map(d => d.value).join('; ');
   }
@@ -158,7 +156,7 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
   }
 
   _getDisagregGroupElem(index: number) {
-    return this.shadowRoot.querySelector('#disaggregationGroups_' + index);
+    return this.shadowRoot!.querySelector('#disaggregationGroups_' + index) as PaperInputElement;
   }
 
 }

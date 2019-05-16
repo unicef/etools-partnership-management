@@ -4,10 +4,11 @@ import {isEmptyObject} from '../utils/utils';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data.js';
-import { fireEvent } from '../utils/fire-custom-event';
+import {fireEvent} from '../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -15,73 +16,69 @@ import { PolymerElement } from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
  */
-function ProfileOperations<T extends Constructor<PolymerElement>>(baseClass: T) {
-    // @ts-ignore
-    class profileOperations extends EndpointsMixin(UserDataMixin(baseClass)) {
+function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
 
-      public static get properties() {
-        return {
-          _saveActionInProgress: Boolean,
-          profileSaveLoadingMsgSource: String,
-        };
-      }
+    @property({type: Boolean})
+    _saveActionInProgress: boolean = false;
 
-      protected _saveActionInProgress: boolean = false;
-      public profileSaveLoadingMsgSource: string = 'profile-modal';
+    @property({type: String})
+    profileSaveLoadingMsgSource: string = 'profile-modal';
 
+    protected _dispatchSaveProfileRequest(profile: any) {
+      const self = this;
+      const config = {
+        // @ts-ignore *defined in component
+        endpoint: this.getEndpoint(this.endpointName),
+        method: 'PATCH',
+        body: profile
+      };
 
-      protected _dispatchSaveProfileRequest(profile: any) {
-        let self = this;
-        let config = {
-          endpoint: this.getEndpoint(this.endpointName),
-          method: 'PATCH',
-          body: profile
-        };
+      this.sendRequest(config).then(function(resp: any) {
+        self._handleResponse(resp);
+      }).catch(function(error: any) {
+        parseRequestErrorsAndShowAsToastMsgs(error, self);
+        self._hideProfileSaveLoadingMsg();
+      });
+    }
 
-        this.sendRequest(config).then(function (resp: any) {
-          self._handleResponse(resp);
-        }).catch(function (error: any) {
-          parseRequestErrorsAndShowAsToastMsgs(error, self);
-          self._hideProfileSaveLoadingMsg();
+    public saveProfile(profile: any) {
+      if (isEmptyObject(profile)) {
+        // empty profile means no changes found
+        fireEvent(this, 'toast', {
+          text: 'All changes are saved.',
+          showCloseBtn: false
         });
+        return;
       }
 
-      public saveProfile(profile: any) {
-        if (isEmptyObject(profile)) {
-          // empty profile means no changes found
-          fireEvent(this, 'toast', {
-            text: 'All changes are saved.',
-            showCloseBtn: false
-          });
-          return;
-        }
+      fireEvent(this, 'global-loading', {
+        message: 'Saving...',
+        active: true,
+        loadingSource: this.profileSaveLoadingMsgSource
+      });
+      this.set('_saveActionInProgress', true);
+      this._dispatchSaveProfileRequest(profile);
+    }
 
+    protected _handleResponse(response: any) {
+      store.dispatch(updateCurrentUser(response));
+      this._hideProfileSaveLoadingMsg();
+    }
+
+    protected _hideProfileSaveLoadingMsg() {
+      if (this._saveActionInProgress) {
         fireEvent(this, 'global-loading', {
-          message: 'Saving...',
-          active: true,
+          active: false,
           loadingSource: this.profileSaveLoadingMsgSource
         });
-        this.set('_saveActionInProgress', true);
-        this._dispatchSaveProfileRequest(profile);
+        this.set('_saveActionInProgress', false);
       }
+    }
 
-      protected _handleResponse(response: any) {
-        store.dispatch(updateCurrentUser(response));
-        this._hideProfileSaveLoadingMsg();
-      }
+  }
 
-      protected _hideProfileSaveLoadingMsg() {
-        if (this._saveActionInProgress) {
-          fireEvent(this, 'global-loading', {
-            active: false,
-            loadingSource: this.profileSaveLoadingMsgSource
-          });
-          this.set('_saveActionInProgress', false);
-        }
-      }
-
-    };
-    return profileOperations;
+  return ProfileOperationsClass;
 }
 
-export default ProfileOperations;
+export default ProfileOperationsMixin;

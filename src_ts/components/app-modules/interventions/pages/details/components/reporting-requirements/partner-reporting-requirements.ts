@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-selector/iron-selector.js';
@@ -12,9 +12,12 @@ import './qpr/quarterly-reporting-requirements.js';
 import './hr/humanitarian-reporting-req-unicef.js';
 import './hr/humanitarian-reporting-req-cluster.js';
 import './srr/special-reporting-requirements.js';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../store.js';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store.js';
+import {property} from '@polymer/decorators';
+import {HumanitarianReportingReqUnicefEl} from './hr/humanitarian-reporting-req-unicef.js';
+import {QuarterlyReportingRequirementsEL} from './qpr/quarterly-reporting-requirements.js';
 
 
 /**
@@ -22,7 +25,7 @@ import { store, RootState } from '../../../../../../../store.js';
  * @customElement
  */
 class PartnerReportingRequirements extends connect(store)(PolymerElement) {
-  [x: string]: any;
+
   static get template() {
     return html`
     ${gridLayoutStyles}
@@ -160,56 +163,52 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      selectedReportType: {
-        type: String,
-        value: 'qtyProgress'
-      },
-      interventionId: Number,
-      interventionStart: Date,
-      interventionEnd: String,
-      expectedResults: Array,
+  @property({type: String})
+  selectedReportType: string = 'qtyProgress';
 
-      // count properties
-      qprRequirementsCount: {
-        type: Number,
-        value: 0
-      },
-      hrUnicefRequirementsCount: {
-        type: Number,
-        value: 0
-      },
-      hrClusterRequirementsCount: {
-        type: Number,
-        value: 0
-      },
-      specialRequirementsCount: {
-        type: Number,
-        value: 0
-      },
-      editMode: {
-        type: Boolean,
-        statePath: 'pageData.permissions.edit.reporting_requirements'
-      }
-    };
-  }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Date})
+  interventionStart!: Date;
+
+  @property({type: String})
+  interventionEnd!: string;
+
+  @property({type: Array})
+  expectedResults!: [];
+
+  // count properties
+  @property({type: Number})
+  qprRequirementsCount: number = 0;
+
+  @property({type: Number})
+  hrUnicefRequirementsCount: number = 0;
+
+
+  @property({type: Number})
+  hrClusterRequirementsCount: number = 0;
+
+  @property({type: Number})
+  specialRequirementsCount: number = 0;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
 
   stateChanged(state: RootState) {
     this.editMode = state.pageData!.permissions!.edit.reporting_requirements;
   }
 
   _openQprEditDialog() {
-    // @ts-ignore
-    this.$.qpr.openQuarterlyRepRequirementsDialog();
+    (this.$.qpr as QuarterlyReportingRequirementsEL).openQuarterlyRepRequirementsDialog();
   }
 
   _openHruEditDialog() {
-    // @ts-ignore
-    this.$.hru.openUnicefHumanitarianRepReqDialog();
+    (this.$.hru as HumanitarianReportingReqUnicefEl).openUnicefHumanitarianRepReqDialog();
   }
 
-  _hideRepReqEditBtn(editMode: boolean, qprCount: Number) {
+  _hideRepReqEditBtn(editMode: boolean, qprCount: number) {
     return qprCount === 0 || !editMode;
   }
 

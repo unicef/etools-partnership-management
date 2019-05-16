@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/communication-icons.js';
@@ -12,7 +12,7 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import '../../../../layout/etools-form-element-wrapper.js';
 
-import '../../../../layout/etools-error-messages-box.js'
+import '../../../../layout/etools-error-messages-box.js';
 import '../../../../layout/icons-actions.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
@@ -20,16 +20,19 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
-import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
 
 import './components/edit-core-values-assessment';
 import './components/staff-members';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import {convertDate} from '../../../../utils/date-utils';
+import {property} from '@polymer/decorators';
+import {LabelAndValue} from '../../../../../typings/globals.types.js';
+import {EditCoreValuesAssessmentEl} from './components/edit-core-values-assessment';
+import {Partner} from '../../../../../models/partners.models.js';
 declare const moment: any;
-
 
 /**
  * @polymer
@@ -38,7 +41,7 @@ declare const moment: any;
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement)) as any) {
+class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement))) {
 
   static get template() {
     // language=HTML
@@ -191,7 +194,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]">
                 <div slot="row-data" class="p-relative">
                   <span class="col-data col-4">
-                    [[getDateDisplayValue(item.date)]]
+                    <span hidden$="[[_isEmptyDate(item.date)]]">[[getDateDisplayValue(item.date)]]</span>
                     <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
                   </span>
                   <span class="col-data col-6">
@@ -226,44 +229,35 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     `;
   }
 
-  static get properties() {
-    return {
-      partner: {
-        type: Object,
-        notify: true,
-        observer: '_partnerChanged'
-      },
-      editMode: Boolean,
-      csoTypes: {
-        type: Array,
-        statePath: 'csoTypes'
-      },
-      partnerTypes: {
-        type: Array,
-        statePath: 'partnerTypes'
-      },
-      sharedPartenerValues: {
-        type: Array,
-        statePath: 'sharedPartenerValues'
-      },
-      showCoreValuesAssessmentAttachment: Boolean,
-      _partnerComputedType: {
-        type: String,
-        computed: '_computePartnerType(partner)'
-      },
-      showArchivedAssessments: Boolean,
-      showDelete: Boolean,
-      editCVADialog: {
-        type: Object
-      }
-    };
-  }
+  @property({type: Object, notify: true, observer: '_partnerChanged'})
+  partner!: Partner;
 
-  public partner: object = {};
-  public editMode: boolean = false;
-  public showCoreValuesAssessmentAttachment: boolean = false;
-  public showArchivedAssessments: boolean = false;
-  public showDelete: boolean = false;
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Array})
+  csoTypes: LabelAndValue[] = [];
+
+  @property({type: Array})
+  partnerTypes: LabelAndValue[] = [];
+
+  @property({type: Array})
+  sharedPartenerValues: LabelAndValue[] = [];
+
+  @property({type: Boolean})
+  showCoreValuesAssessmentAttachment: boolean = false;
+
+  @property({type: String, computed: '_computePartnerType(partner)'})
+  _partnerComputedType: string = '';
+
+  @property({type: Boolean})
+  showArchivedAssessments: boolean = false;
+
+  @property({type: Boolean})
+  showDelete: boolean = false;
+
+  @property({type: Object})
+  editCVADialog!: EditCoreValuesAssessmentEl;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.csoTypes)) {
@@ -292,7 +286,6 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   public disconnectedCallback() {
     super.disconnectedCallback();
     if (this.editCVADialog) {
-      // @ts-ignore
       document.querySelector('body')!.removeChild(this.editCVADialog);
     }
   }
@@ -305,15 +298,14 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   }
 
   public _createEditCoreValuesAssessmentsDialog() {
-    this.editCVADialog = document.createElement('edit-core-values-assessment');
+    this.editCVADialog = document.createElement('edit-core-values-assessment') as any;
     this.editCVADialog.parent = this;
-    // @ts-ignore
+
     document.querySelector('body')!.appendChild(this.editCVADialog);
   }
 
   public _editCoreValuesAssessment(e: CustomEvent) {
-    // @ts-ignore
-    this.editCVADialog.item = JSON.parse(e.target.getAttribute('item'));
+    this.editCVADialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
     this.editCVADialog.open();
   }
 
@@ -328,7 +320,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     if (!isEmptyObject(partner)) {
       // decide if we should show core values assessment attachment
       this.set('showCoreValuesAssessmentAttachment',
-          this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
+        this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
 
       if (this.showCoreValuesAssessmentAttachment) {
         this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
@@ -342,11 +334,10 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
   }
 
   public _sortCvaDescByDate() {
-    // @ts-ignore
     if (!this.partner.core_values_assessments || this.partner.core_values_assessments.length <= 1) {
       return;
     }
-    // @ts-ignore
+
     this.partner.core_values_assessments.sort((a: any, b: any) => {
       // @ts-ignore
       return new Date(b.date) - new Date(a.date);
@@ -357,18 +348,18 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     if (!assessmentDateString) {
       return;
     }
-    let datesFormat = 'YYYY-MM-DD';
-    let today = moment.utc().format(datesFormat);
-    let assessmentDate = convertDate(assessmentDateString);
-    let assessmentExpDate = moment(assessmentDate).add(60, 'months');
+    const datesFormat = 'YYYY-MM-DD';
+    const today = moment.utc().format(datesFormat);
+    const assessmentDate = convertDate(assessmentDateString);
+    const assessmentExpDate = moment(assessmentDate).add(60, 'months');
 
-    let daysUntilExpire = assessmentExpDate.diff(today, 'days');
+    const daysUntilExpire = assessmentExpDate.diff(today, 'days');
 
     let notifMessage = '';
     if (daysUntilExpire < 1) {
       notifMessage = 'The ' + assessmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
     } else {
-      let notifStartDate = moment(assessmentDate).add(57, 'months');
+      const notifStartDate = moment(assessmentDate).add(57, 'months');
       if (moment(today).isAfter(notifStartDate)) {
         notifMessage = 'The ' + assessmentType + ' will expire in ' + daysUntilExpire + ' days';
       }
@@ -382,8 +373,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
   public _computePartnerType(partner: any) {
     return !isEmptyObject(partner)
-        ? this._getPartnerType(partner.partner_type, partner.cso_type)
-        : '';
+      ? this._getPartnerType(partner.partner_type, partner.cso_type)
+      : '';
   }
 
   public _getPartnerType(partnerType: any, csoType: any) {
@@ -403,7 +394,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     if (!date) {
       return true;
     }
-    let converted = this.getDateDisplayValue(date);
+    const converted = this.getDateDisplayValue(date);
     return !converted;
   }
 
@@ -415,6 +406,5 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 }
 
 window.customElements.define('partner-details', PartnerDetails);
-
 
 

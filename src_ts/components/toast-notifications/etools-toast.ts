@@ -1,7 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
+import {PaperToastElement} from '@polymer/paper-toast/paper-toast.js';
+import {PaperButtonElement} from '@polymer/paper-button/paper-button.js';
 
 /**
  * @polymer
@@ -60,21 +62,14 @@ class EtoolsToast extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-    };
-  }
-
   public fitInto: object | null = null;
 
   public show(details: object) {
-    // @ts-ignore
-    return this.$.toast.show(details);
+    return (this.$.toast as PaperToastElement).show(details);
   }
 
   public toggle() {
-    // @ts-ignore
-    return this.$.toast.toggle();
+    return (this.$.toast as PaperToastElement).toggle();
   }
 
   public confirmToast() {
@@ -92,8 +87,7 @@ class EtoolsToast extends PolymerElement {
   }
 
   public getMessageWrapper() {
-    // @ts-ignore
-    return this.$.toast.$.label;
+    return (this.$.toast as PaperToastElement).$.label as HTMLSpanElement;
   }
 
   protected _isMultiLine(message: string) {
@@ -104,8 +98,8 @@ class EtoolsToast extends PolymerElement {
   }
 
   prepareToastAndGetShowProperties(detail: any) {
-    let closeToastBtn = this.$.confirmBtn;
-    let toast = this.$.toast;
+    const closeToastBtn = this.$.confirmBtn as PaperButtonElement;
+    const toast = this.$.toast;
 
     if (this._isMultiLine(detail.text)) {
       toast.classList.remove('toast');
@@ -120,11 +114,11 @@ class EtoolsToast extends PolymerElement {
       closeToastBtn.classList.remove('toast-dismiss-btn-multi-line');
       closeToastBtn.classList.add('toast-dismiss-btn');
     }
-    // @ts-ignore
+
     closeToastBtn.updateStyles();
 
     // clone detail obj
-    let toastProperties = JSON.parse(JSON.stringify(detail));
+    const toastProperties = JSON.parse(JSON.stringify(detail));
 
     toastProperties.duration = 0;
     if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
@@ -147,3 +141,5 @@ class EtoolsToast extends PolymerElement {
 }
 
 window.customElements.define('etools-toast', EtoolsToast);
+
+export {EtoolsToast as EtoolsToastEl};

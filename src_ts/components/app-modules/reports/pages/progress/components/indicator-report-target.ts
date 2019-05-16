@@ -1,11 +1,13 @@
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin Utils
+ * @appliesMixin UtilsMixin
  */
 class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
 
@@ -76,7 +78,9 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
       </div>
       <div class="target-row">
         <span>Total cumulative progress:</span>
-        <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">[[_getCumulativeProgress(displayType, cumulativeProgress)]]</span>
+        <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">
+          [[_getCumulativeProgress(displayType, cumulativeProgress)]]
+        </span>
       </div>
       <div class="target-row">
         <span>Achievement in reporting period:</span>
@@ -85,35 +89,25 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      target: {
-        type: Object
-      },
-      cumulativeProgress: {
-        type: String,
-        value: '-'
-      },
-      achievement: {
-        type: String,
-        value: '-'
-      },
-      bold: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-      displayType: {
-        type: String,
-        value: 'number'
-      }
-    };
-  }
+  @property({type: Object})
+  target!: GenericObject;
+
+  @property({type: String})
+  cumulativeProgress: string = '-';
+
+  @property({type: String})
+  achievement: string = '-';
+
+  @property({type: Boolean, reflectToAttribute: true})
+  bold: boolean = false;
+
+  @property({type: String})
+  displayType: string = 'number';
 
   _getTargetValue(displayType: string, target: any) {
     switch (displayType) {
       case 'number':
-        return this._formatNumber(target.v, '-', 0, '\,');
+        return this._formatNumber(target.v, '-', 0, ',');
       case 'ratio':
         return target.v + '/' + target.d;
       case 'percentage':

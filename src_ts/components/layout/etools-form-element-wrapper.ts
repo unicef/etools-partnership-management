@@ -1,8 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input-container.js';
 
 import {SharedStyles} from '../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -71,28 +72,23 @@ class EtoolsFormElementWrapper extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-      label: String,
-      value: {
-        type: String,
-        value: ''
-      },
-      alwaysFloatLabel: {
-        type: Boolean,
-        value: true
-      },
-      noLabelFloat: Boolean,
-      required: {
-        type: Boolean,
-        reflectToAttribute: true,
-        observer: '_requiredChanged'
-      },
-      noPlaceholder: Boolean
-    };
-  }
+  @property({type: String})
+  label!: string;
 
-  public noPlaceholder: boolean = false;
+  @property({type: String})
+  value: string = '';
+
+  @property({type: Boolean})
+  alwaysFloatLabel: boolean = true;
+
+  @property({type: Boolean})
+  noLabelFloat!: boolean;
+
+  @property({type: Boolean, reflectToAttribute: true, observer: '_requiredChanged'})
+  required!: boolean;
+
+  @property({type: Boolean})
+  noPlaceholder: boolean = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -110,16 +106,16 @@ class EtoolsFormElementWrapper extends PolymerElement {
   }
 
   _getPlaceholderClass(value: string) {
-    let cssclass = ((typeof value === 'string' && value.trim() !== '')
-        ? ''
-        : (this.noPlaceholder ? '' : 'placeholder'));
+    const cssclass = ((typeof value === 'string' && value.trim() !== '')
+      ? ''
+      : (this.noPlaceholder ? '' : 'placeholder'));
     return cssclass + ' etools-form-element-wrapper';
   }
 
   _getDisplayValue(value: string) {
     return (typeof value === 'string' && value.trim() !== '')
-        ? value.trim()
-        : (this.noPlaceholder ? '' : '—');
+      ? value.trim()
+      : (this.noPlaceholder ? '' : '—');
   }
 
 }

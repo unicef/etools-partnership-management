@@ -33,12 +33,17 @@ import {
   UPDATE_CURRENT_USER,
   CommonDataAction
 } from '../actions/common-data';
-import { CpOutput, Disaggregation } from '../typings/intervention.types';
-import { LabelAndValue, CpStructure, Country, IdAndName, GenericObject, MinimalUser, User, EnvFlags } from '../typings/globals.types';
+import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
+import {LabelAndValue, CpStructure, Country, IdAndName, GenericObject,
+  MinimalUser, User, EnvFlags, Office} from '../typings/globals.types';
+import {RootState} from '../store';
+import {createSelector} from 'reselect';
+import {copy} from '../components/utils/utils';
+
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
-  signedByUnicefUsers: {id: number, name: string, email: string, username: string}[] = [];
+  signedByUnicefUsers: {id: number; name: string; email: string; username: string}[] = [];
   cpOutputs: CpOutput[] = [];
   countryProgrammes: CpStructure[] = [];
   interventionDocTypes: LabelAndValue[] = [];
@@ -46,7 +51,7 @@ export class CommonDataState {
   sections: GenericObject[] = [];
   unicefUsersData: MinimalUser[] = [];
   locations: Location[] = [];
-  offices: {id: number, name: string, zonal_chief: any}[] = [];
+  offices: Office[] = [];
   agreementsDropdownData: object[] = []; // TODO - is empty
   agencyChoices: LabelAndValue[] = [];
   agreementAmendmentTypes: LabelAndValue[] = [];
@@ -74,7 +79,7 @@ export class CommonDataState {
     {value: 'QPR', label: 'Quarterly Progress Reports'},
     {value: 'SR', label: 'Special Reports'}
   ];
-  locationTypes: {id: number, name: string, admin_level: any}[] = [];
+  locationTypes: {id: number; name: string; admin_level: any}[] = [];
   grants: GenericObject[] = [];
   donors: GenericObject[] = [];
   partnerRiskRatings: LabelAndValue[] = [];
@@ -85,7 +90,7 @@ const INITIAL_STATE = new CommonDataState();
 
 const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_STATE, action: any) => {
   let disaggregsCopy;
-   let dIndex;
+  let dIndex;
 
   switch (action.type) {
     case UPDATE_COUNTRY_PROGRAMMES:
@@ -280,5 +285,32 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return state;
   }
 };
+
+
+const disaggregationsSelector = (state: RootState) => state.commonData!.disaggregations;
+
+export const flaggedSortedDisaggregs = createSelector(
+  disaggregationsSelector,
+  (disagregs: Disaggregation[]) => {
+    if (!disagregs || !disagregs.length) {
+      return [];
+    }
+
+    return copy(disagregs).map((d: Disaggregation) => {
+      if (!d.active) {
+        d.name = '(*Inactive) ' + d.name;
+      }
+      return d;
+    }).sort((d1: Disaggregation, d2: Disaggregation) => {
+      if (d1.active === d2.active) {
+        return 0;
+      }
+      if (d1.active) {
+        return -1;
+      }
+      return 1;
+    });
+  }
+);
 
 export default commonData;

@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
@@ -9,12 +9,16 @@ import '../../../../../layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
-import { fireEvent } from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {StaffMember} from '../../../../../../models/partners.models';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
+
 /**
  * @polymer
  * @customElement
  */
-class AddEditStaffMembers extends (PolymerElement as any) {
+class AddEditStaffMembers extends PolymerElement {
 
   static get template() {
     // language=HTML
@@ -107,18 +111,15 @@ class AddEditStaffMembers extends (PolymerElement as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      item: Object,
-      dataItems: Array
-    }
-  }
+  @property({type: Object})
+  item!: StaffMember;
 
-  public dataItems: object[] = [];
+  @property({type: Array})
+  dataItems: StaffMember[] = [];
 
   open() {
     this.resetValidations();
-    this.$.staffMemberDialog.opened = true;
+    (this.$.staffMemberDialog as EtoolsDialog).opened = true;
   }
 
   _isNewStaffMember(item: {id: number | null}) {
@@ -180,7 +181,7 @@ class AddEditStaffMembers extends (PolymerElement as any) {
   }
 
   _emailAlreadyUsed(emailAddress: string) {
-    let sameEmailItems = this.dataItems.filter((el: any) => {
+    const sameEmailItems = this.dataItems.filter((el: any) => {
       return el.email === emailAddress
           && Number(el.id) !== Number(this.item.id);
     });
@@ -190,17 +191,21 @@ class AddEditStaffMembers extends (PolymerElement as any) {
 
   validate() {
     let valid = true;
-    let fields = ['#firstName', '#lastName', '#email', '#title'];
-    let elements = [];
-    for (let i = 0; i < fields.length; i++) {
-      elements[i] = this.$.staffMemberDialog.querySelector(fields[i]);
+
+    const fieldSelectors = ['#firstName', '#lastName', '#email', '#title'];
+
+    const elements = [];
+
+    for (let i = 0; i < fieldSelectors.length; i++) {
+      elements[i] = this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
       elements[i].validate();
+      if (fieldSelectors[i] === '#email') {
+        elements[i].invalid = elements[i].invalid || this._emailAlreadyUsed(this.item.email);
+      }
     }
 
-    [].push.apply(fields, ['#email', '#title'] as any);
-
-    for (let i = 0; i < fields.length; i++) {
-      let el = elements[i] || this.$.staffMemberDialog.querySelector(fields[i]);
+    for (let i = 0; i < fieldSelectors.length; i++) {
+      const el = elements[i] || this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
       if (el && el.invalid) {
         valid = false;
         break;
@@ -210,20 +215,24 @@ class AddEditStaffMembers extends (PolymerElement as any) {
   }
 
   resetValidations() {
-    let fields = ['#firstName', '#lastName', '#email', '#phone', '#title'];
-    for (let i = 0; i < fields.length; i++) {
-      let el = this.$.staffMemberDialog.querySelector(fields[i]);
-      el.invalid = false;
+    const fieldSelectors = ['#firstName', '#lastName', '#email', '#phone', '#title'];
+    for (let i = 0; i < fieldSelectors.length; i++) {
+      const el = this.$.staffMemberDialog.querySelector(fieldSelectors[i]) as PolymerElement & {invalid: boolean};
+      if (el) {
+        el.invalid = false;
+      }
     }
   }
 
   _savePartnerContact() {
     if (this.validate()) {
       fireEvent(this, 'save-partner-contact', this.item);
-      this.$.staffMemberDialog.opened = false;
+      (this.$.staffMemberDialog as EtoolsDialog).opened = false;
     }
   }
 
 }
 
 window.customElements.define('add-edit-staff-members', AddEditStaffMembers);
+
+export {AddEditStaffMembers as AddEditStaffMembersEl};

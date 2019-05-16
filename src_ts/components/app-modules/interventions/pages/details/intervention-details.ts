@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
@@ -18,53 +18,62 @@ import '../../../../layout/year-dropdown.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
-import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin';
+import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin';
 import EnvironmentFlagsMixin from '../../../../environment-flags/environment-flags-mixin';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
-import { Agreement } from '../../../agreements/agreement.types';
-import { Intervention, ExpectedResult } from '../../../../../typings/intervention.types';
-import { fireEvent } from '../../../../utils/fire-custom-event';
-import { PolymerElEvent, LabelAndValue } from '../../../../../typings/globals.types';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store';
-import { pageCommonStyles } from '../../../../styles/page-common-styles';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../styles/shared-styles';
-import { requiredFieldStarredStyles } from '../../../../styles/required-field-styles';
-import { buttonsStyles } from '../../../../styles/buttons-styles';
-import { frWarningsStyles } from '../../styles/fr-warnings-styles';
-import { isEmptyObject, isJsonStrMatch, copy } from '../../../../utils/utils';
+import {Agreement} from '../../../agreements/agreement.types';
+import {Intervention, ExpectedResult, InterventionPermissionsFields, Location} from '../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {LabelAndValue, Permission, GenericObject, Office, MinimalUser} from '../../../../../typings/globals.types';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles';
+import {buttonsStyles} from '../../../../styles/buttons-styles';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles';
+import {isEmptyObject, isJsonStrMatch, copy} from '../../../../utils/utils';
 
 import './components/agreement-selector.js';
 import './components/planned-budget.js';
 import './components/results/expected-results.js';
 import './components/planned-visits.js';
-import { setPageDataPermissions } from '../../../../../actions/page-data.js';
+import {setPageDataPermissions} from '../../../../../actions/page-data.js';
 import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
-import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
-import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import {property} from '@polymer/decorators';
+import {ExpectedResultsEl} from './components/results/expected-results.js';
+import {AgreementSelector} from './components/agreement-selector.js';
+import {GroupedLocationsDialog} from './components/grouped-locations-dialog.js';
+import {PlannedBudgetEl} from './components/planned-budget.js';
+import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
- * @appliesMixin StaffMembersData
+ * @appliesMixin StaffMembersDataMixin
  * @appliesMixin EnvironmentFlagsMixin
- * @appliesMixin MissingDropdownOptions
+ * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionDetails extends connect(store)(CommonMixin(
-  StaffMembersData(
-    EnvironmentFlagsMixin(
-      MissingDropdownOptionsMixin(
+class InterventionDetails extends connect(store)(
+  EnvironmentFlagsMixin(
+    CommonMixin(
+      UploadsMixin(
         FrNumbersConsistencyMixin(
-          UploadsMixin(PolymerElement))))) as any)) {
+          StaffMembersDataMixin(
+            MissingDropdownOptionsMixin(PolymerElement))))))) {
 
   static get template() {
     return html`
@@ -128,13 +137,10 @@ class InterventionDetails extends connect(store)(CommonMixin(
         padding-right: 10px;
       }
 
-      datepicker-lite {
-        min-width: 100px; /*IE fix*/
-      }
-
       .export-res-btn {
         height: 28px;
         margin-top: 4px;
+        margin-bottom: 6px;
       }
 
     </style>
@@ -163,7 +169,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
         </div>
 
-        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type, intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type,
+                                                                          intervention.status)]]">
           <year-dropdown id="ref-year"
                         label="Ref. Year"
                         selected-year="{{intervention.reference_number_year}}">
@@ -253,7 +260,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
                         on-upload-finished="_activationLetterUploadFinished"
                         on-upload-started="_onUploadStarted"
                         hidden$="[[_isDraft(intervention.status)]]"
-                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
+                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status,
+                                          permissions.edit.activation_letter_attachment)]]"
                         on-delete-file="_activationLetterDelete"
                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
@@ -274,7 +282,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
                               readonly$="[[!permissions.edit.start]]"
                               required$="[[permissions.required.start]]"
                               error-message="Please select start date"
-                              auto-validate>
+                              auto-validate
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
             <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
             <span slot="message">[[_frsStartConsistencyWarning]]</span>
@@ -294,7 +303,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
                               readonly$="[[!permissions.edit.end]]"
                               required$="[[permissions.required.end]]"
                               error-message="Please select end date"
-                              auto-validate>
+                              auto-validate
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
             <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
@@ -339,11 +349,12 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
         <div class="row-h flex-c">
-          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-            <template is="dom-repeat" items="[[intervention.cluster_names]]">
-              <span class="names-padding">[[item]]</span>
-            </template>
-          </etools-form-element-wrapper>
+          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To" no-placeholder>
+             <template is="dom-repeat" items="[[intervention.cluster_names]]">
+               <span class="names-padding">[[item]]</span>
+             </template>
+             <span hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">—</span>
+           </etools-form-element-wrapper>
         </div>
       </template>
 
@@ -377,10 +388,11 @@ class InterventionDetails extends connect(store)(CommonMixin(
         <template is="dom-if" if="[[!newIntervention]]">
           <div slot="panel-btns" class="cp-header-actions-bar">
             <paper-button title="Export results" class="white-btn export-res-btn"
-             hidden$="[[!showExportResults(intervention.status)]]" on-click="exportExpectedResults">
+             hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]" on-click="exportExpectedResults">
                    Export
             </paper-button>
-            <div class="separator" hidden$="[[!showExportResults(intervention.status)]]"></div>
+            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links,
+                                              permissions.edit.result_links)]]"></div>
             <paper-toggle-button id="showInactive"
                                 hidden$="[[!thereAreInactiveIndicators]]"
                                 checked="{{showInactiveIndicators}}">
@@ -443,98 +455,79 @@ class InterventionDetails extends connect(store)(CommonMixin(
     `;
   }
 
-  static get properties() {
-    return {
-      intervention: {
-        type: Object,
-        observer: '_interventionChanged',
-        notify: true
-      },
-      userEditPermission: Boolean,
-      permissions: {
-        type: Object,
-        statePath: 'pageData.permissions'
-      },
-      selectedPartnerId: {
-        type: Number,
-        notify: true,
-        observer: '_selectedPartnerIdChanged'
-      },
-      documentTypes: {
-        type: Array,
-        statePath: 'interventionDocTypes'
-      },
-      pcaDocTypes: {
-        type: Array,
-        value: []
-      },
-      ssfaDocTypes: {
-        type: Array,
-        value: []
-      },
-      sections: {
-        type: Array,
-        statePath: 'sections'
-      },
-      offices: {
-        type: Array,
-        statePath: 'offices'
-      },
-      unicefUsersData: {
-        type: Array,
-        statePath: 'unicefUsersData'
-      },
-      years: {
-        type: Array,
-        value: []
-      },
-      agreement: {
-        type: Object
-      },
-      originalIntervention: {
-        type: Object
-      },
-      interventionRequiredField: {
-        type: Boolean,
-        value: false
-      },
-      newIntervention: {
-        type: Boolean
-      },
-      fieldsResetted: {
-        type: Boolean
-      },
-      _frsStartConsistencyWarning: {
-        type: String,
-        value: ''
-      },
-      _frsEndConsistencyWarning: {
-        type: String,
-        value: ''
-      },
-      locations: {
-        type: Array,
-        statePath: 'locations'
-      },
-      noOfPdOutputs: {
-        type: String,
-        value: '0'
-      },
-      thereAreInactiveIndicators: {
-        type: Boolean,
-        value: false
-      },
-      showInactiveIndicators: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  // @ts-ignore
+  @property({type: Object, notify: true, observer: InterventionDetails.prototype._interventionChanged})
+  intervention!: Intervention;
+
+  @property({type: Boolean})
+  userEditPermission!: boolean;
+
+  @property({type: Object})
+  permissions!: Permission<InterventionPermissionsFields>;
+
+  @property({type: Number, notify: true, observer: InterventionDetails.prototype._selectedPartnerIdChanged})
+  selectedPartnerId!: number;
+
+  @property({type: Array})
+  documentTypes!: LabelAndValue[];
+
+  @property({type: Array})
+  pcaDocTypes!: LabelAndValue[];
+
+  @property({type: Array})
+  ssfaDocTypes!: LabelAndValue[];
+
+  @property({type: Array})
+  sections!: GenericObject[];
+
+  @property({type: Array})
+  offices!: Office[];
+
+  @property({type: Array})
+  unicefUsersData!: MinimalUser[];
+
+  @property({type: Array})
+  years: [] = [];
+
+  @property({type: Object})
+  agreement!: object;
+
+  @property({type: Object})
+  originalIntervention!: Intervention;
+
+  @property({type: Boolean})
+  interventionRequiredField: boolean = false; // TODO is this used?
+
+  @property({type: Boolean})
+  newIntervention!: boolean;
+
+  @property({type: Boolean})
+  fieldsResetted!: boolean;
+
+  @property({type: String})
+  _frsStartConsistencyWarning: string = '';
+
+  @property({type: String})
+  _frsEndConsistencyWarning: string = '';
+
+  @property({type: Array})
+  locations!: Location[];
+
+  @property({type: String})
+  noOfPdOutputs: string | number = '0';
+
+  @property({type: Boolean})
+  thereAreInactiveIndicators: boolean = false;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
+
+  private locationsDialog!: GroupedLocationsDialog;
 
   static get observers() {
     return [
       '_newInterventionFlagChanged(newIntervention)',
-        '_setYears(intervention.start, intervention.end)',
+      '_setYears(intervention.start, intervention.end)',
       '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
       'intervention.start, intervention.status)',
       '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
@@ -569,7 +562,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
   ready() {
     super.ready();
-    this.locationsDialog = document.createElement('grouped-locations-dialog');
+    this.locationsDialog = document.createElement('grouped-locations-dialog') as any;
     document.querySelector('body')!.appendChild(this.locationsDialog);
   }
 
@@ -580,6 +573,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
      * triggered by parent element on stamp or by click event on tabs
      */
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    // @ts-ignore
     this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
     fireEvent(this, 'tab-content-attached');
   }
@@ -628,7 +622,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
   }
 
   openCpOutputAndRamIndicatorsDialog() {
-    let expectedResultsElem = this.shadowRoot.querySelector('#expectedResults');
+    const expectedResultsElem = this.shadowRoot!.querySelector('#expectedResults') as unknown as ExpectedResultsEl;
     if (!expectedResultsElem) {
       return;
     }
@@ -676,8 +670,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
         this._updateDatesRequiredState(true);
       }
     }
-    this.$.intStart.updateStyles();
-    this.$.intEnd.updateStyles();
+    (this.$.intStart as PolymerElement).updateStyles();
+    (this.$.intEnd as PolymerElement).updateStyles();
   }
 
   _updateDatesRequiredState(isRequired: boolean) {
@@ -694,8 +688,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
     if (!(documentTypes instanceof Array && documentTypes.length)) {
       return;
     }
-    let pcaTypes: LabelAndValue[] = [];
-    let ssfaTypes: LabelAndValue[] = [];
+    const pcaTypes: LabelAndValue[] = [];
+    const ssfaTypes: LabelAndValue[] = [];
     documentTypes.forEach((type) => {
       if (type.value !== CONSTANTS.DOCUMENT_TYPES.SSFA) {
         pcaTypes.push(type);
@@ -708,7 +702,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
     this.set('ssfaDocTypes', ssfaTypes);
   }
 
-  _interventionChanged(intervention: Intervention) {
+  _interventionChanged(intervention: Intervention, _old: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
       if (!intervention.id) {
         this.set('selectedPartnerId', undefined);
@@ -726,12 +720,12 @@ class InterventionDetails extends connect(store)(CommonMixin(
   }
 
   _resetValidations() {
-    this.$.agreementSelector.resetValidations();
-    this.$.documentType.resetInvalidState();
-    this.$.plannedBudget.resetValidations();
-    this.$.cpStructure.resetCpDropdownInvalidState();
+    (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
+    (this.$.documentType as EtoolsDropdownEl).resetInvalidState();
+    (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
+    (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
-    let fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
+    const fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
       'partnerFocalPts', 'intStart', 'intEnd'];
     if (!this._isIE()) {
       fields.push('title');
@@ -742,21 +736,17 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
     this._resetIETitleFieldValidation();
 
-    let plannedVisitsEl = this.shadowRoot.querySelector('#plannedVisits');
-    if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
-      plannedVisitsEl.resetValidations();
-    }
     this.set('fieldsResetted', true);
   }
 
   _isIE() {
-    let appShell = document.querySelector('app-shell');
+    const appShell = document.querySelector('app-shell');
     return appShell!.classList.contains('ie');
   }
 
   _resetIETitleFieldValidation() {
-    let isIE = this._isIE();
-    let title = this.shadowRoot.querySelector('#title');
+    const isIE = this._isIE();
+    const title = this.shadowRoot!.querySelector('#title') as PolymerElement;
     if (title && isIE) {
       // IE11 #title style force update
       setTimeout(() => {
@@ -766,8 +756,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
     }
   }
 
-  _activateAutoValidation(e: PolymerElEvent) {
-    e.target.set('autoValidate', true);
+  _activateAutoValidation(e: CustomEvent) {
+    (e.target as PaperInputElement).set('autoValidate', true);
   }
 
   _setYears(interventionStart: string, interventionEnd: string) {
@@ -775,8 +765,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
         && typeof interventionEnd === 'string' && interventionEnd !== '') {
 
       let start = parseInt(interventionStart.substr(0, 4), 10);
-      let end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
-      let years = [];
+      const end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
+      const years = [];
       while (start <= end) {
         years.push({
           value: start,
@@ -797,6 +787,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
       // Prevent reset on changes caused by initialization of the fields
       this._resetDropdowns();
     }
+    // @ts-ignore
     this.getPartnerStaffMembers(id);
   }
 
@@ -806,9 +797,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
     // reset partner focal points options and value
     this.set('intervention.partner_focal_points', []);
     this.set('staffMembers', []);
-    let partnerFpDropDown = this.$.partnerFocalPts;
+    const partnerFpDropDown = this.$.partnerFocalPts as unknown as EtoolsDropdownEl;
     if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
-      partnerFpDropDown.value = null;
       partnerFpDropDown.selected = null;
     }
   }
@@ -846,7 +836,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
       this.set('intervention.document_type', null);
       return;
     }
-    let selIsInOptions = options.find(o => o.value === this.intervention.document_type);
+    const selIsInOptions = options.find(o => o.value === this.intervention.document_type);
     if (!selIsInOptions) {
       this.set('intervention.document_type', null);
     }
@@ -854,7 +844,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
   validate() {
     let valid = true;
-    let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
+    const fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
       '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
 
     if (this._isContingencyAndHasActivationLetter() || this.intervention.status === 'active') {
@@ -865,7 +855,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
       fieldSelectors.push('#ref-year');
     }
     fieldSelectors.forEach((selector: string) => {
-      let field = this.shadowRoot.querySelector(selector);
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }
@@ -884,8 +874,8 @@ class InterventionDetails extends connect(store)(CommonMixin(
 
   _daysUntilExpiry(end: string) {
     if (isFutureDate(end)) {
-      let today = new Date().toString();
-      let diff = dateDiff(today, end);
+      const today = new Date().toString();
+      const diff = dateDiff(today, end);
       if (diff) {
         return diff + ' days until expiry';
       }
@@ -894,27 +884,27 @@ class InterventionDetails extends connect(store)(CommonMixin(
   }
 
   _checkFrsStartConsistency(frsEarliestStartDate: string, interventionStart: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention)
+    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
         || interventionStatus === 'closed') {
       this.set('_frsStartConsistencyWarning', null);
-      this.$.intStart.updateStyles();
+      (this.$.intStart as PolymerElement).updateStyles();
       return;
     }
     this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-        frsEarliestStartDate, this.frsValidationFields.start_date, true));
-    this.$.intStart.updateStyles();
+      frsEarliestStartDate, this.frsValidationFields.start_date, true));
+    (this.$.intStart as PolymerElement).updateStyles();
   }
 
   _checkFrsEndConsistency(frsLatestEndDate: string, interventionEnd: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention)
+    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
         || interventionStatus === 'closed') {
       this.set('_frsEndConsistencyWarning', '');
-      this.$.intEnd.updateStyles();
+      (this.$.intEnd as PolymerElement).updateStyles();
       return;
     }
     this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
-        frsLatestEndDate, this.frsValidationFields.end_date, true));
-    this.$.intEnd.updateStyles();
+      frsLatestEndDate, this.frsValidationFields.end_date, true));
+    (this.$.intEnd as PolymerElement).updateStyles();
   }
 
   _onIndicatorsChanged() {
@@ -930,7 +920,7 @@ class InterventionDetails extends connect(store)(CommonMixin(
   }
 
   _extractClusterNamesFromIndicators() {
-    let clusterNames = new Set();
+    const clusterNames = new Set();
 
     this.intervention.result_links.forEach((rl: ExpectedResult) => {
       if (isEmptyObject(rl.ll_results)) {
@@ -987,14 +977,21 @@ class InterventionDetails extends connect(store)(CommonMixin(
             && !this.originalIntervention.activation_letter_attachment;
   }
 
-  showExportResults(status: string) {
+  showExportResults(status: string, resultLinks: []) {
     return [CONSTANTS.STATUSES.Draft.toLowerCase(),
-            CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+      CONSTANTS.STATUSES.Signed.toLowerCase(),
+      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
+            && resultLinks && resultLinks.length;
+  }
+
+  showSeparator(status: string, resultLinks: [], resultLinkPermission: boolean) {
+    return this.showExportResults(status, resultLinks) && resultLinkPermission;
+
   }
 
   exportExpectedResults() {
-    let endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
+    // @ts-ignore
+    const endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
     window.open(endpoint, '_blank');
   }
 

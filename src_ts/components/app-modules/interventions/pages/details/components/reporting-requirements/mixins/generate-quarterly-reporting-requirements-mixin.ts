@@ -1,28 +1,22 @@
 declare const moment: any;
 import {convertDate} from '../../../../../../../utils/date-utils';
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class generateQuarterlyReportingRequirements extends baseClass {
-    [x: string]: any;
+  class GenerateQuarterlyRepReqClass extends baseClass {
 
-    static get properties() {
-      return {
-        DUE_DATE_DAYS_TO_ADD: {
-          type: Number,
-          value: 30
-        },
-        datesFormat: {
-          type: String,
-          value: 'YYYY-MM-DD'
-        }
-      };
-    }
+    @property({type: Number})
+    DUE_DATE_DAYS_TO_ADD: number = 30;
+
+    @property({type: String})
+    datesFormat: string = 'YYYY-MM-DD';
+
 
     /**
      * Used to generate (one time) QPR first dates set.
@@ -39,7 +33,7 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
      * @returns {Array}
      */
     generateQPRData(pdStartDateStr: any, pdEndDateStr: any) {
-      let qprData = [];
+      const qprData = [];
       let start = String(pdStartDateStr);
       let end = this._generateEndDate(start, pdEndDateStr);
       while (this._generatedEndIsBeforePdEnd(end.format(this.datesFormat), pdEndDateStr)) {
@@ -67,7 +61,7 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
     }
 
     _generateEndDate(startStr: string, pdEndStr: string) {
-      let d = moment.utc(convertDate(startStr));
+      const d = moment.utc(convertDate(startStr));
       let month = d.get('M');
       if (d.get('D') <= 15) {
         month += 2;
@@ -91,8 +85,8 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
       return moment(momentEndDate).add(1, 'd').format(this.datesFormat);
     }
 
-  };
-  return generateQuarterlyReportingRequirements;
+  }
+  return GenerateQuarterlyRepReqClass;
 }
 
 export default GenerateQuarterlyReportingRequirementsMixin;

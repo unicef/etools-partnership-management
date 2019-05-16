@@ -1,5 +1,50 @@
-import { IPermission } from './globals.types';
+import {Permission} from './globals.types';
 import CONSTANTS from '../config/app-constants';
+
+export class PlannedBudget {
+  currency?: string;
+  unicef_cash_local?: string;
+  total?: string;
+  in_kind_amount_local?: string;
+  partner_contribution_local?: string;
+}
+
+export class InterventionAttachment {
+  id?: number;
+  active: boolean = true;
+  type?: number;
+  intervention?: number;
+  attachment_document?: string | number| File;
+  [key: string]: undefined | number | string | boolean | File;
+}
+
+export class FrsDetails {
+  currencies_match: boolean = false
+  earliest_start_date: string | null = null
+  frs: Fr[] = [];
+  latest_end_date: string | null = null;
+  multi_curr_flag: boolean = false;
+  total_actual_amt: number = 0;
+  total_frs_amt: string = '0';
+  total_intervention_amt: number = 0;
+  total_outstanding_amt: number = 0;
+}
+
+export interface Fr {
+  id: number;
+  currency: string;
+  fr_number: string;
+  line_item_details: [];
+  end_date: string;
+  start_date: string;
+  actual_amt: string;
+  actual_amt_local: string;
+  outstanding_amt: string;
+  outstanding_amt_local: string;
+  total_amt: string;
+  total_amt_local: string;
+  vendor_code: string;
+}
 
 export class Intervention {
   id: number | null = null;
@@ -36,13 +81,13 @@ export class Intervention {
   planned_visits: PlannedVisit[] = [];
   in_amendment: boolean = false;
   amendments: InterventionAmendment[] = [];
-  //distributions: [];
+  // distributions: [];
   activation_letter_attachment: number| string| null = null;
   attachments: InterventionAttachment[] = [];
-  permissions?: IPermission<InterventionPermissionsFields>;
-  [key: string] : any;
+  permissions?: Permission<InterventionPermissionsFields>;
+  [key: string]: any;
 
-  //Domain driven design idea
+  // TODOO
   public isDraft() {
     return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
         status === '';
@@ -84,64 +129,17 @@ export class ListItemIntervention {
   section_names: string[] | null = null;
   document_type?: string ='';
   unicef_focal_points: [] = [];
-  [key: string] : any;
+  [key: string]: any;
 }
 
 export class SelectedSection {
-  constructor(public sectionIds: number[],
-    public section_names: string[]) {
+  sectionIds: number[];
+  section_names: string[];
 
+  constructor(sectionIds: number[], section_names: string[]) {
+    this.sectionIds = sectionIds;
+    this.section_names = section_names;
   }
-}
-
-export type Section = {
-  id: string,
-  name: string
-}
-
-export class InterventionAttachment  {
-  id?: number;
-  active: boolean = true;
-  type?: number;
-  intervention?: number;
-  attachment_document?: string | number| File;
-  [key: string]: undefined | number | string | boolean | File;
-}
-
-export class FrsDetails {
-  currencies_match: boolean = false
-  earliest_start_date: string | null = null
-  frs: Fr[] = [];
-  latest_end_date: string | null = null;
-  multi_curr_flag: boolean = false;
-  total_actual_amt: number = 0;
-  total_frs_amt: string = '0';
-  total_intervention_amt: number = 0;
-  total_outstanding_amt: number = 0;
-}
-
-export type Fr = {
-  id: number;
-  currency: string;
-  fr_number: string;
-  line_item_details: [];
-  end_date: string;
-  start_date: string;
-  actual_amt: string;
-  actual_amt_local: string;
-  outstanding_amt: string;
-  outstanding_amt_local: string;
-  total_amt: string;
-  total_amt_local: string;
-  vendor_code: string;
-}
-
-export class PlannedBudget  {
-  currency?: string;
-  unicef_cash_local?: string;
-  total?: string;
-  in_kind_amount_local?: string;
-  partner_contribution_local?: string;
 }
 
 export class InterventionPermissionsFields {
@@ -196,9 +194,10 @@ export class InterventionPermissionsFields {
 
   // attachments
   attachments: boolean = false;
+  [x: string]: boolean;
 }
 
-export type ExpectedResult = {
+export interface ExpectedResult {
   id: number;
   cp_output: number;
   cp_output_name: string;
@@ -208,7 +207,7 @@ export type ExpectedResult = {
   ram_indicator_names: number[];
 }
 
-export type ResultLinkLowerResult = { //ll_result
+export interface ResultLinkLowerResult { // ll_result
   id: number;
   name: string;
   applied_indicators: Indicator[];
@@ -218,25 +217,6 @@ export type ResultLinkLowerResult = { //ll_result
   result_link?: number;
 }
 
-export class Indicator {// Indicator
-  id: number | null = null;
-  is_active: boolean = true;
-  is_high_frequency: boolean = false;
-  indicator = new IndicatorIndicator();
-  section: number | null = null;
-  baseline: {v?: string, d?: string} = {};
-  target: {v?: string, d: string} = {d: '1'};
-  means_of_verification: string | null = null;
-  locations: string[] = [];
-  disaggregation: string[] = [];
-
-  cluster_name: string | null = null;
-  cluster_indicator_id: number | null = null;
-  cluster_indicator_title: string | null = null;
-  response_plan_name: string | null = null;
-}
-
-
 export class IndicatorIndicator {
   id: number | null = null;
   title: string = '';
@@ -244,7 +224,27 @@ export class IndicatorIndicator {
   unit: string = 'number'
 }
 
-export type CpOutput = {
+export class Indicator {// Indicator
+  id: number | null = null;
+  is_active: boolean = true;
+  is_high_frequency: boolean = false;
+  indicator: IndicatorIndicator | null = new IndicatorIndicator();
+  section: number | null = null;
+  baseline: {v?: string | number; d?: string | number} = {};
+  target: {v?: string | number; d: string | number} = {d: '1'};
+  means_of_verification: string | null = null;
+  locations: number[] = [];
+  disaggregation: string[] = [];
+
+  cluster_name: string | null = null;
+  cluster_indicator_id: number | null = null;
+  cluster_indicator_title: string | null = null;
+  response_plan_name: string | null = null;
+  numerator_label: string = '';
+  denominator_label: string = '';
+}
+
+export interface CpOutput {
   id: number;
   name: string;
   wbs: string;
@@ -262,27 +262,27 @@ export class PlannedVisit {
 }
 
 export class Disaggregation {
-  id: number | null = null;
+  id: string | null = null;
   name: string = '';
   active: boolean = true;
   disaggregation_values: DisaggregationValue[] = [];
 }
 
-export type DisaggregationValue = {
+export interface DisaggregationValue {
   id: number;
   value: string;
   active: boolean;
 }
 
-export type Location = {
-  id: number;
+export interface Location {
+  id: string;
   name: string;
   p_code: string;
   gateway: AdminLevel;
   parent?: string;
 }
 
-export type AdminLevel = {
+export interface AdminLevel {
   id: number;
   name: string;
   admin_level: string | null;

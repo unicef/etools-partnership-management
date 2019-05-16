@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/paper-checkbox/paper-checkbox'
+import '@polymer/paper-checkbox/paper-checkbox';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -12,17 +12,21 @@ import {requiredFieldStarredStyles} from '../../../../../styles/required-field-s
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../store';
-import {isJsonStrMatch} from '../../../../../utils/utils';
+import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
-
+import {property} from '@polymer/decorators';
+import {LabelAndValue} from '../../../../../../typings/globals.types.js';
+import {PartnerAssessment} from '../../../../../../models/partners.models.js';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
+class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -67,7 +71,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
                                auto-validate
                                max-date-error-msg="Date can not be in the future"
                                max-date="[[getCurrentDate()]]"
-                               required>
+                               required
+                               selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>
@@ -94,36 +99,28 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     `;
   }
 
-  static get properties() {
-    return {
-      assessment: Object,
-      uploadEndpoint: String,
-      opened: {
-        type: Boolean,
-        notify: true
-      },
-      uploadInProgress: Boolean,
-      assessmentModel: Object,
-      assessmentTypes: Array,
-      _validationSelectors: Array
-    };
+  @property({type: Object})
+  assessment!: PartnerAssessment;
 
-  }
+  @property({type: String})
+  uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
+
+  @property({type: Boolean, notify: true})
+  opened: boolean = false;
+
+  @property({type: Boolean})
+  uploadInProgress: boolean = false;
+
+  @property({type: Array})
+  assessmentTypes!: LabelAndValue[];
+
+  @property({type: Object})
+  toastEventSource!: PolymerElement;
+
+  @property({type: Object})
+  originalAssessment!: PartnerAssessment;
 
   private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
-  public assessmentModel: any = {
-    type: null,
-    completed_date: null,
-    current: false,
-    report_attachment: null,
-    active: true,
-    partner: null
-  };
-  public uploadInProgress: boolean = false;
-  public opened: boolean = false;
-  public uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
-  public assessment: any = null;
-  public assessmentTypes: any[] = [];
 
   public stateChanged(state: RootState) {
     if (!state.commonData) {
@@ -150,8 +147,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     let isValid = true;
     this._validationSelectors.forEach((selector) => {
       // @ts-ignore
-      let el = this.shadowRoot.querySelector(selector);
-      if (el && !el.validate()) {
+      const el = this.shadowRoot.querySelector(selector);
+      if (el && !(el as any).validate()) {
         isValid = false;
       }
     });
@@ -171,20 +168,20 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
       return;
     }
     const isNew = !this.assessment.id;
-    let options = {
+    const options = {
       method: isNew ? 'POST' : 'PATCH',
       endpoint: this._pickEndpoint(isNew, this.assessment.id),
       body: this._getBody(isNew)
     };
-    // @ts-ignore
+
     this.sendRequest(options)
-        .then((resp: any) => {
-          this._handleResponse(resp, isNew);
-          this.stopSpinner();
-        }).catch((error: any) => {
-      this._handleErrorResponse(error);
-      this.stopSpinner();
-    });
+      .then((resp: any) => {
+        this._handleResponse(resp, isNew);
+        this.stopSpinner();
+      }).catch((error: any) => {
+        this._handleErrorResponse(error);
+        this.stopSpinner();
+      });
 
   }
 
@@ -192,27 +189,36 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
     if (!this.assessment) {
       return null;
     }
+    delete this.assessment.report;
+
     if (!isNew) {
-      delete this.assessment.report;
       delete this.assessment.report_attachment;
     }
     return this.assessment;
   }
 
   public _pickEndpoint(isNew: boolean, assessId: any) {
-    let endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
-    let endpointParam = isNew ? undefined :
-        {assessmentId: assessId};
+    const endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
+    const endpointParam = isNew ? undefined :
+      {assessmentId: assessId};
 
     // @ts-ignore
     return this.getEndpoint(endpointName, endpointParam);
   }
 
   public _handleResponse(response: any, isNew: boolean) {
-    // @ts-ignore
+
     this.set('opened', false);
-    // @ts-ignore
-    fireEvent(this, isNew ? 'assessment-added' : 'assessment-updated', response);
+
+    if (isNew) {
+      fireEvent(this, 'assessment-added', response);
+    } else {
+      fireEvent(this, 'assessment-updated', {
+        before: this.originalAssessment,
+        after: response
+      });
+    }
+
   }
 
   public _handleErrorResponse(error: any) {
@@ -220,32 +226,31 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
   }
 
   public startSpinner() {
-    // @ts-ignore
-    this.$.assessmentDialog.startSpinner();
+    (this.$.assessmentDialog as EtoolsDialog).startSpinner();
   }
 
   public stopSpinner() {
-    // @ts-ignore
-    this.$.assessmentDialog.stopSpinner();
+    (this.$.assessmentDialog as EtoolsDialog).stopSpinner();
   }
 
   public resetValidations() {
     this._validationSelectors.forEach((selector) => {
       // @ts-ignore
-      let el = this.shadowRoot.querySelector(selector);
+      const el = this.shadowRoot.querySelector(selector);
       if (el) {
-        el.invalid = false;
+        (el as any).invalid = false;
       }
     });
   }
 
-  public initAssessment(assessment: any, partnerId: any) {
+  public initAssessment(assessment: any, partnerId?: any) {
     if (!assessment) {
-      assessment = JSON.parse(JSON.stringify(this.assessmentModel));
+      assessment = new PartnerAssessment();
       assessment.partner = partnerId;
     }
 
     this.assessment = assessment;
+    this.originalAssessment = copy(this.assessment);
     this.resetValidations();
   }
 
@@ -254,8 +259,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
   }
 
   public _archivedChanged(e: CustomEvent) {
-    // @ts-ignore
-    this.set('assessment.active', !e.target.checked);
+    this.set('assessment.active', !(e.target as PaperCheckboxElement).checked);
   }
 
   getCurrentDate() {
@@ -266,3 +270,4 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement) as 
 }
 
 window.customElements.define('assessment-dialog', AssessmentDialog);
+export {AssessmentDialog};

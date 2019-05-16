@@ -1,12 +1,17 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import 'etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
-import { SharedStyles } from '../../../styles/shared-styles';
+import {SharedStyles} from '../../../styles/shared-styles';
 declare const moment: any;
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {property} from '@polymer/decorators/lib/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog';
+import {GenericObject} from '../../../../typings/globals.types';
+import {RootState, store} from '../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
 
 
 /*
@@ -19,7 +24,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-p
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRatingDialog extends (EndpointsMixin(PolymerElement) as any) {
+class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -59,34 +64,34 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement) as any) {
     return 'report-rating-dialog';
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      toastEventSource: {
-        type: Object
-      },
-      selectedOverallStatus: {
-        type: String,
-        value: ''
-      }
-    };
+  @property({type: Object})
+  report!: GenericObject;
+
+  @property({type: Object})
+  toastEventSource!: object;
+
+  @property({type: String})
+  selectedOverallStatus: string = '';
+
+  stateChanged(state: RootState) {
+    this.endStateChanged(state);
   }
 
   open() {
     this.set('selectedOverallStatus', '');
-    this.$.reportRatingDialog.set('opened', true);
+    (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
   }
 
   close() {
-    this.$.reportRatingDialog.set('opened', false);
+    (this.$.reportRatingDialog as EtoolsDialog).set('opened', false);
   }
 
   startSpinner() {
-    this.$.reportRatingDialog.startSpinner();
+    (this.$.reportRatingDialog as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    this.$.reportRatingDialog.stopSpinner();
+    (this.$.reportRatingDialog as EtoolsDialog).stopSpinner();
   }
 
   getCurrentDate() {
@@ -94,8 +99,8 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement) as any) {
   }
 
   saveStatus() {
-    let self = this;
-    let requestBody = {
+    const self = this;
+    const requestBody = {
       status: 'Acc',
       overall_status: this.selectedOverallStatus,
       reviewed_by_name: this.currentUser.name,
@@ -103,14 +108,14 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement) as any) {
     };
 
     this.startSpinner();
-    this.fireRequest(this, 'reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
-        .then(function(response: any) {
-          fireEvent(self, 'report-accepted', {report: response});
-          self.stopSpinner();
-          self.close();
-        }).catch(function(error: any) {
-      self._handleErrorResponse(error);
-    });
+    this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
+      .then(function(response: any) {
+        fireEvent(self, 'report-accepted', {report: response});
+        self.stopSpinner();
+        self.close();
+      }).catch(function(error: any) {
+        self._handleErrorResponse(error);
+      });
   }
 
   _handleErrorResponse(error: any) {
@@ -120,3 +125,4 @@ class ReportRatingDialog extends (EndpointsMixin(PolymerElement) as any) {
 }
 
 window.customElements.define(ReportRatingDialog.is, ReportRatingDialog);
+export {ReportRatingDialog as ReportRatingDialogEl};

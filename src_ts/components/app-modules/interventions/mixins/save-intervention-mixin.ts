@@ -1,13 +1,13 @@
-import { store } from '../../../../store.js';
-import { RESET_UNSAVED_UPLOADS } from '../../../../actions/upload-status';
+import {store} from '../../../../store.js';
+import {RESET_UNSAVED_UPLOADS} from '../../../../actions/upload-status';
 import CONSTANTS from '../../../../config/app-constants';
-import { Fr } from '../../../../typings/intervention.types';
-import { isEmptyObject } from '../../../utils/utils';
+import {Intervention} from '../../../../typings/intervention.types';
+import {isEmptyObject} from '../../../utils/utils';
 import ModifiedInterventionFieldsMixin from './modified-intervention-fields-mixin';
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {getArraysDiff} from '../../../utils/array-helper.js';
-import { Constructor, GenericObject } from '../../../../typings/globals.types.js';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor, GenericObject, UserPermissions} from '../../../../typings/globals.types.js';
+import {PolymerElement} from '@polymer/polymer';
 import InterventionItemData from '../data/intervention-item-data.js';
 import InterventionDetails from '../pages/details/intervention-details.js';
 import InterventionReviewAndSign from '../pages/review-and-sign/intervention-review-and-sign';
@@ -17,37 +17,37 @@ import InterventionReviewAndSign from '../pages/review-and-sign/intervention-rev
  * PD/SSFA save functionality
  * @polymer
  * @mixinFunction
- * @appliesMixin ModifiedInterventionFields
+ * @appliesMixin ModifiedInterventionFieldsMixin
  */
 function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class saveInterventionClass extends (ModifiedInterventionFieldsMixin(baseClass) as Constructor<PolymerElement>) {
-    [x: string]: any;
+  class SaveInterventionClass extends ModifiedInterventionFieldsMixin(baseClass as Constructor<PolymerElement>) {
 
-    static get actions() {
-      return {
-
-        resetUnsavedUploads: function() {
-          return {
-            type: 'RESET_UNSAVED_UPLOADS'
-          };
-        }
-      };
-    }
+    // --- *Defined in the component
+    intervention!: Intervention;
+    originalIntervention!: Intervention;
+    saved!: {
+      interventionId: any;
+      justSaved: boolean;
+    }; // TODO - remove if functionality not used anymore
+    permissions!: UserPermissions;
+    // ---
 
     _validateAndSaveIntervention(event: CustomEvent) {
       if (event) {
         event.stopImmediatePropagation();
       }
+
       this.saved.justSaved = true;
       fireEvent(this, 'clear-server-errors');
       this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
+      // @ts-ignore Defined in component
       if (!this._hasEditPermissions(this.permissions, this.intervention)) {
         return Promise.resolve(false);
       }
 
-      let interventionDetailsAreValid = this._validateInterventionDetails();
+      const interventionDetailsAreValid = this._validateInterventionDetails();
 
-      let reviewAndSignIsValid = this._validateReviewAndSign();
+      const reviewAndSignIsValid = this._validateReviewAndSign();
 
       if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
         this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
@@ -56,21 +56,23 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
       let interventionData = this._getModifiedFields();
       interventionData = this._prepareDataForSave(interventionData);
+      // @ts-ignore
       return (this.$.interventionData as InterventionItemData).saveIntervention(interventionData, this._newInterventionSaved.bind(this))
-                  .then((successfull: boolean) => {
-                    if (successfull) {
-                      store.dispatch({type: RESET_UNSAVED_UPLOADS});
-                      return true;
-                    } else {
-                      return false;
-                    }
-                });
+        .then((successfull: boolean) => {
+          if (successfull) {
+            store.dispatch({type: RESET_UNSAVED_UPLOADS});
+            return true;
+          } else {
+            return false;
+          }
+        });
     }
 
     _getModifiedFields() {
       let interventionData;
-      let modifiedDetails = this._getModifiedInterventionDetails();
-      let modifiedReviewAndSign = this._getModifiedReviewAndSign();
+      const modifiedDetails = this._getModifiedInterventionDetails();
+      const modifiedReviewAndSign = this._getModifiedReviewAndSign();
+      // @ts-ignore *Defined in component
       if (this._isNewIntervention()) {
         interventionData = Object.assign({}, modifiedDetails, modifiedReviewAndSign);
         interventionData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
@@ -82,15 +84,15 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
     _validateInterventionDetails() {
       let valid = false;
-      let intervDetailsEl = (this.shadowRoot!.querySelector('#interventionDetails')! as unknown as InterventionDetails);
+      const intervDetailsEl = (this.shadowRoot!.querySelector('#interventionDetails')! as unknown as InterventionDetails);
 
       if (intervDetailsEl && typeof intervDetailsEl.validate === 'function') {
         valid = intervDetailsEl.validate();
       } else {
         // details element not stamped...
         // validate current data that belongs to details tab against permissions
-        let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
-        let detailsObjFields = ['unicef_focal_points', 'partner_focal_points',
+        const detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
+        const detailsObjFields = ['unicef_focal_points', 'partner_focal_points',
           'sections', 'flat_locations', 'offices'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           detailsPrimitiveFields.push('start', 'end');
@@ -110,14 +112,14 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
     _validateReviewAndSign() {
       let valid = false;
-      let reviewAndSignEl = (this.shadowRoot!.querySelector('#interventionReviewAndSign')! as unknown as InterventionReviewAndSign);
+      const reviewAndSignEl = (this.shadowRoot!.querySelector('#interventionReviewAndSign')! as unknown as InterventionReviewAndSign);
 
       if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
         valid = reviewAndSignEl.validate();
       } else {
         // review and signed element not stamped...
         // validate current data that belongs to this tab against permissions
-        let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
+        const reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
           'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment'];
         valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields);
         this.set('_forceReviewUiValidationOnAttach', true);
@@ -139,7 +141,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       let fieldRequired;
       let fieldVal;
       for (i = 0; i < interventionFields.length; i++) {
-        fieldRequired = this.intervention.permissions.required[interventionFields[i]];
+        fieldRequired = this.intervention!.permissions!.required[interventionFields[i]];
         fieldVal = this.intervention[interventionFields[i]];
         if (fieldRequired && isEmptyPredicate(fieldVal)) {
           valid = false;
@@ -181,7 +183,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
             '(check DETAILS and REVIEW & SIGN tabs).';
       } else {
         msg = 'Document can not be saved because of missing data';
-        let tabs = [];
+        const tabs = [];
         if (validDetails === false) {
           tabs.push('DETAILS');
         }
@@ -194,13 +196,13 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       fireEvent(this, 'toast', {text: msg, showCloseBtn: true});
     }
 
-    _needFrsUpdate(frs: Fr[]) {
-      let diff = getArraysDiff(this.originalIntervention.frs, frs);
+    _needFrsUpdate(frs: number[]) {
+      const diff = getArraysDiff(this.originalIntervention.frs, frs);
       return diff.length > 0;
     }
 
     _terminatePd(e: CustomEvent) {
-      let terminationData = {
+      const terminationData = {
         id: e.detail.interventionId,
         end: e.detail.terminationData.date,
         termination_doc_attachment: e.detail.terminationData.fileId
@@ -208,7 +210,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       (this.$.interventionData as InterventionItemData).saveIntervention(terminationData);
     }
   }
-  return saveInterventionClass;
+  return SaveInterventionClass;
 }
 
 

@@ -2,20 +2,21 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import 'etools-upload/etools-upload.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 
 import './sent-bk-comments.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import { PolymerElement, html } from '@polymer/polymer';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -24,7 +25,6 @@ import { SharedStyles } from '../../../../styles/shared-styles.js';
  * @appliesMixin EtoolsCurrency
  */
 class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
-  [x: string]: any;
 
   static get is() {
     return 'report-summary';
@@ -51,8 +51,17 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
           width: auto;
         }
 
-      </style>
+        iron-label {
+          display: block;
+          font-size: 12px;
+          color: var(--secondary-text-color);
+        }
 
+        .att {
+          margin-bottom: 24px;
+        }
+
+      </style>
       <div class="content-section paper-material remove-padding" elevation="1">
         <div class="row-h b-border">
           <div class="col col-5">
@@ -99,27 +108,32 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
             </etools-form-element-wrapper>
           </div>
         </div>
-        <div class="row-h"  hidden$="[[isPrpSRReport(report.report_type)]]">
-          <etools-upload label="Attachment"
-                        file-url="[[reportAttachment.path]]"
-                        readonly>
-          </etools-upload>
+        <div class="row-padding"  hidden$="[[isPrpSRReport(report.report_type)]]">
+          <template is="dom-repeat" items="[[reportAttachments]]">
+            <div class="att">
+              <iron-label for="file_[[index]]">
+                [[item.type]]
+              </iron-label>
+
+              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">
+                [[item.file_name]]
+              </a>
+            </div>
+          </template>
+
         </div>
       </div>
     `;
   }
 
-  static get properties() {
-    return {
-      report: Object,
-      reportAttachment: {
-        type: Object
-      },
-      sentBkCommentsDialog: {
-        type: Object
-      }
-    };
-  }
+  @property({type: Object})
+  report!: GenericObject;
+
+  @property({type: Array})
+  reportAttachments!: any[];
+
+  @property({type: Object})
+  sentBkCommentsDialog!: any;
 
   ready() {
     super.ready();
@@ -165,7 +179,7 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
 
   getReportStatus(status: string, username: string) {
     let stat = '';
-    switch(status) {
+    switch (status) {
       case 'Acc':
         stat = 'Accepted by ';
         break;
@@ -184,8 +198,10 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
   }
 
   _seeSentBackComments() {
-    this.sentBkCommentsDialog.report = this.report;
-    this.sentBkCommentsDialog.opened = true;
+    if (this.sentBkCommentsDialog) {
+      this.sentBkCommentsDialog.report = this.report;
+      this.sentBkCommentsDialog.opened = true;
+    }
   }
 
 }

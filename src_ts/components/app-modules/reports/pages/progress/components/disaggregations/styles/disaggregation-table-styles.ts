@@ -1,4 +1,4 @@
-import { html } from '@polymer/polymer/polymer-element.js';
+import {html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
 export const disaggregationTableStyles = html`

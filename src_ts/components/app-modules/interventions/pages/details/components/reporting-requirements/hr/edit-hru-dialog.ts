@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 declare const moment: any;
 import 'etools-dialog/etools-dialog.js';
@@ -7,26 +7,27 @@ import 'etools-date-time/calendar-lite';
 import 'etools-date-time/datepicker-lite.js';
 import './hru-list.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
-import { requiredFieldStarredStyles } from '../../../../../../../styles/required-field-styles.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
+import {requiredFieldStarredStyles} from '../../../../../../../styles/required-field-styles.js';
 import {prepareDatepickerDate, convertDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import { isEmptyObject } from '../../../../../../../utils/utils.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../../store.js';
+import {isEmptyObject} from '../../../../../../../utils/utils.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../../store.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { logError } from 'etools-behaviors/etools-logging';
+import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsDataReduxStore
  * @appliesMixin EndpointsMixin
  */
-class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any) {
-  [x: string]: any;
+class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   static get template() {
     return html`
@@ -68,7 +69,8 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
                         required
                         min-date="[[minDate]]"
                         auto-validate
-                        open="{{datePickerOpen}}">
+                        open="{{datePickerOpen}}"
+                        selected-date-display-format="D MMM YYYY">
       </datepicker-lite>
       </div>
       <div>
@@ -106,36 +108,36 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: Number,
-      interventionStart: {
-        type: Date
-      },
-      inAmendment: {
-        type: Boolean,
-        statePath: 'pageData.in_amendment'
-      },
-      repStartDate: {
-        type: Date
-      },
-      minDate: Date,
-      selectedDate: String,
-      hruData: {
-        type: Array,
-        value: []
-      },
-      toastMsgLoadingSource: Object,
-      _hruEditedIndex: {
-        type: Number,
-        value: -1
-      },
-      datePickerOpen: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Date})
+  interventionStart!: Date | string;
+
+  @property({type: Boolean})
+  inAmendment!: boolean;
+
+  @property({type: Date})
+  repStartDate!: Date | string;
+
+  @property({type: Date})
+  minDate!: Date;
+
+  @property({type: String})
+  selectedDate!: string;
+
+  @property({type: Array})
+  hruData: GenericObject[] = [];
+
+  @property({type: Object})
+  toastMsgLoadingSource!: PolymerElement;
+
+  @property({type: Number})
+  _hruEditedIndex: number = -1;
+
+  @property({type: Boolean})
+  datePickerOpen: boolean = false;
+
 
   static get observers() {
     return [
@@ -155,7 +157,7 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
     if (!this.interventionStart) {
       return null;
     }
-    let stDt = convertDate(this.interventionStart);
+    const stDt = this.interventionStart instanceof Date ? this.interventionStart : convertDate(this.interventionStart);
     if (stDt) {
       return moment(stDt).add(-1, 'days').toDate();
     }
@@ -180,11 +182,11 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
 
   openDialog() {
     this._setDefaultStartDate();
-    this.$.editHruDialog.opened = true;
+    (this.$.editHruDialog as EtoolsDialog).opened = true;
   }
 
   closeDialog() {
-    this.$.editHruDialog.opened = false;
+    (this.$.editHruDialog as EtoolsDialog).opened = false;
   }
 
   _empty(listLength: number) {
@@ -192,15 +194,15 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
   }
 
   _addToList() {
-    let alreadySelected = this.hruData.find((d: any) => d.end_date === this.selectedDate);
+    const alreadySelected = this.hruData.find((d: any) => d.end_date === this.selectedDate);
     if (alreadySelected) {
       fireEvent(this.toastMsgLoadingSource, 'toast',
-          {text: 'This date is already added to the list.', showCloseBtn: true});
+        {text: 'This date is already added to the list.', showCloseBtn: true});
       return;
     }
     this.push('hruData', {
-       end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
-       due_date: this._oneDayAfterEndDate(this.selectedDate)});
+      end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
+      due_date: this._oneDayAfterEndDate(this.selectedDate)});
   }
 
   _oneDayAfterEndDate(endDt: string) {
@@ -239,11 +241,11 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
   _saveHurData() {
     this.updateStartDates(this.repStartDate);
 
-    let endpoint = this.getEndpoint('reportingRequirements', {
+    const endpoint = this.getEndpoint('reportingRequirements', {
       intervId: this.interventionId,
       reportType: CONSTANTS.REQUIREMENTS_REPORT_TYPE.HR
     });
-    let dialog = this.$.editHruDialog;
+    const dialog = this.$.editHruDialog as EtoolsDialog;
     dialog.startSpinner();
     this.sendRequest({
       method: 'POST',
@@ -267,3 +269,5 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement) as any
 }
 
 window.customElements.define('edit-hru-dialog', EditHruDialog);
+
+export {EditHruDialog};

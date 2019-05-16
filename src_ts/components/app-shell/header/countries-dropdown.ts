@@ -1,12 +1,14 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store, RootState} from "../../../store.js";
+import {store, RootState} from '../../../store.js';
 import 'etools-dropdown/etools-dropdown.js';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import { fireEvent } from '../../utils/fire-custom-event.js';
+import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging';
-
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../typings/globals.types.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
 
 /**
  * @polymer
@@ -15,7 +17,7 @@ import {logError} from 'etools-behaviors/etools-logging';
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshMixin(PolymerElement)) as any) {
+class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsMixin(PolymerElement))) {
 
   public static get template() {
     // main template
@@ -90,28 +92,21 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
     `;
   }
 
-  public static get properties() {
-    return {
-      currentCountry: Object,
-      countries: {
-        type: Array,
-        observer: '_countrySelectorUpdate'
-      },
-      countrySelectorVisible: Boolean
-    };
-  }
+  @property({type: Object})
+  currentCountry: GenericObject = {};
 
-  public currentCountry: object = {};
-  public countries: object[] = [];
-  public countrySelectorVisible: boolean = false;
+  @property({type: Array, observer: '_countrySelectorUpdate'})
+  countries: any[] = [];
+
+  @property({type: Boolean})
+  countrySelectorVisible: boolean = false;
 
   public connectedCallback() {
     super.connectedCallback();
 
     setTimeout(() => {
-      // @ts-ignore
-      let fitInto = document.querySelector('app-shell').shadowRoot.querySelector('#appHeadLayout');
-      this.$.countrySelector.set('fitInto', fitInto);
+      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
+      (this.$.countrySelector as EtoolsDropdownEl).set('fitInto', fitInto);
     }, 0);
   }
 
@@ -127,8 +122,9 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
     if (!e.detail.selectedItem) {
       return;
     }
-    let selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
-    // @ts-ignore
+
+    const selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
+
     if (selectedCountryId !== this.currentCountry.id) {
       // send post request to change_coutry endpoint
       this._triggerCountryChangeRequest(selectedCountryId);
@@ -136,7 +132,7 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
   }
 
   protected _triggerCountryChangeRequest(countryId: any) {
-    let self = this;
+    const self = this;
     fireEvent(this, 'global-loading', {
       message: 'Please wait while country data is changing...',
       active: true,
@@ -147,9 +143,9 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
       endpoint: this.getEndpoint('changeCountry'),
       method: 'POST',
       body: {country: countryId}
-    }).then(function () {
+    }).then(function() {
       self._handleResponse();
-    }).catch(function (error: any) {
+    }).catch(function(error: any) {
       self._handleError(error);
     });
   }
@@ -167,9 +163,7 @@ class CountriesDropdown extends connect(store)(EndpointsMixin(EtoolsPageRefreshM
 
   protected _handleError(error: any) {
     logError('Country change failed!', 'countries-dropdown', error);
-    // TODO: this should be a larger alert.
-    // @ts-ignore
-    this.$.countrySelector.set('selected', this.currentCountry.id);
+    (this.$.countrySelector as EtoolsDropdownEl).set('selected', this.currentCountry.id);
     fireEvent(this, 'toast', {text: 'Something went wrong changing your workspace. Please try again'});
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'country-change'});
   }

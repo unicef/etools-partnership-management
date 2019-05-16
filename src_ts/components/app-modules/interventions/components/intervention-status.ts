@@ -1,19 +1,21 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/av-icons.js';
 import CONSTANTS from '../../../../config/app-constants.js';
 import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
-import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../utils/fire-custom-event.js';
 import '../../../layout/etools-status/etools-status.js';
 import '../../../layout/etools-status/etools-status-common-mixin.js';
 import './pd-termination.js';
+import {property} from '@polymer/decorators';
+import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
+import EtoolsDialog from 'etools-dialog';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixin EtoolsStatusCommon
+ * @appliesMixin EtoolsStatusCommonMixin
  */
-class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any) {
-  [x: string]: any;
+class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -33,67 +35,63 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: Number,
-      activeTab: {
-        type: String,
-        observer: '_activeTabChanged'
-      },
-      newIntervention: {
-        type: Boolean,
-        value: false
-      },
-      interventionAgreementStatus: String,
-      possibleStatuses: {
-        type: Array,
-        value: []
-      },
-      possibleActions: {
-        type: Array,
-        value: [
-          {
-            label: 'Save',
-            hidden: true,
-            primary: true,
-            event: 'save-intervention'
-            // save-intervention event is handeled by the parnent
-          },
-          {
-            label: 'Change to draft',
-            hidden: true,
-            event: 'intervention-draft-event'
-          },
-          {
-            label: 'Suspend',
-            hidden: true,
-            event: 'intervention-suspend-event'
-          },
-          {
-            label: 'Unsuspend',
-            hidden: true,
-            event: 'intervention-unsuspend-event'
-          },
-          {
-            label: 'Terminate',
-            hidden: true,
-            event: 'intervention-terminate-event'
-          },
-          {
-            label: 'Delete',
-            hidden: true,
-            event: 'intervention-delete-event'
-          }
-        ]
-      },
-      deleteWarningMessage: {
-        type: String,
-        value: 'Are you sure you want to delete this PD/SSFA?'
-      },
+  @property({type: Number})
+  interventionId!: number;
 
-      _terminationDialog: Object
-    };
-  }
+  @property({type: String, observer: InterventionStatus.prototype._activeTabChanged})
+  activeTab!: string;
+
+  @property({type: Boolean})
+  newIntervention: boolean = false;
+
+  @property({type: String})
+  interventionAgreementStatus!: string;
+
+  @property({type: Array})
+  possibleStatuses: Status[] = [];
+
+  @property({type: Array})
+  possibleActions: StatusAction[] = [
+    {
+      label: 'Save',
+      hidden: true,
+      primary: true,
+      event: 'save-intervention'
+      // save-intervention event is handeled by the parnent
+    },
+    {
+      label: 'Change to draft',
+      hidden: true,
+      event: 'intervention-draft-event'
+    },
+    {
+      label: 'Suspend',
+      hidden: true,
+      event: 'intervention-suspend-event'
+    },
+    {
+      label: 'Unsuspend',
+      hidden: true,
+      event: 'intervention-unsuspend-event'
+    },
+    {
+      label: 'Terminate',
+      hidden: true,
+      event: 'intervention-terminate-event'
+    },
+    {
+      label: 'Delete',
+      hidden: true,
+      event: 'intervention-delete-event'
+    }
+  ];
+
+  @property({type: String})
+  deleteWarningMessage: string = 'Are you sure you want to delete this PD/SSFA?';
+
+  @property({type: Object})
+  _terminationDialog!: EtoolsDialog & { resetValidations(): void }
+
 
   ready() {
     super.ready();
@@ -103,7 +101,7 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
     this._createDeleteConfirmationDialog();
 
     this._triggerInterventionDeleteOnConfirm = this._triggerInterventionDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm);
+    this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm as any);
 
     this._createTerminationDialog();
 
@@ -114,7 +112,7 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.deleteConfirmDialog.removeEventListener('close', this._triggerInterventionDeleteOnConfirm);
+    this.deleteConfirmDialog.removeEventListener('close', this._triggerInterventionDeleteOnConfirm as any);
     if (this._terminationDialog) {
       document.querySelector('body')!.removeChild(this._terminationDialog);
     }
@@ -165,7 +163,7 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
 
     this._computeAvailableStatuses(this.status);
   }
-  _activeTabChanged(tab: string) {
+  _activeTabChanged(tab: any, _old: any) {
     if (typeof tab === 'undefined') {
       return;
     }
@@ -177,7 +175,7 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
     if (!this.editMode) {
       return;
     }
-    let availableOptions = [];
+    const availableOptions = [];
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
@@ -228,9 +226,9 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
         break;
     }
 
-    for (let key in this.possibleActions) {
+    for (const key in this.possibleActions) {
       if (this.possibleActions[key]) {
-        let actionName = this.possibleActions[key].label;
+        const actionName = this.possibleActions[key].label;
 
         if (availableOptions.indexOf(actionName) > -1) {
           this.set(['possibleActions', key, 'hidden'], false);
@@ -348,7 +346,7 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
     }
 
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
-      let workingStatusLabel = this.possibleStatuses[key].label;
+      const workingStatusLabel = this.possibleStatuses[key].label;
       if (workingStatusLabel === activeStatus) {
         completedFlag = true;
       }
@@ -389,9 +387,9 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
     }
 
     if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-          CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
       if ([CONSTANTS.STATUSES.Active.toLowerCase(),
-            CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
+        CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
         // prevent suspending or terminating anything other than signed or active intervention
         return false;
       }
@@ -450,7 +448,7 @@ class InterventionStatus extends (EtoolsStatusCommonMixin(PolymerElement) as any
   }
 
   _createTerminationDialog() {
-    this._terminationDialog = document.createElement('pd-termination');
+    this._terminationDialog = document.createElement('pd-termination') as any;
     document.querySelector('body')!.appendChild(this._terminationDialog);
 
     this._terminationDialog.set('terminationElSource', this);

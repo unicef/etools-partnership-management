@@ -1,39 +1,31 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../store';
 
 import * as commonDataActions from '../../actions/common-data.js';
 
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import { isEmptyObject } from '../utils/utils';
-import { logError } from 'etools-behaviors/etools-logging';
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {isEmptyObject} from '../utils/utils';
+import {logError} from 'etools-behaviors/etools-logging';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
-  class commonData extends EndpointsMixin(EnvironmentFlagsMixin(baseClass)) {
+function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class CommonDataClass extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
 
-      public static get properties() {
-        return {
-          commonDataEndpoints: Object
-        };
-      }
+      @property({type: Object})
+    commonDataEndpoints = {
+      pmp: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
+        'sections', 'unicefUsers', 'userCountryDetails'],
+      pmpPrpSections: ['disaggregations'],
+      prp: ['getPRPCountries']
+    };
 
-      public commonDataEndpoints: {
-        pmp: string[],
-        pmpPrpSections: string[],
-        prp: string[]
-      } = {
-        pmp: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-          'sections', 'unicefUsers', 'userCountryDetails'],
-        pmpPrpSections: ['disaggregations'],
-        prp: ['getPRPCountries']
-      };
 
       public loadCommonData() {
         // get PMP static data
@@ -41,7 +33,6 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
         this._handlePrpData();
       }
 
-      // @ts-ignore
       protected _getStaticData(endpointsNames: string[]) {
         endpointsNames.forEach((endpointName: string) => {
           this._makeRequest(endpointName, this._getEndpointSuccessHandler(endpointName), this._errorHandler);
@@ -49,7 +40,7 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       protected _handlePrpData() {
-        this._waitForEnvFlagsToLoad().then(() => {
+        this.waitForEnvFlagsToLoad().then(() => {
           if (this.showPrpReports()) {
             this._getStaticData(this.commonDataEndpoints.pmpPrpSections);
             if (this.prpServerIsOn()) {
@@ -173,7 +164,7 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
           // set agreement amendment data
           if (this._validReqResponseData(response.agreement_amendment_types)) {
             store.dispatch(
-                commonDataActions.updateAgreementAmendmentTypes((response as any).agreement_amendment_types));
+              commonDataActions.updateAgreementAmendmentTypes((response as any).agreement_amendment_types));
           }
           // set cso types data
           if (this._validReqResponseData(response.cso_types)) {
@@ -190,7 +181,7 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
           // set intervention ammendment data
           if (this._validReqResponseData(response.intervention_amendment_types)) {
             store.dispatch(
-                commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types));
+              commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types));
           }
           // set admin level/location types
           if (this._validReqResponseData(response.location_types)) {
@@ -245,9 +236,9 @@ function CommonData<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
       }
 
-    };
+  }
 
-    return commonData;
+  return CommonDataClass;
 }
 
-export default CommonData;
+export default CommonDataMixin;

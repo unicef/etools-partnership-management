@@ -1,25 +1,25 @@
-//import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import './etools-toast'
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+// import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
+import './etools-toast';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {EtoolsToastEl} from './etools-toast';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class toastNotifs extends baseClass {
-    static get properties() {
-      return {
-        _toast: Object,
-        _toastQueue: Array,
-        currentToastMessage: String
-      };
-    }
+function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class ToastNotifsClass extends baseClass {
 
-    protected _toast: object | null = null;
-    protected _toastQueue: object[] = [];
-    public currentToastMessage: string = '';
+    @property({type: Object})
+    _toast: EtoolsToastEl | null = null;
+
+    @property({type: Array})
+    _toastQueue: object[] = [];
+
+    @property({type: String})
+    currentToastMessage: string = '';
 
     public connectedCallback() {
       super.connectedCallback();
@@ -30,19 +30,18 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
 
     public disconnectedCallback() {
       super.disconnectedCallback();
-      // @ts-ignore
-      this.removeEventListener('toast', this.queueToast);
+
+      this.removeEventListener('toast', this.queueToast as any);
       if (this._toast) {
-        // @ts-ignore
+
         this._toast.removeEventListener('toast-confirm', this._toggleToast);
-        // @ts-ignore
         this._toast.removeEventListener('toast-closed', this.dequeueToast);
       }
     }
 
     public queueToast(e: CustomEvent) {
       e.stopPropagation();
-      let detail = e.detail;
+      const detail = e.detail;
       if (!this._toast) {
         this.createToastNotificationElement();
       }
@@ -51,10 +50,10 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
         // @ts-ignore
         this.push('_toastQueue', detail);
         // @ts-ignore
-        let toastProperties = this._toast.prepareToastAndGetShowProperties(detail);
+        const toastProperties = this._toast.prepareToastAndGetShowProperties(detail);
         this._showToast(toastProperties);
       } else {
-        let alreadyInQueue = this._toastQueue.filter(function (toastDetail) {
+        const alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
           return JSON.stringify(toastDetail) === JSON.stringify(detail);
         });
         if (alreadyInQueue.length === 0) {
@@ -65,7 +64,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     public createToastNotificationElement() {
-      this._toast = document.createElement('etools-toast');
+      this._toast = document.createElement('etools-toast') as any;
       this._toggleToast = this._toggleToast.bind(this);
       // @ts-ignore
       this._toast.addEventListener('toast-confirm', this._toggleToast);
@@ -78,8 +77,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       if (this._toast !== null) {
         // alter message wrapper css
         setTimeout(() => {
-          // @ts-ignore
-          let messageWrapper = this._toast.getMessageWrapper();
+          const messageWrapper = this._toast!.getMessageWrapper();
           if (messageWrapper) {
             messageWrapper.style.whiteSpace = 'pre-wrap';
           }
@@ -96,7 +94,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       this.shift('_toastQueue');
       if (this._toastQueue.length) {
         // @ts-ignore
-        let toastProperties = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
+        const toastProperties = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
         this._showToast(toastProperties);
       }
     }
@@ -114,7 +112,7 @@ function ToastNotifications<T extends Constructor<PolymerElement>>(baseClass: T)
       // @ts-ignore
       this._toast.show(toastProperties);
     }
-  };
-  return toastNotifs;
+  }
+  return ToastNotifsClass;
 }
-export default ToastNotifications;
+export default ToastNotificationsMixin;

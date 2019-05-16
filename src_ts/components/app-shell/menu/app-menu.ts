@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import EnvironmentFlagsMixin from '../../environment-flags/environment-flags-mixin';
 import '@polymer/iron-icons/iron-icons.js';
@@ -12,8 +12,9 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {property} from '@polymer/decorators';
 
 /**
  * PMP main menu
@@ -21,7 +22,10 @@ import { store, RootState } from '../../../store';
  * @customElement
  * @appliesMixin GestureEventListeners
  */
-class AppMenu extends connect(store)(GestureEventListeners(EnvironmentFlagsMixin(PolymerElement)) as any) {
+class AppMenu extends connect(store)(
+  // eslint-disable-next-line new-cap
+  GestureEventListeners(
+    EnvironmentFlagsMixin(PolymerElement))) {
 
   public static get template() {
     // main template
@@ -144,21 +148,14 @@ class AppMenu extends connect(store)(GestureEventListeners(EnvironmentFlagsMixin
     `;
   }
 
-  public static get properties() {
-    return {
-      selectedOption: String,
-      rootPath: String,
-      smallMenu: {
-        type: Boolean,
-        reflectToAttribute: true,
-        observer: '_menuSizeChange'
-      }
-    };
-  }
+  @property({type: String})
+  selectedOption: string = '';
 
-  public selectedOption: string = '';
-  public rootPath: string = '';
-  public smallMenu: boolean = false;
+  @property({type: String})
+  rootPath: string = '';
+
+  @property({type: Boolean, reflectToAttribute: true, observer: '_menuSizeChange'})
+  smallMenu: boolean = false;
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);

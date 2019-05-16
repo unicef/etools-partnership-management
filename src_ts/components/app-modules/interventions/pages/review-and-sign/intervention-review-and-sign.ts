@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-checkbox/paper-checkbox';
@@ -17,19 +17,21 @@ import './components/fund-reservations/fund-reservations.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { Intervention, Fr } from '../../../../../typings/intervention.types.js';
-import { Agreement } from '../../../agreements/agreement.types.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {Intervention, Fr, InterventionPermissionsFields} from '../../../../../typings/intervention.types.js';
+import {Agreement} from '../../../agreements/agreement.types.js';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { requiredFieldStarredStyles } from '../../../../styles/required-field-styles.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
-import { isJsonStrMatch, copy } from '../../../../utils/utils.js';
-import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
+import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
+import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
+import {Permission, MinimalUser} from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -40,9 +42,9 @@ import {logError} from 'etools-behaviors/etools-logging.js';
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdownOptionsMixin
-(UploadsMixin(PolymerElement))) as any) {
-  [x: string]: any;
+class InterventionReviewAndSign extends connect(store)(CommonMixin(
+  UploadsMixin(
+    MissingDropdownOptionsMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -80,7 +82,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
             <datepicker-lite id="submissionDateField"
                               label="Document Submission Date"
                               value="{{intervention.submission_date}}"
-                              readonly$="[[!permissions.edit.submission_date]]">
+                              readonly$="[[!permissions.edit.submission_date]]"
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
           <div class="col col-3">
@@ -101,7 +104,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
               <datepicker-lite id="submissionDatePrcField"
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
-                                readonly$="[[!permissions.edit.submission_date_prc]]">
+                                readonly$="[[!permissions.edit.submission_date_prc]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -109,7 +113,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
               <datepicker-lite id="reviewDatePrcField"
                                 label="Review Date by PRC"
                                 value="{{intervention.review_date_prc}}"
-                                readonly$="[[!permissions.edit.review_date_prc]]">
+                                readonly$="[[!permissions.edit.review_date_prc]]"
+                                selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
             <div class="col col-6">
@@ -153,7 +158,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
                               auto-validate
                               error-message="Date is required"
                               max-date-error-msg="Date can not be in the future"
-                              max-date="[[getCurrentDate()]]">
+                              max-date="[[getCurrentDate()]]"
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>
@@ -174,7 +180,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
                               auto-validate
                               error-message="Date is required"
                               max-date-error-msg="Date can not be in the future"
-                              max-date="[[getCurrentDate()]]">
+                              max-date="[[getCurrentDate()]]"
+                              selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
           </div>
         </div>
@@ -248,45 +255,33 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
     `;
   }
 
-  static get properties() {
-    return {
-      originalIntervention: Object,
-      intervention: {
-        type: Object,
-        notify: true,
-        observer: '_interventionChanged'
-      },
-      permissions: {
-        type: Object,
-        statePath: 'pageData.permissions'
-      },
-      signedByUnicefUsers: {
-        type: Array,
-        statePath: 'unicefUsersData'
-      },
-      agreement: {
-        type: Object,
-        value: null,
-        observer: '_agreementChanged'
-      },
-      agreementAuthorizedOfficers: {
-        type: Array,
-        value: []
-      },
-      _lockSubmitToPrc: {
-        type: Boolean,
-        value: false
-      },
-      partnerDateValidatorErrorMessage: {
-        type: String,
-        value: ''
-      },
-      unicefDateValidatorErrorMessage: {
-        type: String,
-        value: ''
-      }
-    };
-  }
+  @property({type: Object})
+  originalIntervention!: Intervention;
+
+  @property({type: Object, notify: true, observer: '_interventionChanged'})
+  intervention!: Intervention;
+
+  @property({type: Object})
+  permissions!: Permission<InterventionPermissionsFields>;
+
+  @property({type: Array})
+  signedByUnicefUsers!: MinimalUser[];
+
+  @property({type: Object, observer: '_agreementChanged'})
+  agreement!: Agreement;
+
+  @property({type: Array})
+  agreementAuthorizedOfficers!: [];
+
+  @property({type: Boolean})
+  _lockSubmitToPrc: boolean = false;
+
+  @property({type: String})
+  partnerDateValidatorErrorMessage!: string;
+
+  @property({type: String})
+  unicefDateValidatorErrorMessage!: string;
+
 
   static get observers() {
     return [
@@ -345,9 +340,9 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
 
   _agreementChanged(agreement: Agreement) {
     if (agreement && typeof agreement === 'object' && Object.keys(agreement).length > 0) {
-      let authorizedOfficerData = agreement.authorized_officers!.map((officer) => {
+      const authorizedOfficerData = agreement.authorized_officers!.map((officer) => {
         return {
-          value: typeof officer.id  === 'string' ? parseInt(officer.id, 10) : officer.id,
+          value: typeof officer.id === 'string' ? parseInt(officer.id, 10) : officer.id,
           label: officer.first_name + ' ' + officer.last_name
         };
       });
@@ -358,11 +353,11 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
 
   validate() {
     let valid = true;
-    let fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
+    const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
       '#signedByUnicefDateField', '#signedIntervFile'];
 
     fieldSelectors.forEach((selector: string) => {
-      let field = this.shadowRoot.querySelector(selector);
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }
@@ -391,7 +386,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
       return;
     }
 
-    let submittedToPrc = this._submittedToPrcAvailable(interventionDocumentType);
+    const submittedToPrc = this._submittedToPrcAvailable(interventionDocumentType);
     if (!submittedToPrc) {
       this.set('intervention.submitted_to_prc', false);
       this._resetPrcFields();
@@ -409,7 +404,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(MissingDropdo
     e.stopImmediatePropagation();
     try {
       this.set('intervention.frs_details', e.detail.frsDetails);
-      let frIds = e.detail.frsDetails.frs.map((fr: Fr) => fr.id);
+      const frIds = e.detail.frsDetails.frs.map((fr: Fr) => fr.id);
       this.set('intervention.frs', frIds);
     } catch (err) {
       logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);

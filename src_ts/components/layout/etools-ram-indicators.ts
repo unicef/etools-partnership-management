@@ -1,12 +1,12 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
 import 'etools-loading/etools-loading.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -14,7 +14,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement) as any) {
+class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
   static get is() {
     return 'etools-ram-indicators';
   }
@@ -64,24 +64,19 @@ class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      interventionId: {
-        type: Number
-      },
-      cpId: {
-        type: Number
-      },
-      ramIndicators: {
-        type: Array,
-        value: []
-      },
-      loading: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: Number})
+  cpId!: number;
+
+  @property({type: Array})
+  ramIndicators: any[] = [];
+
+  @property({type: Boolean})
+  loading: boolean = false;
+
+  private _debounceRamIndRequest!: Debouncer;
 
   static get observers() {
     return [
@@ -92,15 +87,15 @@ class EtoolsRamIndicators extends (EndpointsMixin(PolymerElement) as any) {
   _getRamIndicatorsData(interventionId: number, cpId: number) {
     // Debounce to make sure the request is called only after both params are updated
     this._debounceRamIndRequest = Debouncer.debounce(this._debounceRamIndRequest,
-        timeOut.after(100),
-        () => {
-          const validIds = interventionId > 0 && cpId > 0;
-          if (!validIds) {
-            return;
-          }
+      timeOut.after(100),
+      () => {
+        const validIds = interventionId > 0 && cpId > 0;
+        if (!validIds) {
+          return;
+        }
 
-          this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
-        });
+        this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+      });
   }
 
   _requestRamIndicatorsData(reqPayload: any) {

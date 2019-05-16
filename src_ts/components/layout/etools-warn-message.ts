@@ -1,5 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/polymer/lib/elements/dom-repeat';
+import {property} from '@polymer/decorators';
 
 export class WarnMessage {
   public msg: string = '';
@@ -48,19 +49,11 @@ class EtoolsWarnMessage extends PolymerElement {
     `;
   }
 
-  public static get properties() {
-    return {
-      messages: {
-        type: String,
-        observer: '_messagesChanged'
-      },
-      _internalMsgs: Array
-    };
-  }
+  @property({type: String, observer: '_messagesChanged'})
+  messages: string | string[] = [];
 
-  public messages: string | string[] = [];
-  // @ts-ignore
-  private _internalMsgs: WarnMessage[] = [];
+  @property({type: Array})
+  _internalMsgs: WarnMessage[] = [];
 
   // @ts-ignore
   private _messagesChanged(msgs: string | string[]) {
@@ -68,8 +61,8 @@ class EtoolsWarnMessage extends PolymerElement {
       return;
     }
     this._internalMsgs = (msgs instanceof Array && msgs.length > 0)
-        ? msgs.map((msg: string) => new WarnMessage(msg))
-        : [new WarnMessage(msgs as string)];
+      ? msgs.map((msg: string) => new WarnMessage(msg))
+      : [new WarnMessage(msgs as string)];
   }
 
 }

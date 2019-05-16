@@ -1,20 +1,20 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
-import { PolymerElEvent } from '../../../../../../../typings/globals.types';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import './applied-indicator.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from 'etools-dialog';
+import {AppliedIndicatorEl} from './applied-indicator.js';
 
 
 /**
   * @polymer
   * @customElement
-  * @appliesMixin DynamicDialogMixin
-  * @appliesMixin RepeatableDataSetsMixin
+  * @appliesMixin RepeatableDataSetsMixinMixin
   */
-class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(PolymerElement) as any)) {
-  [x: string]: any;
+class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -43,30 +43,40 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
     `;
   }
 
-  static get properties() {
-    return {
-      _deleteEpName: {
-        type: String,
-        value: 'getEditDeleteIndicator',
-        readOnly: true
-      },
-      resultLinkIndex: Number,
-      editMode: Boolean,
-      interventionStatus: String,
-      cpOutputId: Number,
-      deactivateConfirmDialog: Object,
-      indicToDeactivateIndex: String,
-      showInactiveIndicators: Boolean
-    };
-  }
+  @property({type: String})
+  _deleteEpName: string = 'getEditDeleteIndicator';
+
+  @property({type: String})
+  resultLinkIndex!: string | number;
+
+  @property({type: Boolean})
+  editMode!: boolean;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Number})
+  cpOutputId!: number;
+
+  @property({type: Object})
+  deactivateConfirmDialog!: EtoolsDialog;
+
+  @property({type: Number})
+  indicToDeactivateIndex!: number;
+
+  @property({type: Boolean})
+  showInactiveIndicators: boolean = false;
+
+
+  private _onDeactivateHandler!: (...args: any[]) => any;
 
   ready() {
     super.ready();
 
-    let deactivateDialog = document.querySelector('body')!
-        .querySelector('etools-dialog#deactivateIndicatorDialog');
+    const deactivateDialog = document.querySelector('body')!
+      .querySelector('etools-dialog#deactivateIndicatorDialog');
     if (deactivateDialog) {
-      this.deactivateConfirmDialog = deactivateDialog;
+      this.deactivateConfirmDialog = deactivateDialog as EtoolsDialog;
     } else {
       this._createDeactivateConfirmDialog();
     }
@@ -80,9 +90,9 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
   }
 
   _createDeactivateConfirmDialog() {
-    let dialogContent = document.createElement('div');
+    const dialogContent = document.createElement('div');
     dialogContent.innerHTML = 'Are you sure you want to deactivate this indicator?';
-    this.deactivateConfirmDialog = this.createDynamicDialog({
+    this.deactivateConfirmDialog = createDynamicDialog({
       title: 'Deactivate confirmation',
       okBtnText: 'Deactivate',
       cancelBtnText: 'Cancel',
@@ -93,12 +103,13 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
     document.querySelector('body')!.appendChild(this.deactivateConfirmDialog);
   }
 
-  _editIndicator(event: PolymerElEvent) {
-    let indicatorIndex = parseInt(event.target.getAttribute('data-args'), 10);
-    let llResultIndex = parseInt(this.resultLinkIndex, 10);
-    let indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
+  _editIndicator(event: CustomEvent) {
+    const indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
+    // @ts-ignore
+    const llResultIndex = parseInt(this.resultLinkIndex, 10);
+    const indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
 
-    let resultMap = {
+    const resultMap = {
       cpOutputId: this.cpOutputId,
       llResultIndex: llResultIndex,
       llResultId: indicator.lower_result,
@@ -108,28 +119,28 @@ class AppliedIndicators extends (DynamicDialogMixin(RepeatableDataSetsMixin(Poly
     fireEvent(this, 'open-indicator-dialog', resultMap);
   }
 
-  _openDeactivateConfirmation(event: PolymerElEvent) {
-    this.indicToDeactivateIndex = parseInt(event.target.getAttribute('data-args'), 10);
-    this.onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
-    this.deactivateConfirmDialog.addEventListener('close', this.onDeactivateHandler);
+  _openDeactivateConfirmation(event: CustomEvent) {
+    this.indicToDeactivateIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
+    this._onDeactivateHandler = this._onDeactivateConfirmation.bind(this);
+    this.deactivateConfirmDialog.addEventListener('close', this._onDeactivateHandler);
     this.deactivateConfirmDialog.opened = true;
   }
 
   _onDeactivateConfirmation(event: CustomEvent) {
-    this.deactivateConfirmDialog.removeEventListener('close', this.onDeactivateHandler);
+    this.deactivateConfirmDialog.removeEventListener('close', this._onDeactivateHandler);
 
     if (!event.detail.confirmed) {
       this.indicToDeactivateIndex = -1;
       return;
     }
-    let indicatorId = this.dataItems[this.indicToDeactivateIndex]
-        ? this.dataItems[this.indicToDeactivateIndex].id
-        : null;
+    const indicatorId = this.dataItems[this.indicToDeactivateIndex]
+      ? this.dataItems[this.indicToDeactivateIndex].id
+      : null;
     if (!indicatorId) {
       return;
     }
-    let self = this;
-    let endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
+    const self = this;
+    const endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
     this.sendRequest({
       method: 'PATCH',
       endpoint: endpoint,

@@ -1,50 +1,7 @@
-import {IPermission} from '../../../typings/globals.types';
-import { StaffMember } from '../../../models/partners.models';
+import {Permission} from '../../../typings/globals.types';
+import {StaffMember} from '../../../models/partners.models';
 
-// export interface MinimalAgreement {
-//   [key: string]: undefined | null | number | string | boolean;
-// }
-
-// TODO: refactor this...
-export class MinimalAgreement {
-  id?: number | null = undefined;
-  agreement_number?: string = undefined;
-  agreement_number_status?: string = undefined;
-  agreement_type?: string | null = null;
-  end?: string | null= undefined;
-  partner?: number | null = null;
-  partner_name?: string | null= undefined;
-  signed_by_unicef_date?: string | null = null;
-  signed_by_partner_date?: string | null = null;
-  signed_by?: string | null = null;
-  start?: string | null = undefined;
-  status?: string = undefined;
-  country_programme?: string = undefined;
-  special_conditions_pca?: boolean = false;
-  [key: string]: any;
-}
-export class Agreement extends MinimalAgreement {
-  authorized_officers?: StaffMember[] = [];
-  amendments?: AgreementAmendment[] = [];
-  reference_number_year?: number = new Date().getFullYear();
-  partner_manager?: number | null = null;
-  permissions?: IPermission<AgreementPermissionFields> = {
-    edit: new AgreementPermissionFields(true),
-    required: new AgreementPermissionFields(false)
-  };
-  attachment?: string;
-
-  [key: string] : any;
-}
-
-export class AgreementAmendment {
-  id: number | null = null;
-  signed_date: string | null = null;
-  types: [] = [];
-  signed_amendment_attachment: number | string | null = null;
-}
-
-class AgreementPermissionFields  {
+class AgreementPermissionFields {
   constructor(forEdit: boolean) {
     if (forEdit) {
       this._setEditPermissionsForNewAgreement();
@@ -90,7 +47,7 @@ class AgreementPermissionFields  {
     this.authorized_officers = false;
     this.country_programme = true;
     this.end = false;
-    this.partner = true,
+    this.partner = true;
     this.signed_by_id = false;
     this.partner_manager = false;
     this.signed_by_partner_date = false;
@@ -99,3 +56,43 @@ class AgreementPermissionFields  {
     this.special_conditions_pca = false;
   }
 }
+
+export class MinimalAgreement {
+  id: number | null = null;
+  agreement_number?: string;
+  agreement_number_status?: string;
+  agreement_type?: string | null = null;
+  end?: string | null;
+  partner?: number | null = null;
+  partner_name?: string | null;
+  signed_by_unicef_date?: string | null = null;
+  signed_by_partner_date?: string | null = null;
+  signed_by?: string | null = null;
+  start?: string | null;
+  status?: string;
+  country_programme?: string;
+  special_conditions_pca?: boolean = false;
+  [key: string]: any;
+}
+export class Agreement extends MinimalAgreement {
+  authorized_officers?: StaffMember[] = [];
+  amendments?: AgreementAmendment[] = [];
+  reference_number_year?: number = new Date().getFullYear();
+  partner_manager?: number | null = null;
+  permissions?: Permission<AgreementPermissionFields> = {
+    edit: new AgreementPermissionFields(true),
+    required: new AgreementPermissionFields(false)
+  };
+  attachment?: string;
+
+  [key: string]: any;
+}
+
+export class AgreementAmendment {
+  id: number | null = null;
+  signed_date: string | null = null;
+  types: string[] = [];
+  signed_amendment_attachment: number | string | null = null;
+}
+
+

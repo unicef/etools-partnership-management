@@ -1,15 +1,17 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {GestureEventListeners} from "@polymer/polymer/lib/mixins/gesture-event-listeners";
-import "etools-content-panel/etools-content-panel.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-button/paper-button.js";
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import 'etools-content-panel/etools-content-panel.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-button/paper-button.js';
 import {buttonsStyles} from '../styles/buttons-styles.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin GestureEventListeners
  */
+/* eslint-disable new-cap */
 class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   public static get template() {
     // language=HTML
@@ -85,21 +87,14 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      title: String,
-      errors: {
-        type: Array,
-        value: [],
-        notify: true
-      },
-      hidden: {
-        type: Boolean,
-        computed: '_errorsLengthChanged(errors)',
-        reflectToAttribute: true
-      }
-    };
-  }
+  @property({type: String})
+  title!: string;
+
+  @property({type: Array, notify: true})
+  errors = [];
+
+  @property({type: Boolean, computed: '_errorsLengthChanged(errors)', reflectToAttribute: true})
+  hidden!: boolean;
 
   _startsWithEmptySpace(val: string) {
     return val.startsWith(' ');

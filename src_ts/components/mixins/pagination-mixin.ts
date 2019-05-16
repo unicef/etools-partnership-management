@@ -1,95 +1,90 @@
-import { Paginator, Constructor } from '../../typings/globals.types';
+import {Paginator, Constructor} from '../../typings/globals.types';
 import CONSTANTS from '../../config/app-constants';
-import { PolymerElement } from '@polymer/polymer';
-
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class paginationClass extends baseClass {
-    [x: string]: any;
-    static get properties() {
-      return {
-        paginator: {
-          type: Object,
-          value: () => new Paginator(),
-          notify: true
-        }
-      };
-    }
 
-    static get observers() {
-      return [
-        '_pageInsidePaginationRange(paginator.page, paginator.count)',
-        'resetPageNumber(paginator.page_size)'
-      ];
-    }
+  class PaginationClass extends baseClass {
 
-    pageSizeChanged(e: CustomEvent) {
-      this.resetPageNumber();
-      this.setPageSize(parseInt(e.detail.value, 10));
-    }
+     @property({type: Object, notify: true})
+    paginator = new Paginator();
 
-    pageNumberChanged(e: CustomEvent) {
-      this.setPageNumber(parseInt(e.detail.value, 10));
-    }
+     static get observers() {
+       return [
+         '_pageInsidePaginationRange(paginator.page, paginator.count)',
+         'resetPageNumber(paginator.page_size)'
+       ];
+     }
 
-    getRequestPaginationParams() {
-      return {
-        page: this.paginator.page,
-        page_size: this.paginator.page_size
-      };
-    }
+     pageSizeChanged(e: CustomEvent) {
+       this.resetPageNumber();
+       this.setPageSize(parseInt(e.detail.value, 10));
+     }
 
-    updatePaginatorTotalResults(reqResponse: any) {
-      if (reqResponse && reqResponse.count) {
-        let count = parseInt(reqResponse.count, 10);
-        if (!isNaN(count)) {
-          this.set('paginator.count', count);
-          return;
-        }
-      }
-      this.set('paginator.count', 0);
-    }
+     pageNumberChanged(e: CustomEvent) {
+       this.setPageNumber(parseInt(e.detail.value, 10));
+     }
 
-    setPageSize(size: number) {
-      this.set('paginator.page_size', size);
-    }
+     getRequestPaginationParams() {
+       return {
+         page: this.paginator.page,
+         page_size: this.paginator.page_size
+       };
+     }
 
-    setPageNumber(page: number) {
-      this.set('paginator.page', page);
-    }
+     updatePaginatorTotalResults(reqResponse: any) {
+       if (reqResponse && reqResponse.count) {
+         const count = parseInt(reqResponse.count, 10);
+         if (!isNaN(count)) {
+           this.set('paginator.count', count);
+           return;
+         }
+       }
+       this.set('paginator.count', 0);
+     }
 
-    resetPageNumber() {
-      this.setPageNumber(1);
-    }
+     setPageSize(size: number) {
+       this.set('paginator.page_size', size);
+     }
 
-    setPaginationDataFromUrlParams(urlParams: any) {
-      this.setPageNumber(urlParams.page ? parseInt(urlParams.page) : 1);
-      this.setPageSize(urlParams.size ? parseInt(urlParams.size) : CONSTANTS.DEFAULT_LIST_SIZE);
-    }
+     setPageNumber(page: number) {
+       this.set('paginator.page', page);
+     }
 
-    _pageInsidePaginationRange(page: number, totalResults: string) {
-      if (page < 1) {
-        this.resetPageNumber();
-      }
-      let total = parseInt(totalResults, 10);
-      if (isNaN(total)) {
-        return;
-      }
+     resetPageNumber() {
+       this.setPageNumber(1);
+     }
 
-      let lastPageNr = this._getLastPageNr(this.paginator.page_size, total);
-      if (page > lastPageNr) {
-        // page is bigger than last page number (possible by modifying url page param)
-        // set page to last available page
-        this.setPageNumber(lastPageNr);
-      }
-    }
+     setPaginationDataFromUrlParams(urlParams: any) {
+       this.setPageNumber(urlParams.page ? parseInt(urlParams.page) : 1);
+       this.setPageSize(urlParams.size ? parseInt(urlParams.size) : CONSTANTS.DEFAULT_LIST_SIZE);
+     }
 
-    _getLastPageNr(pageSize: number, total: number) {
-      return pageSize < total ? (Math.ceil(total / pageSize)) : 1;
-    }
-  };
 
-  return paginationClass;
+     _pageInsidePaginationRange(page: number, totalResults: string) {
+       if (page < 1) {
+         this.resetPageNumber();
+       }
+       const total = parseInt(totalResults, 10);
+       if (isNaN(total)) {
+         return;
+       }
+
+       const lastPageNr = this._getLastPageNr(this.paginator.page_size, total);
+       if (page > lastPageNr) {
+         // page is bigger than last page number (possible by modifying url page param)
+         // set page to last available page
+         this.setPageNumber(lastPageNr);
+       }
+     }
+
+     _getLastPageNr(pageSize: number, total: number) {
+       return pageSize < total ? (Math.ceil(total / pageSize)) : 1;
+     }
+  }
+
+  return PaginationClass;
 }
 
 export default PaginationMixin;

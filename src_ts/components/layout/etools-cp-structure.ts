@@ -4,22 +4,21 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
-import 'etools-dropdown/etools-dropdown'
+import 'etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../store';
-import {SharedStyles} from '../styles/shared-styles'
-import {requiredFieldStarredStyles} from '../styles/required-field-styles'
+import {SharedStyles} from '../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
-import {CpStructure} from '../../typings/globals.types';
+import {CpStructure, GenericObject} from '../../typings/globals.types';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
-
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @customElement
  */
-class EtoolsCpStructure
-    extends connect(store)(PolymerElement) {
-  [x: string]: any;
+export class EtoolsCpStructure extends connect(store)(PolymerElement) {
+
   static get template() {
     return html`
           ${SharedStyles} ${requiredFieldStarredStyles}
@@ -53,43 +52,28 @@ class EtoolsCpStructure
         `;
   }
 
-  static get properties() {
-    return {
-      countryProgrammes: {
-        type: Array,
-        statePath: 'countryProgrammes'
-      },
-      sortedCountryProgrammes: {
-        type: Array
-      },
-      selectedCp: {
-        type: Number,
-        notify: true
-      },
-      /**
-       * appModuleItem could be agreement or intervention
-       */
-      appModuleItem: {
-        type: Object,
-        value: null
-      },
-      /**
-       * module will indicate the appmodule where cp selector is used;
-       * could be 'agreements' or 'intervention'
-       */
-      module: {
-        type: String
-      },
-      editMode: {
-        type: Boolean,
-        value: false
-      },
-      required: {
-        type: Boolean,
-        value: false
-      }
-    };
-  }
+  @property({type: Array})
+  countryProgrammes!: CpStructure[];
+
+  @property({type: Array})
+  sortedCountryProgrammes!: CpStructure[];
+
+  @property({type: String, notify: true})
+  selectedCp!: string;
+
+  @property({type: Object})
+  appModuleItem: GenericObject | null = null;
+
+  @property({type: String})
+  module!: string;
+
+  @property({type: Boolean})
+  editMode: boolean = false;
+
+  @property({type: Boolean})
+  required: boolean = false;
+
+  private cpInitDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -103,7 +87,7 @@ class EtoolsCpStructure
     }
   }
 
-  _getCurrentCountryProgramme(cpOptions: Array<CpStructure>) {
+  _getCurrentCountryProgramme(cpOptions: CpStructure[]) {
     if (isEmptyObject(cpOptions)) {
       return null;
     }
@@ -122,33 +106,33 @@ class EtoolsCpStructure
       return;
     }
 
-    let currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
+    const currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
 
     this.set('selectedCp', currentCP ? currentCP.id : null);
   }
 
-  _countryProgrammesChanged(_countryProgrammes: Array<CpStructure>, appModuleItem: any) {
+  _countryProgrammesChanged(_countryProgrammes: CpStructure[], appModuleItem: any) {
     this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer,
-        timeOut.after(10),
-        () => {
-          if (appModuleItem) {
-            this._prepareCpsForDisplay();
+      timeOut.after(10),
+      () => {
+        if (appModuleItem) {
+          this._prepareCpsForDisplay();
 
-            if (!this.selectedCp) {
-              this.setDefaultSelectedCpStructure();
-            } else {
-              if (this._hasExpiredCpAssigned(this.selectedCp)) {
-                logWarn(this._getExpiredCPWarning());
-              }
+          if (!this.selectedCp) {
+            this.setDefaultSelectedCpStructure();
+          } else {
+            if (this._hasExpiredCpAssigned(this.selectedCp)) {
+              logWarn(this._getExpiredCPWarning());
             }
           }
-        });
+        }
+      });
   }
 
   _prepareCpsForDisplay() {
-    let displayableCps = orderBy(this.countryProgrammes,
-        ['future', 'active', 'special'],
-        ['desc', 'desc', 'asc']);
+    const displayableCps = orderBy(this.countryProgrammes,
+      ['future', 'active', 'special'],
+      ['desc', 'desc', 'asc']);
 
     // NOTE: Do not remove this code yet, it might be restored in the future
     // if (!this.appModuleItem || !this.appModuleItem.id) {
@@ -192,33 +176,33 @@ class EtoolsCpStructure
     let msg = '';
     switch (this.module) {
       case 'agreements':
-        msg = `Agreement ${this.appModuleItem.agreement_number}`;
+        msg = 'Agreement ' + this.appModuleItem ? this.appModuleItem!.agreement_number : '';
         break;
       case 'interventions':
-        msg = `PD/SSFA ${this.appModuleItem.number}`;
+        msg = 'PD/SSFA ' + this.appModuleItem ? this.appModuleItem!.number : '';
         break;
     }
     return msg + ' has an old/expired CP Structure!';
   }
 
   resetCpDropdownInvalidState() {
-    let cp = this._getCpStructureDropdown();
+    const cp = this._getCpStructureDropdown();
     if (cp) {
       cp.resetInvalidState();
     }
   }
 
   validate() {
-    let cp = this._getCpStructureDropdown();
+    const cp = this._getCpStructureDropdown();
     return cp ? cp.validate() : true;
   }
 
   _getCpStructureDropdown() {
     return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
-                                                         {
-                                                           resetInvalidState(): void,
-                                                           validate(): boolean
-                                                         };
+    {
+      resetInvalidState(): void;
+      validate(): boolean;
+    };
   }
 
 }

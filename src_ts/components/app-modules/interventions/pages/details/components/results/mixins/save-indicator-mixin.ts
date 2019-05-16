@@ -1,13 +1,13 @@
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 // @ts-ignore
 import pick from 'lodash-es/pick';
 // @ts-ignore
 import keys from 'lodash-es/keys';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 
 /**
  * @polymer
@@ -16,98 +16,86 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   // @ts-ignore
-  class saveIndicatorClass extends EndpointsMixin(baseClass) {
+  class SaveIndicatorClass extends EndpointsMixin(baseClass) {
     [x: string]: any;
 
-    static get properties() {
-      return {
-        nonClusterIndicatorCreateModel: {
-          type: Object,
-          value: {
-            indicator: {
-              title: null,
-              unit: 'number',
-              display_type: 'percentage'
-            },
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            means_of_verification: null,
-            locations: [],
-            disaggregation: [],
-            is_high_frequency: false,
-            numerator_label: null,
-            denominator_label: null
-          }
-        },
-        nonClusterIndicatorEditModel: {
-          type: Object,
-          value: {
-            id: null,
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            means_of_verification: null,
-            locations: [],
-            disaggregation: [],
-            is_high_frequency: false,
-            numerator_label: null,
-            denominator_label: null
-          }
-        },
-        clusterIndicatorCreateModel: {
-          type: Object,
-          value: {
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            locations: [],
-            cluster_indicator_id: null,
-            cluster_indicator_title: null,
-            cluster_name: null,
-            response_plan_name: null,
-            numerator_label: null,
-            denominator_label: null
-          }
-        },
-        clusterIndicatorEditModel: {
-          type: Object,
-          value: {
-            id: null,
-            section: null,
-            baseline: {
-              v: 0,
-              d: 1
-            },
-            target: {
-              v: 0,
-              d: 1
-            },
-            locations: [],
-            numerator_label: null,
-            denominator_label: null
-          }
-        }
-      };
-    }
+    // @ts-ignore
+    private nonClusterIndicatorCreateModel = {
+      indicator: {
+        title: null,
+        unit: 'number',
+        display_type: 'percentage'
+      },
+      section: null,
+      baseline: {
+        v: 0,
+        d: 1
+      },
+      target: {
+        v: 0,
+        d: 1
+      },
+      means_of_verification: null,
+      locations: [],
+      disaggregation: [],
+      is_high_frequency: false,
+      numerator_label: null,
+      denominator_label: null
+    };
+    // @ts-ignore
+    private nonClusterIndicatorEditModel = {
+      id: null,
+      section: null,
+      baseline: {
+        v: 0,
+        d: 1
+      },
+      target: {
+        v: 0,
+        d: 1
+      },
+      means_of_verification: null,
+      locations: [],
+      disaggregation: [],
+      is_high_frequency: false,
+      numerator_label: null,
+      denominator_label: null
+    };
+    // @ts-ignore
+    private clusterIndicatorCreateModel = {
+      section: null,
+      baseline: {
+        v: 0,
+        d: 1
+      },
+      target: {
+        v: 0,
+        d: 1
+      },
+      locations: [],
+      cluster_indicator_id: null,
+      cluster_indicator_title: null,
+      cluster_name: null,
+      response_plan_name: null,
+      numerator_label: null,
+      denominator_label: null
+    };
+    // @ts-ignore
+    private clusterIndicatorEditModel = {
+      id: null,
+      section: null,
+      baseline: {
+        v: 0,
+        d: 1
+      },
+      target: {
+        v: 0,
+        d: 1
+      },
+      locations: [],
+      numerator_label: null,
+      denominator_label: null
+    };
 
     _validateAndSaveIndicator() {
       if (!this.validate()) {
@@ -119,10 +107,10 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       this._startSpinner();
       this.disableConfirmBtn = true;
 
-      let endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
-      let method = this.indicator.id ? 'PATCH' : 'POST';
-      let body = this._getIndicatorBody();
-      let self = this;
+      const endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
+      const method = this.indicator.id ? 'PATCH' : 'POST';
+      const body = this._getIndicatorBody();
+      const self = this;
 
       this.sendRequest({
         endpoint: endpoint,
@@ -137,11 +125,13 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     validate() {
       let valid = true;
-      let sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {validate(): boolean}).validate();
+      const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {validate(): boolean}).validate();
       if (this.isCluster) {
-        valid = (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate() && sectionSelected;
+        valid = (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
+                && sectionSelected;
       } else {
-        valid = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate() && sectionSelected;
+        valid = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
+                && sectionSelected;
       }
       return valid;
     }
@@ -173,7 +163,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     _getIndicatorBody() {
-      let body = this._getIndicatorModelForSave();
+      const body = this._getIndicatorModelForSave();
 
       Object.assign(body, pick(this.indicator, keys(body)));
 
@@ -244,8 +234,8 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       modelName += this.indicator.id ? 'EditModel' : 'CreateModel';
       return JSON.parse(JSON.stringify(this[modelName]));
     }
-  };
-  return saveIndicatorClass;
+  }
+  return SaveIndicatorClass;
 }
 
 export default SaveIndicatorMixin;

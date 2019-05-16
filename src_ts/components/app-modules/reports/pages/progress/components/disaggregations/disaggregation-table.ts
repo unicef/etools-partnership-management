@@ -1,12 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin';
 
 import './table-content/three-disaggregations';
 import './table-content/two-disaggregations';
 import './table-content/one-disaggregation';
 import './table-content/zero-disaggregations';
-import { disaggregationTableStyles } from './styles/disaggregation-table-styles';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {Disaggregation} from '../../../../../../../typings/intervention.types';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -17,8 +19,7 @@ import {Disaggregation} from '../../../../../../../typings/intervention.types';
  * @customElement
  * @appliesMixin UtilsMixin
  */
-class DisaggregationTable extends (UtilsMixin(PolymerElement) as any) {
-  [x: string]: any;
+class DisaggregationTable extends UtilsMixin(PolymerElement) {
 
   static get is() {
     return 'disaggregation-table';
@@ -120,56 +121,45 @@ class DisaggregationTable extends (UtilsMixin(PolymerElement) as any) {
     `;
   }
 
-  static get properties() {
-    return {
-      /**
-       * `editable` and `editableBool` is only kept here because disaggregation elements are common with PRP app,
-       * it will always be `0` and `false` in PMP.
-       */
-      editable: {
-        type: Number,
-        value: 0
-      },
+  /**
+   * `editable` and `editableBool` is only kept here because disaggregation elements are common with PRP app,
+   * it will always be `0` and `false` in PMP.
+   */
+  @property({type: Number})
+  editable: number = 0;
 
-      data: {
-        type: Object,
-        observer: '_cloneData'
-      },
+  @property({type: Object, observer: '_cloneData'})
+  data!: GenericObject;
 
-      viewData: {
-        type: Object,
-        computed: '_computeViewData(formattedData, totals)'
-      },
+  @property({type: Object, computed: '_computeViewData(formattedData, totals)'})
+  viewData!: GenericObject;
 
-      formattedData: {
-        type: Object
-      },
+  @property({type: Object})
+  formattedData!: GenericObject;
 
-      formattedMapping: {
-        type: Array,
-        computed: '_computeMapping(editableBool, formattedData, mapping)'
-      },
+  @property({type: Array, computed: '_computeMapping(editableBool, formattedData, mapping)'})
+  formattedMapping!: any[];
 
-      editableBool: {
-        type: Boolean,
-        computed: '_computeEditableBool(editable)'
-      },
+  @property({type: Boolean, computed: '_computeEditableBool(editable)'})
+  editableBool!: boolean;
 
-      indicatorType: {
-        type: String,
-        computed: '_computeIndicatorType(data)'
-      },
+  @property({type: String, computed: '_computeIndicatorType(data)'})
+  indicatorType!: string;
 
-      fields: Array,
-      mapping: Array,
-      labels: Object,
-      viewLabel: {
-        type: Boolean,
-        computed: '_computeLabelVisibility(indicatorType)'
-      },
-      totals: Object
-    };
-  }
+  @property({type: Array})
+  fields!: any[];
+
+  @property({type: Array})
+  mapping!: any[];
+
+  @property({type: Object})
+  labels!: GenericObject;
+
+  @property({type: Boolean, computed: '_computeLabelVisibility(indicatorType)'})
+  viewLabel!: boolean;
+
+  @property({type: Object})
+  totals!: GenericObject;
 
   static get observers() {
     return [
@@ -209,7 +199,7 @@ class DisaggregationTable extends (UtilsMixin(PolymerElement) as any) {
         typeof mapping === 'undefined') {
       return;
     }
-    let reportedOn = formattedData.disaggregation_reported_on;
+    const reportedOn = formattedData.disaggregation_reported_on;
 
     return editableBool ? mapping.filter(function(disagg: Disaggregation) {
       return reportedOn.indexOf(disagg.id) !== -1;

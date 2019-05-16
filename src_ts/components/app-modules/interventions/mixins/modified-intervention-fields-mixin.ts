@@ -1,7 +1,6 @@
-// @ts-ignore
-import difference from 'lodash-es/difference';
-import { GenericObject, Constructor } from '../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {GenericObject, Constructor} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {arraysAreEqual} from '../../../utils/utils';
 
 /**
  * PD/SSFA fields prepare for save functionality
@@ -9,7 +8,7 @@ import { PolymerElement } from '@polymer/polymer';
  * @mixinFunction
  */
 function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class modifiedInterventionFieldsClass extends baseClass{
+  class ModifiedInterventionFieldsClass extends baseClass {
   /* eslint-enable arrow-parens */
     _objectFieldIsModified(fieldName: string) {
       // @ts-ignore
@@ -17,7 +16,7 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
       // @ts-ignore
           JSON.stringify(this.intervention[fieldName], this.numbersToString);
 
-      let dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
+      const dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
       if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
         // Covers dropdown arrays which can have same content but with changed order
         // @ts-ignore
@@ -49,7 +48,7 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
     }
 
     _getModifiedReviewAndSign() {
-      let updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
+      const updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
         'prc_review_attachment', 'partner_authorized_officer_signatory',
         'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment',
         'in_amendment'];
@@ -58,22 +57,22 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
     }
 
     _getModifiedInterventionDetails(docType?: string) {
-      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
+      const updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
         'start', 'end', 'activation_letter_attachment'];
         // @ts-ignore
       if ((docType ? docType : this.intervention.docType) !== 'SSFA') {
         updatableFields.push('reference_number_year');
         updatableFields.push('contingency_pd');
       }
-      let updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
+      const updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
         'sections', 'flat_locations', 'planned_budget', 'planned_visits'];
-      let modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+      const modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
 
       return Object.assign({}, modifiedDetails);
     }
 
     _buildModifiedInterventionObject(updatableFields: string[], updatableObjectFields: string[]) {
-      let modifiedObject: GenericObject = {};
+      const modifiedObject: GenericObject = {};
 
       updatableFields.forEach((fieldName) => {
         if (this._primitiveFieldIsModified(fieldName)) {
@@ -92,8 +91,8 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
       return modifiedObject;
     }
 
-  };
-  return modifiedInterventionFieldsClass;
+  }
+  return ModifiedInterventionFieldsClass;
 }
 
 export default ModifiedInterventionFieldsMixin;

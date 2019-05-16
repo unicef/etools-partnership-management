@@ -1,6 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {PolymerElement, html} from '@polymer/polymer';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-button/paper-button.js';
@@ -19,17 +19,20 @@ import './components/report-reject-dialog';
 import {GenericObject, User} from '../../../typings/globals.types';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import ScrollControl from '../../mixins/scroll-control-mixin';
-import { pageLayoutStyles } from '../../styles/page-layout-styles';
-import { SharedStyles } from '../../styles/shared-styles';
-import { buttonsStyles } from '../../styles/buttons-styles';
-import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header-slotted-styles';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin';
+import {pageLayoutStyles} from '../../styles/page-layout-styles';
+import {SharedStyles} from '../../styles/shared-styles';
+import {buttonsStyles} from '../../styles/buttons-styles';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 import ReportDetailsMixin from './mixins/report-details-mixin';
-import { fireEvent } from '../../utils/fire-custom-event';
-import { isEmptyObject } from '../../utils/utils';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../store';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {isEmptyObject} from '../../utils/utils';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {property} from '@polymer/decorators/lib/decorators';
+import {ReportRatingDialogEl} from './components/report-rating-dialog';
+import {ReportRejectDialogEl} from './components/report-reject-dialog';
+import {ReportsListEl} from './pages/list/reports-list';
 declare const moment: any;
 
 
@@ -38,14 +41,13 @@ declare const moment: any;
  * @customElement
  * @mixinFunction
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
- * @appliesMixin ModuleRouting
- * @appliesMixin ReportDetails
- * @appliesMixin EndpointsMixin
- * @appliesMixin ScrollControl
+ * @appliesMixin ModuleRoutingMixin
+ * @appliesMixin ReportDetailsMixin
+ * @appliesMixin ScrollControlMixin
  */
-class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
-(ReportDetailsMixin(EndpointsMixin(ScrollControl(PolymerElement))))) as any) {
-  [x: string]: any;
+class ReportsModule extends connect(store)(ScrollControlMixin(
+  ModuleMainElCommonFunctionalityMixin(
+    ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))) {
 
   static get is() {
     return 'reports-module';
@@ -209,14 +211,14 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
             <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
               <report-summary name="summary"
                               report="[[report]]"
-                              report-attachment="[[reportAttachment]]"></report-summary>
+                              report-attachments="[[reportAttachments]]"></report-summary>
             </template>
 
             <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
               <report-progress id="reportDetails"
                               name="progress"
                               report="[[report]]"
-                              report-attachment="[[reportAttachment]]"></report-progress>
+                              report-attachments="[[reportAttachments]]"></report-progress>
             </template>
           </iron-pages>
 
@@ -226,41 +228,37 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     `;
   }
 
-  static get properties() {
-    return {
-      reportTabs: {
-        type: Array,
-        value: [
-          {
-            tab: 'progress',
-            tabLabel: 'Results Reported',
-            hidden: false
-          },
-          {
-            tab: 'summary',
-            tabLabel: 'Other Info',
-            hidden: false
-          }
-        ]
-      },
-      reportRatingDialog: {
-        type: Object
-      },
-      reportRejectDialog: {
-        type: Object
-      },
-      permissions: {
-        type: Object
-      },
-      // This shouldn't be neccessary, but the Analyzer isn't picking up
-      // Polymer.Element#rootPath
-      rootPath: String,
-      moduleName: {
-        type: String,
-        value: 'reports'
-      }
-    };
-  }
+  @property({type: Array})
+  reportTabs: object[] = [
+    {
+      tab: 'progress',
+      tabLabel: 'Results Reported',
+      hidden: false
+    },
+    {
+      tab: 'summary',
+      tabLabel: 'Other Info',
+      hidden: false
+    }
+  ];
+
+  @property({type: Object})
+  reportRatingDialog!: ReportRatingDialogEl;
+
+  @property({type: Object})
+  reportRejectDialog!: ReportRejectDialogEl;
+
+  @property({type: Object})
+  permissions!: object;
+
+  @property({type: String})
+  rootPath!: string;
+
+  @property({type: String})
+  moduleName: string = 'reports';
+
+  private mockupListLoadedDebouncer!: Debouncer;
+  private loadingReportDataDebouncer!: Debouncer;
 
   static get observers() {
     return [
@@ -271,17 +269,17 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   stateChanged(state: RootState) {
-    this.repDetailsStateChanged(state);
+    this.endStateChanged(state);
   }
 
   ready() {
     super.ready();
 
     this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer,
-        timeOut.after(500),
-        () => {
-          fireEvent(this, 'global-loading', {active: false});
-        }
+      timeOut.after(500),
+      () => {
+        fireEvent(this, 'global-loading', {active: false});
+      }
     );
   }
 
@@ -293,7 +291,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
-    let loadingMsg = 'Loading...';
+    const loadingMsg = 'Loading...';
     fireEvent(this, 'global-loading', {
       message: loadingMsg,
       active: true,
@@ -322,7 +320,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
 
     this.scrollToTopOnCondition(!listActive);
 
-    let fileImportDetails = {
+    const fileImportDetails = {
       filenamePrefix: 'report',
       baseUrl: '../app-elements/reports/',
       importErrMsg: 'Reports page import error occurred',
@@ -345,7 +343,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     if (!tabsActive || !reportId) {
       return;
     }
-    let id = parseInt(reportId, 10);
+    const id = parseInt(reportId, 10);
     if (this.report && this.report.id === id) {
       return;
     }
@@ -356,10 +354,10 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
         return;
       }
       this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer,
-          timeOut.after(50),
-          () => {
-            this.requestReportDetails.bind(this, id)();
-          }
+        timeOut.after(50),
+        () => {
+          this.requestReportDetails.bind(this, id? id.toString() : '')();
+        }
       );
     }, 0);
   }
@@ -385,12 +383,12 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _exportIndicators(type: string) {
-    const reportsList = this.shadowRoot.querySelector('#list');
+    const reportsList = (this.shadowRoot!.querySelector('#list') as ReportsListEl);
     if (reportsList instanceof PolymerElement === false) {
       return;
     }
 
-    let params: GenericObject = {};
+    const params: GenericObject = {};
 
     if (typeof reportsList.queryParams.pd_ref_title === 'string' && reportsList.queryParams.pd_ref_title !== '') {
       params.pd_ref_title = reportsList.queryParams.pd_ref_title;
@@ -423,16 +421,16 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     params.export = type;
 
     this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params})
-        .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+      .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
   }
 
   _downloadAnexC() {
-    let filename = 'Progress Report.pdf';
+    const filename = 'Progress Report.pdf';
     this._reportTokenizedDownload('downloadReportAnexC', filename);
   }
 
   _downloadXls() {
-    let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
+    const filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
     this._reportTokenizedDownload('downloadReportXls', filename);
   }
 
@@ -441,7 +439,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _downloadPdf() {
-    let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
+    const filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
     this._reportTokenizedDownload('downloadReportPdf', filename);
   }
 
@@ -451,7 +449,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     }
 
     this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
-        .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename));
+      .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename));
   }
 
   _handleBlobDataReceivedAndStartDownload(blob: Blob, filename: string) {
@@ -459,9 +457,9 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
       window.navigator.msSaveBlob(blob, filename);
     } else {
       // create a blob url representing the data
-      let url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
       // attach blob url to anchor element with download attribute
-      let anchor = document.createElement('a');
+      const anchor = document.createElement('a');
       anchor.setAttribute('href', url);
       anchor.setAttribute('download', filename);
 
@@ -475,7 +473,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _goToActionPointModule() {
-    let a = document.createElement('a');
+    const a = document.createElement('a');
     a.setAttribute('target', '_blank');
     a.href = '/apd/';
     a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
@@ -485,31 +483,31 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     super.disconnectedCallback();
 
     if (this.reportRatingDialog) {
-      this.reportRatingDialog.removeEventListener('report-accepted', this._updateReportDetailsObj);
-      document.querySelector('body')!.removeChild(this.reportRatingDialog);
+      this.reportRatingDialog.removeEventListener('report-accepted', this._updateReportDetailsObj as any);
+      document.querySelector('body')!.removeChild(this.reportRatingDialog as any);
     }
     if (this.reportRejectDialog) {
-      this.reportRejectDialog.removeEventListener('report-rejected', this._updateReportDetailsObj);
-      document.querySelector('body')!.removeChild(this.reportRejectDialog);
+      this.reportRejectDialog.removeEventListener('report-rejected', this._updateReportDetailsObj as any);
+      document.querySelector('body')!.removeChild(this.reportRejectDialog as any);
     }
   }
 
   _createReportStatusUpdateDialogs() {
     this._updateReportDetailsObj = this._updateReportDetailsObj.bind(this);
 
-    this.reportRatingDialog = document.createElement('report-rating-dialog');
+    this.reportRatingDialog = document.createElement('report-rating-dialog') as any;
     this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
     this.reportRatingDialog.set('toastEventSource', this);
-    this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj);
+    this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj as any);
 
-    document.querySelector('body')!.appendChild(this.reportRatingDialog);
+    document.querySelector('body')!.appendChild(this.reportRatingDialog as any);
 
-    this.reportRejectDialog = document.createElement('report-reject-dialog');
+    this.reportRejectDialog = document.createElement('report-reject-dialog') as any;
     this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
     this.reportRejectDialog.set('toastEventSource', this);
-    this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj);
+    this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj as any);
 
-    document.querySelector('body')!.appendChild(this.reportRejectDialog);
+    document.querySelector('body')!.appendChild(this.reportRejectDialog as any);
   }
 
   _reportChanged(report: any) {
@@ -531,11 +529,11 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _updateReportDataOnList(report: any) {
-    let list = this.shadowRoot.querySelector('#list');
+    const list = this.shadowRoot!.querySelector('#list');
     if (list) {
-      let reportsDisplayList = list.shadowRoot.querySelector('reports-display-list');
+      const reportsDisplayList = list.shadowRoot!.querySelector('reports-display-list') as GenericObject;
       if (reportsDisplayList && !isEmptyObject(reportsDisplayList.reports)) {
-        let currentReports = reportsDisplayList.reports;
+        const currentReports = reportsDisplayList.reports;
         let index = -1;
         for (let i = 0; i < currentReports.length; i++) {
           if (currentReports[i].id === report.id) {
