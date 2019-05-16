@@ -6,9 +6,9 @@ import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.j
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from 'etools-behaviors/etools-logging';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../typings/globals.types.js';
-import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../typings/globals.types.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
 
 /**
  * @polymer
@@ -95,7 +95,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
   @property({type: Object})
   currentCountry: GenericObject = {};
 
-  @property({type: Array,  observer: '_countrySelectorUpdate'})
+  @property({type: Array, observer: '_countrySelectorUpdate'})
   countries: any[] = [];
 
   @property({type: Boolean})
@@ -105,7 +105,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
     super.connectedCallback();
 
     setTimeout(() => {
-      let fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
+      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
       (this.$.countrySelector as EtoolsDropdownEl).set('fitInto', fitInto);
     }, 0);
   }

@@ -257,7 +257,7 @@ class InterventionProgress extends connect(store)(
   @property({type: Number, computed: '_getTimeProgress(progress.start_date, progress.end_date)'})
   pdProgress!: number;
 
-  @property({type: Number,  computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
+  @property({type: Number, computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
   'latestAcceptedPr.programme_document.total_unicef_cash)'})
   cashProgress!: number;
 

@@ -49,13 +49,13 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
 
       this.addEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft as EventListenerOrEventListenerObject);
       this.addEventListener('restore-original-permissions',
-                             this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
+        this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
     }
 
     _removePermissionsListeners() {
       this.removeEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft as EventListenerOrEventListenerObject);
       this.removeEventListener('restore-original-permissions',
-                                this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
+        this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
     }
 
     _getNewIntervRequiredFields() {

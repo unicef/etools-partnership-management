@@ -12,9 +12,9 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../utils/fire-custom-event';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../store';
-import { property } from '@polymer/decorators';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {property} from '@polymer/decorators';
 
 /**
  * PMP main menu

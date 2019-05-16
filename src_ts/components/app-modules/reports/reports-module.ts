@@ -46,8 +46,8 @@ declare const moment: any;
  * @appliesMixin ScrollControlMixin
  */
 class ReportsModule extends connect(store)(ScrollControlMixin(
-ModuleMainElCommonFunctionalityMixin(
-  ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))) {
+  ModuleMainElCommonFunctionalityMixin(
+    ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))) {
 
   static get is() {
     return 'reports-module';

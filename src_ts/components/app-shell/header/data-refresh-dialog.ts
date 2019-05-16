@@ -6,10 +6,10 @@ import {SharedStyles} from '../../styles/shared-styles';
 import {gridLayoutStyles} from '../../styles/grid-layout-styles';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
 import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin';
-import { store } from '../../../store';
-import { RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS } from '../../../actions/upload-status';
-import { fireEvent } from '../../utils/fire-custom-event';
-import { property } from '@polymer/decorators';
+import {store} from '../../../store';
+import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**

@@ -234,7 +234,7 @@ class PlannedBudget extends connect(store)(
   editMode!: boolean;
 
   @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)',
-             observer: PlannedBudget.prototype._editModeChanged})
+    observer: PlannedBudget.prototype._editModeChanged})
   unicefCashEditMode!: boolean;
 
   @property({type: Boolean})

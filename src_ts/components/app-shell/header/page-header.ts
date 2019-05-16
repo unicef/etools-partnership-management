@@ -12,10 +12,10 @@ import 'etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -148,13 +148,13 @@ class PageHeader extends connect(store)(
   @property({type: Array})
   users: MinimalUser[] = [];
 
-  @property({type: Array,  notify: true, computed: '_convertCollection(sections)'})
+  @property({type: Array, notify: true, computed: '_convertCollection(sections)'})
   allSections: LabelAndValue[] = [];
 
-  @property({type: Array,  notify: true, computed: '_convertCollection(offices)'})
+  @property({type: Array, notify: true, computed: '_convertCollection(offices)'})
   allOffices: LabelAndValue[] = [];
 
-  @property({type: Array,  notify: true, computed: '_convertUsers(users)'})
+  @property({type: Array, notify: true, computed: '_convertUsers(users)'})
   allUsers: LabelAndValue[] = [];
 
   @property({type: String})
