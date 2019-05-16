@@ -169,7 +169,8 @@ class InterventionDetails extends connect(store)(
 
         </div>
 
-        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type, intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type,
+                                                                          intervention.status)]]">
           <year-dropdown id="ref-year"
                         label="Ref. Year"
                         selected-year="{{intervention.reference_number_year}}">
@@ -259,7 +260,8 @@ class InterventionDetails extends connect(store)(
                         on-upload-finished="_activationLetterUploadFinished"
                         on-upload-started="_onUploadStarted"
                         hidden$="[[_isDraft(intervention.status)]]"
-                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
+                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status,
+                                          permissions.edit.activation_letter_attachment)]]"
                         on-delete-file="_activationLetterDelete"
                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
@@ -389,7 +391,8 @@ class InterventionDetails extends connect(store)(
              hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]" on-click="exportExpectedResults">
                    Export
             </paper-button>
-            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links, permissions.edit.result_links)]]"></div>
+            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links,
+                                              permissions.edit.result_links)]]"></div>
             <paper-toggle-button id="showInactive"
                                 hidden$="[[!thereAreInactiveIndicators]]"
                                 checked="{{showInactiveIndicators}}">

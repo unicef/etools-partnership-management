@@ -78,7 +78,9 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
       </div>
       <div class="target-row">
         <span>Total cumulative progress:</span>
-        <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">[[_getCumulativeProgress(displayType, cumulativeProgress)]]</span>
+        <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">
+          [[_getCumulativeProgress(displayType, cumulativeProgress)]]
+        </span>
       </div>
       <div class="target-row">
         <span>Achievement in reporting period:</span>

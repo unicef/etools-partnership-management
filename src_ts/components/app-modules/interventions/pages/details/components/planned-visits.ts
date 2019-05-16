@@ -187,7 +187,8 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
                 </div>
                 <div class="col col-4"
-                    hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)]]">
+                    hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3,
+                               item.programmatic_q4)]]">
                   <div class="error-msg">Total has to be greater than 0</div>
                 </div>
               </div>

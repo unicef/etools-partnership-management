@@ -127,9 +127,11 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       let valid = true;
       const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {validate(): boolean}).validate();
       if (this.isCluster) {
-        valid = (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate() && sectionSelected;
+        valid = (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
+                && sectionSelected;
       } else {
-        valid = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate() && sectionSelected;
+        valid = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
+                && sectionSelected;
       }
       return valid;
     }

@@ -216,7 +216,8 @@ class InterventionsList extends connect(store)(
               <etools-info-tooltip class="fr-nr-warn"
                                   custom-icon
                                   icon-first
-                                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]">
+                                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start,
+                                                  intervention.frs_earliest_start_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -226,7 +227,8 @@ class InterventionsList extends connect(store)(
               <etools-info-tooltip class="fr-nr-warn"
                                     custom-icon
                                     icon-first
-                                    hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]">
+                                    hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end,
+                                                    intervention.frs_latest_end_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
@@ -250,7 +252,8 @@ class InterventionsList extends connect(store)(
                   class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
                   icon-first
                   custom-icon
-                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
+                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent,
+                                  intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
                 <span slot="field">
                   <span class="amount-currency">[[intervention.budget_currency]]</span>
                   <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
@@ -258,7 +261,8 @@ class InterventionsList extends connect(store)(
                 <iron-icon icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]"
                           slot="custom-icon"></iron-icon>
                 <span slot="message">
-                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent, intervention.fr_currencies_are_consistent)]]</span>
+                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent,
+                          intervention.fr_currencies_are_consistent)]]</span>
                 </span>
               </etools-info-tooltip>
             </div>

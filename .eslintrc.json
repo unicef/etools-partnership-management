@@ -25,7 +25,7 @@
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
     "comma-dangle": ["error", "never"],
-    "max-len": ["error", { "code": 120 }],
+    "max-len": ["error", { "code": 140 }],
     "camelcase": "off",
     "arrow-parens": [2, "as-needed", { "requireForBlockBody": true }],
     "indent": "off",

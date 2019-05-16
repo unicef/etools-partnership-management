@@ -118,7 +118,8 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
                 <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                     icon-first
                                     custom-icon
-                                    hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
+                                    hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency,
+                                                    intervention.planned_budget.currency)]]">
                   <span slot="field">[[fr.currency]]</span>
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">
@@ -180,7 +181,8 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
               <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                   icon-first
                                   custom-icon
-                                  hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
+                                  hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs,
+                                                  intervention.planned_budget.currency)]]">
                 <span slot="field" class$="[[getFrsValueNAClass(frsDetails.currencies_match)]]">
                   [[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]
                 </span>
@@ -193,7 +195,8 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
               <etools-info-tooltip class="fr-nr-warn"
                                   custom-icon
                                   icon-first
-                                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
+                                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs,
+                                                   intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
                 <span slot="field" class$="[[getFrsValueNAClass(frsDetails.currencies_match)]]">
                   [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_frs_amt)]]
                 </span>

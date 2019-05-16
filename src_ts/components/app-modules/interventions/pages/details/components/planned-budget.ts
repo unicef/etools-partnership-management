@@ -119,13 +119,15 @@ class PlannedBudget extends connect(store)(
                 <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                       icon-first
                                       custom-icon
-                                      hide-tooltip="[[_hideBudgetCurrencyMismatchTooltip(intervention.frs_details.currencies_match, intervention.frs_details.frs, plannedBudget.currency)]]">
+                                      hide-tooltip="[[_hideBudgetCurrencyMismatchTooltip(intervention.frs_details.currencies_match,
+                                                      intervention.frs_details.frs, plannedBudget.currency)]]">
                   <etools-dropdown id="currencyDd"
                                     slot="field"
                                     placeholder="&#8212;"
                                     options="[[currencies]]"
                                     selected="{{plannedBudget.currency}}"
-                                    readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget, interventionId)]]"
+                                    readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget,
+                                                interventionId)]]"
                                     no-label-float>
                   </etools-dropdown>
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
@@ -231,7 +233,8 @@ class PlannedBudget extends connect(store)(
   @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget)', observer: PlannedBudget.prototype._editModeChanged})
   editMode!: boolean;
 
-  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)', observer: PlannedBudget.prototype._editModeChanged})
+  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)',
+             observer: PlannedBudget.prototype._editModeChanged})
   unicefCashEditMode!: boolean;
 
   @property({type: Boolean})

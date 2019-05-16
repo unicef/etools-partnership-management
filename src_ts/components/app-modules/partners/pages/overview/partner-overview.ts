@@ -187,7 +187,8 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                   <etools-info-tooltip class="fr-nr-warn"
                                        custom-icon
                                        icon-first
-                                       hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]">
+                                       hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start,
+                                                        partnership.frs_earliest_start_date)]]">
                     <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
                     <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                     <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -210,17 +211,20 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                       class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
                       icon-first
                       custom-icon
-                      hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
+                      hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent,
+                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
                     <span slot="field"
                           class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">
                       <span class="amount-currency">[[partnership.fr_currency]]</span>
                       <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
                     </span>
                     <iron-icon
-                        icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
+                        icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent,
+                                partnership.fr_currencies_are_consistent)]]"
                         slot="custom-icon"></iron-icon>
                     <span slot="message">
-                      <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
+                      <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent,
+                              partnership.fr_currencies_are_consistent)]]</span>
                     </span>
                   </etools-info-tooltip>
                 </div>
