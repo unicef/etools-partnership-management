@@ -8,7 +8,7 @@ import {property} from '@polymer/decorators';
  * @mixinFunction
  */
 function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class indicatorsCommonClass extends baseClass {
+  class IndicatorsCommonClass extends baseClass {
 
     @property({type: String}) // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
     numberPattern: string = '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)'
@@ -78,6 +78,6 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
 
   }
 
-  return indicatorsCommonClass;
+  return IndicatorsCommonClass;
 }
 export default IndicatorsCommonMixin;

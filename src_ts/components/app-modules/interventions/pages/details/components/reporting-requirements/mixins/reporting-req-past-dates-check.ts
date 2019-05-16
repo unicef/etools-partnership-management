@@ -12,7 +12,7 @@ declare const moment: any;
  */
 function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class reportingReqPastDatesCheckClass extends baseClass {
+  class ReportingReqPastDatesCheckClass extends baseClass {
 
     @property({type: Boolean})
     inAmendment!: boolean;
@@ -45,7 +45,7 @@ function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(
     }
 
   }
-  return reportingReqPastDatesCheckClass;
+  return ReportingReqPastDatesCheckClass;
 }
 
 export default ReportingReqPastDatesCheckMixin;

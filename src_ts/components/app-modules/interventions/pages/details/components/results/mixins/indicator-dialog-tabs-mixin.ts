@@ -8,7 +8,7 @@ import {property} from '@polymer/decorators';
  * @mixinFunction
  */
 function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class indicatorDialogTabsClass extends baseClass {
+  class IndicatorDialogTabsClass extends baseClass {
 
     @property({type: Array})
     indicatorDataTabs: EtoolsTab[] = [
@@ -64,7 +64,7 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
     }
 
   }
-  return indicatorDialogTabsClass;
+  return IndicatorDialogTabsClass;
 }
 
 export default IndicatorDialogTabsMixin;

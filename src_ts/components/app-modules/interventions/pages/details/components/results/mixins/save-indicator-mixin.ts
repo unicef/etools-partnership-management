@@ -16,7 +16,7 @@ import {PolymerElement} from '@polymer/polymer';
  */
 function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   // @ts-ignore
-  class saveIndicatorClass extends EndpointsMixin(baseClass) {
+  class SaveIndicatorClass extends EndpointsMixin(baseClass) {
     [x: string]: any;
 
     // @ts-ignore
@@ -235,7 +235,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       return JSON.parse(JSON.stringify(this[modelName]));
     }
   }
-  return saveIndicatorClass;
+  return SaveIndicatorClass;
 }
 
 export default SaveIndicatorMixin;

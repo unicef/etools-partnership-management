@@ -15,7 +15,7 @@ import {property} from '@polymer/decorators';
  */
 function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class reportingRequirementsCommon extends EndpointsMixin(baseClass) {
+  class ReportingRequirementsCommon extends EndpointsMixin(baseClass) {
 
     @property({type: Array})
     reportingRequirements: [] = [];
@@ -87,7 +87,7 @@ function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>
       this.set('reportingRequirements', e.detail);
     }
   }
-  return reportingRequirementsCommon;
+  return ReportingRequirementsCommon;
 }
 
 

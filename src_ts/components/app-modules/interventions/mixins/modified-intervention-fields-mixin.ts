@@ -10,7 +10,7 @@ import {arraysAreEqual} from '../../../utils/utils';
  * @mixinFunction
  */
 function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class modifiedInterventionFieldsClass extends baseClass {
+  class ModifiedInterventionFieldsClass extends baseClass {
   /* eslint-enable arrow-parens */
     _objectFieldIsModified(fieldName: string) {
       // @ts-ignore
@@ -94,7 +94,7 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
     }
 
   }
-  return modifiedInterventionFieldsClass;
+  return ModifiedInterventionFieldsClass;
 }
 
 export default ModifiedInterventionFieldsMixin;

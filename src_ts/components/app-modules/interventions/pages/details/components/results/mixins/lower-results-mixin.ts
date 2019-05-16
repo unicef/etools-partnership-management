@@ -10,7 +10,7 @@ import {PdLowerResultNameEl} from '../pd-lower-result-name';
  * @mixinFunction
  */
 function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class lowerResultsClass extends baseClass {
+  class LowerResultsClass extends baseClass {
 
     @property({type: Object})
     lowerResultNameEditElem!: PdLowerResultNameEl;
@@ -141,7 +141,7 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
     }
 
   }
-  return lowerResultsClass;
+  return LowerResultsClass;
 }
 
 export default LowerResultsMixin;

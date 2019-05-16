@@ -16,7 +16,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin ReduxPermissionsUpdaterMixin
  */
 function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class interventionPermissionsClass extends baseClass {
+  class InterventionPermissionsClass extends baseClass {
 
     /* eslint-enable arrow-parens */
     @property({type: Object})
@@ -261,7 +261,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
     }
 
   }
-  return interventionPermissionsClass;
+  return InterventionPermissionsClass;
 }
 
 

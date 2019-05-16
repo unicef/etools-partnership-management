@@ -20,7 +20,7 @@ import InterventionReviewAndSign from '../pages/review-and-sign/intervention-rev
  * @appliesMixin ModifiedInterventionFieldsMixin
  */
 function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class saveInterventionClass extends ModifiedInterventionFieldsMixin(baseClass as Constructor<PolymerElement>) {
+  class SaveInterventionClass extends ModifiedInterventionFieldsMixin(baseClass as Constructor<PolymerElement>) {
 
     // --- *Defined in the component
     intervention!: Intervention;
@@ -210,7 +210,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
       (this.$.interventionData as InterventionItemData).saveIntervention(terminationData);
     }
   }
-  return saveInterventionClass;
+  return SaveInterventionClass;
 }
 
 
