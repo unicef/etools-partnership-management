@@ -2,7 +2,7 @@ import {logWarn} from 'etools-behaviors/etools-logging.js';
 declare const moment: any;
 
 export function prettyDate(dateString: string, format?: string, placeholder?: string) {
-  let date = convertDate(dateString);
+  const date = convertDate(dateString);
   return (!date) ? (placeholder ? placeholder : ''): _utcDate(date, format);
 }
 
@@ -23,8 +23,8 @@ export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
      * @type {string}
      */
     dateString += (noZTimezoneOffset || dateString.indexOf('Z') >= 0) ? '' : 'Z';
-    let date = new Date(dateString);
-    let isValid = isValidDate(date);
+    const date = new Date(dateString);
+    const isValid = isValidDate(date);
     if (!isValid) {
       logWarn('Date conversion unsuccessful: ' + dateString);
     }
@@ -34,7 +34,7 @@ export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
 }
 
 function _getDateWithoutTimezoneOffset(date: any) {
-  let userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  const userTimezoneOffset = date.getTimezoneOffset() * 60000;
   return new Date(date.getTime() + userTimezoneOffset);
 }
 
@@ -44,7 +44,7 @@ function _getDateWithoutTimezoneOffset(date: any) {
  * (eliminates the issue when the selected date was displayed +-1 day)
  */
 export function prepareDatepickerDate(dateString: string) {
-  let date = convertDate(dateString);
+  const date = convertDate(dateString);
   if (!date) {
     return null;
   }
@@ -65,8 +65,8 @@ export function dateDiff(firstDate: any, secondDate: any, unit?: any) {
   }
 
   if (isValidDate(firstDate) && isValidDate(secondDate)) {
-    let mFirstDate = moment.utc(firstDate);
-    let mSecondDate = moment.utc(secondDate);
+    const mFirstDate = moment.utc(firstDate);
+    const mSecondDate = moment.utc(secondDate);
     return mSecondDate.diff(mFirstDate, unit);
   }
 
@@ -75,8 +75,8 @@ export function dateDiff(firstDate: any, secondDate: any, unit?: any) {
 
 export function getMaxDateStr(d1Str: string, d2Str: string) {
   // TODO: optimize this
-  let d1 = new Date(d1Str);
-  let d2 = new Date(d2Str);
+  const d1 = new Date(d1Str);
+  const d2 = new Date(d2Str);
   if (!isValidDate(d1) && isValidDate(d2)) {
     return d2Str;
   } else if (isValidDate(d1) && !isValidDate(d2)) {
@@ -97,15 +97,15 @@ export function isFutureDate(dateStr: string) {
 }
 
 export function dateIsBetween(start: any, end: any, current: any) {
-  let startDate = (start instanceof Date) ? start : new Date(start);
-  let endDate = (end instanceof Date) ? end : new Date(end);
+  const startDate = (start instanceof Date) ? start : new Date(start);
+  const endDate = (end instanceof Date) ? end : new Date(end);
 
   if (!isValidDate(startDate) || !isValidDate(endDate)) {
     throw new Error('Both start and end dates must valid.');
   }
-  let date = (current instanceof Date) ? current : new Date(current);
+  const date = (current instanceof Date) ? current : new Date(current);
 
-  let currentDate = isValidDate(date) ? moment() : moment(date);
+  const currentDate = isValidDate(date) ? moment() : moment(date);
   return currentDate.isBetween(moment(startDate), moment(endDate), 'day', '[]');
 }
 
@@ -137,7 +137,7 @@ export function EdgeAcceptableDateParse(strDt: any) {
     return date;
   }
 
-  let dtArr = strDt.split('-');
+  const dtArr = strDt.split('-');
   if (dtArr && dtArr.length) {
     let numericMonth = dtArr[1];
 

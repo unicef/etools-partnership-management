@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-icon-button/paper-icon-button';
 
@@ -11,10 +11,10 @@ import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-he
 
 import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
-import { fireEvent } from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { StaffMember } from '../../../../../../models/partners.models';
-import { AddEditStaffMembersEl } from './add-edit-staff-members';
+import {StaffMember} from '../../../../../../models/partners.models';
+import {AddEditStaffMembersEl} from './add-edit-staff-members';
 
 /**
  * @polymer

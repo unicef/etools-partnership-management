@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 
@@ -6,7 +6,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-tabs/paper-tabs';
 
 import {EtoolsTab} from '../../typings/globals.types';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -103,7 +103,7 @@ class EtoolsTabs extends PolymerElement {
     }
 
     this._debouncer = Debouncer.debounce(this._debouncer,
-        timeOut.after(50), () => (this.$.tabs as any).notifyResize());
+      timeOut.after(50), () => (this.$.tabs as any).notifyResize());
   }
 
 }

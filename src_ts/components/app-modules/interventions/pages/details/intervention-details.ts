@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
@@ -18,62 +18,62 @@ import '../../../../layout/year-dropdown.js';
 import UploadsMixin from '../../../../mixins/uploads-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
-import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin';
+import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin';
 import EnvironmentFlagsMixin from '../../../../environment-flags/environment-flags-mixin';
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
-import { Agreement } from '../../../agreements/agreement.types';
-import { Intervention, ExpectedResult, InterventionPermissionsFields, Location } from '../../../../../typings/intervention.types';
-import { fireEvent } from '../../../../utils/fire-custom-event';
-import { LabelAndValue, IPermission, GenericObject, Office, MinimalUser } from '../../../../../typings/globals.types';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store';
-import { pageCommonStyles } from '../../../../styles/page-common-styles';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../styles/shared-styles';
-import { requiredFieldStarredStyles } from '../../../../styles/required-field-styles';
-import { buttonsStyles } from '../../../../styles/buttons-styles';
-import { frWarningsStyles } from '../../styles/fr-warnings-styles';
-import { isEmptyObject, isJsonStrMatch, copy } from '../../../../utils/utils';
+import {Agreement} from '../../../agreements/agreement.types';
+import {Intervention, ExpectedResult, InterventionPermissionsFields, Location} from '../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {LabelAndValue, Permission, GenericObject, Office, MinimalUser} from '../../../../../typings/globals.types';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles';
+import {buttonsStyles} from '../../../../styles/buttons-styles';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles';
+import {isEmptyObject, isJsonStrMatch, copy} from '../../../../utils/utils';
 
 import './components/agreement-selector.js';
 import './components/planned-budget.js';
 import './components/results/expected-results.js';
 import './components/planned-visits.js';
-import { setPageDataPermissions } from '../../../../../actions/page-data.js';
+import {setPageDataPermissions} from '../../../../../actions/page-data.js';
 import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
-import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
-import { property } from '@polymer/decorators';
-import { ExpectedResultsEl } from './components/results/expected-results.js';
-import { AgreementSelector } from './components/agreement-selector.js';
-import { GroupedLocationsDialog } from './components/grouped-locations-dialog.js';
-import { PlannedBudgetEl } from './components/planned-budget.js';
-import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure.js';
-import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
-import { etoolsCpHeaderActionsBarStyles } from '../../../../styles/etools-cp-header-actions-bar-styles.js';
-import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import {property} from '@polymer/decorators';
+import {ExpectedResultsEl} from './components/results/expected-results.js';
+import {AgreementSelector} from './components/agreement-selector.js';
+import {GroupedLocationsDialog} from './components/grouped-locations-dialog.js';
+import {PlannedBudgetEl} from './components/planned-budget.js';
+import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
- * @appliesMixin StaffMembersData
+ * @appliesMixin StaffMembersDataMixin
  * @appliesMixin EnvironmentFlagsMixin
- * @appliesMixin MissingDropdownOptions
+ * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin UploadsMixin
  */
 class InterventionDetails extends connect(store)(
-    EnvironmentFlagsMixin(
-        CommonMixin(
-          UploadsMixin(
-            FrNumbersConsistencyMixin(
-              StaffMembersData(
-                MissingDropdownOptionsMixin(PolymerElement))))))) {
+  EnvironmentFlagsMixin(
+    CommonMixin(
+      UploadsMixin(
+        FrNumbersConsistencyMixin(
+          StaffMembersDataMixin(
+            MissingDropdownOptionsMixin(PolymerElement))))))) {
 
   static get template() {
     return html`
@@ -169,7 +169,8 @@ class InterventionDetails extends connect(store)(
 
         </div>
 
-        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type, intervention.status)]]">
+        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type,
+                                                                          intervention.status)]]">
           <year-dropdown id="ref-year"
                         label="Ref. Year"
                         selected-year="{{intervention.reference_number_year}}">
@@ -259,7 +260,8 @@ class InterventionDetails extends connect(store)(
                         on-upload-finished="_activationLetterUploadFinished"
                         on-upload-started="_onUploadStarted"
                         hidden$="[[_isDraft(intervention.status)]]"
-                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status, permissions.edit.activation_letter_attachment)]]"
+                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status,
+                                          permissions.edit.activation_letter_attachment)]]"
                         on-delete-file="_activationLetterDelete"
                         on-change-unsaved-file="_onChangeUnsavedFile">
           </etools-upload>
@@ -389,7 +391,8 @@ class InterventionDetails extends connect(store)(
              hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]" on-click="exportExpectedResults">
                    Export
             </paper-button>
-            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links, permissions.edit.result_links)]]"></div>
+            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links,
+                                              permissions.edit.result_links)]]"></div>
             <paper-toggle-button id="showInactive"
                                 hidden$="[[!thereAreInactiveIndicators]]"
                                 checked="{{showInactiveIndicators}}">
@@ -460,7 +463,7 @@ class InterventionDetails extends connect(store)(
   userEditPermission!: boolean;
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   @property({type: Number, notify: true, observer: InterventionDetails.prototype._selectedPartnerIdChanged})
   selectedPartnerId!: number;
@@ -493,7 +496,7 @@ class InterventionDetails extends connect(store)(
   originalIntervention!: Intervention;
 
   @property({type: Boolean})
-  interventionRequiredField: Boolean = false; // TODO is this used?
+  interventionRequiredField: boolean = false; // TODO is this used?
 
   @property({type: Boolean})
   newIntervention!: boolean;
@@ -524,7 +527,7 @@ class InterventionDetails extends connect(store)(
   static get observers() {
     return [
       '_newInterventionFlagChanged(newIntervention)',
-        '_setYears(intervention.start, intervention.end)',
+      '_setYears(intervention.start, intervention.end)',
       '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
       'intervention.start, intervention.status)',
       '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
@@ -619,7 +622,7 @@ class InterventionDetails extends connect(store)(
   }
 
   openCpOutputAndRamIndicatorsDialog() {
-    let expectedResultsElem = this.shadowRoot!.querySelector('#expectedResults') as unknown as ExpectedResultsEl;
+    const expectedResultsElem = this.shadowRoot!.querySelector('#expectedResults') as unknown as ExpectedResultsEl;
     if (!expectedResultsElem) {
       return;
     }
@@ -685,8 +688,8 @@ class InterventionDetails extends connect(store)(
     if (!(documentTypes instanceof Array && documentTypes.length)) {
       return;
     }
-    let pcaTypes: LabelAndValue[] = [];
-    let ssfaTypes: LabelAndValue[] = [];
+    const pcaTypes: LabelAndValue[] = [];
+    const ssfaTypes: LabelAndValue[] = [];
     documentTypes.forEach((type) => {
       if (type.value !== CONSTANTS.DOCUMENT_TYPES.SSFA) {
         pcaTypes.push(type);
@@ -722,7 +725,7 @@ class InterventionDetails extends connect(store)(
     (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
     (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
-    let fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
+    const fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
       'partnerFocalPts', 'intStart', 'intEnd'];
     if (!this._isIE()) {
       fields.push('title');
@@ -737,13 +740,13 @@ class InterventionDetails extends connect(store)(
   }
 
   _isIE() {
-    let appShell = document.querySelector('app-shell');
+    const appShell = document.querySelector('app-shell');
     return appShell!.classList.contains('ie');
   }
 
   _resetIETitleFieldValidation() {
-    let isIE = this._isIE();
-    let title = this.shadowRoot!.querySelector('#title') as PolymerElement;
+    const isIE = this._isIE();
+    const title = this.shadowRoot!.querySelector('#title') as PolymerElement;
     if (title && isIE) {
       // IE11 #title style force update
       setTimeout(() => {
@@ -762,8 +765,8 @@ class InterventionDetails extends connect(store)(
         && typeof interventionEnd === 'string' && interventionEnd !== '') {
 
       let start = parseInt(interventionStart.substr(0, 4), 10);
-      let end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
-      let years = [];
+      const end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
+      const years = [];
       while (start <= end) {
         years.push({
           value: start,
@@ -794,7 +797,7 @@ class InterventionDetails extends connect(store)(
     // reset partner focal points options and value
     this.set('intervention.partner_focal_points', []);
     this.set('staffMembers', []);
-    let partnerFpDropDown = this.$.partnerFocalPts as unknown as EtoolsDropdownEl;
+    const partnerFpDropDown = this.$.partnerFocalPts as unknown as EtoolsDropdownEl;
     if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
       partnerFpDropDown.selected = null;
     }
@@ -833,7 +836,7 @@ class InterventionDetails extends connect(store)(
       this.set('intervention.document_type', null);
       return;
     }
-    let selIsInOptions = options.find(o => o.value === this.intervention.document_type);
+    const selIsInOptions = options.find(o => o.value === this.intervention.document_type);
     if (!selIsInOptions) {
       this.set('intervention.document_type', null);
     }
@@ -841,7 +844,7 @@ class InterventionDetails extends connect(store)(
 
   validate() {
     let valid = true;
-    let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
+    const fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
       '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
 
     if (this._isContingencyAndHasActivationLetter() || this.intervention.status === 'active') {
@@ -852,7 +855,7 @@ class InterventionDetails extends connect(store)(
       fieldSelectors.push('#ref-year');
     }
     fieldSelectors.forEach((selector: string) => {
-      let field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }
@@ -871,8 +874,8 @@ class InterventionDetails extends connect(store)(
 
   _daysUntilExpiry(end: string) {
     if (isFutureDate(end)) {
-      let today = new Date().toString();
-      let diff = dateDiff(today, end);
+      const today = new Date().toString();
+      const diff = dateDiff(today, end);
       if (diff) {
         return diff + ' days until expiry';
       }
@@ -888,7 +891,7 @@ class InterventionDetails extends connect(store)(
       return;
     }
     this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-        frsEarliestStartDate, this.frsValidationFields.start_date, true));
+      frsEarliestStartDate, this.frsValidationFields.start_date, true));
     (this.$.intStart as PolymerElement).updateStyles();
   }
 
@@ -900,7 +903,7 @@ class InterventionDetails extends connect(store)(
       return;
     }
     this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
-        frsLatestEndDate, this.frsValidationFields.end_date, true));
+      frsLatestEndDate, this.frsValidationFields.end_date, true));
     (this.$.intEnd as PolymerElement).updateStyles();
   }
 
@@ -917,7 +920,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _extractClusterNamesFromIndicators() {
-    let clusterNames = new Set();
+    const clusterNames = new Set();
 
     this.intervention.result_links.forEach((rl: ExpectedResult) => {
       if (isEmptyObject(rl.ll_results)) {
@@ -976,8 +979,8 @@ class InterventionDetails extends connect(store)(
 
   showExportResults(status: string, resultLinks: []) {
     return [CONSTANTS.STATUSES.Draft.toLowerCase(),
-            CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
+      CONSTANTS.STATUSES.Signed.toLowerCase(),
+      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
             && resultLinks && resultLinks.length;
   }
 
@@ -988,7 +991,7 @@ class InterventionDetails extends connect(store)(
 
   exportExpectedResults() {
     // @ts-ignore
-    let endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
+    const endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
     window.open(endpoint, '_blank');
   }
 

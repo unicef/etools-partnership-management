@@ -1,7 +1,7 @@
 import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import { Intervention, ListItemIntervention, FrsDetails, Fr } from '../../../../typings/intervention.types';
-import { Constructor, GenericObject } from '../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Intervention, ListItemIntervention, FrsDetails, Fr} from '../../../../typings/intervention.types';
+import {Constructor, GenericObject} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 
 /**
@@ -10,37 +10,37 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EtoolsCurrency
  */
 function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superClass: T) {
-  class frNumbersConsistencyClass extends EtoolsCurrency(superClass as Constructor<PolymerElement>)  {
+  class FrNumbersConsistencyClass extends EtoolsCurrency(superClass as Constructor<PolymerElement>) {
     @property({type: Object})
     frsConsistencyWarnings: GenericObject = {
-        amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution can not be compared.',
-        tooManyFrsCurencies: 'More than 1 FR currency is available.',
-        amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
-        currencyMismatch: 'FR currency does not match PD/SSFA currency.',
-        cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
-        addedFrsCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
+      amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution can not be compared.',
+      tooManyFrsCurencies: 'More than 1 FR currency is available.',
+      amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
+      currencyMismatch: 'FR currency does not match PD/SSFA currency.',
+      cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
+      addedFrsCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
         'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
         'as the FR.\n',
-        amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
-        dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
-        warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
-        FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
-      };
+      amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
+      dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
+      warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
+      FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
+    };
     @property({type: Object})
     frsValidationFields: GenericObject = {
-        start_date: 'Start Date',
-        end_date: 'End Date',
-        pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
-        fr_earliest_date: 'FR Start Date',
-        fr_latest_date: 'FR End Date',
-        fr_total_amount: 'Total FR amount'
-      }
+      start_date: 'Start Date',
+      end_date: 'End Date',
+      pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
+      fr_earliest_date: 'FR Start Date',
+      fr_latest_date: 'FR End Date',
+      fr_total_amount: 'Total FR amount'
+    }
 
     /*
     * frs currencies and planned budget currency check
     */
     _frsAndPlannedBudgetCurrenciesMatch(frs: Fr[], plannedBudgetCurrency: string) {
-      let differentFrCurrencies = frs.filter(fr => fr.currency !== plannedBudgetCurrency);
+      const differentFrCurrencies = frs.filter(fr => fr.currency !== plannedBudgetCurrency);
       return differentFrCurrencies.length === 0;
     }
 
@@ -48,8 +48,8 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
      * Check for currency mismatch in frs list
      */
     _frsCurrenciesMatch(frs: Fr[]) {
-      let firstFrCurrency = frs[0].currency;
-      let diff = frs.filter(fr => fr.currency !== firstFrCurrency);
+      const firstFrCurrency = frs[0].currency;
+      const diff = frs.filter(fr => fr.currency !== firstFrCurrency);
       return diff.length === 0;
     }
 
@@ -61,8 +61,8 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
         return false;
       }
 
-      let warnFrsFields = []; // FR fields
-      let warnIntervFields = []; // PD/SSFA fields
+      const warnFrsFields = []; // FR fields
+      const warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
         warnFrsFields.push(this.frsValidationFields.fr_earliest_date);
         warnIntervFields.push(this.frsValidationFields.start_date);
@@ -77,7 +77,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       if (this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, intervention.planned_budget!.currency as string)) {
         // currencies are the same => check amounts consistency
         if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget!.unicef_cash_local as string,
-                frsDetails.total_frs_amt as unknown as string, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
+          frsDetails.total_frs_amt as unknown as string, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
           warnFrsFields.push(this.frsValidationFields.fr_total_amount);
           warnIntervFields.push(this.frsValidationFields.pd_unicef_cash_contribution);
         }
@@ -90,17 +90,17 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
         computedWarning += this.frsConsistencyWarnings.warningTmpl;
         computedWarning = this._buildFrsWarningMsg(computedWarning, '<<frs_fields>>', warnFrsFields.join(', '));
         computedWarning = this._buildFrsWarningMsg(computedWarning, '<<verb>>',
-            warnFrsFields.length > 1 ? 'are' : 'is');
+          warnFrsFields.length > 1 ? 'are' : 'is');
         computedWarning = this._buildFrsWarningMsg(computedWarning, '<<pd_fields>>', warnIntervFields.join(', '));
       }
       return computedWarning !== '' ? computedWarning : false;
     }
 
     checkFrsAndUnicefCashAmountsConsistency(unicefCash: string, frsTotalAmt: string, intervention: Intervention,
-                                            interventionIsFromWhere: string, returnMsg: boolean,
-                                            skipEmptyListCheck?: boolean) {
+      interventionIsFromWhere: string, returnMsg: boolean,
+      skipEmptyListCheck?: boolean) {
       if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere,
-              skipEmptyListCheck)) {
+        skipEmptyListCheck)) {
         return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }
       return false;
@@ -110,13 +110,13 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
      * skipEmptyListCheck - skip required when in the process of adding a new FR number
      */
     validateFrsVsUnicefCashAmounts(unicefCash: string, frsTotalAmt: string, intervention: Intervention,
-                                    interventionIsFromWhere: string, skipEmptyListCheck?: boolean) {
+      interventionIsFromWhere: string, skipEmptyListCheck?: boolean) {
       if (intervention.status === 'closed'
           || (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere))) {
         return true;
       }
-      let totalUnicefContribution = parseFloat(unicefCash);
-      let totalFrsAmount = parseFloat(frsTotalAmt);
+      const totalUnicefContribution = parseFloat(unicefCash);
+      const totalFrsAmount = parseFloat(frsTotalAmt);
 
       return totalUnicefContribution === totalFrsAmount;
     }
@@ -125,9 +125,9 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       fieldName?: string, returnMsg?: boolean) {
       if (!this.validateFrsVsInterventionDates(intervDateStr, frsDateStr)) {
         return returnMsg
-            ? this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
-                '<<field_name>>', fieldName as string)
-            : true;
+          ? this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
+            '<<field_name>>', fieldName as string)
+          : true;
       }
       return false;
     }
@@ -150,12 +150,12 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
 
     getFrsStartDateValidationMsg() {
       return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', this.frsValidationFields.start_date);
+        '<<field_name>>', this.frsValidationFields.start_date);
     }
 
     getFrsEndDateValidationMsg() {
       return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', this.frsValidationFields.end_date);
+        '<<field_name>>', this.frsValidationFields.end_date);
     }
 
     frsConsistencyWarningIsActive(active: boolean) {
@@ -194,7 +194,7 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
 
     hideFrsAmountTooltip(frsCurrencyMatch: boolean, frs: any,
       plannedBudgetCurrency: string, frsTotalAmountWarning: string) {
-      let allCurrenciesMatch = this.allCurrenciesMatch(frsCurrencyMatch, frs, plannedBudgetCurrency);
+      const allCurrenciesMatch = this.allCurrenciesMatch(frsCurrencyMatch, frs, plannedBudgetCurrency);
       return !allCurrenciesMatch || !frsTotalAmountWarning;
     }
 
@@ -206,12 +206,12 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
     }
 
     getFrsValueNAClass(valIsAvailable: boolean, negateFlagValFirst: boolean) {
-      let isAvailable = negateFlagValFirst ? !valIsAvailable : valIsAvailable;
+      const isAvailable = negateFlagValFirst ? !valIsAvailable : valIsAvailable;
       return isAvailable ? '' : 'fr-val-not-available';
     }
 
     getFrsCurrencyTooltipMsg(frsCurrencyMatch: boolean) {
-      let tooManyCurrenciesMsg = this.frsConsistencyWarnings.tooManyFrsCurencies + '\n' +
+      const tooManyCurrenciesMsg = this.frsConsistencyWarnings.tooManyFrsCurencies + '\n' +
           this.frsConsistencyWarnings.amountAndDisbursementNotDisplayed;
       return !frsCurrencyMatch ? tooManyCurrenciesMsg : this.frsConsistencyWarnings.currencyMismatch;
     }
@@ -228,13 +228,13 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
      */
     _allCurrenciesAreConsistent(allCurrenciesAreConsistent: any) {
       return typeof allCurrenciesAreConsistent === 'boolean'
-          ? allCurrenciesAreConsistent
-          : true;
+        ? allCurrenciesAreConsistent
+        : true;
     }
 
     hideIntListUnicefCashAmountTooltip(allCurrenciesAreConsistent: any, unicefCash: string,
       frsTotalAmt: string, intervention: Intervention) {
-      let consistentCurrencies = this._allCurrenciesAreConsistent(allCurrenciesAreConsistent);
+      const consistentCurrencies = this._allCurrenciesAreConsistent(allCurrenciesAreConsistent);
       if (consistentCurrencies) {
         return this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, 'interventionsList');
       }
@@ -250,9 +250,9 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       if (this._allCurrenciesAreConsistent(allCurrenciesAreConsistent)) {
         return this.getFrsTotalAmountInconsistencyMsg();
       }
-      let msg = !frsCurrenciesAreConsistent
-          ? this.frsConsistencyWarnings.tooManyFrsCurencies
-          : this.frsConsistencyWarnings.currencyMismatch;
+      const msg = !frsCurrenciesAreConsistent
+        ? this.frsConsistencyWarnings.tooManyFrsCurencies
+        : this.frsConsistencyWarnings.currencyMismatch;
       return msg + '\n' + this.frsConsistencyWarnings.amountsCannotBeCompared;
     }
 
@@ -260,9 +260,9 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       return this.frsConsistencyWarnings.FCmultiCurrFlagErrorMsg;
     }
 
-  };
+  }
 
-  return frNumbersConsistencyClass;
+  return FrNumbersConsistencyClass;
 }
 
 

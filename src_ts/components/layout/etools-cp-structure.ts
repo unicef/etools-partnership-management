@@ -4,14 +4,14 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
-import 'etools-dropdown/etools-dropdown'
+import 'etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../store';
-import {SharedStyles} from '../styles/shared-styles'
-import {requiredFieldStarredStyles} from '../styles/required-field-styles'
+import {SharedStyles} from '../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
 import {CpStructure, GenericObject} from '../../typings/globals.types';
 import {logWarn} from 'etools-behaviors/etools-logging.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -87,7 +87,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
     }
   }
 
-  _getCurrentCountryProgramme(cpOptions: Array<CpStructure>) {
+  _getCurrentCountryProgramme(cpOptions: CpStructure[]) {
     if (isEmptyObject(cpOptions)) {
       return null;
     }
@@ -106,33 +106,33 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
       return;
     }
 
-    let currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
+    const currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
 
     this.set('selectedCp', currentCP ? currentCP.id : null);
   }
 
-  _countryProgrammesChanged(_countryProgrammes: Array<CpStructure>, appModuleItem: any) {
+  _countryProgrammesChanged(_countryProgrammes: CpStructure[], appModuleItem: any) {
     this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer,
-        timeOut.after(10),
-        () => {
-          if (appModuleItem) {
-            this._prepareCpsForDisplay();
+      timeOut.after(10),
+      () => {
+        if (appModuleItem) {
+          this._prepareCpsForDisplay();
 
-            if (!this.selectedCp) {
-              this.setDefaultSelectedCpStructure();
-            } else {
-              if (this._hasExpiredCpAssigned(this.selectedCp)) {
-                logWarn(this._getExpiredCPWarning());
-              }
+          if (!this.selectedCp) {
+            this.setDefaultSelectedCpStructure();
+          } else {
+            if (this._hasExpiredCpAssigned(this.selectedCp)) {
+              logWarn(this._getExpiredCPWarning());
             }
           }
-        });
+        }
+      });
   }
 
   _prepareCpsForDisplay() {
-    let displayableCps = orderBy(this.countryProgrammes,
-        ['future', 'active', 'special'],
-        ['desc', 'desc', 'asc']);
+    const displayableCps = orderBy(this.countryProgrammes,
+      ['future', 'active', 'special'],
+      ['desc', 'desc', 'asc']);
 
     // NOTE: Do not remove this code yet, it might be restored in the future
     // if (!this.appModuleItem || !this.appModuleItem.id) {
@@ -176,33 +176,33 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
     let msg = '';
     switch (this.module) {
       case 'agreements':
-        msg = 'Agreement ' +  this.appModuleItem ? this.appModuleItem!.agreement_number : '';
+        msg = 'Agreement ' + this.appModuleItem ? this.appModuleItem!.agreement_number : '';
         break;
       case 'interventions':
-        msg = 'PD/SSFA ' +  this.appModuleItem ? this.appModuleItem!.number : '';
+        msg = 'PD/SSFA ' + this.appModuleItem ? this.appModuleItem!.number : '';
         break;
     }
     return msg + ' has an old/expired CP Structure!';
   }
 
   resetCpDropdownInvalidState() {
-    let cp = this._getCpStructureDropdown();
+    const cp = this._getCpStructureDropdown();
     if (cp) {
       cp.resetInvalidState();
     }
   }
 
   validate() {
-    let cp = this._getCpStructureDropdown();
+    const cp = this._getCpStructureDropdown();
     return cp ? cp.validate() : true;
   }
 
   _getCpStructureDropdown() {
     return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
-                                                         {
-                                                           resetInvalidState(): void,
-                                                           validate(): boolean
-                                                         };
+    {
+      resetInvalidState(): void;
+      validate(): boolean;
+    };
   }
 
 }

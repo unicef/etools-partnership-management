@@ -1,6 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * page footer element

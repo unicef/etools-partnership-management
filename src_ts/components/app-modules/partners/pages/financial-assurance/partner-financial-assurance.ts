@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-input/paper-input.js'
+import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-data-table/etools-data-table.js';
@@ -18,7 +18,7 @@ import CommonMixin from '../../../../mixins/common-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
 declare const moment: any;
@@ -28,8 +28,8 @@ import './components/assessments-items.js';
 import '../../../../layout/monitoring-visits-list.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { PartnerAssessment } from '../../../../../models/partners.models.js';
-import { LabelAndValue } from '../../../../../typings/globals.types.js';
+import {PartnerAssessment} from '../../../../../models/partners.models.js';
+import {LabelAndValue} from '../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -42,8 +42,8 @@ import { LabelAndValue } from '../../../../../typings/globals.types.js';
  * @appliesMixin PaginationMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin
-(PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
+class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(
+  PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`
@@ -443,7 +443,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
   @property({type: Array})
   allEngagements: any[] = [];
 
-  @property({type: Object,  reflectToAttribute: true, observer: '_partnerReceived'})
+  @property({type: Object, reflectToAttribute: true, observer: '_partnerReceived'})
   partner: any = {};
 
   @property({type: Object})
@@ -453,7 +453,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
   basisOptions: any[] = [];
 
   @property({type: Array})
-  auditOptions: any[] = [ { label: 'NO', value: 'NO' }, { label: 'YES', value: 'YES' } ];
+  auditOptions: any[] = [{label: 'NO', value: 'NO'}, {label: 'YES', value: 'YES'}];
 
   @property({type: Boolean})
   editMode!: boolean;
@@ -525,12 +525,12 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     if (!partner || !partner.id) {
       return;
     }
-    let requestOptions = this._getEngagementsRequestOptions(partner.id);
+    const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
     this.sendRequest(requestOptions)
-        .then((results: any) => this._init(results))
-        // @ts-ignore
-        .catch((err: any) => this.handleErrorResponse(err));
+      .then((results: any) => this._init(results))
+    // @ts-ignore
+      .catch((err: any) => this.handleErrorResponse(err));
 
     this.set('basisOptions', []);
     this._addBasisFromPartner();
@@ -562,8 +562,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     }
     let engagements = this.allEngagements;
     engagements = engagements
-        .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-        .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+      .sort((a, b) => moment(b.status_date) - moment(a.status_date))
+      .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.set('engagements', engagements);
   }
 
@@ -588,7 +588,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
-        : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+      : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
   public _disableBasisForRiskRating(editMode: boolean, typeOfAssessment: any, rating: any) {
@@ -606,14 +606,14 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
   }
 
   _updateBassisForRiskRatingOptions(oldAssessm: PartnerAssessment, updatedAssessm: PartnerAssessment) {
-    let oldBasisTxt = `${oldAssessm.type} - ${this.getDateDisplayValue(oldAssessm.completed_date!)}`;
-    let updatedBasisTxt = `${updatedAssessm.type} - ${this.getDateDisplayValue(updatedAssessm.completed_date!)}`;
+    const oldBasisTxt = `${oldAssessm.type} - ${this.getDateDisplayValue(oldAssessm.completed_date!)}`;
+    const updatedBasisTxt = `${updatedAssessm.type} - ${this.getDateDisplayValue(updatedAssessm.completed_date!)}`;
 
     if (this.partner.basis_for_risk_rating === oldBasisTxt) {
       fireEvent(this, 'assessment-updated-step3', updatedBasisTxt);
 
     } else {
-      let index = this.basisOptions.findIndex((b: LabelAndValue) => b.label === oldBasisTxt);
+      const index = this.basisOptions.findIndex((b: LabelAndValue) => b.label === oldBasisTxt);
       this.splice('basisOptions', index, 1, {label: updatedBasisTxt, value: updatedBasisTxt});
     }
 
@@ -623,10 +623,10 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     if (!e.detail || !Object.keys(e.detail)) {
       return;
     }
-    let basisVal = `${e.detail.type} - ${this.getDateDisplayValue(e.detail.completed_date!)}`;
+    const basisVal = `${e.detail.type} - ${this.getDateDisplayValue(e.detail.completed_date!)}`;
 
     this.push('basisOptions', {
-      value:  basisVal,
+      value: basisVal,
       label: basisVal
     });
   }

@@ -1,7 +1,7 @@
-import { fireEvent } from '../utils/fire-custom-event.js';
+import {fireEvent} from '../utils/fire-custom-event.js';
 
-const globalMessage: string = 'An error occurred. Please try again later.';
-const httpStatus413Msg: string = 'The uploaded file is too large!';
+const globalMessage = 'An error occurred. Please try again later.';
+const httpStatus413Msg = 'The uploaded file is too large!';
 
 export function tryGetResponseError(response: any) {
   if (response.status === 413) {
@@ -14,10 +14,10 @@ export function tryGetResponseError(response: any) {
 }
 
 export function getErrorsArray(errors: any, prepareForToastMsg: boolean) {
-  //@ts-ignore
-  let errorsArray: any = [];
+  // @ts-ignore
+  const errorsArray: any = [];
   if (!errors) {
-    //@ts-ignore
+    // @ts-ignore
     return errorsArray;
   }
 
@@ -35,11 +35,11 @@ export function getErrorsArray(errors: any, prepareForToastMsg: boolean) {
   }
 
   if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
-    errors.errors.forEach(function (err: any) {
+    errors.errors.forEach(function(err: any) {
       if (typeof err === 'object') {
-        let errKeys = Object.keys(err);
+        const errKeys = Object.keys(err);
         if (errKeys.length > 0) {
-          errKeys.forEach(function (k) {
+          errKeys.forEach(function(k) {
             errorsArray.push(err[k]); // will work only for strings
           });
         }
@@ -70,7 +70,7 @@ export function getErrorsArray(errors: any, prepareForToastMsg: boolean) {
       }
       if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
         let parentErr = 'Field ' + errField + ': ';
-        //@ts-ignore
+        // @ts-ignore
         let nestedErrs = getErrorsArray(errors[errField]);
         if (nestedErrs.length === 1) {
           parentErr += nestedErrs[0];
@@ -117,7 +117,7 @@ function _isArrayOfStrings(arr: any) {
 }
 
 export function formatServerErrorAsText(errors: any) {
-  let errorsArray = getErrorsArray(errors, false);
+  const errorsArray = getErrorsArray(errors, false);
   if (errorsArray && errorsArray.length) {
     return errorsArray.join('\n');
   }
@@ -130,8 +130,8 @@ export function parseRequestErrorsAndShowAsToastMsgs(error: any, source: any, re
     return;
   }
 
-  let errorResponse = tryGetResponseError(error);
-  let errorsString = formatServerErrorAsText(errorResponse);
+  const errorResponse = tryGetResponseError(error);
+  const errorsString = formatServerErrorAsText(errorResponse);
 
   showErrorAsToastMsg(errorsString, source);
 }

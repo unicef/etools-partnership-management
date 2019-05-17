@@ -1,10 +1,10 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/av-icons.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-status-common-mixin';
 import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
-import { fireEvent } from '../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 
 /**
@@ -45,35 +45,35 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
   @property({type: Array})
   possibleActions: any = [
-      {
+    {
       label: 'Save',
       hidden: true,
       primary: true,
       event: 'save-agreement'
       // save-agreement event is handeled by the parnent
-      },
-      {
-          label: 'Suspend',
-          hidden: true,
-          event: 'agreement-suspend-event'
-      },
-      {
-          label: 'Unsuspend',
-          hidden: true,
-          event: 'agreement-unsuspend-event'
-      },
-      {
-          label: 'Terminate',
-          hidden: true,
-          event: 'agreement-terminate-event'
-      },
-      {
-          label: 'Delete',
-          hidden: true,
-          event: 'agreement-delete-event'
-      }];
+    },
+    {
+      label: 'Suspend',
+      hidden: true,
+      event: 'agreement-suspend-event'
+    },
+    {
+      label: 'Unsuspend',
+      hidden: true,
+      event: 'agreement-unsuspend-event'
+    },
+    {
+      label: 'Terminate',
+      hidden: true,
+      event: 'agreement-terminate-event'
+    },
+    {
+      label: 'Delete',
+      hidden: true,
+      event: 'agreement-delete-event'
+    }];
 
-  @property({type:String})
+  @property({type: String})
   deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
 
 
@@ -92,7 +92,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
     this._createDeleteConfirmationDialog();
 
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm  as any);
+    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
 
     // has to be run async for shadycss to load
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -144,7 +144,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
     if (!this.editMode) {
       return;
     }
-    let availableOptions = [];
+    const availableOptions = [];
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
@@ -176,9 +176,9 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         break;
     }
 
-    for (let key in this.possibleActions) {
+    for (const key in this.possibleActions) {
       if (this.possibleActions[key].label) {
-        let actionName = this.possibleActions[key].label;
+        const actionName = this.possibleActions[key].label;
 
         if (availableOptions.indexOf(actionName) > -1) {
           this.set(['possibleActions', key, 'hidden'], false);
@@ -251,7 +251,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
     }
 
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
-      let workingStatusLabel = this.possibleStatuses[key].label;
+      const workingStatusLabel = this.possibleStatuses[key].label;
       if (workingStatusLabel === activeStatus && !this.newAgreement) {
         completedFlag = true;
       }
@@ -286,7 +286,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
       }
     }
     if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-          CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
       if (this.status !== CONSTANTS.STATUSES.Signed.toLowerCase()) {
         // prevent suspending or terminating anything other than signed agreement
         return false;

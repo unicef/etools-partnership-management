@@ -1,7 +1,7 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import {customElement, property} from '@polymer/decorators';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
@@ -14,29 +14,29 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin';
-import { SharedStyles } from '../../../../styles/shared-styles';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
-import { listFilterStyles } from '../../../../styles/list-filter-styles';
-import { frWarningsStyles } from '../../styles/fr-warnings-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {listFilterStyles} from '../../../../styles/list-filter-styles';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
 import {InterventionsListData} from '../../data/interventions-list-data.js';
-import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { LabelAndValue, CpStructure, MinimalUser } from '../../../../../typings/globals.types.js';
-import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
-import { ListFilterOption } from '../../../../../typings/filter.types.js';
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {LabelAndValue, CpStructure, MinimalUser} from '../../../../../typings/globals.types.js';
+import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
+import {ListFilterOption} from '../../../../../typings/filter.types.js';
 
 
-let _interventionsLastNavigated: string = '';
+let _interventionsLastNavigated = '';
 
 /**
  * @polymer
@@ -47,15 +47,14 @@ let _interventionsLastNavigated: string = '';
  * @appliesMixin FrNumbersConsistencyMixin
  * @appliesMixin PaginationMixin
  */
-@customElement('interventions-list')
-// @ts-ignore
+
 class InterventionsList extends connect(store)(
-   ListFiltersMixin(
-     ListsCommonMixin(
+  ListFiltersMixin(
+    ListsCommonMixin(
       CommonMixin(
-          PaginationMixin(
-            FrNumbersConsistencyMixin(
-  PolymerElement)))))) {
+        PaginationMixin(
+          FrNumbersConsistencyMixin(
+            PolymerElement)))))) {
 
   static get template() {
     return html`
@@ -216,7 +215,8 @@ class InterventionsList extends connect(store)(
               <etools-info-tooltip class="fr-nr-warn"
                                   custom-icon
                                   icon-first
-                                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]">
+                                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start,
+                                                  intervention.frs_earliest_start_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -226,7 +226,8 @@ class InterventionsList extends connect(store)(
               <etools-info-tooltip class="fr-nr-warn"
                                     custom-icon
                                     icon-first
-                                    hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]">
+                                    hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end,
+                                                    intervention.frs_latest_end_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
@@ -250,7 +251,8 @@ class InterventionsList extends connect(store)(
                   class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
                   icon-first
                   custom-icon
-                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
+                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent,
+                                  intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
                 <span slot="field">
                   <span class="amount-currency">[[intervention.budget_currency]]</span>
                   <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
@@ -258,7 +260,8 @@ class InterventionsList extends connect(store)(
                 <iron-icon icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]"
                           slot="custom-icon"></iron-icon>
                 <span slot="message">
-                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent, intervention.fr_currencies_are_consistent)]]</span>
+                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent,
+                          intervention.fr_currencies_are_consistent)]]</span>
                 </span>
               </etools-info-tooltip>
             </div>
@@ -285,28 +288,28 @@ class InterventionsList extends connect(store)(
     `;
   }
 
-  @property({ type: Array, notify: true, observer: InterventionsList.prototype._listChanged })
+  @property({type: Array, notify: true, observer: InterventionsList.prototype._listChanged})
   filteredInterventions!: ListItemIntervention[];
 
-  @property({ type: Array })
+  @property({type: Array})
   documentTypes!: LabelAndValue[];
 
   @property({type: Array})
   selectedDocumentTypes: string[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   interventionStatuses!: LabelAndValue[];
 
   @property({type: Array})
   selectedStatuses: string[] = [];
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   startDate!: string;
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   endDate!: string;
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   endAfter!: string;
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
@@ -348,7 +351,7 @@ class InterventionsList extends connect(store)(
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedGrants: string[] = [];
 
-  @property({ type: String, notify: true })
+  @property({type: String, notify: true})
   csvDownloadQs!: string;
 
   @property({type: String})
@@ -423,8 +426,8 @@ class InterventionsList extends connect(store)(
   }
 
   _initFiltersMenuList(cpOutputs: number[], unicefUsersData: number[], donors: number[],
-                      grants: number[], countryProgrammes: number[], offices: number[],
-                      documentTypes: string[], sections: number[], interventionStatuses: string[]) {
+    grants: number[], countryProgrammes: number[], offices: number[],
+    documentTypes: string[], sections: number[], interventionStatuses: string[]) {
 
     if (!cpOutputs || !unicefUsersData || !donors || !grants || !countryProgrammes || !offices ||
         !documentTypes || !sections || !interventionStatuses) {
@@ -570,11 +573,11 @@ class InterventionsList extends connect(store)(
   // Initializes the properties of the list at page load
   // to the params interpretted from the URL string.
   _init(active: boolean) {
-    let urlQueryParams = this.urlParams;
+    const urlQueryParams = this.urlParams;
     if (!active || !urlQueryParams) {
       return;
     }
-    if(isEmptyObject(urlQueryParams)) {
+    if (isEmptyObject(urlQueryParams)) {
       urlQueryParams.status = 'draft|signed|active|ended|suspended';
     }
 
@@ -600,7 +603,7 @@ class InterventionsList extends connect(store)(
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
     // format of sort param is sort=field.order ex: sort=partner_name.asc
-    let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
+    const result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
     this.set('sortOrder', result);
     this.set('initComplete', true);
 
@@ -610,69 +613,69 @@ class InterventionsList extends connect(store)(
   // update selected filters(present in URL) at page refresh
   _updateSelectedFiltersValues() {
     this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
-        timeOut.after(100),
-        () => {
-          let filtersValues = [
-            {
-              filterName: 'Status',
-              selectedValue: this.selectedStatuses
-            },
-            {
-              filterName: 'PD/SSFA Type',
-              selectedValue: this.selectedDocumentTypes
-            },
-            {
-              filterName: 'Sections',
-              selectedValue: this.selectedSections
-            },
-            {
-              filterName: 'Offices',
-              selectedValue: this.selectedOffices
-            },
-            {
-              filterName: 'CP Structure',
-              selectedValue: this.selectedCPStructures
-            },
-            {
-              filterName: 'Country Programme Output',
-              selectedValue: this.selectedCpOutputs
-            },
-            {
-              filterName: 'Donors',
-              selectedValue: this.selectedDonors
-            },
-            {
-              filterName: 'Grants',
-              selectedValue: this.selectedGrants
-            },
-            {
-              filterName: 'UNICEF focal point',
-              selectedValue: this.selectedUnicefFocalPoints
-            },
-            {
-              filterName: 'Starts After',
-              selectedValue: this.startDate
-            },
-            {
-              filterName: 'Ends After',
-              selectedValue: this.endAfter
-            },
-            {
-              filterName: 'Ends Before',
-              selectedValue: this.endDate
-            }
-          ];
-          this.updateShownFilters(filtersValues);
-        });
+      timeOut.after(100),
+      () => {
+        const filtersValues = [
+          {
+            filterName: 'Status',
+            selectedValue: this.selectedStatuses
+          },
+          {
+            filterName: 'PD/SSFA Type',
+            selectedValue: this.selectedDocumentTypes
+          },
+          {
+            filterName: 'Sections',
+            selectedValue: this.selectedSections
+          },
+          {
+            filterName: 'Offices',
+            selectedValue: this.selectedOffices
+          },
+          {
+            filterName: 'CP Structure',
+            selectedValue: this.selectedCPStructures
+          },
+          {
+            filterName: 'Country Programme Output',
+            selectedValue: this.selectedCpOutputs
+          },
+          {
+            filterName: 'Donors',
+            selectedValue: this.selectedDonors
+          },
+          {
+            filterName: 'Grants',
+            selectedValue: this.selectedGrants
+          },
+          {
+            filterName: 'UNICEF focal point',
+            selectedValue: this.selectedUnicefFocalPoints
+          },
+          {
+            filterName: 'Starts After',
+            selectedValue: this.startDate
+          },
+          {
+            filterName: 'Ends After',
+            selectedValue: this.endAfter
+          },
+          {
+            filterName: 'Ends Before',
+            selectedValue: this.endDate
+          }
+        ];
+        this.updateShownFilters(filtersValues);
+      });
   }
 
   // Updates URL state with new query string, and launches query
   _updateUrlAndData() {
     if (this._canFilterData()) {
       this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
-      let qs = this._buildQueryString();
+      const qs = this._buildQueryString();
       this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated, qs,
-          this._filterListData.bind(this));
+        this._filterListData.bind(this));
       _interventionsLastNavigated = qs || _interventionsLastNavigated;
     }
   }
@@ -681,33 +684,33 @@ class InterventionsList extends connect(store)(
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
-        timeOut.after(this.debounceTime),
-        () => {
-          let interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
-          if (!interventions) {
-            return;
-          }
-          interventions.query(
-              this.sortOrder.field,
-              this.sortOrder.direction,
-              this.q.toLowerCase(),
-              this.selectedDocumentTypes,
-              this.selectedCpOutputs.map((cpo: number) => String(cpo)),
-              this.selectedDonors,
-              this.selectedGrants,
-              this.selectedStatuses,
-              this.selectedSections.map((s: number) => String(s)),
-              this.selectedUnicefFocalPoints.map((ufc: number) => String(ufc)),
-              this.selectedOffices.map((o: number) => String(o)),
-              this.selectedCPStructures,
-              this.startDate,
-              this.endDate,
-              this.endAfter,
-              this.paginator.page,
-              this.paginator.page_size,
-              forceNoLoading ? false : this.showQueryLoading
-          );
-        });
+      timeOut.after(this.debounceTime),
+      () => {
+        const interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
+        if (!interventions) {
+          return;
+        }
+        interventions.query(
+          this.sortOrder.field,
+          this.sortOrder.direction,
+          this.q.toLowerCase(),
+          this.selectedDocumentTypes,
+          this.selectedCpOutputs.map((cpo: number) => String(cpo)),
+          this.selectedDonors,
+          this.selectedGrants,
+          this.selectedStatuses,
+          this.selectedSections.map((s: number) => String(s)),
+          this.selectedUnicefFocalPoints.map((ufc: number) => String(ufc)),
+          this.selectedOffices.map((o: number) => String(o)),
+          this.selectedCPStructures,
+          this.startDate,
+          this.endDate,
+          this.endAfter,
+          this.paginator.page,
+          this.paginator.page_size,
+          forceNoLoading ? false : this.showQueryLoading
+        );
+      });
   }
 
   // Outputs the query string for the list
@@ -733,7 +736,7 @@ class InterventionsList extends connect(store)(
   }
 
   _buildCsvDownloadQueryString() {
-    let params = {
+    const params = {
       status: this.selectedStatuses,
       document_type: this.selectedDocumentTypes,
       sections: this.selectedSections,
@@ -777,3 +780,4 @@ class InterventionsList extends connect(store)(
 
 }
 
+window.customElements.define('interventions-list', InterventionsList);

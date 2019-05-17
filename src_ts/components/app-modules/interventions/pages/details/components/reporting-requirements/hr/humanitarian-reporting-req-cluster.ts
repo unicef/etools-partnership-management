@@ -1,14 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import uniq from 'lodash-es/uniq';
 import 'etools-data-table/etools-data-table.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../../../../../mixins/common-mixin';
-import { ResultLinkLowerResult, ExpectedResult } from '../../../../../../../../typings/intervention.types';
-import { isEmptyObject } from '../../../../../../../utils/utils';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles';
-import { logError } from 'etools-behaviors/etools-logging';
+import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typings/intervention.types';
+import {isEmptyObject} from '../../../../../../../utils/utils';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -16,7 +16,7 @@ import { property } from '@polymer/decorators';
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin Common
+ * @appliesMixin CommonMixin
  */
 class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(PolymerElement)) {
 
@@ -78,7 +78,7 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
       return;
     }
 
-    let clusterIndicIds = this._getClusterIndicIds();
+    const clusterIndicIds = this._getClusterIndicIds();
     if (isEmptyObject(clusterIndicIds)) {
       this.reportingRequirements = [];
       return;
@@ -100,7 +100,7 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
     if (isEmptyObject(this.expectedResults)) {
       return [];
     }
-    let clusterIndicIds: any[] = [];
+    const clusterIndicIds: any[] = [];
     this.expectedResults.forEach((r: ExpectedResult) => {
       return r.ll_results.forEach((llr: ResultLinkLowerResult) => {
         return llr.applied_indicators.forEach((i) => {
@@ -126,7 +126,7 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
       if (!dates.length) {
         return '';
       }
-      let formatedDates = dates.map(d => this.getDateDisplayValue(d));
+      const formatedDates = dates.map(d => this.getDateDisplayValue(d));
       return formatedDates.join(', ');
     } else {
       return this.getDateDisplayValue(dates);

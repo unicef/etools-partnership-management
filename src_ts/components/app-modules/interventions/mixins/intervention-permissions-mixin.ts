@@ -1,13 +1,13 @@
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import { Intervention, InterventionPermissionsFields } from '../../../../typings/intervention.types';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import {Intervention, InterventionPermissionsFields} from '../../../../typings/intervention.types';
 import CONSTANTS from '../../../../config/app-constants';
 import {store} from '../../../../store.js';
-import { setPageDataPermissions } from '../../../../actions/page-data';
-import { isEmptyObject } from '../../../utils/utils';
-import { fireEvent } from '../../../utils/fire-custom-event';
-import { Constructor, IPermission } from '../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {setPageDataPermissions} from '../../../../actions/page-data';
+import {isEmptyObject} from '../../../utils/utils';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {Constructor, Permission} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * PD/SSFA permissions mixin
@@ -16,14 +16,14 @@ import { property } from '@polymer/decorators';
  * @appliesMixin ReduxPermissionsUpdaterMixin
  */
 function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class interventionPermissionsClass extends baseClass {
+  class InterventionPermissionsClass extends baseClass {
 
     /* eslint-enable arrow-parens */
     @property({type: Object})
-    _intervNoEditPerm: IPermission<InterventionPermissionsFields> = {
-        edit: new InterventionPermissionsFields(),
-        required: new InterventionPermissionsFields()
-      };
+    _intervNoEditPerm: Permission<InterventionPermissionsFields> = {
+      edit: new InterventionPermissionsFields(),
+      required: new InterventionPermissionsFields()
+    };
 
 
     // ---*Defined in the component
@@ -48,12 +48,14 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
           this._restoreInterventionOriginalDataAndPermissions.bind(this);
 
       this.addEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft as EventListenerOrEventListenerObject);
-      this.addEventListener('restore-original-permissions', this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
+      this.addEventListener('restore-original-permissions',
+        this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
     }
 
     _removePermissionsListeners() {
       this.removeEventListener('signed-doc-change-for-draft', this._signedDocChangedForDraft as EventListenerOrEventListenerObject);
-      this.removeEventListener('restore-original-permissions', this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
+      this.removeEventListener('restore-original-permissions',
+        this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject);
     }
 
     _getNewIntervRequiredFields() {
@@ -61,7 +63,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
     }
 
     _getDraftToSignedRequiredFields(intervention: Intervention) {
-      let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
+      const fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
         'partner_authorized_officer_signatory', 'signed_by_partner_date',
         'signed_by_unicef_date', 'signed_pd_attachment'];
       if (!intervention.contingency_pd) {
@@ -76,16 +78,16 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
 
     _getNewInterventionPermissions() {
       // get a fresh reseted permissions list
-      let newIntervPerm = this._getNoEditPermissionsClone();
+      const newIntervPerm = this._getNoEditPermissionsClone();
       let fieldName;
       // set required fields
-      let reqFields = this._getNewIntervRequiredFields();
+      const reqFields = this._getNewIntervRequiredFields();
       for (fieldName in newIntervPerm.required) {
         if (reqFields.indexOf(fieldName) > -1) {
           newIntervPerm.required[fieldName] = true;
         }
       }
-      let notEditableFieldsForDraft = ['amendments', 'frs'];
+      const notEditableFieldsForDraft = ['amendments', 'frs'];
       // set editable fields
       for (fieldName in newIntervPerm.edit) {
         if (notEditableFieldsForDraft.indexOf(fieldName) === -1) {
@@ -95,7 +97,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       return newIntervPerm;
     }
 
-    _setPermissions(perm: IPermission<InterventionPermissionsFields>) {
+    _setPermissions(perm: Permission<InterventionPermissionsFields>) {
       this.set('intervention.permissions', perm);
       store.dispatch(setPageDataPermissions(perm));
       this._updateRelatedPermStyles();
@@ -105,8 +107,8 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
     _updateRelatedPermStyles(onlyDetails?: boolean, forceDetUiValidationOnAttach?: boolean,
       forceReviewUiValidationOnAttach?: boolean) {
       setTimeout(() => {
-        let details = this.shadowRoot!.querySelector('#interventionDetails') as PolymerElement & {validate(): boolean};
-        let reviewAndSign = this.shadowRoot!.querySelector('#interventionReviewAndSign') as PolymerElement & {validate(): boolean};
+        const details = this.shadowRoot!.querySelector('#interventionDetails') as PolymerElement & {validate(): boolean};
+        const reviewAndSign = this.shadowRoot!.querySelector('#interventionReviewAndSign') as PolymerElement & {validate(): boolean};
         if (details && typeof details.updateStyles === 'function') {
           details.updateStyles();
 
@@ -136,7 +138,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       this._setPermissions(this._getNoEditPermissionsClone());
     }
 
-    setInterventionPermissions(newIntervention: boolean, perm?: IPermission<InterventionPermissionsFields>) {
+    setInterventionPermissions(newIntervention: boolean, perm?: Permission<InterventionPermissionsFields>) {
       if (newIntervention) {
         this._setPermissions(this._getNewInterventionPermissions());
       } else {
@@ -148,9 +150,9 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
     }
 
     getDraftToSignedTransitionPermissions(intervention: Intervention) {
-      let currentPerm = intervention.permissions;
-      let reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields(intervention);
-      let perm = JSON.parse(JSON.stringify(currentPerm));
+      const currentPerm = intervention.permissions;
+      const reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields(intervention);
+      const perm = JSON.parse(JSON.stringify(currentPerm));
       reqFieldsForSignedStatus.forEach(function(field) {
         perm.required[field] = true;
         perm.edit[field] = true;
@@ -167,7 +169,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
         this.set('intervention.permissions.edit.planned_budget_unicef_cash', true);
       } else {
         this.set('intervention.permissions.edit.planned_budget_unicef_cash',
-            this.get('intervention.permissions.edit.planned_budget'));
+          this.get('intervention.permissions.edit.planned_budget'));
       }
       store.dispatch(setPageDataPermissions(this.intervention.permissions));
       this._updateRelatedPermStyles(true);
@@ -178,10 +180,10 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
      * new/unsaved amendments are deleted
      */
     restoreDetailsTabOriginalValuesRelatedToAmendments() {
-      let status = this.get('intervention.status');
+      const status = this.get('intervention.status');
 
       if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) === -1) {
+        CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) === -1) {
         return;
       }
       let fieldsToRestore = ['agreement', 'document_type', 'title', 'country_programme', 'sections',
@@ -190,11 +192,11 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
         fieldsToRestore = fieldsToRestore.concat(['start', 'end']);
       }
 
-      let unicefCashCopy = this.get('intervention.planned_budget.unicef_cash_local');
+      const unicefCashCopy = this.get('intervention.planned_budget.unicef_cash_local');
 
       fieldsToRestore.forEach((field: string) => {
-        let dataPath = 'intervention.' + field;
-        let originalDataPath = 'originalIntervention.' + field;
+        const dataPath = 'intervention.' + field;
+        const originalDataPath = 'originalIntervention.' + field;
         this.set(dataPath, JSON.parse(JSON.stringify(this.get(originalDataPath))));
         if (field === 'planned_budget' && status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
           // if planned_budget we need to make sure in signed status unicef_cash remains the same
@@ -229,7 +231,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       e.stopImmediatePropagation();
       if (e.detail.docSelected) {
         this.setInterventionPermissions(false,
-            this.getDraftToSignedTransitionPermissions(this.intervention));
+          this.getDraftToSignedTransitionPermissions(this.intervention));
       } else {
         if (!this._canRestoreOriginalPermissions()) {
           return;
@@ -237,11 +239,11 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
         this.setInterventionPermissions(false, this.originalIntervention.permissions);
         this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
         // update validation errors
-        let details = this.shadowRoot!.querySelector('#interventionDetails') as PolymerElement & {validate(): boolean};
+        const details = this.shadowRoot!.querySelector('#interventionDetails') as PolymerElement & {validate(): boolean};
         if (details && typeof details.validate === 'function') {
           details.validate();
         }
-        let reviewAndSign = this.shadowRoot!.querySelector('#interventionReviewAndSign') as PolymerElement & {validate(): boolean};
+        const reviewAndSign = this.shadowRoot!.querySelector('#interventionReviewAndSign') as PolymerElement & {validate(): boolean};
         if (reviewAndSign && typeof reviewAndSign.validate === 'function') {
           reviewAndSign.validate();
         }
@@ -258,8 +260,8 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
       this.restoreDetailsTabOriginalValuesRelatedToAmendments();
     }
 
-  };
-  return interventionPermissionsClass;
+  }
+  return InterventionPermissionsClass;
 }
 
 

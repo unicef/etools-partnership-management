@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -9,15 +9,15 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-currency-amount-input/etools-currency-amount-input.js';
 import FrNumbersConsistencyMixin from '../../../mixins/fr-numbers-consistency-mixin';
 import '../../../../../layout/etools-form-element-wrapper.js';
-import { isEmptyObject, isJsonStrMatch, copy } from '../../../../../utils/utils';
-import { store, RootState } from '../../../../../../store';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { SharedStyles } from '../../../../../styles/shared-styles';
-import { gridLayoutStyles } from '../../../../../styles/grid-layout-styles';
-import { frWarningsStyles } from '../../../styles/fr-warnings-styles';
-import { Country, IPermission, LabelAndValue } from '../../../../../../typings/globals.types';
-import {Fr, FrsDetails, InterventionPermissionsFields, Intervention } from '../../../../../../typings/intervention.types';
-import { pmpCustomIcons } from '../../../../../styles/custom-iconsets/pmp-icons';
+import {isEmptyObject, isJsonStrMatch, copy} from '../../../../../utils/utils';
+import {store, RootState} from '../../../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {frWarningsStyles} from '../../../styles/fr-warnings-styles';
+import {Country, Permission, LabelAndValue} from '../../../../../../typings/globals.types';
+import {Fr, FrsDetails, InterventionPermissionsFields, Intervention} from '../../../../../../typings/intervention.types';
+import {pmpCustomIcons} from '../../../../../styles/custom-iconsets/pmp-icons';
 import {property, computed} from '@polymer/decorators';
 
 /**
@@ -27,7 +27,7 @@ import {property, computed} from '@polymer/decorators';
  */
 class PlannedBudget extends connect(store)(
   FrNumbersConsistencyMixin(
-  PolymerElement)) {
+    PolymerElement)) {
 
   static get template() {
     return html`
@@ -119,13 +119,15 @@ class PlannedBudget extends connect(store)(
                 <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                       icon-first
                                       custom-icon
-                                      hide-tooltip="[[_hideBudgetCurrencyMismatchTooltip(intervention.frs_details.currencies_match, intervention.frs_details.frs, plannedBudget.currency)]]">
+                                      hide-tooltip="[[_hideBudgetCurrencyMismatchTooltip(intervention.frs_details.currencies_match,
+                                                      intervention.frs_details.frs, plannedBudget.currency)]]">
                   <etools-dropdown id="currencyDd"
                                     slot="field"
                                     placeholder="&#8212;"
                                     options="[[currencies]]"
                                     selected="{{plannedBudget.currency}}"
-                                    readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget, interventionId)]]"
+                                    readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget,
+                                                interventionId)]]"
                                     no-label-float>
                   </etools-dropdown>
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
@@ -231,14 +233,15 @@ class PlannedBudget extends connect(store)(
   @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget)', observer: PlannedBudget.prototype._editModeChanged})
   editMode!: boolean;
 
-  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)', observer: PlannedBudget.prototype._editModeChanged})
+  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)',
+    observer: PlannedBudget.prototype._editModeChanged})
   unicefCashEditMode!: boolean;
 
   @property({type: Boolean})
   editablePlannedBudget: boolean = false;
 
   @property({type: Number, observer: PlannedBudget.prototype._interventionIdChanged})
-  interventionId!: Number;
+  interventionId!: number;
 
   @property({type: Object})
   initialPlannedBudget!: PlannedBudget;
@@ -258,7 +261,7 @@ class PlannedBudget extends connect(store)(
   }
 
   @property({type: Object})
-  permissions!: IPermission<InterventionPermissionsFields>;
+  permissions!: Permission<InterventionPermissionsFields>;
 
   static get observers() {
     return [
@@ -313,7 +316,7 @@ class PlannedBudget extends connect(store)(
   }
 
   _showEditBtn(_editMode?: boolean, _unicefCashEditMode?: boolean,
-     _showCancelButton?: boolean, _interventionId?: number) {
+    _showCancelButton?: boolean, _interventionId?: number) {
     return (this.editMode || this.unicefCashEditMode) && !this._showCancelButton && this.interventionId > 0;
   }
 
@@ -328,7 +331,7 @@ class PlannedBudget extends connect(store)(
   }
 
   _isCurrencyReadonly(inAmendmentMode: boolean, editMode: boolean,
-      editablePlannedBudget: boolean, interventionId: number) {
+    editablePlannedBudget: boolean, interventionId: number) {
     return inAmendmentMode ? true : this._isReadonly(editMode, editablePlannedBudget, interventionId);
   }
 
@@ -375,13 +378,13 @@ class PlannedBudget extends connect(store)(
   // validate fields
   validate() {
     let valid = true;
-    let elementsSelectorsToValidate = [
+    const elementsSelectorsToValidate = [
       '#csoCont',
       '#unicefCash',
       '#inKindAmount'
     ];
     elementsSelectorsToValidate.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
       if (el && !el.validate()) {
         valid = false;
       }
@@ -391,13 +394,13 @@ class PlannedBudget extends connect(store)(
 
   // reset validation errors
   resetValidations() {
-    let elementsSelectorsToValidate = [
+    const elementsSelectorsToValidate = [
       '#csoCont',
       '#unicefCash',
       '#inKindAmount'
     ];
     elementsSelectorsToValidate.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -411,7 +414,7 @@ class PlannedBudget extends connect(store)(
   }
 
   _checkFrsAmountConsistency(frsTotalAmt: string, unicefCash: string, plannedBudgetCurrency: string,
-                              frsDetails: FrsDetails, interventionStatus: string) {
+    frsDetails: FrsDetails, interventionStatus: string) {
     if (typeof frsTotalAmt === 'undefined' || typeof unicefCash === 'undefined' ||
         typeof plannedBudgetCurrency === 'undefined' || typeof frsDetails === 'undefined' ||
         typeof interventionStatus === 'undefined') {
@@ -426,8 +429,8 @@ class PlannedBudget extends connect(store)(
     }
 
     this.set('_frsConsistencyWarning',
-        this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
-            'interventionDetails', true));
+      this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
+        'interventionDetails', true));
   }
 
   _hideBudgetCurrencyMismatchTooltip(frsCurrencyMatch: boolean, frs: Fr[], plannedBudgetCurrency: string) {

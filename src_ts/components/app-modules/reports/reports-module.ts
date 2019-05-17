@@ -1,6 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {PolymerElement, html} from '@polymer/polymer';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-button/paper-button.js';
@@ -19,21 +19,20 @@ import './components/report-reject-dialog';
 import {GenericObject, User} from '../../../typings/globals.types';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import ScrollControl from '../../mixins/scroll-control-mixin';
-import { pageLayoutStyles } from '../../styles/page-layout-styles';
-import { SharedStyles } from '../../styles/shared-styles';
-import { buttonsStyles } from '../../styles/buttons-styles';
-import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header-slotted-styles';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin';
+import {pageLayoutStyles} from '../../styles/page-layout-styles';
+import {SharedStyles} from '../../styles/shared-styles';
+import {buttonsStyles} from '../../styles/buttons-styles';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 import ReportDetailsMixin from './mixins/report-details-mixin';
-import { fireEvent } from '../../utils/fire-custom-event';
-import { isEmptyObject } from '../../utils/utils';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../store';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {isEmptyObject} from '../../utils/utils';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
 import {property} from '@polymer/decorators/lib/decorators';
-import {ReportRatingDialogEl} from "./components/report-rating-dialog";
-import {ReportRejectDialogEl} from "./components/report-reject-dialog";
-import { ReportsListEl } from './pages/list/reports-list';
+import {ReportRatingDialogEl} from './components/report-rating-dialog';
+import {ReportRejectDialogEl} from './components/report-reject-dialog';
+import {ReportsListEl} from './pages/list/reports-list';
 declare const moment: any;
 
 
@@ -42,13 +41,13 @@ declare const moment: any;
  * @customElement
  * @mixinFunction
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
- * @appliesMixin ModuleRouting
- * @appliesMixin ReportDetails
- * @appliesMixin EndpointsMixin
- * @appliesMixin ScrollControl
+ * @appliesMixin ModuleRoutingMixin
+ * @appliesMixin ReportDetailsMixin
+ * @appliesMixin ScrollControlMixin
  */
-class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin
-(ReportDetailsMixin(ScrollControl(EndpointsMixin(PolymerElement)))))) {
+class ReportsModule extends connect(store)(ScrollControlMixin(
+  ModuleMainElCommonFunctionalityMixin(
+    ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))) {
 
   static get is() {
     return 'reports-module';
@@ -231,16 +230,16 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
 
   @property({type: Array})
   reportTabs: object[] = [
-      {
-          tab: 'progress',
-          tabLabel: 'Results Reported',
-          hidden: false
-      },
-      {
-          tab: 'summary',
-          tabLabel: 'Other Info',
-          hidden: false
-      }
+    {
+      tab: 'progress',
+      tabLabel: 'Results Reported',
+      hidden: false
+    },
+    {
+      tab: 'summary',
+      tabLabel: 'Other Info',
+      hidden: false
+    }
   ];
 
   @property({type: Object})
@@ -258,6 +257,9 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   @property({type: String})
   moduleName: string = 'reports';
 
+  private mockupListLoadedDebouncer!: Debouncer;
+  private loadingReportDataDebouncer!: Debouncer;
+
   static get observers() {
     return [
       '_pageChanged(listActive, tabsActive, routeData)',
@@ -267,7 +269,6 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   stateChanged(state: RootState) {
-    this.repDetailsStateChanged(state);
     this.endStateChanged(state);
   }
 
@@ -275,10 +276,10 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     super.ready();
 
     this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer,
-        timeOut.after(500),
-        () => {
-          fireEvent(this, 'global-loading', {active: false});
-        }
+      timeOut.after(500),
+      () => {
+        fireEvent(this, 'global-loading', {active: false});
+      }
     );
   }
 
@@ -290,7 +291,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
-    let loadingMsg = 'Loading...';
+    const loadingMsg = 'Loading...';
     fireEvent(this, 'global-loading', {
       message: loadingMsg,
       active: true,
@@ -319,7 +320,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
 
     this.scrollToTopOnCondition(!listActive);
 
-    let fileImportDetails = {
+    const fileImportDetails = {
       filenamePrefix: 'report',
       baseUrl: '../app-elements/reports/',
       importErrMsg: 'Reports page import error occurred',
@@ -342,7 +343,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     if (!tabsActive || !reportId) {
       return;
     }
-    let id = parseInt(reportId, 10);
+    const id = parseInt(reportId, 10);
     if (this.report && this.report.id === id) {
       return;
     }
@@ -353,10 +354,10 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
         return;
       }
       this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer,
-          timeOut.after(50),
-          () => {
-            this.requestReportDetails.bind(this, id? id.toString() : '')();
-          }
+        timeOut.after(50),
+        () => {
+          this.requestReportDetails.bind(this, id? id.toString() : '')();
+        }
       );
     }, 0);
   }
@@ -387,7 +388,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
       return;
     }
 
-    let params: GenericObject = {};
+    const params: GenericObject = {};
 
     if (typeof reportsList.queryParams.pd_ref_title === 'string' && reportsList.queryParams.pd_ref_title !== '') {
       params.pd_ref_title = reportsList.queryParams.pd_ref_title;
@@ -420,16 +421,16 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     params.export = type;
 
     this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params})
-        .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+      .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
   }
 
   _downloadAnexC() {
-    let filename = 'Progress Report.pdf';
+    const filename = 'Progress Report.pdf';
     this._reportTokenizedDownload('downloadReportAnexC', filename);
   }
 
   _downloadXls() {
-    let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
+    const filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.xls';
     this._reportTokenizedDownload('downloadReportXls', filename);
   }
 
@@ -438,7 +439,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _downloadPdf() {
-    let filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
+    const filename = '[' + this._getCurrentDateTime() + '] Progress Report(s) Summary.pdf';
     this._reportTokenizedDownload('downloadReportPdf', filename);
   }
 
@@ -448,7 +449,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
     }
 
     this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
-        .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename));
+      .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename));
   }
 
   _handleBlobDataReceivedAndStartDownload(blob: Blob, filename: string) {
@@ -456,9 +457,9 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
       window.navigator.msSaveBlob(blob, filename);
     } else {
       // create a blob url representing the data
-      let url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
       // attach blob url to anchor element with download attribute
-      let anchor = document.createElement('a');
+      const anchor = document.createElement('a');
       anchor.setAttribute('href', url);
       anchor.setAttribute('download', filename);
 
@@ -472,7 +473,7 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _goToActionPointModule() {
-    let a = document.createElement('a');
+    const a = document.createElement('a');
     a.setAttribute('target', '_blank');
     a.href = '/apd/';
     a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
@@ -528,11 +529,11 @@ class ReportsModule extends connect(store)(ModuleMainElCommonFunctionalityMixin(
   }
 
   _updateReportDataOnList(report: any) {
-    let list = this.shadowRoot!.querySelector('#list');
+    const list = this.shadowRoot!.querySelector('#list');
     if (list) {
-      let reportsDisplayList = list.shadowRoot!.querySelector('reports-display-list') as GenericObject;
+      const reportsDisplayList = list.shadowRoot!.querySelector('reports-display-list') as GenericObject;
       if (reportsDisplayList && !isEmptyObject(reportsDisplayList.reports)) {
-        let currentReports = reportsDisplayList.reports;
+        const currentReports = reportsDisplayList.reports;
         let index = -1;
         for (let i = 0; i < currentReports.length; i++) {
           if (currentReports[i].id === report.id) {

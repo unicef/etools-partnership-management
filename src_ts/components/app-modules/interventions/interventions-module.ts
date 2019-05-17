@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
@@ -6,9 +6,9 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import CONSTANTS from '../../../config/app-constants';
 import {GenericObject, UserPermissions} from '../../../typings/globals.types';
-import { Intervention } from '../../../typings/intervention.types';
+import {Intervention} from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
-import ScrollControl from '../../mixins/scroll-control-mixin';
+import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import InterventionPageTabsMixin from './mixins/intervention-page-tabs-mixin';
@@ -24,18 +24,18 @@ import './components/intervention-status.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
 import {SharedStyles} from '../../styles/shared-styles.js';
 import {buttonsStyles} from '../../styles/buttons-styles.js';
-import { pageContentHeaderSlottedStyles } from '../../layout/page-content-header-slotted-styles';
-import { isEmptyObject } from '../../utils/utils';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { setInAmendment, setPageDataPermissions } from '../../../actions/page-data';
-import { store, RootState } from '../../../store';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { fireEvent } from '../../utils/fire-custom-event';
-import { property } from '@polymer/decorators';
-import { Agreement } from '../agreements/agreement.types';
+import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
+import {isEmptyObject} from '../../utils/utils';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
+import {setInAmendment, setPageDataPermissions} from '../../../actions/page-data';
+import {store, RootState} from '../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
-import { createDynamicDialog, removeDialog } from 'etools-dialog/dynamic-dialog';
+import {createDynamicDialog, removeDialog} from 'etools-dialog/dynamic-dialog';
 import EtoolsDialog from 'etools-dialog';
 
 /**
@@ -43,7 +43,7 @@ import EtoolsDialog from 'etools-dialog';
  * @customElement
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin EndpointsMixin
- * @appliesMixin ScrollControl
+ * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin InterventionPageTabsMixin
@@ -52,12 +52,12 @@ import EtoolsDialog from 'etools-dialog';
  */
 class InterventionsModule extends connect(store)(
   InterventionPermissionsMixin(
-      ScrollControl(
-        ModuleMainElCommonFunctionalityMixin(
-          ModuleRoutingMixin(
-            InterventionPageTabsMixin(
-              SaveInterventionMixin(
-                  EndpointsMixin(PolymerElement)))))))) {
+    ScrollControlMixin(
+      ModuleMainElCommonFunctionalityMixin(
+        ModuleRoutingMixin(
+          InterventionPageTabsMixin(
+            SaveInterventionMixin(
+              EndpointsMixin(PolymerElement)))))))) {
 
   static get template() {
     return html`
@@ -299,12 +299,12 @@ class InterventionsModule extends connect(store)(
 
   @property({type: Object})
   saved: {
-    interventionId: any,
-    justSaved: boolean
+    interventionId: any;
+    justSaved: boolean;
   } = {
-        interventionId: null,
-        justSaved: false
-      };
+    interventionId: null,
+    justSaved: false
+  };
 
   @property({type: Boolean})
   _forceDetUiValidationOnAttach!: boolean;
@@ -323,7 +323,7 @@ class InterventionsModule extends connect(store)(
   @property({type: String})
   rootPath!: string
 
-  private finalizeAmendmentConfirmationDialog! : EtoolsDialog;
+  private finalizeAmendmentConfirmationDialog!: EtoolsDialog;
   private _pageChangeDebouncer!: Debouncer;
 
   static get observers() {
@@ -386,10 +386,10 @@ class InterventionsModule extends connect(store)(
 
   _createFinalizeAmendConfirmDialog() {
     this._finalizeAmendmentConfirmationCallback = this._finalizeAmendmentConfirmationCallback.bind(this);
-    let dialog = document.createElement('div');
+    const dialog = document.createElement('div');
     dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
     dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
-    let conf: any = {
+    const conf: any = {
       title: 'Finalize Amendment',
       size: 'md',
       okBtnText: 'Yes',
@@ -403,7 +403,7 @@ class InterventionsModule extends connect(store)(
   _removeFinalizeAmendConfirmDialog() {
     if (this.finalizeAmendmentConfirmationDialog) {
       this.finalizeAmendmentConfirmationDialog.removeEventListener('close',
-          this._finalizeAmendmentConfirmationCallback as any);
+        this._finalizeAmendmentConfirmationCallback as any);
       removeDialog(this.finalizeAmendmentConfirmationDialog);
     }
   }
@@ -443,12 +443,12 @@ class InterventionsModule extends connect(store)(
     this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
     if (!isEmptyObject(intervention)) {
       // set edit permissions
-      let isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
+      const isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
       if (isNewIntervention) {
         this.set('intervention.reference_number_year', new Date().getFullYear());
       }
       this.checkAndUpdateInterventionPermissions(intervention,
-          this._hasEditPermissions(permissions), isNewIntervention);
+        this._hasEditPermissions(permissions), isNewIntervention);
       setTimeout(() => {
         // ensure intervention get/save/change status loading msgs close
         fireEvent(this, 'global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
@@ -461,7 +461,7 @@ class InterventionsModule extends connect(store)(
       if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
         // Avoid showing msg again after save
         this.set('errorMsgBoxTitle',
-            'eTools validation code has been upgraded and this record is now considered invalid due to:');
+          'eTools validation code has been upgraded and this record is now considered invalid due to:');
         fireEvent(this, 'set-server-errors', intervention.metadata.error_msg);
       }
     }
@@ -506,18 +506,18 @@ class InterventionsModule extends connect(store)(
       this.reportsPrevParams = {};
     }
     this._pageChangeDebouncer = Debouncer.debounce(this._pageChangeDebouncer,
-        timeOut.after(10),
-        () => {
-          let fileImportDetails = {
-            filenamePrefix: 'intervention',
-            baseUrl: '../app-elements/interventions/',
-            importErrMsg: 'Interventions page import error occurred',
-            errMsgPrefixTmpl: '[intervention(s) ##page##]',
-            loadingMsgSource: 'interv-page'
-          };
-          this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
-              null, this._resetRedirectToNewInterventionFlag);
-        });
+      timeOut.after(10),
+      () => {
+        const fileImportDetails = {
+          filenamePrefix: 'intervention',
+          baseUrl: '../app-elements/interventions/',
+          importErrMsg: 'Interventions page import error occurred',
+          errMsgPrefixTmpl: '[intervention(s) ##page##]',
+          loadingMsgSource: 'interv-page'
+        };
+        this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
+          null, this._resetRedirectToNewInterventionFlag);
+      });
   }
 
   _observeRouteDataId(idStr: string) {
@@ -538,20 +538,20 @@ class InterventionsModule extends connect(store)(
   }
 
   _finalizeAmendmentConfirmationCallback(event: CustomEvent) {
-    let preparedData: GenericObject = {id: this.intervention.id, in_amendment: false};
+    const preparedData: GenericObject = {id: this.intervention.id, in_amendment: false};
 
     if (event.detail.confirmed) {
       return (this.$.interventionData as InterventionItemData).saveIntervention(preparedData as Intervention,
-          this._newInterventionSaved.bind(this))
-          .then((successfull: boolean) => {
-              if (successfull) {
-                  this.set('intervention.in_amendment', false);
-                  return true;
-              } else {
-                  this.set('intervention.in_amendment', true);
-                  return false;
-              }
-          });
+        this._newInterventionSaved.bind(this))
+        .then((successfull: boolean) => {
+          if (successfull) {
+            this.set('intervention.in_amendment', false);
+            return true;
+          } else {
+            this.set('intervention.in_amendment', true);
+            return false;
+          }
+        });
     }
   }
 
@@ -562,17 +562,17 @@ class InterventionsModule extends connect(store)(
   _refreshInterventionPermissions(e: CustomEvent) {
     e.stopImmediatePropagation();
     (this.$.interventionData as InterventionItemData)._reqInterventionDataWithoutRespHandling()
-        .then((resp: any) => {
-          if (!isEmptyObject(resp.permissions)) {
-            this.set('intervention.permissions', resp.permissions);
-            this.set('intervention.in_amendment', resp.in_amendment);
-            this.set('originalIntervention.in_amendment', resp.in_amendment);
-            store.dispatch(setPageDataPermissions(resp.permissions));
-          }
-        })
-        .then(() => {
-          this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
-        });
+      .then((resp: any) => {
+        if (!isEmptyObject(resp.permissions)) {
+          this.set('intervention.permissions', resp.permissions);
+          this.set('intervention.in_amendment', resp.in_amendment);
+          this.set('originalIntervention.in_amendment', resp.in_amendment);
+          store.dispatch(setPageDataPermissions(resp.permissions));
+        }
+      })
+      .then(() => {
+        this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
+      });
   }
 
   _updateInterventionStatus(e: CustomEvent) {
@@ -662,8 +662,8 @@ class InterventionsModule extends connect(store)(
   _showInterventionSidebarStatus(listActive: boolean, tabAttached: boolean,
     activePage: string) {
     return (['reports', 'progress'].indexOf(activePage) > -1)
-        ? false
-        : this._showSidebarStatus(listActive, tabAttached);
+      ? false
+      : this._showSidebarStatus(listActive, tabAttached);
   }
 
   /**
@@ -697,7 +697,7 @@ class InterventionsModule extends connect(store)(
   }
 
   _exportPD(url: string) {
-    let csvDownloadUrl = url + '?' + this.csvDownloadQs;
+    const csvDownloadUrl = url + '?' + this.csvDownloadQs;
     window.open(csvDownloadUrl, '_blank');
   }
 

@@ -1,7 +1,7 @@
-//import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import { Constructor } from '../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+// import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
+import {Constructor} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * App menu functionality mixin
@@ -9,7 +9,7 @@ import { property } from '@polymer/decorators';
  * @mixinFunction
  */
 export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
- class appMenuClass extends baseClass {
+  class AppMenuClass extends baseClass {
 
     @property({type: Boolean})
     smallMenu: boolean = false;
@@ -49,7 +49,7 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
       /**
        * etoolsPmpSmallMenu localStorage value must be 0 or 1
        */
-      let menuTypeStoredVal: string | null = localStorage.getItem('etoolsAppSmallMenuIsActive');
+      const menuTypeStoredVal: string | null = localStorage.getItem('etoolsAppSmallMenuIsActive');
       if (!menuTypeStoredVal) {
         return false;
       }
@@ -69,27 +69,27 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
     }
 
     private _smallMenuValueChanged(newVal: boolean) {
-      let localStorageVal: number = newVal ? 1 : 0;
+      const localStorageVal: number = newVal ? 1 : 0;
       localStorage.setItem('etoolsAppSmallMenuIsActive', String(localStorageVal));
     }
 
     private _updateDrawerStyles(): void {
-      let drawerLayout = this.$.layout as PolymerElement;
+      const drawerLayout = this.$.layout as PolymerElement;
       if (drawerLayout) {
         drawerLayout.updateStyles();
       }
-      let drawer = this.$.drawer as PolymerElement;
+      const drawer = this.$.drawer as PolymerElement;
       if (drawer) {
         drawer.updateStyles();
       }
     }
 
     private _notifyLayoutResize(): void {
-      let layout = this.$.layout as PolymerElement & {notifyResize(): void};
+      const layout = this.$.layout as PolymerElement & {notifyResize(): void};
       if (layout) {
         layout.notifyResize();
       }
-      let headerLayout = this.$.appHeadLayout as PolymerElement & {notifyResize(): void};
+      const headerLayout = this.$.appHeadLayout as PolymerElement & {notifyResize(): void};
       if (headerLayout) {
         headerLayout.notifyResize();
       }
@@ -99,8 +99,8 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
       // @ts-ignore
       this.$.drawer.toggle();
     }
-  };
-  return appMenuClass;
+  }
+  return AppMenuClass;
 }
 
 

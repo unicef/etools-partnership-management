@@ -1,9 +1,9 @@
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class frontendPaginationClass extends baseClass {
+  class FrontendPaginationClass extends baseClass {
 
     @property({type: Object})
     pagination = {
@@ -31,7 +31,7 @@ function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClas
       }
       pageNumber = parseInt(String(pageNumber));
       pageSize = parseInt(String(pageSize));
-      let startingIndex = (pageNumber - 1) * pageSize;
+      const startingIndex = (pageNumber - 1) * pageSize;
       this.dataItems = listData.slice(startingIndex, startingIndex + pageSize);
     }
 
@@ -43,8 +43,8 @@ function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClas
       return typeof item === 'undefined';
     }
 
-  };
-  return frontendPaginationClass;
+  }
+  return FrontendPaginationClass;
 }
 
 export default FrontendPaginationMixin;

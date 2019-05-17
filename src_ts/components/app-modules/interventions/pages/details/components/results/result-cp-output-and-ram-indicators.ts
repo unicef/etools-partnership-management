@@ -1,23 +1,22 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
-import { fireEvent } from '../../../../../../utils/fire-custom-event';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { logError } from 'etools-behaviors/etools-logging';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { EtoolsDropdownMultiEl } from 'etools-dropdown/etools-dropdown-multi.js';
-import { EtoolsDropdownEl } from 'etools-dropdown/etools-dropdown.js';
+import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi.js';
+import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
 
 /**
  * @polymer
  * @customElement
- * @appliesMixins Endpoints
- * @appliesMixins MissingDropdownOptions
+ * @appliesMixins MissingDropdownOptionsMixin
  */
 class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(PolymerElement) {
 
@@ -108,10 +107,10 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   saveResultLoadingMsg: string = 'Saving...';
 
   @property({type: Boolean})
-  opened: Boolean = false;
+  opened: boolean = false;
 
   @property({type: Boolean})
-  preventRamIndicatorReset!: Boolean;
+  preventRamIndicatorReset!: boolean;
 
   @property({type: String})
   editIndex: string | null = null;
@@ -123,7 +122,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   toastEventSource!: PolymerElement;
 
   @property({type: Boolean})
-  disableCpoField!: Boolean;
+  disableCpoField!: boolean;
 
 
   ready() {
@@ -141,8 +140,8 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
       this._setRamIndicatorsSpinnerText(this.ramIndicatorsLoadingMsg);
       this._showRamIndicatorsLoadingSpinner(true);
 
-      let ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: cpOutputId});
-      let self = this;
+      const ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: cpOutputId});
+      const self = this;
       this.sendRequest({
         endpoint: ramIndicatorsEndpoint
       }).then(function(response: any) {
@@ -155,7 +154,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   }
 
   _handleRamIndicatorsReqResponse(response: any) {
-    if (this._thereAreSelectedIndicators() &&  // to prevent triggering validation
+    if (this._thereAreSelectedIndicators() && // to prevent triggering validation
         !this.preventRamIndicatorReset) {
       this.set('selectedRamIndicatorsIds', []);
     }
@@ -206,7 +205,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
     (this.$.cpOutput as EtoolsDropdownEl).validate();
     (this.$.indicators as EtoolsDropdownMultiEl).validate();
 
-    let result = {
+    const result = {
       intervention: this.interventionId,
       cp_output: this.selectedCpOutputId,
       ram_indicators: (this.selectedRamIndicatorsIds instanceof Array) ? this.selectedRamIndicatorsIds : []
@@ -251,7 +250,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   }
 
   _saveExpectedResult(endpoint: any, method: string, result: any, successCallback: any) {
-    let self = this;
+    const self = this;
     this._setRamIndicatorsSpinnerText(this.saveResultLoadingMsg);
     this._showRamIndicatorsLoadingSpinner(true);
     this.set('disableConfirmBtn', true);
@@ -285,4 +284,4 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
 }
 
 window.customElements.define('result-cp-output-and-ram-indicators', ResultCpOutputAndRamIndicators);
-export {ResultCpOutputAndRamIndicators as ResultCpOutputAndRamIndicatorsEl}
+export {ResultCpOutputAndRamIndicators as ResultCpOutputAndRamIndicatorsEl};

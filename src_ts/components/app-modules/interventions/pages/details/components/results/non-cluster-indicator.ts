@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
@@ -7,11 +7,11 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { Indicator } from '../../../../../../../typings/intervention.types';
-import { property } from '@polymer/decorators';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {Indicator} from '../../../../../../../typings/intervention.types';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -308,19 +308,19 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
   }
 
   validate() {
-    let elemIds = ['titleEl', 'locationsDropdw'];
+    const elemIds = ['titleEl', 'locationsDropdw'];
     ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
   resetValidations() {
     setTimeout(() => {
-      let elemIds = ['titleEl', 'locationsDropdw'];
+      const elemIds = ['titleEl', 'locationsDropdw'];
       ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
 
       let i;
       for (i = 0; i < elemIds.length; i++) {
-        let elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & {invalid: boolean};
+        const elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & {invalid: boolean};
         if (elem) {
           elem.invalid = false;
         }
@@ -336,7 +336,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
       return ['baselineNumerator', 'baselineDenominator', 'targetNumerator', 'targetDenominator'];
     }
     return (this._unitIsNumeric(this.indicator.indicator.unit))
-        ? ['targetElForNumericUnit', 'baselineNumeric'] : ['targetElForNonNumericUnit', 'baselineNonNumeric'];
+      ? ['targetElForNumericUnit', 'baselineNumeric'] : ['targetElForNonNumericUnit', 'baselineNonNumeric'];
   }
 
   _isRatioType() {
@@ -358,4 +358,4 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 }
 
 window.customElements.define('non-cluster-indicator', NonClusterIndicator);
-export {NonClusterIndicator as NonClusterIndicatorEl}
+export {NonClusterIndicator as NonClusterIndicatorEl};

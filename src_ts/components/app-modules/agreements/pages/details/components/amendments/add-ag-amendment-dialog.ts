@@ -1,16 +1,16 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-upload/etools-upload.js';
 import 'etools-date-time/datepicker-lite.js';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
-import { AgreementAmendment } from '../../../../agreement.types';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { fireEvent } from '../../../../../../utils/fire-custom-event.js';
+import {AgreementAmendment} from '../../../../agreement.types';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
-import { LabelAndValue } from '../../../../../../../typings/globals.types.js';
+import {LabelAndValue} from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -141,7 +141,7 @@ class AddAgAmendmentDialog extends PolymerElement {
     this.set('amendment', new AgreementAmendment());
     this.set('amendmentTypes', amendmentTypes);
     this.set('authorizedOfficersOptions',
-        JSON.parse(JSON.stringify(authorizedOfficers)));
+      JSON.parse(JSON.stringify(authorizedOfficers)));
     this.set('authorizedOfficers', []);
     this.set('showAuthorizedOfficers', showAuthorizedOfficers);
     this.set('autoValidate', true);
@@ -165,7 +165,7 @@ class AddAgAmendmentDialog extends PolymerElement {
 
   _resetValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -175,7 +175,7 @@ class AddAgAmendmentDialog extends PolymerElement {
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }

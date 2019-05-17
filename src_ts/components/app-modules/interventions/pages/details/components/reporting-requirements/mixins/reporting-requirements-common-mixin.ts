@@ -1,11 +1,11 @@
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CONSTANTS from '../../../../../../../../config/app-constants';
-import { isEmptyObject } from '../../../../../../../utils/utils';
+import {isEmptyObject} from '../../../../../../../utils/utils';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser';
-import { Constructor } from '../../../../../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -15,7 +15,7 @@ import { property } from '@polymer/decorators';
  */
 function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class reportingRequirementsCommon extends EndpointsMixin(baseClass) {
+  class ReportingRequirementsCommon extends EndpointsMixin(baseClass) {
 
     @property({type: Array})
     reportingRequirements: [] = [];
@@ -49,24 +49,24 @@ function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>
         return;
       }
       // @ts-ignore *Defined in the component
-      let type = this._getReportType();
-      let endpoint = this._getEndpointObj(newId, type);
+      const type = this._getReportType();
+      const endpoint = this._getEndpointObj(newId, type);
       this.sendRequest({method: 'GET', endpoint: endpoint})
-          .then((response: any) => {
-            this.set('reportingRequirements',
-                (type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL)
-                    ? response
-                    : response.reporting_requirements);
-          })
-          .catch((error: any) => {
-            logError('Failed to get qpr data from API!',
-                'reporting-requirements-common-mixin', error);
-            parseRequestErrorsAndShowAsToastMsgs(error, this);
-          });
+        .then((response: any) => {
+          this.set('reportingRequirements',
+            (type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL)
+              ? response
+              : response.reporting_requirements);
+        })
+        .catch((error: any) => {
+          logError('Failed to get qpr data from API!',
+            'reporting-requirements-common-mixin', error);
+          parseRequestErrorsAndShowAsToastMsgs(error, this);
+        });
     }
 
     _countReportingReq(length: number) {
-      let l = (typeof length === 'number') ? length : 0;
+      const l = (typeof length === 'number') ? length : 0;
       this.set('requirementsCount', l);
       // @ts-ignore *Defined in the component
       if (typeof this._sortRequirementsAsc === 'function' && l > 0) {
@@ -86,8 +86,8 @@ function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>
     _onReportingRequirementsSaved(e: CustomEvent) {
       this.set('reportingRequirements', e.detail);
     }
-  };
-  return reportingRequirementsCommon;
+  }
+  return ReportingRequirementsCommon;
 }
 
 

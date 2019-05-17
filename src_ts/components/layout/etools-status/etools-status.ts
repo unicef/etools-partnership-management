@@ -1,15 +1,15 @@
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../store';
-import { PolymerElement, html } from '@polymer/polymer';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {PolymerElement, html} from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/av-icons.js';
-import 'etools-content-panel/etools-content-panel.js'
-import { etoolsStatusStyles } from './etools-status-styles';
+import 'etools-content-panel/etools-content-panel.js';
+import {etoolsStatusStyles} from './etools-status-styles';
 import './etools-action-button.js';
-import { StatusAction, Status } from '../../../typings/etools-status.types';
-import { property } from '@polymer/decorators';
+import {StatusAction, Status} from '../../../typings/etools-status.types';
+import {property} from '@polymer/decorators';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -116,22 +116,22 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
 
   _handleStatusChanged(statuses: Status[]) {
     this._statusChangedDebouncer = Debouncer.debounce(this._statusChangedDebouncer,
-        timeOut.after(10),
-        () => {
-          this._computeAvailableStatuses(statuses);
-        });
+      timeOut.after(10),
+      () => {
+        this._computeAvailableStatuses(statuses);
+      });
   }
 
   _handleActionsChanged() {
     this._actionsOptionsChangedDebouncer = Debouncer.debounce(this._actionsOptionsChangedDebouncer,
-        timeOut.after(10),
-        () => {
-          let hidden = true;
-          this.actions.forEach((elem: StatusAction) => {
-            hidden = elem.hidden && hidden;
-          });
-          this.set('hideActions', hidden);
+      timeOut.after(10),
+      () => {
+        let hidden = true;
+        this.actions.forEach((elem: StatusAction) => {
+          hidden = elem.hidden && hidden;
         });
+        this.set('hideActions', hidden);
+      });
   }
 
   _getStatusIcon(icon: string) {
@@ -164,7 +164,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
   _computeAvailableStatuses(statuses: Status[]) {
     this.set('availableStatuses', []);
     setTimeout(() => {
-      let filteredStatuses = statuses.filter((elem) => {
+      const filteredStatuses = statuses.filter((elem) => {
         return !elem.hidden;
       });
       this.set('availableStatuses', filteredStatuses);

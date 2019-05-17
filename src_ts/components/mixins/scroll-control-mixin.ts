@@ -1,14 +1,14 @@
 import {logWarn} from 'etools-behaviors/etools-logging.js';
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class scrollControl extends baseClass {
+function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class ScrollControlClass extends baseClass {
 
     @property({type: Object})
     contentContainer: PolymerElement | null = window.EtoolsPmpApp.ContentContainer;
@@ -25,12 +25,12 @@ function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected _getContentContainer() {
-      let appShell = document.querySelector('app-shell');
+      const appShell = document.querySelector('app-shell');
       if (!appShell) {
         return null;
       }
       // @ts-ignore
-      let appHeadLayout = appShell.shadowRoot.querySelector('#appHeadLayout');
+      const appHeadLayout = appShell.shadowRoot.querySelector('#appHeadLayout');
       if (!appHeadLayout) {
         return null;
       }
@@ -41,7 +41,7 @@ function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
     public scrollToTop() {
       if (!this.contentContainer) {
         logWarn('Can not scroll! `contentContainer` object is null or undefined',
-            'scroll-control-mixin');
+          'scroll-control-mixin');
         return;
       }
       // @ts-ignore
@@ -54,8 +54,8 @@ function ScrollControl<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
     }
 
-  };
-  return scrollControl;
+  }
+  return ScrollControlClass;
 }
 
-export default ScrollControl;
+export default ScrollControlMixin;
