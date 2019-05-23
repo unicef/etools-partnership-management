@@ -1,7 +1,7 @@
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
-import { Constructor, EtoolsTab } from '../../../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {Constructor, EtoolsTab} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * Interventions details tabs functionality
@@ -10,7 +10,7 @@ import { property } from '@polymer/decorators';
  * @appliesMixin EnvironmentFlagsMixin
  */
 function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class interventionPageTabsClass extends EnvironmentFlagsMixin(baseClass as Constructor<PolymerElement>) {
+  class InterventionPageTabsClass extends EnvironmentFlagsMixin(baseClass as Constructor<PolymerElement>) {
 
     /**
      * Hidden tabs rules:
@@ -19,37 +19,37 @@ function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseCl
      */
     @property({type: Array})
     interventionTabs: EtoolsTab[] = [
-        {
-          tab: 'overview',
-          tabLabel: 'Overview',
-          hidden: false
-        },
-        {
-          tab: 'details',
-          tabLabel: 'Details',
-          hidden: false
-        },
-        {
-          tab: 'review-and-sign',
-          tabLabel: 'Review & Sign',
-          hidden: false
-        },
-        {
-          tab: 'attachments',
-          tabLabel: 'Attachments',
-          hidden: false
-        },
-        {
-          tab: 'reports',
-          tabLabel: 'Reports',
-          hidden: false
-        },
-        {
-          tab: 'progress',
-          tabLabel: 'Progress',
-          hidden: false
-        }
-      ];
+      {
+        tab: 'overview',
+        tabLabel: 'Overview',
+        hidden: false
+      },
+      {
+        tab: 'details',
+        tabLabel: 'Details',
+        hidden: false
+      },
+      {
+        tab: 'review-and-sign',
+        tabLabel: 'Review & Sign',
+        hidden: false
+      },
+      {
+        tab: 'attachments',
+        tabLabel: 'Attachments',
+        hidden: false
+      },
+      {
+        tab: 'reports',
+        tabLabel: 'Reports',
+        hidden: false
+      },
+      {
+        tab: 'progress',
+        tabLabel: 'Progress',
+        hidden: false
+      }
+    ];
 
     static get observers() {
       return ['_computeInterventionTabs(newInterventionActive, environmentFlags)'];
@@ -59,8 +59,8 @@ function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseCl
       if (typeof newInterventionActive === 'undefined' && typeof environmentFlags === 'undefined') {
         return;
       }
-      let showPrpTabs = this.showPrpReports();
-      let tabs = JSON.parse(JSON.stringify(this.interventionTabs));
+      const showPrpTabs = this.showPrpReports();
+      const tabs = JSON.parse(JSON.stringify(this.interventionTabs));
       tabs.forEach((t: any) => {
         if (t.tab === 'overview') {
           t.hidden = newInterventionActive;
@@ -72,8 +72,8 @@ function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseCl
       this.set('interventionTabs', tabs);
     }
 
-  };
-  return interventionPageTabsClass;
+  }
+  return InterventionPageTabsClass;
 }
 
 export default InterventionPageTabsMixin;

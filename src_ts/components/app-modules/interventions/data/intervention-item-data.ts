@@ -1,12 +1,12 @@
-import { PolymerElement } from '@polymer/polymer';
+import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import CONSTANTS from '../../../../config/app-constants';
-import { RootState } from '../../../../store';
-import { isJsonStrMatch } from '../../../utils/utils';
-import { connect } from 'pwa-helpers/connect-mixin';
+import {RootState} from '../../../../store';
+import {isJsonStrMatch} from '../../../utils/utils';
+import {connect} from 'pwa-helpers/connect-mixin';
 import {
   ListItemIntervention,
   SelectedSection,
@@ -16,10 +16,10 @@ import {
   PlannedVisit, ExpectedResult
 } from '../../../../typings/intervention.types';
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
-import { property } from '@polymer/decorators';
-import { Office, GenericObject } from '../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
+import {Office, GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -33,16 +33,16 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
 
   @property({type: Object})
   pdEndpoints: {
-      DETAILS: string,
-      CREATE: string,
-      AGREEMENT_DETAILS: string,
-      DELETE: string
-    } = {
-      DETAILS: 'interventionDetails',
-      CREATE: 'interventions',
-      AGREEMENT_DETAILS: 'agreementDetails',
-      DELETE: 'interventionDelete'
-    };
+    DETAILS: string;
+    CREATE: string;
+    AGREEMENT_DETAILS: string;
+    DELETE: string;
+  } = {
+    DETAILS: 'interventionDetails',
+    CREATE: 'interventions',
+    AGREEMENT_DETAILS: 'agreementDetails',
+    DELETE: 'interventionDelete'
+  };
 
   @property({type: Object, readOnly: true, notify: true})
   intervention!: Intervention;
@@ -81,8 +81,8 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _triggerInterventionRequest(options: any) {
-    let self = this;
-    let ajaxMethod = options.method || 'GET';
+    const self = this;
+    const ajaxMethod = options.method || 'GET';
     return this.sendRequest(options).then(function(resp: any) {
       self._handleResponse(resp, ajaxMethod);
       return true;
@@ -93,8 +93,8 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _reqInterventionDataWithoutRespHandling() {
-    let self = this;
-    let options = {
+    const self = this;
+    const options = {
       endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
     };
     return this.sendRequest(options).catch(function(error: any) {
@@ -140,7 +140,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _handleDataConversions(intervention: any) {
-    let fieldsToConvert = [
+    const fieldsToConvert = [
       'flat_locations',
       'offices',
       'partner_focal_points',
@@ -172,10 +172,10 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       this.set('handleResponseAdditionalCallback', null);
     }
 
-    let self = this;
+    const self = this;
     if (ajaxMethod !== 'GET') {
       // update the interventions list in dexieDB
-      let mappedResponse = this._formatResponseDataForDexie(response);
+      const mappedResponse = this._formatResponseDataForDexie(response);
       window.EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
         fireEvent(self, 'reload-list');
       });
@@ -193,12 +193,12 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   updateAgreeementStatus(agreement: Agreement) {
-    let minimalAgreement = this._getMinimalAgreementData(agreement);
+    const minimalAgreement = this._getMinimalAgreementData(agreement);
     window.EtoolsPmpApp.DexieDb.table('agreements').put(minimalAgreement);
   }
 
   _getMinimalAgreementData(detail: Agreement) {
-    let minimalAgrData: MinimalAgreement = {
+    const minimalAgrData: MinimalAgreement = {
       agreement_number: '',
       agreement_number_status: '',
       agreement_type: '',
@@ -251,8 +251,8 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       fireEvent(this, 'toast', {text: 'Invalid intervention ID', showCloseBtn: true});
     } else {
       if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Suspended.toLowerCase(),
-            CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
+        CONSTANTS.STATUSES.Suspended.toLowerCase(),
+        CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
         // status change is allowed
         // set additional callback if any
         if (callback) {
@@ -283,7 +283,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   /**
    * Save intervention data
    */
-  //TODO Intervention | any
+  // TODO Intervention | any
   saveIntervention(intervention: Intervention | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
       fireEvent(this, 'toast', {text: 'Invalid intervention data!', showCloseBtn: true});
@@ -330,7 +330,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
         loadingSource: this.ajaxLoadingMsgSource
       });
 
-      let method = (isNew) ? 'POST' : 'PATCH';
+      const method = (isNew) ? 'POST' : 'PATCH';
       return this._triggerInterventionRequest({
         method: method, endpoint: endpoint, body: intervention,
         multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
@@ -339,7 +339,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _formatResponseDataForDexie(responseDetail: Intervention) {
-    let dexieObject = new ListItemIntervention();
+    const dexieObject = new ListItemIntervention();
     dexieObject.cp_outputs = [];
     dexieObject.unicef_budget = 0;
     dexieObject.cso_contribution = 0;
@@ -369,7 +369,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _updateSections(dexieObject: ListItemIntervention, intervention: Intervention) {
-    let selectedSections = this._getSelectedSections(intervention);
+    const selectedSections = this._getSelectedSections(intervention);
     dexieObject.sections = selectedSections.sectionIds;
     dexieObject.section_names = selectedSections.section_names;
   }
@@ -394,12 +394,12 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
     dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
     dexieObject.fr_currency = intervFrDetails.currencies_match
-        ? intervFrDetails.frs[0].currency
-        : null;
+      ? intervFrDetails.frs[0].currency
+      : null;
     dexieObject.fr_currencies_are_consistent = intervFrDetails.currencies_match;
     dexieObject.all_currencies_are_consistent = intervFrDetails.currencies_match
-        ? intervFrDetails.frs[0].currency === plannedBudgetCurrency
-        : false;
+      ? intervFrDetails.frs[0].currency === plannedBudgetCurrency
+      : false;
   }
 
   _noFrOnIntervention(intervFrDetails: FrsDetails) {
@@ -416,7 +416,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _getSelectedOfficesNames(responseDetail: any) {
-    let selectedOffices = this.offices.filter(function(office: any) {
+    const selectedOffices = this.offices.filter(function(office: any) {
       return responseDetail.offices.indexOf(office.id.toString()) > -1;
     });
     if (!selectedOffices) {
@@ -428,13 +428,13 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _getSelectedSections(responseDetail: any) {
-    let selectedSections = new SelectedSection([],[]);
+    let selectedSections = new SelectedSection([], []);
 
-    let sections = responseDetail.sections;
+    const sections = responseDetail.sections;
 
     if (sections) {
-      let sectionNames: string[] = [];
-      let interventionSectionIds = sections.map((sectionId: string) => parseInt(sectionId, 10));
+      const sectionNames: string[] = [];
+      const interventionSectionIds = sections.map((sectionId: string) => parseInt(sectionId, 10));
 
 
       this.sections.forEach(function(section: any) {
@@ -462,14 +462,14 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
 
   _handleInterventionDeleteSuccess(id: string) {
     window.EtoolsPmpApp.DexieDb.interventions.where('id')
-        .equals(parseInt(id, 10))
-        .delete()
-        .then((deleteCount: any) => this._handleInterventionDeleteFromDexieSuccess(deleteCount))
-        .catch((dexieDeleteErr: any) => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr))
-        .then(() => {
-          // go to pd/ssfa list after delete
-          fireEvent(this, 'update-main-path', {path: 'interventions/list'});
-        });
+      .equals(parseInt(id, 10))
+      .delete()
+      .then((deleteCount: any) => this._handleInterventionDeleteFromDexieSuccess(deleteCount))
+      .catch((dexieDeleteErr: any) => this._handleInterventionDeleteFromDexieErr(dexieDeleteErr))
+      .then(() => {
+        // go to pd/ssfa list after delete
+        fireEvent(this, 'update-main-path', {path: 'interventions/list'});
+      });
   }
 
   _handleInterventionDeleteFromDexieSuccess(deleteCount: number) {
@@ -487,7 +487,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
     logError('Agreement delete from local dexie db failed!', 'agreement-item-data',
-        dexieDeleteErr);
+      dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
       'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',

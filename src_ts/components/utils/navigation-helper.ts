@@ -4,9 +4,9 @@
 export function updateAppState(routePath: string, qs: string, dispatchLocationChange: boolean) {
   // Using replace state to change the URL here ensures the browser's
   // back button doesn't take you through every query
-  let currentState = window.history.state;
+  const currentState = window.history.state;
   window.history.replaceState(currentState, '',
-      routePath + (qs.length ? '?' + qs : ''));
+    routePath + (qs.length ? '?' + qs : ''));
 
   if (dispatchLocationChange) {
     // This event lets app-location and app-route know

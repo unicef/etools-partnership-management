@@ -1,10 +1,10 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import 'etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
-import { LabelAndValue } from '../../../../../../typings/globals.types';
+import {LabelAndValue} from '../../../../../../typings/globals.types';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 /**
@@ -39,9 +39,9 @@ class GeneratePcaDialog extends PolymerElement {
 
   @property({type: Array})
   templateOptions: LabelAndValue[] = [{value: 'english', label: 'English'},
-      {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
-      {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
-      {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
+    {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
+    {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
+    {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
 
   @property({type: String})
   selectedTemplate: string | null = null;
@@ -64,4 +64,4 @@ class GeneratePcaDialog extends PolymerElement {
 }
 
 window.customElements.define('generate-pca-dialog', GeneratePcaDialog);
-export {GeneratePcaDialog as GeneratePcaDialogEl}
+export {GeneratePcaDialog as GeneratePcaDialogEl};

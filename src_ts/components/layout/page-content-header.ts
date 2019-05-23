@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -82,7 +82,7 @@ class PageContentHeader extends PolymerElement {
     `;
   }
 
-  @property({type: Boolean,  reflectToAttribute: true})
+  @property({type: Boolean, reflectToAttribute: true})
   withTabsVisible: boolean = false;
 
 }

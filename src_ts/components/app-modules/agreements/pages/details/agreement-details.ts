@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
@@ -13,9 +13,9 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-date-time/datepicker-lite';
 
-import { DECREASE_UPLOADS_IN_PROGRESS, DECREASE_UNSAVED_UPLOADS, INCREASE_UNSAVED_UPLOADS } from '../../../../../actions/upload-status';
-import { store, RootState } from '../../../../../store';
-import { connect } from 'pwa-helpers/connect-mixin';
+import {DECREASE_UPLOADS_IN_PROGRESS, DECREASE_UNSAVED_UPLOADS, INCREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status';
+import {store, RootState} from '../../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
 import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-cp-structure.js';
 import '../../../../layout/year-dropdown.js';
@@ -23,7 +23,7 @@ import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import UploadsMixin from '../../../../mixins/uploads-mixin';
-import { Agreement } from '../../agreement.types.js';
+import {Agreement} from '../../agreement.types.js';
 
 import '../../../../mixins/missing-dropdown-options-mixin.js';
 import '../../../../mixins/common-mixin.js';
@@ -39,26 +39,26 @@ import {SharedStyles} from '../../../../styles/shared-styles.js';
 
 import './components/amendments/agreement-amendments.js';
 import './components/generate-PCA-dialog.js';
-import StaffMembersData from '../../../partners/mixins/staff-members-data-mixin.js';
-import { isJsonStrMatch } from '../../../../utils/utils';
-import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
-import { fireEvent } from '../../../../utils/fire-custom-event';
+import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin.js';
+import {isJsonStrMatch} from '../../../../utils/utils';
+import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { LabelAndValue } from '../../../../../typings/globals.types';
-import { EtoolsCpStructure } from '../../../../layout/etools-cp-structure';
-import { MinimalStaffMember, StaffMember } from '../../../../../models/partners.models';
-import { GeneratePcaDialogEl } from './components/generate-PCA-dialog.js';
+import {LabelAndValue} from '../../../../../typings/globals.types';
+import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure';
+import {MinimalStaffMember, StaffMember} from '../../../../../models/partners.models';
+import {GeneratePcaDialogEl} from './components/generate-PCA-dialog.js';
 
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin StaffMembersData
+ * @appliesMixin StaffMembersDataMixin
  * @appliesMixin CommonMixin
  * @appliesMixin UploadsMixin
  */
-class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersData(PolymerElement)))) {
+class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
 
   static get template() {
     return html`
@@ -329,7 +329,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 file-url="{{agreement.attachment}}"
                 upload-endpoint="[[uploadEndpoint]]"
                 on-upload-finished="_signedAgreementUploadFinished"
-                show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment, originalAgreementData.attachment, isNewAgreement)]]"
+                show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment,
+                                   originalAgreementData.attachment, isNewAgreement)]]"
                 on-delete-file="_signedAgFileDelete"
                 accept=".doc,.docx,.pdf,.jpg,.png"
                 readonly$="[[!agreement.permissions.edit.attachment]]"
@@ -506,9 +507,9 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       // keep a copy of the agreement before changes are made and use it later to save only the changes
       this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
 
-      let cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
+      const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
       if (cpField) {
-          cpField.resetCpDropdownInvalidState();
+        cpField.resetCpDropdownInvalidState();
       }
       this.set('enableEditForAuthorizedOfficers', false);
       this.resetAttachedAgreementElem(agreement);
@@ -531,7 +532,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _resetDropdown(selector: string) {
-    let field = this.fieldValidationReset(selector, false);
+    const field = this.fieldValidationReset(selector, false);
     if (field) {
       field.set('selected', null);
     }
@@ -608,7 +609,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         // this.set('agreement.start', null);
         // this.set('agreement.end', null);
       } else {
-        let cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
+        const cpField = this.shadowRoot!.querySelector('#cpStructure') as EtoolsCpStructure;
         if (cpField) {
           cpField.setDefaultSelectedCpStructure();
         }
@@ -635,7 +636,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (this.agreement.partner_signatory) {
       return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
     } else if (staffMembers && staffMembers.length) {
-      let selectedPartner = staffMembers.filter(function(s: any) {
+      const selectedPartner = staffMembers.filter(function(s: any) {
         return parseInt(s.id) === parseInt(selectedId);
       });
       if (selectedPartner && selectedPartner.length) {
@@ -651,7 +652,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (aoSelected) {
       const selectedIds = selection.map(s => parseInt(s, 10));
       ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers!)
-          .filter((a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
+        .filter((a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
     } else {
       ao = (agreement && agreement.authorized_officers instanceof Array)
         ? agreement.authorized_officers
@@ -717,13 +718,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   // Validate agreement fields
   _validateAgreement() {
     let valid = true;
-    let reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
+    const reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
     if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
       reqFieldsSelectors.push('#cpStructure');
     }
     reqFieldsSelectors.forEach(function(fSelector: string) {
       // @ts-ignore
-      let field = this.shadowRoot.querySelector(fSelector);
+      const field = this.shadowRoot.querySelector(fSelector);
       if (field && !field.validate()) {
         valid = false;
       }

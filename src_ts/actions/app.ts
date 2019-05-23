@@ -8,20 +8,20 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { Action, ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-import { RootState } from '../store.js';
+import {Action, ActionCreator} from 'redux';
+import {ThunkAction} from 'redux-thunk';
+import {RootState} from '../store.js';
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
-export interface AppActionUpdatePage extends Action<'UPDATE_PAGE'> {page: string};
-export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {opened: boolean};
+export interface AppActionUpdatePage extends Action<'UPDATE_PAGE'> {page: string}
+export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {opened: boolean}
 export type AppAction = AppActionUpdatePage | AppActionUpdateDrawerState;
 
 type ThunkResult = ThunkAction<void, RootState, undefined, AppAction>;
 
 // @ts-ignore
-export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch) => {
+export const navigate: ActionCreator<ThunkResult> = (_path: string) => (dispatch) => {
 //   // Extract the page name from path.
 //   const p: string = path.replace('/pmp', '');
 //   const page = p === '/' ? 'page-one' : p.slice(1);
@@ -35,7 +35,7 @@ export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch)
 };
 
 // @ts-ignore
-const loadPage: ActionCreator<ThunkResult> = (page: string) => (dispatch) => {
+const loadPage: ActionCreator<ThunkResult> = (_page: string) => (dispatch) => {
 //   switch(page) {
 //     case 'page-one':
 //       import('../components/pages/page-one.js').then(() => {

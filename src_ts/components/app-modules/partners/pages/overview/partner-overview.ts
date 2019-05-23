@@ -9,15 +9,15 @@ import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 
 import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
 
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
-import { frWarningsStyles } from '../../../interventions/styles/fr-warnings-styles.js';
-import {riskRatingStyles} from "../../../../styles/risk-rating-styles";
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {frWarningsStyles} from '../../../interventions/styles/fr-warnings-styles.js';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { Partner } from '../../../../../models/partners.models.js';
+import {Partner} from '../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -176,7 +176,9 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
             <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
               <div class="row-h">
                 <div class="col col-3 block word-break">
-                  <a  class="primary" href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+                  <a  class="primary" href="interventions/[[partnership.id]]/details">
+                    <strong>[[partnership.number]]</strong>
+                  </a><br>
                   <span>
                     [[partnership.title]]
                     </span>
@@ -185,7 +187,8 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                   <etools-info-tooltip class="fr-nr-warn"
                                        custom-icon
                                        icon-first
-                                       hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]">
+                                       hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start,
+                                                        partnership.frs_earliest_start_date)]]">
                     <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
                     <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                     <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -208,17 +211,20 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                       class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
                       icon-first
                       custom-icon
-                      hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
+                      hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent,
+                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
                     <span slot="field"
                           class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">
                       <span class="amount-currency">[[partnership.fr_currency]]</span>
                       <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span>
                     </span>
                     <iron-icon
-                        icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
+                        icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent,
+                                partnership.fr_currencies_are_consistent)]]"
                         slot="custom-icon"></iron-icon>
                     <span slot="message">
-                      <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
+                      <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent,
+                              partnership.fr_currencies_are_consistent)]]</span>
                     </span>
                   </etools-info-tooltip>
                 </div>
@@ -253,7 +259,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
   }
 
   @property({type: Object})
-  partner = {} as Partner;
+  partner!: Partner;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -268,7 +274,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
-        : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+      : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
 }

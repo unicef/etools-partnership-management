@@ -10,18 +10,18 @@ import '../../../../../endpoints/endpoints.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
-import { SharedStyles } from '../../../../../styles/shared-styles.js';
+import {SharedStyles} from '../../../../../styles/shared-styles.js';
 import '../../../../../layout/icons-actions.js';
 
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
-import { store } from '../../../../../../store.js';
-import { DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS } from '../../../../../../actions/upload-status.js';
+import {store} from '../../../../../../store.js';
+import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../actions/upload-status.js';
 import {property} from '@polymer/decorators';
-import { PartnerAssessment } from '../../../../../../models/partners.models.js';
-import { AssessmentDialog } from './assessment-dialog.js';
-import { IconsActionsEl } from '../../../../../layout/icons-actions.js';
-import { fireEvent } from '../../../../../utils/fire-custom-event.js';
+import {PartnerAssessment} from '../../../../../../models/partners.models.js';
+import {AssessmentDialog} from './assessment-dialog.js';
+import {IconsActionsEl} from '../../../../../layout/icons-actions.js';
+import {fireEvent} from '../../../../../utils/fire-custom-event.js';
 
 
 /**
@@ -154,7 +154,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   @property({type: Boolean, reflectToAttribute: true})
   open: boolean = true;
 
-  @property({type: Boolean,  reflectToAttribute: true, observer: '_editModeChanged'})
+  @property({type: Boolean, reflectToAttribute: true, observer: '_editModeChanged'})
   editMode!: boolean;
 
   @property({type: Boolean})
@@ -205,7 +205,7 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   assessmentUpdated(e: CustomEvent) {
     const updatedAss = e.detail.after;
     const assessments = JSON.parse(JSON.stringify(this.dataItems));
-    let idx = this.dataItems.findIndex((a: any) => a.id === updatedAss.id);
+    const idx = this.dataItems.findIndex((a: any) => a.id === updatedAss.id);
     if (idx > -1) {
       assessments.splice(idx, 1, updatedAss);
     }
@@ -222,8 +222,8 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   }
 
   _editAssessment(e: CustomEvent) {
-    let assessment = this.dataItems
-        .find((a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+    const assessment = this.dataItems
+      .find((a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
     this.assessmentDialog.opened = true;
   }
@@ -254,12 +254,5 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
 }
 
 window.customElements.define('assessments-items', AssessmentsItems);
-
-
-
-
-
-
-
 
 

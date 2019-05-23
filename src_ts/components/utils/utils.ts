@@ -1,4 +1,4 @@
-import { GenericObject } from '../../typings/globals.types';
+import {GenericObject} from '../../typings/globals.types';
 import difference from 'lodash-es/difference';
 
 export const isObject = (a: any) => {
@@ -35,8 +35,8 @@ export const objectsAreTheSame = (obj1: any, obj2: any) =>{
   if (!obj1 && !obj2) {
     return true;
   }
-  let props1: GenericObject = obj1 ? Object.keys(obj1) : {};
-  let props2: GenericObject = obj2 ? Object.keys(obj2) : {};
+  const props1: GenericObject = obj1 ? Object.keys(obj1) : {};
+  const props2: GenericObject = obj2 ? Object.keys(obj2) : {};
 
   if (props1.length !== props2.length) {
     return false;
@@ -47,7 +47,7 @@ export const objectsAreTheSame = (obj1: any, obj2: any) =>{
 
   let areDiff = false;
   props1.forEach((p: string) => {
-    if( obj1[p] !== obj2[p]) {
+    if ( obj1[p] !== obj2[p]) {
       areDiff = true;
     }
   });
@@ -66,7 +66,5 @@ export function arraysAreEqual(array1: [], array2: []) {
   }
   return isEmptyObject(differencesArray);
 }
-
-
 
 

@@ -1,13 +1,12 @@
 import {createDynamicDialog, removeDialog} from 'etools-dialog/dynamic-dialog';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import { fireEvent } from '../utils/fire-custom-event.js';
-import { GenericObject, Constructor } from '../../typings/globals.types.js';
+import {fireEvent} from '../utils/fire-custom-event.js';
+import {GenericObject, Constructor} from '../../typings/globals.types.js';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog';
-import { copy } from '../utils/utils.js';
-
+import {copy} from '../utils/utils.js';
 
 
 /**
@@ -17,7 +16,7 @@ import { copy } from '../utils/utils.js';
  */
 function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class repeatableDataSetsClass extends EndpointsMixin(baseClass) {
+  class RepeatableDataSetsClass extends EndpointsMixin(baseClass) {
 
     @property({type: Array, notify: true})
     dataItems!: any[];
@@ -66,7 +65,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
      * itemValueName - the name of property to compare selValue against
      */
     public isAlreadySelected(selValue: any, selIndex: any, itemValueName: any) {
-      let duplicateItems = this.dataItems.filter(function(item, index) {
+      const duplicateItems = this.dataItems.filter(function(item, index) {
         return parseInt(item[itemValueName]) === parseInt(selValue)
             && parseInt(String(index)) !== parseInt(selIndex);
       });
@@ -82,7 +81,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         return null;
       }
       if (this.dataSetModel === null) {
-        let newObj: GenericObject = {};
+        const newObj: GenericObject = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
           Object.keys(this.dataItems[0]).forEach(function(property) {
             newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
@@ -101,7 +100,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       }
       this._makeSureDataItemsAreValid();
 
-      let newObj = this._getItemModelObject(addNull);
+      const newObj = this._getItemModelObject(addNull);
       this.push('dataItems', newObj);
     }
 
@@ -135,7 +134,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     public _onDeleteConfirmation(event: any) {
       this._deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
-        let id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
+        const id = this.dataItems[this.elToDeleteIndex] ? this.dataItems[this.elToDeleteIndex].id : null;
 
         if (id) {
           // @ts-ignore
@@ -150,9 +149,9 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             loadingSource: this.deleteLoadingSource
           });
 
-          let self = this;
+          const self = this;
           // @ts-ignore
-          let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
+          const deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
           this.sendRequest({
             method: 'DELETE',
             endpoint: deleteEndpoint,
@@ -175,7 +174,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       if (!this.editMode) {
         return;
       }
-      let index = this.elToDeleteIndex;
+      const index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
 
@@ -187,17 +186,17 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     public _createDeleteConfirmationDialog() {
-      let deleteConfirmationContent = document.createElement('div');
+      const deleteConfirmationContent = document.createElement('div');
       deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
       this._onDeleteConfirmation = this._onDeleteConfirmation.bind(this);
 
       this._deleteDialog = createDynamicDialog({
-          title: this.deleteConfirmationTitle,
-          size: 'md',
-          okBtnText: 'Yes',
-          cancelBtnText: 'No',
-          closeCallback: this._onDeleteConfirmation,
-          content: deleteConfirmationContent});
+        title: this.deleteConfirmationTitle,
+        size: 'md',
+        okBtnText: 'Yes',
+        cancelBtnText: 'No',
+        closeCallback: this._onDeleteConfirmation,
+        content: deleteConfirmationContent});
     }
 
     /**
@@ -216,14 +215,14 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
      * Check is dataItems is Array, if not init with empty Array
      */
     public _makeSureDataItemsAreValid(dataItems?: any) {
-      let items = dataItems ? dataItems : this.dataItems;
+      const items = dataItems ? dataItems : this.dataItems;
       if (!Array.isArray(items)) {
         this.set('dataItems', []);
       }
     }
 
-  };
-  return repeatableDataSetsClass;
+  }
+  return RepeatableDataSetsClass;
 }
 
 export default RepeatableDataSetsMixin;

@@ -1,20 +1,20 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 import 'etools-data-table/etools-data-table.js';
 
-import { createDynamicDialog } from 'etools-dialog/dynamic-dialog';
+import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
 import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin.js';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { reportingRequirementsListStyles } from '../styles/reporting-requirements-lists-styles.js';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
-import { logError } from 'etools-behaviors/etools-logging';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
-import { AddEditSpecialRepReqEl } from './add-edit-special-rep-req.js';
+import {property} from '@polymer/decorators';
+import {AddEditSpecialRepReqEl} from './add-edit-special-rep-req.js';
 import EtoolsDialog from 'etools-dialog';
 
 
@@ -127,8 +127,8 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
     if (this._deleteConfirmationDialog) {
       if (e.target !== null) {
         // @ts-ignore
-        let itemToDelete = JSON.parse(e.target.getAttribute('item'));
-        let index = this._getIndexById(itemToDelete.id);
+        const itemToDelete = JSON.parse(e.target.getAttribute('item'));
+        const index = this._getIndexById(itemToDelete.id);
         this.set('_itemToDeleteIndex', index);
       }
       this._deleteConfirmationDialog.opened = true;
@@ -142,8 +142,8 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
     }
 
     if (this._itemToDeleteIndex > -1) {
-      let itemToDelete = this.reportingRequirements[this._itemToDeleteIndex] as any;
-      let endpoint = this.getEndpoint('specialReportingRequirementsUpdate', {reportId: itemToDelete.id});
+      const itemToDelete = this.reportingRequirements[this._itemToDeleteIndex] as any;
+      const endpoint = this.getEndpoint('specialReportingRequirementsUpdate', {reportId: itemToDelete.id});
       this.sendRequest({
         method: 'DELETE',
         endpoint: endpoint
@@ -151,7 +151,7 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
         this.splice('reportingRequirements', this._itemToDeleteIndex, 1);
       }).catch((error: any) => {
         logError('Failed to delete special report requirement!',
-            'special-reporting-requirements', error);
+          'special-reporting-requirements', error);
         parseRequestErrorsAndShowAsToastMsgs(error, this);
       }).then(() => {
         // delete complete, reset _itemToDeleteIndex
@@ -174,16 +174,16 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
   _removeAddEditDialog() {
     if (this.addEditDialog) {
       this.addEditDialog.removeEventListener('reporting-requirements-saved',
-          this._onSpecialReportingRequirementsSaved as any);
+        this._onSpecialReportingRequirementsSaved as any);
       document.querySelector('body')!.removeChild(this.addEditDialog);
     }
   }
 
   _createDeleteConfirmationsDialog() {
     this._onDeleteConfirmation = this._onDeleteConfirmation.bind(this);
-    let confirmationMSg = document.createElement('span');
+    const confirmationMSg = document.createElement('span');
     confirmationMSg.innerText = 'Are you sure you want to delete this Special Reporting Requirement?';
-    let confirmationDialogConf = {
+    const confirmationDialogConf = {
       title: 'Delete Special Reporting Requirement',
       size: 'md',
       okBtnText: 'Yes',
@@ -223,8 +223,8 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
   }
 
   _onSpecialReportingRequirementsSaved(e: CustomEvent) {
-    let savedReqItem = e.detail;
-    let index = this._getIndexById(savedReqItem.id);
+    const savedReqItem = e.detail;
+    const index = this._getIndexById(savedReqItem.id);
     if (index > -1) {
       // edit
       this.splice('reportingRequirements', index, 1, savedReqItem);

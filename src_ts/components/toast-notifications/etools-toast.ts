@@ -1,9 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
-import { PaperToastElement } from '@polymer/paper-toast/paper-toast.js';
-import { PaperButtonElement } from '@polymer/paper-button/paper-button.js';
+import {PaperToastElement} from '@polymer/paper-toast/paper-toast.js';
+import {PaperButtonElement} from '@polymer/paper-button/paper-button.js';
 
 /**
  * @polymer
@@ -62,11 +62,6 @@ class EtoolsToast extends PolymerElement {
     `;
   }
 
-  static get properties() {
-    return {
-    };
-  }
-
   public fitInto: object | null = null;
 
   public show(details: object) {
@@ -92,7 +87,7 @@ class EtoolsToast extends PolymerElement {
   }
 
   public getMessageWrapper() {
-    return (this.$.toast as PaperToastElement).$.label  as HTMLSpanElement;
+    return (this.$.toast as PaperToastElement).$.label as HTMLSpanElement;
   }
 
   protected _isMultiLine(message: string) {
@@ -103,8 +98,8 @@ class EtoolsToast extends PolymerElement {
   }
 
   prepareToastAndGetShowProperties(detail: any) {
-    let closeToastBtn = this.$.confirmBtn as PaperButtonElement;
-    let toast = this.$.toast;
+    const closeToastBtn = this.$.confirmBtn as PaperButtonElement;
+    const toast = this.$.toast;
 
     if (this._isMultiLine(detail.text)) {
       toast.classList.remove('toast');
@@ -123,7 +118,7 @@ class EtoolsToast extends PolymerElement {
     closeToastBtn.updateStyles();
 
     // clone detail obj
-    let toastProperties = JSON.parse(JSON.stringify(detail));
+    const toastProperties = JSON.parse(JSON.stringify(detail));
 
     toastProperties.duration = 0;
     if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {

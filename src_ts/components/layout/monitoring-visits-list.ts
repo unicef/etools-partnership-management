@@ -1,14 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-loading/etools-loading.js';
 declare const moment: any;
 import CommonMixin from '../mixins/common-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
-import { isEmptyObject } from '../utils/utils';
-import { SharedStyles } from '../styles/shared-styles';
-import { gridLayoutStyles } from '../styles/grid-layout-styles';
+import {isEmptyObject} from '../utils/utils';
+import {SharedStyles} from '../styles/shared-styles';
+import {gridLayoutStyles} from '../styles/grid-layout-styles';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -145,10 +145,10 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
   @property({type: Array})
   tpmMonitoringVisits: any[] = [];
 
-  @property({type: Number,  observer: '_interventionIdChanged'})
+  @property({type: Number, observer: '_interventionIdChanged'})
   interventionId!: number;
 
-  @property({type: Number,  observer: '_partnerIdChanged'})
+  @property({type: Number, observer: '_partnerIdChanged'})
   partnerId!: number;
 
   @property({type: Boolean, reflectToAttribute: true})
@@ -159,8 +159,8 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
 
   static get observers() {
     return [
-             'showTpmVisitsAndIdChanged(partnerId, showTpmVisits)'
-           ];
+      'showTpmVisitsAndIdChanged(partnerId, showTpmVisits)'
+    ];
   }
 
   _interventionIdChanged(intervId: string) {
@@ -173,16 +173,16 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     }
   }
 
-  _getT2fVisits(interventionOrPartnerId: string , endpointName: string) {
+  _getT2fVisits(interventionOrPartnerId: string, endpointName: string) {
     if (!interventionOrPartnerId) {
       return;
     }
 
     this.set('showLoading', true);
-    let monitoringVisitsEndpoint = this.getEndpoint(endpointName, {
+    const monitoringVisitsEndpoint = this.getEndpoint(endpointName, {
       id: interventionOrPartnerId, year: moment().year()
     });
-    let self = this;
+    const self = this;
     this.sendRequest({
       endpoint: monitoringVisitsEndpoint
     }).then(function(resp: any) {
@@ -211,7 +211,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
 
     this.sendRequest({
       endpoint: this.getEndpoint('partnerTPMProgrammaticVisits',
-       {partnerId: partnerId})
+        {partnerId: partnerId})
     }).then((resp: any) => {
       this.set('tpmMonitoringVisits', resp.results);
       this.set('showLoading', false);

@@ -1,15 +1,15 @@
 import pmpEdpoints from '../endpoints/endpoints.js';
 import {store, RootState} from '../../store';
-import { DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS } from '../../actions/upload-status.js';
-import { Constructor } from '../../typings/globals.types.js';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
+import {DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS} from '../../actions/upload-status.js';
+import {Constructor} from '../../typings/globals.types.js';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 /**
  * @polymer
  * @mixinFunction
  */
 function UploadsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class uploadsClass extends baseClass {
+  class UploadsClass extends baseClass {
 
     @property({type: String})
     uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;
@@ -40,8 +40,8 @@ function UploadsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       e.stopImmediatePropagation();
       store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
     }
-  };
-  return uploadsClass;
+  }
+  return UploadsClass;
 }
 
 export default UploadsMixin;

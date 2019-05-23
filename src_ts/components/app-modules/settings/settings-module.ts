@@ -3,13 +3,13 @@ import '../../layout/page-content-header';
 import './components/disaggregation-list.js';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @polymer
  * @customElement
  */
-class SettingsModule extends PolymerElement{
+class SettingsModule extends PolymerElement {
 
   static get template() {
     // language=HTML
