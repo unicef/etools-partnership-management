@@ -582,7 +582,6 @@ class InterventionsList extends connect(store)(
     }
 
     this.set('initComplete', false);
-    console.log(urlQueryParams.end);
     this.setProperties(
       {
         q: urlQueryParams.q ? urlQueryParams.q : '',
@@ -675,7 +674,6 @@ class InterventionsList extends connect(store)(
     if (this._canFilterData()) {
       this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
       const qs = this._buildQueryString();
-      // console.log(qs);
       this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated, qs,
         this._filterListData.bind(this));
       _interventionsLastNavigated = qs || _interventionsLastNavigated;
@@ -753,7 +751,6 @@ class InterventionsList extends connect(store)(
       endAfter: this.endAfter,
       search: this.q
     };
-    // console.log(params);
     return this._buildExportQueryString(params);
   }
 
