@@ -96,7 +96,7 @@ class InterventionsList extends connect(store)(
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
-          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+          <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
             <etools-dropdown-multi
                 class="filter"
                 label="[[filter.filterName]]"
@@ -105,7 +105,7 @@ class InterventionsList extends connect(store)(
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="{{filter.alreadySelected}}"
+                selected-values="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -121,7 +121,7 @@ class InterventionsList extends connect(store)(
                               class="filter date"
                               label="[[filter.filterName]]"
                               placeholder="&#8212;"
-                              value="{{filter.dateSelected}}"
+                              value="{{filter.selectedValue}}"
                               on-date-has-changed="_filterDateHasChanged"
                               data-filter-path$="[[filter.path]]"
                               fire-date-has-changed
@@ -313,7 +313,7 @@ class InterventionsList extends connect(store)(
   endAfter!: string;
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
-  cpOutputs: CpOutput[] = []
+  cpOutputs: CpOutput[] = [];
 
   @property({type: Array})
   selectedCpOutputs: number[] = [];
@@ -442,11 +442,11 @@ class InterventionsList extends connect(store)(
     this.initListFiltersData([
       new ListFilterOption({
         filterName: 'CP Structure',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
         optionLabel: 'name',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCPStructures',
         selected: true,
         minWidth: '400px',
@@ -454,22 +454,22 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'Country Programme Output',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: cpOutputs,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCpOutputs',
         selected: false,
         minWidth: '400px'
       }),
       new ListFilterOption({
         filterName: 'Donors',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: donors,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedDonors',
         selected: false,
         minWidth: '400px'
@@ -478,27 +478,27 @@ class InterventionsList extends connect(store)(
         filterName: 'Ends Before',
         type: 'datepicker', // datepicker-lite
         path: 'endDate',
-        dateSelected: '',
+        selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Grants',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: grants,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedGrants',
         selected: false,
         minWidth: '400px'
       }),
       new ListFilterOption({
         filterName: 'Offices',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: offices,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedOffices',
         selected: true,
         minWidth: '250px',
@@ -506,11 +506,11 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'PD/SSFA Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: documentTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedDocumentTypes',
         selected: true,
         minWidth: '400px',
@@ -518,11 +518,11 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'Sections',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: sections,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedSections',
         selected: true,
         minWidth: '350px',
@@ -532,23 +532,23 @@ class InterventionsList extends connect(store)(
         filterName: 'Starts After',
         type: 'datepicker', // datepicker-lite
         path: 'startDate',
-        dateSelected: '',
+        selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Ends After',
         type: 'datepicker',
-        dateSelected: '',
+        selectedValue: '',
         path: 'endAfter',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Status',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: interventionStatuses,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedStatuses',
         selected: true,
         minWidth: '160px',
@@ -556,11 +556,11 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'UNICEF focal point',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: unicefUsersData,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedUnicefFocalPoints',
         selected: false,
         minWidth: '400px'
@@ -582,6 +582,7 @@ class InterventionsList extends connect(store)(
     }
 
     this.set('initComplete', false);
+    console.log(urlQueryParams.end);
     this.setProperties(
       {
         q: urlQueryParams.q ? urlQueryParams.q : '',
@@ -674,6 +675,7 @@ class InterventionsList extends connect(store)(
     if (this._canFilterData()) {
       this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
       const qs = this._buildQueryString();
+      // console.log(qs);
       this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated, qs,
         this._filterListData.bind(this));
       _interventionsLastNavigated = qs || _interventionsLastNavigated;
@@ -751,6 +753,7 @@ class InterventionsList extends connect(store)(
       endAfter: this.endAfter,
       search: this.q
     };
+    // console.log(params);
     return this._buildExportQueryString(params);
   }
 
