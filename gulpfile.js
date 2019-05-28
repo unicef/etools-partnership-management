@@ -157,7 +157,7 @@ async function build(done) {
         buildStream = buildStream.pipe(gulp.dest(buildDirectory+'/es6-bundled'))
 
         // ---- Transpile to ES5 --------------
-        // buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter())
+        // 
         //                          .pipe(gulpif(matchesExt('.js'), through2(polymerProject.jsTransform(file, {
         //                                       js: {
         //                                         compile: true,
@@ -165,6 +165,7 @@ async function build(done) {
         //                                       },
         //                                       entrypointPath: polymerProject.config.entrypoint
         //                                     }))));
+        buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter())
         buildStream = pipeStreams([
           buildStream,
           htmlSplitter.split(),
