@@ -90,7 +90,7 @@ class PartnersList extends
           </paper-input>
 
           <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-            <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
               <!-- esmm multi -->
               <etools-dropdown-multi
                   class="filter"
@@ -98,7 +98,7 @@ class PartnersList extends
                   placeholder="Select"
                   disabled$="[[filter.disabled]]"
                   options="[[filter.selectionOptions]]"
-                  selected-values="{{filter.alreadySelected}}"
+                  selected-values="{{filter.selectedValue}}"
                   data-filter-path$="[[filter.path]]"
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event
@@ -323,9 +323,9 @@ class PartnersList extends
     this.initListFiltersData([
       {
         filterName: 'Partner Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: partnerTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedPartnerTypes',
         selected: true,
         minWidth: '350px',
@@ -334,9 +334,9 @@ class PartnersList extends
       },
       {
         filterName: 'CSO Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: csoTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCsoTypes',
         selected: true,
         minWidth: '350px',
@@ -345,9 +345,9 @@ class PartnersList extends
       },
       {
         filterName: 'Risk Rating',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedRiskRatings',
         selected: true,
         minWidth: '160px',
