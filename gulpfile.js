@@ -18,6 +18,7 @@ const del = require('del');
 const spawn = require('child_process').spawn;
 const polymerBuilds = require('./build_helpers/polymer-builds');
 const fileSystemHelper = require('./build_helpers/file-system-helper');
+const babel = require('gulp-babel');
 
 
 
@@ -27,6 +28,8 @@ const gulpif = require('gulp-if');
 const mergeStream = require('merge-stream');
 const polymerBuild = require('polymer-build');
 const through2 = require('through2').obj;
+//let uglify = require('gulp-uglify-es').default;
+let uglify = require('babel-preset-minify');
 
 // Here we add tools that will be used to process our source files.
 //const imagemin = require('gulp-imagemin');
@@ -109,7 +112,7 @@ async function build(done) {
           // Add any dependency optimizations here.
          // .pipe(dependenciesStreamSplitter.rejoin());
 
-        const htmlSplitter = new polymerBuild.HtmlSplitter();
+        //const htmlSplitter = new polymerBuild.HtmlSplitter();
         // Okay, now let's merge your sources & dependencies together into a single build stream.
         let buildStream = mergeStream(polymerProject.sources(), polymerProject.dependencies())
           .once('data', () => {
@@ -120,64 +123,81 @@ async function build(done) {
         // This will bundle dependencies into your fragments so you can lazy
         // load them.
         // ------ Bundle --------------
-        buildStream = buildStream.pipe(polymerProject.bundler())
+        buildStream = buildStream.pipe(polymerProject.bundler({
+          stripComments: true
+        }));
 
-        // ------ Minify Js ------------
-       // buildStream = buildStream.pipe(polymerBuild.getOptimizeStreams({js:{minify:true, moduleResolution: 'node'}}));
-        buildStream = pipeStreams([
-          buildStream,
-          htmlSplitter.split(),
 
-          polymerBuild.getOptimizeStreams({js:{minify:true, moduleResolution: 'node'}}),
-          htmlSplitter.rejoin()
-          ]);
+       // buildStream = buildStream.pipe(uglify({mangle: false}));
+        // buildStream = pipeStreams([
+        //   buildStream,
+        //   ...polymerBuild.getOptimizeStreams({js:{minify:true, moduleResolution: 'node'}})
+        //   ]);
 
         buildStream = buildStream.pipe(gulp.dest(buildDirectory+'/esm-bundled'));
 
 
         //----- Transform Modules to AMD ----------
-        // buildStream = buildStream.pipe(polymerBuild.getOptimizeStreams({js: {
-        //       transformModulesToAmd: true,
-        //       moduleResolution: 'node'
-        //     },
-        //     entrypointPath: polymerProject.config.entrypoint
-        //   }));
+        // buildStream = buildStream.pipe(gulpif(matchesExt('.js'), babel({
+        //   plugins: ["@babel/plugin-transform-modules-amd"]
+        // })));
         buildStream = pipeStreams([
           buildStream,
-          htmlSplitter.split(),
 
-          polymerBuild.getOptimizeStreams({js: {
+          ...polymerBuild.getOptimizeStreams({js: {
                    transformModulesToAmd: true,
-                   moduleResolution: 'node'
+                   moduleResolution: 'node',
+                   minify: true
                  },
                  entrypointPath: polymerProject.config.entrypoint
-               }),
-          htmlSplitter.rejoin()]);
+               })
+        ]);
+
+        // ------ Minify Js ------------
+        // buildStream = buildStream.pipe(gulpif(matchesExt('.js'),babel({presets:[['minify', {
+        //   builtIns: false,
+        //   evaluate: false,
+        //   mangle: false,
+        // }]]})));
 
         buildStream = buildStream.pipe(gulp.dest(buildDirectory+'/es6-bundled'))
 
         // ---- Transpile to ES5 --------------
-        // 
-        //                          .pipe(gulpif(matchesExt('.js'), through2(polymerProject.jsTransform(file, {
-        //                                       js: {
-        //                                         compile: true,
-        //                                         moduleResolution: 'node'
-        //                                       },
-        //                                       entrypointPath: polymerProject.config.entrypoint
-        //                                     }))));
+
         buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter())
         buildStream = pipeStreams([
           buildStream,
-          htmlSplitter.split(),
-
-          polymerBuild.getOptimizeStreams({js: {
+          ...polymerBuild.getOptimizeStreams({js: {
                                              compile: true,
                                              moduleResolution: 'node'
                                            },
                                            entrypointPath: polymerProject.config.entrypoint
-                                         }),
-          htmlSplitter.rejoin()
+                                         })
         ]);
+        // buildStream = buildStream.pipe(gulpif(matchesExt('.js'), babel({
+        //   plugins: [
+        //     '@babel/plugin-proposal-object-rest-spread',
+        //     '@babel/plugin-transform-template-literals',
+        //     '@babel/plugin-transform-literals',
+        //     '@babel/plugin-transform-function-name',
+        //     '@babel/plugin-transform-arrow-functions',
+        //     '@babel/plugin-transform-block-scoped-functions',
+        //     '@babel/plugin-transform-classes',
+        //     '@babel/plugin-transform-object-super',
+        //     '@babel/plugin-transform-shorthand-properties',
+        //     '@babel/plugin-transform-duplicate-keys',
+        //     '@babel/plugin-transform-computed-properties',
+        //     '@babel/plugin-transform-for-of',
+        //     '@babel/plugin-transform-sticky-regex',
+        //     '@babel/plugin-transform-unicode-regex',
+        //     '@babel/plugin-transform-spread',
+        //     '@babel/plugin-transform-parameters',
+        //     '@babel/plugin-transform-destructuring',
+        //     '@babel/plugin-transform-block-scoping',
+        //     '@babel/plugin-transform-typeof-symbol',
+        //     '@babel/plugin-transform-instanceof'
+        //   ]
+        // })));
 
         buildStream.pipe(gulp.dest(buildDirectory+'/es5-bundled'));
 
