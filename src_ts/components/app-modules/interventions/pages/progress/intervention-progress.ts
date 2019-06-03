@@ -400,8 +400,7 @@ class InterventionProgress extends connect(store)(
     let resultStatusDateStr = '';
     const latestIndReport = this._getLatestIndicatorReport(lowerResultId);
     if (latestIndReport) {
-      const d = this._convertToDisplayFormat(latestIndReport.submission_date);
-      resultStatusDateStr = '(' + this.getDateDisplayValue(d) + ')';
+      resultStatusDateStr = '(' + this._convertToDisplayFormat(latestIndReport.submission_date) + ')';
     }
     return resultStatusDateStr;
   }
