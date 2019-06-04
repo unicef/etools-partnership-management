@@ -2,7 +2,7 @@
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {fireEvent} from '../utils/fire-custom-event';
-import {logWarn} from 'etools-behaviors/etools-logging';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

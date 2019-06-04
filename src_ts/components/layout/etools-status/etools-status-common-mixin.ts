@@ -3,7 +3,7 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import {removeDialog, createDynamicDialog} from 'etools-dialog/dynamic-dialog';
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Constructor} from '../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

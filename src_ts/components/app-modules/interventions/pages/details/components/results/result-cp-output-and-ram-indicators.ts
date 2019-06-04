@@ -6,7 +6,7 @@ import 'etools-dropdown/etools-dropdown-multi.js';
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';

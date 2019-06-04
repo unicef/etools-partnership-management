@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import '../../../../../../layout/etools-warn-message';

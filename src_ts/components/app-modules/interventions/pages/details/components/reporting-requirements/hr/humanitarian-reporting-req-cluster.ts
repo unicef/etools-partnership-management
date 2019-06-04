@@ -6,7 +6,7 @@ import CommonMixin from '../../../../../../../mixins/common-mixin';
 import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typings/intervention.types';
 import {isEmptyObject} from '../../../../../../../utils/utils';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 

@@ -10,7 +10,7 @@ import {SharedStyles} from '../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
 import {CpStructure, GenericObject} from '../../typings/globals.types';
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 
 /**

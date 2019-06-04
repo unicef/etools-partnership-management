@@ -14,7 +14,7 @@ import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../store';
 import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 

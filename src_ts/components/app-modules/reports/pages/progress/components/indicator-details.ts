@@ -4,7 +4,7 @@ import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
-import 'etools-loading/etools-loading.js';
+import '@unicef-polymer/etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
@@ -13,7 +13,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../typings/globals.types.js';
 

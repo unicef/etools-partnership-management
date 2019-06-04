@@ -6,7 +6,7 @@ import '@polymer/paper-input/paper-input.js';
 
 import 'etools-content-panel/etools-content-panel.js';
 import 'etools-dropdown/etools-dropdown.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import 'etools-date-time/datepicker-lite.js';
 
@@ -29,7 +29,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
 import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Permission, MinimalUser} from '../../../../../typings/globals.types.js';
 

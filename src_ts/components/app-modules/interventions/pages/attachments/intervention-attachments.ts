@@ -22,7 +22,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../../../store.js';
 import {RootState} from '../../../../../store.js';
 import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';

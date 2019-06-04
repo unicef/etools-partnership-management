@@ -17,7 +17,7 @@ import {isEmptyObject} from '../../../../../../../utils/utils.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../../store.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 import {GenericObject} from '../../../../../../../../typings/globals.types.js';

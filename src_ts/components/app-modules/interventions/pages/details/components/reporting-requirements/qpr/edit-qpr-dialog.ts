@@ -13,7 +13,7 @@ import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import 'etools-date-time/calendar-lite.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../../../typings/globals.types.js';

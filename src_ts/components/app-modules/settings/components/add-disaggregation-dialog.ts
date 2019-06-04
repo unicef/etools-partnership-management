@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-dialog/etools-dialog.js';
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin.js';
+import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';

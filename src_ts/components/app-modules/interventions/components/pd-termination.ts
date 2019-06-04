@@ -3,7 +3,7 @@ import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-
 import pmpEndpoints from '../../../endpoints/endpoints';
 declare const moment: any;
 import 'etools-dialog/etools-dialog';
-import 'etools-upload/etools-upload';
+import '@unicef-polymer/etools-upload/etools-upload';
 import 'etools-date-time/datepicker-lite';
 import '../../../layout/etools-warn-message';
 import {SharedStyles} from '../../../styles/shared-styles';

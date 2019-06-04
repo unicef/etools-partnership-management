@@ -16,7 +16,7 @@ import {frWarningsStyles} from '../../../../styles/fr-warnings-styles.js';
 import {FrsDetails, Fr, Intervention} from '../../../../../../../typings/intervention.types.js';
 import {pmpCustomIcons} from '../../../../../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {getArraysDiff} from '../../../../../../utils/array-helper.js';
 import {property} from '@polymer/decorators';
 import {UpdateFrNumbersEl} from './update-fr-numbers';

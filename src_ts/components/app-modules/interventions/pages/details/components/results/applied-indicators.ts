@@ -3,7 +3,7 @@ import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import './applied-indicator.js';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog';
 import {AppliedIndicatorEl} from './applied-indicator.js';

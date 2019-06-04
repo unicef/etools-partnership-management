@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
@@ -13,7 +13,7 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
 import {SharedStyles} from '../../../../../styles/shared-styles.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {logWarn} from 'etools-behaviors/etools-logging';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';

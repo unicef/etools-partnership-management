@@ -16,7 +16,7 @@ import {SharedStyles} from '../../../../../../styles/shared-styles';
 import './pd-lower-result-name.js';
 import './applied-indicators.js';
 import {Indicator} from '../../../../../../../typings/intervention.types.js';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';

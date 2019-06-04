@@ -22,7 +22,7 @@ import './result-link-lower-results.js';
 import './indicator-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../store';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {IndicatorDialogEl} from './indicator-dialog.js';
 import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';

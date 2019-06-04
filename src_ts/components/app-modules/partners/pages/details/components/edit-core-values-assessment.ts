@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-dialog/etools-dialog';
-import 'etools-upload/etools-upload';
+import '@unicef-polymer/etools-upload/etools-upload';
 
 import '../../../../../layout/etools-form-element-wrapper';
 

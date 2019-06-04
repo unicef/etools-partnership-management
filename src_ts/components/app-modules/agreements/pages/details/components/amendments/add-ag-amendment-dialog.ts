@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 import 'etools-date-time/datepicker-lite.js';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
 import {AgreementAmendment} from '../../../../agreement.types';

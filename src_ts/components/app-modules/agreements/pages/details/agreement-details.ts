@@ -8,7 +8,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input-container.js';
 
 import 'etools-content-panel/etools-content-panel.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 import 'etools-dropdown/etools-dropdown.js';
 import 'etools-date-time/datepicker-lite';

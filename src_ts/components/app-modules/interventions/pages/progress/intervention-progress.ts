@@ -26,7 +26,7 @@ import {User, GenericObject} from '../../../../../typings/globals.types.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
-import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
+import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 declare const moment: any;

@@ -11,7 +11,7 @@ import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {AddEditSpecialRepReqEl} from './add-edit-special-rep-req.js';
