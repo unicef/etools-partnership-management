@@ -152,6 +152,9 @@ class StaffMembers extends PolymerElement {
   @property({type: Array})
   dataItems: StaffMember[] = [];
 
+  @property({type: Number})
+  partnerId: number | null = null;
+
   static get observers() {
     return [
       'dataItemsChanged(dataItems, dataItems.*)'
@@ -185,6 +188,7 @@ class StaffMembers extends PolymerElement {
     this._savePartnerContact = this._savePartnerContact.bind(this);
     this.addEditDialog = document.createElement('add-edit-staff-members') as any;
     this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact as any);
+    this.addEditDialog.mainEl = this;
     document.querySelector('body')!.appendChild(this.addEditDialog);
   }
 
@@ -206,6 +210,7 @@ class StaffMembers extends PolymerElement {
   }
 
   openAddEditDialog() {
+    this.addEditDialog.partnerId = this.partnerId;
     this.addEditDialog.dataItems = this.dataItems;
     this.addEditDialog.open();
   }

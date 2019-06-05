@@ -125,15 +125,18 @@ export class Partner extends ModelsCommon {
     };
   }
 
-
-  private _normalizePartnerData() {
-    if (this.staff_members.length > 0) {
+  updateStaffMembers(staffMembers: GenericObject) {
+    if (staffMembers.length > 0) {
       const sm: StaffMember[] = [];
-      this.staff_members.forEach((staffM: GenericObject) => {
+      staffMembers.forEach((staffM: GenericObject) => {
         sm.push(new StaffMember(staffM));
       });
       this.staff_members = sm;
     }
+  }
+
+  private _normalizePartnerData() {
+    this.updateStaffMembers(this.staff_members);
     // TODO1  Do we need to do this? are we using this fields in a maner that requires this extra work?
 
     // TODO2 dependent on TODO1= true: normalize the other prop data that contains partner types

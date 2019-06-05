@@ -11,14 +11,17 @@ import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {StaffMember} from '../../../../../../models/partners.models';
+import {StaffMember, Partner} from '../../../../../../models/partners.models';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
 
 /**
  * @polymer
  * @customElement
+ * @appliesMixin EndpointsMixin
  */
-class AddEditStaffMembers extends PolymerElement {
+class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
 
   static get template() {
     // language=HTML
@@ -116,6 +119,9 @@ class AddEditStaffMembers extends PolymerElement {
 
   @property({type: Array})
   dataItems: StaffMember[] = [];
+
+  @property({type: Object})
+  mainEl: object = {};
 
   open() {
     this.resetValidations();
@@ -226,8 +232,25 @@ class AddEditStaffMembers extends PolymerElement {
 
   _savePartnerContact() {
     if (this.validate()) {
-      fireEvent(this, 'save-partner-contact', this.item);
-      (this.$.staffMemberDialog as EtoolsDialog).opened = false;
+      const dialog = (this.$.staffMemberDialog as EtoolsDialog);
+      const endpoint = this.getEndpoint('partnerDetails', {id: this.partnerId});
+      dialog.startSpinner();
+
+      this.sendRequest({
+        endpoint: endpoint,
+        method: 'PATCH',
+        body: {
+          id: this.id,
+          staff_members: [this.item]
+        }
+      }).then((response: any) => {
+        fireEvent(this.mainEl, 'partner-contacts-updated', response.staff_members);
+        dialog.stopSpinner();
+        (this.$.staffMemberDialog as EtoolsDialog).opened = false;
+      }).catch((error: any) => {
+        dialog.stopSpinner();
+        parseRequestErrorsAndShowAsToastMsgs(error, this.mainEl);
+      });
     }
   }
 
