@@ -2,12 +2,15 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
+
 import 'etools-loading/etools-loading.js';
+
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
 import {isEmptyObject} from '../../../../../utils/utils.js';
 import {PolymerElement, html} from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
 import {logError} from 'etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
@@ -19,7 +22,7 @@ import {GenericObject} from '../../../../../../typings/globals.types.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends EndpointsMixin(PolymerElement) {
+class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
   static get is() {
     return 'indicator-details';
