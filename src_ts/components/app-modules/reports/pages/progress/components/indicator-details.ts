@@ -1,17 +1,13 @@
 import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
-
 import 'etools-loading/etools-loading.js';
-
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
 import {isEmptyObject} from '../../../../../utils/utils.js';
 import {PolymerElement, html} from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
-import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
 import {logError} from 'etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
@@ -23,7 +19,7 @@ import {GenericObject} from '../../../../../../typings/globals.types.js';
  * @appliesMixin EndpointsMixin
  * @appliesMixin UtilsMixin
  */
-class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
+class IndicatorDetails extends EndpointsMixin(PolymerElement) {
 
   static get is() {
     return 'indicator-details';
@@ -58,8 +54,6 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
             padding-bottom: 13px;
           };
 
-          --layout-horizontal: {display: block}
-
           --paper-tab: {
             padding-top:14px;
           }
@@ -70,8 +64,8 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
           --paper-tabs-selection-bar-color: var(--ternary-color);
         }
         .tab-header {
-          @apply --layout-horizontal;
           @apply --layout-justified;
+          display: block
           padding: 10px 24px;
           border-bottom: 1px solid var(--dark-divider-color);
           background-color: var(--light-theme-background-color);
