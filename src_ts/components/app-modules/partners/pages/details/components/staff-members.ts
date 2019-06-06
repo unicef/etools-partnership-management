@@ -185,16 +185,13 @@ class StaffMembers extends PolymerElement {
   }
 
   _createAddEditDialog() {
-    this._savePartnerContact = this._savePartnerContact.bind(this);
     this.addEditDialog = document.createElement('add-edit-staff-members') as any;
-    this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact as any);
     this.addEditDialog.mainEl = this;
     document.querySelector('body')!.appendChild(this.addEditDialog);
   }
 
   _removeAddEditDialog() {
     if (this.addEditDialog) {
-      this.addEditDialog.removeEventListener('save-partner-contact', this._savePartnerContact as any);
       document.querySelector('body')!.removeChild(this.addEditDialog);
     }
   }
@@ -213,10 +210,6 @@ class StaffMembers extends PolymerElement {
     this.addEditDialog.partnerId = this.partnerId;
     this.addEditDialog.dataItems = this.dataItems;
     this.addEditDialog.open();
-  }
-
-  _savePartnerContact(e: CustomEvent) {
-    fireEvent(this, 'save-partner-contact', e.detail);
   }
 
   _isVisible(active: boolean, showInactive: boolean) {

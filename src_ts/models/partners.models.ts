@@ -111,13 +111,6 @@ export class Partner extends ModelsCommon {
     this._normalizePartnerData();
   }
 
-  getSaveStaffMemberRequestPayload(staffMemberData: GenericObject) {
-    return {
-      id: this.id,
-      staff_members: [new StaffMember(staffMemberData)]
-    };
-  }
-
   getSaveCVARequestPayload(cvaData: GenericObject) {
     return {
       id: this.id,

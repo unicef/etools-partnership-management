@@ -11,9 +11,9 @@ import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {StaffMember, Partner} from '../../../../../../models/partners.models';
+import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
 
 /**
@@ -232,7 +232,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
 
   _savePartnerContact() {
     if (this.validate()) {
-      const dialog = (this.$.staffMemberDialog as EtoolsDialog);
+      const dialog: EtoolsDialog = this.$.staffMemberDialog;
       const endpoint = this.getEndpoint('partnerDetails', {id: this.partnerId});
       dialog.startSpinner();
 
@@ -246,7 +246,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
       }).then((response: any) => {
         fireEvent(this.mainEl, 'partner-contacts-updated', response.staff_members);
         dialog.stopSpinner();
-        (this.$.staffMemberDialog as EtoolsDialog).opened = false;
+        dialog.opened = false;
       }).catch((error: any) => {
         dialog.stopSpinner();
         parseRequestErrorsAndShowAsToastMsgs(error, this.mainEl);
