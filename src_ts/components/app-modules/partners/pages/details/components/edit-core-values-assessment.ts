@@ -10,7 +10,7 @@ import CommonMixin from '../../../../../mixins/common-mixin';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
-import { fireEvent } from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
 /**
@@ -72,7 +72,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
   }
 
   _saveCoreValueAssessment() {
-    let attach = this.shadowRoot!.querySelector('#attachment') as any;
+    const attach = this.shadowRoot!.querySelector('#attachment') as any;
     if (!attach || !attach.validate()) {
       return;
     }
@@ -91,4 +91,4 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 
 window.customElements.define('edit-core-values-assessment', EditCoreValuesAssessment);
 
-export {EditCoreValuesAssessment as EditCoreValuesAssessmentEl}
+export {EditCoreValuesAssessment as EditCoreValuesAssessmentEl};

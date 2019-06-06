@@ -6,8 +6,6 @@ export class ListFilterOption {
     this.selectionOptions = item.selectionOptions;
     this.optionValue = item.optionValue;
     this.optionLabel = item.optionLabel;
-    this.alreadySelected = item.alreadySelected;
-    this.dateSelected = item.dateSelected;
     this.selectedValue = item.selectedValue;
     this.path = item.path;
     this.selected = item.selected;
@@ -24,8 +22,6 @@ export class ListFilterOption {
   selectionOptions?: string[] | number[] | any[];
   optionValue?: string;
   optionLabel?: string;
-  alreadySelected?: [] | null;
-  dateSelected?: string;
   selectedValue?: any;
   path: string = '';
   selected: boolean = false;
@@ -39,12 +35,12 @@ export class ListFilterOption {
   [key: string]: any;
 }
 
-export type SelectedFilterOption = {
-  filterName: string,
-  selectedValue: any,
-  allowEmpty?: boolean,
-  disabled?: boolean,
-  disableMenuOption?: boolean
+export interface SelectedFilterOption {
+  filterName: string;
+  selectedValue: any;
+  allowEmpty?: boolean;
+  disabled?: boolean;
+  disableMenuOption?: boolean;
 }
 
 export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;// TODO

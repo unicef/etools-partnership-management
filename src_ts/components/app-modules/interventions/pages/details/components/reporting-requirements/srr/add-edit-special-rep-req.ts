@@ -9,10 +9,10 @@ import 'etools-dialog/etools-dialog.js';
 
 import 'etools-date-time/calendar-lite.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
-import { logError } from 'etools-behaviors/etools-logging';
+import {logError} from 'etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { property } from '@polymer/decorators';
-import { GenericObject } from '../../../../../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
 
 
@@ -104,27 +104,27 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
   }
 
   _save() {
-    let dialog = this.$.addEditDialog as EtoolsDialog;
+    const dialog = this.$.addEditDialog as EtoolsDialog;
     dialog.startSpinner();
 
-    let endpoint = this._getEndpoint();
-    let method = this._isNew() ? 'POST' : 'PATCH';
+    const endpoint = this._getEndpoint();
+    const method = this._isNew() ? 'POST' : 'PATCH';
     this.sendRequest(
-        {
-          method: method,
-          endpoint: endpoint,
-          body: this._getBody()
-        })
-        .then((response: any) => {
-          fireEvent(this, 'reporting-requirements-saved', response);
-          dialog.stopSpinner();
-          this.opened = false;
-        })
-        .catch((error: any) => {
-          dialog.stopSpinner();
-          logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
-          parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
-        });
+      {
+        method: method,
+        endpoint: endpoint,
+        body: this._getBody()
+      })
+      .then((response: any) => {
+        fireEvent(this, 'reporting-requirements-saved', response);
+        dialog.stopSpinner();
+        this.opened = false;
+      })
+      .catch((error: any) => {
+        dialog.stopSpinner();
+        logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+      });
   }
 
   _getBody() {
@@ -141,4 +141,4 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
 }
 
 window.customElements.define('add-edit-special-rep-req', AddEditSpecialRepReq);
-export {AddEditSpecialRepReq as AddEditSpecialRepReqEl}
+export {AddEditSpecialRepReq as AddEditSpecialRepReqEl};

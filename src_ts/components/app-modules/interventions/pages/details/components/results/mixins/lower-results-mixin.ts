@@ -1,16 +1,16 @@
-//import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import { GenericObject, Constructor } from '../../../../../../../../typings/globals.types';
+// import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
+import {GenericObject, Constructor} from '../../../../../../../../typings/globals.types';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { PolymerElement } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
-import { PdLowerResultNameEl } from '../pd-lower-result-name';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {PdLowerResultNameEl} from '../pd-lower-result-name';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class lowerResultsClass extends baseClass {
+  class LowerResultsClass extends baseClass {
 
     @property({type: Object})
     lowerResultNameEditElem!: PdLowerResultNameEl;
@@ -69,7 +69,7 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
     _getDataIndex(id: string, dataSet: GenericObject[]) {
       try {
         let index = null;
-        let resultsLength = dataSet.length;
+        const resultsLength = dataSet.length;
         for (index = 0; index < resultsLength; index++) {
           if (parseInt(dataSet[index].id, 10) === parseInt(id, 10)) {
             break;
@@ -88,23 +88,23 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
       try {
         if (!e.detail.expectedResultId) {
           logError('Can not make changes if expected result ID is not specified.',
-              'lower-results-behavior');
+            'lower-results-behavior');
           return;
         }
         // @ts-ignore
-        let expectedResultIndex = this._getDataIndex(e.detail.expectedResultId, this.dataItems);
-        let validExpectedResultsIndex = expectedResultIndex >= 0;
+        const expectedResultIndex = this._getDataIndex(e.detail.expectedResultId, this.dataItems);
+        const validExpectedResultsIndex = expectedResultIndex >= 0;
         if (!validExpectedResultsIndex) {
           logError('Result with ID: ' + e.detail.expectedResultId + ' not found.',
-              'lower-results-behavior');
+            'lower-results-behavior');
           return;
         }
         if (!e.detail.lowerResultId) {
           this.push(['dataItems', expectedResultIndex, 'll_results'], e.detail.lowerResult);
         } else {
-          let lrIndex = this._getDataIndex(e.detail.lowerResultId, this.get(['dataItems', expectedResultIndex,
+          const lrIndex = this._getDataIndex(e.detail.lowerResultId, this.get(['dataItems', expectedResultIndex,
             'll_results']));
-          let validIndex = lrIndex >= 0;
+          const validIndex = lrIndex >= 0;
           if (!validIndex) {
             logError('Lower result with ID: ' + e.detail.lowerResultId + ' not found.', 'lower-results-behavior');
             return;
@@ -113,7 +113,7 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
         }
       } catch (err) {
         logError('Adding lower result in displayed list has failed!', 'lower-results-behavior',
-            err);
+          err);
       }
     }
 
@@ -140,8 +140,8 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
       }
     }
 
-  };
-  return lowerResultsClass;
+  }
+  return LowerResultsClass;
 }
 
 export default LowerResultsMixin;

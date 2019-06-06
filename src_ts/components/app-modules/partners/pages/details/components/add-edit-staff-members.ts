@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
@@ -9,9 +9,9 @@ import '../../../../../layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
-import { fireEvent } from '../../../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { StaffMember } from '../../../../../../models/partners.models';
+import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
 
 /**
@@ -181,7 +181,7 @@ class AddEditStaffMembers extends PolymerElement {
   }
 
   _emailAlreadyUsed(emailAddress: string) {
-    let sameEmailItems = this.dataItems.filter((el: any) => {
+    const sameEmailItems = this.dataItems.filter((el: any) => {
       return el.email === emailAddress
           && Number(el.id) !== Number(this.item.id);
     });
@@ -192,9 +192,9 @@ class AddEditStaffMembers extends PolymerElement {
   validate() {
     let valid = true;
 
-    let fieldSelectors = ['#firstName', '#lastName', '#email', '#title'];
+    const fieldSelectors = ['#firstName', '#lastName', '#email', '#title'];
 
-    let elements = [];
+    const elements = [];
 
     for (let i = 0; i < fieldSelectors.length; i++) {
       elements[i] = this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
@@ -205,7 +205,7 @@ class AddEditStaffMembers extends PolymerElement {
     }
 
     for (let i = 0; i < fieldSelectors.length; i++) {
-      let el = elements[i] || this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
+      const el = elements[i] || this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
       if (el && el.invalid) {
         valid = false;
         break;
@@ -215,10 +215,10 @@ class AddEditStaffMembers extends PolymerElement {
   }
 
   resetValidations() {
-    let fieldSelectors = ['#firstName', '#lastName', '#email', '#phone', '#title'];
+    const fieldSelectors = ['#firstName', '#lastName', '#email', '#phone', '#title'];
     for (let i = 0; i < fieldSelectors.length; i++) {
-      let el = this.$.staffMemberDialog.querySelector(fieldSelectors[i]) as PolymerElement & {invalid: boolean};
-      if(el){
+      const el = this.$.staffMemberDialog.querySelector(fieldSelectors[i]) as PolymerElement & {invalid: boolean};
+      if (el) {
         el.invalid = false;
       }
     }
@@ -235,4 +235,4 @@ class AddEditStaffMembers extends PolymerElement {
 
 window.customElements.define('add-edit-staff-members', AddEditStaffMembers);
 
-export {AddEditStaffMembers as AddEditStaffMembersEl}
+export {AddEditStaffMembers as AddEditStaffMembersEl};

@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/paper-checkbox/paper-checkbox'
+import '@polymer/paper-checkbox/paper-checkbox';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-dialog/etools-dialog.js';
 import 'etools-dropdown/etools-dropdown.js';
@@ -16,10 +16,10 @@ import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
-import { LabelAndValue } from '../../../../../../typings/globals.types.js';
-import { PartnerAssessment } from '../../../../../../models/partners.models.js';
+import {LabelAndValue} from '../../../../../../typings/globals.types.js';
+import {PartnerAssessment} from '../../../../../../models/partners.models.js';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { PaperCheckboxElement } from '@polymer/paper-checkbox/paper-checkbox';
+import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
 
 /**
  * @polymer
@@ -147,7 +147,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     let isValid = true;
     this._validationSelectors.forEach((selector) => {
       // @ts-ignore
-      let el = this.shadowRoot.querySelector(selector);
+      const el = this.shadowRoot.querySelector(selector);
       if (el && !(el as any).validate()) {
         isValid = false;
       }
@@ -168,20 +168,20 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       return;
     }
     const isNew = !this.assessment.id;
-    let options = {
+    const options = {
       method: isNew ? 'POST' : 'PATCH',
       endpoint: this._pickEndpoint(isNew, this.assessment.id),
       body: this._getBody(isNew)
     };
 
     this.sendRequest(options)
-        .then((resp: any) => {
-          this._handleResponse(resp, isNew);
-          this.stopSpinner();
-        }).catch((error: any) => {
-      this._handleErrorResponse(error);
-      this.stopSpinner();
-    });
+      .then((resp: any) => {
+        this._handleResponse(resp, isNew);
+        this.stopSpinner();
+      }).catch((error: any) => {
+        this._handleErrorResponse(error);
+        this.stopSpinner();
+      });
 
   }
 
@@ -198,9 +198,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   public _pickEndpoint(isNew: boolean, assessId: any) {
-    let endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
-    let endpointParam = isNew ? undefined :
-        {assessmentId: assessId};
+    const endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
+    const endpointParam = isNew ? undefined :
+      {assessmentId: assessId};
 
     // @ts-ignore
     return this.getEndpoint(endpointName, endpointParam);
@@ -236,7 +236,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   public resetValidations() {
     this._validationSelectors.forEach((selector) => {
       // @ts-ignore
-      let el = this.shadowRoot.querySelector(selector);
+      const el = this.shadowRoot.querySelector(selector);
       if (el) {
         (el as any).invalid = false;
       }
@@ -270,4 +270,4 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 }
 
 window.customElements.define('assessment-dialog', AssessmentDialog);
-export {AssessmentDialog}
+export {AssessmentDialog};

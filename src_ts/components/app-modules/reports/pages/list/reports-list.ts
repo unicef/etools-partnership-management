@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -7,21 +7,21 @@ import 'etools-dropdown/etools-dropdown.js';
 import 'etools-dropdown/etools-dropdown-multi.js';
 
 import '../../components/reports-display-list';
-import { SharedStyles } from '../../../../styles/shared-styles';
-import { listFilterStyles } from '../../../../styles/list-filter-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {listFilterStyles} from '../../../../styles/list-filter-styles';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store';
-import { isJsonStrMatch, isEmptyObject } from '../../../../utils/utils';
-import { partnersDropdownDataSelector } from '../../../../../reducers/partners';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store';
+import {isJsonStrMatch, isEmptyObject} from '../../../../utils/utils';
+import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { fireEvent } from '../../../../utils/fire-custom-event';
-import { updateAppState } from '../../../../utils/navigation-helper';
-import { GenericObject, LabelAndValue, MinimalUser } from '../../../../../typings/globals.types';
-import { property } from '@polymer/decorators';
-import { CpOutput } from '../../../../../typings/intervention.types';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {updateAppState} from '../../../../utils/navigation-helper';
+import {GenericObject, LabelAndValue, MinimalUser} from '../../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
+import {CpOutput} from '../../../../../typings/intervention.types';
 
 
 /**
@@ -65,7 +65,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected="{{filter.alreadySelected}}"
+                selected="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-item-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -85,7 +85,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="{{filter.alreadySelected}}"
+                selected-values="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -136,7 +136,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   urlParams!: GenericObject;
 
   @property({type: Boolean})
-  active: Boolean = false;
+  active: boolean = false;
 
   @property({type: String, notify: true})
   csvDownloadUrl!: string;
@@ -163,20 +163,20 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   // selected filters values
   @property({type: Object})
   queryParams: GenericObject = {
-      pd_ref_title: null,
-      external_partner_id: null,
-      cp_output: null,
-      section: null,
-      status: [],
-      report_type: null,
-      unicef_focal_points: []
-    }
+    pd_ref_title: null,
+    external_partner_id: null,
+    cp_output: null,
+    section: null,
+    status: [],
+    report_type: null,
+    unicef_focal_points: []
+  }
 
   @property({type: Object})
-  paginator: GenericObject =  {
-        page: 1,
-        page_size: 10
-      }
+  paginator: GenericObject = {
+    page: 1,
+    page_size: 10
+  }
 
   @property({type: Boolean})
   _initComplete: boolean = false;
@@ -232,7 +232,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   }
 
   _initListFilters(partners: any[], cpOutputs: any[], sections: any[], unicefUsersData: any[],
-                   reportStatuses: any[], reportTypes: any[]) {
+    reportStatuses: any[], reportTypes: any[]) {
 
     if (!partners || partners.length === 0 || !cpOutputs || !sections ||
         !unicefUsersData || unicefUsersData.length === 0 || !reportStatuses || !reportTypes) {
@@ -245,36 +245,36 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
     this.initListFiltersData([
       {
         filterName: 'CP Output',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: cpOutputs,
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.cp_output',
         selected: false,
         minWidth: '400px'
       },
       {
         filterName: 'Partner',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: partners,
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.external_partner_id',
         selected: false,
         minWidth: '400px'
       },
       {
         filterName: 'Report Status',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         singleSelection: false,
         selectionOptions: reportStatuses,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'queryParams.status',
         selected: true,
         minWidth: '160px',
@@ -282,12 +282,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       },
       {
         filterName: 'Report Type',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         selectionOptions: reportTypes,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.report_type',
         selected: true,
         minWidth: '300px',
@@ -295,12 +295,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       },
       {
         filterName: 'Section',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: sections,
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.section',
         selected: false,
         minWidth: '400px',
@@ -308,12 +308,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       },
       {
         filterName: 'UNICEF focal points',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: false,
         optionValue: 'email',
         optionLabel: 'name',
         selectionOptions: unicefUsersData,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'queryParams.unicef_focal_points',
         selected: false,
         minWidth: '400px'
@@ -325,43 +325,43 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   // update selected filters(prezent in URL) at page refresh
   _updateSelectedFiltersValues() {
     this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
-        timeOut.after(100),
-        () => {
-          let filtersValues = [
-            {
-              filterName: 'Report Status',
-              selectedValue: this.queryParams.status
-            },
-            {
-              filterName: 'Report Type',
-              selectedValue: this.queryParams.report_type
-            },
-            {
-              filterName: 'Partner',
-              selectedValue: this.queryParams.external_partner_id
-            },
-            {
-              filterName: 'CP Output',
-              selectedValue: this.queryParams.cp_output
-            },
-            {
-              filterName: 'Section',
-              selectedValue: this.queryParams.section
-            },
-            {
-              filterName: 'UNICEF focal points',
-              selectedValue: this.queryParams.unicef_focal_points
-            }
-          ];
-          this.updateShownFilters(filtersValues);
-        });
+      timeOut.after(100),
+      () => {
+        const filtersValues = [
+          {
+            filterName: 'Report Status',
+            selectedValue: this.queryParams.status
+          },
+          {
+            filterName: 'Report Type',
+            selectedValue: this.queryParams.report_type
+          },
+          {
+            filterName: 'Partner',
+            selectedValue: this.queryParams.external_partner_id
+          },
+          {
+            filterName: 'CP Output',
+            selectedValue: this.queryParams.cp_output
+          },
+          {
+            filterName: 'Section',
+            selectedValue: this.queryParams.section
+          },
+          {
+            filterName: 'UNICEF focal points',
+            selectedValue: this.queryParams.unicef_focal_points
+          }
+        ];
+        this.updateShownFilters(filtersValues);
+      });
   }
 
   _init(active: boolean) {
     if (!active) {
       return;
     }
-    let urlQueryParams = this.urlParams;
+    const urlQueryParams = this.urlParams;
     this.set('_initComplete', false);
     if (isEmptyObject(urlQueryParams)) {
       urlQueryParams.status = 'Sub|Ove|Sen';
@@ -375,7 +375,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       'queryParams.section': urlQueryParams.section ? urlQueryParams.section : null,
       'queryParams.status': urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status,
       'queryParams.unicef_focal_points': urlQueryParams.unicef_focal_points
-          ? urlQueryParams.unicef_focal_points.split('|') : [],
+        ? urlQueryParams.unicef_focal_points.split('|') : [],
       'queryParams.report_type': urlQueryParams.report_type ? urlQueryParams.report_type : null,
       'paginator.page': urlQueryParams.page ? Number(urlQueryParams.page) : 1,
       'paginator.page_size':
@@ -394,14 +394,14 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       return;
     }
 
-    let qs = this._buildQueryString();
+    const qs = this._buildQueryString();
     // update URL
     updateAppState('reports/list', qs, true);
   }
 
   // Outputs the query string for the list
   _buildQueryString() {
-    let qStrData: string[] = [];
+    const qStrData: string[] = [];
     if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach((k: any) => {
         let qStrVal;
@@ -429,7 +429,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   /**
    * _prevFiltersChangedArgs check will prevent page reset in case queryParams array values are updated,
    * but with the same value. Ex: by default queryParams.unicef_focal_points = [], when filter si selected from menu,
-   * queryParams.unicef_focal_points is updated, but to a new empty array (by esmm) and this will
+   * queryParams.unicef_focal_points is updated, but to a new empty array (by etools-dropdown-multi) and this will
    * trigger _filtersChanged observer.
    * @private
    */
@@ -445,4 +445,4 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
 
 window.customElements.define(ReportsList.is, ReportsList);
 
-export {ReportsList as ReportsListEl}
+export {ReportsList as ReportsListEl};

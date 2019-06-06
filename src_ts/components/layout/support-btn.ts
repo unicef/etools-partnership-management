@@ -1,11 +1,13 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/communication-icons';
+
+/* eslint-disable max-len */
 
 /**
  * @polymer
  * @customElement
  */
- class SupportBtn extends PolymerElement {
+class SupportBtn extends PolymerElement {
   static get is() {
     return 'support-btn';
   }
@@ -33,6 +35,6 @@ import '@polymer/iron-icons/communication-icons';
       </a>
     `;
   }
- }
+}
 
- window.customElements.define('support-btn', SupportBtn);
+window.customElements.define('support-btn', SupportBtn);

@@ -1,19 +1,19 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import 'etools-data-table/etools-data-table';
 import './report-status';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {GenericObject, User} from '../../../../typings/globals.types';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../mixins/common-mixin';
 import PaginationMixin from '../../../mixins/pagination-mixin';
-import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../store';
-import { isJsonStrMatch, isEmptyObject } from '../../../utils/utils';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../store';
+import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
 import {logError} from 'etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
@@ -232,48 +232,48 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
     }
 
     this._loadReportsDataDebouncer = Debouncer.debounce(this._loadReportsDataDebouncer,
-        timeOut.after(this.debounceInterval),
-        () => {
-          let params = this._prepareReqParamsObj(interventionId);
+      timeOut.after(this.debounceInterval),
+      () => {
+        const params = this._prepareReqParamsObj(interventionId);
 
-          if (isJsonStrMatch(this._lastParamsUsed, params) ||
+        if (isJsonStrMatch(this._lastParamsUsed, params) ||
               (this.noPdSsfaRef && !params.programme_document_ext)) {
-            return;
-          }
+          return;
+        }
 
-          this._lastParamsUsed = Object.assign({}, params);
+        this._lastParamsUsed = Object.assign({}, params);
 
-          fireEvent(this, 'global-loading', {
-            message: 'Loading...',
-            active: true,
-            loadingSource: 'reports-list'
-          });
-
-          let activeReportsReq = this.getActiveRequestByKey(this._endpointName);
-          if (activeReportsReq) {
-            // abort previous req and then fire a new one with updated params
-            this.abortActiveRequest(activeReportsReq);
-          }
-
-          this.fireRequest('reports', {}, {params: params}, this._endpointName)
-              .then((response: any) => {
-                if (response) {
-                  this.set('reports', response.results);
-                  this.updatePaginatorTotalResults(response);
-                }
-                fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
-              })
-              .catch((error: any) => {
-                if (error.status === 0) {
-                  // req aborted
-                  return;
-                }
-                logError('Reports list data request failed!', 'reports-list', error);
-
-                parseRequestErrorsAndShowAsToastMsgs(error, this);
-                fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
-              });
+        fireEvent(this, 'global-loading', {
+          message: 'Loading...',
+          active: true,
+          loadingSource: 'reports-list'
         });
+
+        const activeReportsReq = this.getActiveRequestByKey(this._endpointName);
+        if (activeReportsReq) {
+          // abort previous req and then fire a new one with updated params
+          this.abortActiveRequest(activeReportsReq);
+        }
+
+        this.fireRequest('reports', {}, {params: params}, this._endpointName)
+          .then((response: any) => {
+            if (response) {
+              this.set('reports', response.results);
+              this.updatePaginatorTotalResults(response);
+            }
+            fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
+          })
+          .catch((error: any) => {
+            if (error.status === 0) {
+              // req aborted
+              return;
+            }
+            logError('Reports list data request failed!', 'reports-list', error);
+
+            parseRequestErrorsAndShowAsToastMsgs(error, this);
+            fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
+          });
+      });
   }
 
   _prepareReqParamsObj(interventionId: number) {
@@ -290,7 +290,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   }
 
   _preserveExistingQueryParams() {
-    let params: GenericObject = {};
+    const params: GenericObject = {};
     if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach((k: any) => {
         if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
@@ -320,7 +320,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   // TODO: this is the same function from lists common mixin, but we do not need that entire functionality here
   // refactor in near future
   _listDataChanged() {
-    let rows = this.shadowRoot!.querySelectorAll('etools-data-table-row') as any; //TODO: etools-data-table typings
+    const rows = this.shadowRoot!.querySelectorAll('etools-data-table-row') as any; // TODO: etools-data-table typings
     if (rows && rows.length) {
       for (let i = 0; i < rows.length; i++) {
         if (rows[i].detailsOpened) {

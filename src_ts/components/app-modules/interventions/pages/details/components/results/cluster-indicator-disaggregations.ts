@@ -1,11 +1,11 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-import { GenericObject } from '../../../../../../../typings/globals.types';
-import { property } from '@polymer/decorators';
+import {PolymerElement, html} from '@polymer/polymer';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {GenericObject} from '../../../../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
 
- /**
+/**
  * @polymer
  * @customElement
  */

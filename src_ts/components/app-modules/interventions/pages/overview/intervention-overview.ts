@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/maps-icons.js';
 import '@polymer/iron-label/iron-label.js';
@@ -9,17 +9,17 @@ import 'etools-content-panel/etools-content-panel.js';
 import '../../../../layout/monitoring-visits-list.js';
 import './components/fund-reservations-display.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles.js';
-import { pageCommonStyles } from '../../../../styles/page-common-styles.js';
-import { SharedStyles } from '../../../../styles/shared-styles.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
-import { isJsonStrMatch } from '../../../../utils/utils.js';
-import { CpOutput, ExpectedResult, Intervention } from '../../../../../typings/intervention.types.js';
-import { property } from '@polymer/decorators';
-import { Agreement } from '../../../agreements/agreement.types.js';
-import { GenericObject } from '../../../../../typings/globals.types.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
+import {isJsonStrMatch} from '../../../../utils/utils.js';
+import {CpOutput, ExpectedResult, Intervention} from '../../../../../typings/intervention.types.js';
+import {property} from '@polymer/decorators';
+import {Agreement} from '../../../agreements/agreement.types.js';
+import {GenericObject} from '../../../../../typings/globals.types.js';
 
 
 /**
@@ -167,10 +167,10 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
 
   @property({type: Array})
   inteventionSections!: [];
-  
+
   @property({type: Array})
   resultLinks: [] = [];
-    
+
   static get observers() {
     return [
       '_parseSections(sections.length, intervention.sections.length)',
@@ -204,9 +204,9 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
       return;
     }
 
-    let ids: GenericObject = {};
-    let uniqueIds: number[] = [];
-    let interventionCpOutputs: string[] = [];
+    const ids: GenericObject = {};
+    const uniqueIds: number[] = [];
+    const interventionCpOutputs: string[] = [];
 
     this.resultLinks.forEach(function(res: ExpectedResult) {
       ids[res.cp_output] = true;
@@ -239,8 +239,8 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
   }
 
   _getIntervSectionNames() {
-    let interventionSections = this.intervention.sections.map((sectionId: string) =>  parseInt(sectionId, 10));
-    let sectionNames: string[] = [];
+    const interventionSections = this.intervention.sections.map((sectionId: string) => parseInt(sectionId, 10));
+    const sectionNames: string[] = [];
 
 
     this.sections.forEach(function(section: GenericObject) {

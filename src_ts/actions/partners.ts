@@ -7,11 +7,11 @@ export const setPartners = (partners: []) => {
     type: SET_PARTNERS,
     partners
   };
-}
+};
 
 export const deletePartner = (partnerId: number) => {
   return {
     type: DELETE_PARTNER,
     partnerId
   };
-}
+};

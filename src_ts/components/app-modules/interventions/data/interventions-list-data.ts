@@ -1,12 +1,12 @@
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import { PolymerElement } from '@polymer/polymer';
-import { ListItemIntervention } from '../../../../typings/intervention.types';
+import {PolymerElement} from '@polymer/polymer';
+import {ListItemIntervention} from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
-import { fireEvent } from '../../../utils/fire-custom-event';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from 'etools-behaviors/etools-logging.js';
-import { property, customElement } from '@polymer/decorators';
-import { GenericObject } from '../../../../typings/globals.types';
+import {property, customElement} from '@polymer/decorators';
+import {GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -33,7 +33,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
 
 
   _filterFound(intervention: ListItemIntervention, prop: string,
-     multiple: boolean, filterValues: any) {
+    multiple: boolean, filterValues: any) {
     if (!filterValues.length) {
       return true;
     }
@@ -55,10 +55,10 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
   }
 
   query(field: string, order: string, searchString: string, documentTypes: string[],
-        cpOutputs: string[], donors: string[], grants: string[],
-        statuses: string[], sections: string[], unicefFocalPoints: string[],
-        offices: string[], cpStructures: string[], startDate: string,
-        endDate: string, endAfter: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
+    cpOutputs: string[], donors: string[], grants: string[],
+    statuses: string[], sections: string[], unicefFocalPoints: string[],
+    offices: string[], cpStructures: string[], startDate: string,
+    endDate: string, endAfter: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
     // a new one
@@ -66,7 +66,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       this.currentQuery.abort();
     }
 
-    let self = this;
+    const self = this;
 
     if (showQueryLoading) {
       fireEvent(this, 'global-loading', {
@@ -76,7 +76,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       });
     }
 
-    let interventionsDexieTable = window.EtoolsPmpApp.DexieDb.interventions;
+    const interventionsDexieTable = window.EtoolsPmpApp.DexieDb.interventions;
     window.EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function() {
       self.currentQuery = Dexie.currentTransaction;
 
@@ -141,9 +141,9 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       });
 
       return queryResult
-          .offset((pageNumber - 1) * pageSize)
-          .limit(pageSize)
-          .toArray();
+        .offset((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .toArray();
 
     }).then(function(result: any) {
       // @ts-ignore

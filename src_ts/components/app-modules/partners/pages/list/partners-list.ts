@@ -1,7 +1,7 @@
 import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {store, RootState} from '../../../../../store';
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
@@ -30,13 +30,13 @@ import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
 import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
 
 import '../../data/partners-list-data.js';
-import { isJsonStrMatch } from '../../../../utils/utils';
-import { fireEvent } from '../../../../utils/fire-custom-event';
+import {isJsonStrMatch} from '../../../../utils/utils';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import { LabelAndValue } from '../../../../../typings/globals.types';
-import { PartnersListDataEl } from '../../data/partners-list-data.js';
+import {LabelAndValue} from '../../../../../typings/globals.types';
+import {PartnersListDataEl} from '../../data/partners-list-data.js';
 
-let _partnersLastNavigated: string = '';
+let _partnersLastNavigated = '';
 
 /**
  * @polymer
@@ -50,8 +50,8 @@ let _partnersLastNavigated: string = '';
  * @appliesMixin PaginationMixin
  */
 class PartnersList extends
-      connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
-        EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
+  connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
+    EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
 
   static get template() {
     // language=HTML
@@ -90,7 +90,7 @@ class PartnersList extends
           </paper-input>
 
           <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-            <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
               <!-- esmm multi -->
               <etools-dropdown-multi
                   class="filter"
@@ -98,7 +98,7 @@ class PartnersList extends
                   placeholder="Select"
                   disabled$="[[filter.disabled]]"
                   options="[[filter.selectionOptions]]"
-                  selected-values="{{filter.alreadySelected}}"
+                  selected-values="{{filter.selectedValue}}"
                   data-filter-path$="[[filter.path]]"
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event
@@ -323,9 +323,9 @@ class PartnersList extends
     this.initListFiltersData([
       {
         filterName: 'Partner Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: partnerTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedPartnerTypes',
         selected: true,
         minWidth: '350px',
@@ -334,9 +334,9 @@ class PartnersList extends
       },
       {
         filterName: 'CSO Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: csoTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCsoTypes',
         selected: true,
         minWidth: '350px',
@@ -345,9 +345,9 @@ class PartnersList extends
       },
       {
         filterName: 'Risk Rating',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedRiskRatings',
         selected: true,
         minWidth: '160px',
@@ -367,47 +367,47 @@ class PartnersList extends
 
   public _updateSelectedFiltersValues() {
     this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer,
-        timeOut.after(20),
-        () => {
-          let filtersValues = [
-            {
-              filterName: 'Partner Type',
-              selectedValue: this.selectedPartnerTypes,
-              disabled: this.showOnlyGovernmentType,
-              allowEmpty: true,
-              disableMenuOption: this.showOnlyGovernmentType
-            },
-            {
-              filterName: 'CSO Type',
-              selectedValue: this.selectedCsoTypes,
-              allowEmpty: true
-            },
-            {
-              filterName: 'Risk Rating',
-              selectedValue: this.selectedRiskRatings,
-              allowEmpty: true
-            },
-            {
-              filterName: 'Show hidden',
-              selectedValue: this.showHidden,
-              allowEmpty: true
-            }
-          ];
-          this.updateShownFilters(filtersValues);
-        });
+      timeOut.after(20),
+      () => {
+        const filtersValues = [
+          {
+            filterName: 'Partner Type',
+            selectedValue: this.selectedPartnerTypes,
+            disabled: this.showOnlyGovernmentType,
+            allowEmpty: true,
+            disableMenuOption: this.showOnlyGovernmentType
+          },
+          {
+            filterName: 'CSO Type',
+            selectedValue: this.selectedCsoTypes,
+            allowEmpty: true
+          },
+          {
+            filterName: 'Risk Rating',
+            selectedValue: this.selectedRiskRatings,
+            allowEmpty: true
+          },
+          {
+            filterName: 'Show hidden',
+            selectedValue: this.showHidden,
+            allowEmpty: true
+          }
+        ];
+        this.updateShownFilters(filtersValues);
+      });
   }
 
   public _getSelectedPartnerTypes(selectedPartnerTypes: any) {
     return this.showOnlyGovernmentType
-        ? this._governmentLockedPartnerTypes
-        : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
+      ? this._governmentLockedPartnerTypes
+      : this._getFilterUrlValuesAsArray(selectedPartnerTypes);
   }
 
   // Input: URL query params
   // Initializes the properties of the list at page load
   // to the params interpretted from the URL string.
   public _init(active: any) {
-    let urlQueryParams = this.urlParams;
+    const urlQueryParams = this.urlParams;
     if (!active || !urlQueryParams) {
       return;
     }
@@ -421,7 +421,7 @@ class PartnersList extends
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
     // format of sort param is sort=field.order ex: sort=name.asc
-    let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
+    const result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
     this.set('sortOrder', result);
     this.set('initComplete', true);
     this._updateSelectedFiltersValues();
@@ -431,12 +431,12 @@ class PartnersList extends
   public _updateUrlAndData() {
     if (this._canFilterData()) {
       this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-      let qs = this._buildQueryString();
+      const qs = this._buildQueryString();
 
       this._updateUrlAndDislayedData(this.currentModule + '/list',
-          _partnersLastNavigated,
-          qs,
-          this._filterListData.bind(this));
+        _partnersLastNavigated,
+        qs,
+        this._filterListData.bind(this));
 
       _partnersLastNavigated = qs || _partnersLastNavigated;
     }
@@ -446,28 +446,28 @@ class PartnersList extends
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer,
-        timeOut.after(this.debounceTime),
-        () => {
-          this._handleFilterPartnersData(forceNoLoading);
-        });
+      timeOut.after(this.debounceTime),
+      () => {
+        this._handleFilterPartnersData(forceNoLoading);
+      });
   }
 
   public _handleFilterPartnersData(forceNoLoading: boolean) {
-    let partners = this.shadowRoot!.querySelector('#partners') as PartnersListDataEl;
+    const partners = this.shadowRoot!.querySelector('#partners') as PartnersListDataEl;
     if (!partners) {
       return;
     }
     partners.query(
-        this.sortOrder.field,
-        this.sortOrder.direction,
-        this.q.toLowerCase(),
-        this.selectedPartnerTypes,
-        this.selectedCsoTypes,
-        this.selectedRiskRatings,
-        this.paginator.page,
-        this.paginator.page_size,
-        this.showHidden,
-        forceNoLoading ? false : this.showQueryLoading
+      this.sortOrder.field,
+      this.sortOrder.direction,
+      this.q.toLowerCase(),
+      this.selectedPartnerTypes,
+      this.selectedCsoTypes,
+      this.selectedRiskRatings,
+      this.paginator.page,
+      this.paginator.page_size,
+      this.showHidden,
+      forceNoLoading ? false : this.showQueryLoading
     );
   }
 
@@ -486,8 +486,8 @@ class PartnersList extends
   }
 
   public _buildCsvDownloadUrl() {
-    let endpointUrl = this.getEndpoint('partners').url;
-    let params = {
+    const endpointUrl = this.getEndpoint('partners').url;
+    const params = {
       search: this.q,
       partner_type: this.selectedPartnerTypes,
       cso_type: this.selectedCsoTypes,

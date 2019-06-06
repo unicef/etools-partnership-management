@@ -1,7 +1,7 @@
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
-import { Constructor } from '../../typings/globals.types';
-import { PolymerElement } from '@polymer/polymer';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 
 /**
  * @polymer
@@ -10,14 +10,14 @@ import { PolymerElement } from '@polymer/polymer';
  */
 function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
-  class missingDropdownOptionsClass extends EndpointsMixin(baseClass) {
+  class MissingDropdownOptionsClass extends EndpointsMixin(baseClass) {
 
     public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
-      let self = this;
+      const self = this;
       setTimeout(function() {
         try {
           if (dropdownEl) {
-            let endpointUrl = self.getMissingOptionsEndpointUrl(endpointName);
+            const endpointUrl = self.getMissingOptionsEndpointUrl(endpointName);
             params = (params) ? params : {};
 
             dropdownEl.set('ajaxParams', params);
@@ -32,7 +32,7 @@ function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(base
     }
 
     public getMissingOptionsEndpointUrl(endpointName: any) {
-      let endpoint = this.getEndpoint(endpointName);
+      const endpoint = this.getEndpoint(endpointName);
       if (endpoint && endpoint.url) {
         return endpoint.url;
       }
@@ -42,8 +42,8 @@ function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(base
     public getCleanEsmmOptions(options: any) {
       return (options instanceof Array) ? options.slice(0) : [];
     }
-  };
-  return missingDropdownOptionsClass;
+  }
+  return MissingDropdownOptionsClass;
 }
 
 export default MissingDropdownOptionsMixin;

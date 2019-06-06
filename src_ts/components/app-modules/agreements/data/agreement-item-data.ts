@@ -1,13 +1,13 @@
-import { store } from '../../../../store.js';
-import { PolymerElement } from '@polymer/polymer';
+import {store} from '../../../../store.js';
+import {PolymerElement} from '@polymer/polymer';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
-import { Agreement, MinimalAgreement } from '../agreement.types.js';
+import {Agreement, MinimalAgreement} from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
-import { addEditAgreement } from '../../../../actions/agreements.js';
+import {addEditAgreement} from '../../../../actions/agreements.js';
 import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
-import { GenericObject } from '../../../../typings/globals.types.js';
-import { fireEvent } from '../../../utils/fire-custom-event.js';
+import {GenericObject} from '../../../../typings/globals.types.js';
+import {fireEvent} from '../../../utils/fire-custom-event.js';
 import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 
@@ -17,8 +17,7 @@ import {property} from '@polymer/decorators';
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin AjaxServerErrors
- * @appliedMixin Constants
+ * @appliesMixin AjaxServerErrorsMixin
  */
 class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
@@ -27,9 +26,9 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
   @property({type: Object})
   agreementEndpoints = {
-      DETAILS: 'agreementDetails',
-      CREATE: 'agreements',
-      DELETE: 'agreementDelete'
+    DETAILS: 'agreementDetails',
+    CREATE: 'agreements',
+    DELETE: 'agreementDelete'
   };
 
   @property({type: Object, readOnly: true, notify: true})
@@ -48,7 +47,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   ajaxLoadingMsgSource: string = 'ag-data';
 
   _triggerAgreementRequest(options: any) {
-    let ajaxMethod = options.method || 'GET';
+    const ajaxMethod = options.method || 'GET';
     return this.sendRequest(options).then((resp: any) => {
       this._handleSuccResponse(resp, ajaxMethod);
       return true;
@@ -86,14 +85,14 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       this.set('handleSuccResponseAdditionalCallback', null);
     }
     if (ajaxMethod !== 'GET') {
-        // 'agreement_number_status' is not retrieved from API
+      // 'agreement_number_status' is not retrieved from API
       response.agreement_number_status =
           this._computeAgrementNumberStatus(response.agreement_number,
-              response.status);
+            response.status);
 
       store.dispatch(addEditAgreement(this._getMinimalAgreementData(response)));
 
-      let self = this;
+      const self = this;
       // update the agreement list in dexieDB
       window.EtoolsPmpApp.DexieDb.table('agreements').put(response).then(function() {
         fireEvent(self, 'reload-list');
@@ -103,7 +102,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   }
 
   _getMinimalAgreementData(detail: Agreement) {
-    let minimalAgrData: MinimalAgreement = {
+    const minimalAgrData: MinimalAgreement = {
       agreement_number: '',
       agreement_number_status: '',
       agreement_type: '',
@@ -130,7 +129,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   }
 
   _computeAgrementNumberStatus(agrNumber: string, status: string) {
-    let capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1);
+    const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1);
 
     return agrNumber + ' [' + capitalizedStatus +']';
   }
@@ -141,8 +140,8 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       fireEvent(this, 'toast', {text: 'Invalid agreement ID', showCloseBtn: true});
     } else {
       if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-            CONSTANTS.STATUSES.Suspended.toLowerCase(),
-            CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
+        CONSTANTS.STATUSES.Suspended.toLowerCase(),
+        CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
         // status change is allowed
         // set additional callback if any
         if (callback) {
@@ -153,7 +152,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
-        let endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId});
+        const endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId});
         // fire in the hole
         this._triggerAgreementRequest({
           method: 'PATCH',
@@ -164,7 +163,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
         });
       } else {
         fireEvent(this, 'toast',
-            {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
+          {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
       }
     }
   }
@@ -218,7 +217,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
           loadingSource: this.ajaxLoadingMsgSource
         });
         // fire in the hole
-        let method = (isNew) ? 'POST' : 'PATCH';
+        const method = (isNew) ? 'POST' : 'PATCH';
         return this._triggerAgreementRequest({
           method: method,
           endpoint: endpoint,
@@ -248,14 +247,14 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
   _handleAgreementDeleteSuccess(id: string) {
     window.EtoolsPmpApp.DexieDb.agreements.where('id')
-        .equals(parseInt(id, 10))
-        .delete()
-        .then((deleteCount: number) => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
-        .catch((dexieDeleteErr: any) => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
-        .then(() => {
-          // go to agreements list after delete
-          fireEvent(this, 'update-main-path', {path: 'agreements/list'});
-        });
+      .equals(parseInt(id, 10))
+      .delete()
+      .then((deleteCount: number) => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
+      .catch((dexieDeleteErr: any) => this._handleAgreementDeleteFromDexieErr(dexieDeleteErr))
+      .then(() => {
+        // go to agreements list after delete
+        fireEvent(this, 'update-main-path', {path: 'agreements/list'});
+      });
   }
 
   _handleAgreementDeleteFromDexieSuccess(deleteCount: number) {
@@ -273,7 +272,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   _handleAgreementDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
     logError('Agreement delete from local dexie db failed!', 'agreement-item-data',
-        dexieDeleteErr);
+      dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
       'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',

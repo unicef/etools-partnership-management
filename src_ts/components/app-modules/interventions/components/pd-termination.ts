@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import pmpEndpoints from '../../../endpoints/endpoints';
 declare const moment: any;
@@ -6,11 +6,11 @@ import 'etools-dialog/etools-dialog';
 import 'etools-upload/etools-upload';
 import 'etools-date-time/datepicker-lite';
 import '../../../layout/etools-warn-message';
-import { SharedStyles } from '../../../styles/shared-styles';
-import { gridLayoutStyles } from '../../../styles/grid-layout-styles';
-import { requiredFieldStarredStyles } from '../../../styles/required-field-styles';
+import {SharedStyles} from '../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -109,7 +109,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
   warningOpened!: boolean;
 
   @property({type: Object})
-  termination!: {date: string, attachment_notice: number};
+  termination!: {date: string; attachment_notice: number};
 
   @property({type: Object})
   terminationElSource!: PolymerElement
@@ -155,13 +155,13 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
   _terminatePD() {
     if (this.validate()) {
       fireEvent(this.terminationElSource, 'terminate-pd',
-          {
-            interventionId: this.interventionId,
-            terminationData: {
-              date: this.termination.date,
-              fileId: this.termination.attachment_notice
-            }
-          });
+        {
+          interventionId: this.interventionId,
+          terminationData: {
+            date: this.termination.date,
+            fileId: this.termination.attachment_notice
+          }
+        });
       this.set('opened', false);
     }
   }
@@ -169,7 +169,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)
   resetValidations() {
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement;
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
         el.set('invalid', false);
       }
@@ -180,7 +180,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      let el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }

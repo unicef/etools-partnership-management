@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 declare const moment: any;
 import 'etools-dialog/etools-dialog.js';
@@ -7,20 +7,20 @@ import 'etools-date-time/calendar-lite';
 import 'etools-date-time/datepicker-lite.js';
 import './hru-list.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
-import { fireEvent } from '../../../../../../../utils/fire-custom-event.js';
-import { gridLayoutStyles } from '../../../../../../../styles/grid-layout-styles.js';
-import { buttonsStyles } from '../../../../../../../styles/buttons-styles.js';
-import { requiredFieldStarredStyles } from '../../../../../../../styles/required-field-styles.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
+import {requiredFieldStarredStyles} from '../../../../../../../styles/required-field-styles.js';
 import {prepareDatepickerDate, convertDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
-import { isEmptyObject } from '../../../../../../../utils/utils.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../../../../store.js';
+import {isEmptyObject} from '../../../../../../../utils/utils.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../../store.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
-import { logError } from 'etools-behaviors/etools-logging';
-import { property } from '@polymer/decorators';
+import {logError} from 'etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
 import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import { GenericObject } from '../../../../../../../../typings/globals.types.js';
+import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -157,7 +157,7 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     if (!this.interventionStart) {
       return null;
     }
-    let stDt = this.interventionStart instanceof Date ? this.interventionStart : convertDate(this.interventionStart);
+    const stDt = this.interventionStart instanceof Date ? this.interventionStart : convertDate(this.interventionStart);
     if (stDt) {
       return moment(stDt).add(-1, 'days').toDate();
     }
@@ -194,15 +194,15 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   _addToList() {
-    let alreadySelected = this.hruData.find((d: any) => d.end_date === this.selectedDate);
+    const alreadySelected = this.hruData.find((d: any) => d.end_date === this.selectedDate);
     if (alreadySelected) {
       fireEvent(this.toastMsgLoadingSource, 'toast',
-          {text: 'This date is already added to the list.', showCloseBtn: true});
+        {text: 'This date is already added to the list.', showCloseBtn: true});
       return;
     }
     this.push('hruData', {
-       end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
-       due_date: this._oneDayAfterEndDate(this.selectedDate)});
+      end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
+      due_date: this._oneDayAfterEndDate(this.selectedDate)});
   }
 
   _oneDayAfterEndDate(endDt: string) {
@@ -241,11 +241,11 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   _saveHurData() {
     this.updateStartDates(this.repStartDate);
 
-    let endpoint = this.getEndpoint('reportingRequirements', {
+    const endpoint = this.getEndpoint('reportingRequirements', {
       intervId: this.interventionId,
       reportType: CONSTANTS.REQUIREMENTS_REPORT_TYPE.HR
     });
-    let dialog = this.$.editHruDialog as EtoolsDialog;
+    const dialog = this.$.editHruDialog as EtoolsDialog;
     dialog.startSpinner();
     this.sendRequest({
       method: 'POST',

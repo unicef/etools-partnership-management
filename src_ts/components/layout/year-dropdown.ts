@@ -1,8 +1,8 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import 'etools-dropdown/etools-dropdown.js'
+import {PolymerElement, html} from '@polymer/polymer';
+import 'etools-dropdown/etools-dropdown.js';
 import {SharedStyles} from '../styles/shared-styles.js';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles.js';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  *
@@ -55,8 +55,8 @@ class YearDropdown extends PolymerElement {
 
   ready() {
     super.ready();
-    let year = this._getCurrentYear();
-    let optYears = [];
+    const year = this._getCurrentYear();
+    const optYears = [];
     for (let i = year - 5; i <= year + 5; i++) {
       optYears.push({value: i, label: i});
     }

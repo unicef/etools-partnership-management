@@ -1,9 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input-container.js';
 
 import {SharedStyles} from '../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles';
-import { property } from '@polymer/decorators';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -106,16 +106,16 @@ class EtoolsFormElementWrapper extends PolymerElement {
   }
 
   _getPlaceholderClass(value: string) {
-    let cssclass = ((typeof value === 'string' && value.trim() !== '')
-        ? ''
-        : (this.noPlaceholder ? '' : 'placeholder'));
+    const cssclass = ((typeof value === 'string' && value.trim() !== '')
+      ? ''
+      : (this.noPlaceholder ? '' : 'placeholder'));
     return cssclass + ' etools-form-element-wrapper';
   }
 
   _getDisplayValue(value: string) {
     return (typeof value === 'string' && value.trim() !== '')
-        ? value.trim()
-        : (this.noPlaceholder ? '' : '—');
+      ? value.trim()
+      : (this.noPlaceholder ? '' : '—');
   }
 
 }

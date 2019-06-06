@@ -1,5 +1,5 @@
 import * as a from '../actions/upload-status.js';
-import { Reducer, Action } from 'redux';
+import {Reducer, Action} from 'redux';
 
 export class UploadStatusState {
   uploadsInProgress: number = 0;
@@ -9,7 +9,7 @@ export class UploadStatusState {
 const INITIAL_STATE = new UploadStatusState();
 
 const uploadStatus: Reducer<UploadStatusState, Action<string>> = (state = INITIAL_STATE, action: any) => {
-  switch(action.type) {
+  switch (action.type) {
     case a.RESET_UNSAVED_UPLOADS:
       return {
         ...state,
@@ -31,14 +31,14 @@ const uploadStatus: Reducer<UploadStatusState, Action<string>> = (state = INITIA
         uploadsInProgress: state.uploadsInProgress + 1
       };
     case a.DECREASE_UNSAVED_UPLOADS: {
-      let unsavedUploads = state.unsavedUploads > 0 ? state.unsavedUploads - 1 : 0;
+      const unsavedUploads = state.unsavedUploads > 0 ? state.unsavedUploads - 1 : 0;
       return {
         ...state,
         unsavedUploads
       };
     }
     case a.DECREASE_UPLOADS_IN_PROGRESS: {
-      let uploadsInProgress =  state.uploadsInProgress > 0 ? state.uploadsInProgress - 1 : 0;
+      const uploadsInProgress = state.uploadsInProgress > 0 ? state.uploadsInProgress - 1 : 0;
       return {
         ...state,
         uploadsInProgress
@@ -48,6 +48,6 @@ const uploadStatus: Reducer<UploadStatusState, Action<string>> = (state = INITIA
       return state;
 
   }
-}
+};
 
 export default uploadStatus;
