@@ -99,4 +99,4 @@ gulp.task('build-with-lib', gulp.series(buildWithPolymerLib.deleteBuildDirectory
 gulp.task('build1by1', gulp.series(polymerBuilds.buildEsmBundled, polymerBuilds.buildEs6Bundled,
 polymerBuilds.buildEs5Bundled));
 
-
+gulp.task('pipi', buildWithPolymerLib.build);

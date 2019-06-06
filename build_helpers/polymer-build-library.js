@@ -56,8 +56,6 @@ async function build(done) {
 
     // ------ Save esm-bundled ------
     buildStream = buildStream.pipe(gulp.dest(buildDirectory+'/esm-bundled'));
-    await helpers.waitFor(buildStream);
-    console.log('Finished esm-bundled!');
 
 
     //----- Transform Modules to AMD ----------
@@ -75,44 +73,38 @@ async function build(done) {
 
     // ------ Save es6-bundled
     buildStream = buildStream.pipe(gulp.dest(buildDirectory+'/es6-bundled'))
-    await helpers.waitFor(buildStream);
-    console.log('Finished es6-bundled!');
 
+      // ---- Transpile to ES5 --------------
+      buildStream = helpers.pipeStreams([
+        buildStream,
+        ...polymerBuild.getOptimizeStreams({js: {
+                                          compile: true,
+                                          moduleResolution: 'node'
+                                          //minify: true
+                                        },
+                                        entrypointPath: polymerProject.config.entrypoint
+                                      })
+      ]);
+      buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter());
 
-    // ---- Transpile to ES5 --------------
-    buildStream = helpers.pipeStreams([
-      buildStream,
-      ...polymerBuild.getOptimizeStreams({js: {
-                                        compile: true,
-                                        moduleResolution: 'node'
-                                        //minify: true
-                                      },
-                                      entrypointPath: polymerProject.config.entrypoint
-                                    })
-    ]);
-    buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter())
+      // ----- Save es5-bundled -------------
+      buildStream.pipe(gulp.dest(buildDirectory+'/es5-bundled'));
+      await helpers.waitFor(buildStream);
+      console.log('Build complete!');
+      done();
 
-    // ----- Save es5-bundled -------------
-    buildStream.pipe(gulp.dest(buildDirectory+'/es5-bundled'));
-    await helpers.waitFor(buildStream);
-    console.log('Finished es5-bundled!');
-
-
-
-    console.log('Build complete!');
-    done();
  }
 
  async function generateServiceWorker(done) {
     console.log('Generating the Service Worker...');
-    await polymerBuild.addServiceWorker({
+    return polymerBuild.addServiceWorker({
       project: polymerProject,
       buildRoot: buildDirectory,
       bundled: true,
       swPrecacheConfig: swPrecacheConfig
     });
     console.log('Service worker generated');
-    done();
+
  }
 
  async function moveServiceWorker(done) {
@@ -122,7 +114,7 @@ async function build(done) {
 
   await del(buildDirectory + '/service-worker.js');
   console.log('Service worker copied to apropriate folders');
-  done();
+
  }
 
  const copyServiceWorker = (src, dest) => helpers.copyFiles(src, dest);
