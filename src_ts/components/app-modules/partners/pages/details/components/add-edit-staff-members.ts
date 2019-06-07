@@ -49,8 +49,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
                          value="{{item.title}}"
                          placeholder="&#8212;"
                          maxlength="30"
-                         required
-                         invalid="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                         required auto-validate
                          error-message="Position is required"></paper-input>
           </div>
           <div class="col col-6">
@@ -68,8 +67,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
                          value="{{item.first_name}}"
                          placeholder="&#8212;"
                          maxlength="30"
-                         required
-                         invalid="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                         required auto-validate
                          error-message="First name is required">
             </paper-input>
           </div>
@@ -79,8 +77,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
                          value="{{item.last_name}}"
                          placeholder="&#8212;"
                          maxlength="30"
-                         required
-                         invalid="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                         required auto-validate
                          error-message="Last name is required">
             </paper-input>
           </div>
@@ -93,8 +90,8 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
                          placeholder="&#8212;"
                          readonly$="[[!_isNewStaffMember(item)]]"
                          maxlength="50"
-                         required
-                         invalid="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone)]]"
+                         type="email"
+                         required auto-validate
                          error-message="A valid & unused email address is required">
               <iron-icon slot="prefix" icon="communication:email"></iron-icon>
             </paper-input>
@@ -123,6 +120,9 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
   @property({type: Object})
   mainEl: object = {};
 
+  @property({type: Array})
+  fieldSelectors: string[] = ['#firstName', '#lastName', '#email', '#title'];
+
   open() {
     this.resetValidations();
     (this.$.staffMemberDialog as EtoolsDialog).opened = true;
@@ -132,102 +132,26 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
     return !item || !item.id;
   }
 
-  _isValid(field: string, title: string, firstName: string, lastName: string, emailAddress: string, phone: string) {
-    let valid = true;
-    switch (field) {
-      case 'title':
-        if (!this._notEmpty(title) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
-            this._notEmpty(emailAddress) || this._notEmpty(phone))) {
-          valid = false;
-        }
-        break;
-      case 'firstName':
-        if (!this._notEmpty(firstName) && (this._notEmpty(title) || this._notEmpty(lastName) ||
-            this._notEmpty(emailAddress) || this._notEmpty(phone))) {
-          valid = false;
-        }
-        break;
-      case 'lastName':
-        if (!this._notEmpty(lastName) && (this._notEmpty(title) || this._notEmpty(firstName) ||
-            this._notEmpty(emailAddress) || this._notEmpty(phone))) {
-          valid = false;
-        }
-        break;
-      case 'emailAddress':
-        if (this._notEmpty(emailAddress)) {
-          valid = this._validStaffMemberEmailAddress(emailAddress);
-        } else {
-          if (this._notEmpty(phone) || this._notEmpty(title) || this._notEmpty(firstName) ||
-              this._notEmpty(lastName)) {
-            valid = false;
-          } else {
-            valid = true; // empty staff member data, hide error msgs
-          }
-        }
-        break;
-    }
-    return valid;
-  }
-
-  _notEmpty(value: any) {
-    return typeof value !== 'undefined' && value !== null && value !== '';
-  }
-
-  _validStaffMemberEmailAddress(emailAddress: string) {
-    let valid = true;
-
-    if (this._emailAlreadyUsed(emailAddress)) {
-      valid = false;
-    } else {
-      // eslint-disable-next-line
-      let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      valid = re.test(emailAddress);
-    }
-    return valid;
-  }
-
-  _emailAlreadyUsed(emailAddress: string) {
-    const sameEmailItems = this.dataItems.filter((el: any) => {
-      return el.email === emailAddress
-          && Number(el.id) !== Number(this.item.id);
-    });
-
-    return sameEmailItems.length > 0;
-  }
-
   validate() {
     let valid = true;
 
-    const fieldSelectors = ['#firstName', '#lastName', '#email', '#title'];
-
-    const elements = [];
-
-    for (let i = 0; i < fieldSelectors.length; i++) {
-      elements[i] = this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
-      elements[i].validate();
-      if (fieldSelectors[i] === '#email') {
-        elements[i].invalid = elements[i].invalid || this._emailAlreadyUsed(this.item.email);
-      }
-    }
-
-    for (let i = 0; i < fieldSelectors.length; i++) {
-      const el = elements[i] || this.$.staffMemberDialog.querySelector(fieldSelectors[i]);
-      if (el && el.invalid) {
+    this.fieldSelectors.forEach((s) => {
+      const el = this.shadowRoot.querySelector(s);
+      if (el && !el.validate()) {
         valid = false;
-        break;
       }
-    }
+    });
+
     return valid;
   }
 
   resetValidations() {
-    const fieldSelectors = ['#firstName', '#lastName', '#email', '#phone', '#title'];
-    for (let i = 0; i < fieldSelectors.length; i++) {
-      const el = this.$.staffMemberDialog.querySelector(fieldSelectors[i]) as PolymerElement & {invalid: boolean};
+    this.fieldSelectors.forEach((s) => {
+      const el: PolymerElement & {invalid: boolean} = this.shadowRoot.querySelector(s);
       if (el) {
         el.invalid = false;
       }
-    }
+    });
   }
 
   _savePartnerContact() {
