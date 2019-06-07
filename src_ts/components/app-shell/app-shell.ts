@@ -92,8 +92,8 @@ import {objectsAreTheSame} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
-import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
-import EtoolsDialog from 'etools-dialog';
+import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
 setRootPath(BASE_URL);
 
 /**

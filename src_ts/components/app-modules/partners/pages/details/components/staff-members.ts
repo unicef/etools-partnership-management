@@ -2,8 +2,8 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-icon-button/paper-icon-button';
 
-import 'etools-content-panel/etools-content-panel';
-import 'etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-data-table/etools-data-table';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';

@@ -2,10 +2,10 @@ import {ListFilterOption, ListOrSelectedFilterOption} from '../../typings/filter
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {DomRepeatEvent, Constructor} from '../../typings/globals.types';
-import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi';
-import {EtoolsDropdownEl} from 'etools-dropdown';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
-import DatePickerLite from 'etools-date-time/datepicker-lite';
+import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 declare const moment: any;
 /**
   * @polymer

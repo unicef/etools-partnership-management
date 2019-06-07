@@ -35,8 +35,8 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
-import {createDynamicDialog, removeDialog} from 'etools-dialog/dynamic-dialog';
-import EtoolsDialog from 'etools-dialog';
+import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
 
 /**
  * @polymer

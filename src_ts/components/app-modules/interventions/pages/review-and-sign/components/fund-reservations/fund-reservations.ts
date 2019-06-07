@@ -5,9 +5,9 @@ import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'etools-content-panel/etools-content-panel.js';
-import {removeDialog, createDynamicDialog} from 'etools-dialog/dynamic-dialog';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
 import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
@@ -20,7 +20,7 @@ import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {getArraysDiff} from '../../../../../../utils/array-helper.js';
 import {property} from '@polymer/decorators';
 import {UpdateFrNumbersEl} from './update-fr-numbers';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../../../../typings/globals.types';
 
 

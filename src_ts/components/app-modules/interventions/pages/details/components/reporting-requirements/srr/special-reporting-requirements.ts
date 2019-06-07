@@ -1,8 +1,8 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
-import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
+import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import '../../../../../../../layout/icons-actions.js';
 import './add-edit-special-rep-req.js';
 import CommonMixin from '../../../../../../../mixins/common-mixin.js';
@@ -15,7 +15,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {AddEditSpecialRepReqEl} from './add-edit-special-rep-req.js';
-import EtoolsDialog from 'etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
 
 
 /**

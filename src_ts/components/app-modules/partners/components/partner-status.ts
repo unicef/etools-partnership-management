@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '../../../layout/etools-status/etools-status.js';
-import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
+import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';

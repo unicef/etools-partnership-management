@@ -3,7 +3,7 @@ import '@polymer/paper-input/paper-input';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
 
-import 'etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-dialog/etools-dialog';
 
 import '../../../../../layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
@@ -12,7 +12,7 @@ import {requiredFieldStarredStyles} from '../../../../../styles/required-field-s
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 
 /**
  * @polymer

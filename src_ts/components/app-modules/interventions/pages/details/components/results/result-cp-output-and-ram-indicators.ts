@@ -1,17 +1,17 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import 'etools-dialog/etools-dialog.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdown-options-mixin';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi.js';
-import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 /**
  * @polymer

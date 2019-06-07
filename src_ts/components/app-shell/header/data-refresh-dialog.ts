@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@polymer/iron-label/iron-label.js';
 import {SharedStyles} from '../../styles/shared-styles';
 import {gridLayoutStyles} from '../../styles/grid-layout-styles';
@@ -10,7 +10,7 @@ import {store} from '../../../store';
 import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 /**
  * @polymer

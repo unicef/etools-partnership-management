@@ -5,7 +5,7 @@ import '@polymer/iron-label/iron-label.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '../../../../layout/monitoring-visits-list.js';
 import './components/fund-reservations-display.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';

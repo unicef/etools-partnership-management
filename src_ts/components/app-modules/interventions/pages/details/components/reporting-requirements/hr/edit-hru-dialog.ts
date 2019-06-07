@@ -1,10 +1,10 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-button/paper-button.js';
 declare const moment: any;
-import 'etools-dialog/etools-dialog.js';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-date-time/calendar-lite';
-import 'etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-date-time/calendar-lite';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import './hru-list.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
@@ -19,7 +19,7 @@ import {store, RootState} from '../../../../../../../../store.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 
 /**

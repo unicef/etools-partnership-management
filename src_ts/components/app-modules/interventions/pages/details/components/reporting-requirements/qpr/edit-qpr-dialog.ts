@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-button/paper-button.js';
 
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
@@ -10,14 +10,14 @@ import './qpr-list.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 
-import 'etools-date-time/calendar-lite.js';
+import '@unicef-polymer/etools-date-time/calendar-lite.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../../../typings/globals.types.js';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {QprListEl} from './qpr-list.js';
 
 /**

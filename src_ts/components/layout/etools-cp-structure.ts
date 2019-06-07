@@ -4,7 +4,7 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
-import 'etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../store';
 import {SharedStyles} from '../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles';

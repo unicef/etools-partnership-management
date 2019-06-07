@@ -1,14 +1,14 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {SharedStyles} from '../../../styles/shared-styles';
 declare const moment: any;
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../typings/globals.types';
 import {RootState, store} from '../../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';

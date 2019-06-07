@@ -3,7 +3,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import {DomRepeatEvent} from '../../../../../../../typings/globals.types';
@@ -17,7 +17,7 @@ import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data
 import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import {property} from '@polymer/decorators';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
-import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {flaggedSortedDisaggregs} from '../../../../../../../reducers/common-data';
 
 
