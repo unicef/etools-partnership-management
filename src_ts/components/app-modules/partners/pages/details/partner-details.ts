@@ -223,7 +223,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
         <staff-members id="staffMembersList"
                     data-items="[[partner.staff_members]]"
-                    edit-mode="[[editMode]]">
+                    edit-mode="[[editMode]]"
+                    partner-id="[[partner.id]]">
         </staff-members>
 
     `;

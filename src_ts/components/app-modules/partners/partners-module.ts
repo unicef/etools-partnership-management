@@ -34,7 +34,7 @@ import {property} from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data.js';
 import {NewPartnerDialog} from './components/new-partner-dialog.js';
-
+import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
 
 /**
  * @polymer
@@ -44,12 +44,13 @@ import {NewPartnerDialog} from './components/new-partner-dialog.js';
  * @appliesMixin ScrollControlMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
+ * @appliesMixin StaffMembersDataMixin
  */
 class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
     ScrollControlMixin(ModuleRoutingMixin(
-      ModuleMainElCommonFunctionalityMixin(PolymerElement))))) {
+      ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement)))))) {
 
   public static get template() {
     // main template
@@ -251,13 +252,13 @@ class PartnersModule extends connect(store)(
 
   public _initListeners() {
     this._partnerSaveError = this._partnerSaveError.bind(this);
-    this._savePartnerContact = this._savePartnerContact.bind(this);
+    this._partnerContactsUpdated = this._partnerContactsUpdated.bind(this);
     this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
     this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
     this._updateBasisForRiskRating = this._updateBasisForRiskRating.bind(this);
 
     this.addEventListener('partner-save-error', this._partnerSaveError as any);
-    this.addEventListener('save-partner-contact', this._savePartnerContact as any);
+    this.addEventListener('partner-contacts-updated', this._partnerContactsUpdated as any);
     this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
     this.addEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
@@ -265,14 +266,15 @@ class PartnersModule extends connect(store)(
 
   public _removeListeners() {
     this.removeEventListener('partner-save-error', this._partnerSaveError as any);
-    this.removeEventListener('save-partner-contact', this._savePartnerContact as any);
+    this.removeEventListener('partner-contacts-updated', this._partnerContactsUpdated as any);
     this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
     this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
     this.removeEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
   }
 
-  public _savePartnerContact(e: CustomEvent) {
-    this._savePartner(this.partner.getSaveStaffMemberRequestPayload(e.detail));
+  public _partnerContactsUpdated(e: CustomEvent) {
+    this.partner.updateStaffMembers(e.detail);
+    this.notifyPath('partner.staff_members');
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
