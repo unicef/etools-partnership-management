@@ -341,7 +341,7 @@ class PartnersList extends
         selected: true,
         minWidth: '350px',
         hideSearch: false,
-        disabled: csoTypes.length === 0
+        disabled: this.showOnlyGovernmentType || csoTypes.length === 0
       },
       {
         filterName: 'Risk Rating',
