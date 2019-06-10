@@ -15,6 +15,7 @@ import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from 'etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
+import {ValidatableField} from "../../../../../../typings/globals.types";
 
 /**
  * @polymer
@@ -120,6 +121,9 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
   @property({type: Object})
   mainEl: object = {};
 
+  @property({type: Number})
+  partnerId: number | null = null;
+
   @property({type: Array})
   fieldSelectors: string[] = ['#firstName', '#lastName', '#email', '#title'];
 
@@ -136,7 +140,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
     let valid = true;
 
     this.fieldSelectors.forEach((s) => {
-      const el = this.shadowRoot.querySelector(s);
+      const el: ValidatableField | null = this.shadowRoot!.querySelector(s);
       if (el && !el.validate()) {
         valid = false;
       }
@@ -147,7 +151,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
 
   resetValidations() {
     this.fieldSelectors.forEach((s) => {
-      const el: PolymerElement & {invalid: boolean} = this.shadowRoot.querySelector(s);
+      const el: ValidatableField | null = this.shadowRoot!.querySelector(s);
       if (el) {
         el.invalid = false;
       }
@@ -156,7 +160,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
 
   _savePartnerContact() {
     if (this.validate()) {
-      const dialog: EtoolsDialog = this.$.staffMemberDialog;
+      const dialog: EtoolsDialog = this.$.staffMemberDialog as EtoolsDialog;
       const endpoint = this.getEndpoint('partnerDetails', {id: this.partnerId});
       dialog.startSpinner();
 

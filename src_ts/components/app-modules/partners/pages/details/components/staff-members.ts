@@ -11,7 +11,6 @@ import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-he
 
 import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {AddEditStaffMembersEl} from './add-edit-staff-members';

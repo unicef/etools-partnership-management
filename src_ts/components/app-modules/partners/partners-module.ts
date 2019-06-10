@@ -35,8 +35,6 @@ import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data.js';
 import {NewPartnerDialog} from './components/new-partner-dialog.js';
 import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
-import {logError} from "etools-behaviors/etools-logging";
-
 
 /**
  * @polymer
