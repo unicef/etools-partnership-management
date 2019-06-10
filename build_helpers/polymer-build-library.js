@@ -65,7 +65,7 @@ async function build(done) {
       ...polymerBuild.getOptimizeStreams({js: {
               transformModulesToAmd: true,
               moduleResolution: 'node',
-              //minify: true
+              minify: true
             },
             entrypointPath: polymerProject.config.entrypoint
           })
@@ -79,8 +79,8 @@ async function build(done) {
         buildStream,
         ...polymerBuild.getOptimizeStreams({js: {
                                           compile: true,
-                                          moduleResolution: 'node'
-                                          //minify: true
+                                          moduleResolution: 'node',
+                                          minify: true
                                         },
                                         entrypointPath: polymerProject.config.entrypoint
                                       })
@@ -97,14 +97,14 @@ async function build(done) {
 
  async function generateServiceWorker(done) {
     console.log('Generating the Service Worker...');
-    return polymerBuild.addServiceWorker({
+    await polymerBuild.addServiceWorker({
       project: polymerProject,
       buildRoot: buildDirectory,
       bundled: true,
       swPrecacheConfig: swPrecacheConfig
     });
     console.log('Service worker generated');
-
+    done();
  }
 
  async function moveServiceWorker(done) {

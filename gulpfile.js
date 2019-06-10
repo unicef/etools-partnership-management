@@ -20,16 +20,6 @@ const polymerBuilds = require('./build_helpers/polymer-builds');
 const fileSystemHelper = require('./build_helpers/file-system-helper');
 const buildWithPolymerLib = require('./build_helpers/polymer-build-library');
 
-//const through2 = require('through2').obj;
-//let uglify = require('gulp-uglify-es').default;
-//let uglify = require('babel-preset-minify');
-
-// const uglify = require('gulp-uglify');
-// const cssSlam = require('css-slam').gulp;
-// const htmlMinifier = require('gulp-html-minifier');
-
-
-// ---------------------------------------------------------------------------------
 
 /**
  * Cleans the prpl-server build in the server directory.
@@ -99,4 +89,4 @@ gulp.task('build-with-lib', gulp.series(buildWithPolymerLib.deleteBuildDirectory
 gulp.task('build1by1', gulp.series(polymerBuilds.buildEsmBundled, polymerBuilds.buildEs6Bundled,
 polymerBuilds.buildEs5Bundled));
 
-gulp.task('pipi', buildWithPolymerLib.build);
+
