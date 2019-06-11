@@ -105,6 +105,8 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
                                 readonly$="[[!permissions.edit.submission_date_prc]]"
+                                required
+                                auto-validate
                                 selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
