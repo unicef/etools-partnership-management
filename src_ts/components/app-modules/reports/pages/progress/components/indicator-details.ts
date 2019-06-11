@@ -46,29 +46,17 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
           --paper-tabs: {
             padding-left: 13px;
             border-bottom: 1px solid var(--dark-divider-color);
-            display:block;
-            flex-wrap:nowrap;
-            height:auto;
-            min-height:48px;
           };
-
-          --paper-tabs-container: {
-            white-space: normal;
-            padding-bottom: 13px;
-          };
-
-          --paper-tab: {
-            padding-top:14px;
-          }
         }
 
         :host([is-cluster-indicator]) {
           --paper-tab-ink: var(--ternary-color);
           --paper-tabs-selection-bar-color: var(--ternary-color);
         }
+
         .tab-header {
+          @apply --layout-horizontal;
           @apply --layout-justified;
-          display: block
           padding: 10px 24px;
           border-bottom: 1px solid var(--dark-divider-color);
           background-color: var(--light-theme-background-color);
@@ -113,10 +101,9 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
       <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
       <template is="dom-if" if="[[!loading]]">
-
         <paper-tabs selected="{{selected}}"
                     selectable="paper-tab"
-                    hide-scroll-buttons>
+                    scrollable>
           <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
             <paper-tab>
               <report-status status="[[_computeLocationStatus(topLevelLocation)]]" no-label></report-status>
@@ -132,7 +119,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
             <div>
               <paper-tabs selected="{{topLevelLocation.selected}}"
                           selectable="paper-tab"
-                          hide-scroll-buttons>
+                          scrollable>
                 <template
                     is="dom-repeat"
                     items="[[topLevelLocation.byEntity]]"
