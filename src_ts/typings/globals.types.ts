@@ -54,7 +54,7 @@ export class User extends MinimalUser {
 export interface UserGroup {
   id: number;
   name: string;
-  permissions: [];
+  permissions: any[];
 }
 
 export interface EtoolsTab {
@@ -73,7 +73,7 @@ export class Paginator {
   page: number = 1;
   page_size: number = 10;
   count: number | null = null;
-  visible_range: [] = [];
+  visible_range: string[] | number[] = [];
 }
 
 export interface CpStructure {
@@ -127,4 +127,9 @@ export interface Office {
   name: string;
   email: string;
   username: string;
+}
+
+export interface ValidatableField extends PolymerElement {
+  invalid: boolean;
+  validate: () => any; // validate method for polymer form input elements
 }
