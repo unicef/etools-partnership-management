@@ -99,14 +99,14 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     _validateAndSaveIndicator() {
       if (!this.validate()) {
-        // @ts-ignore
+        // @ts-ignore *Defined in component
         this.activeTab = 'details';
         this._centerDialog();
         return;
       }
 
       this._startSpinner();
-      // @ts-ignore
+      // @ts-ignore *Defined in component
       this.disableConfirmBtn = true;
 
       const endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
@@ -159,7 +159,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     _handleSaveIndicatorError(error: any) {
       this._stopSpinner();
-      // @ts-ignore
+      // @ts-ignore *Defined in component
       this.disableConfirmBtn = false;
 
       parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
@@ -221,7 +221,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       if (!this.disaggregations || !this.disaggregations.length) {
         return [];
       }
-      // @ts-ignore
+      // @ts-ignore *Defined in component
       this.disaggregations = this.disaggregations.filter(this._notEmptyDisaggregs);
 
       return this.disaggregations.map(function(item: {disaggregId: number}) {
