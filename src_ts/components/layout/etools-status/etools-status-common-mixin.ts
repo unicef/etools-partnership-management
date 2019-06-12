@@ -159,7 +159,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _waitForBoundingClientRectToBeSet() {
-      return new Promise((resolve, _reject) => {
+      return new Promise<number>((resolve, _reject) => {
         let top = this.getBoundingClientRect().top;
         if (top === 0) {
           const bcrInterval = setInterval(() => {
