@@ -83,7 +83,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               label="Document Submission Date"
                               value="{{intervention.submission_date}}"
                               readonly$="[[!permissions.edit.submission_date]]"
-                              selected-date-display-format="D MMM YYYY">
+                              selected-date-display-format="D MMM YYYY"
+                              required$="[[permissions.required.submission_date]]"
+                              max-date="[[getCurrentDate()]]"
+                              auto-validate>
             </datepicker-lite>
           </div>
           <div class="col col-3">
