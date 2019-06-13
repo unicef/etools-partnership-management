@@ -29,7 +29,7 @@ async function build(done) {
      //let sourcesStreamSplitter = new polymerBuild.HtmlSplitter();
      //let dependenciesStreamSplitter = new polymerBuild.HtmlSplitter();
 
-
+     let splitter = new polymerBuild.HtmlSplitter();
     // Okay, now let's merge your sources & dependencies together into a single build stream.
     let buildStream = mergeStream(polymerProject.sources(), polymerProject.dependencies())
       .once('data', () => {
@@ -61,37 +61,42 @@ async function build(done) {
     //----- Transform Modules to AMD ----------
     buildStream = helpers.pipeStreams([
       buildStream,
-
+      splitter.split(),
       ...polymerBuild.getOptimizeStreams({js: {
               transformModulesToAmd: true,
               moduleResolution: 'node',
               minify: true
             },
             entrypointPath: polymerProject.config.entrypoint
-          })
+          }),
+      splitter.rejoin()
     ]);
 
     // ------ Save es6-bundled
     buildStream = buildStream.pipe(gulp.dest(buildDirectory+'/es6-bundled'))
 
-      // ---- Transpile to ES5 --------------
-      buildStream = helpers.pipeStreams([
-        buildStream,
-        ...polymerBuild.getOptimizeStreams({js: {
-                                          compile: true,
-                                          moduleResolution: 'node',
-                                          minify: true
-                                        },
-                                        entrypointPath: polymerProject.config.entrypoint
-                                      })
-      ]);
-      buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter());
 
-      // ----- Save es5-bundled -------------
-      buildStream.pipe(gulp.dest(buildDirectory+'/es5-bundled'));
-      await helpers.waitFor(buildStream);
-      console.log('Build complete!');
-      done();
+
+    // ---- Transpile to ES5 --------------
+    buildStream = helpers.pipeStreams([
+      buildStream,
+      ...polymerBuild.getOptimizeStreams({js: {
+                                        compile: true,
+                                        moduleResolution: 'node',
+                                        minify: true
+                                      },
+                                      entrypointPath: polymerProject.config.entrypoint
+                                    })
+    ]);
+
+    buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter());
+
+
+    // ----- Save es5-bundled -------------
+    buildStream.pipe(gulp.dest(buildDirectory+'/es5-bundled'));
+    await helpers.waitFor(buildStream);
+    console.log('Build complete!');
+    done();
 
  }
 
