@@ -55,6 +55,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           width: 100%;
         }
 
+        datepicker-lite[required]{
+          --paper-input-container-label-floating_-_max-width: 133%;
+        }
+
         paper-input {
           width: 100%;
         }
