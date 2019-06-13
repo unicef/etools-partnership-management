@@ -1,12 +1,12 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import uniq from 'lodash-es/uniq';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../../../../../mixins/common-mixin';
 import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typings/intervention.types';
 import {isEmptyObject} from '../../../../../../../utils/utils';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 

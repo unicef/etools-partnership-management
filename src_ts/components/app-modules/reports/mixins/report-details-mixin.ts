@@ -1,4 +1,4 @@
-import {logWarn, logError} from 'etools-behaviors/etools-logging.js';
+import {logWarn, logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';

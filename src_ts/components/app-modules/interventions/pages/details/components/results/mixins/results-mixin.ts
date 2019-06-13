@@ -2,7 +2,7 @@
 import {ExpectedResult, CpOutput} from '../../../../../../../../typings/intervention.types';
 import {isEmptyObject, isJsonStrMatch, copy} from '../../../../../../../utils/utils';
 import {RootState} from '../../../../../../../../store';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Constructor} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

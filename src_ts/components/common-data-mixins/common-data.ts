@@ -5,7 +5,7 @@ import * as commonDataActions from '../../actions/common-data.js';
 
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../utils/utils';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';

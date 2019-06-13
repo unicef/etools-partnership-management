@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label';
-import 'etools-loading/etools-loading.js';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import '@unicef-polymer/etools-loading/etools-loading.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';

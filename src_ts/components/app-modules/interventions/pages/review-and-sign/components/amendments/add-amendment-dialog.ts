@@ -1,9 +1,9 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
-import 'etools-dialog/etools-dialog.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-upload/etools-upload.js';
-import 'etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
 import '../../../../../../layout/etools-warn-message';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
@@ -21,8 +21,8 @@ import {InterventionAmendment} from '../../../../../../../typings/intervention.t
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
-import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 
 
 /**

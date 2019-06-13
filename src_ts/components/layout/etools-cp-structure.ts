@@ -4,13 +4,13 @@ import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import orderBy from 'lodash-es/orderBy';
-import 'etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import {store, RootState} from '../../store';
 import {SharedStyles} from '../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
 import {CpStructure, GenericObject} from '../../typings/globals.types';
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 
 /**
