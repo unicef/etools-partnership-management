@@ -86,6 +86,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               selected-date-display-format="D MMM YYYY"
                               required$="[[permissions.required.submission_date]]"
                               max-date="[[getCurrentDate()]]"
+                              error-message="Document Submission Date is required"
                               auto-validate>
             </datepicker-lite>
           </div>
@@ -357,7 +358,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   validate() {
     let valid = true;
     const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
-      '#signedByUnicefDateField', '#signedIntervFile'];
+      '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
 
     fieldSelectors.forEach((selector: string) => {
       const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
