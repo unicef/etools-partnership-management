@@ -86,6 +86,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               selected-date-display-format="D MMM YYYY"
                               required$="[[permissions.required.submission_date]]"
                               max-date="[[getCurrentDate()]]"
+                              max-date-error-msg="Date can not be in the future"
                               error-message="Document Submission Date is required"
                               auto-validate>
             </datepicker-lite>
