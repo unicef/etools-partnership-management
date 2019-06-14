@@ -55,6 +55,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           width: 100%;
         }
 
+        datepicker-lite[required]{
+          --paper-input-container-label-floating_-_max-width: 133%;
+        }
+
         paper-input {
           width: 100%;
         }
@@ -83,7 +87,12 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               label="Document Submission Date"
                               value="{{intervention.submission_date}}"
                               readonly$="[[!permissions.edit.submission_date]]"
-                              selected-date-display-format="D MMM YYYY">
+                              selected-date-display-format="D MMM YYYY"
+                              required$="[[permissions.required.submission_date]]"
+                              max-date="[[getCurrentDate()]]"
+                              max-date-error-msg="Date can not be in the future"
+                              error-message="Document Submission Date is required"
+                              auto-validate>
             </datepicker-lite>
           </div>
           <div class="col col-3">
@@ -354,7 +363,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   validate() {
     let valid = true;
     const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
-      '#signedByUnicefDateField', '#signedIntervFile'];
+      '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
 
     fieldSelectors.forEach((selector: string) => {
       const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
