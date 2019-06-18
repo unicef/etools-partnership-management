@@ -6,7 +6,7 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 
 import './qpr/quarterly-reporting-requirements.js';
 import './hr/humanitarian-reporting-req-unicef.js';

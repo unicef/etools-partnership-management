@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-content-panel/etools-content-panel';
 
 import '../../../../layout/etools-ram-indicators';
 

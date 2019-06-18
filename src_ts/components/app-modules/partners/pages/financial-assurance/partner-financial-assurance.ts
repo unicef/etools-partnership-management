@@ -3,12 +3,12 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import 'etools-content-panel/etools-content-panel.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import 'etools-dropdown/etools-dropdown.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.js';

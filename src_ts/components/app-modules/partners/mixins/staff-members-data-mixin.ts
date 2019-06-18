@@ -1,6 +1,6 @@
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Constructor} from '../../../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

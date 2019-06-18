@@ -1,10 +1,9 @@
 import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-tabs/paper-tab.js';
 import '@polymer/paper-tabs/paper-tabs.js';
 import '@polymer/app-layout/app-grid/app-grid-style.js';
 
-import 'etools-loading/etools-loading.js';
+import '@unicef-polymer/etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
@@ -13,7 +12,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../typings/globals.types.js';
 
@@ -104,8 +103,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
       <template is="dom-if" if="[[!loading]]">
         <paper-tabs selected="{{selected}}"
                     selectable="paper-tab"
-                    scrollable
-                    hide-scroll-buttons>
+                    scrollable>
           <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
             <paper-tab>
               <report-status status="[[_computeLocationStatus(topLevelLocation)]]" no-label></report-status>
@@ -121,7 +119,6 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
             <div>
               <paper-tabs selected="{{topLevelLocation.selected}}"
                           selectable="paper-tab"
-                          hide-scroll-buttons
                           scrollable>
                 <template
                     is="dom-repeat"

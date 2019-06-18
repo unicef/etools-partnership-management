@@ -5,7 +5,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import RepeatableDataSetsMixin from '../../../../../mixins/repeatable-data-sets-mixin';
 import {DomRepeatEvent} from '../../../../../../typings/globals.types';
@@ -16,7 +16,7 @@ import {repeatableDataSetsStyles} from '../../../../../styles/repeatable-data-se
 import {buttonsStyles} from '../../../../../styles/buttons-styles.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
-import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**

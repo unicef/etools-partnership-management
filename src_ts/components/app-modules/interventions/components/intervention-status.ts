@@ -8,7 +8,7 @@ import '../../../layout/etools-status/etools-status-common-mixin.js';
 import './pd-termination.js';
 import {property} from '@polymer/decorators';
 import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
-import EtoolsDialog from 'etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
 
 /**
  * @polymer
