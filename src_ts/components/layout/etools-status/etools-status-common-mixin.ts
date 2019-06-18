@@ -2,13 +2,13 @@
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin';
-import {removeDialog, createDynamicDialog} from 'etools-dialog/dynamic-dialog';
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Constructor} from '../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Status, StatusAction} from '../../../typings/etools-status.types';
-import EtoolsDialog from 'etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
 declare const ShadyCSS: any;
 
 /**
@@ -159,7 +159,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _waitForBoundingClientRectToBeSet() {
-      return new Promise((resolve, _reject) => {
+      return new Promise<number>((resolve, _reject) => {
         let top = this.getBoundingClientRect().top;
         if (top === 0) {
           const bcrInterval = setInterval(() => {

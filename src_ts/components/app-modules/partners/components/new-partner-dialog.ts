@@ -1,10 +1,10 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 /**
  * @polymer

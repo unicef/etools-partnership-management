@@ -1,13 +1,13 @@
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
+import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {store} from '../../../../store';
 import {deletePartner} from '../../../../actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {Partner} from '../../../../models/partners.models';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {tryGetResponseError, formatServerErrorAsText} from '../../../utils/ajax-errors-parser.js';
 
 

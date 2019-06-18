@@ -4,7 +4,7 @@ import pmpEdpoints from '../endpoints/endpoints';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../store';
 import {updateEnvFlags} from '../../actions/common-data';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {EnvFlags} from '../../typings/globals.types';
 import {property} from '@polymer/decorators';
 

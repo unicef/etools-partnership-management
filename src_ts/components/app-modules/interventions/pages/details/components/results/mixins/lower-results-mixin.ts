@@ -1,6 +1,6 @@
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 import {GenericObject, Constructor} from '../../../../../../../../typings/globals.types';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {PdLowerResultNameEl} from '../pd-lower-result-name';

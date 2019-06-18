@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
 import '../../../../../../layout/icons-actions.js';
@@ -16,7 +16,7 @@ import {SharedStyles} from '../../../../../../styles/shared-styles';
 import './pd-lower-result-name.js';
 import './applied-indicators.js';
 import {Indicator} from '../../../../../../../typings/intervention.types.js';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
