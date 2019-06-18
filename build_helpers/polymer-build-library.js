@@ -80,13 +80,15 @@ async function build(done) {
     // ---- Transpile to ES5 --------------
     buildStream = helpers.pipeStreams([
       buildStream,
+      splitter.split(),
       ...polymerBuild.getOptimizeStreams({js: {
                                         compile: true,
                                         moduleResolution: 'node',
                                         minify: true
                                       },
                                       entrypointPath: polymerProject.config.entrypoint
-                                    })
+                                    }),
+      splitter.rejoin()
     ]);
 
     buildStream = buildStream.pipe(polymerProject.addCustomElementsEs5Adapter());
