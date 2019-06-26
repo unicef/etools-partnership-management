@@ -1,5 +1,5 @@
 import '@polymer/paper-input/paper-input.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {PolymerElement, html} from '@polymer/polymer';
 import {SharedStyles} from '../../../styles/shared-styles';
@@ -8,7 +8,7 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 declare const moment: any;
 import {property} from '@polymer/decorators/lib/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../typings/globals.types';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../store';

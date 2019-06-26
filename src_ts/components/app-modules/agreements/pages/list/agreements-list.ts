@@ -12,10 +12,10 @@ import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';

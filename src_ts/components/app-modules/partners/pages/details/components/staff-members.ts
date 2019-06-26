@@ -2,8 +2,8 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-icon-button/paper-icon-button';
 
-import 'etools-content-panel/etools-content-panel';
-import 'etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-data-table/etools-data-table';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
@@ -11,7 +11,6 @@ import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-he
 
 import '../../../../../layout/icons-actions';
 import './add-edit-staff-members';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import {AddEditStaffMembersEl} from './add-edit-staff-members';
@@ -152,6 +151,9 @@ class StaffMembers extends PolymerElement {
   @property({type: Array})
   dataItems: StaffMember[] = [];
 
+  @property({type: Number})
+  partnerId: number | null = null;
+
   static get observers() {
     return [
       'dataItemsChanged(dataItems, dataItems.*)'
@@ -182,15 +184,13 @@ class StaffMembers extends PolymerElement {
   }
 
   _createAddEditDialog() {
-    this._savePartnerContact = this._savePartnerContact.bind(this);
     this.addEditDialog = document.createElement('add-edit-staff-members') as any;
-    this.addEditDialog.addEventListener('save-partner-contact', this._savePartnerContact as any);
+    this.addEditDialog.mainEl = this;
     document.querySelector('body')!.appendChild(this.addEditDialog);
   }
 
   _removeAddEditDialog() {
     if (this.addEditDialog) {
-      this.addEditDialog.removeEventListener('save-partner-contact', this._savePartnerContact as any);
       document.querySelector('body')!.removeChild(this.addEditDialog);
     }
   }
@@ -206,12 +206,9 @@ class StaffMembers extends PolymerElement {
   }
 
   openAddEditDialog() {
+    this.addEditDialog.partnerId = this.partnerId;
     this.addEditDialog.dataItems = this.dataItems;
     this.addEditDialog.open();
-  }
-
-  _savePartnerContact(e: CustomEvent) {
-    fireEvent(this, 'save-partner-contact', e.detail);
   }
 
   _isVisible(active: boolean, showInactive: boolean) {

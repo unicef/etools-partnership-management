@@ -1,12 +1,12 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../store';
 
-import EtoolsPageRefreshMixin from 'etools-behaviors/etools-page-refresh-mixin.js';
+import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data';
 import {isEmptyObject} from '../utils/utils';
 import {fireEvent} from '../utils/fire-custom-event';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor, User, UserGroup, UserPermissions} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

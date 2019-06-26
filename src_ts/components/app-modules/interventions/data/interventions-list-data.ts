@@ -4,7 +4,7 @@ import {PolymerElement} from '@polymer/polymer';
 import {ListItemIntervention} from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property, customElement} from '@polymer/decorators';
 import {GenericObject} from '../../../../typings/globals.types';
 

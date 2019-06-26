@@ -1,8 +1,8 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
-import 'etools-content-panel/etools-content-panel.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';

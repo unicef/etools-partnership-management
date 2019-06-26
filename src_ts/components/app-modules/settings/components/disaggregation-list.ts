@@ -2,9 +2,9 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-content-panel/etools-content-panel';
-import 'etools-data-table/etools-data-table';
-import EtoolsAjaxRequestMixin from 'etools-ajax/etools-ajax-request-mixin';
+import '@unicef-polymer/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-data-table/etools-data-table';
+import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';

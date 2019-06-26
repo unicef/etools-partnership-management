@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';

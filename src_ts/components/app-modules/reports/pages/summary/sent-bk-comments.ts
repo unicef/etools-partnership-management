@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '../../../../layout/etools-form-element-wrapper.js';
 import {property} from '@polymer/decorators';
 
