@@ -17,7 +17,7 @@ import {
 } from '../../../../typings/intervention.types';
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
+import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Office, GenericObject} from '../../../../typings/globals.types';
 

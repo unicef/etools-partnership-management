@@ -65,7 +65,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
     _getDraftToSignedRequiredFields(intervention: Intervention) {
       const fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
         'partner_authorized_officer_signatory', 'signed_by_partner_date',
-        'signed_by_unicef_date', 'signed_pd_attachment'];
+        'signed_by_unicef_date', 'signed_pd_attachment', 'submission_date'];
       if (!intervention.contingency_pd) {
         fields.push('start', 'end');
       }

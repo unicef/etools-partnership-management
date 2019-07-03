@@ -1,4 +1,4 @@
-import {logWarn} from 'etools-behaviors/etools-logging';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

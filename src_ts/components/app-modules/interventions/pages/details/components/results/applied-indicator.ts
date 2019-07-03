@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {isEmptyObject, isJsonStrMatch} from '../../../../../../utils/utils';

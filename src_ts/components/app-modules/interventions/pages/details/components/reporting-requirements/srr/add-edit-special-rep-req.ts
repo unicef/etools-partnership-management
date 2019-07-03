@@ -5,15 +5,15 @@ import {prepareDatepickerDate} from '../../../../../../../utils/date-utils';
 
 import '@polymer/iron-label/iron-label.js';
 import '@polymer/paper-input/paper-input.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 
-import 'etools-date-time/calendar-lite.js';
+import '@unicef-polymer/etools-date-time/calendar-lite.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../../../typings/globals.types';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 
 /**

@@ -9,7 +9,7 @@ import {isEmptyObject} from '../../../utils/utils';
 import {setAgreements} from '../../../../actions/agreements';
 import {MinimalAgreement} from '../agreement.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../typings/globals.types';
 
