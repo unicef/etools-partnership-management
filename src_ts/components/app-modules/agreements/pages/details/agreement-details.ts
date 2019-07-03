@@ -306,7 +306,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
+              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca, agreement.status)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -556,11 +556,11 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     return !(this.agreement && this.agreement!.id! > 0) || (agreementStatus && this._isDraft());
   }
 
-  _showGeneratePcaBtn(type: string, isNewAgreement: boolean, isSpecialConditionsPCA: boolean) {
+  _showGeneratePcaBtn(type: string, isNewAgreement: boolean, isSpecialConditionsPCA: boolean, status: string) {
     if (isSpecialConditionsPCA) {
       return false;
     }
-    return type === CONSTANTS.AGREEMENT_TYPES.PCA && this._isDraft() && !isNewAgreement;
+    return type === CONSTANTS.AGREEMENT_TYPES.PCA && this._isDraft() && !isNewAgreement || status === 'signed';
   }
 
   _showGeneratePcaWarning(type: string, isNewAgreement: boolean, isSpecialConditionsPCA: boolean) {
