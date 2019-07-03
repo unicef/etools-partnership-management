@@ -113,14 +113,13 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
     _validateReviewAndSign() {
       let valid = false;
       const reviewAndSignEl = (this.shadowRoot!.querySelector('#interventionReviewAndSign')! as unknown as InterventionReviewAndSign);
-
       if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
         valid = reviewAndSignEl.validate();
       } else {
         // review and signed element not stamped...
         // validate current data that belongs to this tab against permissions
         const reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
-          'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment'];
+          'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment', 'submission_date'];
         valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields);
         this.set('_forceReviewUiValidationOnAttach', true);
       }
