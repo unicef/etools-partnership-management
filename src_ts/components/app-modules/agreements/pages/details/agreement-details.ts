@@ -560,7 +560,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (isSpecialConditionsPCA) {
       return false;
     }
-    return type === CONSTANTS.AGREEMENT_TYPES.PCA && this._isDraft() && !isNewAgreement || status === 'signed';
+    return type === CONSTANTS.AGREEMENT_TYPES.PCA && ((this._isDraft() && !isNewAgreement) || status === 'signed');
   }
 
   _showGeneratePcaWarning(type: string, isNewAgreement: boolean, isSpecialConditionsPCA: boolean) {
