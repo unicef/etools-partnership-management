@@ -118,8 +118,8 @@ class AppShell extends connect(store)(
         ToastNotificationsMixin(
           ScrollControlMixin(
             AmendmentModeUIMixin(
-              LoadingMixin(
-                UtilsMixin(
+              UtilsMixin(
+                LoadingMixin(
                   UserDataMixin(
                     CommonDataMixin(
                       PolymerElement))))))))))) {
