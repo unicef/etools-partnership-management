@@ -1,6 +1,5 @@
 import {html} from '@polymer/polymer/polymer-element';
 
-
 // language=HTML
 export const appDrawerStyles = html`
   <style>

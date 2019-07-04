@@ -15,7 +15,7 @@ export const navMenuStyles = html`
       overflow-x: hidden;
       border-right: 1px solid var(--dark-divider-color);
     }
-  
+
     :host([small-menu]) {
       overflow-x: visible;
     }
