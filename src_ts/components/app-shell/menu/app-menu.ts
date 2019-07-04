@@ -9,7 +9,7 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 
-import './styles/nav-menu-styles';
+import {navMenuStyles} from './styles/nav-menu-styles';
 import {pmpMainIcons} from '../../styles/custom-iconsets/pmp-icons';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -31,8 +31,7 @@ class AppMenu extends connect(store)(
     // main template
     // language=HTML
     return html`
-      ${pmpMainIcons}
-      <style include="nav-menu-styles"></style>
+      ${pmpMainIcons} ${navMenuStyles}
 
       <div class="menu-header">
       <span id="app-name">
