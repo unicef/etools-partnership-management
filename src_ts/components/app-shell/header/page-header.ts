@@ -106,7 +106,7 @@ class PageHeader extends connect(store)(
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
         <div class="titlebar content-align">
-          <etools-app-selector></etools-app-selector>
+          <etools-app-selector user="[[profile]]"></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
           <template is="dom-if" if="[[environment]]">
             <div class="envWarning"> - [[environment]] TESTING ENVIRONMENT</div>
