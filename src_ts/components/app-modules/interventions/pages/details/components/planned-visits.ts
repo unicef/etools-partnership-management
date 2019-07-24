@@ -8,7 +8,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import RepeatableDataSetsMixin from '../../../../../mixins/repeatable-data-sets-mixin';
-import {DomRepeatEvent} from '../../../../../../typings/globals.types';
+import {DomRepeatEvent, GenericObject} from '../../../../../../typings/globals.types';
 import {PlannedVisit} from '../../../../../../typings/intervention.types';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../../styles/shared-styles.js';
@@ -102,7 +102,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
                 <paper-icon-button class="action delete"
                                   on-tap="_openDeleteConfirmation"
                                   data-args$="[[index]]"
-                                  disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
+                                  disabled="[[!_canBeRemoved(index, editMode, interventionStatus)]]"
                                   icon="cancel">
                 </paper-icon-button>
               </div>
@@ -203,6 +203,9 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     `;
   }
 
+  @property({type: String})
+  _deleteEpName: string = 'interventionPVLinkDelete';
+
   @property({type: Array})
   years: [] = [];
 
@@ -210,6 +213,14 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   @property({type: Boolean, observer: PlannedVisits.prototype._editModeChanged})
   editMode!: boolean;
 
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Object})
+  extraEndPointParams!: GenericObject;
 
   static get observers() {
     return [
@@ -220,6 +231,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   ready() {
     super.ready();
     this.dataSetModel = new PlannedVisit();
+    this.set('extraEndPointParams', {intervention_id: this.interventionId});
   }
 
   _getAddBtnPadding(itemsLength: number) {
@@ -242,6 +254,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   validate() {
     let valid = true;
+
     this.dataItems.forEach((item: PlannedVisit, index: number) => {
       if (!(this._validateYear(index) && this._validateQuarters(item, index))) {
         valid = false;
@@ -296,13 +309,15 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   /**
    * The planned visit row data can be removed only if it doesn't have and id assigned(only if is not saved)
    */
-  _canBeRemoved(index: number, editMode: boolean) {
-    if (!editMode || !this.dataItems || !this.dataItems.length) {
+  _canBeRemoved(index: number, editMode: boolean, interventionStatus: string) {
+
+    if(!editMode || interventionStatus !== 'draft'){
       return false;
     }
-    const plannedVisit = this.dataItems[index];
-    const plannedVisitId = parseInt(plannedVisit.id, 10);
-    return !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0);
+    if (!this.dataItems || !this.dataItems.length || !this.dataItems[index]) {
+      return false;
+    }
+    return true;
   }
 
   _yearChanged(event: DomRepeatEvent) {

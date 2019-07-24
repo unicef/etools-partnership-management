@@ -151,7 +151,13 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
 
           const self = this;
           // @ts-ignore
-          const deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
+          let endPointParams = {id: id};
+          // @ts-ignore
+          if(this.extraEndPointParams){
+            endPointParams = {...endPointParams, ...this.extraEndPointParams}
+          }
+          // @ts-ignore
+          const deleteEndpoint = this.getEndpoint(this._deleteEpName, endPointParams);
           this.sendRequest({
             method: 'DELETE',
             endpoint: deleteEndpoint,
