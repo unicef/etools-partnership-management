@@ -1,7 +1,7 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
-import {timeOut} from '@polymer/polymer/lib/utils/async';
+import { PolymerElement, html } from '@polymer/polymer';
+import { property } from '@polymer/decorators';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { timeOut } from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
@@ -14,27 +14,27 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
-import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../store.js';
+import { connect } from 'pwa-helpers/connect-mixin';
+import { store, RootState } from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin';
-import {SharedStyles} from '../../../../styles/shared-styles';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
-import {listFilterStyles} from '../../../../styles/list-filter-styles';
-import {frWarningsStyles} from '../../styles/fr-warnings-styles';
+import { SharedStyles } from '../../../../styles/shared-styles';
+import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
+import { listFilterStyles } from '../../../../styles/list-filter-styles';
+import { frWarningsStyles } from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
-import {InterventionsListData} from '../../data/interventions-list-data.js';
-import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
-import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
-import {fireEvent} from '../../../../utils/fire-custom-event.js';
-import {LabelAndValue, CpStructure, MinimalUser} from '../../../../../typings/globals.types.js';
-import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
-import {ListFilterOption} from '../../../../../typings/filter.types.js';
-
+import { InterventionsListData } from '../../data/interventions-list-data.js';
+import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
+import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
+import { fireEvent } from '../../../../utils/fire-custom-event.js';
+import { LabelAndValue, CpStructure, MinimalUser } from '../../../../../typings/globals.types.js';
+import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
+import { ListFilterOption } from '../../../../../typings/filter.types.js';
+import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
 
 let _interventionsLastNavigated = '';
 
@@ -288,76 +288,82 @@ class InterventionsList extends connect(store)(
     `;
   }
 
-  @property({type: Array, notify: true, observer: InterventionsList.prototype._listChanged})
+  @property({ type: Array, notify: true, observer: InterventionsList.prototype._listChanged })
   filteredInterventions!: ListItemIntervention[];
 
-  @property({type: Array})
+  @property({ type: Array })
   documentTypes!: LabelAndValue[];
 
-  @property({type: Array})
+  @property({ type: Array })
   selectedDocumentTypes: string[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   interventionStatuses!: LabelAndValue[];
 
-  @property({type: Array})
+  @property({ type: Array })
   selectedStatuses: string[] = [];
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
   startDate!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
   endDate!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
   endAfter!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
   cpOutputs: CpOutput[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   selectedCpOutputs: number[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   countryProgrammes!: CpStructure[];
 
-  @property({type: Array})
+  @property({ type: Array })
   sections!: object[];
 
-  @property({type: Array})
+  @property({ type: Array })
   selectedSections: number[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   unicefUsersData!: MinimalUser[];
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
   selectedUnicefFocalPoints: number[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   offices!: object[];
 
-  @property({type: Array})
+  @property({ type: Array })
   selectedOffices: number[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   donors!: object[];
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
   selectedDonors: string[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
+  partners: [] = [];
+
+  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  selectedPartners: [] = [];
+
+  @property({ type: Array })
   grants!: object[];
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
   selectedGrants: string[] = [];
 
-  @property({type: String, notify: true})
+  @property({ type: String, notify: true })
   csvDownloadQs!: string;
 
-  @property({type: String})
+  @property({ type: String })
   _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
 
-  @property({type: String, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({ type: String, observer: InterventionsList.prototype._arrayFilterChanged })
   selectedCPStructures: string[] = [];
 
   _updateFiltersValsDebouncer!: Debouncer | null;
@@ -366,14 +372,14 @@ class InterventionsList extends connect(store)(
   static get observers() {
     return [
       '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-          'selectedSections.length, selectedOffices.length, ' +
-          'selectedCPStructures.length)', // used for non removable filters
-      '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants, countryProgrammes, offices, ' +
-          'documentTypes, sections, interventionStatuses)',
+      'selectedSections.length, selectedOffices.length, ' +
+      'selectedCPStructures.length)', // used for non removable filters
+      '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
+      'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
-          'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-          'selectedDonors.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
-          'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+      'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
+      'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
+      'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -403,10 +409,10 @@ class InterventionsList extends connect(store)(
     if (!isJsonStrMatch(this.donors, state.commonData!.donors)) {
       this.donors = [...state.commonData!.donors];
     }
+    this.partners = partnersDropdownDataSelector(state);
     if (!isJsonStrMatch(this.grants, state.commonData!.grants)) {
       this.grants = [...state.commonData!.grants];
     }
-
   }
 
   ready() {
@@ -420,17 +426,17 @@ class InterventionsList extends connect(store)(
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', { active: false, loadingSource: 'interv-page' });
 
     this.listAttachedCallback(this.active, 'Loading...', 'pd-ssfa-list');
   }
 
-  _initFiltersMenuList(cpOutputs: number[], unicefUsersData: number[], donors: number[],
+  _initFiltersMenuList(cpOutputs: number[], unicefUsersData: number[], donors: number[], partners: number[],
     grants: number[], countryProgrammes: number[], offices: number[],
     documentTypes: string[], sections: number[], interventionStatuses: string[]) {
 
-    if (!cpOutputs || !unicefUsersData || !donors || !grants || !countryProgrammes || !offices ||
-        !documentTypes || !sections || !interventionStatuses) {
+    if (!cpOutputs || !unicefUsersData || !donors || !partners || !grants || !countryProgrammes || !offices ||
+      !documentTypes || !sections || !interventionStatuses) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
     }
@@ -473,6 +479,18 @@ class InterventionsList extends connect(store)(
         path: 'selectedDonors',
         selected: false,
         minWidth: '400px'
+      }),
+      new ListFilterOption({
+        filterName: 'Partners',
+        type: 'etools-dropdown-multi',
+        selectionOptions: partners,
+        optionValue: 'value',
+        optionLabel: 'label',
+        selectedValue: [],
+        path: 'selectedPartners',
+        selected: false,
+        minWidth: '400px',
+        hideSearch: false
       }),
       new ListFilterOption({
         filterName: 'Ends Before',
@@ -590,20 +608,21 @@ class InterventionsList extends connect(store)(
         selectedCpOutputs: this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs),
         selectedSections: this._getFilterUrlValuesAsArray(urlQueryParams.section),
         selectedDonors: this._getFilterUrlValuesAsArray(urlQueryParams.donors),
+        selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
         selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
         selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
         selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
         selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
         startDate: urlQueryParams.start ? urlQueryParams.start : '',
         endDate: urlQueryParams.end ? urlQueryParams.end : '',
-        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter: ''
+        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : ''
       }
     );
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
     // format of sort param is sort=field.order ex: sort=partner_name.asc
-    const result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
+    const result = this.initSortFieldsValues({ field: 'partner_name', direction: 'asc' }, urlQueryParams.sort);
     this.set('sortOrder', result);
     this.set('initComplete', true);
 
@@ -643,6 +662,10 @@ class InterventionsList extends connect(store)(
           {
             filterName: 'Donors',
             selectedValue: this.selectedDonors
+          },
+          {
+            filterName: 'Partners',
+            selectedValue: this.selectedPartners
           },
           {
             filterName: 'Grants',
@@ -697,6 +720,7 @@ class InterventionsList extends connect(store)(
           this.selectedDocumentTypes,
           this.selectedCpOutputs.map((cpo: number) => String(cpo)),
           this.selectedDonors,
+          this.getFilterValuesByProperty(this.partners, 'label', this.selectedPartners, 'value'),
           this.selectedGrants,
           this.selectedStatuses,
           this.selectedSections.map((s: number) => String(s)),
@@ -725,6 +749,7 @@ class InterventionsList extends connect(store)(
       offices: this.selectedOffices.join('|'),
       cp_outputs: this.selectedCpOutputs.join('|'),
       donors: this.selectedDonors.join('|'),
+      partners: this.selectedPartners.join('|'),
       grants: this.selectedGrants.join('|'),
       unicef_focal_points: this.selectedUnicefFocalPoints.join('|'),
       cpStructures: this.selectedCPStructures.join('|'),
@@ -742,6 +767,7 @@ class InterventionsList extends connect(store)(
       sections: this.selectedSections,
       office: this.selectedOffices,
       donors: this.selectedDonors,
+      partners: this.selectedPartners,
       grants: this.selectedGrants,
       unicef_focal_points: this.selectedUnicefFocalPoints,
       country_programme: this.selectedCPStructures,
@@ -767,7 +793,7 @@ class InterventionsList extends connect(store)(
 
   _canShowListDatesFrsWarnings(status: string) {
     return (status !== CONSTANTS.STATUSES.Draft.toLowerCase() &&
-            status !== CONSTANTS.STATUSES.Closed.toLowerCase());
+      status !== CONSTANTS.STATUSES.Closed.toLowerCase());
   }
 
   _hideDateFrsWarningTooltip(pdDate: string, frsDate: string, status: string) {
