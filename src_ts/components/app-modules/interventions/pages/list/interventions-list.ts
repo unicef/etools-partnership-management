@@ -767,7 +767,7 @@ class InterventionsList extends connect(store)(
       sections: this.selectedSections,
       office: this.selectedOffices,
       donors: this.selectedDonors,
-      partners: this.getFilterValuesByProperty(this.partners, 'label', this.selectedPartners, 'value'),
+      partners: this.selectedPartners,
       grants: this.selectedGrants,
       unicef_focal_points: this.selectedUnicefFocalPoints,
       country_programme: this.selectedCPStructures,
