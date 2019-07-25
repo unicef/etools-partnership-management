@@ -102,7 +102,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
                 <paper-icon-button class="action delete"
                                   on-tap="_openDeleteConfirmation"
                                   data-args$="[[index]]"
-                                  disabled="[[!_canBeRemoved(index, editMode, interventionStatus)]]"
+                                  disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
                                   icon="cancel">
                 </paper-icon-button>
               </div>
@@ -220,7 +220,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   interventionStatus!: string;
 
   @property({ type: Object })
-  extraEndPointParams!: GenericObject;
+  extraEndpointParams!: GenericObject;
 
   static get observers() {
     return [
@@ -303,21 +303,23 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     if (!Array.isArray(dataItems)) {
       this.set('dataItems', []);
     }
-    this.set('extraEndPointParams', { intervention_id: this.interventionId });
+    this.set('extraEndpointParams', { intervention_id: this.interventionId });
   }
 
   /**
-   * The planned visit row data can be removed only if it doesn't have and id assigned(only if is not saved)
+   * The planned visit row data can be removed only if (intervention status is new or draft) or (if it doesn't have and id assigned(only if is not saved))
    */
-  _canBeRemoved(index: number, editMode: boolean, interventionStatus: string) {
+  _canBeRemoved(index: number, editMode: boolean) {
+    if (!editMode || !this.dataItems || !this.dataItems.length || !this.dataItems[index]) {
+      return false;
+    }
+    const plannedVisit = this.dataItems[index];
+    const plannedVisitId = parseInt(plannedVisit.id, 10);
+    return (this._isDraft() || !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0));
+  }
 
-    if (!editMode || !(interventionStatus === '' || interventionStatus === 'draft')) {
-      return false;
-    }
-    if (!this.dataItems || !this.dataItems.length || !this.dataItems[index]) {
-      return false;
-    }
-    return true;
+  _isDraft() {
+    return (this.interventionStatus === '' || this.interventionStatus === 'draft');
   }
 
   _yearChanged(event: DomRepeatEvent) {
