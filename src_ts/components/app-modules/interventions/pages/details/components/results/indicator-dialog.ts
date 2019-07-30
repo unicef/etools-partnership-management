@@ -17,8 +17,8 @@ import {User, GenericObject} from '../../../../../../../typings/globals.types';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
 import {SharedStyles} from '../../../../../../styles/shared-styles';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import './mixins/indicator-dialog-tabs-mixin.js';
 import './mixins/save-indicator-mixin.js';
 import './indicator-dissaggregations.js';
@@ -29,8 +29,8 @@ import {Indicator, Location} from '../../../../../../../typings/intervention.typ
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
 import {userIsPme} from '../../../../../../user/user-permissions';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
-import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {ClusterIndicatorEl} from './cluster-indicator.js';
 import {NonClusterIndicatorEl} from './non-cluster-indicator.js';
 

@@ -4,7 +4,7 @@ import '../../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 
 import {fireEvent} from '../../utils/fire-custom-event.js';
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {Constructor} from '../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
 

@@ -1,4 +1,4 @@
-import {logWarn} from 'etools-behaviors/etools-logging.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 declare const moment: any;
 
 export function prettyDate(dateString: string, format?: string, placeholder?: string) {

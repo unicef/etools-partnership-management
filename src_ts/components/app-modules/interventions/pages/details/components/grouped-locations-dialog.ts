@@ -1,13 +1,13 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../store';
 import {isJsonStrMatch} from '../../../../../utils/utils';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {Location} from '../../../../../../typings/intervention.types';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 class GroupedLocations {
   adminLevelLocation: Location | null = null;

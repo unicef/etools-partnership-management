@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import 'etools-dialog/etools-dialog';
-import 'etools-upload/etools-upload';
+import '@unicef-polymer/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-upload/etools-upload';
 
 import '../../../../../layout/etools-form-element-wrapper';
 
@@ -12,7 +12,7 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 /**
  * @polymer
  * @customElement

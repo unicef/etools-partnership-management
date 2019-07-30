@@ -2,9 +2,9 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import '../../../../../endpoints/endpoints.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';

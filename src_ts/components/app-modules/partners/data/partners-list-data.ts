@@ -5,7 +5,7 @@ import Dexie from 'dexie';
 import {isEmptyObject} from '../../../utils/utils';
 import {setPartners} from '../../../../actions/partners.js';
 import {fireEvent} from '../../../utils/fire-custom-event.js';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../typings/globals.types';
 

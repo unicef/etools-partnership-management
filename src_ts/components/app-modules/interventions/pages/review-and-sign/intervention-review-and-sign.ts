@@ -4,11 +4,11 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/paper-input/paper-input.js';
 
-import 'etools-content-panel/etools-content-panel.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 
-import 'etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 
@@ -29,7 +29,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
 import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Permission, MinimalUser} from '../../../../../typings/globals.types.js';
 
@@ -53,6 +53,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
         :host {
           @apply --layout-vertical;
           width: 100%;
+        }
+
+        datepicker-lite[required]{
+          --paper-input-container-label-floating_-_max-width: 133%;
         }
 
         paper-input {
@@ -83,7 +87,12 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                               label="Document Submission Date"
                               value="{{intervention.submission_date}}"
                               readonly$="[[!permissions.edit.submission_date]]"
-                              selected-date-display-format="D MMM YYYY">
+                              selected-date-display-format="D MMM YYYY"
+                              required$="[[permissions.required.submission_date]]"
+                              max-date="[[getCurrentDate()]]"
+                              max-date-error-msg="Date can not be in the future"
+                              error-message="Document Submission Date is required"
+                              auto-validate>
             </datepicker-lite>
           </div>
           <div class="col col-3">
@@ -354,7 +363,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   validate() {
     let valid = true;
     const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
-      '#signedByUnicefDateField', '#signedIntervFile'];
+      '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
 
     fieldSelectors.forEach((selector: string) => {
       const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};

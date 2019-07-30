@@ -5,7 +5,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
 
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import '../../../../../../mixins/repeatable-data-sets-mixin.js';
@@ -22,7 +22,7 @@ import './result-link-lower-results.js';
 import './indicator-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../store';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {IndicatorDialogEl} from './indicator-dialog.js';
 import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';

@@ -5,7 +5,7 @@ import '../../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer/polymer-element';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {getDomainByEnv} from '../../../config/config';
-import {logError} from 'etools-behaviors/etools-logging';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {Route} from '../../../typings/route.types';
 /**

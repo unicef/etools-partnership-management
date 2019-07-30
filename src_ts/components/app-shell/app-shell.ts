@@ -54,7 +54,7 @@ import '@polymer/app-route/app-route.js';
 
 import {AppShellStyles} from './app-shell-styles';
 
-import LoadingMixin from 'etools-loading/etools-loading-mixin.js';
+import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
 import 'etools-piwik-analytics/etools-piwik-analytics.js';
 import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from '../common-data-mixins/common-data.js';
@@ -92,8 +92,8 @@ import {objectsAreTheSame} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
-import {createDynamicDialog} from 'etools-dialog/dynamic-dialog';
-import EtoolsDialog from 'etools-dialog';
+import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
 setRootPath(BASE_URL);
 
 /**
@@ -118,8 +118,8 @@ class AppShell extends connect(store)(
         ToastNotificationsMixin(
           ScrollControlMixin(
             AmendmentModeUIMixin(
-              LoadingMixin(
-                UtilsMixin(
+              UtilsMixin(
+                LoadingMixin(
                   UserDataMixin(
                     CommonDataMixin(
                       PolymerElement))))))))))) {

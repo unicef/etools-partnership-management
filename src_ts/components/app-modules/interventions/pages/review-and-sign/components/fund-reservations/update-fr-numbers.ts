@@ -4,7 +4,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
 import {PolymerElement, html} from '@polymer/polymer';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
@@ -12,7 +12,7 @@ import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
 import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from 'etools-dialog/etools-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
 import {PaperDialogElement} from '@polymer/paper-dialog/paper-dialog';
 

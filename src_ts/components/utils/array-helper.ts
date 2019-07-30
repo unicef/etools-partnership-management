@@ -1,4 +1,4 @@
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 /**
  * Compare arrays.
  * base array can be an array of values or an array of objects (if objects use basePropertyToVerify for matches)
