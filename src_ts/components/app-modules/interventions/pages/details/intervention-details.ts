@@ -437,7 +437,9 @@ class InterventionDetails extends connect(store)(
       <planned-visits id="plannedVisits"
                       data-items="{{intervention.planned_visits}}"
                       edit-mode="[[permissions.edit.planned_visits]]"
-                      years="[[years]]">
+                      years="[[years]]"
+                      intervention-status="[[intervention.status]]"
+                      intervention-id="[[intervention.id]]">
       </planned-visits>
     </etools-content-panel>
 

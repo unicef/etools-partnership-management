@@ -17,6 +17,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
     <style>
         :host {
           width: 100%;
+
           max-width: var(--etools-form-element-wrapper-max-width, none);
           --paper-input-container-underline: {
             display: none;
@@ -41,6 +42,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
         .paper-input-input {
           @apply --layout-horizontal;
           display: inline-block;
+          word-wrap: break-word;
         }
 
         :host(.ie) .paper-input-input {
