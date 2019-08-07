@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer';
+import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
@@ -7,12 +7,12 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
-import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
-import { SharedStyles } from '../../../../../../styles/shared-styles';
-import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
-import { buttonsStyles } from '../../../../../../styles/buttons-styles';
-import { Indicator } from '../../../../../../../typings/intervention.types';
-import { property } from '@polymer/decorators';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {Indicator} from '../../../../../../../typings/intervention.types';
+import {property} from '@polymer/decorators';
 
 
 /**
@@ -255,19 +255,19 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Object, observer: '_indicatorChanged' })
+  @property({type: Object, observer: '_indicatorChanged'})
   indicator!: Indicator;
 
-  @property({ type: Boolean, observer: '_readonlyChanged' })
+  @property({type: Boolean, observer: '_readonlyChanged'})
   readonly: boolean = false;
 
-  @property({ type: Array })
+  @property({type: Array})
   locationOptions!: [];
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   baselineIsUnknown!: boolean;
 
-  @property({ type: String })
+  @property({type: String})
   interventionStatus!: string;
 
   static get observers() {
@@ -311,7 +311,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
   _baselineUnknownChanged(isUnknown: boolean) {
     if (isUnknown) {
-      this.set('indicator.baseline', { v: null, d: 1 });
+      this.set('indicator.baseline', {v: null, d: 1});
     }
   }
 
@@ -332,7 +332,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
       let i;
       for (i = 0; i < elemIds.length; i++) {
-        const elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & { invalid: boolean };
+        const elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & {invalid: boolean};
         if (elem) {
           elem.invalid = false;
         }
@@ -374,4 +374,4 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 }
 
 window.customElements.define('non-cluster-indicator', NonClusterIndicator);
-export { NonClusterIndicator as NonClusterIndicatorEl };
+export {NonClusterIndicator as NonClusterIndicatorEl};
