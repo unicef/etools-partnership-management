@@ -1,4 +1,4 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
@@ -7,11 +7,11 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
-import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../../../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
-import {Indicator} from '../../../../../../../typings/intervention.types';
-import {property} from '@polymer/decorators';
+import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
+import { SharedStyles } from '../../../../../../styles/shared-styles';
+import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import { Indicator } from '../../../../../../../typings/intervention.types';
+import { property } from '@polymer/decorators';
 
 
 /**
@@ -62,6 +62,12 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
           padding: 0 8px 0 8px;
           margin-bottom: 10px;
         }
+
+        .add-locations {
+        padding-right: 0;
+        @apply --layout-end;
+        padding-bottom: 12px;
+      }
 
       </style>
 
@@ -239,23 +245,28 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
                               disable-on-focus-handling
                               fit-into="etools-dialog">
         </etools-dropdown-multi>
+        <paper-button class="secondary-btn add-locations"
+                      on-click="_addAllLocations"
+                      title="Add all locations">
+          Add all
+        </paper-button>
       </div>
     `;
   }
 
-  @property({type: Object, observer: '_indicatorChanged'})
+  @property({ type: Object, observer: '_indicatorChanged' })
   indicator!: Indicator;
 
-  @property({type: Boolean, observer: '_readonlyChanged'})
+  @property({ type: Boolean, observer: '_readonlyChanged' })
   readonly: boolean = false;
 
-  @property({type: Array})
+  @property({ type: Array })
   locationOptions!: [];
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   baselineIsUnknown!: boolean;
 
-  @property({type: String})
+  @property({ type: String })
   interventionStatus!: string;
 
   static get observers() {
@@ -299,7 +310,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
   _baselineUnknownChanged(isUnknown: boolean) {
     if (isUnknown) {
-      this.set('indicator.baseline', {v: null, d: 1});
+      this.set('indicator.baseline', { v: null, d: 1 });
     }
   }
 
@@ -320,7 +331,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
       let i;
       for (i = 0; i < elemIds.length; i++) {
-        const elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & {invalid: boolean};
+        const elem = this.shadowRoot!.querySelector('#' + elemIds[i]) as PolymerElement & { invalid: boolean };
         if (elem) {
           elem.invalid = false;
         }
@@ -344,7 +355,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
       return false;
     }
     return (this._getIndDisplayType() === 'ratio' &&
-        this._getIndUnit() === 'percentage');
+      this._getIndUnit() === 'percentage');
   }
 
   _getIndDisplayType() {
@@ -355,7 +366,11 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
     return this.indicator.indicator!.unit;
   }
 
+  _addAllLocations() {
+    const locationIDs = this.locationOptions.map((x: any) => x.id);
+    this.set('indicator.locations', locationIDs);
+  }
 }
 
 window.customElements.define('non-cluster-indicator', NonClusterIndicator);
-export {NonClusterIndicator as NonClusterIndicatorEl};
+export { NonClusterIndicator as NonClusterIndicatorEl };
