@@ -96,7 +96,7 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper label="Challneges/Bottlenecks in the Reporting Period (latest)"
+            <etools-form-element-wrapper label="Challenges/Bottlenecks in the Reporting Period (latest)"
                                         value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]">
             </etools-form-element-wrapper>
           </div>
