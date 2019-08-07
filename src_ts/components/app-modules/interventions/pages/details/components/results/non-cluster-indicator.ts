@@ -10,6 +10,7 @@ import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import { gridLayoutStyles } from '../../../../../../styles/grid-layout-styles';
 import { SharedStyles } from '../../../../../../styles/shared-styles';
 import { requiredFieldStarredStyles } from '../../../../../../styles/required-field-styles';
+import { buttonsStyles } from '../../../../../../styles/buttons-styles';
 import { Indicator } from '../../../../../../../typings/intervention.types';
 import { property } from '@polymer/decorators';
 
@@ -23,7 +24,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
   static get template() {
     return html`
-      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
       <style>
         *[hidden] {
           display: none !important;
