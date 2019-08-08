@@ -280,7 +280,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     const q3 = this.shadowRoot!.querySelector('#visit_' + index + '_q3') as PaperInputElement;
     const q4 = this.shadowRoot!.querySelector('#visit_' + index + '_q4') as PaperInputElement;
 
-    [q1, q2, q3, q4].forEach(function (q) {
+    [q1, q2, q3, q4].forEach(function(q) {
       if (q) {
         if (!q.validate()) {
           valid = false;
