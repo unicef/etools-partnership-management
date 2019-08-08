@@ -1,12 +1,12 @@
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import { PolymerElement } from '@polymer/polymer';
-import { ListItemIntervention } from '../../../../typings/intervention.types';
+import {PolymerElement} from '@polymer/polymer';
+import {ListItemIntervention} from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
-import { fireEvent } from '../../../utils/fire-custom-event';
-import { logError } from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import { property, customElement } from '@polymer/decorators';
-import { GenericObject } from '../../../../typings/globals.types';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {property, customElement} from '@polymer/decorators';
+import {GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -16,19 +16,19 @@ import { GenericObject } from '../../../../typings/globals.types';
 @customElement('interventions-list-data')
 class InterventionsListData extends ListDataMixin(PolymerElement) {
 
-  @property({ type: String })
+  @property({type: String})
   endpointName: string = 'interventions';
 
-  @property({ type: String })
+  @property({type: String})
   dataLoadedEventName: string = 'interventions-loaded';
 
-  @property({ type: Array, readOnly: true, notify: true })
+  @property({type: Array, readOnly: true, notify: true})
   filteredInterventions!: [];
 
-  @property({ type: Number, readOnly: true, notify: true })
+  @property({type: Number, readOnly: true, notify: true})
   totalResults!: number;
 
-  @property({ type: Object })
+  @property({type: Object})
   currentQuery: GenericObject | null = null;
 
 
@@ -148,13 +148,13 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     }).then(function (result: any) {
       // @ts-ignore
       self._setFilteredInterventions(result);
-      fireEvent(self, 'global-loading', { active: false, loadingSource: 'pd-ssfa-list' });
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     }).catch(function (error: any) {
       logError('Error querying interventions: ' + error, 'interventions-list-data');
-      fireEvent(self, 'global-loading', { active: false, loadingSource: 'pd-ssfa-list' });
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     });
   }
 
 }
 
-export { InterventionsListData };
+export {InterventionsListData};
