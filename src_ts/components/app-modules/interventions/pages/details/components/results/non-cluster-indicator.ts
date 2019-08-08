@@ -65,10 +65,10 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
         }
 
         .add-locations {
-        padding-right: 0;
-        @apply --layout-end;
-        padding-bottom: 12px;
-      }
+          padding-right: 0;
+          @apply --layout-end;
+          padding-bottom: 12px;
+        }
 
       </style>
 
