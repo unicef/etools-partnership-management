@@ -275,7 +275,7 @@ const pmpEdpoints = {
   },
   interventionPVLinkDelete: {
     template: '/api/v2/interventions/<%=intervention_id%>/planned-visits/<%=id%>/'
-  },
+  }
 };
 
 export default pmpEdpoints;
