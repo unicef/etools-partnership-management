@@ -1,7 +1,7 @@
-import { PolymerElement, html } from '@polymer/polymer';
-import { property } from '@polymer/decorators';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
@@ -14,27 +14,27 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
-import { connect } from 'pwa-helpers/connect-mixin';
-import { store, RootState } from '../../../../../store.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin';
 import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin';
-import { SharedStyles } from '../../../../styles/shared-styles';
-import { gridLayoutStyles } from '../../../../styles/grid-layout-styles';
-import { listFilterStyles } from '../../../../styles/list-filter-styles';
-import { frWarningsStyles } from '../../styles/fr-warnings-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {listFilterStyles} from '../../../../styles/list-filter-styles';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
-import { InterventionsListData } from '../../data/interventions-list-data.js';
-import { isEmptyObject, isJsonStrMatch } from '../../../../utils/utils.js';
-import { pmpCustomIcons } from '../../../../styles/custom-iconsets/pmp-icons.js';
-import { fireEvent } from '../../../../utils/fire-custom-event.js';
-import { LabelAndValue, CpStructure, MinimalUser } from '../../../../../typings/globals.types.js';
-import { CpOutput, ListItemIntervention } from '../../../../../typings/intervention.types.js';
-import { ListFilterOption } from '../../../../../typings/filter.types.js';
-import { partnersDropdownDataSelector } from '../../../../../reducers/partners.js';
+import {InterventionsListData} from '../../data/interventions-list-data.js';
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {LabelAndValue, CpStructure, MinimalUser} from '../../../../../typings/globals.types.js';
+import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
+import {ListFilterOption} from '../../../../../typings/filter.types.js';
+import {partnersDropdownDataSelector} from '../../../../../reducers/partners.js';
 
 let _interventionsLastNavigated = '';
 
@@ -288,82 +288,82 @@ class InterventionsList extends connect(store)(
     `;
   }
 
-  @property({ type: Array, notify: true, observer: InterventionsList.prototype._listChanged })
+  @property({type: Array, notify: true, observer: InterventionsList.prototype._listChanged})
   filteredInterventions!: ListItemIntervention[];
 
-  @property({ type: Array })
+  @property({type: Array})
   documentTypes!: LabelAndValue[];
 
-  @property({ type: Array })
+  @property({type: Array})
   selectedDocumentTypes: string[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   interventionStatuses!: LabelAndValue[];
 
-  @property({ type: Array })
+  @property({type: Array})
   selectedStatuses: string[] = [];
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   startDate!: string;
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   endDate!: string;
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   endAfter!: string;
 
-  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   cpOutputs: CpOutput[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   selectedCpOutputs: number[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   countryProgrammes!: CpStructure[];
 
-  @property({ type: Array })
+  @property({type: Array})
   sections!: object[];
 
-  @property({ type: Array })
+  @property({type: Array})
   selectedSections: number[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   unicefUsersData!: MinimalUser[];
 
-  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedUnicefFocalPoints: number[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   offices!: object[];
 
-  @property({ type: Array })
+  @property({type: Array})
   selectedOffices: number[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   donors!: object[];
 
-  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedDonors: string[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   partners: [] = [];
 
-  @property({ type: Array, observer: InterventionsList.prototype._filtersChanged })
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   selectedPartners: [] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   grants!: object[];
 
-  @property({ type: Array, observer: InterventionsList.prototype._arrayFilterChanged })
+  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedGrants: string[] = [];
 
-  @property({ type: String, notify: true })
+  @property({type: String, notify: true})
   csvDownloadQs!: string;
 
-  @property({ type: String })
+  @property({type: String})
   _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
 
-  @property({ type: String, observer: InterventionsList.prototype._arrayFilterChanged })
+  @property({type: String, observer: InterventionsList.prototype._arrayFilterChanged})
   selectedCPStructures: string[] = [];
 
   _updateFiltersValsDebouncer!: Debouncer | null;
@@ -426,7 +426,7 @@ class InterventionsList extends connect(store)(
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', { active: false, loadingSource: 'interv-page' });
+    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
 
     this.listAttachedCallback(this.active, 'Loading...', 'pd-ssfa-list');
   }
@@ -622,7 +622,7 @@ class InterventionsList extends connect(store)(
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
     // format of sort param is sort=field.order ex: sort=partner_name.asc
-    const result = this.initSortFieldsValues({ field: 'partner_name', direction: 'asc' }, urlQueryParams.sort);
+    const result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
     this.set('sortOrder', result);
     this.set('initComplete', true);
 

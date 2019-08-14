@@ -1,12 +1,12 @@
 declare const moment: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import { PolymerElement } from '@polymer/polymer';
-import { ListItemIntervention } from '../../../../typings/intervention.types';
+import {PolymerElement} from '@polymer/polymer';
+import {ListItemIntervention} from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
-import { fireEvent } from '../../../utils/fire-custom-event';
-import { logError } from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import { property, customElement } from '@polymer/decorators';
-import { GenericObject } from '../../../../typings/globals.types';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {property, customElement} from '@polymer/decorators';
+import {GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -16,19 +16,19 @@ import { GenericObject } from '../../../../typings/globals.types';
 @customElement('interventions-list-data')
 class InterventionsListData extends ListDataMixin(PolymerElement) {
 
-  @property({ type: String })
+  @property({type: String})
   endpointName: string = 'interventions';
 
-  @property({ type: String })
+  @property({type: String})
   dataLoadedEventName: string = 'interventions-loaded';
 
-  @property({ type: Array, readOnly: true, notify: true })
+  @property({type: Array, readOnly: true, notify: true})
   filteredInterventions!: [];
 
-  @property({ type: Number, readOnly: true, notify: true })
+  @property({type: Number, readOnly: true, notify: true})
   totalResults!: number;
 
-  @property({ type: Object })
+  @property({type: Object})
   currentQuery: GenericObject | null = null;
 
 
@@ -41,13 +41,13 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     let foundValues;
     if (multiple) {
       // case for intervention properties values like: offices, sections, cp outputs (array of values)
-      foundValues = intervention[prop].filter(function (propVal: any) {
+      foundValues = intervention[prop].filter(function(propVal: any) {
         return filterValues.indexOf(String(propVal)) > -1;
       });
       return foundValues && foundValues.length > 0;
     } else {
       // case for intervention properties values like: status, doc type (primitive types)
-      foundValues = filterValues.filter(function (selectedFilter: any) {
+      foundValues = filterValues.filter(function(selectedFilter: any) {
         return String(selectedFilter) === String(intervention[prop]);
       });
       return !!foundValues[0];
@@ -77,7 +77,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     }
 
     const interventionsDexieTable = window.EtoolsPmpApp.DexieDb.interventions;
-    window.EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function () {
+    window.EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function() {
       self.currentQuery = Dexie.currentTransaction;
 
       let queryResult = interventionsDexieTable;
@@ -89,7 +89,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         queryResult = queryResult.reverse();
       }
 
-      queryResult = queryResult.filter(function (intervention: ListItemIntervention) {
+      queryResult = queryResult.filter(function(intervention: ListItemIntervention) {
         if (!self._filterFound(intervention, 'status', false, statuses) ||
           !self._filterFound(intervention, 'document_type', false, documentTypes) ||
           !self._filterFound(intervention, 'sections', true, sections) ||
@@ -133,8 +133,8 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       // instead of blocking the main query
       // TODO: to not use @ts-ignore we should import dexie in index.html then decalre it as global variable
       // @ts-ignore
-      Dexie.ignoreTransaction(function () {
-        queryResult.count(function (count: number) {
+      Dexie.ignoreTransaction(function() {
+        queryResult.count(function(count: number) {
           // @ts-ignore
           self._setTotalResults(count);
         });
@@ -145,16 +145,16 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         .limit(pageSize)
         .toArray();
 
-    }).then(function (result: any) {
+    }).then(function(result: any) {
       // @ts-ignore
       self._setFilteredInterventions(result);
-      fireEvent(self, 'global-loading', { active: false, loadingSource: 'pd-ssfa-list' });
-    }).catch(function (error: any) {
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+    }).catch(function(error: any) {
       logError('Error querying interventions: ' + error, 'interventions-list-data');
-      fireEvent(self, 'global-loading', { active: false, loadingSource: 'pd-ssfa-list' });
+      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     });
   }
 
 }
 
-export { InterventionsListData };
+export {InterventionsListData};
