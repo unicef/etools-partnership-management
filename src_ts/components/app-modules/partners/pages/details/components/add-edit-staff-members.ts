@@ -13,8 +13,8 @@ import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
-import {parseRequestErrorsAndShowAsToastMsgs} from "../../../../../utils/ajax-errors-parser";
-import {ValidatableField} from "../../../../../../typings/globals.types";
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
+import {ValidatableField} from '../../../../../../typings/globals.types';
 
 /**
  * @polymer
