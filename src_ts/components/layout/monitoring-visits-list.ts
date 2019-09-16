@@ -42,7 +42,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                         active$="[[showLoading]]"></etools-loading>
 
         <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
-          <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
+          <etools-data-table-header id="listHeader" label="Showing [[_getVisitsCount(monitoringVisits.length, tpmMonitoringVisits.length)]] results" no-collapse>
             <etools-data-table-column class="col-2" field="reference_number">
               Reference #
             </etools-data-table-column>
@@ -185,10 +185,10 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     const self = this;
     this.sendRequest({
       endpoint: monitoringVisitsEndpoint
-    }).then(function(resp: any) {
+    }).then(function (resp: any) {
       self.set('monitoringVisits', resp);
       self.set('showLoading', false);
-    }).catch(function(error: any) {
+    }).catch(function (error: any) {
       self.set('showLoading', false);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
@@ -201,6 +201,10 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       shouldHide = shouldHide && (tpmLength === 0);
     }
     return shouldHide;
+  }
+
+  _getVisitsCount(t2flength: number, tpmLength: number) {
+    return this.showTpmVisits ? (t2flength + tpmLength) : t2flength;
   }
 
   showTpmVisitsAndIdChanged(partnerId: string, showTpmVisits: boolean) {
