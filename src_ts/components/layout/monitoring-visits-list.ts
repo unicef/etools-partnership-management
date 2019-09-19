@@ -231,8 +231,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     if (locations.length === 1) {
       return locations[0].name;
     }
-
-    return locations.reduce((a: any, b: any) => a.name + ', ' + b.name);
+    return locations.map((a: any) => a.name ? a.name : '').join(', ');
   }
 }
 
