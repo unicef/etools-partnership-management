@@ -115,8 +115,8 @@ const pmpEdpoints = {
   partnerT2fProgrammaticVisits: {
     template: '/api/t2f/travels/activities/<%=id%>/?year=<%=year%>&status=completed'
   },
-  partnerTPMProgrammaticVisits: {
-    template: '/api/tpm/visits/?ordering=reference_number&status=unicef_approved&tpm_activities__partner=<%=partnerId%>'
+  partnerTPMActivities: {
+    template: '/api/tpm/activities/?is_pv=true&tpm_visit__status=unicef_approved&partner=<%=partnerId%>'
   },
   sectorLocationsDelete: {
     template: '/api/v2/interventions/sector-locations/<%=id%>/'
