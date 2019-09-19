@@ -113,7 +113,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                 <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
                     [[getDateDisplayValue(visit.date)]]
                 </span>
-                <span class="col-data col-2" title="[[getDisplayValue(visit.locations_details)]]">
+                <span class="col-data col-2" title="[[getLocNames(visit.locations_details)]]">
                     [[getLocNames(visit.locations_details)]]
                 </span>
                 <span class="col-data col-2 capitalize" title="[[visit.status]]">
