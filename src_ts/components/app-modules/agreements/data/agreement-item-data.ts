@@ -5,10 +5,10 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {Agreement, MinimalAgreement} from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement} from '../../../../actions/agreements.js';
-import {EtoolsRequestError} from 'etools-ajax/etools-ajax-request-mixin.js';
+import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import {GenericObject} from '../../../../typings/globals.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event.js';
-import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
+import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 
 

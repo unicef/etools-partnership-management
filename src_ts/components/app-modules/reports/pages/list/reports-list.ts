@@ -3,8 +3,8 @@ import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 
 import '../../components/reports-display-list';
 import {SharedStyles} from '../../../../styles/shared-styles';
@@ -65,7 +65,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected="{{filter.alreadySelected}}"
+                selected="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-item-changed="filterValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -85,7 +85,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="{{filter.alreadySelected}}"
+                selected-values="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -245,36 +245,36 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
     this.initListFiltersData([
       {
         filterName: 'CP Output',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: cpOutputs,
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.cp_output',
         selected: false,
         minWidth: '400px'
       },
       {
         filterName: 'Partner',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: partners,
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.external_partner_id',
         selected: false,
         minWidth: '400px'
       },
       {
         filterName: 'Report Status',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         singleSelection: false,
         selectionOptions: reportStatuses,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'queryParams.status',
         selected: true,
         minWidth: '160px',
@@ -282,12 +282,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       },
       {
         filterName: 'Report Type',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         selectionOptions: reportTypes,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.report_type',
         selected: true,
         minWidth: '300px',
@@ -295,12 +295,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       },
       {
         filterName: 'Section',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: true,
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: sections,
-        alreadySelected: null,
+        selectedValue: null,
         path: 'queryParams.section',
         selected: false,
         minWidth: '400px',
@@ -308,12 +308,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
       },
       {
         filterName: 'UNICEF focal points',
-        type: 'esmm',
+        type: 'etools-dropdown-multi',
         singleSelection: false,
         optionValue: 'email',
         optionLabel: 'name',
         selectionOptions: unicefUsersData,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'queryParams.unicef_focal_points',
         selected: false,
         minWidth: '400px'
@@ -429,7 +429,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   /**
    * _prevFiltersChangedArgs check will prevent page reset in case queryParams array values are updated,
    * but with the same value. Ex: by default queryParams.unicef_focal_points = [], when filter si selected from menu,
-   * queryParams.unicef_focal_points is updated, but to a new empty array (by esmm) and this will
+   * queryParams.unicef_focal_points is updated, but to a new empty array (by etools-dropdown-multi) and this will
    * trigger _filtersChanged observer.
    * @private
    */

@@ -5,11 +5,12 @@ import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import {Indicator} from '../../../../../../../typings/intervention.types';
 import {property} from '@polymer/decorators';
 
@@ -23,7 +24,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
 
   static get template() {
     return html`
-      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
       <style>
         *[hidden] {
           display: none !important;
@@ -61,6 +62,12 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
         .dash-separator {
           padding: 0 8px 0 8px;
           margin-bottom: 10px;
+        }
+
+        .add-locations {
+          padding-right: 0;
+          @apply --layout-end;
+          padding-bottom: 12px;
         }
 
       </style>
@@ -239,6 +246,11 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
                               disable-on-focus-handling
                               fit-into="etools-dialog">
         </etools-dropdown-multi>
+        <paper-button class="secondary-btn add-locations"
+                      on-click="_addAllLocations"
+                      title="Add all locations">
+          Add all
+        </paper-button>
       </div>
     `;
   }
@@ -344,7 +356,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
       return false;
     }
     return (this._getIndDisplayType() === 'ratio' &&
-        this._getIndUnit() === 'percentage');
+      this._getIndUnit() === 'percentage');
   }
 
   _getIndDisplayType() {
@@ -355,6 +367,10 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
     return this.indicator.indicator!.unit;
   }
 
+  _addAllLocations() {
+    const locationIDs = this.locationOptions.map((x: any) => x.id);
+    this.set('indicator.locations', locationIDs);
+  }
 }
 
 window.customElements.define('non-cluster-indicator', NonClusterIndicator);

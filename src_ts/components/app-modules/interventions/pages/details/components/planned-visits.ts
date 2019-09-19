@@ -5,10 +5,10 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import RepeatableDataSetsMixin from '../../../../../mixins/repeatable-data-sets-mixin';
-import {DomRepeatEvent} from '../../../../../../typings/globals.types';
+import {DomRepeatEvent, GenericObject} from '../../../../../../typings/globals.types';
 import {PlannedVisit} from '../../../../../../typings/intervention.types';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
 import {SharedStyles} from '../../../../../styles/shared-styles.js';
@@ -16,7 +16,7 @@ import {repeatableDataSetsStyles} from '../../../../../styles/repeatable-data-se
 import {buttonsStyles} from '../../../../../styles/buttons-styles.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
-import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
@@ -203,6 +203,9 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     `;
   }
 
+  @property({type: String})
+  _deleteEpName: string = 'interventionPVLinkDelete';
+
   @property({type: Array})
   years: [] = [];
 
@@ -210,6 +213,14 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   @property({type: Boolean, observer: PlannedVisits.prototype._editModeChanged})
   editMode!: boolean;
 
+  @property({type: Number})
+  interventionId!: number;
+
+  @property({type: String})
+  interventionStatus!: string;
+
+  @property({type: Object})
+  extraEndpointParams!: GenericObject;
 
   static get observers() {
     return [
@@ -242,6 +253,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   validate() {
     let valid = true;
+
     this.dataItems.forEach((item: PlannedVisit, index: number) => {
       if (!(this._validateYear(index) && this._validateQuarters(item, index))) {
         valid = false;
@@ -291,18 +303,23 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
     if (!Array.isArray(dataItems)) {
       this.set('dataItems', []);
     }
+    this.set('extraEndpointParams', {intervention_id: this.interventionId});
   }
 
   /**
-   * The planned visit row data can be removed only if it doesn't have and id assigned(only if is not saved)
+   * The planned visit row data can be removed only if (intervention status is new or draft) or (if it doesn't have and id assigned(only if is not saved))
    */
   _canBeRemoved(index: number, editMode: boolean) {
-    if (!editMode || !this.dataItems || !this.dataItems.length) {
+    if (!editMode || !this.dataItems || !this.dataItems.length || !this.dataItems[index]) {
       return false;
     }
     const plannedVisit = this.dataItems[index];
     const plannedVisitId = parseInt(plannedVisit.id, 10);
-    return !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0);
+    return (this._isDraft() || !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0));
+  }
+
+  _isDraft() {
+    return (this.interventionStatus === '' || this.interventionStatus === 'draft');
   }
 
   _yearChanged(event: DomRepeatEvent) {

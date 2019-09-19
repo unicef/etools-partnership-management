@@ -2,10 +2,10 @@ import {ListFilterOption, ListOrSelectedFilterOption} from '../../typings/filter
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {DomRepeatEvent, Constructor} from '../../typings/globals.types';
-import {EtoolsDropdownMultiEl} from 'etools-dropdown/etools-dropdown-multi';
-import {EtoolsDropdownEl} from 'etools-dropdown';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
-import DatePickerLite from 'etools-date-time/datepicker-lite';
+import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 declare const moment: any;
 /**
   * @polymer
@@ -69,7 +69,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     _getEmptyValueByFilterType(filter: any) {
       switch (filter.type) {
-        case 'esmm':
+        case 'etools-dropdown-multi':
         case 'dropdown':
         case 'etools-dropdown':
           return filter.singleSelection ? null : [];
@@ -115,13 +115,13 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     */
     clearSelectedValueInFilter(filter: ListFilterOption, filterPath: [string, number]) {
       switch (filter.type) {
-        case 'esmm':
+        case 'etools-dropdown-multi':
         case 'dropdown':
         case 'etools-dropdown':
-          this.set([...filterPath, 'alreadySelected'], filter.singleSelection ? null : []);
+          this.set([...filterPath, 'selectedValue'], filter.singleSelection ? null : []);
           break;
         case 'datepicker':
-          this.set([...filterPath, 'dateSelected'], '');
+          this.set([...filterPath, 'selectedValue'], '');
           break;
         case 'paper-toggle':
           this.set([...filterPath, 'selectedValue'], false);
@@ -133,21 +133,9 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     updateSelectedValueInFilter(filterType: string, filterPath: [string, number], selectedValue: any) {
-      switch (filterType) {
-        case 'esmm':
-        case 'dropdown':
-        case 'etools-dropdown':
-          this.set([...filterPath, 'alreadySelected'], selectedValue);
-          break;
-        case 'datepicker':
-          this.set([...filterPath, 'dateSelected'], selectedValue);
-          break;
-        case 'paper-toggle':
-          this.set([...filterPath, 'selectedValue'], selectedValue);
-          this.notifyPath([...filterPath, 'selectedValue'].join('.'));
-          break;
-        default:
-          break;
+      this.set([...filterPath, 'selectedValue'], selectedValue);
+      if (filterType === 'paper-toggle') {
+        this.notifyPath([...filterPath, 'selectedValue'].join('.'));
       }
     }
 
@@ -163,7 +151,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     /**
      * Check filter type. Filter type can be:
      *  - 'dropdown'(dropdown created using polymer catalog elements)
-     *  - 'esmm' (etools-dropdown-multi)
+     *  - 'etools-dropdown-multi' (etools-dropdown-multi)
      *  - 'etools-dropdown' - etools-dropdown single selection
      *  - 'datepicker' (datepicker-lite)update
      */
@@ -171,7 +159,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return expectedType === checkedTypeValue;
     }
 
-    // 'esmm' (etools-dropdown-multi) filter value changed
+    // 'etools-dropdown-multi' (etools-dropdown-multi) filter value changed
     esmmValueChanged(e: CustomEvent) {
       const dropdownMultiEl = e.target as EtoolsDropdownMultiEl;
       const filterPath = dropdownMultiEl.getAttribute('data-filter-path')!;
@@ -260,7 +248,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     filterHasSelectedValue(selectedValue: any, filterType: string) {
       switch (filterType) {
-        case 'esmm':
+        case 'etools-dropdown-multi':
         case 'dropdown':
         case 'etools-dropdown':
           return selectedValue && ((typeof selectedValue === 'string' && selectedValue !== '')

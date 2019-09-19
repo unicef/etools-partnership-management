@@ -4,7 +4,7 @@ import {PolymerElement} from '@polymer/polymer';
 import {ListItemIntervention} from '../../../../typings/intervention.types';
 import Dexie from 'dexie';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property, customElement} from '@polymer/decorators';
 import {GenericObject} from '../../../../typings/globals.types';
 
@@ -29,7 +29,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
   totalResults!: number;
 
   @property({type: Object})
-  currentQuery: GenericObject | null= null;
+  currentQuery: GenericObject | null = null;
 
 
   _filterFound(intervention: ListItemIntervention, prop: string,
@@ -55,7 +55,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
   }
 
   query(field: string, order: string, searchString: string, documentTypes: string[],
-    cpOutputs: string[], donors: string[], grants: string[],
+    cpOutputs: string[], donors: string[], partners: string[], grants: string[],
     statuses: string[], sections: string[], unicefFocalPoints: string[],
     offices: string[], cpStructures: string[], startDate: string,
     endDate: string, endAfter: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
@@ -90,38 +90,38 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       }
 
       queryResult = queryResult.filter(function(intervention: ListItemIntervention) {
-
         if (!self._filterFound(intervention, 'status', false, statuses) ||
-            !self._filterFound(intervention, 'document_type', false, documentTypes) ||
-            !self._filterFound(intervention, 'sections', true, sections) ||
-            !self._filterFound(intervention, 'offices', true, offices) ||
-            !self._filterFound(intervention, 'unicef_focal_points', true, unicefFocalPoints) ||
-            !self._filterFound(intervention, 'cp_outputs', true, cpOutputs) ||
-            !self._filterFound(intervention, 'donors', true, donors) ||
-            !self._filterFound(intervention, 'grants', true, grants) ||
-            !self._filterFound(intervention, 'country_programme', false, cpStructures)) {
+          !self._filterFound(intervention, 'document_type', false, documentTypes) ||
+          !self._filterFound(intervention, 'sections', true, sections) ||
+          !self._filterFound(intervention, 'offices', true, offices) ||
+          !self._filterFound(intervention, 'unicef_focal_points', true, unicefFocalPoints) ||
+          !self._filterFound(intervention, 'cp_outputs', true, cpOutputs) ||
+          !self._filterFound(intervention, 'donors', true, donors) ||
+          !self._filterFound(intervention, 'partner_name', false, partners) ||
+          !self._filterFound(intervention, 'grants', true, grants) ||
+          !self._filterFound(intervention, 'country_programme', false, cpStructures)) {
           return false;
         }
 
         if (startDate && startDate.length &&
-            (!intervention.start || !moment.utc(intervention.start).isAfter(moment.utc(startDate)))) {
+          (!intervention.start || !moment.utc(intervention.start).isAfter(moment.utc(startDate)))) {
           return false;
         }
 
         if (endDate && endDate.length &&
-            (!intervention.end || !moment.utc(intervention.end).isBefore(moment.utc(endDate)))) {
+          (!intervention.end || !moment.utc(intervention.end).isBefore(moment.utc(endDate)))) {
           return false;
         }
 
         if (endAfter && endAfter.length &&
-            (!intervention.end || !moment.utc(intervention.end).isSameOrAfter(moment.utc(endAfter)))) {
+          (!intervention.end || !moment.utc(intervention.end).isSameOrAfter(moment.utc(endAfter)))) {
           return false;
         }
 
         if (searchString && searchString.length &&
-            intervention.title!.toLowerCase().indexOf(searchString) < 0 &&
-            intervention.partner_name!.toLowerCase().indexOf(searchString) < 0 &&
-            intervention.number!.toLowerCase().indexOf(searchString) < 0) {
+          intervention.title!.toLowerCase().indexOf(searchString) < 0 &&
+          intervention.partner_name!.toLowerCase().indexOf(searchString) < 0 &&
+          intervention.number!.toLowerCase().indexOf(searchString) < 0) {
           return false;
         }
 

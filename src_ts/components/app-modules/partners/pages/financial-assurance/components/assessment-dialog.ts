@@ -1,9 +1,9 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-checkbox/paper-checkbox';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dialog/etools-dialog.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 
@@ -18,7 +18,7 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-er
 import {property} from '@polymer/decorators';
 import {LabelAndValue} from '../../../../../../typings/globals.types.js';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
 
 /**

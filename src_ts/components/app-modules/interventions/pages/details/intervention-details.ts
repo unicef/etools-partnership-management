@@ -4,12 +4,12 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-content-panel/etools-content-panel.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-upload/etools-upload.js';
-import 'etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-cp-structure.js';
@@ -52,7 +52,7 @@ import {AgreementSelector} from './components/agreement-selector.js';
 import {GroupedLocationsDialog} from './components/grouped-locations-dialog.js';
 import {PlannedBudgetEl} from './components/planned-budget.js';
 import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure.js';
-import {EtoolsDropdownEl} from 'etools-dropdown/etools-dropdown.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../styles/etools-cp-header-actions-bar-styles.js';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
@@ -437,7 +437,9 @@ class InterventionDetails extends connect(store)(
       <planned-visits id="plannedVisits"
                       data-items="{{intervention.planned_visits}}"
                       edit-mode="[[permissions.edit.planned_visits]]"
-                      years="[[years]]">
+                      years="[[years]]"
+                      intervention-status="[[intervention.status]]"
+                      intervention-id="[[intervention.id]]">
       </planned-visits>
     </etools-content-panel>
 

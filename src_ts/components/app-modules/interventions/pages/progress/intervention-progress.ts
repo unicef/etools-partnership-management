@@ -3,9 +3,9 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 
-import 'etools-content-panel/etools-content-panel.js';
-import 'etools-data-table/etools-data-table.js';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-progress-bar.js';
@@ -26,7 +26,7 @@ import {User, GenericObject} from '../../../../../typings/globals.types.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
-import {logError, logWarn} from 'etools-behaviors/etools-logging.js';
+import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 declare const moment: any;
@@ -400,8 +400,7 @@ class InterventionProgress extends connect(store)(
     let resultStatusDateStr = '';
     const latestIndReport = this._getLatestIndicatorReport(lowerResultId);
     if (latestIndReport) {
-      const d = this._convertToDisplayFormat(latestIndReport.submission_date);
-      resultStatusDateStr = '(' + this.getDateDisplayValue(d) + ')';
+      resultStatusDateStr = '(' + this._convertToDisplayFormat(latestIndReport.submission_date) + ')';
     }
     return resultStatusDateStr;
   }

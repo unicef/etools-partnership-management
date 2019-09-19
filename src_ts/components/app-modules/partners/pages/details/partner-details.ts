@@ -7,9 +7,9 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
-import 'etools-content-panel/etools-content-panel.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '../../../../layout/etools-form-element-wrapper.js';
 
 import '../../../../layout/etools-error-messages-box.js';
@@ -223,7 +223,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
         <staff-members id="staffMembersList"
                     data-items="[[partner.staff_members]]"
-                    edit-mode="[[editMode]]">
+                    edit-mode="[[editMode]]"
+                    partner-id="[[partner.id]]">
         </staff-members>
 
     `;
@@ -322,9 +323,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
       this.set('showCoreValuesAssessmentAttachment',
         this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
 
-      if (this.showCoreValuesAssessmentAttachment) {
-        this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
-      }
+      this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
+
       if (partner.type_of_assessment === 'Micro Assessment') {
         this._displayAssessmentNotification(partner.last_assessment_date, 'Micro Assessment');
       }

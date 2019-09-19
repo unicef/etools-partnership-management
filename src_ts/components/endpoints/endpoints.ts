@@ -272,6 +272,9 @@ const pmpEdpoints = {
   },
   expectedResultsExport: {
     template: '/api/v2/reports/interventions/results/<%=intervention_id%>/?format=docx_table'
+  },
+  interventionPVLinkDelete: {
+    template: '/api/v2/interventions/<%=intervention_id%>/planned-visits/<%=id%>/'
   }
 };
 

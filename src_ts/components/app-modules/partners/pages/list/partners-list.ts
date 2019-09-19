@@ -13,10 +13,10 @@ import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
@@ -90,7 +90,7 @@ class PartnersList extends
           </paper-input>
 
           <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-            <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
               <!-- esmm multi -->
               <etools-dropdown-multi
                   class="filter"
@@ -98,7 +98,7 @@ class PartnersList extends
                   placeholder="Select"
                   disabled$="[[filter.disabled]]"
                   options="[[filter.selectionOptions]]"
-                  selected-values="{{filter.alreadySelected}}"
+                  selected-values="{{filter.selectedValue}}"
                   data-filter-path$="[[filter.path]]"
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event
@@ -323,9 +323,9 @@ class PartnersList extends
     this.initListFiltersData([
       {
         filterName: 'Partner Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: partnerTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedPartnerTypes',
         selected: true,
         minWidth: '350px',
@@ -334,20 +334,20 @@ class PartnersList extends
       },
       {
         filterName: 'CSO Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: csoTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCsoTypes',
         selected: true,
         minWidth: '350px',
         hideSearch: false,
-        disabled: csoTypes.length === 0
+        disabled: this.showOnlyGovernmentType || csoTypes.length === 0
       },
       {
         filterName: 'Risk Rating',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedRiskRatings',
         selected: true,
         minWidth: '160px',

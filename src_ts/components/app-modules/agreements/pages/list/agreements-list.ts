@@ -12,10 +12,10 @@ import '@polymer/paper-item/paper-icon-item';
 import '@polymer/paper-item/paper-item-body';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
@@ -85,7 +85,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
           </paper-input>
 
           <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-            <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
               <!-- esmm multi -->
               <etools-dropdown-multi
                   class="filter"
@@ -95,7 +95,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                   options="[[filter.selectionOptions]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
-                  selected-values="{{filter.alreadySelected}}"
+                  selected-values="{{filter.selectedValue}}"
                   data-filter-path$="[[filter.path]]"
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event
@@ -111,7 +111,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                                 class="filter date"
                                 label="[[filter.filterName]]"
                                 placeholder="Select"
-                                value="{{filter.dateSelected}}"
+                                value="{{filter.selectedValue}}"
                                 on-date-has-changed="_filterDateHasChanged"
                                 data-filter-path$="[[filter.path]]"
                                 fire-date-has-changed
@@ -129,7 +129,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                     options="[[filter.selectionOptions]]"
                     option-value="[[filter.optionValue]]"
                     option-label="[[filter.optionLabel]]"
-                    selected="{{filter.alreadySelected}}"
+                    selected="{{filter.selectedValue}}"
                     trigger-value-change-event
                     on-etools-selected-item-changed="filterValueChanged"
                     data-filter-path$="[[filter.path]]"
@@ -330,11 +330,11 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
     this.initListFiltersData([
       new ListFilterOption({
         filterName: 'CP Structure',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
         optionLabel: 'name',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCPStructures',
         selected: true,
         minWidth: '400px',
@@ -343,17 +343,17 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
       new ListFilterOption({
         filterName: 'Ends Before',
         type: 'datepicker',
-        dateSelected: '',
+        selectedValue: '',
         path: 'endDate',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Partner',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: partnersDropdownData,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedPartners',
         selected: false,
         minWidth: '400px',
@@ -362,17 +362,17 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
       new ListFilterOption({
         filterName: 'Starts After',
         type: 'datepicker',
-        dateSelected: '',
+        selectedValue: '',
         path: 'startDate',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Status',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: agreementStatuses,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedAgStatuses',
         selected: true,
         minWidth: '160px',
@@ -380,11 +380,11 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
       }),
       new ListFilterOption({
         filterName: 'Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: agreementTypes,
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedAgTypes',
         selected: true,
         minWidth: '350px',
@@ -397,7 +397,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
         selectionOptions: [{value: 'true', label: 'Yes'}, {value: 'false', label: 'No'}],
         optionValue: 'value',
         optionLabel: 'label',
-        alreadySelected: null,
+        selectedValue: null,
         path: 'isSpecialConditionsPca',
         selected: true,
         minWidth: '350px',

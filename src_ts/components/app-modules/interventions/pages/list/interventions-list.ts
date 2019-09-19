@@ -10,10 +10,10 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import CONSTANTS from '../../../../../config/app-constants';
@@ -34,7 +34,7 @@ import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import {LabelAndValue, CpStructure, MinimalUser} from '../../../../../typings/globals.types.js';
 import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
 import {ListFilterOption} from '../../../../../typings/filter.types.js';
-
+import {partnersDropdownDataSelector} from '../../../../../reducers/partners.js';
 
 let _interventionsLastNavigated = '';
 
@@ -96,7 +96,7 @@ class InterventionsList extends connect(store)(
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
-          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+          <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
             <etools-dropdown-multi
                 class="filter"
                 label="[[filter.filterName]]"
@@ -105,7 +105,7 @@ class InterventionsList extends connect(store)(
                 options="[[filter.selectionOptions]]"
                 option-value="[[filter.optionValue]]"
                 option-label="[[filter.optionLabel]]"
-                selected-values="{{filter.alreadySelected}}"
+                selected-values="{{filter.selectedValue}}"
                 trigger-value-change-event
                 on-etools-selected-items-changed="esmmValueChanged"
                 data-filter-path$="[[filter.path]]"
@@ -121,7 +121,7 @@ class InterventionsList extends connect(store)(
                               class="filter date"
                               label="[[filter.filterName]]"
                               placeholder="&#8212;"
-                              value="{{filter.dateSelected}}"
+                              value="{{filter.selectedValue}}"
                               on-date-has-changed="_filterDateHasChanged"
                               data-filter-path$="[[filter.path]]"
                               fire-date-has-changed
@@ -313,7 +313,7 @@ class InterventionsList extends connect(store)(
   endAfter!: string;
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
-  cpOutputs: CpOutput[] = []
+  cpOutputs: CpOutput[] = [];
 
   @property({type: Array})
   selectedCpOutputs: number[] = [];
@@ -346,6 +346,12 @@ class InterventionsList extends connect(store)(
   selectedDonors: string[] = [];
 
   @property({type: Array})
+  partners: [] = [];
+
+  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  selectedPartners: [] = [];
+
+  @property({type: Array})
   grants!: object[];
 
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
@@ -366,14 +372,14 @@ class InterventionsList extends connect(store)(
   static get observers() {
     return [
       '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-          'selectedSections.length, selectedOffices.length, ' +
-          'selectedCPStructures.length)', // used for non removable filters
-      '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, grants, countryProgrammes, offices, ' +
-          'documentTypes, sections, interventionStatuses)',
+      'selectedSections.length, selectedOffices.length, ' +
+      'selectedCPStructures.length)', // used for non removable filters
+      '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
+      'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
-          'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-          'selectedDonors.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
-          'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+      'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
+      'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
+      'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -403,10 +409,10 @@ class InterventionsList extends connect(store)(
     if (!isJsonStrMatch(this.donors, state.commonData!.donors)) {
       this.donors = [...state.commonData!.donors];
     }
+    this.partners = partnersDropdownDataSelector(state);
     if (!isJsonStrMatch(this.grants, state.commonData!.grants)) {
       this.grants = [...state.commonData!.grants];
     }
-
   }
 
   ready() {
@@ -425,12 +431,12 @@ class InterventionsList extends connect(store)(
     this.listAttachedCallback(this.active, 'Loading...', 'pd-ssfa-list');
   }
 
-  _initFiltersMenuList(cpOutputs: number[], unicefUsersData: number[], donors: number[],
+  _initFiltersMenuList(cpOutputs: number[], unicefUsersData: number[], donors: number[], partners: number[],
     grants: number[], countryProgrammes: number[], offices: number[],
     documentTypes: string[], sections: number[], interventionStatuses: string[]) {
 
-    if (!cpOutputs || !unicefUsersData || !donors || !grants || !countryProgrammes || !offices ||
-        !documentTypes || !sections || !interventionStatuses) {
+    if (!cpOutputs || !unicefUsersData || !donors || !partners || !grants || !countryProgrammes || !offices ||
+      !documentTypes || !sections || !interventionStatuses) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
     }
@@ -442,11 +448,11 @@ class InterventionsList extends connect(store)(
     this.initListFiltersData([
       new ListFilterOption({
         filterName: 'CP Structure',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         selectionOptions: countryProgrammes,
         optionValue: 'id',
         optionLabel: 'name',
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCPStructures',
         selected: true,
         minWidth: '400px',
@@ -454,51 +460,63 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'Country Programme Output',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: cpOutputs,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedCpOutputs',
         selected: false,
         minWidth: '400px'
       }),
       new ListFilterOption({
         filterName: 'Donors',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: donors,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedDonors',
         selected: false,
         minWidth: '400px'
       }),
       new ListFilterOption({
+        filterName: 'Partners',
+        type: 'etools-dropdown-multi',
+        selectionOptions: partners,
+        optionValue: 'value',
+        optionLabel: 'label',
+        selectedValue: [],
+        path: 'selectedPartners',
+        selected: false,
+        minWidth: '400px',
+        hideSearch: false
+      }),
+      new ListFilterOption({
         filterName: 'Ends Before',
         type: 'datepicker', // datepicker-lite
         path: 'endDate',
-        dateSelected: '',
+        selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Grants',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: grants,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedGrants',
         selected: false,
         minWidth: '400px'
       }),
       new ListFilterOption({
         filterName: 'Offices',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: offices,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedOffices',
         selected: true,
         minWidth: '250px',
@@ -506,11 +524,11 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'PD/SSFA Type',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: documentTypes,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedDocumentTypes',
         selected: true,
         minWidth: '400px',
@@ -518,11 +536,11 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'Sections',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: sections,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedSections',
         selected: true,
         minWidth: '350px',
@@ -532,23 +550,23 @@ class InterventionsList extends connect(store)(
         filterName: 'Starts After',
         type: 'datepicker', // datepicker-lite
         path: 'startDate',
-        dateSelected: '',
+        selectedValue: '',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Ends After',
         type: 'datepicker',
-        dateSelected: '',
+        selectedValue: '',
         path: 'endAfter',
         selected: false
       }),
       new ListFilterOption({
         filterName: 'Status',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
         selectionOptions: interventionStatuses,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedStatuses',
         selected: true,
         minWidth: '160px',
@@ -556,11 +574,11 @@ class InterventionsList extends connect(store)(
       }),
       new ListFilterOption({
         filterName: 'UNICEF focal point',
-        type: 'esmm', // etools-dropdown-multi
+        type: 'etools-dropdown-multi',
         optionValue: 'id',
         optionLabel: 'name',
         selectionOptions: unicefUsersData,
-        alreadySelected: [],
+        selectedValue: [],
         path: 'selectedUnicefFocalPoints',
         selected: false,
         minWidth: '400px'
@@ -590,13 +608,14 @@ class InterventionsList extends connect(store)(
         selectedCpOutputs: this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs),
         selectedSections: this._getFilterUrlValuesAsArray(urlQueryParams.section),
         selectedDonors: this._getFilterUrlValuesAsArray(urlQueryParams.donors),
+        selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
         selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
         selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
         selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
         selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
         startDate: urlQueryParams.start ? urlQueryParams.start : '',
         endDate: urlQueryParams.end ? urlQueryParams.end : '',
-        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter: ''
+        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : ''
       }
     );
 
@@ -643,6 +662,10 @@ class InterventionsList extends connect(store)(
           {
             filterName: 'Donors',
             selectedValue: this.selectedDonors
+          },
+          {
+            filterName: 'Partners',
+            selectedValue: this.selectedPartners
           },
           {
             filterName: 'Grants',
@@ -697,6 +720,7 @@ class InterventionsList extends connect(store)(
           this.selectedDocumentTypes,
           this.selectedCpOutputs.map((cpo: number) => String(cpo)),
           this.selectedDonors,
+          this.getFilterValuesByProperty(this.partners, 'label', this.selectedPartners, 'value'),
           this.selectedGrants,
           this.selectedStatuses,
           this.selectedSections.map((s: number) => String(s)),
@@ -725,6 +749,7 @@ class InterventionsList extends connect(store)(
       offices: this.selectedOffices.join('|'),
       cp_outputs: this.selectedCpOutputs.join('|'),
       donors: this.selectedDonors.join('|'),
+      partners: this.selectedPartners.join('|'),
       grants: this.selectedGrants.join('|'),
       unicef_focal_points: this.selectedUnicefFocalPoints.join('|'),
       cpStructures: this.selectedCPStructures.join('|'),
@@ -742,6 +767,7 @@ class InterventionsList extends connect(store)(
       sections: this.selectedSections,
       office: this.selectedOffices,
       donors: this.selectedDonors,
+      partners: this.selectedPartners,
       grants: this.selectedGrants,
       unicef_focal_points: this.selectedUnicefFocalPoints,
       country_programme: this.selectedCPStructures,
@@ -767,7 +793,7 @@ class InterventionsList extends connect(store)(
 
   _canShowListDatesFrsWarnings(status: string) {
     return (status !== CONSTANTS.STATUSES.Draft.toLowerCase() &&
-            status !== CONSTANTS.STATUSES.Closed.toLowerCase());
+      status !== CONSTANTS.STATUSES.Closed.toLowerCase());
   }
 
   _hideDateFrsWarningTooltip(pdDate: string, frsDate: string, status: string) {

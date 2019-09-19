@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
-import 'etools-data-table/etools-data-table';
+import '@unicef-polymer/etools-data-table/etools-data-table';
 import './report-status';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
@@ -14,7 +14,7 @@ import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../store';
 import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 

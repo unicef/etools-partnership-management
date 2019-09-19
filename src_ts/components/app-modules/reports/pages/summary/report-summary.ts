@@ -3,7 +3,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-label/iron-label.js';
-import {EtoolsCurrency} from 'etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
 
@@ -96,7 +96,7 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper label="Challneges/Bottlenecks in the Reporting Period (latest)"
+            <etools-form-element-wrapper label="Challenges/Bottlenecks in the Reporting Period (latest)"
                                         value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]">
             </etools-form-element-wrapper>
           </div>

@@ -2,10 +2,10 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
-import 'etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
 import {LabelAndValue} from '../../../../../../typings/globals.types';
-import EtoolsDialog from 'etools-dialog/etools-dialog.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 /**
  * @polymer

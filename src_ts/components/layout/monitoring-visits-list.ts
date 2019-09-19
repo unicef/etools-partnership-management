@@ -1,12 +1,12 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import 'etools-loading/etools-loading.js';
+import '@unicef-polymer/etools-loading/etools-loading.js';
 declare const moment: any;
 import CommonMixin from '../mixins/common-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {isEmptyObject} from '../utils/utils';
 import {SharedStyles} from '../styles/shared-styles';
 import {gridLayoutStyles} from '../styles/grid-layout-styles';
-import {logError} from 'etools-behaviors/etools-logging.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 

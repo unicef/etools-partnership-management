@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import 'etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {isEmptyObject, isJsonStrMatch} from '../../../../../../utils/utils';
@@ -78,12 +78,18 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
         .bolder-txt {
           font-weight: 600;
         }
+
+        .indicatorType{
+          font-weight: 600;
+          font-size: 16px;
+          margin-right: 4px;
+        }
       </style>
 
       <etools-data-table-row>
         <div slot="row-data" class="p-relative">
           <div class="col-8">
-            [[_getIndicatorDisplayType(indicator.indicator.unit, indicator.indicator.display_type)]]
+            <label class="indicatorType">[[_getIndicatorDisplayType(indicator.indicator.unit, indicator.indicator.display_type)]]</label>
             <strong>[[_addInactivePrefix(indicator)]]</strong>
             [[_getIndicatorTitle(indicator)]]
           </div>

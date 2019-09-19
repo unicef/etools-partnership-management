@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 
 import '../../../../../layout/etools-form-element-wrapper.js';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';

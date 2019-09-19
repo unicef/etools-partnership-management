@@ -7,8 +7,8 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
 import {_checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../actions/app';
-import 'etools-profile-dropdown/etools-profile-dropdown';
-import 'etools-app-selector/etools-app-selector';
+import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
@@ -106,7 +106,7 @@ class PageHeader extends connect(store)(
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
         <div class="titlebar content-align">
-          <etools-app-selector></etools-app-selector>
+          <etools-app-selector id="app-selector"></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
           <template is="dom-if" if="[[environment]]">
             <div class="envWarning"> - [[environment]] TESTING ENVIRONMENT</div>
@@ -170,7 +170,10 @@ class PageHeader extends connect(store)(
   userProfileDialog!: GenericObject;
 
   public static get observers() {
-    return ['_updateCountriesList(profile.countries_available)'];
+    return [
+      '_updateCountriesList(profile.countries_available)',
+      '_profileChanged(profile)'
+    ];
   }
 
   public connectedCallback() {
@@ -281,6 +284,15 @@ class PageHeader extends connect(store)(
 
   protected _clearLocalStorage() {
     localStorage.clear();
+  }
+
+  protected _profileChanged(profile: User | null) {
+    if (profile) {
+      const appSelector = this.shadowRoot!.querySelector('#app-selector');
+      if (appSelector) {
+        (appSelector as PolymerElement).set('user', profile);
+      }
+    }
   }
 }
 
