@@ -124,6 +124,10 @@ export const navMenuStyles = html`
       text-transform: capitalize;
     }
 
+    .nav-menu-item.no-transform {
+      text-transform: none;
+    }
+
     .nav-menu-item.section-title {
       color: var(--primary-text-color);
       font-size: 13px;
