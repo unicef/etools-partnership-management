@@ -104,11 +104,11 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                     [[visit.visit_reference]]
                   </a>
                 </span>
-                <span class="col-data col-2" title="[[visit.partner_name]]">
-                  <span class="truncate"> [[visit.partner_name]] </span>
+                <span class="col-data col-2" title="[[visit.tpm_partner_name]]">
+                  <span class="truncate"> [[visit.tpm_partner_name]] </span>
                 </span>
-                <span class="col-data col-2" title="TPM Visit">
-                    TPM Visit
+                <span class="col-data col-2" title="[[getDisplayType(visit.is_pv)]]">
+                    [[getDisplayType(visit.is_pv)]]
                 </span>
                 <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
                     [[getDateDisplayValue(visit.date)]]
@@ -198,6 +198,10 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     return this.showTpmVisits ? (t2flength + tpmLength) : t2flength;
   }
 
+  getDisplayType(is_pv: boolean){
+    return is_pv ? 'TPM Programmatic' : 'TPM Monitoring';
+  }
+
   _hideMonitoringVisits(t2flength: number, tpmLength: number) {
     let shouldHide = t2flength === 0;
     if (this.showTpmVisits) {
@@ -213,7 +217,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     }
 
     this.sendRequest({
-      endpoint: this.getEndpoint('partnerTPMActivities', {partnerId: partnerId})
+      endpoint: this.getEndpoint('partnerTPMActivities', {partnerId: partnerId, year: moment().year()})
     }).then((resp: any) => {
       this.set('tpmActivities', resp);
       this.set('showLoading', false);
