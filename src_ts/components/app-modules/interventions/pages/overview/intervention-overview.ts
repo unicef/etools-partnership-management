@@ -136,7 +136,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
                                     frs-details="[[intervention.frs_details]]"></fund-reservations-display>
       </etools-content-panel>
 
-      <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Activities">
+      <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Activities">
         <monitoring-visits-list intervention-id="[[intervention.id]]"
                                 partner-id="[[intervention.partner_id]]"
                                 intervention-overview
