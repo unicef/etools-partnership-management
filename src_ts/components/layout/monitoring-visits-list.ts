@@ -41,8 +41,8 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
         <etools-loading loading-text="Loading..."
                         active$="[[showLoading]]"></etools-loading>
 
-        <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
-          <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
+        <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
+          <etools-data-table-header id="listHeader" label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results" no-collapse>
             <etools-data-table-column class="col-2" field="reference_number">
               Reference #
             </etools-data-table-column>
@@ -93,28 +93,28 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
             </etools-data-table-row>
           </template>
 
-          <template id="rows" is="dom-repeat" items="[[tpmMonitoringVisits]]" as="visit">
+          <template id="rows" is="dom-repeat" items="[[tpmActivities]]" as="visit">
             <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-2">
                   <a class="truncate"
-                    href$="/tpm/visits/[[visit.id]]/details"
-                    title="[[visit.reference_number]]"
+                    href$="/tpm/visits/[[visit.tpm_visit]]/details"
+                    title="[[visit.visit_reference]]"
                     target="_blank">
-                    [[visit.reference_number]]
+                    [[visit.visit_reference]]
                   </a>
                 </span>
-                <span class="col-data col-2" title="[[visit.tpm_partner.name]]">
-                  <span class="truncate"> [[visit.tpm_partner.name]] </span>
+                <span class="col-data col-2" title="[[visit.tpm_partner_name]]">
+                  <span class="truncate"> [[visit.tpm_partner_name]] </span>
                 </span>
-                <span class="col-data col-2" title="TPM Visit">
-                    TPM Visit
+                <span class="col-data col-2" title="[[getDisplayType(visit.is_pv)]]">
+                    [[getDisplayType(visit.is_pv)]]
                 </span>
-                <span class="col-data col-2" title="[[getDateDisplayValue(visit.end_date)]]">
-                    [[getDateDisplayValue(visit.end_date)]]
+                <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
+                    [[getDateDisplayValue(visit.date)]]
                 </span>
-                <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
-                    [[getLocNames(visit.locations)]]
+                <span class="col-data col-2" title="[[getLocNames(visit.locations_details)]]">
+                    [[getLocNames(visit.locations_details)]]
                 </span>
                 <span class="col-data col-2 capitalize" title="[[visit.status]]">
                     [[visit.status]]
@@ -123,8 +123,8 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
             </etools-data-table-row>
           </template>
         </div>
-        <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmMonitoringVisits.length)]]">
-          <p>There are no monitoring visits.</p>
+        <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
+          <p>There are no activities.</p>
         </div>
       </div>
     `;
@@ -143,7 +143,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
   monitoringVisits: any[] = [];
 
   @property({type: Array})
-  tpmMonitoringVisits: any[] = [];
+  tpmActivities: any[] = [];
 
   @property({type: Number, observer: '_interventionIdChanged'})
   interventionId!: number;
@@ -185,15 +185,22 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     const self = this;
     this.sendRequest({
       endpoint: monitoringVisitsEndpoint
-    }).then(function(resp: any) {
+    }).then(function (resp: any) {
       self.set('monitoringVisits', resp);
       self.set('showLoading', false);
-    }).catch(function(error: any) {
+    }).catch(function (error: any) {
       self.set('showLoading', false);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
   }
 
+  _getVisitsCount(t2flength: number, tpmLength: number) {
+    return this.showTpmVisits ? (t2flength + tpmLength) : t2flength;
+  }
+
+  getDisplayType(is_pv: boolean){
+    return is_pv ? 'TPM Programmatic' : 'TPM Monitoring';
+  }
 
   _hideMonitoringVisits(t2flength: number, tpmLength: number) {
     let shouldHide = t2flength === 0;
@@ -205,15 +212,14 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
 
   showTpmVisitsAndIdChanged(partnerId: string, showTpmVisits: boolean) {
     if (!showTpmVisits || !partnerId) {
-      this.set('tpmMonitoringVisits', []);
+      this.set('tpmActivities', []);
       return;
     }
 
     this.sendRequest({
-      endpoint: this.getEndpoint('partnerTPMProgrammaticVisits',
-        {partnerId: partnerId})
+      endpoint: this.getEndpoint('partnerTPMActivities', {partnerId: partnerId, year: moment().year()})
     }).then((resp: any) => {
-      this.set('tpmMonitoringVisits', resp.results);
+      this.set('tpmActivities', resp);
       this.set('showLoading', false);
     }).catch((_error: any) => {
       this.set('showLoading', false);
@@ -229,8 +235,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     if (locations.length === 1) {
       return locations[0].name;
     }
-
-    return locations.reduce((a: any, b: any) => a.name + ', ' + b.name);
+    return locations.map((a: any) => a.name ? a.name : '').join(', ');
   }
 }
 
