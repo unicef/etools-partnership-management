@@ -215,9 +215,12 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       this.set('tpmActivities', []);
       return;
     }
+    const endpoint = this.interventionId ?
+    this.getEndpoint('interventionTPMActivities', {year: moment().year(), interventionId: this.interventionId}) :
+    this.getEndpoint('partnerTPMActivities', {year: moment().year(), partnerId: this.partnerId});
 
     this.sendRequest({
-      endpoint: this.getEndpoint('partnerTPMActivities', {partnerId: partnerId, year: moment().year()})
+      endpoint:endpoint
     }).then((resp: any) => {
       this.set('tpmActivities', resp);
       this.set('showLoading', false);
