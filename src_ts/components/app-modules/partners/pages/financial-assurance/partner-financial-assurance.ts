@@ -16,20 +16,20 @@ import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 
-import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../styles/shared-styles.js';
-import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 
 declare const moment: any;
-import {AP_DOMAIN} from '../../../../../config/config.js';
+import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
 import '../../../../layout/monitoring-visits-list.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {PartnerAssessment} from '../../../../../models/partners.models.js';
-import {LabelAndValue} from '../../../../../typings/globals.types.js';
+import {PartnerAssessment} from '../../../../../models/partners.models';
+import {LabelAndValue} from '../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -43,7 +43,7 @@ import {LabelAndValue} from '../../../../../typings/globals.types.js';
  * @appliesMixin RiskRatingMixin
  */
 class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(
-  PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
+    PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`
@@ -211,11 +211,11 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
             <div class="col col-6 vision">
                 <div class="from-vision">from VISION</div>
                 <div class="col-4">
-          <span class$="[[getRiskRatingClass(partner.rating)]]">
-            [[getRiskRatingValue(partner.rating)]]
-          </span>
+                  <span class$="[[getRiskRatingClass(partner.rating)]]">
+                    [[getRiskRatingValue(partner.rating)]]
+                  </span>
                 </div>
-                <div class="col col-4">[[partner.type_of_assessment]]</div>
+                <div class="col col-4">[[partner.type_of_assessment]] <br> [[partner.core_values_assessment_date]]</div>
                 <div class="col col-4 center-align">
                     $ [[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]
                 </div>
@@ -528,9 +528,9 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
     this.sendRequest(requestOptions)
-      .then((results: any) => this._init(results))
-    // @ts-ignore
-      .catch((err: any) => this.handleErrorResponse(err));
+        .then((results: any) => this._init(results))
+        // @ts-ignore
+        .catch((err: any) => this.handleErrorResponse(err));
 
     this.set('basisOptions', []);
     this._addBasisFromPartner();
@@ -562,8 +562,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     }
     let engagements = this.allEngagements;
     engagements = engagements
-      .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-      .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        .sort((a, b) => moment(b.status_date) - moment(a.status_date))
+        .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.set('engagements', engagements);
   }
 
@@ -588,7 +588,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
-      : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+        : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
   public _disableBasisForRiskRating(editMode: boolean, typeOfAssessment: any, rating: any) {
