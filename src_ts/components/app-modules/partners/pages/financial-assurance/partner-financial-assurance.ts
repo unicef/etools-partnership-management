@@ -215,7 +215,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
                     [[getRiskRatingValue(partner.rating)]]
                   </span>
                 </div>
-                <div class="col col-4">[[partner.type_of_assessment]] <br> [[partner.core_values_assessment_date]]</div>
+                <div class="col col-4">[[partner.type_of_assessment]] <br> [[partner.last_assessment_date]]</div>
                 <div class="col col-4 center-align">
                     $ [[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]
                 </div>
