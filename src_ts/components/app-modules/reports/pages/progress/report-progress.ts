@@ -100,7 +100,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
       <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->
       <template is="dom-if" if="[[_equals(report.report_type, 'SR')]]">
-        <sr-details report="[[report]]" report-attachments="[[reportAttachment]]"></sr-details>
+        <sr-details report="[[report]]" report-attachments="[[reportAttachments]]"></sr-details>
       </template>
 
       <template is="dom-if" if="[[!_equals(report.report_type, 'SR')]]">
@@ -201,7 +201,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
   report!: GenericObject;
 
   @property({type: Object})
-  reportAttachment!: GenericObject;
+  reportAttachments!: GenericObject;
 
   connectedCallback() {
     super.connectedCallback();
