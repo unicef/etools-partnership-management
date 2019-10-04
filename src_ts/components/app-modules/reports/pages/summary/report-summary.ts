@@ -108,7 +108,7 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
             </etools-form-element-wrapper>
           </div>
         </div>
-        <div class="row-padding"  hidden$="[[isPrpSRReport(report.report_type)]]">
+        <div class="row-padding">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
               <iron-label for="file_[[index]]">
@@ -159,15 +159,6 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
   _createSentBkCommentsDialog() {
     this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
     document.querySelector('body')!.appendChild(this.sentBkCommentsDialog);
-  }
-
-  /**
-   * SR report check, used to hide attachment from this page. SR report attachment is displayed in progress tab
-   * @param repType
-   * @returns {boolean}
-   */
-  isPrpSRReport(repType: string) {
-    return repType === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
   }
 
   _displayOrDefault(val: string) {
