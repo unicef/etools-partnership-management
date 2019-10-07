@@ -333,11 +333,11 @@ class InterventionProgress extends connect(store)(
     fireEvent(this, 'tab-content-attached');
   }
 
-  multipleCurrenciesWereUsed(disbursement_percent: string) {
-    if (disbursement_percent === undefined) {
+  multipleCurrenciesWereUsed(disbursementOrPercent: string) {
+    if (disbursementOrPercent === undefined) {
       return true; // hide icon until request data is received
     }
-    return (Number(disbursement_percent) === -1 || disbursement_percent === 'N/A');
+    return (Number(disbursementOrPercent) === -1 || disbursementOrPercent === 'N/A');
   }
 
   _requestProgressData(id: string, prpCountries: any, currentUser: User) {
