@@ -85,9 +85,9 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
   open() {
     this.set('selectedOverallStatus', '');
-    (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
-    this.isSRReport = this.report.report_type ===  CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+    this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
     this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
+    (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
   }
 
   close() {
@@ -117,11 +117,11 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
     this.startSpinner();
     this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
-      .then(function(response: any) {
+      .then(function (response: any) {
         fireEvent(self, 'report-accepted', {report: response});
         self.stopSpinner();
         self.close();
-      }).catch(function(error: any) {
+      }).catch(function (error: any) {
         self._handleErrorResponse(error);
       });
   }
