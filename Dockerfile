@@ -16,7 +16,7 @@ RUN npm install --no-save
 ADD . /code/
 WORKDIR /code
 RUN cp -a /tmp/node_modules /code/node_modules
-RUN npm run build
+RUN npm run customBuild
 
 
 FROM node:11.9.0-alpine
