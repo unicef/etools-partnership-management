@@ -31,6 +31,7 @@ import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles.js';
 declare const moment: any;
 
 
@@ -51,7 +52,7 @@ class InterventionProgress extends connect(store)(
   static get template() {
     return html`
      ${pageCommonStyles} ${SharedStyles} ${gridLayoutStyles} ${listFilterStyles}
-     ${pmpCustomIcons}
+     ${pmpCustomIcons} ${frWarningsStyles}
       <style
           include="data-table-styles paper-material-styles">
 
@@ -144,13 +145,6 @@ class InterventionProgress extends connect(store)(
 
         }
 
-        etools-info-tooltip.primary-color iron-icon{
-          color: var(--primary-color);
-        }
-        etools-info-tooltip.red iron-icon {
-          color: var(--error-color);
-        }
-
         etools-info-tooltip etools-form-element-wrapper {
           width: 100% !important;
         }
@@ -167,14 +161,14 @@ class InterventionProgress extends connect(store)(
           <div class="layout-vertical col-5">
             <div class="layout-horizontal" id="cash-progress">
 
-              <etools-info-tooltip class="red col-6"
+              <etools-info-tooltip class="fr-nr-warn col-6"
                 custom-icon
                 icon-first
                 hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement)]]">
 
                   <etools-form-element-wrapper slot="field"
                      label="Cash Transfered"
-                    value="[[displayCurrencyAmount(progress.disbursement, '0', 0)]] [[progress.disbursement_currency]]">
+                    value="[[progress.disbursement_currency]] [[displayCurrencyAmount(progress.disbursement, '0', 0)]]">
                   </etools-form-element-wrapper>
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">Disbursement amounts in multiple currencies.</span>
@@ -182,8 +176,7 @@ class InterventionProgress extends connect(store)(
               </etools-info-tooltip>
 
               <etools-form-element-wrapper class="col-6" label="UNICEF Cash"
-                                            value="[[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]
-                                            [[progress.unicef_budget_cash_currency]]">
+                                            value="[[progress.unicef_budget_cash_currency]] [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]">
               </etools-form-element-wrapper>
             </div>
 
@@ -192,7 +185,7 @@ class InterventionProgress extends connect(store)(
             </etools-progress-bar>
 
             <template is="dom-if" if="[[multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
-              <etools-info-tooltip class="primary-color col-6"
+              <etools-info-tooltip class="currency-mismatch col-6"
                 custom-icon
                 icon-first
                 hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
