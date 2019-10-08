@@ -12,7 +12,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../typings/globals.types';
 import {RootState, store} from '../../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
-
+import CONSTANTS from '../../../../config/app-constants.js';
 
 /*
   status: 'accepted'/'sent back'
@@ -44,11 +44,11 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
           keep-dialog-open
           spinner-text="Sending rating..."
           disable-confirm-btn="[[!selectedOverallStatus.length]]"
-          ok-btn-text="Rate & Accept Report"
+          ok-btn-text="[[okBtnText]]"
           cancel-btn-text="Cancel"
           dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
           on-confirm-btn-clicked="saveStatus">
-        <div id="content-box">
+        <div id="content-box" hidden$="[[isSRReport]]">
           <p>Rate the overall progress of this PD/SSFA in light of this report and monitoring visits.</p>
           <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
             <paper-radio-button name="Met"> Met</paper-radio-button>
@@ -73,6 +73,12 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   @property({type: String})
   selectedOverallStatus: string = '';
 
+  @property({type: String})
+  okBtnText: string = '';
+
+  @property({type: Boolean})
+  isSRReport!: boolean;
+
   stateChanged(state: RootState) {
     this.endStateChanged(state);
   }
@@ -80,6 +86,8 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   open() {
     this.set('selectedOverallStatus', '');
     (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
+    this.isSRReport = this.report.report_type ===  CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+    this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
   }
 
   close() {
