@@ -5,6 +5,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
 import '../../../../layout/etools-form-element-wrapper.js';
@@ -29,6 +30,8 @@ import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDatePar
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles.js';
 declare const moment: any;
 
 
@@ -49,6 +52,7 @@ class InterventionProgress extends connect(store)(
   static get template() {
     return html`
      ${pageCommonStyles} ${SharedStyles} ${gridLayoutStyles} ${listFilterStyles}
+     ${pmpCustomIcons} ${frWarningsStyles}
       <style
           include="data-table-styles paper-material-styles">
 
@@ -138,6 +142,11 @@ class InterventionProgress extends connect(store)(
           .progress-details {
             @apply --layout-start-justified;
           }
+
+        }
+
+        etools-info-tooltip etools-form-element-wrapper {
+          width: 100% !important;
         }
       </style>
 
@@ -149,20 +158,47 @@ class InterventionProgress extends connect(store)(
             </etools-form-element-wrapper>
             <etools-progress-bar value="[[pdProgress]]" no-decimals></etools-progress-bar>
           </div>
-          <div class="layout-vertical col-4">
+          <div class="layout-vertical col-5">
             <div class="layout-horizontal" id="cash-progress">
-              <etools-form-element-wrapper label="Cash Transfered"
-                                            value="[[latestAcceptedPr.programme_document.funds_received_to_date_currency]]
-                                            [[displayCurrencyAmount(latestAcceptedPr.programme_document.funds_received_to_date, '0', 0)]]">
-              </etools-form-element-wrapper>
-              <etools-form-element-wrapper label="UNICEF Cash"
-                                            value="[[latestAcceptedPr.programme_document.total_unicef_cash_currency]]
-                                            [[displayCurrencyAmount(latestAcceptedPr.programme_document.total_unicef_cash, '0', 0)]]">
+
+              <etools-info-tooltip class="fr-nr-warn col-6"
+                custom-icon
+                icon-first
+                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement)]]">
+
+                  <etools-form-element-wrapper slot="field"
+                     label="Cash Transfered"
+                    value="[[progress.disbursement_currency]] [[displayCurrencyAmount(progress.disbursement, '0', 0)]]">
+                  </etools-form-element-wrapper>
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <span slot="message">Disbursement amounts in multiple currencies.</span>
+
+              </etools-info-tooltip>
+
+              <etools-form-element-wrapper class="col-6" label="UNICEF Cash"
+                                            value="[[progress.unicef_budget_cash_currency]] [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]">
               </etools-form-element-wrapper>
             </div>
-            <etools-progress-bar value="[[cashProgress]]" no-decimals></etools-progress-bar>
+
+            <etools-progress-bar value="[[progress.disbursement_percent]]" no-decimals
+              hidden$="[[multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
+            </etools-progress-bar>
+
+            <template is="dom-if" if="[[multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
+              <etools-info-tooltip class="currency-mismatch col-6"
+                custom-icon
+                icon-first
+                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
+
+                  <span slot="field">N/A %</span>
+                  <iron-icon slot="custom-icon" icon="pmp-custom-icons:not-equal"></iron-icon>
+                  <span slot="message">FR currency does not match PD/SSFA currency.</span>
+
+              </etools-info-tooltip>
+            </template>
+
           </div>
-          <div class="col col-4">
+          <div class="col col-3">
             <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF"
                                           value="[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]"
                                           no-placeholder>
@@ -259,10 +295,6 @@ class InterventionProgress extends connect(store)(
   @property({type: Number, computed: '_getTimeProgress(progress.start_date, progress.end_date)'})
   pdProgress!: number;
 
-  @property({type: Number, computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
-  'latestAcceptedPr.programme_document.total_unicef_cash)'})
-  cashProgress!: number;
-
   @property({type: Object, observer: '_progressDataObjChanged'})
   progress!: GenericObject;
 
@@ -292,6 +324,13 @@ class InterventionProgress extends connect(store)(
      */
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
     fireEvent(this, 'tab-content-attached');
+  }
+
+  multipleCurrenciesWereUsed(disbursementOrPercent: string) {
+    if (disbursementOrPercent === undefined) {
+      return true; // hide icon until request data is received
+    }
+    return (Number(disbursementOrPercent) === -1 || disbursementOrPercent === 'N/A');
   }
 
   _requestProgressData(id: string, prpCountries: any, currentUser: User) {
@@ -434,9 +473,6 @@ class InterventionProgress extends connect(store)(
     return 0;
   }
 
-  _getCashProgress(actual: string, total: string) {
-    return parseFloat(actual) * 100 / parseFloat(total);
-  }
 
   _getOverallPdStatusDate(date: string) {
     return date ? ('(' + this._convertToDisplayFormat(date) + ')') : '';
