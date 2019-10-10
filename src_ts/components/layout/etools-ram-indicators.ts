@@ -50,7 +50,7 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
         <span id="label">RAM Indicators</span>
         <div id="ram-indicators" iron-label-target>
           <template is="dom-if" if="[[_noRamIndicators(ramIndicators.length)]]">
-            <span id="no-ram-indicators">&#8212;</span>
+            <span id="no-ram-indicators">[[ramErrorText]]</span>
           </template>
           <template is="dom-if" if="[[!_noRamIndicators(ramIndicators.length)]]">
             <ul id="ram-indicators-list">
@@ -76,6 +76,9 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
   @property({type: Boolean})
   loading: boolean = false;
 
+  @property({type: String})
+  ramErrorText: string = '-';
+
   private _debounceRamIndRequest!: Debouncer;
 
   static get observers() {
@@ -99,6 +102,7 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
   }
 
   _requestRamIndicatorsData(reqPayload: any) {
+    this.ramErrorText = '-';
     this.set('loading', true);
     this.sendRequest({
       method: 'GET',
@@ -107,8 +111,11 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
       this.set('loading', false);
       this.set('ramIndicators', resp.ram_indicators.map((ri: any) => ri.indicator_name));
     }).catch((error: any) => {
+      if (error.status === 404) {
+        this.ramErrorText = 'Data between PMP and PRP is not synced';
+      }
       logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
-          ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
+        ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
       parseRequestErrorsAndShowAsToastMsgs(error, this);
       this.set('loading', false);
     });
