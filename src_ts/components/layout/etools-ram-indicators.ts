@@ -7,6 +7,7 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
 import {property} from '@polymer/decorators';
+import {fireEvent} from '../utils/fire-custom-event';
 
 /**
  * @polymer
@@ -107,9 +108,16 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
       this.set('loading', false);
       this.set('ramIndicators', resp.ram_indicators.map((ri: any) => ri.indicator_name));
     }).catch((error: any) => {
+      if (error.status === 404) {
+        fireEvent(this, 'toast', {
+          text: 'PMP is not synced with PRP',
+          showCloseBtn: true
+        });
+      } else {
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+      }
       logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
-          ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
-      parseRequestErrorsAndShowAsToastMsgs(error, this);
+        ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
       this.set('loading', false);
     });
   }
