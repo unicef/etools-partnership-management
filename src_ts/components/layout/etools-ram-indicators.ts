@@ -110,7 +110,7 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
     }).catch((error: any) => {
       if (error.status === 404) {
         fireEvent(this, 'toast', {
-          text: 'Data between PMP and PRP is not synced',
+          text: 'PMP is not synced with PRP',
           showCloseBtn: true
         });
       } else {
