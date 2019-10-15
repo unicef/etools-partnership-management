@@ -435,7 +435,7 @@ class AppShell extends connect(store)(
 
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
-    this._drawerOpened = (this.$.drawer as AppDrawerElement).opened;
+    this._drawerOpened = Boolean((this.$.drawer as AppDrawerElement).opened);
   }
 
   // @ts-ignore
