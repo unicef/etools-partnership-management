@@ -253,7 +253,7 @@ class AppShell extends connect(store)(
   route!: GenericObject;
 
   @property({type: Object})
-  routeData!: { module: string};
+  routeData!: {module: string};
 
   @property({type: Object})
   subroute!: object;
@@ -385,7 +385,7 @@ class AppShell extends connect(store)(
 
   public routeChanged() {
     if (this.appLocRoute.path === this.route.path &&
-        objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
+      objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
       return;
     }
 
@@ -410,11 +410,13 @@ class AppShell extends connect(store)(
     this._updateQueryParams = this._updateQueryParams.bind(this);
     this._onForbidden = this._onForbidden.bind(this);
     this._openDataRefreshDialog = this._openDataRefreshDialog.bind(this);
+    this._drawerChanged = this._drawerChanged.bind(this);
 
     this.addEventListener('404', this._pageNotFound);
     this.addEventListener('update-main-path', this._updateMainPath as any);
     this.addEventListener('forbidden', this._onForbidden);
     this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+    this.addEventListener('app-drawer-transitioned', this._drawerChanged);
   }
 
   private _removeListeners() {
@@ -423,11 +425,17 @@ class AppShell extends connect(store)(
     this.removeEventListener('update-route-query-params', this._updateQueryParams as any);
     this.removeEventListener('forbidden', this._onForbidden);
     this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+    this.removeEventListener('app-drawer-transitioned', this._drawerChanged);
   }
 
   public disconnectedCallback() {
     super.disconnectedCallback();
     this._removeListeners();
+  }
+
+  public _drawerChanged() {
+    // need this for catching drawer closing event and keep _drawerOpened updated
+    this._drawerOpened = Boolean((this.$.drawer as AppDrawerElement).opened);
   }
 
   // @ts-ignore
@@ -477,7 +485,7 @@ class AppShell extends connect(store)(
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
     const defer: any = {};
-    defer.promise = new Promise(function(resolve, reject) {
+    defer.promise = new Promise(function (resolve, reject) {
       defer.resolve = resolve;
       defer.reject = reject;
     });
