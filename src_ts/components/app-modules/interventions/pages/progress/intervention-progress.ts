@@ -164,7 +164,7 @@ class InterventionProgress extends connect(store)(
               <etools-info-tooltip class="fr-nr-warn col-6"
                 custom-icon
                 icon-first
-                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement)]]">
+                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement, progress)]]">
 
                   <etools-form-element-wrapper slot="field"
                      label="Cash Transfered"
@@ -181,14 +181,14 @@ class InterventionProgress extends connect(store)(
             </div>
 
             <etools-progress-bar value="[[progress.disbursement_percent]]" no-decimals
-              hidden$="[[multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
+              hidden$="[[multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]">
             </etools-progress-bar>
 
-            <template is="dom-if" if="[[multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
+            <template is="dom-if" if="[[multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]">
               <etools-info-tooltip class="currency-mismatch col-6"
                 custom-icon
                 icon-first
-                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement_percent)]]">
+                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]">
 
                   <span slot="field">N/A %</span>
                   <iron-icon slot="custom-icon" icon="pmp-custom-icons:not-equal"></iron-icon>
@@ -296,7 +296,7 @@ class InterventionProgress extends connect(store)(
   pdProgress!: number;
 
   @property({type: Object, observer: '_progressDataObjChanged'})
-  progress!: GenericObject;
+  progress: GenericObject | null = null;
 
   @property({type: Object, computed: '_computeLatestAcceptedPr(progress)'})
   latestAcceptedPr!: GenericObject;
@@ -326,9 +326,9 @@ class InterventionProgress extends connect(store)(
     fireEvent(this, 'tab-content-attached');
   }
 
-  multipleCurrenciesWereUsed(disbursementOrPercent: string) {
-    if (disbursementOrPercent === undefined) {
-      return true; // hide icon until request data is received
+  multipleCurrenciesWereUsed(disbursementOrPercent: string, progress: GenericObject | null) {
+    if (!progress || disbursementOrPercent === undefined) {
+      return false; // hide icon until request data is received
     }
     return (Number(disbursementOrPercent) === -1 || disbursementOrPercent === 'N/A');
   }
@@ -345,10 +345,10 @@ class InterventionProgress extends connect(store)(
       loadingSource: 'pd-progress'
     });
 
-    this.fireRequest('interventionProgress', {pdId: id}).then(function(response: any) {
+    this.fireRequest('interventionProgress', {pdId: id}).then(function (response: any) {
       self.set('progress', response);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
-    }).catch(function(error: any) {
+    }).catch(function (error: any) {
       logError('PD/SSFA progress request failed!', 'intervention-progress', error);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
@@ -370,9 +370,9 @@ class InterventionProgress extends connect(store)(
     }
     const self = this;
     if (!this._emptyList(progress.details.cp_outputs)) {
-      progress.details.cp_outputs.forEach(function(result: any) {
+      progress.details.cp_outputs.forEach(function (result: any) {
         if (!self._emptyList(result.ll_outputs)) {
-          result.ll_outputs.forEach(function(lowerResult: any) {
+          result.ll_outputs.forEach(function (lowerResult: any) {
             self._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
           });
         }
@@ -388,7 +388,7 @@ class InterventionProgress extends connect(store)(
     if (this._emptyList(progressIndicatorReports)) {
       return;
     }
-    indicatorReportData.reports = progressIndicatorReports.filter(function(report: any) {
+    indicatorReportData.reports = progressIndicatorReports.filter(function (report: any) {
       return report.reportable_object_id === lowerResultId;
     });
     this.push('indicatorReports', indicatorReportData);
@@ -396,16 +396,16 @@ class InterventionProgress extends connect(store)(
 
   _countIndicatorReports(lowerResultId: any) {
     return !this._emptyList(this.indicatorReports) &&
-        !!this.indicatorReports.find(function(indReports: any) {
-          return indReports.lowerResultId === lowerResultId;
-        });
+      !!this.indicatorReports.find(function (indReports: any) {
+        return indReports.lowerResultId === lowerResultId;
+      });
   }
 
   _getIndicatorsReports(lowerResultId: any) {
     if (this._emptyList(this.indicatorReports)) {
       return [];
     }
-    const indicatorsReports = this.indicatorReports.filter(function(indReports: any) {
+    const indicatorsReports = this.indicatorReports.filter(function (indReports: any) {
       return indReports.lowerResultId === lowerResultId;
     });
     return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
@@ -416,7 +416,7 @@ class InterventionProgress extends connect(store)(
     */
   _getLatestIndicatorReport(lowerResultId: any) {
     if (!this._emptyList(this.indicatorReports)) {
-      const indReports = this.indicatorReports.find(function(indReports: any) {
+      const indReports = this.indicatorReports.find(function (indReports: any) {
         return indReports.lowerResultId === lowerResultId;
       });
       if (indReports && indReports.reports[0]) {
@@ -445,12 +445,18 @@ class InterventionProgress extends connect(store)(
   }
 
   _getPdDuration(start: string, end: string) {
+    if (!start && !end) {
+      return;
+    }
     start = this._convertToDisplayFormat(start) || 'N/A';
     end = this._convertToDisplayFormat(end) || 'N/A';
     return start + ' - ' + end;
   }
 
   _getTimeProgress(start: string, end: string) {
+    if (!start && !end) {
+      return;
+    }
     const today = new Date();
     // eslint-disable-next-line new-cap
     const startDt = EdgeAcceptableDateParse(start);
@@ -467,7 +473,7 @@ class InterventionProgress extends connect(store)(
     }
     // if end date is valid and is past date or today's date, progress should be 100%
     if (isValidDate(endDt) &&
-        (dateIsAfter(today, endDt) || datesAreEqual(today, endDt))) {
+      (dateIsAfter(today, endDt) || datesAreEqual(today, endDt))) {
       return 100;
     }
     return 0;

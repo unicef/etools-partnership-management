@@ -94,6 +94,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         .generate-pca[hidden] + .col {
           padding-left: 0;
         }
+        
+        #generateMyPca {
+          cursor: pointer;
+        }
 
         paper-toggle-button {
           font-size: 16px;
