@@ -123,13 +123,13 @@ class AppMenu extends connect(store)(
         </div>
 
         <a class="nav-menu-item lighter-item no-transform"
-           href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/5e60ab16-cce5-4c21-8620-de0c4c6415de/ReportSectionfe8562e6ef8c4eddcb52"
+           href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/5e60ab16-cce5-4c21-8620-de0c4c6415de/ReportSectionfe8562e6ef8c4eddcb52?chromeless=1"
            target="_blank">
           <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
           <paper-tooltip for="power-bi-icon" position="right">
-            eToolsNOW
+            Implementation Intelligence
           </paper-tooltip>
-          <div class="name">eToolsNOW</div>
+          <div class="name">Implementation Intelligence</div>
         </a>
 
         <a class="nav-menu-item lighter-item" href="http://etools.zendesk.com" target="_blank">
