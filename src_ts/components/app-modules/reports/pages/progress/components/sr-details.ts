@@ -30,6 +30,7 @@ class SrDetails extends PolymerElement {
         }
 
         .att {
+          margin-right: 10px;
           margin-bottom: 24px;
         }
       </style>
