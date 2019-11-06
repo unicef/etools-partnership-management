@@ -58,7 +58,6 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
         }
 
         .att {
-          margin-right: 10px;
           margin-bottom: 24px;
         }
 
