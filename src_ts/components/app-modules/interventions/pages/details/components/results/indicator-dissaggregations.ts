@@ -90,7 +90,8 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
       </div>
 
       <div class="row-padding-v">
-        <paper-button class="secondary-btn" on-tap="_addNewDisaggregation"
+        <paper-button class="secondary-btn" on-tap="_addNewDisaggregation" 
+                      hidden$="[[_maxDisaggregations(dataItems.length)]]"
                       title="Add Disaggregation">ADD DISAGGREGATION
         </paper-button>
       </div>
@@ -116,6 +117,10 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
 
   _isEmptyList(disaggregations: Disaggregation[], disaggregLength: number) {
     return (!disaggregations || !disaggregLength);
+  }
+
+  _maxDisaggregations(disaggregLength: number) {
+    return disaggregLength >= 3;
   }
 
   _addNewDisaggregation() {
