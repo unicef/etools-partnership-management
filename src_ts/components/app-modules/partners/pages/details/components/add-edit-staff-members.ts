@@ -44,15 +44,15 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
                      ok-btn-text="Save" keep-dialog-open spinner-Text="Saving..."
                      on-confirm-btn-clicked="_savePartnerContact">
         <div class="layout-horizontal row-padding-v flex-c">
-          <div class="col col-6">
+          <div class="col col-10">
             <paper-input id="title" label="Position"
                          value="{{item.title}}"
                          placeholder="&#8212;"
-                         maxlength="30"
+                         maxlength="100"
                          required auto-validate
                          error-message="Position is required"></paper-input>
           </div>
-          <div class="col col-6">
+          <div class="col col-2">
             <etools-form-element-wrapper no-placeholder>
               <paper-checkbox checked="{{item.active}}">
                 Active Staff
