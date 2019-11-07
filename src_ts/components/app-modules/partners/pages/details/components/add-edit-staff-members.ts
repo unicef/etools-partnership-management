@@ -40,10 +40,6 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
           padding-left: 12px;
         }
         
-        .active-staff-member {
-          position: relative;
-          right: -53px;
-        }
       </style>
       <etools-dialog id="staffMemberDialog" dialog-title="Partner Contact" size="md"
                      ok-btn-text="Save" keep-dialog-open spinner-Text="Saving..."
@@ -57,7 +53,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
                          required auto-validate
                          error-message="Position is required"></paper-input>
           </div>
-          <div class="col col-2 active-staff-member">
+          <div class="col col-3 right-align">
             <etools-form-element-wrapper no-placeholder>
               <paper-checkbox checked="{{item.active}}">
                 Active Staff
