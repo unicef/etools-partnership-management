@@ -39,7 +39,7 @@ class SrDetails extends PolymerElement {
           <etools-form-element-wrapper label="Narrative" value="[[report.narrative]]">
           </etools-form-element-wrapper>
         </div>
-        <div class="row-h">
+        <div class="row-padding">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
               <iron-label for="file_[[index]]">

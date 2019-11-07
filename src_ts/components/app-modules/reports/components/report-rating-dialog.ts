@@ -33,10 +33,6 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
         [hidden] {
           display: none !important;
         }
-
-        #content-box {
-          margin-bottom: 20px;
-        }
       </style>
       <etools-dialog
           id="reportRatingDialog"
