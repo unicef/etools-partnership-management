@@ -474,7 +474,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _isNewAgreementChanged(isNew: boolean) {
-    this.set('authorizedOfficers', '');
+    this.set('authorizedOfficers', []);
     this._setDraftStatus(this.editMode, isNew);
   }
 
