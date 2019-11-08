@@ -14,13 +14,7 @@ export class NewPartnerDialog extends PolymerElement {
 
   static get template() {
     // language=HTML
-    return html`
-      <style>
-        #vendorNo {
-          margin-bottom: 30px;
-        }
-      </style>
-
+    return html`        
       <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
                      dialog-title="Import Partner" on-close="_handleDialogClosed">
 

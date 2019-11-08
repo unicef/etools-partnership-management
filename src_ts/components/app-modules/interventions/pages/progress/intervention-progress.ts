@@ -260,7 +260,7 @@ class InterventionProgress extends connect(store)(
                         </div>
                         <div class="col-data col-3 progress-bar">
                           <etools-progress-bar class="report-progress-bar"
-                                                value="[[indicatorReport.reportable.progress_percentage]]">
+                                                value="[[getProgressPercentage(indicatorReport.reportable.total_against_target)]]">
                           </etools-progress-bar>
                         </div>
                       </div>
@@ -487,6 +487,10 @@ class InterventionProgress extends connect(store)(
   _convertToDisplayFormat(strDt: string) {
     // eslint-disable-next-line new-cap
     return moment(EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
+  }
+
+  getProgressPercentage(progress_percentage: number) {
+    return progress_percentage * 100;
   }
 
 }
