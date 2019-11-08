@@ -260,7 +260,7 @@ class InterventionProgress extends connect(store)(
                         </div>
                         <div class="col-data col-3 progress-bar">
                           <etools-progress-bar class="report-progress-bar"
-                                                value="[[getProgressPercentage(indicatorReport.reportable.total_against_target]])">
+                                                value="[[getProgressPercentage(indicatorReport.reportable.total_against_target)]]">
                           </etools-progress-bar>
                         </div>
                       </div>
