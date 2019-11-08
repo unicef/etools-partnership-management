@@ -77,11 +77,6 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             opacity: 1;
           };
         }
-
-        .col_prc_doc {
-          max-width:400px;
-        }
-
       </style>
 
       <etools-content-panel class="content-section" panel-title="Signatures & Dates">
@@ -131,7 +126,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
-            <div class="col col-6 col_prc_doc">
+            <div class="col col-6">
               <!-- PRC Review Document -->
               <etools-upload
                   label="PRC Review Document"
