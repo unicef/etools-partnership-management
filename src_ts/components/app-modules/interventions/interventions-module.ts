@@ -97,6 +97,7 @@ class InterventionsModule extends connect(store)(
           }
         }
         /* Prevent #pageContent from growing with content (because of this, Status section will fall at the bottom of the page) */
+        /* Make sure there is enough space for Status section (224px) */
         #pageContent {
           max-width: calc(100% - 224px)
         }
