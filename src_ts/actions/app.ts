@@ -9,21 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {Action, ActionCreator} from 'redux';
-export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
-export interface AppActionUpdatePage extends Action<'UPDATE_PAGE'> {page: string}
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {opened: boolean}
-export type AppAction = AppActionUpdatePage | AppActionUpdateDrawerState;
+export type AppAction = AppActionUpdateDrawerState;
 
-
-// eslint-disable-next-line
-const updatePage: ActionCreator<AppActionUpdatePage> = (page: string) => {
-  return {
-    type: UPDATE_PAGE,
-    page
-  };
-};
 
 export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
   return {
