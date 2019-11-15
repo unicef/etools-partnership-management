@@ -9,8 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {Action, ActionCreator} from 'redux';
-import {ThunkAction} from 'redux-thunk';
-import {RootState} from '../store.js';
 export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
@@ -18,41 +16,6 @@ export interface AppActionUpdatePage extends Action<'UPDATE_PAGE'> {page: string
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {opened: boolean}
 export type AppAction = AppActionUpdatePage | AppActionUpdateDrawerState;
 
-type ThunkResult = ThunkAction<void, RootState, undefined, AppAction>;
-
-// @ts-ignore
-// export const navigate: ActionCreator<ThunkResult> = (_path: string) => (dispatch) => {
-//   // Extract the page name from path.
-//   const p: string = path.replace('/pmp', '');
-//   const page = p === '/' ? 'page-one' : p.slice(1);
-//
-//   // Any other info you might want to extract from the path (like page type),
-//   // you can do here
-//   dispatch(loadPage(page));
-//
-//   // Close the drawer - in case the *path* change came from a link in the drawer.
-//   dispatch(updateDrawerState(false));
-// };
-
-// @ts-ignore
-// const loadPage: ActionCreator<ThunkResult> = (_page: string) => (dispatch) => {
-//   switch(page) {
-//     case 'page-one':
-//       import('../components/pages/page-one.js').then(() => {
-//         // Put code in here that you want to run every time when
-//         // navigating to view1 after my-view1.js is loaded.
-//       });
-//       break;
-//     case 'page-two':
-//       import('../components/pages/page-two.js');
-//       break;
-//     default:
-//       page = 'page-not-found';
-//       import('../components/pages/page-not-found.js');
-//   }
-//
-//   dispatch(updatePage(page));
-// };
 
 // eslint-disable-next-line
 const updatePage: ActionCreator<AppActionUpdatePage> = (page: string) => {
