@@ -32,7 +32,7 @@ class ReportOverall extends PolymerElement {
           </etools-form-element-wrapper>
         </div>
         <div class="col col-5">
-          <etools-form-element-wrapper label="Narative Assessment" value="[[latestIndicator.narrative_assessment]]">
+          <etools-form-element-wrapper label="Narrative Assessment" value="[[latestIndicator.narrative_assessment]]">
           </etools-form-element-wrapper>
         </div>
       </div>

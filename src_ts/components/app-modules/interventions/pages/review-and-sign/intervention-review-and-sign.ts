@@ -328,7 +328,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
 
   _isDraft(status: string) {
     return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-        status === '';
+      status === '';
   }
 
   _interventionChanged(intervention: Intervention) {
@@ -430,7 +430,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     }
     // this functionality is available only after pd is saved and in draft status
     if (this.intervention &&
-        this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase()) {
+      this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase()) {
       setTimeout(() => {
         // delay micro task execution; set to make sure _signedDocChangedForDraft will run on page load
         if (signedDocument) {
