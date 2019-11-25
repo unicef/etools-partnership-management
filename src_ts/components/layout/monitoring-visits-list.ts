@@ -42,7 +42,9 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                         active$="[[showLoading]]"></etools-loading>
 
         <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
-          <etools-data-table-header id="listHeader" label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results" no-collapse>
+          <etools-data-table-header 
+                id="listHeader" 
+                label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results" no-collapse>
             <etools-data-table-column class="col-2" field="reference_number">
               Reference #
             </etools-data-table-column>
@@ -185,10 +187,10 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     const self = this;
     this.sendRequest({
       endpoint: monitoringVisitsEndpoint
-    }).then(function (resp: any) {
+    }).then(function(resp: any) {
       self.set('monitoringVisits', resp);
       self.set('showLoading', false);
-    }).catch(function (error: any) {
+    }).catch(function(error: any) {
       self.set('showLoading', false);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
     });
@@ -198,7 +200,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
     return this.showTpmVisits ? (t2flength + tpmLength) : t2flength;
   }
 
-  getDisplayType(is_pv: boolean){
+  getDisplayType(is_pv: boolean) {
     return is_pv ? 'TPM Programmatic' : 'TPM Monitoring';
   }
 
@@ -216,11 +218,11 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       return;
     }
     const endpoint = this.interventionId ?
-    this.getEndpoint('interventionTPMActivities', {year: moment().year(), interventionId: this.interventionId}) :
-    this.getEndpoint('partnerTPMActivities', {year: moment().year(), partnerId: this.partnerId});
+      this.getEndpoint('interventionTPMActivities', {year: moment().year(), interventionId: this.interventionId}) :
+      this.getEndpoint('partnerTPMActivities', {year: moment().year(), partnerId: this.partnerId});
 
     this.sendRequest({
-      endpoint:endpoint
+      endpoint: endpoint
     }).then((resp: any) => {
       this.set('tpmActivities', resp);
       this.set('showLoading', false);

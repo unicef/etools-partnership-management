@@ -485,7 +485,7 @@ class AppShell extends connect(store)(
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
     const defer: any = {};
-    defer.promise = new Promise(function (resolve, reject) {
+    defer.promise = new Promise(function(resolve, reject) {
       defer.resolve = resolve;
       defer.reject = reject;
     });

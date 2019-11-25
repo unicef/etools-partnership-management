@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import {Reducer} from 'redux';
 import {
-  UPDATE_PAGE,
   UPDATE_DRAWER_STATE,
   AppAction
 } from '../actions/app.js';
@@ -24,11 +23,6 @@ const INITIAL_STATE = new AppState();
 
 const app: Reducer<AppState, AppAction> = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UPDATE_PAGE:
-      return {
-        ...state,
-        page: action.page
-      };
     case UPDATE_DRAWER_STATE:
       return {
         ...state,

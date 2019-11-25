@@ -43,7 +43,7 @@ import {LabelAndValue} from '../../../../../typings/globals.types';
  * @appliesMixin RiskRatingMixin
  */
 class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(
-    PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
+  PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`
@@ -528,9 +528,9 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
     this.sendRequest(requestOptions)
-        .then((results: any) => this._init(results))
-        // @ts-ignore
-        .catch((err: any) => this.handleErrorResponse(err));
+      .then((results: any) => this._init(results))
+    // @ts-ignore
+      .catch((err: any) => this.handleErrorResponse(err));
 
     this.set('basisOptions', []);
     this._addBasisFromPartner();
@@ -562,8 +562,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     }
     let engagements = this.allEngagements;
     engagements = engagements
-        .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-        .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+      .sort((a, b) => moment(b.status_date) - moment(a.status_date))
+      .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.set('engagements', engagements);
   }
 
@@ -588,7 +588,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
-        : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+      : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
   public _disableBasisForRiskRating(editMode: boolean, typeOfAssessment: any, rating: any) {

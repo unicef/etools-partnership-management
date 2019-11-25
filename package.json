@@ -14,7 +14,7 @@
   "scripts": {
     "build": "export NODE_OPTIONS=--max_old_space_size=4096 && npm run tsToJs && polymer build",
     "tsToJs": "tsc --skipLibCheck",
-    "tsEslint": "eslint src_ts/**",
+    "tsEslint": "npx eslint 'src_ts/**' --fix",
     "start": "gulp serve",
     "initialbuild": "tsc && npm run build:prpl-server && npm run build:static",
     "build:prpl-server": "polymer build --auto-base-path && gulp prpl-server",
@@ -61,7 +61,7 @@
     "@unicef-polymer/etools-data-table": "3.0.0-rc.1",
     "@unicef-polymer/etools-date-time": "1.0.0-rc.1",
     "@unicef-polymer/etools-dialog": "^3.0.0",
-    "@unicef-polymer/etools-dropdown": "^3.0.8",
+    "@unicef-polymer/etools-dropdown": "^3.0.10",
     "@unicef-polymer/etools-info-tooltip": "^3.0.0",
     "@unicef-polymer/etools-loading": "^4.0.1",
     "@unicef-polymer/etools-profile-dropdown": "4.0.1-rc.1",
