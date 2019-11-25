@@ -345,10 +345,10 @@ class InterventionProgress extends connect(store)(
       loadingSource: 'pd-progress'
     });
 
-    this.fireRequest('interventionProgress', {pdId: id}).then(function (response: any) {
+    this.fireRequest('interventionProgress', {pdId: id}).then(function(response: any) {
       self.set('progress', response);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
-    }).catch(function (error: any) {
+    }).catch(function(error: any) {
       logError('PD/SSFA progress request failed!', 'intervention-progress', error);
       parseRequestErrorsAndShowAsToastMsgs(error, self);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
@@ -370,9 +370,9 @@ class InterventionProgress extends connect(store)(
     }
     const self = this;
     if (!this._emptyList(progress.details.cp_outputs)) {
-      progress.details.cp_outputs.forEach(function (result: any) {
+      progress.details.cp_outputs.forEach(function(result: any) {
         if (!self._emptyList(result.ll_outputs)) {
-          result.ll_outputs.forEach(function (lowerResult: any) {
+          result.ll_outputs.forEach(function(lowerResult: any) {
             self._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
           });
         }
@@ -388,7 +388,7 @@ class InterventionProgress extends connect(store)(
     if (this._emptyList(progressIndicatorReports)) {
       return;
     }
-    indicatorReportData.reports = progressIndicatorReports.filter(function (report: any) {
+    indicatorReportData.reports = progressIndicatorReports.filter(function(report: any) {
       return report.reportable_object_id === lowerResultId;
     });
     this.push('indicatorReports', indicatorReportData);
@@ -396,7 +396,7 @@ class InterventionProgress extends connect(store)(
 
   _countIndicatorReports(lowerResultId: any) {
     return !this._emptyList(this.indicatorReports) &&
-      !!this.indicatorReports.find(function (indReports: any) {
+      !!this.indicatorReports.find(function(indReports: any) {
         return indReports.lowerResultId === lowerResultId;
       });
   }
@@ -405,7 +405,7 @@ class InterventionProgress extends connect(store)(
     if (this._emptyList(this.indicatorReports)) {
       return [];
     }
-    const indicatorsReports = this.indicatorReports.filter(function (indReports: any) {
+    const indicatorsReports = this.indicatorReports.filter(function(indReports: any) {
       return indReports.lowerResultId === lowerResultId;
     });
     return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
@@ -416,7 +416,7 @@ class InterventionProgress extends connect(store)(
     */
   _getLatestIndicatorReport(lowerResultId: any) {
     if (!this._emptyList(this.indicatorReports)) {
-      const indReports = this.indicatorReports.find(function (indReports: any) {
+      const indReports = this.indicatorReports.find(function(indReports: any) {
         return indReports.lowerResultId === lowerResultId;
       });
       if (indReports && indReports.reports[0]) {
