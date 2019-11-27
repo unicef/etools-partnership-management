@@ -96,17 +96,6 @@ class InterventionsModule extends connect(store)(
             opacity: 0;
           }
         }
-        /* Prevent #pageContent from growing with content (because of this, Status section will fall at the bottom of the page) */
-        /* Make sure there is enough space for Status section (224px) */
-        #pageContent {
-          max-width: calc(100% - 224px)
-        }
-        /* Up to this width(1359px) Status section it's displayed on top and #pageContent can fill full width */
-        @media only screen and (max-width: 1359px){
-          #pageContent{
-            max-width: 100%;
-          }
-        }
       </style>
 
       <app-route
