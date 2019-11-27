@@ -142,10 +142,6 @@ class InterventionDetails extends connect(store)(
         margin-top: 4px;
         margin-bottom: 6px;
       }
-
-      #activationLetterUpload {
-        max-width: 420px;
-      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">

@@ -20,6 +20,8 @@ export const pageLayoutStyles = html`
     @media only screen and (min-width: 1360px) {
       #pageContent {
         @apply --layout-flex;
+        flex: 1 1 auto;
+        min-width: 0px;
       }
     }
 
@@ -31,7 +33,7 @@ export const pageLayoutStyles = html`
 
     #main {
       @apply --layout-horizontal;
-      @apply --layout-wrap;
+      flex-wrap: nowrap;
       padding: 24px;
     }
 
@@ -42,6 +44,8 @@ export const pageLayoutStyles = html`
     #sidebar {
       @apply --layout;
       width: 224px;
+      flex: 0 0 224px;
+      min-width: 0px;
       padding-left: 24px;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
