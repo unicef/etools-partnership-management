@@ -77,6 +77,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             opacity: 1;
           };
         }
+
+        #reviewDocUpload {
+          max-width: 380px;
+        }
       </style>
 
       <etools-content-panel class="content-section" panel-title="Signatures & Dates">
@@ -129,6 +133,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             <div class="col col-6">
               <!-- PRC Review Document -->
               <etools-upload
+                  id="reviewDocUpload"
                   label="PRC Review Document"
                   accept=".doc,.docx,.pdf,.jpg,.png"
                   file-url="[[intervention.prc_review_attachment]]"
