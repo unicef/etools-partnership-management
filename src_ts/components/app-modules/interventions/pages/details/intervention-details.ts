@@ -143,6 +143,9 @@ class InterventionDetails extends connect(store)(
         margin-bottom: 6px;
       }
 
+      #activationLetterUpload {
+        max-width: 420px;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -255,6 +258,7 @@ class InterventionDetails extends connect(store)(
         </div>
         <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
           <etools-upload label="Activation Letter"
+                        id="activationLetterUpload"
                         file-url="{{intervention.activation_letter_attachment}}"
                         upload-endpoint="[[uploadEndpoint]]"
                         on-upload-finished="_activationLetterUploadFinished"
@@ -649,7 +653,7 @@ class InterventionDetails extends connect(store)(
 
   _isDraft(status: string) {
     return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-        status === '';
+      status === '';
   }
 
   _isTerminated(status: string) {
@@ -664,11 +668,11 @@ class InterventionDetails extends connect(store)(
 
   _contingencyPDChanged(newValue: boolean) {
     if (newValue &&
-        this.intervention.status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
+      this.intervention.status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
       this._updateDatesRequiredState(false);
     } else {
       if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-        CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
+      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
         this._updateDatesRequiredState(true);
       }
     }
@@ -764,7 +768,7 @@ class InterventionDetails extends connect(store)(
 
   _setYears(interventionStart: string, interventionEnd: string) {
     if (typeof interventionStart === 'string' && interventionStart !== ''
-        && typeof interventionEnd === 'string' && interventionEnd !== '') {
+      && typeof interventionEnd === 'string' && interventionEnd !== '') {
 
       let start = parseInt(interventionStart.substr(0, 4), 10);
       const end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
@@ -784,8 +788,8 @@ class InterventionDetails extends connect(store)(
 
   _selectedPartnerIdChanged(id: any, oldId: any) {
     if (typeof oldId === 'number'
-        && id !== oldId
-        && !this.agreement) {
+      && id !== oldId
+      && !this.agreement) {
       // Prevent reset on changes caused by initialization of the fields
       this._resetDropdowns();
     }
@@ -887,7 +891,7 @@ class InterventionDetails extends connect(store)(
 
   _checkFrsStartConsistency(frsEarliestStartDate: string, interventionStart: string, interventionStatus: string) {
     if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
-        || interventionStatus === 'closed') {
+      || interventionStatus === 'closed') {
       this.set('_frsStartConsistencyWarning', null);
       (this.$.intStart as PolymerElement).updateStyles();
       return;
@@ -899,7 +903,7 @@ class InterventionDetails extends connect(store)(
 
   _checkFrsEndConsistency(frsLatestEndDate: string, interventionEnd: string, interventionStatus: string) {
     if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
-        || interventionStatus === 'closed') {
+      || interventionStatus === 'closed') {
       this.set('_frsEndConsistencyWarning', '');
       (this.$.intEnd as PolymerElement).updateStyles();
       return;
@@ -955,9 +959,9 @@ class InterventionDetails extends connect(store)(
 
   _canEditCpoRamIndicators(userEditPermission: boolean, status: string) {
     return userEditPermission &&
-        [CONSTANTS.STATUSES.Draft.toLowerCase(),
-          CONSTANTS.STATUSES.Signed.toLowerCase(),
-          CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+      [CONSTANTS.STATUSES.Draft.toLowerCase(),
+      CONSTANTS.STATUSES.Signed.toLowerCase(),
+      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
   }
 
   _activationLetterUploadFinished(e: CustomEvent) {
@@ -976,14 +980,14 @@ class InterventionDetails extends connect(store)(
 
   showActivationLetterDeleteBtn(status: string) {
     return this._isDraft(status) && !!this.originalIntervention
-            && !this.originalIntervention.activation_letter_attachment;
+      && !this.originalIntervention.activation_letter_attachment;
   }
 
   showExportResults(status: string, resultLinks: []) {
     return [CONSTANTS.STATUSES.Draft.toLowerCase(),
-      CONSTANTS.STATUSES.Signed.toLowerCase(),
-      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
-            && resultLinks && resultLinks.length;
+    CONSTANTS.STATUSES.Signed.toLowerCase(),
+    CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
+      && resultLinks && resultLinks.length;
   }
 
   showSeparator(status: string, resultLinks: [], resultLinkPermission: boolean) {
