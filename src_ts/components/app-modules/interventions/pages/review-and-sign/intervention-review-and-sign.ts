@@ -77,10 +77,6 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             opacity: 1;
           };
         }
-
-        #reviewDocUpload {
-          max-width: 380px;
-        }
       </style>
 
       <etools-content-panel class="content-section" panel-title="Signatures & Dates">
