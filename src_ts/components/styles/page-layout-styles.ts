@@ -34,6 +34,8 @@ export const pageLayoutStyles = html`
     #main {
       @apply --layout-horizontal;
       flex-wrap: nowrap;
+      -ms-flex-wrap: none;
+      -webkit-flex-wrap: nowrap;
       padding: 24px;
     }
 
