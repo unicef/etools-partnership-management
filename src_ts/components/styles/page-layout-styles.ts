@@ -21,6 +21,8 @@ export const pageLayoutStyles = html`
       #pageContent {
         @apply --layout-flex;
         flex: 1 1 auto;
+        -ms-flex: 1 1 auto;
+        -webkit-flex: 1 1 auto;
         min-width: 0px;
       }
     }
@@ -47,6 +49,8 @@ export const pageLayoutStyles = html`
       @apply --layout;
       width: 224px;
       flex: 0 0 224px;
+      -ms-flex: 0 0 224px;
+      -webkit-flex: 0 0 224px;
       min-width: 0px;
       padding-left: 24px;
       -webkit-box-sizing: border-box;
