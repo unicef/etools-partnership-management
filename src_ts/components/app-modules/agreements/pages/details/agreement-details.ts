@@ -310,7 +310,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca, agreement.status)]]">
+              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, 
+                                agreement.special_conditions_pca, agreement.status)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -474,6 +475,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _isNewAgreementChanged(isNew: boolean) {
+    this.set('authorizedOfficers', []);
     this._setDraftStatus(this.editMode, isNew);
   }
 

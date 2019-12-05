@@ -96,7 +96,6 @@ class InterventionsModule extends connect(store)(
             opacity: 0;
           }
         }
-
       </style>
 
       <app-route
@@ -302,9 +301,9 @@ class InterventionsModule extends connect(store)(
     interventionId: any;
     justSaved: boolean;
   } = {
-    interventionId: null,
-    justSaved: false
-  };
+      interventionId: null,
+      justSaved: false
+    };
 
   @property({type: Boolean})
   _forceDetUiValidationOnAttach!: boolean;
@@ -586,15 +585,15 @@ class InterventionsModule extends connect(store)(
 
   _userHasEditPermissions(permissions: UserPermissions) {
     return permissions && permissions.editInterventionDetails === true &&
-        (permissions.partnershipManager || permissions.PME);
+      (permissions.partnershipManager || permissions.PME);
   }
 
   _hasEditPermissions(permissions: UserPermissions, intervention?: Intervention) {
     if (permissions && permissions.editInterventionDetails === true) {
       if (intervention) {
         if (!(permissions.partnershipManager || permissions.PME) &&
-            (!intervention.status ||
-              intervention.status !== CONSTANTS.STATUSES.Draft.toLowerCase())) {
+          (!intervention.status ||
+            intervention.status !== CONSTANTS.STATUSES.Draft.toLowerCase())) {
           // other users than partnershipManager or PME will be able to edit only if intervention status is draft
           return false;
         }
@@ -639,7 +638,7 @@ class InterventionsModule extends connect(store)(
   _interventionSaveErrors(event: CustomEvent) {
     event.stopImmediatePropagation();
     if ((event.detail instanceof Array && event.detail.length > 0) ||
-        (typeof event.detail === 'string' && event.detail !== '')) {
+      (typeof event.detail === 'string' && event.detail !== '')) {
       fireEvent(this, 'set-server-errors', event.detail);
       this.scrollToTop();
     }

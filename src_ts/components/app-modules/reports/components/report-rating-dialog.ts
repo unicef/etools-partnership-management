@@ -113,11 +113,11 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
     this.startSpinner();
     this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
-      .then(function (response: any) {
+      .then(function(response: any) {
         fireEvent(self, 'report-accepted', {report: response});
         self.stopSpinner();
         self.close();
-      }).catch(function (error: any) {
+      }).catch(function(error: any) {
         self._handleErrorResponse(error);
       });
   }

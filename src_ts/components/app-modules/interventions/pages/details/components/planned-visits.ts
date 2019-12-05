@@ -307,7 +307,8 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   /**
-   * The planned visit row data can be removed only if (intervention status is new or draft) or (if it doesn't have and id assigned(only if is not saved))
+   * The planned visit row data can be removed only if (intervention status is new or draft) or (if it doesn't have
+   * and id assigned(only if is not saved))
    */
   _canBeRemoved(index: number, editMode: boolean) {
     if (!editMode || !this.dataItems || !this.dataItems.length || !this.dataItems[index]) {
