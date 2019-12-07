@@ -101,6 +101,25 @@ class PageHeader extends connect(store)(
             display: none;
           }
         }
+        @media (max-width: 972px) {
+          .envWarning {
+            display: none;
+          }
+        }
+        @media (max-width: 768px) {
+          etools-app-selector {
+            width: 42px;
+          }
+          .titlebar img {
+            margin: 0 8px 0 12px;
+          }
+          support-btn {
+            margin-left: 14px;
+          }
+          etools-profile-dropdown{
+            margin-left: 12px;
+            width: 40px;
+        }
       </style>
 
       <app-toolbar sticky class="content-align">
@@ -195,7 +214,7 @@ class PageHeader extends connect(store)(
       this.users = [...state.commonData.unicefUsersData];
     }
     if (state.commonData.currentUser !== null &&
-        !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
+      !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
 
       if (this.profile && this.profile.countries_available) {
@@ -263,7 +282,7 @@ class PageHeader extends connect(store)(
 
   protected _getModifiedFields(originalData: any, newData: any) {
     const modifiedFields: GenericObject = {};
-    this.editableFields.forEach(function(field: any) {
+    this.editableFields.forEach(function (field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];
       }
