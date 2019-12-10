@@ -98,7 +98,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           <div class="col col-3">
             <!-- Submitted to PRC? -->
             <etools-form-element-wrapper no-placeholder>
-              <paper-checkbox checked="{{intervention.submitted_to_prc}}"
+              <paper-checkbox checked="{{intervention.prc_review_attachment}}"
                               disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
                               hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
                 Submitted to PRC?
@@ -106,7 +106,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             </etools-form-element-wrapper>
           </div>
         </div>
-        <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]">
+        <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.prc_review_attachment)]]">
           <div class="row-h flex-c row-second-bg">
             <div class="col col-3">
               <!-- Submission Date to PRC -->
