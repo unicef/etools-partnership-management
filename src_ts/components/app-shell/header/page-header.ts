@@ -109,6 +109,7 @@ class PageHeader extends connect(store)(
         @media (max-width: 768px) {
           etools-app-selector {
             width: 42px;
+            --app-selector-button-padding:18px 12px;
           }
           .titlebar img {
             margin: 0 8px 0 12px;
@@ -120,6 +121,7 @@ class PageHeader extends connect(store)(
             margin-left: 12px;
             width: 40px;
         }
+      }
       </style>
 
       <app-toolbar sticky class="content-align">
