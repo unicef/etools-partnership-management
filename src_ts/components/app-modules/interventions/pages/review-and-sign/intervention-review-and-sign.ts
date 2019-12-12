@@ -477,10 +477,6 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     if (e.detail.success) {
       const response = JSON.parse(e.detail.success);
       this.set('intervention.prc_review_attachment', response.id);
-      // this.set('showPrcFields', true);
-
-
-      console.log(response);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
