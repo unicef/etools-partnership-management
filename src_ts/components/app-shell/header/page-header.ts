@@ -86,6 +86,7 @@ class PageHeader extends connect(store)(
           color: var(--nonprod-text-warn-color);
           font-weight: 700;
           font-size: 18px;
+          line-height: 20px;
         }
 
         support-btn {
@@ -101,12 +102,22 @@ class PageHeader extends connect(store)(
             display: none;
           }
         }
-        @media (max-width: 972px) {
+        @media (max-width: 920px) {
           .envWarning {
-            display: none;
+            font-size: 14px;
+            line-height: 16px;
+          }
+          .titlebar img {
+            margin: 0 8px 0 12px;
           }
         }
         @media (max-width: 768px) {
+          #app-logo {
+            width: 90px;
+          }
+          .envLong {
+            display: none;
+          }
           etools-app-selector {
             width: 42px;
           }
@@ -114,11 +125,17 @@ class PageHeader extends connect(store)(
             margin: 0 8px 0 12px;
           }
           support-btn {
-            margin-left: 14px;
+            margin-left: 4px;
           }
           etools-profile-dropdown{
-            margin-left: 12px;
+            margin-left: 0px;
             width: 40px;
+        }
+      }
+      @media (max-width: 576px) {
+        #refresh{
+          width: 24px;
+          padding: 0px
         }
       }
       </style>
@@ -129,7 +146,7 @@ class PageHeader extends connect(store)(
           <etools-app-selector id="app-selector"></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
           <template is="dom-if" if="[[environment]]">
-            <div class="envWarning"> - [[environment]] TESTING ENVIRONMENT</div>
+            <div class="envWarning"> - [[environment]] <span class='envLong'>TESTING ENVIRONMENT<span></div>
           </template>
         </div>
         <div class="content-align">
