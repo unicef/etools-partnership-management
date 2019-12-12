@@ -73,6 +73,12 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
             max-height: 380px;
           };
         }
+
+        @media (max-width: 768px) {
+          etools-dropdown {
+            width: 130px;
+          }
+        }
       </style>
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown id="countrySelector"
@@ -143,9 +149,9 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
       endpoint: this.getEndpoint('changeCountry'),
       method: 'POST',
       body: {country: countryId}
-    }).then(function() {
+    }).then(function () {
       self._handleResponse();
-    }).catch(function(error: any) {
+    }).catch(function (error: any) {
       self._handleError(error);
     });
   }
