@@ -98,7 +98,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           <div class="col col-3">
             <!-- Submitted to PRC? -->
             <etools-form-element-wrapper no-placeholder>
-              <paper-checkbox checked="{{intervention.prc_review_attachment}}"
+              <paper-checkbox checked="{{showPrcFields}}"
                               disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
                               hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
                 Submitted to PRC?
@@ -106,7 +106,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             </etools-form-element-wrapper>
           </div>
         </div>
-        <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.prc_review_attachment)]]">
+        <template is="dom-if" if="[[_showSubmittedToPrcFields(showPrcFields)]]">
           <div class="row-h flex-c row-second-bg">
             <div class="col col-3">
               <!-- Submission Date to PRC -->
@@ -114,6 +114,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
                                 readonly$="[[!permissions.edit.submission_date_prc]]"
+                                required$="{{intervention.prc_review_attachment}}"
                                 selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
@@ -123,6 +124,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Review Date by PRC"
                                 value="{{intervention.review_date_prc}}"
                                 readonly$="[[!permissions.edit.review_date_prc]]"
+                                required$="{{intervention.prc_review_attachment}}"
                                 selected-date-display-format="D MMM YYYY">
               </datepicker-lite>
             </div>
@@ -292,6 +294,9 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   @property({type: String})
   unicefDateValidatorErrorMessage!: string;
 
+  @property({type: Boolean})
+  showPrcFields: boolean = false;
+
 
   static get observers() {
     return [
@@ -365,7 +370,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     let valid = true;
     const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
       '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
-
+    if (this.showPrcFields) {
+      const dateFields = ['#submissionDatePrcField', '#reviewDatePrcField'];
+      fieldSelectors.push(...dateFields);
+    }
     fieldSelectors.forEach((selector: string) => {
       const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
@@ -376,7 +384,12 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   }
 
   _showSubmittedToPrcFields(submittedToPrc: boolean) {
-    return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
+    if(this.intervention.prc_review_attachment !== null){
+      this.set('showPrcFields', true);
+      return true;
+    }else {
+      return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
+    }
   }
 
   _submittedToPrcAvailable(documentType: string) {
@@ -464,6 +477,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     if (e.detail.success) {
       const response = JSON.parse(e.detail.success);
       this.set('intervention.prc_review_attachment', response.id);
+      // this.set('showPrcFields', true);
+
+
+      console.log(response);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
