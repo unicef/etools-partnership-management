@@ -115,7 +115,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
                                 readonly$="[[!permissions.edit.submission_date_prc]]"
-                                required$="[[intervention.submitted_to_prc]]"
+                                required$="[[intervention.prc_review_attachment]]"
                                 selected-date-display-format="D MMM YYYY"
                                 auto-validate>
               </datepicker-lite>
@@ -126,7 +126,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Review Date by PRC"
                                 value="{{intervention.review_date_prc}}"
                                 readonly$="[[!permissions.edit.review_date_prc]]"
-                                required$="[[intervention.submitted_to_prc]]"
+                                required$="[[intervention.prc_review_attachment]]"
                                 selected-date-display-format="D MMM YYYY"
                                 auto-validate>
               </datepicker-lite>
@@ -302,7 +302,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
       '_interventionDocTypeChanged(intervention.document_type)',
       '_signedPdDocHasChanged(intervention.signed_pd_attachment)',
       '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)',
-      '_resetEagerValidations(intervention.submitted_to_prc)'
+      '_resetFieldsAndValidations(intervention.submitted_to_prc)'
     ];
   }
 
@@ -328,13 +328,15 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     fireEvent(this, 'tab-content-attached');
   }
 
-  _resetEagerValidations(submittedToPrc: boolean) {
+  _resetFieldsAndValidations(submittedToPrc: boolean) {
     if (submittedToPrc) {
       /** wait for components to be stamped */
       setTimeout(() => {
         (this.shadowRoot!.querySelector('#submissionDatePrcField')! as DatePickerLite).invalid = false;
         (this.shadowRoot!.querySelector('#reviewDatePrcField')! as DatePickerLite).invalid = false;
       });
+    } else {
+      this._resetPrcFields();
     }
   }
 
@@ -380,7 +382,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     let valid = true;
     const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
       '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
-    if (this.intervention.submitted_to_prc) {
+    if (this.intervention.prc_review_attachment) {
       const dateFields = ['#submissionDatePrcField', '#reviewDatePrcField'];
       fieldSelectors.push(...dateFields);
     }
