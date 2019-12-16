@@ -332,12 +332,19 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     if (submittedToPrc) {
       /** wait for components to be stamped */
       setTimeout(() => {
-        (this.shadowRoot!.querySelector('#submissionDatePrcField')! as DatePickerLite).invalid = false;
-        (this.shadowRoot!.querySelector('#reviewDatePrcField')! as DatePickerLite).invalid = false;
+        this._resetPrcFieldsValidations();
       });
     } else {
+      if (this.intervention.prc_review_attachment) {
+        store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
+      }
       this._resetPrcFields();
     }
+  }
+
+  _resetPrcFieldsValidations() {
+    (this.shadowRoot!.querySelector('#submissionDatePrcField')! as DatePickerLite).invalid = false;
+    (this.shadowRoot!.querySelector('#reviewDatePrcField')! as DatePickerLite).invalid = false;
   }
 
   _updateStyles() {
@@ -497,6 +504,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   _prcRevDocDelete(_e: CustomEvent) {
     this.set('intervention.prc_review_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
+    this._resetPrcFieldsValidations();
   }
 
   showPrcReviewDeleteBtn(status: string) {
