@@ -32,6 +32,7 @@ import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Permission, MinimalUser} from '../../../../../typings/globals.types.js';
+import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
 
 /**
@@ -77,10 +78,6 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             opacity: 1;
           };
         }
-
-        #reviewDocUpload {
-          max-width: 380px;
-        }
       </style>
 
       <etools-content-panel class="content-section" panel-title="Signatures & Dates">
@@ -104,7 +101,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
             <etools-form-element-wrapper no-placeholder>
               <paper-checkbox checked="{{intervention.submitted_to_prc}}"
                               disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
-                              hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
+                              hidden$="[[!_isNotSSFA(intervention.document_type)]]">
                 Submitted to PRC?
               </paper-checkbox>
             </etools-form-element-wrapper>
@@ -118,7 +115,9 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Submission Date to PRC"
                                 value="{{intervention.submission_date_prc}}"
                                 readonly$="[[!permissions.edit.submission_date_prc]]"
-                                selected-date-display-format="D MMM YYYY">
+                                required$="[[intervention.prc_review_attachment]]"
+                                selected-date-display-format="D MMM YYYY"
+                                auto-validate>
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -127,7 +126,9 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
                                 label="Review Date by PRC"
                                 value="{{intervention.review_date_prc}}"
                                 readonly$="[[!permissions.edit.review_date_prc]]"
-                                selected-date-display-format="D MMM YYYY">
+                                required$="[[intervention.prc_review_attachment]]"
+                                selected-date-display-format="D MMM YYYY"
+                                auto-validate>
               </datepicker-lite>
             </div>
             <div class="col col-6">
@@ -296,12 +297,12 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   @property({type: String})
   unicefDateValidatorErrorMessage!: string;
 
-
   static get observers() {
     return [
       '_interventionDocTypeChanged(intervention.document_type)',
       '_signedPdDocHasChanged(intervention.signed_pd_attachment)',
-      '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)'
+      '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)',
+      '_resetFieldsAndValidations(intervention.submitted_to_prc)'
     ];
   }
 
@@ -325,6 +326,25 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
     this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
     fireEvent(this, 'tab-content-attached');
+  }
+
+  _resetFieldsAndValidations(submittedToPrc: boolean) {
+    if (submittedToPrc) {
+      /** wait for components to be stamped */
+      setTimeout(() => {
+        this._resetPrcFieldsValidations();
+      });
+    } else {
+      if (this.intervention.prc_review_attachment) {
+        store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
+      }
+      this._resetPrcFields();
+    }
+  }
+
+  _resetPrcFieldsValidations() {
+    (this.shadowRoot!.querySelector('#submissionDatePrcField')! as DatePickerLite).invalid = false;
+    (this.shadowRoot!.querySelector('#reviewDatePrcField')! as DatePickerLite).invalid = false;
   }
 
   _updateStyles() {
@@ -369,7 +389,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     let valid = true;
     const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
       '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
-
+    if (this.intervention.prc_review_attachment) {
+      const dateFields = ['#submissionDatePrcField', '#reviewDatePrcField'];
+      fieldSelectors.push(...dateFields);
+    }
     fieldSelectors.forEach((selector: string) => {
       const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
@@ -379,11 +402,17 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     return valid;
   }
 
+
+  /**
+   * intervention.submitted_to_prc is set only on bk if submission_date_prc, review_date_prc are filled in
+   * For the submitted_to_prc field to be true when file is attached also,
+   * we make the date fields required
+   */
   _showSubmittedToPrcFields(submittedToPrc: boolean) {
-    return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
+    return this._isNotSSFA(this.intervention.documentType) && submittedToPrc;
   }
 
-  _submittedToPrcAvailable(documentType: string) {
+  _isNotSSFA(documentType: string) {
     return documentType !== CONSTANTS.DOCUMENT_TYPES.SSFA;
   }
 
@@ -400,7 +429,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
       return;
     }
 
-    const submittedToPrc = this._submittedToPrcAvailable(interventionDocumentType);
+    const submittedToPrc = this._showSubmittedToPrcFields(this.intervention.submitted_to_prc);
     if (!submittedToPrc) {
       this.set('intervention.submitted_to_prc', false);
       this._resetPrcFields();
@@ -475,6 +504,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   _prcRevDocDelete(_e: CustomEvent) {
     this.set('intervention.prc_review_attachment', null);
     store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
+    this._resetPrcFieldsValidations();
   }
 
   showPrcReviewDeleteBtn(status: string) {

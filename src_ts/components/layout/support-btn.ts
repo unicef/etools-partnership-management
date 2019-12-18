@@ -18,18 +18,18 @@ class SupportBtn extends PolymerElement {
         :host(:hover) {
           cursor: pointer;
         }
-        
+
         a {
           color: inherit;
           text-decoration: none;
           font-size: 16px;
         }
-        
+
         iron-icon {
           margin-right: 4px;
         }
-        
-        @media (max-width: 768px) {
+
+        @media (max-width: 980px) {
          #supportTxt {
            display: none;
          }
