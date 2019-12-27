@@ -37,6 +37,7 @@ import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import PiwikAnalyticsMixin from '../../mixins/piwik-analytics-mixin';
 
 /**
  * @polymer
@@ -57,7 +58,8 @@ class InterventionsModule extends connect(store)(
         ModuleRoutingMixin(
           InterventionPageTabsMixin(
             SaveInterventionMixin(
-              EndpointsMixin(PolymerElement)))))))) {
+              EndpointsMixin(
+                PiwikAnalyticsMixin(PolymerElement))))))))) {
 
   static get template() {
     return html`
@@ -131,7 +133,7 @@ class InterventionsModule extends connect(store)(
         <div slot="title-row-actions" class="content-header-actions export-options">
 
           <div class="action" hidden$="[[!listActive]]">
-            <paper-menu-button id="pdExportMenuBtn" close-on-activate>
+            <paper-menu-button id="pdExportMenuBtn" close-on-activate on-tap="trackEvent" tracker="intervention export">
               <paper-button slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
                 Export

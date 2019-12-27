@@ -94,6 +94,7 @@ import {property} from '@polymer/decorators';
 import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import PiwikAnalyticsMixin from '../mixins/piwik-analytics-mixin';
 setRootPath(BASE_URL);
 
 /**
@@ -122,7 +123,8 @@ class AppShell extends connect(store)(
                 LoadingMixin(
                   UserDataMixin(
                     CommonDataMixin(
-                      PolymerElement))))))))))) {
+                      PiwikAnalyticsMixin(
+                        PolymerElement)))))))))))) {
 
   public static get template() {
     // main template
@@ -135,7 +137,9 @@ class AppShell extends connect(store)(
     <etools-piwik-analytics
         page="[[subroute.prefix]]"
         user="[[user]]"
-        toast="[[currentToastMessage]]">
+        toast="[[currentToastMessage]]"
+        site-url="https://unisitetracker.unicef.io/"
+        site-id="[[siteIdent]]">
     </etools-piwik-analytics>
 
     <app-location
@@ -187,7 +191,8 @@ class AppShell extends connect(store)(
           <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
             <agreements-module id="agreements" class="main-page"
                                route="{{subroute}}"
-                               permissions="[[permissions]]">
+                               permissions="[[permissions]]"
+                               tracker="agreements">
             </agreements-module>
           </template>
 
@@ -295,7 +300,6 @@ class AppShell extends connect(store)(
 
   @property({type: String})
   appLocPath!: string;
-
 
   public static get observers() {
     return [

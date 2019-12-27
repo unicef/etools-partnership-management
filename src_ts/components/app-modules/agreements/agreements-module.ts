@@ -26,6 +26,7 @@ import {fireEvent} from '../../utils/fire-custom-event.js';
 import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
+import PiwikAnalyticsMixin from '../../mixins/piwik-analytics-mixin.js';
 
 /**
  * @polymer
@@ -40,7 +41,8 @@ const AgreementsModuleRequiredMixins =
     ModuleRoutingMixin(
       ModuleMainElCommonFunctionalityMixin(
         EndpointsMixin(
-          PolymerElement))));
+          PiwikAnalyticsMixin(
+            PolymerElement)))));
 
 /**
  * @polymer
@@ -82,7 +84,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action" hidden$="[[!listActive]]">
-            <a target="_blank" href$="[[csvDownloadUrl]]">
+            <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="agreements export">
               <paper-button>
                 <iron-icon icon="file-download"></iron-icon>
                 Export

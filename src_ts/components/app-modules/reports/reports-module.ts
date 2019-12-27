@@ -33,6 +33,7 @@ import {property} from '@polymer/decorators/lib/decorators';
 import {ReportRatingDialogEl} from './components/report-rating-dialog';
 import {ReportRejectDialogEl} from './components/report-reject-dialog';
 import {ReportsListEl} from './pages/list/reports-list';
+import PiwikAnalyticsMixin from '../../mixins/piwik-analytics-mixin';
 declare const moment: any;
 
 
@@ -47,7 +48,8 @@ declare const moment: any;
  */
 class ReportsModule extends connect(store)(ScrollControlMixin(
   ModuleMainElCommonFunctionalityMixin(
-    ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))) {
+    ModuleRoutingMixin(ReportDetailsMixin(
+      PiwikAnalyticsMixin(PolymerElement)))))) {
 
   static get is() {
     return 'reports-module';
@@ -148,7 +150,7 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
 
           <div class="action" hidden$="[[!listActive]]">
-            <paper-menu-button id="export" close-on-activate horizontal-align="right">
+            <paper-menu-button id="export" close-on-activate horizontal-align="right" on-tap="trackAnalytics" tracker="reports export">
               <paper-button slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
                 Export

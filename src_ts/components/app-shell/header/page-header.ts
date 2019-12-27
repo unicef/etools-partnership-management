@@ -164,7 +164,7 @@ class PageHeader extends connect(store)(
               on-save-profile="_saveProfile"
               on-sign-out="_signOut"></etools-profile-dropdown>
 
-          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
+          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog();trackAnalytics()" tracker="hard refresh"></paper-icon-button>
         </div>
       </app-toolbar>
     `;
@@ -216,6 +216,7 @@ class PageHeader extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
+    
   }
 
   public stateChanged(state: RootState) {
