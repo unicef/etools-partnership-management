@@ -15,6 +15,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../store';
 import {property} from '@polymer/decorators';
+import PiwikAnalyticsMixin from '../../mixins/piwik-analytics-mixin';
 
 /**
  * PMP main menu
@@ -25,7 +26,8 @@ import {property} from '@polymer/decorators';
 class AppMenu extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
-    EnvironmentFlagsMixin(PolymerElement))) {
+    PiwikAnalyticsMixin(
+      EnvironmentFlagsMixin(PolymerElement)))) {
 
   public static get template() {
     // main template
@@ -132,7 +134,8 @@ class AppMenu extends connect(store)(
           <div class="name">Implementation Intelligence</div>
         </a>
 
-        <a class="nav-menu-item lighter-item" href="http://etools.zendesk.com" target="_blank">
+        <a class="nav-menu-item lighter-item" href="http://etools.zendesk.com" target="_blank"
+          on-tap="trackAnalytics" tracker="Knowledge base">
           <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
           <paper-tooltip for="knoledge-icon" position="right">
             Knowledge base
@@ -142,7 +145,8 @@ class AppMenu extends connect(store)(
 
         <a class="nav-menu-item lighter-item"
            href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
-           target="_blank">
+           target="_blank"
+           on-tap="trackAnalytics" tracker="Discussion">
           <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
           <paper-tooltip for="discussion-icon" position="right">
             Discussion
@@ -150,7 +154,8 @@ class AppMenu extends connect(store)(
           <div class="name">Discussion</div>
         </a>
 
-        <a class="nav-menu-item lighter-item last-one" href="http://etoolsinfo.unicef.org" target="_blank">
+        <a class="nav-menu-item lighter-item last-one" href="http://etoolsinfo.unicef.org" target="_blank"
+          on-tap="trackAnalytics" tracker="Information">
           <iron-icon id="information-icon" icon="icons:info"></iron-icon>
           <paper-tooltip for="information-icon" position="right">
             Information

@@ -35,6 +35,7 @@ import {Partner} from '../../../models/partners.models';
 import {PartnerItemData} from './data/partner-item-data.js';
 import {NewPartnerDialog} from './components/new-partner-dialog.js';
 import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
+import PiwikAnalyticsMixin from '../../mixins/piwik-analytics-mixin';
 
 /**
  * @polymer
@@ -50,7 +51,9 @@ class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
     ScrollControlMixin(ModuleRoutingMixin(
-      ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement)))))) {
+      ModuleMainElCommonFunctionalityMixin(
+        StaffMembersDataMixin(
+          PiwikAnalyticsMixin(PolymerElement))))))) {
 
   public static get template() {
     // main template
@@ -88,7 +91,7 @@ class PartnersModule extends connect(store)(
 
           <div slot="title-row-actions" class="content-header-actions">
             <div class="action" hidden$="[[!listActive]]">
-              <a target="_blank" href$="[[csvDownloadUrl]]">
+              <a target="_blank" href$="[[csvDownloadUrl]]" on-tap="trackAnalytics" tracker="partners export">
                 <paper-button>
                   <iron-icon icon="file-download"></iron-icon>
                   Export
