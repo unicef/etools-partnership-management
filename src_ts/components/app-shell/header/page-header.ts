@@ -16,6 +16,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
+import PiwikAnalyticsMixin from '../../mixins/piwik-analytics-mixin';
 
 
 /**
@@ -29,7 +30,9 @@ import {property} from '@polymer/decorators';
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
-    ProfileOperationsMixin(PolymerElement))) {
+    PiwikAnalyticsMixin(
+      ProfileOperationsMixin(
+        PolymerElement)))) {
 
   public static get template() {
     // main template
@@ -154,7 +157,7 @@ class PageHeader extends connect(store)(
                               current-country="[[profile.country]]">
           </countries-dropdown>
 
-          <support-btn></support-btn>
+          <support-btn on-tap="trackAnalytics" tracker="support"></support-btn>
 
           <etools-profile-dropdown
               sections="[[allSections]]"
@@ -164,7 +167,7 @@ class PageHeader extends connect(store)(
               on-save-profile="_saveProfile"
               on-sign-out="_signOut"></etools-profile-dropdown>
 
-          <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog();trackAnalytics()" tracker="hard refresh"></paper-icon-button>
+          <paper-icon-button id="refresh" icon="refresh" on-tap="trackAnalytics" tracker="hard refresh"></paper-icon-button>
         </div>
       </app-toolbar>
     `;
@@ -216,7 +219,11 @@ class PageHeader extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
-    
+    this.shadowRoot!.querySelector('#refresh')!.addEventListener('tap', () => this._openDataRefreshDialog());
+  }
+
+  public disconnectedCallback() {
+    this.shadowRoot!.querySelector('#refresh')!.removeEventListener('tap', () => this._openDataRefreshDialog());
   }
 
   public stateChanged(state: RootState) {
@@ -273,6 +280,11 @@ class PageHeader extends connect(store)(
 
     return countriesList;
   }
+
+  // private _handleRefreshClick() {
+  //   this._openDataRefreshDialog();
+  //   this.trackAnalytics();
+  // }
 
   // @ts-ignore
   private _openDataRefreshDialog() {
