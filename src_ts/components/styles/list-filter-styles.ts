@@ -131,4 +131,23 @@ export const listFilterStyles = html`
       border-bottom: 1px solid var(--list-divider-color, #9d9d9d);
     }
 
+    @media (max-width: 576px) {
+      #filters {
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+      }
+      #filters-fields #query {
+        --paper-input-container_-_width : 100%;
+      }
+      #filters-fields .filter, #filters-fields etools-dropdown.filter,
+      #filters-fields .filter.date {
+        width: 100%;
+      }
+      .fixed-controls {
+        border-left: none;
+        margin: 0 auto;
+        padding: 0px;
+      }
+    }
   </style>`;

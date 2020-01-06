@@ -9,6 +9,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
+import '@polymer/iron-media-query/iron-media-query.js';
 
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
@@ -71,6 +72,7 @@ class InterventionsList extends connect(store)(
         text-transform: none;
       }
     </style>
+    <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
     ${pmpCustomIcons}
     <template is="dom-if" if="[[stampListData]]">
       <interventions-list-data id="interventions"
@@ -162,6 +164,7 @@ class InterventionsList extends connect(store)(
     <div id="list" class="paper-material" elevation="1">
 
       <etools-data-table-header
+          low-resolution-layout="[[lowResolutionLayout]]"
           id="listHeader"
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
         <etools-data-table-column class="col-2" field="number" sortable>
@@ -189,7 +192,7 @@ class InterventionsList extends connect(store)(
 
       <template id="rows" is="dom-repeat" notify-dom-change items="[[filteredInterventions]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
-        <etools-data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
           <div slot="row-data" class="p-relative">
             <span class="col-data col-2">
               <a class="pd-ref truncate"
@@ -200,7 +203,7 @@ class InterventionsList extends connect(store)(
               </a>
             </span>
             <span class="col-data col-3" title="[[getDisplayValue(intervention.partner_name)]]">
-                <span class="truncate">[[getDisplayValue(intervention.partner_name)]]</span>
+                <span>[[getDisplayValue(intervention.partner_name)]]</span>
             </span>
             <span class="col-data flex-c">
                 [[getDisplayValue(intervention.document_type)]]
@@ -278,6 +281,7 @@ class InterventionsList extends connect(store)(
       </template>
 
       <etools-data-table-footer
+          low-resolution-layout="[[lowResolutionLayout]]"
           page-size="{{paginator.page_size}}"
           page-number="{{paginator.page}}"
           total-results="[[paginator.count]]"
@@ -359,6 +363,9 @@ class InterventionsList extends connect(store)(
 
   @property({type: String, notify: true})
   csvDownloadQs!: string;
+
+  @property({type: Boolean})
+  lowResolutionLayout: boolean = false;
 
   @property({type: String})
   _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
