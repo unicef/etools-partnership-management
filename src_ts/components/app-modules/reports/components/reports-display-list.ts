@@ -112,7 +112,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
             <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]">
 
               <div slot="row-data">
-                <span class="col-data col-2">
+                <span class="col-data col-2" data-col-header-label="Report #">
                   <span id$="tooltip-trigger-[[report.id]]" class="tooltip-trigger">
                     <a class="view-report"
                       href$="reports/[[report.id]]/progress"
@@ -132,7 +132,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                     [[report.programme_document.title]]
                   </paper-tooltip>
                 </span>
-                <span class="col-data flex-c">
+                <span class="col-data flex-c" data-col-header-label="Partner">
                   <span id$="tooltip-partner-[[report.id]]" class="tooltip-trigger">
                     [[_displayOrDefault(report.partner_name)]]
                   </span>
@@ -143,17 +143,17 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                     [[report.partner_vendor_number]]
                   </paper-tooltip>
                 </span>
-                <span class="col-data flex-c">
+                <span class="col-data flex-c" data-col-header-label="Report Status">
                   <report-status status="[[report.status]]"></report-status>
                 </span>
-                <span class="col-data flex-c">
+                <span class="col-data flex-c" data-col-header-label="Due Date">
                   [[_displayOrDefault(report.due_date)]]
                 </span>
-                <span class="col-data flex-c">
+                <span class="col-data flex-c" data-col-header-label="Reporting Period">
                   [[getDisplayValue(report.reporting_period)]]
                 </span>
                 <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-                  <span class="col-data col-2">
+                  <span class="col-data col-2" data-col-header-label="PD/SSFA ref.#">
                     <a class="pd-ref truncate"
                       href$="interventions/[[report.programme_document.external_id]]/details"
                       title$="[[getDisplayValue(report.programme_document.reference_number)]]">

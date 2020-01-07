@@ -202,7 +202,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                   initial-count="10" on-dom-change="_listDataChanged">
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <span class="col-data col-2">
+              <span class="col-data col-2" data-col-header-label="Reference No.">
                 <a class="ag-ref truncate"
                   href="agreements/[[agreement.id]]/details"
                   title="[[getDisplayValue(agreement.agreement_number)]]"
@@ -210,19 +210,19 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                   [[getDisplayValue(agreement.agreement_number)]]
                 </a>
               </span>
-              <span class="col-data col-4" title="[[getDisplayValue(agreement.partner_name)]]">
+              <span class="col-data col-4" data-col-header-label="Partner Full Name" title="[[getDisplayValue(agreement.partner_name)]]">
                 <span> [[getDisplayValue(agreement.partner_name)]] </span>
               </span>
-              <span class="col-data col-2">
+              <span class="col-data col-2" data-col-header-label="Type">
                   [[getDisplayValue(agreement.agreement_type)]]
               </span>
-              <span class="col-data col-2 capitalize">
+              <span class="col-data col-2 capitalize" data-col-header-label="Status">
                   [[getDisplayValue(agreement.status)]]
               </span>
-              <span class="col-data flex-c">
+              <span class="col-data flex-c" data-col-header-label="Start Date">
                   [[_checkAndShowAgreementDate(agreement.start)]]
               </span>
-              <span class="col-data flex-c">
+              <span class="col-data flex-c" data-col-header-label="End Date">
                   [[_checkAndShowAgreementDate(agreement.end)]]
               </span>
 
