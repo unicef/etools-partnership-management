@@ -16,6 +16,7 @@ import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@polymer/iron-media-query/iron-media-query.js';
 
 import ListsCommonMixin from '../../../../mixins/lists-common-mixin.js';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
@@ -61,7 +62,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
         }
 
       </style>
-
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
       <template is="dom-if" if="[[stampListData]]">
         <agreements-list-data id="agreements"
                               filtered-agreements="{{filteredAgreements}}"
@@ -173,6 +174,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
       <div id="list" class="paper-material hidden" elevation="1">
 
         <etools-data-table-header
+            low-resolution-layout="[[lowResolutionLayout]]"
             id="listHeader"
             label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
@@ -198,7 +200,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
         <template id="rows" is="dom-repeat"
                   items="[[filteredAgreements]]" as="agreement"
                   initial-count="10" on-dom-change="_listDataChanged">
-          <etools-data-table-row details-opened="[[detailsOpened]]">
+          <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
               <span class="col-data col-2">
                 <a class="ag-ref truncate"
@@ -209,7 +211,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                 </a>
               </span>
               <span class="col-data col-4" title="[[getDisplayValue(agreement.partner_name)]]">
-                <span class="truncate"> [[getDisplayValue(agreement.partner_name)]] </span>
+                <span> [[getDisplayValue(agreement.partner_name)]] </span>
               </span>
               <span class="col-data col-2">
                   [[getDisplayValue(agreement.agreement_type)]]
@@ -241,6 +243,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
         </template>
 
         <etools-data-table-footer
+            low-resolution-layout="[[lowResolutionLayout]]"
             page-size="{{paginator.page_size}}"
             page-number="{{paginator.page}}"
             total-results="[[paginator.count]]"
@@ -283,6 +286,9 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
 
   @property({type: Array})
   agreementStatuses: LabelAndValue[] = [];
+
+  @property({type: Boolean})
+  lowResolutionLayout: boolean = false;
 
   @property({type: Array})
   _sortableFieldNames: string[] = ['agreement_number', 'partner_name', 'start', 'end'];

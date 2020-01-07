@@ -63,4 +63,9 @@ export const pageLayoutStyles = html`
         padding: 0;
       }
     }
+    @media (max-width: 576px) {
+      #main {
+        padding: 5px;
+      }
+    }
   </style>`;
