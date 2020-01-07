@@ -152,7 +152,7 @@ class PartnersList extends
       <div id="list" elevation="1" class="paper-material hidden">
 
         <etools-data-table-header
-            low-resolution-layout="[[lowResolutionLayout]]
+            low-resolution-layout="[[lowResolutionLayout]]"
             id="listHeader"
             label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
           <etools-data-table-column class="flex" field="vendor_number" sortable>
@@ -174,7 +174,7 @@ class PartnersList extends
                   initial-count="10" on-dom-change="_listDataChanged">
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-                <span class="col-data flex">
+                <span class="col-data flex" data-col-header-label="Vendor No.">
                   <a class="vendor-nr truncate"
                      href$="[[currentModule]]/[[partner.id]]/details"
                      title$="[[getDisplayValue(partner.vendor_number)]]"
@@ -182,7 +182,7 @@ class PartnersList extends
                     [[getDisplayValue(partner.vendor_number)]]
                   </a>
                 </span>
-              <span class="col-data flex-3">
+              <span class="col-data flex-3" data-col-header-label="Name (Short/Full)">
                   <span>[[_computeName(partner.name, partner.short_name)]]</span>
 
                   <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
@@ -198,10 +198,10 @@ class PartnersList extends
                   </span>
 
                 </span>
-              <span class="col-data flex-2">
+              <span class="col-data flex-2" data-col-header-label="Partner Type">
                   [[_computeType(partner.cso_type, partner.partner_type)]]
                 </span>
-              <span class="col-data flex" style="text-transform: capitalize">
+              <span class="col-data flex" data-col-header-label="Risk Rating" style="text-transform: capitalize">
                   [[getDisplayValue(partner.rating)]]
                 </span>
             </div>
