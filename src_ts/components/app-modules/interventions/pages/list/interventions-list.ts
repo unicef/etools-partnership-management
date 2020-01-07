@@ -194,7 +194,7 @@ class InterventionsList extends connect(store)(
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
           <div slot="row-data" class="p-relative">
-            <span class="col-data col-2">
+            <span class="col-data col-2" data-col-header-label="Reference #">
               <a class="pd-ref truncate"
                 href="interventions/[[intervention.id]]/details"
                 title="[[getDisplayValue(intervention.number)]]"
@@ -202,19 +202,19 @@ class InterventionsList extends connect(store)(
                 [[getDisplayValue(intervention.number)]]
               </a>
             </span>
-            <span class="col-data col-3" title="[[getDisplayValue(intervention.partner_name)]]">
+            <span class="col-data col-3" data-col-header-label="Partner Name" title="[[getDisplayValue(intervention.partner_name)]]">
                 <span>[[getDisplayValue(intervention.partner_name)]]</span>
             </span>
-            <span class="col-data flex-c">
+            <span class="col-data flex-c" data-col-header-label="Document Type">
                 [[getDisplayValue(intervention.document_type)]]
             </span>
-            <span class="col-data flex-c capitalize">
+            <span class="col-data flex-c capitalize" data-col-header-label="Status">
                 [[getDisplayValue(intervention.status)]]
             </span>
-            <span class="col-data col-2" title="[[getDisplayValue(intervention.title)]]">
+            <span class="col-data col-2" data-col-header-label="Title" title="[[getDisplayValue(intervention.title)]]">
                 [[getDisplayValue(intervention.title)]]
             </span>
-            <span class="col-data flex-c">
+            <span class="col-data flex-c" data-col-header-label="Start Date">
               <etools-info-tooltip class="fr-nr-warn"
                                   custom-icon
                                   icon-first
@@ -225,7 +225,7 @@ class InterventionsList extends connect(store)(
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
-            <span class="col-data flex-c">
+            <span class="col-data flex-c" data-col-header-label="End Date">
               <etools-info-tooltip class="fr-nr-warn"
                                     custom-icon
                                     icon-first
