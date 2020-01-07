@@ -2,6 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import '@unicef-polymer/etools-data-table/etools-data-table';
+import '@polymer/iron-media-query/iron-media-query.js';
 import './report-status';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
@@ -72,7 +73,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
         }
 
       </style>
-
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
       <div id="list" class="paper-material" elevation="1">
 
         <template is="dom-if" if="[[!reports.length]]">
@@ -82,7 +83,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
         </template>
 
         <template is="dom-if" if="[[reports.length]]">
-          <etools-data-table-header id="listHeader"
+          <etools-data-table-header id="listHeader" low-resolution-layout="[[lowResolutionLayout]]"
                                     label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
                                       of [[paginator.count]] results to show">
             <etools-data-table-column class="col-2">
@@ -108,7 +109,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
           </etools-data-table-header>
 
           <template is="dom-repeat" items="[[reports]]" as="report" on-dom-change="_listDataChanged">
-            <etools-data-table-row>
+            <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]">
 
               <div slot="row-data">
                 <span class="col-data col-2">
@@ -173,6 +174,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
           </template>
 
           <etools-data-table-footer
+              low-resolution-layout="[[lowResolutionLayout]]"
               page-size="[[paginator.page_size]]"
               page-number="[[paginator.page]]"
               total-results="[[paginator.count]]"
@@ -212,6 +214,9 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   @property({type: Object})
   _lastParamsUsed!: object;
 
+  @property({type: Boolean})
+  lowResolutionLayout: boolean = false;
+
   private _loadReportsDataDebouncer!: Debouncer;
 
   static get observers() {
@@ -227,7 +232,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
 
   _loadReportsData(prpCountries: any, interventionId: number, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
     if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) ||
-     isEmptyObject(prpCountries)) {
+      isEmptyObject(prpCountries)) {
       return;
     }
 
@@ -237,7 +242,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
         const params = this._prepareReqParamsObj(interventionId);
 
         if (isJsonStrMatch(this._lastParamsUsed, params) ||
-              (this.noPdSsfaRef && !params.programme_document_ext)) {
+          (this.noPdSsfaRef && !params.programme_document_ext)) {
           return;
         }
 
@@ -294,7 +299,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
     if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach((k: any) => {
         if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
-            (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
+          (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
           params[k] = this.queryParams[k];
         }
       });

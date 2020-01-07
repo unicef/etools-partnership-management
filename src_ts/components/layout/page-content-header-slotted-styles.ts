@@ -9,6 +9,12 @@ export const pageContentHeaderSlottedStyles = html`
       @apply --layout-end;
     }
 
+    @media (max-width: 576px) {
+      .content-header-actions {
+        --layout-horizontal_-_display: block;
+      }
+    }
+
     .content-header-actions .action {
       @apply --layout-horizontal;
       @apply --layout-end;

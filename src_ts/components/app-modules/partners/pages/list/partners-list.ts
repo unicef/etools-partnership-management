@@ -2,6 +2,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {store, RootState} from '../../../../../store';
 import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-media-query/iron-media-query.js';
 
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
@@ -67,6 +68,9 @@ class PartnersList extends
           text-transform: none;
         }
       </style>
+
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+
       <template is="dom-if" if="[[stampListData]]">
         <partners-list-data id="partners"
                             filtered-partners="{{filteredPartners}}"
@@ -148,6 +152,7 @@ class PartnersList extends
       <div id="list" elevation="1" class="paper-material hidden">
 
         <etools-data-table-header
+            low-resolution-layout="[[lowResolutionLayout]]
             id="listHeader"
             label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
           <etools-data-table-column class="flex" field="vendor_number" sortable>
@@ -167,7 +172,7 @@ class PartnersList extends
         <template id="rows" is="dom-repeat"
                   items="[[filteredPartners]]" as="partner"
                   initial-count="10" on-dom-change="_listDataChanged">
-          <etools-data-table-row details-opened="[[detailsOpened]]">
+          <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
                 <span class="col-data flex">
                   <a class="vendor-nr truncate"
@@ -226,6 +231,7 @@ class PartnersList extends
         </template>
 
         <etools-data-table-footer
+            low-resolution-layout="[[lowResolutionLayout]]"
             page-size="{{paginator.page_size}}"
             page-number="{{paginator.page}}"
             total-results="[[paginator.count]]"
@@ -271,6 +277,9 @@ class PartnersList extends
 
   @property({type: Array})
   _governmentLockedPartnerTypes: string[] = ['Government'];
+
+  @property({type: Boolean})
+  lowResolutionLayout: boolean = false;
 
   private _updateShownFilterDebouncer!: Debouncer;
   private _actionsChangedDebouncer!: Debouncer;

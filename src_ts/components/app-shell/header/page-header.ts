@@ -133,9 +133,18 @@ class PageHeader extends connect(store)(
         }
       }
       @media (max-width: 576px) {
+        #app-logo {
+          width: 60px;
+        }
+        .envWarning {
+          font-size: 10px;
+        }
         #refresh{
           width: 24px;
           padding: 0px
+        }
+        etools-app-selector {
+          display: none;
         }
       }
       </style>
