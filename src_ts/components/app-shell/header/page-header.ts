@@ -86,6 +86,7 @@ class PageHeader extends connect(store)(
           color: var(--nonprod-text-warn-color);
           font-weight: 700;
           font-size: 18px;
+          line-height: 20px;
         }
 
         support-btn {
@@ -101,6 +102,51 @@ class PageHeader extends connect(store)(
             display: none;
           }
         }
+        @media (max-width: 920px) {
+          .envWarning {
+            font-size: 14px;
+            line-height: 16px;
+          }
+          .titlebar img {
+            margin: 0 8px 0 12px;
+          }
+        }
+        @media (max-width: 768px) {
+          #app-logo {
+            width: 90px;
+          }
+          .envLong {
+            display: none;
+          }
+          etools-app-selector {
+            width: 42px;
+          }
+          .titlebar img {
+            margin: 0 8px 0 12px;
+          }
+          support-btn {
+            margin-left: 4px;
+          }
+          etools-profile-dropdown{
+            margin-left: 0px;
+            width: 40px;
+        }
+      }
+      @media (max-width: 576px) {
+        #app-logo {
+          width: 60px;
+        }
+        .envWarning {
+          font-size: 10px;
+        }
+        #refresh{
+          width: 24px;
+          padding: 0px
+        }
+        etools-app-selector {
+          display: none;
+        }
+      }
       </style>
 
       <app-toolbar sticky class="content-align">
@@ -109,7 +155,7 @@ class PageHeader extends connect(store)(
           <etools-app-selector id="app-selector"></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
           <template is="dom-if" if="[[environment]]">
-            <div class="envWarning"> - [[environment]] TESTING ENVIRONMENT</div>
+            <div class="envWarning"> - [[environment]] <span class='envLong'>TESTING ENVIRONMENT<span></div>
           </template>
         </div>
         <div class="content-align">
@@ -195,7 +241,7 @@ class PageHeader extends connect(store)(
       this.users = [...state.commonData.unicefUsersData];
     }
     if (state.commonData.currentUser !== null &&
-        !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
+      !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
 
       if (this.profile && this.profile.countries_available) {
@@ -263,7 +309,7 @@ class PageHeader extends connect(store)(
 
   protected _getModifiedFields(originalData: any, newData: any) {
     const modifiedFields: GenericObject = {};
-    this.editableFields.forEach(function(field: any) {
+    this.editableFields.forEach(function (field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];
       }
