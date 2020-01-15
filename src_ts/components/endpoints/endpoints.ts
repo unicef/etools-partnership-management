@@ -88,7 +88,7 @@ const pmpEdpoints = {
   locations: {
     url: '/api/locations-light',
     exp: 60 * 60 * 60 * 1000, // 60h
-    cachingKey: 'locations'
+    sharedDbCachingKey: 'locations'
   },
   offices: {
     url: '/api/offices',

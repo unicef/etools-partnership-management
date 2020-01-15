@@ -4,7 +4,13 @@ import Dexie from 'dexie';
  * For db versioning check: http://dexie.org/docs/Tutorial/Design
  */
 declare global {
-  interface Window { EtoolsPmpApp: any; EtoolsRequestCacheDb: any; EtoolsLogsLevel: any; EtoolsEsmmFitIntoEl: any }
+  interface Window {
+    EtoolsPmpApp: any;
+    EtoolsRequestCacheDb: any;
+    EtoolsSharedDb: any,
+    EtoolsLogsLevel: any;
+    EtoolsEsmmFitIntoEl: any
+  }
 }
 
 window.EtoolsLogsLevel = 'INFO';
@@ -15,7 +21,7 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
   partners: 'id, name, rating, vendor_number',
   agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
   interventions: 'id, number, partner_name, document_type, ' +
-      'cp_outputs, status, title, start, end, sections, unicef_focal_points, offices',
+    'cp_outputs, status, title, start, end, sections, unicef_focal_points, offices',
 
   // etools-ajax v2.0.0 requirements
   listsExpireMapTable: '&name, expire',
@@ -24,6 +30,13 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
 
 // configure app dexie db to be used for caching
 window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || window.EtoolsPmpApp.DexieDb;
+
+window.EtoolsSharedDb = new Dexie('EtoolsSharedDb');
+window.EtoolsSharedDb.version(1).stores({
+  collections: '&cacheKey, data, expire'
+});
+
+
 
 export const BASE_URL = '/pmp/';
 
