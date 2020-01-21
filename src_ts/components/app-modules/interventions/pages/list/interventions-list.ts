@@ -198,7 +198,7 @@ class InterventionsList extends connect(store)(
               <a class="pd-ref truncate"
                 href="interventions/[[intervention.id]]/details"
                 title="[[getDisplayValue(intervention.number)]]"
-                on-tap="_triggerInterventionLoadingMsg">
+                on-click="_triggerInterventionLoadingMsg">
                 [[getDisplayValue(intervention.number)]]
               </a>
             </span>
