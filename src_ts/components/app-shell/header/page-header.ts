@@ -133,18 +133,22 @@ class PageHeader extends connect(store)(
         }
       }
       @media (max-width: 576px) {
+        etools-app-selector {
+        --app-selector-button-padding: 18px 8px;
+        }
         #app-logo {
-          width: 60px;
+          display: none;
         }
         .envWarning {
           font-size: 10px;
+          margin-left: 2px;
         }
         #refresh{
           width: 24px;
           padding: 0px
         }
-        etools-app-selector {
-          display: none;
+        app-toolbar {
+          padding-right: 4px;
         }
       }
       </style>
@@ -155,7 +159,10 @@ class PageHeader extends connect(store)(
           <etools-app-selector id="app-selector"></etools-app-selector>
           <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
           <template is="dom-if" if="[[environment]]">
-            <div class="envWarning"> - [[environment]] <span class='envLong'>TESTING ENVIRONMENT<span></div>
+            <div class="envWarning">
+              <span class='envLong'> - </span>[[environment]]
+              <span class='envLong'>TESTING ENVIRONMENT<span>
+            </div>
           </template>
         </div>
         <div class="content-align">
