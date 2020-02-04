@@ -31,13 +31,6 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
 // configure app dexie db to be used for caching
 window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || window.EtoolsPmpApp.DexieDb;
 
-window.EtoolsSharedDb = new Dexie('EtoolsSharedDb');
-window.EtoolsSharedDb.version(1).stores({
-  collections: '&cacheKey, data, expire'
-});
-
-
-
 export const BASE_URL = '/pmp/';
 
 const PROD_DOMAIN = 'etools.unicef.org';
@@ -85,7 +78,7 @@ export const tokenEndpointsHost = (host: string) => {
   if (host === 'prp') {
     switch (_checkEnvironment()) {
       case 'LOCAL':
-        return 'https://dev.partnerreportingportal.org';
+        return 'http://127.0.0.1:8081';
       case 'DEVELOPMENT':
         return 'https://dev.partnerreportingportal.org';
       case 'DEMO':
