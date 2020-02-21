@@ -8,7 +8,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-// import { LitElement, html, property, PropertyValues } from '@polymer/lit-element';
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
@@ -435,7 +434,7 @@ class AppShell extends connect(store)(
 
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
-    this._drawerOpened = Boolean((this.$.drawer as AppDrawerElement).opened);
+    store.dispatch(updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened)));
   }
 
   // @ts-ignore
@@ -485,7 +484,7 @@ class AppShell extends connect(store)(
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
     const defer: any = {};
-    defer.promise = new Promise(function(resolve, reject) {
+    defer.promise = new Promise(function (resolve, reject) {
       defer.resolve = resolve;
       defer.reject = reject;
     });

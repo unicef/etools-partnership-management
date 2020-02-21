@@ -4,7 +4,13 @@ import Dexie from 'dexie';
  * For db versioning check: http://dexie.org/docs/Tutorial/Design
  */
 declare global {
-  interface Window { EtoolsPmpApp: any; EtoolsRequestCacheDb: any; EtoolsLogsLevel: any; EtoolsEsmmFitIntoEl: any }
+  interface Window {
+    EtoolsPmpApp: any;
+    EtoolsRequestCacheDb: any;
+    EtoolsSharedDb: any,
+    EtoolsLogsLevel: any;
+    EtoolsEsmmFitIntoEl: any
+  }
 }
 
 window.EtoolsLogsLevel = 'INFO';
@@ -15,7 +21,7 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
   partners: 'id, name, rating, vendor_number',
   agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
   interventions: 'id, number, partner_name, document_type, ' +
-      'cp_outputs, status, title, start, end, sections, unicef_focal_points, offices',
+    'cp_outputs, status, title, start, end, sections, unicef_focal_points, offices',
 
   // etools-ajax v2.0.0 requirements
   listsExpireMapTable: '&name, expire',
@@ -72,7 +78,7 @@ export const tokenEndpointsHost = (host: string) => {
   if (host === 'prp') {
     switch (_checkEnvironment()) {
       case 'LOCAL':
-        return 'https://dev.partnerreportingportal.org';
+        return 'http://127.0.0.1:8081';
       case 'DEVELOPMENT':
         return 'https://dev.partnerreportingportal.org';
       case 'DEMO':

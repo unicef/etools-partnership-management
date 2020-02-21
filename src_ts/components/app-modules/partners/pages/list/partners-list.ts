@@ -178,7 +178,7 @@ class PartnersList extends
                   <a class="vendor-nr truncate"
                      href$="[[currentModule]]/[[partner.id]]/details"
                      title$="[[getDisplayValue(partner.vendor_number)]]"
-                     on-tap="_triggerPartnerLoadingMsg">
+                     on-click="_triggerPartnerLoadingMsg">
                     [[getDisplayValue(partner.vendor_number)]]
                   </a>
                 </span>
