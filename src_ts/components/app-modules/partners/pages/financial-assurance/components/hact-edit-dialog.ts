@@ -144,7 +144,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
 
   // Programmatic Visits changes here due to different endpoint for PATCH
   @property({type: Array})
-  selectedAudits!: [];
+  selectedAudits!: string[];
 
   @property({type: Array})
   auditOptions = [
