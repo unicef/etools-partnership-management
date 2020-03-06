@@ -15,6 +15,12 @@ export const gridLayoutStyles = html`
     .col.layout-vertical {
       @apply --layout-vertical;
     }
+    .space-between {
+      @apply --layout-justified;
+    }
+    .space-around {
+      @apply --layout-around-justified;
+    }
     .layout-wrap {
       @apply --layout-wrap;
     }
@@ -151,5 +157,5 @@ export const gridLayoutStyles = html`
     }
 
     /* TODO: more classes will e added if needed */
-    
+
   </style>`;

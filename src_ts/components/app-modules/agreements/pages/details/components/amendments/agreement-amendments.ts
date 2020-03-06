@@ -102,7 +102,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
             Use the amendment template for documenting changes and signing.
           </div>
           <!-- Download template btn -->
-          <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx">
+          <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx" download>
             <paper-button id="download-template-btn" class="secondary-btn">
               <iron-icon icon="file-download"></iron-icon>
               Download template
