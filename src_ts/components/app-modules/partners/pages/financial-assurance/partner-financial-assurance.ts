@@ -30,6 +30,8 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../models/partners.models';
 import {LabelAndValue} from '../../../../../typings/globals.types';
+import './components/hact-edit-dialog';
+import clone from 'lodash-es/clone';
 
 /**
  * @polymer
@@ -254,6 +256,12 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
       <etools-content-panel panel-title="Assurance Activities"
                             class="content-section">
+        <div slot="panel-btns">
+          <paper-icon-button icon="create"
+                             title="Edit"
+                             on-click="_openHactEditDialog">
+          </paper-icon-button>
+        </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
 
@@ -458,6 +466,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
   @property({type: Boolean})
   editMode!: boolean;
 
+  private _hactDialog!: any;
+
   static get observers() {
     return [
       '_paginate(paginator.page, paginator.page_size)'
@@ -479,16 +489,36 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
     this.addEventListener('assessment-updated-step2', this._assessmentUpdated as any);
     this.addEventListener('assessment-added-step2', this._assessmentAdded as any);
+
+    this._createHactEditDialog();
+
+  }
+
+  _createHactEditDialog() {
+    this._hactDialog = document.createElement('hact-edit-dialog') as any;
+    this._hactDialog.setAttribute('id', '_hactDialog');
+
+    document.querySelector('body')!.appendChild(this._hactDialog);
+    this._refreshPartner = this._refreshPartner.bind(this);
+    this._hactDialog.addEventListener('hact-values-saved', this._refreshPartner);
+  }
+
+  _refreshPartner(e: CustomEvent) {
+    this.partner = clone(e.detail.partner);
   }
 
   _removeListeners() {
     this.removeEventListener('assessment-updated-step2', this._assessmentUpdated as any);
     this.removeEventListener('assessment-added-step2', this._assessmentAdded as any);
+    this._hactDialog.removeEventListener('hact-values-saved', this._refreshPartner as any);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this._removeListeners();
+    if (this._hactDialog) {
+      document.querySelector('body')!.removeChild(this._hactDialog);
+    }
   }
 
   public _init(engagements: any) {
@@ -529,7 +559,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
     this.sendRequest(requestOptions)
       .then((results: any) => this._init(results))
-    // @ts-ignore
+      // @ts-ignore
       .catch((err: any) => this.handleErrorResponse(err));
 
     this.set('basisOptions', []);
@@ -593,8 +623,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
   public _disableBasisForRiskRating(editMode: boolean, typeOfAssessment: any, rating: any) {
     return !editMode ||
-        (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
-        ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1;
+      (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
+      ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1;
   }
 
   _assessmentUpdated(e: CustomEvent) {
@@ -629,6 +659,11 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
       value: basisVal,
       label: basisVal
     });
+  }
+
+  _openHactEditDialog() {
+    this._hactDialog.partner = clone(this.partner);
+    this._hactDialog.openDialog();
   }
 }
 

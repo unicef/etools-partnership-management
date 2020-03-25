@@ -206,7 +206,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                 <a class="ag-ref truncate"
                   href="agreements/[[agreement.id]]/details"
                   title="[[getDisplayValue(agreement.agreement_number)]]"
-                  on-tap="_triggerAgreementLoadingMsg">
+                  on-click="_triggerAgreementLoadingMsg">
                   [[getDisplayValue(agreement.agreement_number)]]
                 </a>
               </span>
