@@ -72,7 +72,7 @@ export const tokenEndpointsHost = (host: string) => {
   if (host === 'prp') {
     switch (_checkEnvironment()) {
       case 'LOCAL':
-        return 'https://dev.partnerreportingportal.org';
+        return 'http://127.0.0.1:8081';
       case 'DEVELOPMENT':
         return 'https://dev.partnerreportingportal.org';
       case 'DEMO':
