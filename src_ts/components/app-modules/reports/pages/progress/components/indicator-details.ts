@@ -86,7 +86,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
         }
 
         .tab-header dd::after {
-          content: '\A';
+          content: '\\A';
           white-space: pre;
         }
 
@@ -192,8 +192,8 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
   _shouldRefreshIndicatorDetails() {
     return this.indicatorReportId &&
-        (isEmptyObject(this.indicatorReport) ||
-          (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)));
+      (isEmptyObject(this.indicatorReport) ||
+        (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)));
   }
 
   getIndicatorDetails() {
