@@ -82,7 +82,7 @@ class EtoolsProgressBar extends PolymerElement {
     if (isNaN(value)) {
       return 0;
     }
-    value = (value > 100) ? 100 : value; // cannot be bigger than 100
+    // value = (value > 100) ? 100 : value; // cannot be bigger than 100
     value = (value < 0) ? 0 : value; // cannot be less that 0
 
     this.updateStyles({'--etools-progress-width-on-print': value + '%'});
