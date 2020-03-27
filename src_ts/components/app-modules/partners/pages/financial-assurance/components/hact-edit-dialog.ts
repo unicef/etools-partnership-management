@@ -74,7 +74,6 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
                 <div class="layout-horizontal space-around">
                   <paper-input type="number"
                                 allowed-pattern="[0-9]"
-                                pattern="[[digitsNotStartingWith0Pattern]]"
                                 auto-validate
                                 error-message="Invalid"
                                 value="{{editableValues.planned_visits.programmatic_q1}}"
@@ -82,20 +81,17 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
                   <paper-input value="{{editableValues.planned_visits.programmatic_q2}}"
                                 type="number"
                                 allowed-pattern="[0-9]"
-                                pattern="[[digitsNotStartingWith0Pattern]]"
                                 auto-validate
                                 error-message="Invalid"
                                 label="Q2"></paper-input>
                   <paper-input value="{{editableValues.planned_visits.programmatic_q3}}"
                                 type="number"
                                 allowed-pattern="[0-9]"
-                                pattern="[[digitsNotStartingWith0Pattern]]"
                                 auto-validate
                                 error-message="Invalid"
                                 label="Q3"></paper-input>
                   <paper-input type="number"
                                 allowed-pattern="[0-9]"
-                                pattern="[[digitsNotStartingWith0Pattern]]"
                                 auto-validate
                                 error-message="Invalid"
                                 value="{{editableValues.planned_visits.programmatic_q4}}"
@@ -110,7 +106,6 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
                 <paper-input value="{{editableValues.planned_engagement.spot_check_follow_up}}"
                               type="number"
                               allowed-pattern="[0-9]"
-                              pattern="[[digitsNotStartingWith0Pattern]]"
                               auto-validate
                               error-message="Invalid">
                 </paper-input>
@@ -122,28 +117,24 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
               <div class="layout-horizontal space-around">
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            pattern="[[digitsNotStartingWith0Pattern]]"
                             auto-validate
                             error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q1}}"
                             label="Q1"></paper-input>
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            pattern="[[digitsNotStartingWith0Pattern]]"
                             auto-validate
                             error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q2}}"
                             label="Q2"></paper-input>
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            pattern="[[digitsNotStartingWith0Pattern]]"
                             auto-validate
                             error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q3}}"
                             label="Q3"></paper-input>
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            pattern="[[digitsNotStartingWith0Pattern]]"
                             auto-validate
                             error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q4}}"
