@@ -500,6 +500,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
     document.querySelector('body')!.appendChild(this._hactDialog);
     this._refreshPartner = this._refreshPartner.bind(this);
+    this._hactDialog.set('toastSource', this);
     this._hactDialog.addEventListener('hact-values-saved', this._refreshPartner);
   }
 
