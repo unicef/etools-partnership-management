@@ -6,7 +6,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
-import {formatServerErrorAsText} from '../../../../../utils/ajax-errors-parser'
+import {formatServerErrorAsText} from '../../../../../utils/ajax-errors-parser';
 
 
 class HactEditDialog extends EndpointsMixin(PolymerElement) {
