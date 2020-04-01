@@ -105,9 +105,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
               <div class="layout-horizontal space-around">
                 <paper-input value="{{editableValues.planned_engagement.spot_check_follow_up}}"
                               type="number"
-                              allowed-pattern="[0-9]"
-                              auto-validate
-                              error-message="Invalid">
+                              allowed-pattern="[0-9]">
                 </paper-input>
               </div>
             </div>
@@ -117,26 +115,18 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
               <div class="layout-horizontal space-around">
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            auto-validate
-                            error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q1}}"
                             label="Q1"></paper-input>
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            auto-validate
-                            error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q2}}"
                             label="Q2"></paper-input>
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            auto-validate
-                            error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q3}}"
                             label="Q3"></paper-input>
                 <paper-input type="number"
                             allowed-pattern="[0-9]"
-                            auto-validate
-                            error-message="Invalid"
                             value="{{editableValues.planned_engagement.spot_check_planned_q4}}"
                             label="Q4"></paper-input>
               </div>
@@ -197,7 +187,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
   ];
 
   @property({type: Object})
-  toastSource!: any;
+  toastSource!: PolymerElement;
 
   openDialog() {
     (this.$.editPartnersDialog as EtoolsDialog).opened = true;
@@ -264,7 +254,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       })
       .catch((err: any) => {
         (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
-        fireEvent(this.toastSource, 'toast', {text: formatServerErrorAsText(err)});
+        fireEvent(this.toastSource, 'toast', {text: formatServerErrorAsText(err), showCloseBtn: true});
       });
   }
 }
