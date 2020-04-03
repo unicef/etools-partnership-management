@@ -6,7 +6,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
-import {formatServerErrorAsText} from '../../../../../utils/ajax-errors-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
 
 
 class HactEditDialog extends EndpointsMixin(PolymerElement) {
@@ -254,7 +254,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       })
       .catch((err: any) => {
         (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
-        fireEvent(this.toastSource, 'toast', {text: formatServerErrorAsText(err), showCloseBtn: true});
+        parseRequestErrorsAndShowAsToastMsgs(err, this.toastSource, false);
       });
   }
 }
