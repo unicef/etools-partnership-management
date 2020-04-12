@@ -125,7 +125,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
             <div class="col col-2"><strong> AUDIT </strong></div>
           </div>
           <div class="row-h">
-            <div class="col col-2"> Risk Rating</div>
+            <div class="col col-2"> HACT Risk Rating</div>
             <div class="col col-2"> Current CP Cycle</div>
             <div class="col col-2"> Current Year (Jan - Dec)</div>
             <div class="col col-2"> Planned / M.R. / Completed</div>
