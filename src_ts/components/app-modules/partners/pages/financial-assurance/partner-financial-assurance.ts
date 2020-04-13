@@ -189,14 +189,14 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
       <etools-content-panel panel-title="[[_getYear()]] Overview" class="content-section">
         <div class="row-h overview-header">
-            <etools-data-table-column class="col col-2">
+            <etools-data-table-column class="col col-1">
                 HACT Risk Rating
             </etools-data-table-column>
             <etools-data-table-column class="col col-2">
                 Type of Assessment - Date of Assessment
             </etools-data-table-column>
-            <etools-data-table-column class="col col-2 center-align">
-                Cash Transfers (USD)<br> (Jan-Dec)
+            <etools-data-table-column class="col col-1 center-align">
+                Cash Transfers (USD)
             </etools-data-table-column>
             <etools-data-table-column class="col col-2 center-align">
                 PROG. VISIT<br> Planned / MR / Completed
@@ -207,17 +207,23 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
             <etools-data-table-column class="col col-2 center-align">
                 AUDIT <br> Required / Completed
             </etools-data-table-column>
+            <etools-data-table-column class="col col-1 center-align">
+                PSEA risk Rating
+            </etools-data-table-column>
+            <etools-data-table-column class="col col-1 center-align">
+                Last PSEA Assessment Date 
+            </etools-data-table-column>
         </div>
 
         <div class="row-h overview-row">
-            <div class="col col-6 vision">
+            <div class="col col-4 vision">
                 <div class="from-vision">from VISION</div>
-                <div class="col-4">
+                <div class="col-3">
                   <span class$="[[getRiskRatingClass(partner.rating)]]">
                     [[getRiskRatingValue(partner.rating)]]
                   </span>
                 </div>
-                <div class="col col-4">[[partner.type_of_assessment]] <br> [[getDateDisplayValue(partner.last_assessment_date)]]</div>
+                <div class="col col-5">[[partner.type_of_assessment]] <br> [[getDateDisplayValue(partner.last_assessment_date)]]</div>
                 <div class="col col-4 center-align">
                     $ [[displayCurrencyAmount(partner.total_ct_ytd, '0', 0)]]
                 </div>
@@ -240,6 +246,14 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
                     <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
                     / [[partner.hact_values.audits.completed]]
                 </strong>
+            </div>
+            <div class="col-1 col center-align">
+              <span class$="[[getRiskRatingClass(partner.psea_risk_rating)]]">
+                [[getRiskRatingValue(partner.psea_risk_rating)]]
+              </span>
+            </div>
+            <div class="col col-1 center-align">
+                [[getDateDisplayValue(partner.psea_assessment_date)]]
             </div>
         </div>
         <div class="row-h overview-row">
