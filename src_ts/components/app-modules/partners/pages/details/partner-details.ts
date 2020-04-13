@@ -143,7 +143,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           </div>
           <div class="row-h flex-c">
             <div class="col col-4">
-              <!-- Risk rating -->
+              <!-- HACT Risk rating -->
                 <etools-form-element-wrapper label="HACT Risk Rating"
                                              no-placeholder>
                   <span class$="[[getRiskRatingClass(partner.rating)]]">
@@ -163,6 +163,25 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 <iron-icon icon="date-range" slot="prefix"></iron-icon>
               </etools-form-element-wrapper>
 
+            </div>
+          </div>
+          
+          <div class="row-h flex-c">
+            <div class="col col-4">
+              <!-- PSEA risk rating -->
+                <etools-form-element-wrapper label="PSEA risk rating"
+                                             no-placeholder>
+                  <span class$="[[getRiskRatingClass(partner.psea_risk_rating)]]">
+                    [[getRiskRatingValue(partner.psea_risk_rating)]]
+                  </span>
+                </etools-form-element-wrapper>
+            </div>
+            
+            <div class="col col-4">
+              <!--Last PSEA Assess. Date-->
+              <etools-form-element-wrapper label="Last PSEA Assessment Date" value="[[getDateDisplayValue(partner.psea_assessment_date)]]">
+                <iron-icon icon="date-range" slot="prefix"></iron-icon>
+              </etools-form-element-wrapper>
             </div>
           </div>
         </etools-content-panel>
