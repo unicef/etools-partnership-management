@@ -190,7 +190,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
       <etools-content-panel panel-title="[[_getYear()]] Overview" class="content-section">
         <div class="row-h overview-header">
             <etools-data-table-column class="col col-2">
-                Risk Rating
+                HACT Risk Rating
             </etools-data-table-column>
             <etools-data-table-column class="col col-2">
                 Type of Assessment - Date of Assessment
