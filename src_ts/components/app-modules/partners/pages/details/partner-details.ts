@@ -144,7 +144,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           <div class="row-h flex-c">
             <div class="col col-4">
               <!-- Risk rating -->
-                <etools-form-element-wrapper label="Partner Risk Rating"
+                <etools-form-element-wrapper label="HACT Risk Rating"
                                              no-placeholder>
                   <span class$="[[getRiskRatingClass(partner.rating)]]">
                     [[getRiskRatingValue(partner.rating)]]
