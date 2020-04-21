@@ -89,7 +89,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
   @property({type: Boolean, reflectToAttribute: true, observer: '_requiredChanged'})
   required!: boolean;
 
-  @property({type: Boolean})
+  @property({type: Boolean, notify: true})
   noPlaceholder: boolean = false;
 
   connectedCallback() {
@@ -116,7 +116,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
 
   _getDisplayValue(value: string) {
     return (typeof value === 'string' && value.trim() !== '')
-      ? value.trim()
+      ? (value == '-' ? 'N/A' : value.trim())
       : (this.noPlaceholder ? '' : '—');
   }
 
