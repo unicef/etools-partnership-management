@@ -89,7 +89,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
   @property({type: Boolean, reflectToAttribute: true, observer: '_requiredChanged'})
   required!: boolean;
 
-  @property({type: Boolean, notify: true})
+  @property({type: Boolean})
   noPlaceholder: boolean = false;
 
   connectedCallback() {
