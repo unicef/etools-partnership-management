@@ -267,6 +267,9 @@ class PartnersList extends
   riskRatings: LabelAndValue[] = [];
 
   @property({type: Array})
+  seaRiskRatings: LabelAndValue[] = [];
+
+  @property({type: Array})
   selectedPartnerTypes: any[] = [];
 
   @property({type: Array})
@@ -274,6 +277,9 @@ class PartnersList extends
 
   @property({type: Array})
   selectedRiskRatings: any[] = [];
+
+  @property({type: Array})
+  selectedSEARiskRatings: any[] = [];
 
   @property({type: Boolean})
   showHidden: boolean = false;
@@ -298,11 +304,11 @@ class PartnersList extends
 
   public static get observers() {
     return [
-      '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, showOnlyGovernmentType)',
+      '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, seaRiskRatings, showOnlyGovernmentType)',
       'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
-      'selectedRiskRatings.length, showHidden)',
+      'selectedRiskRatings.length, selectedSEARiskRatings.length, showHidden)',
       '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
-      'paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
+      'selectedSEARiskRatings.length, paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -320,6 +326,7 @@ class PartnersList extends
     if (!isJsonStrMatch(this.riskRatings, state.commonData!.partnerRiskRatings)) {
       this.riskRatings = [...state.commonData!.partnerRiskRatings];
     }
+    //TODO set seaRiskRatings
   }
 
   public connectedCallback() {
@@ -335,8 +342,8 @@ class PartnersList extends
     this.listAttachedCallback(this.active, 'Loading...', 'partners-list');
   }
 
-  public _initFiltersMenuList(partnerTypes: any, csoTypes: any, riskRatings: any) {
-    if (!partnerTypes || !csoTypes || !riskRatings) {
+  public _initFiltersMenuList(partnerTypes: any, csoTypes: any, riskRatings: any, seaRiskRatings: any) {
+    if (!partnerTypes || !csoTypes || !riskRatings || !seaRiskRatings) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
     }
@@ -365,12 +372,23 @@ class PartnersList extends
         disabled: this.showOnlyGovernmentType || csoTypes.length === 0
       },
       {
-        filterName: 'Risk Rating',
+        filterName: 'HACT Risk Rating',
         type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
         selectedValue: [],
         path: 'selectedRiskRatings',
         selected: true,
+        minWidth: '160px',
+        hideSearch: false,
+        disabled: riskRatings.length === 0
+      },
+      {
+        filterName: 'SEA Risk Rating',
+        type: 'etools-dropdown-multi',
+        selectionOptions: seaRiskRating,
+        selectedValue: [],
+        path: 'selectedSEARiskRatings',
+        selected: false,
         minWidth: '160px',
         hideSearch: false,
         disabled: riskRatings.length === 0
@@ -404,8 +422,13 @@ class PartnersList extends
             allowEmpty: true
           },
           {
-            filterName: 'Risk Rating',
+            filterName: 'HACT Risk Rating',
             selectedValue: this.selectedRiskRatings,
+            allowEmpty: true
+          },
+          {
+            filterName: 'SEA Risk Rating',
+            selectedValue: this.selectedSEARiskRatings,
             allowEmpty: true
           },
           {
@@ -437,6 +460,7 @@ class PartnersList extends
     this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
     this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
     this.set('selectedRiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings));
+    this.set('selectedSEARiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.sea_risk_ratings));
     this.set('showHidden', urlQueryParams.hidden ? true : false);
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
@@ -485,6 +509,7 @@ class PartnersList extends
       this.selectedPartnerTypes,
       this.selectedCsoTypes,
       this.selectedRiskRatings,
+      this.selectedSEARiskRatings,
       this.paginator.page,
       this.paginator.page_size,
       this.showHidden,
@@ -501,6 +526,7 @@ class PartnersList extends
       partner_types: this.selectedPartnerTypes,
       cso_types: this.selectedCsoTypes,
       risk_ratings: this.selectedRiskRatings,
+      sea_risk_ratings: this.selectedSEARiskRatings,
       hidden: this.showHidden ? 'true' : '',
       sort: this.sortOrder
     });
@@ -513,6 +539,7 @@ class PartnersList extends
       partner_type: this.selectedPartnerTypes,
       cso_type: this.selectedCsoTypes,
       rating: this.selectedRiskRatings,
+      sea_risk_rating: this.selectedSEARiskRatings,
       hidden: this.showHidden ? 'true' : 'false'
     };
     return this._buildCsvExportUrl(params, endpointUrl);
@@ -542,6 +569,7 @@ class PartnersList extends
     }
     this.set('selectedCsoTypes', []);
     this.set('selectedRiskRatings', []);
+    this.set('selectedSEARiskRatings', []);
     this.set('q', '');
     this.resetPageNumber();
     this.set('showHidden', false);

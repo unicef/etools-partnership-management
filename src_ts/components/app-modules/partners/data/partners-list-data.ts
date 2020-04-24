@@ -50,7 +50,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
   }
 
   public query(field: string, order: string, searchString: string, partnerTypes: string[], csoTypes: string[],
-    riskRatings: string[], pageNumber: number, pageSize: number, showHidden: boolean,
+    riskRatings: string[], seaRiskRatings: string[], pageNumber: number, pageSize: number, showHidden: boolean,
     showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
@@ -95,14 +95,18 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
+        if (!isEmptyObject(seaRiskRatings) && seaRiskRatings.indexOf(partner.sea_risk_rating_name) === -1) {
+          return false;
+        }
+
         if (searchString && searchString.length) {
           let vnMatch = true;
           if (partner.vendor_number) {
             vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
           }
           if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
-              partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
-              vnMatch) {
+            partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+            vnMatch) {
             return false;
           }
         }
