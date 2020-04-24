@@ -143,8 +143,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           </div>
           <div class="row-h flex-c">
             <div class="col col-4">
-              <!-- Risk rating -->
-                <etools-form-element-wrapper label="Partner Risk Rating"
+              <!-- HACT Risk rating -->
+                <etools-form-element-wrapper label="HACT Risk Rating"
                                              no-placeholder>
                   <span class$="[[getRiskRatingClass(partner.rating)]]">
                     [[getRiskRatingValue(partner.rating)]]
@@ -163,6 +163,25 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
                 <iron-icon icon="date-range" slot="prefix"></iron-icon>
               </etools-form-element-wrapper>
 
+            </div>
+          </div>
+
+          <div class="row-h flex-c">
+            <div class="col col-4">
+              <!-- PSEA risk rating -->
+                <etools-form-element-wrapper label="SEA Risk Rating"
+                                             no-placeholder>
+                  <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
+                    [[getRiskRatingValue(partner.sea_risk_rating_name)]]
+                  </span>
+                </etools-form-element-wrapper>
+            </div>
+
+            <div class="col col-4">
+              <!--Last PSEA Assess. Date-->
+              <etools-form-element-wrapper label="Last PSEA Assessment Date" value="[[getDateDisplayValue(partner.psea_assessment_date)]]">
+                <iron-icon icon="date-range" slot="prefix"></iron-icon>
+              </etools-form-element-wrapper>
             </div>
           </div>
         </etools-content-panel>
@@ -387,7 +406,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
    */
   public _showCoreValueAssessment(partnerType: any, csoType: any) {
     return partnerType === 'Civil Society Organization' &&
-        (['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1);
+      (['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1);
   }
 
   public _isEmptyDate(date: any) {
