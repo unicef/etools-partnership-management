@@ -131,7 +131,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
             <div class="col col-2"> Planned / M.R. / Completed</div>
             <div class="col col-2"> Planned / Completed</div>
             <div class="col col-2"> Required / Completed</div>
-            <div class="col col-1 center-align  "> PSEA risk rating</div>
+            <div class="col col-1 center-align  "> SEA risk rating</div>
           </div>
         </div>
         <div class="hact-body">
@@ -161,8 +161,8 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
               </strong>
             </div>
             <div class="col col-1 center-align">
-              <div class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]"> 
-                [[getRiskRatingValue(partner.sea_risk_rating_name)]] 
+              <div class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
+                [[getRiskRatingValue(partner.sea_risk_rating_name)]]
               </div>
             </div>
           </div>
