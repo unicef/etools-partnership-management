@@ -90,7 +90,9 @@ export class Partner extends ModelsCommon {
   planned_engagement: PartnerPlannedEngagement = {};
   planned_visits: any[] = [];
   postal_code: string = '';
+  psea_assessment_date: string = '';
   rating: string = '';
+  sea_risk_rating_name: string = '';
   shared_with: string[] = [];
   short_name: string = '';
   staff_members: StaffMember[] = [];
