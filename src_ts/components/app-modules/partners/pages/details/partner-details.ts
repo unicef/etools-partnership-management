@@ -171,8 +171,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
               <!-- PSEA risk rating -->
                 <etools-form-element-wrapper label="PSEA risk rating"
                                              no-placeholder>
-                  <span class$="[[getRiskRatingClass(partner.psea_risk_rating)]]">
-                    [[getRiskRatingValue(partner.psea_risk_rating)]]
+                  <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
+                    [[getRiskRatingValue(partner.sea_risk_rating_name)]]
                   </span>
                 </etools-form-element-wrapper>
             </div>
