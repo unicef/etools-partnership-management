@@ -385,7 +385,7 @@ class PartnersList extends
       {
         filterName: 'SEA Risk Rating',
         type: 'etools-dropdown-multi',
-        selectionOptions: seaRiskRating,
+        selectionOptions: seaRiskRatings,
         selectedValue: [],
         path: 'selectedSEARiskRatings',
         selected: false,
