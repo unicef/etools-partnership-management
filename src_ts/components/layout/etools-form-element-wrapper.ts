@@ -116,7 +116,7 @@ class EtoolsFormElementWrapper extends PolymerElement {
 
   _getDisplayValue(value: string) {
     return (typeof value === 'string' && value.trim() !== '')
-      ? value.trim()
+      ? (value == '-' ? 'N/A' : value.trim())
       : (this.noPlaceholder ? '' : '—');
   }
 
