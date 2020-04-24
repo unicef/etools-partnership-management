@@ -145,9 +145,9 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
                         </template>
                         <template is="dom-if" if="[[!_equals(location.display_type, 'number')]]" restamp="true">
                           <dt>Location progress:</dt>
-                          <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c, true)]]</dd>
+                          <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c, 1)]]</dd>
                           <dt>Previous location progress:</dt>
-                          <dd>[[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, true)]]</dd>
+                          <dd>[[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, 1)]]</dd>
                         </template>
                       </dl>
                     </div>
