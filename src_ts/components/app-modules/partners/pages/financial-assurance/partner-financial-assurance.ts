@@ -195,7 +195,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
             <etools-data-table-column class="col col-2">
                 Type of Assessment - Date of Assessment
             </etools-data-table-column>
-            <etools-data-table-column class="col col-1 center-align">
+            <etools-data-table-column class="col col-1 center-align" title="Jan-Dec">
                 Cash Transfers (USD)
             </etools-data-table-column>
             <etools-data-table-column class="col col-2 center-align">
@@ -208,10 +208,10 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
                 AUDIT <br> Required / Completed
             </etools-data-table-column>
             <etools-data-table-column class="col col-1 center-align">
-                PSEA risk Rating
+                SEA risk Rating
             </etools-data-table-column>
             <etools-data-table-column class="col col-1 center-align">
-                Last PSEA Assessment Date 
+                Last PSEA Assessment Date
             </etools-data-table-column>
         </div>
 
