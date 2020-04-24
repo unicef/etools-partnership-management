@@ -160,8 +160,10 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                 / [[partner.hact_values.audits.completed]]
               </strong>
             </div>
-            <div class="col col-1">
-              <div class$="[[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.psea_risk_rating)]] </div>
+            <div class="col col-1 center-align">
+              <div class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]"> 
+                [[getRiskRatingValue(partner.sea_risk_rating_name)]] 
+              </div>
             </div>
           </div>
         </div>
