@@ -208,7 +208,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
                 AUDIT <br> Required / Completed
             </etools-data-table-column>
             <etools-data-table-column class="col col-1 center-align">
-                SEA risk Rating
+                SEA Risk Rating
             </etools-data-table-column>
             <etools-data-table-column class="col col-1 center-align">
                 Last PSEA Assessment Date
