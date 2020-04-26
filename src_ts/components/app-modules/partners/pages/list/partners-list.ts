@@ -164,8 +164,14 @@ class PartnersList extends
           <etools-data-table-column class="flex-2" field="partner_type">
             Partner Type
           </etools-data-table-column>
-          <etools-data-table-column class="flex" field="rating">
-            Risk Rating
+          <etools-data-table-column class="flex" field="hact_rating">
+            HACT Risk Rating
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="sea_rating">
+            SEA Risk Rating
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="psea_date">
+            Last PSEA Assess. Date
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -201,9 +207,15 @@ class PartnersList extends
               <span class="col-data flex-2" data-col-header-label="Partner Type">
                   [[_computeType(partner.cso_type, partner.partner_type)]]
                 </span>
-              <span class="col-data flex" data-col-header-label="Risk Rating" style="text-transform: capitalize">
+              <span class="col-data flex" data-col-header-label="HACT Risk Rating" style="text-transform: capitalize">
                   [[getDisplayValue(partner.rating)]]
-                </span>
+              </span>
+              <span class="col-data flex" data-col-header-label="SEA Risk Rating" style="text-transform: capitalize">
+                  [[getDisplayValue(partner.sea_risk_rating_name)]]
+              </span>
+              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date" >
+                  [[getDateDisplayValue(partner.psea_assessment_date)]]
+              </span>
             </div>
             <div slot="row-data-details">
               <div class="row-details-content flex">

@@ -119,23 +119,24 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
       <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
+            <div class="col col-5"><strong> TOTAL CASH TRANSFERS </strong></div>
             <div class="col col-2"><strong> PROG.VISIT </strong></div>
             <div class="col col-2"><strong> SPOT CHECK </strong></div>
             <div class="col col-2"><strong> AUDIT </strong></div>
           </div>
           <div class="row-h">
-            <div class="col col-2"> Risk Rating</div>
+            <div class="col col-1"> HACT Risk Rating</div>
             <div class="col col-2"> Current CP Cycle</div>
             <div class="col col-2"> Current Year (Jan - Dec)</div>
             <div class="col col-2"> Planned / M.R. / Completed</div>
             <div class="col col-2"> Planned / Completed</div>
             <div class="col col-2"> Required / Completed</div>
+            <div class="col col-1 center-align  "> SEA risk rating</div>
           </div>
         </div>
         <div class="hact-body">
           <div class="row-h">
-            <div class="col col-2 center-align">
+            <div class="col col-1">
               <div class$="[[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </div>
             </div>
             <div class="col col-2 center-align"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
@@ -158,6 +159,11 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                 <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
                 / [[partner.hact_values.audits.completed]]
               </strong>
+            </div>
+            <div class="col col-1 center-align">
+              <div class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
+                [[getRiskRatingValue(partner.sea_risk_rating_name)]]
+              </div>
             </div>
           </div>
         </div>
