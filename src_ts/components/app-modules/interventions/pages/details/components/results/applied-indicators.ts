@@ -161,7 +161,6 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _handleDeactivateError(err: any) {
-    // @ts-ignore *Defined in component
     parseRequestErrorsAndShowAsToastMsgs(err, this);
 
     logError('Deactivate indicator error occurred.', 'applies-indicators', err);
