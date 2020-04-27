@@ -289,7 +289,7 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         seaRiskRatings: action.seaRiskRatings
-      }
+      };
 
     default:
       return state;
