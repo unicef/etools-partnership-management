@@ -4,6 +4,7 @@ import {store, RootState} from '../../../../../store';
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-media-query/iron-media-query.js';
 
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input';
@@ -111,6 +112,19 @@ class PartnersList extends
                   horizontal-align="left"
                   no-dynamic-align>
               </etools-dropdown-multi>
+            </template>
+
+            <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+              <datepicker-lite id$="datepicker_[[filter.path]]"
+                                class="filter date"
+                                label="[[filter.filterName]]"
+                                placeholder="&#8212;"
+                                value="{{filter.selectedValue}}"
+                                on-date-has-changed="_filterDateHasChanged"
+                                data-filter-path$="[[filter.path]]"
+                                fire-date-has-changed
+                                selected-date-display-format="D MMM YYYY">
+              </datepicker-lite>
             </template>
 
             <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
@@ -281,6 +295,12 @@ class PartnersList extends
   @property({type: Array})
   selectedSEARiskRatings: any[] = [];
 
+  @property({type: String})
+  selectedPseaDateBefore: string = '';
+
+  @property({type: String})
+  selectedPseaDateAfter: string = '';
+
   @property({type: Boolean})
   showHidden: boolean = false;
 
@@ -306,9 +326,9 @@ class PartnersList extends
     return [
       '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, seaRiskRatings, showOnlyGovernmentType)',
       'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
-      'selectedRiskRatings.length, selectedSEARiskRatings.length, showHidden)',
+      'selectedRiskRatings.length, selectedSEARiskRatings.length,, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
       '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
-      'selectedSEARiskRatings.length, paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
+      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -326,7 +346,10 @@ class PartnersList extends
     if (!isJsonStrMatch(this.riskRatings, state.commonData!.partnerRiskRatings)) {
       this.riskRatings = [...state.commonData!.partnerRiskRatings];
     }
-    //TODO set seaRiskRatings
+
+    if (!isJsonStrMatch(this.riskRatings, state.commonData!.seaRiskRatings)) {
+      this.seaRiskRatings = [...state.commonData!.seaRiskRatings];
+    }
   }
 
   public connectedCallback() {
@@ -390,8 +413,24 @@ class PartnersList extends
         path: 'selectedSEARiskRatings',
         selected: false,
         minWidth: '160px',
-        hideSearch: false,
-        disabled: riskRatings.length === 0
+        hideSearch: true,
+        disabled: seaRiskRatings.length === 0
+      },
+      {
+        filterName: 'PSEA Assessment Date Before',
+        type: 'datepicker',
+        selectedValue: '',
+        path: 'selectedPseaDateBefore',
+        selected: false,
+        disabled: false
+      },
+      {
+        filterName: 'PSEA Assessment Date After',
+        type: 'datepicker',
+        selectedValue: '',
+        path: 'selectedPseaDateAfter',
+        selected: false,
+        disabled: false
       },
       {
         filterName: 'Show hidden',
@@ -432,6 +471,16 @@ class PartnersList extends
             allowEmpty: true
           },
           {
+            filterName: 'PSEA Assessment Date Before',
+            selectedValue: this.selectedPseaDateBefore,
+            allowEmpty: true
+          },
+          {
+            filterName: 'PSEA Assessment Date After',
+            selectedValue: this.selectedPseaDateAfter,
+            allowEmpty: true
+          },
+          {
             filterName: 'Show hidden',
             selectedValue: this.showHidden,
             allowEmpty: true
@@ -455,13 +504,17 @@ class PartnersList extends
     if (!active || !urlQueryParams) {
       return;
     }
-    this.set('initComplete', false);
-    this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-    this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
-    this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
-    this.set('selectedRiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings));
-    this.set('selectedSEARiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.sea_risk_ratings));
-    this.set('showHidden', urlQueryParams.hidden ? true : false);
+    this.setProperties({
+      initComplete: false,
+      q: urlQueryParams.q ? urlQueryParams.q : '',
+      selectedPartnerTypes: this._getSelectedPartnerTypes(urlQueryParams.partner_types),
+      selectedCsoTypes: this._getFilterUrlValuesAsArray(urlQueryParams.cso_types),
+      selectedRiskRatings: this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings),
+      selectedSEARiskRatings: this._getFilterUrlValuesAsArray(urlQueryParams.sea_risk_ratings),
+      selectedPseaDateBefore: urlQueryParams.psea_assessment_date_before ? urlQueryParams.psea_assessment_date_before : '',
+      selectedPseaDateAfter: urlQueryParams.psea_assessment_date_after ? urlQueryParams.psea_assessment_date_after : '',
+      showHidden: urlQueryParams.hidden ? true : false
+    });
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
@@ -510,6 +563,8 @@ class PartnersList extends
       this.selectedCsoTypes,
       this.selectedRiskRatings,
       this.selectedSEARiskRatings,
+      this.selectedPseaDateBefore,
+      this.selectedPseaDateAfter,
       this.paginator.page,
       this.paginator.page_size,
       this.showHidden,
@@ -527,6 +582,8 @@ class PartnersList extends
       cso_types: this.selectedCsoTypes,
       risk_ratings: this.selectedRiskRatings,
       sea_risk_ratings: this.selectedSEARiskRatings,
+      psea_assessment_date_before: this.selectedPseaDateBefore,
+      psea_assessment_date_after: this.selectedPseaDateAfter,
       hidden: this.showHidden ? 'true' : '',
       sort: this.sortOrder
     });
@@ -540,6 +597,8 @@ class PartnersList extends
       cso_type: this.selectedCsoTypes,
       rating: this.selectedRiskRatings,
       sea_risk_rating: this.selectedSEARiskRatings,
+      psea_assessment_date_before: this.selectedPseaDateBefore,
+      psea_assessment_date_after: this.selectedPseaDateAfter,
       hidden: this.showHidden ? 'true' : 'false'
     };
     return this._buildCsvExportUrl(params, endpointUrl);
@@ -570,6 +629,8 @@ class PartnersList extends
     this.set('selectedCsoTypes', []);
     this.set('selectedRiskRatings', []);
     this.set('selectedSEARiskRatings', []);
+    this.set('selectedPseaDateBefore', '');
+    this.set('selectedPseaDateAfter', '');
     this.set('q', '');
     this.resetPageNumber();
     this.set('showHidden', false);

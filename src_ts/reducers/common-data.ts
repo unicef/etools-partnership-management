@@ -31,11 +31,14 @@ import {
   UPDATE_PRP_COUNTRIES,
   UPDATE_ENV_FLAGS,
   UPDATE_CURRENT_USER,
-  CommonDataAction
+  CommonDataAction,
+  UPDATE_SEA_RISK_RATINGS
 } from '../actions/common-data';
 import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
-import {LabelAndValue, CpStructure, Country, IdAndName, GenericObject,
-  MinimalUser, User, EnvFlags, Office} from '../typings/globals.types';
+import {
+  LabelAndValue, CpStructure, Country, IdAndName, GenericObject,
+  MinimalUser, User, EnvFlags, Office
+} from '../typings/globals.types';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
 import {copy} from '../components/utils/utils';
@@ -57,6 +60,7 @@ export class CommonDataState {
   agreementAmendmentTypes: LabelAndValue[] = [];
   csoTypes: LabelAndValue[] = [];
   partnerTypes: LabelAndValue[] = [];
+  seaRiskRatings: LabelAndValue[] = [];
   assessmentTypes: LabelAndValue[] = [];
   interventionAmendmentTypes: LabelAndValue[] = [];
   currencies: LabelAndValue[] = [];
@@ -280,6 +284,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
         ...state,
         envFlags: action.envFlags
       };
+
+    case UPDATE_SEA_RISK_RATINGS:
+      return {
+        ...state,
+        seaRiskRatings: action.seaRiskRatings
+      }
 
     default:
       return state;
