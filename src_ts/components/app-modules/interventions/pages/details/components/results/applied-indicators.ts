@@ -151,7 +151,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     }).then(function(resp: any) {
       self._handleDeactivateResponse(resp);
     }).catch(function(error: any) {
-      self._handleDeactivateError(error.response);
+      self._handleDeactivateError(error);
     });
   }
 
