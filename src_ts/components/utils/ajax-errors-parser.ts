@@ -10,6 +10,10 @@ export function tryGetResponseError(response: any) {
   if (response.status >= 401) {
     return globalMessage;
   }
+
+  if (response.non_field_errors) {
+    return response.non_field_errors;
+  }
   return response.response || globalMessage;
 }
 
@@ -129,10 +133,8 @@ export function parseRequestErrorsAndShowAsToastMsgs(error: any, source: any, re
     fireEvent(source, '404');
     return;
   }
-
   const errorResponse = tryGetResponseError(error);
   const errorsString = formatServerErrorAsText(errorResponse);
-
   showErrorAsToastMsg(errorsString, source);
 }
 

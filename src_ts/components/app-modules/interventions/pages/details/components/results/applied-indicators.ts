@@ -7,6 +7,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {AppliedIndicatorEl} from './applied-indicator.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
 
 
 /**
@@ -160,14 +161,8 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _handleDeactivateError(err: any) {
-    if (err.non_field_errors) {
-      err.non_field_errors.forEach((element: string) => {
-        fireEvent(this, 'toast', {text: element, showCloseBtn: true});
-      });
-
-    } else {
-      fireEvent(this, 'toast', {text: 'Deactivate indicator error occurred', showCloseBtn: true});
-    }
+    // @ts-ignore *Defined in component
+    parseRequestErrorsAndShowAsToastMsgs(err, this);
 
     logError('Deactivate indicator error occurred.', 'applies-indicators', err);
     this.indicToDeactivateIndex = -1;
