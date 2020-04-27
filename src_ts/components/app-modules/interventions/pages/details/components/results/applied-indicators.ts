@@ -160,7 +160,15 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _handleDeactivateError(err: any) {
-    fireEvent(this, 'toast', {text: 'Deactivate indicator error occurred', showCloseBtn: true});
+    if (err.non_field_errors) {
+      err.non_field_errors.forEach((element: string) => {
+        fireEvent(this, 'toast', {text: element, showCloseBtn: true});
+      });
+
+    } else {
+      fireEvent(this, 'toast', {text: 'Deactivate indicator error occurred', showCloseBtn: true});
+    }
+
     logError('Deactivate indicator error occurred.', 'applies-indicators', err);
     this.indicToDeactivateIndex = -1;
   }
