@@ -325,10 +325,11 @@ class PartnersList extends
   public static get observers() {
     return [
       '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, seaRiskRatings, showOnlyGovernmentType)',
-      'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
-      'selectedRiskRatings.length, selectedSEARiskRatings.length,, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
+      'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length,' +
+      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
       '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
-      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
+      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, paginator.page_size, ' +
+      'sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
