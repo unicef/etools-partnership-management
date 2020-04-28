@@ -329,12 +329,10 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
       attachment_notice: null
     });
     this._terminationDialog.set('opened', true);
-
-
   }
 
   _createTerminationDialog() {
-    this._terminationDialog = document.createElement('pd-termination') as any;
+    this._terminationDialog = document.createElement('agreement-termination') as any;
     document.querySelector('body')!.appendChild(this._terminationDialog);
 
     this._terminationDialog.set('terminationElSource', this);
