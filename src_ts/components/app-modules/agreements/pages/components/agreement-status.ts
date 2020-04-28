@@ -6,6 +6,8 @@ import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import '../../data/agreement-termination';
 
 /**
  * @polymer
@@ -76,6 +78,8 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
   @property({type: String})
   deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
 
+  @property({type: Object})
+  _terminationDialog!: EtoolsDialog & {resetValidations(): void}
 
   static get observers() {
     return [
@@ -90,7 +94,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
     this._createStatusChangeWarningDialog();
     this._createDeleteConfirmationDialog();
-
+    this._createTerminationDialog();
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
     this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
 
@@ -313,7 +317,27 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
   }
 
   _setStatusTerminated() {
-    this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
+    // this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
+    if (!this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())) {
+      return;
+    }
+
+    this._terminationDialog.resetValidations();
+    this._terminationDialog.set('agreementId', this.agreementId);
+    this._terminationDialog.set('termination', {
+      date: null,
+      attachment_notice: null
+    });
+    this._terminationDialog.set('opened', true);
+
+
+  }
+
+  _createTerminationDialog() {
+    this._terminationDialog = document.createElement('pd-termination') as any;
+    document.querySelector('body')!.appendChild(this._terminationDialog);
+
+    this._terminationDialog.set('terminationElSource', this);
   }
 
   _setStatusSuspended() {
