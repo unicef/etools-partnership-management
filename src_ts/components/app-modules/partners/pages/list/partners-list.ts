@@ -348,7 +348,7 @@ class PartnersList extends
       this.riskRatings = [...state.commonData!.partnerRiskRatings];
     }
 
-    if (!isJsonStrMatch(this.riskRatings, state.commonData!.seaRiskRatings)) {
+    if (!isJsonStrMatch(this.seaRiskRatings, state.commonData!.seaRiskRatings)) {
       this.seaRiskRatings = [...state.commonData!.seaRiskRatings];
     }
   }
