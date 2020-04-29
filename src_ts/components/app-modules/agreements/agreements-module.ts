@@ -149,6 +149,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
                               agreement-type="[[agreement.agreement_type]]"
                               on-save-agreement="_validateAndTriggerAgreementSave"
                               edit-mode="[[_hasEditPermissions(permissions)]]"
+                              on-terminate-agreement="_terminateAgreement"
                               on-update-agreement-status="_updateAgreementStatus"
                               on-delete-agreement="_deleteAgreement">
             </agreement-status>

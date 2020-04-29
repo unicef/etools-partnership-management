@@ -11,6 +11,7 @@ import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import CONSTANTS from '../../../../config/app-constants';
 
 
 /**
@@ -46,7 +47,7 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
                   ok-btn-text="Terminate"
                   dialog-title="Terminate Agreement"
                   on-close="_handleDialogClosed"
-                  on-confirm-btn-clicked="_triggerPdTermination"
+                  on-confirm-btn-clicked="_triggerAgreementTermination"
                   disable-confirm-btn="[[uploadInProgress]]"
                   disable-dismiss-btn="[[uploadInProgress]]">
 
@@ -102,6 +103,9 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
   @property({type: Number})
   interventionId!: number;
 
+  @property({type: Number})
+  agreementId!: number;
+
   @property({type: Boolean})
   opened!: boolean;
 
@@ -134,7 +138,7 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
     this.resetValidations();
   }
 
-  _triggerPdTermination() {
+  _triggerAgreementTermination() {
     if (!this.validate()) {
       return;
     }
@@ -142,28 +146,41 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
       !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
       this.set('warningOpened', true);
     } else {
-      this._terminatePD();
+      this._terminateAgreement();
     }
   }
 
   _terminationConfirmed(e: CustomEvent) {
     if (e.detail.confirmed) {
-      this._terminatePD();
+      this._terminateAgreement();
     }
   }
 
-  _terminatePD() {
+  _terminateAgreement() {
     if (this.validate()) {
-      fireEvent(this.terminationElSource, 'terminate-pd',
+      fireEvent(this, 'update-agreement-status',
         {
-          interventionId: this.interventionId,
+          agreementId: this.agreementId,
           terminationData: {
             date: this.termination.date,
             fileId: this.termination.attachment_notice
-          }
+          },
+          status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
         });
+      console.log('jashdjkashdjks');
+      fireEvent(this, 'reload-list');
       this.set('opened', false);
     }
+
+    //old, we use the constant..as this will always have status terminated
+    // if (this.validate()) {
+    //   fireEvent(this, 'update-agreement-status', {
+    //     agreementId: this.agreementId,
+    //     status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
+    //   });
+    //   fireEvent(this, 'reload-list');
+    // }
+    // this.set('newStatus', '');
   }
 
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)
