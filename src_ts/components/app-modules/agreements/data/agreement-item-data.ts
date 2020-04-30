@@ -154,13 +154,25 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
         });
         const endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId});
         // fire in the hole
-        this._triggerAgreementRequest({
-          method: 'PATCH',
-          endpoint: endpoint,
-          body: {
-            status: data.status
-          }
-        });
+        if (CONSTANTS.STATUSES.Terminated.toLowerCase() == data.status) {
+          this._triggerAgreementRequest({
+            method: 'PATCH',
+            endpoint: endpoint,
+            body: {
+              status: data.status,
+              termination_doc_attachment: data.termination_doc_attachment
+            }
+          });
+        } else {
+          this._triggerAgreementRequest({
+            method: 'PATCH',
+            endpoint: endpoint,
+            body: {
+              status: data.status
+            }
+          });
+        }
+
       } else {
         fireEvent(this, 'toast',
           {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});

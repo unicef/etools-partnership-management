@@ -149,7 +149,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
                               agreement-type="[[agreement.agreement_type]]"
                               on-save-agreement="_validateAndTriggerAgreementSave"
                               edit-mode="[[_hasEditPermissions(permissions)]]"
-                              on-terminate-agreement="_terminateAgreement"
+                              on-terminate-agreement="_terminateAgreementNow"
                               on-update-agreement-status="_updateAgreementStatus"
                               on-delete-agreement="_deleteAgreement">
             </agreement-status>
@@ -287,6 +287,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   _updateAgreementStatus(e: CustomEvent) {
     e.stopImmediatePropagation();
+
     (this.$.agreementData as unknown as AgreementItemData).updateAgreementStatus(e.detail);
   }
 
@@ -506,6 +507,15 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     (this.$.agreementData as unknown as AgreementItemData).deleteAgreement(e.detail.id);
   }
 
+  _terminateAgreementNow(e: CustomEvent) {
+    e.stopImmediatePropagation();
+    const terminationData = {
+      agreementId: e.detail.agreementId,
+      termination_doc_attachment: e.detail.terminationData.fileId,
+      status: e.detail.status
+    };
+    (this.$.agreementData as unknown as AgreementItemData).updateAgreementStatus(terminationData);
+  }
 }
 
 window.customElements.define('agreements-module', AgreementsModule);

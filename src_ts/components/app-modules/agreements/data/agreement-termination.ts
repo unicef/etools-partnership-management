@@ -29,18 +29,18 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
         /* host CSS */
       }
 
-      #pdTermination {
+      #agreementTermination {
         --etools-dialog-default-btn-bg: var(--error-color);
       }
 
-      #pdTerminationConfirmation {
+      #agreementTerminationConfirmation {
         --etools-dialog-confirm-btn-bg: var(--primary-color);
       }
     </style>
 
     <etools-dialog no-padding
                   keep-dialog-open
-                  id="pdTermination"
+                  id="agreementTermination"
                   opened="{{opened}}"
                   size="md"
                   hidden$="[[warningOpened]]"
@@ -50,17 +50,6 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
                   on-confirm-btn-clicked="_triggerAgreementTermination"
                   disable-confirm-btn="[[uploadInProgress]]"
                   disable-dismiss-btn="[[uploadInProgress]]">
-
-      <div class="row-h flex-c">
-        <datepicker-lite id="terminationDate"
-                          label="Termination Date"
-                          value="{{termination.date}}"
-                          error-message="Please select termination date"
-                          auto-validate
-                          required
-                          selected-date-display-format="D MMM YYYY">
-        </datepicker-lite>
-      </div>
 
       <div class="row-h flex-c">
         <etools-upload id="terminationNotice"
@@ -84,7 +73,7 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
     </etools-dialog>
 
     <etools-dialog no-padding
-                  id="pdTerminationConfirmation"
+                  id="agreementTerminationConfirmation"
                   theme="confirmation"
                   opened="{{warningOpened}}"
                   size="md"
@@ -158,29 +147,16 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
 
   _terminateAgreement() {
     if (this.validate()) {
-      fireEvent(this, 'update-agreement-status',
+      fireEvent(this.terminationElSource, 'terminate-agreement',
         {
           agreementId: this.agreementId,
           terminationData: {
-            date: this.termination.date,
             fileId: this.termination.attachment_notice
           },
           status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
         });
-      console.log('jashdjkashdjks');
-      fireEvent(this, 'reload-list');
       this.set('opened', false);
     }
-
-    //old, we use the constant..as this will always have status terminated
-    // if (this.validate()) {
-    //   fireEvent(this, 'update-agreement-status', {
-    //     agreementId: this.agreementId,
-    //     status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
-    //   });
-    //   fireEvent(this, 'reload-list');
-    // }
-    // this.set('newStatus', '');
   }
 
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)

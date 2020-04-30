@@ -94,7 +94,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         .generate-pca[hidden] + .col {
           padding-left: 0;
         }
-        
+
         #generateMyPca {
           cursor: pointer;
         }
@@ -310,7 +310,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, 
+              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement,
                                 agreement.special_conditions_pca, agreement.status)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
@@ -344,6 +344,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 on-change-unsaved-file="_onChangeUnsavedFile">
             </etools-upload>
           </div>
+          <div class="col col-9" hidden$="[[_showTerminationDoc(agreement.termination_doc_attachment, agreement.status)]]">
+            <etools-upload
+                label="Agreement termination Doc"
+                file-url="{{agreement.termination_doc_attachment}}"
+                upload-endpoint="[[uploadEndpoint]]">
+            </etools-upload>
+          </div>
         </div>
       </etools-content-panel>
 
@@ -357,6 +364,17 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                               authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                               selected-ao="{{authorizedOfficers}}">
         </agreement-amendments>
+      </template>
+        <template is="dom-if" if="[[_showTerminationDoc(agreement.termination_doc_attachment, agreement.status)]]">
+          <agreement-amendments id="agreementTermination"
+                                class="content-section"
+                                data-items="{{agreement.amendments}}"
+                                agreement-type="[[agreement.agreement_type]]"
+                                edit-mode="[[agreement.permissions.edit.amendments]]"
+                                show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
+                                authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+                                selected-ao="{{authorizedOfficers}}">
+          </agreement-amendments>
       </template>
     `;
   }
@@ -763,6 +781,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   getCurrentDate() {
     return new Date();
+  }
+
+  _showTerminationDoc(file: string, _status: string) {
+    return file && _status == CONSTANTS.STATUSES.Terminated.toLowerCase();
   }
 }
 
