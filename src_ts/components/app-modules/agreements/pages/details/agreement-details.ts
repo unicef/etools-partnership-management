@@ -344,10 +344,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 on-change-unsaved-file="_onChangeUnsavedFile">
             </etools-upload>
           </div>
-          <div class="col col-6" hidden$="[[_typeMatches(agreement.termination_doc_atachment, agreement.status)]]">
+          <div class="col col-6" hidden$="[[_hideTerminationDoc(agreement.termination_doc, agreement.status)]]">
             <etools-upload
-                label="Agreement termination Doc"
-                file-url="{{agreement.termination_doc_atachment}}"
+                label="Termination Notice"
+                file-url="[[agreement.termination_doc]]"
                 readonly="true">
             </etools-upload>
           </div>
@@ -558,7 +558,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   _showYearDropdown(status: string) {
     return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-        status === '' || status === undefined;
+      status === '' || status === undefined;
   }
 
   _allowEdit(agreementStatus: string, editMode?: boolean) {
@@ -706,7 +706,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       return false;
     }
     if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA &&
-        agreementStatus === CONSTANTS.STATUSES.Signed.toLowerCase()) {
+      agreementStatus === CONSTANTS.STATUSES.Signed.toLowerCase()) {
       return !this.agreement.permissions!.edit.authorized_officers ? false : allowAoEditForSSFA;
     } else {
       return this.agreement.permissions!.edit.authorized_officers;
@@ -715,7 +715,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   _showAoEditBtn(status: string, editMode: boolean, permissionsEditAO: boolean) {
     return this.agreement && this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA && editMode &&
-        permissionsEditAO && status === CONSTANTS.STATUSES.Signed.toLowerCase();
+      permissionsEditAO && status === CONSTANTS.STATUSES.Signed.toLowerCase();
   }
 
   _enableAoEdit() {
@@ -760,7 +760,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
    */
   showSignedAgDeleteBtn(_status: string, _editAttPermission: boolean, _originalAtt: string, _isNewAgreement: boolean) {
     return _isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
-        && !this.originalAgreementData.attachment);
+      && !this.originalAgreementData.attachment);
   }
 
   _signedAgFileDelete() {
@@ -772,8 +772,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     return new Date();
   }
 
-  _showTerminationDoc(file: string, _status: string) {
-    return file && _status == CONSTANTS.STATUSES.Terminated.toLowerCase();
+  _hideTerminationDoc(file: string, status: string) {
+    return !file || status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
   }
 }
 

@@ -1,7 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import pmpEndpoints from '../../../endpoints/endpoints';
-declare const moment: any;
 import '@unicef-polymer/etools-dialog/etools-dialog';
 import '@unicef-polymer/etools-upload/etools-upload';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
@@ -12,6 +11,7 @@ import {requiredFieldStarredStyles} from '../../../styles/required-field-styles'
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import CONSTANTS from '../../../../config/app-constants';
+import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
 
 
 /**
@@ -19,7 +19,7 @@ import CONSTANTS from '../../../../config/app-constants';
  * @customElement
  * @appliesMixin EnvironmentFlagsMixin
  */
-class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
+export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
 
   static get template() {
     return html`
@@ -33,9 +33,6 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
         --etools-dialog-default-btn-bg: var(--error-color);
       }
 
-      #agreementTerminationConfirmation {
-        --etools-dialog-confirm-btn-bg: var(--primary-color);
-      }
     </style>
 
     <etools-dialog no-padding
@@ -55,11 +52,11 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
         <etools-upload id="terminationNotice"
                       label="Termination Notice"
                       accept=".doc,.docx,.pdf,.jpg,.png"
-                      file-url="[[termination.attachment_notice]]"
+                      file-url="[[termination.attachment_id]]"
                       upload-endpoint="[[uploadEndpoint]]"
                       on-upload-finished="_uploadFinished"
                       required
-                      auto-validate
+                      auto-validation
                       upload-in-progress="{{uploadInProgress}}"
                       error-message="Termination Notice file is required">
         </etools-upload>
@@ -70,18 +67,6 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
         </etools-warn-message>
       </div>
 
-    </etools-dialog>
-
-    <etools-dialog no-padding
-                  id="agreementTerminationConfirmation"
-                  theme="confirmation"
-                  opened="{{warningOpened}}"
-                  size="md"
-                  ok-btn-text="Continue"
-                  on-close="_terminationConfirmed">
-      <div class="row-h">
-        Please make sure that the reporting requirements for the PD are updated with the correct dates
-      </div>
     </etools-dialog>
     `;
   }
@@ -102,7 +87,7 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
   warningOpened!: boolean;
 
   @property({type: Object})
-  termination!: {date: string; attachment_notice: number};
+  termination!: {attachment_id: number};
 
   @property({type: Object})
   terminationElSource!: PolymerElement
@@ -112,7 +97,6 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
 
 
   private _validationSelectors: string[] = ['#terminationNotice'];
-
 
   connectedCallback() {
     super.connectedCallback();
@@ -126,32 +110,20 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
     if (!this.validate()) {
       return;
     }
-    if (this.environmentFlags &&
-      !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
-      this.set('warningOpened', true);
-    } else {
-      this._terminateAgreement();
-    }
-  }
 
-  _terminationConfirmed(e: CustomEvent) {
-    if (e.detail.confirmed) {
-      this._terminateAgreement();
-    }
+    this._terminateAgreement();
   }
 
   _terminateAgreement() {
-    if (this.validate()) {
-      fireEvent(this.terminationElSource, 'terminate-agreement',
-        {
-          agreementId: this.agreementId,
-          terminationData: {
-            fileId: this.termination.attachment_notice
-          },
-          status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
-        });
-      this.set('opened', false);
-    }
+    fireEvent(this.terminationElSource, 'terminate-agreement',
+      {
+        agreementId: this.agreementId,
+        terminationData: {
+          fileId: this.termination.attachment_id
+        },
+        status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
+      });
+    this.set('opened', false);
   }
 
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)
@@ -179,7 +151,7 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = JSON.parse(e.detail.success);
-      this.set('termination.attachment_notice', uploadResponse.id);
+      this.set('termination.attachment_id', uploadResponse.id);
     }
   }
 

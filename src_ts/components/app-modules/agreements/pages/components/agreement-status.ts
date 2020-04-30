@@ -6,8 +6,8 @@ import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import '../../data/agreement-termination';
+import {AgreementTermination} from '../../data/agreement-termination';
 
 /**
  * @polymer
@@ -26,7 +26,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         <etools-status statuses="[[possibleStatuses]]"
                       actions="[[possibleActions]]"
                       on-agreement-suspend-event="_setStatusSuspended"
-                      on-agreement-terminate-event="_setStatusTerminated"
+                      on-agreement-terminate-event="_openTerminationDialog"
                       on-agreement-unsuspend-event="_unsuspendAgreement"
                       on-agreement-delete-event="_openDeleteConfirmation">
         </etools-status>
@@ -79,7 +79,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
   deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
 
   @property({type: Object})
-  _terminationDialog!: EtoolsDialog & {resetValidations(): void}
+  _terminationDialog!: AgreementTermination;
 
   static get observers() {
     return [
@@ -290,7 +290,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
       }
     }
     if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+    CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
       if (this.status !== CONSTANTS.STATUSES.Signed.toLowerCase()) {
         // prevent suspending or terminating anything other than signed agreement
         return false;
@@ -316,7 +316,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
     }
   }
 
-  _setStatusTerminated() {
+  _openTerminationDialog() {
     // this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
     if (!this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())) {
       return;

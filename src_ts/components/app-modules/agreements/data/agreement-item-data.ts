@@ -87,8 +87,8 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
     if (ajaxMethod !== 'GET') {
       // 'agreement_number_status' is not retrieved from API
       response.agreement_number_status =
-          this._computeAgrementNumberStatus(response.agreement_number,
-            response.status);
+        this._computeAgrementNumberStatus(response.agreement_number,
+          response.status);
 
       store.dispatch(addEditAgreement(this._getMinimalAgreementData(response)));
 
@@ -131,7 +131,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   _computeAgrementNumberStatus(agrNumber: string, status: string) {
     const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1);
 
-    return agrNumber + ' [' + capitalizedStatus +']';
+    return agrNumber + ' [' + capitalizedStatus + ']';
   }
 
   // Update agreement status. In addition set a callback to be called after request is complete.
@@ -140,8 +140,8 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       fireEvent(this, 'toast', {text: 'Invalid agreement ID', showCloseBtn: true});
     } else {
       if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-        CONSTANTS.STATUSES.Suspended.toLowerCase(),
-        CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
+      CONSTANTS.STATUSES.Suspended.toLowerCase(),
+      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
         // status change is allowed
         // set additional callback if any
         if (callback) {
@@ -152,26 +152,20 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
           active: true,
           loadingSource: this.ajaxLoadingMsgSource
         });
-        const endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId});
-        // fire in the hole
+
+        let requestOptions: any = {
+          method: 'PATCH',
+          endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId}),
+          body: {
+            status: data.status
+          }
+        };
+
         if (CONSTANTS.STATUSES.Terminated.toLowerCase() == data.status) {
-          this._triggerAgreementRequest({
-            method: 'PATCH',
-            endpoint: endpoint,
-            body: {
-              status: data.status,
-              termination_doc_attachment: data.termination_doc_attachment
-            }
-          });
-        } else {
-          this._triggerAgreementRequest({
-            method: 'PATCH',
-            endpoint: endpoint,
-            body: {
-              status: data.status
-            }
-          });
+          requestOptions.body.termination_doc = data.termination_doc;
         }
+
+        this._triggerAgreementRequest(requestOptions);
 
       } else {
         fireEvent(this, 'toast',
@@ -287,7 +281,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
-      'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
+        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
       showCloseBtn: true
     });
   }
