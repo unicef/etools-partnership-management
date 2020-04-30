@@ -11,8 +11,6 @@ import {requiredFieldStarredStyles} from '../../../styles/required-field-styles'
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import CONSTANTS from '../../../../config/app-constants';
-import {EtoolsUpload} from '@unicef-polymer/etools-upload/etools-upload';
-
 
 /**
  * @polymer
