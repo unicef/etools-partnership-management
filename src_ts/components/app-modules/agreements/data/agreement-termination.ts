@@ -111,16 +111,11 @@ class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
   uploadInProgress: boolean = false;
 
 
-  private _validationSelectors: string[] = ['#terminationDate', '#terminationNotice'];
+  private _validationSelectors: string[] = ['#terminationNotice'];
 
 
   connectedCallback() {
     super.connectedCallback();
-    (this.$.terminationDate as any).maxDate = this._getMaxDate();
-  }
-
-  _getMaxDate() {
-    return moment(Date.now()).add(30, 'd').toDate();
   }
 
   _handleDialogClosed() {

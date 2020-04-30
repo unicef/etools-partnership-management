@@ -328,7 +328,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
             <span class="type-warning">[[generatePCAMessage]]</span>
           </div>
-          <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+          <div class="col col-6" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-upload
                 label="Signed Agreement"
                 file-url="{{agreement.attachment}}"
@@ -344,11 +344,11 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 on-change-unsaved-file="_onChangeUnsavedFile">
             </etools-upload>
           </div>
-          <div class="col col-9" hidden$="[[_showTerminationDoc(agreement.termination_doc_attachment, agreement.status)]]">
+          <div class="col col-6" hidden$="[[_typeMatches(agreement.termination_doc_atachment, agreement.status)]]">
             <etools-upload
                 label="Agreement termination Doc"
-                file-url="{{agreement.termination_doc_attachment}}"
-                upload-endpoint="[[uploadEndpoint]]">
+                file-url="{{agreement.termination_doc_atachment}}"
+                readonly="true">
             </etools-upload>
           </div>
         </div>
@@ -364,17 +364,6 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                               authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                               selected-ao="{{authorizedOfficers}}">
         </agreement-amendments>
-      </template>
-        <template is="dom-if" if="[[_showTerminationDoc(agreement.termination_doc_attachment, agreement.status)]]">
-          <agreement-amendments id="agreementTermination"
-                                class="content-section"
-                                data-items="{{agreement.amendments}}"
-                                agreement-type="[[agreement.agreement_type]]"
-                                edit-mode="[[agreement.permissions.edit.amendments]]"
-                                show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
-                                authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-                                selected-ao="{{authorizedOfficers}}">
-          </agreement-amendments>
       </template>
     `;
   }
