@@ -6,6 +6,8 @@ import '../../../../layout/etools-status/etools-status.js';
 import '../../../../layout/etools-status/etools-status-common-mixin.js';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import '../../data/agreement-termination';
+import {AgreementTermination} from '../../data/agreement-termination';
 
 /**
  * @polymer
@@ -24,7 +26,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         <etools-status statuses="[[possibleStatuses]]"
                       actions="[[possibleActions]]"
                       on-agreement-suspend-event="_setStatusSuspended"
-                      on-agreement-terminate-event="_setStatusTerminated"
+                      on-agreement-terminate-event="_openTerminationDialog"
                       on-agreement-unsuspend-event="_unsuspendAgreement"
                       on-agreement-delete-event="_openDeleteConfirmation">
         </etools-status>
@@ -76,6 +78,8 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
   @property({type: String})
   deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
 
+  @property({type: Object})
+  _terminationDialog!: AgreementTermination;
 
   static get observers() {
     return [
@@ -90,7 +94,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
     this._createStatusChangeWarningDialog();
     this._createDeleteConfirmationDialog();
-
+    this._createTerminationDialog();
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
     this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
 
@@ -286,7 +290,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
       }
     }
     if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+    CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
       if (this.status !== CONSTANTS.STATUSES.Signed.toLowerCase()) {
         // prevent suspending or terminating anything other than signed agreement
         return false;
@@ -312,8 +316,26 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
     }
   }
 
-  _setStatusTerminated() {
-    this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
+  _openTerminationDialog() {
+    // this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
+    if (!this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())) {
+      return;
+    }
+
+    this._terminationDialog.resetValidations();
+    this._terminationDialog.set('agreementId', this.agreementId);
+    this._terminationDialog.set('termination', {
+      date: null,
+      attachment_notice: null
+    });
+    this._terminationDialog.set('opened', true);
+  }
+
+  _createTerminationDialog() {
+    this._terminationDialog = document.createElement('agreement-termination') as any;
+    document.querySelector('body')!.appendChild(this._terminationDialog);
+
+    this._terminationDialog.set('terminationElSource', this);
   }
 
   _setStatusSuspended() {

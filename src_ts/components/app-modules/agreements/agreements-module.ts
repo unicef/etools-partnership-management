@@ -149,6 +149,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
                               agreement-type="[[agreement.agreement_type]]"
                               on-save-agreement="_validateAndTriggerAgreementSave"
                               edit-mode="[[_hasEditPermissions(permissions)]]"
+                              on-terminate-agreement="_terminateAgreementNow"
                               on-update-agreement-status="_updateAgreementStatus"
                               on-delete-agreement="_deleteAgreement">
             </agreement-status>
@@ -276,7 +277,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!agreementData.id) {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
-    (this.$.agreementData as unknown as AgreementItemData).saveAgreement(agreementData, this._newAgreementSaved.bind(this))
+    (this.$.agreementData as AgreementItemData).saveAgreement(agreementData, this._newAgreementSaved.bind(this))
       .then((successfull: boolean) => {
         if (successfull) {
           store.dispatch({type: RESET_UNSAVED_UPLOADS});
@@ -286,7 +287,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   _updateAgreementStatus(e: CustomEvent) {
     e.stopImmediatePropagation();
-    (this.$.agreementData as unknown as AgreementItemData).updateAgreementStatus(e.detail);
+
+    (this.$.agreementData as AgreementItemData).updateAgreementStatus(e.detail);
   }
 
   // Go to details page once the new agreement has been saved
@@ -297,7 +299,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   _agreementSaveErrors(e: CustomEvent) {
     e.stopImmediatePropagation();
     if ((e.detail instanceof Array && e.detail.length > 0) ||
-        (typeof e.detail === 'string' && e.detail !== '')) {
+      (typeof e.detail === 'string' && e.detail !== '')) {
       fireEvent(this, 'set-server-errors', e.detail as any);
       this.scrollToTop();
     }
@@ -360,7 +362,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!agreementDetailsEl._validateAgreement()) {
       fireEvent(this, 'toast', {
         text: 'Document can not be saved ' +
-            'because of missing data in Details tab', showCloseBtn: true
+          'because of missing data in Details tab', showCloseBtn: true
       });
       return false;
     }
@@ -502,9 +504,18 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   }
 
   _deleteAgreement(e: CustomEvent) {
-    (this.$.agreementData as unknown as AgreementItemData).deleteAgreement(e.detail.id);
+    (this.$.agreementData as AgreementItemData).deleteAgreement(e.detail.id);
   }
 
+  _terminateAgreementNow(e: CustomEvent) {
+    e.stopImmediatePropagation();
+    const terminationData = {
+      agreementId: e.detail.agreementId,
+      termination_doc: e.detail.terminationData.fileId,
+      status: e.detail.status
+    };
+    (this.$.agreementData as AgreementItemData).updateAgreementStatus(terminationData);
+  }
 }
 
 window.customElements.define('agreements-module', AgreementsModule);
