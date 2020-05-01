@@ -94,7 +94,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         .generate-pca[hidden] + .col {
           padding-left: 0;
         }
-        
+
         #generateMyPca {
           cursor: pointer;
         }
@@ -310,7 +310,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement, 
+              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement,
                                 agreement.special_conditions_pca, agreement.status)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
@@ -328,7 +328,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
               hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
             <span class="type-warning">[[generatePCAMessage]]</span>
           </div>
-          <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+          <div class="col col-6" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-upload
                 label="Signed Agreement"
                 file-url="{{agreement.attachment}}"
@@ -342,6 +342,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
                 required$="[[agreement.permissions.required.attachment]]"
                 on-upload-started="_onUploadStarted"
                 on-change-unsaved-file="_onChangeUnsavedFile">
+            </etools-upload>
+          </div>
+          <div class="col col-6" hidden$="[[_hideTerminationDoc(agreement.termination_doc, agreement.status)]]">
+            <etools-upload
+                label="Termination Notice"
+                file-url="[[agreement.termination_doc]]"
+                readonly="true">
             </etools-upload>
           </div>
         </div>
@@ -551,7 +558,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   _showYearDropdown(status: string) {
     return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-        status === '' || status === undefined;
+      status === '' || status === undefined;
   }
 
   _allowEdit(agreementStatus: string, editMode?: boolean) {
@@ -699,7 +706,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       return false;
     }
     if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA &&
-        agreementStatus === CONSTANTS.STATUSES.Signed.toLowerCase()) {
+      agreementStatus === CONSTANTS.STATUSES.Signed.toLowerCase()) {
       return !this.agreement.permissions!.edit.authorized_officers ? false : allowAoEditForSSFA;
     } else {
       return this.agreement.permissions!.edit.authorized_officers;
@@ -708,7 +715,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   _showAoEditBtn(status: string, editMode: boolean, permissionsEditAO: boolean) {
     return this.agreement && this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA && editMode &&
-        permissionsEditAO && status === CONSTANTS.STATUSES.Signed.toLowerCase();
+      permissionsEditAO && status === CONSTANTS.STATUSES.Signed.toLowerCase();
   }
 
   _enableAoEdit() {
@@ -753,7 +760,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
    */
   showSignedAgDeleteBtn(_status: string, _editAttPermission: boolean, _originalAtt: string, _isNewAgreement: boolean) {
     return _isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
-        && !this.originalAgreementData.attachment);
+      && !this.originalAgreementData.attachment);
   }
 
   _signedAgFileDelete() {
@@ -763,6 +770,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   getCurrentDate() {
     return new Date();
+  }
+
+  _hideTerminationDoc(file: string, status: string) {
+    return !file || status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
   }
 }
 

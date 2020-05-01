@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import {DomRepeatEvent, GenericObject} from '../../../typings/globals.types';
+import {DomRepeatEvent} from '../../../typings/globals.types';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -11,6 +11,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
+import {StatusAction} from '../../../typings/etools-status.types';
 
 /**
  * @polymer
@@ -114,13 +115,13 @@ class EtoolsActionButton extends PolymerElement {
   }
 
   @property({type: Array})
-  actions: any[] = [];
+  actions: StatusAction[] = [];
 
   @property({type: Object})
-  primaryAction!: GenericObject;
+  primaryAction!: StatusAction;
 
   @property({type: Array})
-  secondaryActions: any[] = [];
+  secondaryActions: StatusAction[] = [];
 
   @property({type: Boolean})
   disabled: boolean = false;
