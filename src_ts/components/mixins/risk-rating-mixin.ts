@@ -18,7 +18,7 @@ function RiskRatingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     public getRiskRatingClass(riskRating: string) {
       let riskRatingClass = '';
-      if (riskRating !== '') {
+      if (riskRating) {
         if (riskRating.includes('High')) {
           riskRating = 'high';
         } else if (riskRating.includes('Moderate')) {
