@@ -131,13 +131,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
   }
 
-  ready() {
-    super.ready();
-  }
-
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       // @ts-ignore
       this.set('assessment.report_attachment', uploadResponse.id);
     }

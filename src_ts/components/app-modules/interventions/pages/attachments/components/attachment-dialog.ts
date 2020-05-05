@@ -195,7 +195,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
 
   _attachmentUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('attachment.attachment_document', uploadResponse.id);
     }
   }

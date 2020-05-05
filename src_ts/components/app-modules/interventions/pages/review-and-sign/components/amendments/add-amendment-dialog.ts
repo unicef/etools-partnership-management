@@ -267,18 +267,18 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
           break;
         case 'budget_lte_20':
           messages.push('Changes to the budget of activities resulting in a change in the UNICEF contribution ≤20% of ' +
-              'previously approved cash and/or supplies, with or without changes to the programme results.');
+            'previously approved cash and/or supplies, with or without changes to the programme results.');
           break;
         case 'budget_gt_20':
           messages.push('Changes to the budget of activities resulting in a change in the UNICEF contribution >20% of ' +
-              'previously approved cash and/or supplies, with or without changes to the programme results.');
+            'previously approved cash and/or supplies, with or without changes to the programme results.');
           break;
         case 'no_cost':
           messages.push('No cost extension');
           break;
         case 'change':
           messages.push('Changes to planned results, population or geographical coverage of the programme with no ' +
-              'change in UNICEF contribution.');
+            'change in UNICEF contribution.');
           break;
         case 'other':
           messages.push('Other');
@@ -326,14 +326,14 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
 
   _amendmentUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('newAmendment.signed_amendment_attachment', uploadResponse.id);
     }
   }
 
   _prcReviewUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('newAmendment.internal_prc_review', uploadResponse.id);
     }
   }
