@@ -119,7 +119,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
   dataItems: StaffMember[] = [];
 
   @property({type: Object})
-  mainEl: object = {};
+  mainEl!: HTMLElement;
 
   @property({type: Number})
   partnerId: number | null = null;

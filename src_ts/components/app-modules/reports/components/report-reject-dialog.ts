@@ -54,7 +54,7 @@ class ReportRejectDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   report!: GenericObject;
 
   @property({type: Object})
-  toastEventSource!: object;
+  toastEventSource!: HTMLElement;
 
   @property({type: String})
   comment: string = '';

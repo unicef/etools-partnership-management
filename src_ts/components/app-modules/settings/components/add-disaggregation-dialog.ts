@@ -109,7 +109,7 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   dataItems!: [];
 
   @property({type: Object})
-  toastEventSource!: object;
+  toastEventSource!: HTMLElement;
 
   @property({type: Boolean})
   disableConfirmBtn: boolean = false;
