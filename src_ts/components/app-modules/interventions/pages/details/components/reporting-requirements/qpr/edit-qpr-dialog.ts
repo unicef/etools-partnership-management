@@ -14,7 +14,7 @@ import '@unicef-polymer/etools-date-time/calendar-lite.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../../../typings/globals.types.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';

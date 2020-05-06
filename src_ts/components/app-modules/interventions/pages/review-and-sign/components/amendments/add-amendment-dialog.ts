@@ -18,7 +18,7 @@ import pmpEndpoints from '../../../../../../endpoints/endpoints';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {LabelAndValue} from '../../../../../../../typings/globals.types';
 import {InterventionAmendment} from '../../../../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';

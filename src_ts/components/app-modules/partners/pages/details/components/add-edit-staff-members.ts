@@ -13,7 +13,7 @@ import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {ValidatableField} from '../../../../../../typings/globals.types';
 
 /**
@@ -39,7 +39,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
         .col:not(:first-of-type) {
           padding-left: 12px;
         }
-        
+
       </style>
       <etools-dialog id="staffMemberDialog" dialog-title="Partner Contact" size="md"
                      ok-btn-text="Save" keep-dialog-open spinner-Text="Saving..."

@@ -5,7 +5,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import {SharedStyles} from '../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 declare const moment: any;
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';

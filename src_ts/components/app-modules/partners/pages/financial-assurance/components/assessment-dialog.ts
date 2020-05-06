@@ -14,7 +14,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../store';
 import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {LabelAndValue} from '../../../../../../typings/globals.types.js';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
