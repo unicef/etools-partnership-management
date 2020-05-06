@@ -176,6 +176,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
           import(pageUrl).then(() => {
             resolve();
           }).catch((err) => {
+            logError('Error importing component', 'module-routing-mixin', err);
             reject(err);
           });
         } else {
