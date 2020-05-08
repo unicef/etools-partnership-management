@@ -260,7 +260,7 @@ class InterventionProgress extends connect(store)(
                         </div>
                         <div class="col-data col-3 progress-bar">
                           <etools-progress-bar class="report-progress-bar"
-                                                value="[[getProgressPercentage(indicatorReport.reportable.total_against_target)]]">
+                                                value="[[getProgressPercentage(indicatorReport.reportable.total_against_target, indicatorReport.reportable.blueprint.display_type)]]">
                           </etools-progress-bar>
                         </div>
                       </div>
@@ -489,7 +489,10 @@ class InterventionProgress extends connect(store)(
     return moment(EdgeAcceptableDateParse(strDt)).format('D MMM YYYY');
   }
 
-  getProgressPercentage(progress_percentage: number) {
+  getProgressPercentage(progress_percentage: number, displayType: string) {
+    if (displayType === 'percentage') {
+      return progress_percentage;
+    }
     return progress_percentage * 100;
   }
 

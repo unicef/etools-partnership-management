@@ -1,3 +1,4 @@
+declare const moment: any;
 import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store.js';
 import ListDataMixin from '../../../mixins/list-data-mixin';
@@ -50,7 +51,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
   }
 
   public query(field: string, order: string, searchString: string, partnerTypes: string[], csoTypes: string[],
-    riskRatings: string[], pageNumber: number, pageSize: number, showHidden: boolean,
+    riskRatings: string[], seaRiskRatings: string[], seaDateBefore: string, seaDateAfter: string, pageNumber: number, pageSize: number, showHidden: boolean,
     showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
@@ -95,14 +96,28 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
+        if (!isEmptyObject(seaRiskRatings) && seaRiskRatings.indexOf(partner.sea_risk_rating_name) === -1) {
+          return false;
+        }
+
+        if (seaDateBefore && seaDateBefore.length &&
+          (!partner.psea_assessment_date || !moment.utc(partner.psea_assessment_date).isBefore(moment.utc(seaDateBefore)))) {
+          return false;
+        }
+
+        if (seaDateAfter && seaDateAfter.length &&
+          (!partner.psea_assessment_date || !moment.utc(partner.psea_assessment_date).isAfter(moment.utc(seaDateAfter)))) {
+          return false;
+        }
+
         if (searchString && searchString.length) {
           let vnMatch = true;
           if (partner.vendor_number) {
             vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
           }
           if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
-              partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
-              vnMatch) {
+            partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+            vnMatch) {
             return false;
           }
         }

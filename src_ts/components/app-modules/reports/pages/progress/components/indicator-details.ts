@@ -86,7 +86,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
         }
 
         .tab-header dd::after {
-          content: '\A';
+          content: '\\A';
           white-space: pre;
         }
 
@@ -145,9 +145,9 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
                         </template>
                         <template is="dom-if" if="[[!_equals(location.display_type, 'number')]]" restamp="true">
                           <dt>Location progress:</dt>
-                          <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c, true)]]</dd>
+                          <dd>[[_formatIndicatorValue(location.display_type, location.location_progress.c, 1)]]</dd>
                           <dt>Previous location progress:</dt>
-                          <dd>[[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, true)]]</dd>
+                          <dd>[[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, 1)]]</dd>
                         </template>
                       </dl>
                     </div>
@@ -192,8 +192,8 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
   _shouldRefreshIndicatorDetails() {
     return this.indicatorReportId &&
-        (isEmptyObject(this.indicatorReport) ||
-          (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)));
+      (isEmptyObject(this.indicatorReport) ||
+        (!isEmptyObject(this.indicatorReport) && this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)));
   }
 
   getIndicatorDetails() {

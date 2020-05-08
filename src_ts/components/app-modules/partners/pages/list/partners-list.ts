@@ -4,6 +4,7 @@ import {store, RootState} from '../../../../../store';
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-media-query/iron-media-query.js';
 
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input';
@@ -113,6 +114,19 @@ class PartnersList extends
               </etools-dropdown-multi>
             </template>
 
+            <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+              <datepicker-lite id$="datepicker_[[filter.path]]"
+                                class="filter date"
+                                label="[[filter.filterName]]"
+                                placeholder="&#8212;"
+                                value="{{filter.selectedValue}}"
+                                on-date-has-changed="_filterDateHasChanged"
+                                data-filter-path$="[[filter.path]]"
+                                fire-date-has-changed
+                                selected-date-display-format="D MMM YYYY">
+              </datepicker-lite>
+            </template>
+
             <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
               <div id="hiddenToggle" class="filter">
                 [[filter.filterName]]
@@ -164,8 +178,14 @@ class PartnersList extends
           <etools-data-table-column class="flex-2" field="partner_type">
             Partner Type
           </etools-data-table-column>
-          <etools-data-table-column class="flex" field="rating">
-            Risk Rating
+          <etools-data-table-column class="flex" field="hact_rating">
+            HACT Risk Rating
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="sea_rating">
+            SEA Risk Rating
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="psea_date">
+            Last PSEA Assess. Date
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -201,9 +221,15 @@ class PartnersList extends
               <span class="col-data flex-2" data-col-header-label="Partner Type">
                   [[_computeType(partner.cso_type, partner.partner_type)]]
                 </span>
-              <span class="col-data flex" data-col-header-label="Risk Rating" style="text-transform: capitalize">
+              <span class="col-data flex" data-col-header-label="HACT Risk Rating" style="text-transform: capitalize">
                   [[getDisplayValue(partner.rating)]]
-                </span>
+              </span>
+              <span class="col-data flex" data-col-header-label="SEA Risk Rating" style="text-transform: capitalize">
+                  [[getDisplayValue(partner.sea_risk_rating_name)]]
+              </span>
+              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date" >
+                  [[getDateDisplayValue(partner.psea_assessment_date)]]
+              </span>
             </div>
             <div slot="row-data-details">
               <div class="row-details-content flex">
@@ -255,6 +281,9 @@ class PartnersList extends
   riskRatings: LabelAndValue[] = [];
 
   @property({type: Array})
+  seaRiskRatings: LabelAndValue[] = [];
+
+  @property({type: Array})
   selectedPartnerTypes: any[] = [];
 
   @property({type: Array})
@@ -262,6 +291,15 @@ class PartnersList extends
 
   @property({type: Array})
   selectedRiskRatings: any[] = [];
+
+  @property({type: Array})
+  selectedSEARiskRatings: any[] = [];
+
+  @property({type: String})
+  selectedPseaDateBefore: string = '';
+
+  @property({type: String})
+  selectedPseaDateAfter: string = '';
 
   @property({type: Boolean})
   showHidden: boolean = false;
@@ -286,11 +324,12 @@ class PartnersList extends
 
   public static get observers() {
     return [
-      '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, showOnlyGovernmentType)',
-      'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, ' +
-      'selectedRiskRatings.length, showHidden)',
+      '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, seaRiskRatings, showOnlyGovernmentType)',
+      'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length,' +
+      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
       '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
-      'paginator.page, paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
+      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, paginator.page_size, ' +
+      'sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -308,6 +347,10 @@ class PartnersList extends
     if (!isJsonStrMatch(this.riskRatings, state.commonData!.partnerRiskRatings)) {
       this.riskRatings = [...state.commonData!.partnerRiskRatings];
     }
+
+    if (!isJsonStrMatch(this.seaRiskRatings, state.commonData!.seaRiskRatings)) {
+      this.seaRiskRatings = [...state.commonData!.seaRiskRatings];
+    }
   }
 
   public connectedCallback() {
@@ -323,8 +366,8 @@ class PartnersList extends
     this.listAttachedCallback(this.active, 'Loading...', 'partners-list');
   }
 
-  public _initFiltersMenuList(partnerTypes: any, csoTypes: any, riskRatings: any) {
-    if (!partnerTypes || !csoTypes || !riskRatings) {
+  public _initFiltersMenuList(partnerTypes: any, csoTypes: any, riskRatings: any, seaRiskRatings: any) {
+    if (!partnerTypes || !csoTypes || !riskRatings || !seaRiskRatings) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
     }
@@ -353,7 +396,7 @@ class PartnersList extends
         disabled: this.showOnlyGovernmentType || csoTypes.length === 0
       },
       {
-        filterName: 'Risk Rating',
+        filterName: 'HACT Risk Rating',
         type: 'etools-dropdown-multi',
         selectionOptions: riskRatings,
         selectedValue: [],
@@ -362,6 +405,33 @@ class PartnersList extends
         minWidth: '160px',
         hideSearch: false,
         disabled: riskRatings.length === 0
+      },
+      {
+        filterName: 'SEA Risk Rating',
+        type: 'etools-dropdown-multi',
+        selectionOptions: seaRiskRatings,
+        selectedValue: [],
+        path: 'selectedSEARiskRatings',
+        selected: false,
+        minWidth: '160px',
+        hideSearch: true,
+        disabled: seaRiskRatings.length === 0
+      },
+      {
+        filterName: 'PSEA Assessment Date Before',
+        type: 'datepicker',
+        selectedValue: '',
+        path: 'selectedPseaDateBefore',
+        selected: false,
+        disabled: false
+      },
+      {
+        filterName: 'PSEA Assessment Date After',
+        type: 'datepicker',
+        selectedValue: '',
+        path: 'selectedPseaDateAfter',
+        selected: false,
+        disabled: false
       },
       {
         filterName: 'Show hidden',
@@ -392,8 +462,23 @@ class PartnersList extends
             allowEmpty: true
           },
           {
-            filterName: 'Risk Rating',
+            filterName: 'HACT Risk Rating',
             selectedValue: this.selectedRiskRatings,
+            allowEmpty: true
+          },
+          {
+            filterName: 'SEA Risk Rating',
+            selectedValue: this.selectedSEARiskRatings,
+            allowEmpty: true
+          },
+          {
+            filterName: 'PSEA Assessment Date Before',
+            selectedValue: this.selectedPseaDateBefore,
+            allowEmpty: true
+          },
+          {
+            filterName: 'PSEA Assessment Date After',
+            selectedValue: this.selectedPseaDateAfter,
             allowEmpty: true
           },
           {
@@ -420,12 +505,17 @@ class PartnersList extends
     if (!active || !urlQueryParams) {
       return;
     }
-    this.set('initComplete', false);
-    this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
-    this.set('selectedPartnerTypes', this._getSelectedPartnerTypes(urlQueryParams.partner_types));
-    this.set('selectedCsoTypes', this._getFilterUrlValuesAsArray(urlQueryParams.cso_types));
-    this.set('selectedRiskRatings', this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings));
-    this.set('showHidden', urlQueryParams.hidden ? true : false);
+    this.setProperties({
+      initComplete: false,
+      q: urlQueryParams.q ? urlQueryParams.q : '',
+      selectedPartnerTypes: this._getSelectedPartnerTypes(urlQueryParams.partner_types),
+      selectedCsoTypes: this._getFilterUrlValuesAsArray(urlQueryParams.cso_types),
+      selectedRiskRatings: this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings),
+      selectedSEARiskRatings: this._getFilterUrlValuesAsArray(urlQueryParams.sea_risk_ratings),
+      selectedPseaDateBefore: urlQueryParams.psea_assessment_date_before ? urlQueryParams.psea_assessment_date_before : '',
+      selectedPseaDateAfter: urlQueryParams.psea_assessment_date_after ? urlQueryParams.psea_assessment_date_after : '',
+      showHidden: urlQueryParams.hidden ? true : false
+    });
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
@@ -473,6 +563,9 @@ class PartnersList extends
       this.selectedPartnerTypes,
       this.selectedCsoTypes,
       this.selectedRiskRatings,
+      this.selectedSEARiskRatings,
+      this.selectedPseaDateBefore,
+      this.selectedPseaDateAfter,
       this.paginator.page,
       this.paginator.page_size,
       this.showHidden,
@@ -489,6 +582,9 @@ class PartnersList extends
       partner_types: this.selectedPartnerTypes,
       cso_types: this.selectedCsoTypes,
       risk_ratings: this.selectedRiskRatings,
+      sea_risk_ratings: this.selectedSEARiskRatings,
+      psea_assessment_date_before: this.selectedPseaDateBefore,
+      psea_assessment_date_after: this.selectedPseaDateAfter,
       hidden: this.showHidden ? 'true' : '',
       sort: this.sortOrder
     });
@@ -501,6 +597,9 @@ class PartnersList extends
       partner_type: this.selectedPartnerTypes,
       cso_type: this.selectedCsoTypes,
       rating: this.selectedRiskRatings,
+      sea_risk_rating: this.selectedSEARiskRatings,
+      psea_assessment_date_before: this.selectedPseaDateBefore,
+      psea_assessment_date_after: this.selectedPseaDateAfter,
       hidden: this.showHidden ? 'true' : 'false'
     };
     return this._buildCsvExportUrl(params, endpointUrl);
@@ -530,6 +629,9 @@ class PartnersList extends
     }
     this.set('selectedCsoTypes', []);
     this.set('selectedRiskRatings', []);
+    this.set('selectedSEARiskRatings', []);
+    this.set('selectedPseaDateBefore', '');
+    this.set('selectedPseaDateAfter', '');
     this.set('q', '');
     this.resetPageNumber();
     this.set('showHidden', false);
