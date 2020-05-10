@@ -7,7 +7,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {AppliedIndicatorEl} from './applied-indicator.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 
 /**

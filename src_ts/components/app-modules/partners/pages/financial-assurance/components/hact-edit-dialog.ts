@@ -6,7 +6,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 
 class HactEditDialog extends EndpointsMixin(PolymerElement) {
@@ -50,6 +50,10 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
           max-width: 32px;
           text-align: center;
         }
+
+        .avoid-scroll {
+          min-height: 120px;
+        }
       </style>
 
       <etools-dialog id="editPartnersDialog"
@@ -66,7 +70,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
             </div>
           </div>
 
-          <div class="layout-horizontal space-between">
+          <div class="avoid-scroll layout-horizontal space-between">
 
             <template is="dom-if" if="{{isGovPartner}}">
               <div class="layout-vertical col-3">

@@ -1,7 +1,7 @@
 import {logWarn, logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor, GenericObject, User} from '../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';

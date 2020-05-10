@@ -14,7 +14,7 @@ import {requiredFieldStarredStyles} from '../../../../../styles/required-field-s
 import {SharedStyles} from '../../../../../styles/shared-styles.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
@@ -195,7 +195,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
 
   _attachmentUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('attachment.attachment_document', uploadResponse.id);
     }
   }

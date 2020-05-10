@@ -748,7 +748,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   _signedAgreementUploadFinished(e: CustomEvent) {
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
-      const response = JSON.parse(e.detail.success);
+      const response = e.detail.success;
       this.set('agreement.attachment', response.id);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }

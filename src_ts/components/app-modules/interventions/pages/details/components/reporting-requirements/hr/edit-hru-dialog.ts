@@ -16,7 +16,7 @@ import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../../../../../../../utils/utils.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../../store.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
@@ -202,7 +202,8 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
     this.push('hruData', {
       end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
-      due_date: this._oneDayAfterEndDate(this.selectedDate)});
+      due_date: this._oneDayAfterEndDate(this.selectedDate)
+    });
   }
 
   _oneDayAfterEndDate(endDt: string) {
@@ -235,7 +236,7 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   _computeStartDate(i: number) {
-    return moment(this.hruData[i-1].end_date).add(1, 'days').format('YYYY-MM-DD');
+    return moment(this.hruData[i - 1].end_date).add(1, 'days').format('YYYY-MM-DD');
   }
 
   _saveHurData() {

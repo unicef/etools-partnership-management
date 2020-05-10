@@ -7,7 +7,7 @@ import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typ
 import {isEmptyObject} from '../../../../../../../utils/utils';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 
 

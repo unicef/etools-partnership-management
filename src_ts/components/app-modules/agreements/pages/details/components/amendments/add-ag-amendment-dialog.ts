@@ -153,7 +153,8 @@ class AddAgAmendmentDialog extends PolymerElement {
     if (this.validate()) {
       fireEvent(this, 'update-amendment-and-ao', {
         amendment: this.amendment,
-        ao: JSON.parse(JSON.stringify(this.authorizedOfficers))});
+        ao: JSON.parse(JSON.stringify(this.authorizedOfficers))
+      });
       this.set('opened', false);
     }
   }
@@ -175,7 +176,7 @@ class AddAgAmendmentDialog extends PolymerElement {
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (el && !el.validate()) {
         isValid = false;
       }
@@ -200,7 +201,7 @@ class AddAgAmendmentDialog extends PolymerElement {
 
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('amendment.signed_amendment_attachment', uploadResponse.id);
     }
   }

@@ -249,7 +249,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
             </div>
             <div class="col-1 col center-align">
               <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
-                [[getRiskRatingValue(partner.sea_risk_rating_name)]]
+                [[getRiskRatingValue(partner.sea_risk_rating_name, 1)]]
               </span>
             </div>
             <div class="col col-1 center-align">

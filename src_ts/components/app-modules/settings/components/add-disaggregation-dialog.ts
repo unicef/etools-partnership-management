@@ -16,7 +16,7 @@ import {store} from '../../../../store';
 import {addDisaggregation} from '../../../../actions/common-data';
 import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles.js';
 import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
@@ -109,7 +109,7 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   dataItems!: [];
 
   @property({type: Object})
-  toastEventSource!: object;
+  toastEventSource!: HTMLElement;
 
   @property({type: Boolean})
   disableConfirmBtn: boolean = false;

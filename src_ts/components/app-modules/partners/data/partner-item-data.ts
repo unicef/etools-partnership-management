@@ -8,7 +8,7 @@ import {deletePartner} from '../../../../actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {Partner} from '../../../../models/partners.models';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {tryGetResponseError, formatServerErrorAsText} from '../../../utils/ajax-errors-parser.js';
+import {tryGetResponseError, formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 
 
 /**
@@ -131,7 +131,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
     logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
-          'partner data from browser cache. Use refresh data functionality to update cached partners data.',
+        'partner data from browser cache. Use refresh data functionality to update cached partners data.',
       showCloseBtn: true
     });
   }

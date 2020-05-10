@@ -139,7 +139,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
       return;
     }
     if (this.environmentFlags &&
-        !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
+      !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
       this.set('warningOpened', true);
     } else {
       this._terminatePD();
@@ -190,7 +190,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
 
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('termination.attachment_notice', uploadResponse.id);
     }
   }

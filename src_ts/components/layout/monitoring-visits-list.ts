@@ -7,7 +7,7 @@ import {isEmptyObject} from '../utils/utils';
 import {SharedStyles} from '../styles/shared-styles';
 import {gridLayoutStyles} from '../styles/grid-layout-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 
 /**
@@ -42,8 +42,8 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                         active$="[[showLoading]]"></etools-loading>
 
         <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
-          <etools-data-table-header 
-                id="listHeader" 
+          <etools-data-table-header
+                id="listHeader"
                 label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results" no-collapse>
             <etools-data-table-column class="col-2" field="reference_number">
               Reference #

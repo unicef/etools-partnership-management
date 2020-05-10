@@ -963,7 +963,7 @@ class InterventionDetails extends connect(store)(
   _activationLetterUploadFinished(e: CustomEvent) {
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
-      const response = JSON.parse(e.detail.success);
+      const response = e.detail.success;
       this.set('intervention.activation_letter_attachment', response.id);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }

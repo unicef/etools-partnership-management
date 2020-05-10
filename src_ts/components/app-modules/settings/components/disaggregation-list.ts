@@ -17,7 +17,7 @@ import {patchDisaggregation} from '../../../../actions/common-data';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {EnvFlags, User} from '../../../../typings/globals.types';
 import {userIsPme} from '../../../user/user-permissions';
 import {property} from '@polymer/decorators/lib/decorators';

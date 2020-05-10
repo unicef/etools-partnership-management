@@ -23,7 +23,7 @@ import {store} from '../../../../../store.js';
 import {RootState} from '../../../../../store.js';
 import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import {IconsActionsEl} from '../../../../layout/icons-actions.js';
@@ -399,7 +399,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
 
   _canEditAttachments(status: string) {
     return status !== CONSTANTS.STATUSES.Closed.toLowerCase() &&
-        status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
+      status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
   }
 }
 
