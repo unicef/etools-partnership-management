@@ -8,6 +8,7 @@ import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
@@ -129,6 +130,15 @@ class InterventionsList extends connect(store)(
                               fire-date-has-changed
                               selected-date-display-format="D MMM YYYY">
             </datepicker-lite>
+          </template>
+          
+          <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
+            <div id="hiddenToggle" class="filter">
+              [[filter.filterName]]
+              <paper-toggle-button id="toggleFilter" checked="{{filter.selectedValue}}"
+                                   data-filter-path$="[[filter.path]]"
+                                   on-iron-change="toggleValueChanged"></paper-toggle-button>
+            </div>
           </template>
 
         </template>
@@ -316,6 +326,9 @@ class InterventionsList extends connect(store)(
   @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
   endAfter!: string;
 
+  @property({type: Boolean, observer: InterventionsList.prototype._filtersChanged})
+  contingency_pd!: boolean;
+
   @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
   cpOutputs: CpOutput[] = [];
 
@@ -379,14 +392,14 @@ class InterventionsList extends connect(store)(
   static get observers() {
     return [
       '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-      'selectedSections.length, selectedOffices.length, ' +
+      'selectedSections.length, selectedOffices.length, contingency_pd' +
       'selectedCPStructures.length)', // used for non removable filters
       '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
       'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
       'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
       'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
-      'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+      'contingency_pd, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -589,6 +602,13 @@ class InterventionsList extends connect(store)(
         path: 'selectedUnicefFocalPoints',
         selected: false,
         minWidth: '400px'
+      }),
+      new ListFilterOption({
+        filterName: 'Contingency PD',
+        type: 'paper-toggle',
+        selectedValue: this.contingency_pd,
+        path: 'contingency_pd',
+        selected: true
       })
     ]);
     this._updateSelectedFiltersValues();
@@ -622,7 +642,8 @@ class InterventionsList extends connect(store)(
         selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
         startDate: urlQueryParams.start ? urlQueryParams.start : '',
         endDate: urlQueryParams.end ? urlQueryParams.end : '',
-        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : ''
+        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : '',
+        contingency_pd: urlQueryParams.contingency_pd ? true : false
       }
     );
 
@@ -693,6 +714,10 @@ class InterventionsList extends connect(store)(
           {
             filterName: 'Ends Before',
             selectedValue: this.endDate
+          },
+          {
+            filterName: 'Contingency PD',
+            selectedValue: this.contingency_pd
           }
         ];
         this.updateShownFilters(filtersValues);
@@ -763,6 +788,7 @@ class InterventionsList extends connect(store)(
       start: this.startDate,
       end: this.endDate,
       endAfter: this.endAfter,
+      contingency_pd: this.contingency_pd,
       sort: this.sortOrder
     });
   }
