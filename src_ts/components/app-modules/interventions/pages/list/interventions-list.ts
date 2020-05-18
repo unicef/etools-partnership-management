@@ -759,6 +759,7 @@ class InterventionsList extends connect(store)(
           this.selectedUnicefFocalPoints.map((ufc: number) => String(ufc)),
           this.selectedOffices.map((o: number) => String(o)),
           this.selectedCPStructures,
+          this.contingency_pd,
           this.startDate,
           this.endDate,
           this.endAfter,

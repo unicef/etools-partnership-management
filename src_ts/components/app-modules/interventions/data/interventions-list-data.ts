@@ -99,8 +99,11 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           !self._filterFound(intervention, 'donors', true, donors) ||
           !self._filterFound(intervention, 'partner_name', false, partners) ||
           !self._filterFound(intervention, 'grants', true, grants) ||
-          !self._filterFound(intervention, 'contingency_pd', false, contingency_pd) ||
           !self._filterFound(intervention, 'country_programme', false, cpStructures)) {
+          return false;
+        }
+
+        if (!contingency_pd && intervention.contingency_pd) {
           return false;
         }
 
