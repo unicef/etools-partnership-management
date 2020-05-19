@@ -1,6 +1,7 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor, GenericObject} from '../../typings/globals.types';
@@ -74,7 +75,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _requestListData() {
-      this.sendRequest(this.options)
+      sendRequest(this.options)
         .then((resp: any) => {
           this._handleMyResponse(resp);
         }).catch((error: any) => {

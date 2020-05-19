@@ -8,6 +8,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
@@ -295,7 +296,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
     }
 
     // @ts-ignore
-    this.sendRequest({
+    sendRequest({
       endpoint: {url: url}
     }).then((resp: FrsDetails) => {
       this._frsDetailsSuccessHandler(resp);

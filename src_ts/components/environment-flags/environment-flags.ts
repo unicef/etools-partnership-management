@@ -1,5 +1,6 @@
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEdpoints from '../endpoints/endpoints';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../store';
@@ -44,7 +45,7 @@ class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement
       endpoint: pmpEdpoints.environmentFlags
     };
 
-    this.sendRequest(requestConfig).then((response: any) => {
+    sendRequest(requestConfig).then((response: any) => {
       if (response) {
         store.dispatch(updateEnvFlags(this._processAndSetEnvFlags(response)));
       } else {

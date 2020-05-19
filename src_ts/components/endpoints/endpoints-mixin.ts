@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
 import {RootState} from '../../store';
 
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
@@ -13,10 +13,9 @@ import {property} from '@polymer/decorators';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  */
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class EndpointsMixinClass extends EtoolsAjaxRequestMixin(baseClass as Constructor<PolymerElement>) {
+  class EndpointsMixinClass extends (baseClass as Constructor<PolymerElement>) {
 
       @property({type: Object})
     prpCountries!: GenericObject[]
@@ -136,7 +135,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       public requestToken(endpoint: object) {
-        return this.sendRequest({
+        return sendRequest({
           endpoint: endpoint
         });
       }
@@ -218,7 +217,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this.addTokenToRequestOptions(endpoint, endpointTemplateData)
           .then(function(requestOptions: any) {
             const options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
-            return self.sendRequest(options, activeReqKey);
+            return sendRequest(options, activeReqKey);
           })
           .then(function(endpointResponse: any) {
             defer.resolve(endpointResponse);

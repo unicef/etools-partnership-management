@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
@@ -26,12 +26,11 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(RepeatableDataSetsMixin(
-  EndpointsMixin(PolymerElement)))) {
+class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(
+  EndpointsMixin(PolymerElement))) {
 
   static get template() {
     // language=HTML
@@ -175,7 +174,7 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
       endpoint: this.getEndpoint('disaggregations'),
       body: this._getBody()
     };
-    this.sendRequest(requestParams).then(function(response: any) {
+    return sendRequest(requestParams).then(function(response: any) {
       self.disaggregation = response;
       store.dispatch(addDisaggregation(response));
       self.broadcastAddDisaggregToOtherTabs(response);

@@ -5,6 +5,7 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {Agreement, MinimalAgreement} from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement} from '../../../../actions/agreements.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import {GenericObject} from '../../../../typings/globals.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event.js';
@@ -48,7 +49,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
   _triggerAgreementRequest(options: any) {
     const ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then((resp: any) => {
+    return sendRequest(options).then((resp: any) => {
       this._handleSuccResponse(resp, ajaxMethod);
       return true;
     }).catch((error: any) => {

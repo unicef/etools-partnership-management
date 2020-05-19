@@ -4,7 +4,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-data-table/etools-data-table';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
@@ -30,14 +30,12 @@ import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggl
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
 class DisaggregationList extends connect(store)(FrontendPaginationMixin(
-  EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(
-      EndpointsMixin(PolymerElement))))) {
+      EnvironmentFlagsMixin(
+      EndpointsMixin(PolymerElement)))) {
 
   static get template() {
     // language=HTML
@@ -214,7 +212,7 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
       body: {active: e.model.item.active}
     };
 
-    this.sendRequest(requestParams).then(function(response: any) {
+    return sendRequest(requestParams).then(function(response: any) {
       store.dispatch(patchDisaggregation(response));
       self.broadcastPatchDisaggregToOtherTabs(response);
     }).catch(function(error: any) {

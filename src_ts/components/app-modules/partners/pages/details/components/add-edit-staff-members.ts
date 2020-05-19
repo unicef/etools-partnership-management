@@ -13,6 +13,7 @@ import {property} from '@polymer/decorators';
 import {StaffMember} from '../../../../../../models/partners.models';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {ValidatableField} from '../../../../../../typings/globals.types';
 
@@ -164,7 +165,7 @@ class AddEditStaffMembers extends (EndpointsMixin(PolymerElement)) {
       const endpoint = this.getEndpoint('partnerDetails', {id: this.partnerId});
       dialog.startSpinner();
 
-      this.sendRequest({
+      sendRequest({
         endpoint: endpoint,
         method: 'PATCH',
         body: {
