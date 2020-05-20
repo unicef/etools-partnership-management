@@ -17,6 +17,7 @@ import {store, RootState} from '../../../../store';
 import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
 import {property} from '@polymer/decorators';
 
 
@@ -29,7 +30,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
-class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(EndpointsMixin(PolymerElement)))) {
+class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(EtoolsAjaxRequestMixin(EndpointsMixin(PolymerElement))))) {
   static get is() {
     return 'reports-display-list';
   }

@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {RootState} from '../../store';
 
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
@@ -18,7 +18,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class EndpointsMixinClass extends (baseClass as Constructor<PolymerElement>) {
 
       @property({type: Object})
-    prpCountries!: GenericObject[]
+      prpCountries!: GenericObject[]
 
       @property({type: Object})
       currentUser!: User
@@ -134,7 +134,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return {'Authorization': 'JWT ' + token};
       }
 
-      public requestToken(endpoint: object) {
+      public requestToken(endpoint: EtoolsRequestEndpoint) {
         return sendRequest({
           endpoint: endpoint
         });

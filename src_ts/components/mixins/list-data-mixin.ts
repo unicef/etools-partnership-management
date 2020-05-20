@@ -1,7 +1,7 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor, GenericObject} from '../../typings/globals.types';
@@ -22,12 +22,12 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     @property({type: Object})
     options: {
-      endpoint: GenericObject | null;
+      endpoint: EtoolsRequestEndpoint;
       csrf: boolean;
     } = {
-      endpoint: null,
+      endpoint: {url: ''},
       csrf: true
-    };;
+    };
 
     @property({type: Array, readOnly: true, notify: true})
     data: [] = [];
