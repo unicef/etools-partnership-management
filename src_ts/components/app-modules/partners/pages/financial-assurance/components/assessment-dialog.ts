@@ -14,6 +14,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../store';
 import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {LabelAndValue} from '../../../../../../typings/globals.types.js';
@@ -170,7 +171,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       body: this._getBody(isNew)
     };
 
-    this.sendRequest(options)
+    sendRequest(options)
       .then((resp: any) => {
         this._handleResponse(resp, isNew);
         this.stopSpinner();

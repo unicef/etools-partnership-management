@@ -11,6 +11,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixin
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
@@ -572,7 +573,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     }
     const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
-    this.sendRequest(requestOptions)
+    sendRequest(requestOptions)
         .then((results: any) => this._init(results))
         // @ts-ignore
         .catch((err: any) => this.handleErrorResponse(err));

@@ -7,6 +7,7 @@ import {isEmptyObject} from '../utils/utils';
 import {SharedStyles} from '../styles/shared-styles';
 import {gridLayoutStyles} from '../styles/grid-layout-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 
@@ -185,7 +186,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       id: interventionOrPartnerId, year: moment().year()
     });
     const self = this;
-    this.sendRequest({
+    sendRequest({
       endpoint: monitoringVisitsEndpoint
     }).then(function(resp: any) {
       self.set('monitoringVisits', resp);
@@ -221,7 +222,7 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       this.getEndpoint('interventionTPMActivities', {year: moment().year(), interventionId: this.interventionId}) :
       this.getEndpoint('partnerTPMActivities', {year: moment().year(), partnerId: this.partnerId});
 
-    this.sendRequest({
+    sendRequest({
       endpoint: endpoint
     }).then((resp: any) => {
       this.set('tpmActivities', resp);

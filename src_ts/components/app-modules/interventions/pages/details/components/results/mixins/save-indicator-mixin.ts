@@ -5,6 +5,7 @@ import pick from 'lodash-es/pick';
 import keys from 'lodash-es/keys';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
@@ -114,7 +115,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       const body = this._getIndicatorBody();
       const self = this;
 
-      this.sendRequest({
+      sendRequest({
         endpoint: endpoint,
         method: method,
         body: body

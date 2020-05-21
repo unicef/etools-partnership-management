@@ -7,6 +7,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {AppliedIndicatorEl} from './applied-indicator.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 
@@ -142,7 +143,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     }
     const self = this;
     const endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
-    this.sendRequest({
+    sendRequest({
       method: 'PATCH',
       endpoint: endpoint,
       body: {

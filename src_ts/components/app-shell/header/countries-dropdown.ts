@@ -4,6 +4,7 @@ import {store, RootState} from '../../../store.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
@@ -145,13 +146,13 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
       loadingSource: 'country-change'
     });
 
-    this.sendRequest({
+    sendRequest({
       endpoint: this.getEndpoint('changeCountry'),
       method: 'POST',
       body: {country: countryId}
-    }).then(function () {
+    }).then(() => {
       self._handleResponse();
-    }).catch(function (error: any) {
+    }).catch((error: any) => {
       self._handleError(error);
     });
   }

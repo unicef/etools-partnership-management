@@ -14,6 +14,7 @@ import '@unicef-polymer/etools-date-time/calendar-lite.js';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
 import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../../../typings/globals.types.js';
@@ -228,7 +229,7 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
     });
     const dialog = this.$.editQprDialog as EtoolsDialog;
     dialog.startSpinner();
-    this.sendRequest({
+    sendRequest({
       method: 'POST',
       endpoint: endpoint,
       body: {reporting_requirements: this.qprData}

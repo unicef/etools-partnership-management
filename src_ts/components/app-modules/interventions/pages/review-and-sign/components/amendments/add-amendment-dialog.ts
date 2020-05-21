@@ -18,6 +18,7 @@ import pmpEndpoints from '../../../../../../endpoints/endpoints';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {LabelAndValue} from '../../../../../../../typings/globals.types';
 import {InterventionAmendment} from '../../../../../../../typings/intervention.types';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import CONSTANTS from '../../../../../../../config/app-constants';
 import {property} from '@polymer/decorators';
@@ -305,7 +306,7 @@ class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
       body: newAmendment
     };
     this.startSpinner();
-    this.sendRequest(options)
+    sendRequest(options)
       .then((resp: InterventionAmendment) => {
         this._handleResponse(resp);
         this.stopSpinner();
