@@ -3,6 +3,7 @@ import {store} from '../../../../store';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../store';
 import {isJsonStrMatch} from '../../../utils/utils';
@@ -83,7 +84,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   _triggerInterventionRequest(options: any) {
     const self = this;
     const ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then(function(resp: any) {
+    return sendRequest(options).then(function(resp: any) {
       self._handleResponse(resp, ajaxMethod);
       return true;
     }).catch(function(error: any) {
@@ -97,7 +98,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     const options = {
       endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
     };
-    return this.sendRequest(options).catch(function(error: any) {
+    return sendRequest(options).catch(function(error: any) {
       self._handleErrorResponse(error, 'GET');
     });
   }
@@ -183,7 +184,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       if (response.document_type &&
           response.document_type === CONSTANTS.DOCUMENT_TYPES.SSFA &&
           response.status !== CONSTANTS.STATUSES.Draft.toLowerCase()) {
-        this.sendRequest({
+        sendRequest({
           endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {id: response.agreement})
         }).then(function(resp: any) {
           self.updateAgreeementStatus.bind(self, resp)();

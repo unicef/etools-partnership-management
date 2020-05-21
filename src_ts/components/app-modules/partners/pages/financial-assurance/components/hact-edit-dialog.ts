@@ -6,6 +6,7 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 
@@ -251,7 +252,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
       endpoint: this.getEndpoint('partnerDetails', {id: partnerId}),
       body
     };
-    this.sendRequest(params)
+    sendRequest(params)
       .then((resp: any) => {
         window.EtoolsPmpApp.DexieDb.partners.put(resp)
           .then(() => this._handleSaveResponse(resp));

@@ -5,6 +5,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-date-time/calendar-lite';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import './hru-list.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
@@ -248,7 +249,7 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     });
     const dialog = this.$.editHruDialog as EtoolsDialog;
     dialog.startSpinner();
-    this.sendRequest({
+    sendRequest({
       method: 'POST',
       endpoint: endpoint,
       body: {reporting_requirements: this.hruData}

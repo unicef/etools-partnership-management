@@ -3,6 +3,7 @@ import '@polymer/iron-label/iron-label';
 import '@unicef-polymer/etools-loading/etools-loading.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
@@ -101,7 +102,7 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
 
   _requestRamIndicatorsData(reqPayload: any) {
     this.set('loading', true);
-    this.sendRequest({
+    sendRequest({
       method: 'GET',
       endpoint: this.getEndpoint('cpOutputRamIndicators', reqPayload)
     }).then((resp: any) => {

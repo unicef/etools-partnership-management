@@ -1,5 +1,6 @@
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
@@ -64,7 +65,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
 
   _triggerPartnerRequest(options: any) {
     const ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then((resp: any) => {
+    return sendRequest(options).then((resp: any) => {
       this._handleSuccResponse(resp, ajaxMethod);
       return true;
     }).catch((error: any) => {

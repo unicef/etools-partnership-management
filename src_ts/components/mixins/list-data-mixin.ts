@@ -1,6 +1,7 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
 import EndpointsMixin from '../endpoints/endpoints-mixin';
+import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {Constructor, GenericObject} from '../../typings/globals.types';
@@ -11,7 +12,6 @@ import {property} from '@polymer/decorators';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors
  */
@@ -21,12 +21,12 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     @property({type: Object})
     options: {
-      endpoint: GenericObject | null;
+      endpoint: EtoolsRequestEndpoint;
       csrf: boolean;
     } = {
-      endpoint: null,
-      csrf: true
-    };;
+        endpoint: {url: ''},
+        csrf: true
+      };
 
     @property({type: Array, readOnly: true, notify: true})
     data: [] = [];
@@ -39,7 +39,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     fireDataLoaded: boolean = false;
 
     @property({type: Object})
-    _refreshInterval: GenericObject|null = null;
+    _refreshInterval: GenericObject | null = null;
 
     // Defined in the element that uses this mixin
     endpointName!: string;
@@ -74,7 +74,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _requestListData() {
-      this.sendRequest(this.options)
+      sendRequest(this.options)
         .then((resp: any) => {
           this._handleMyResponse(resp);
         }).catch((error: any) => {

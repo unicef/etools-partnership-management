@@ -3,7 +3,7 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
@@ -174,7 +174,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
       body: attachment
     };
     this.startSpinner();
-    this.sendRequest(options)
+    sendRequest(options)
       .then((resp: any) => {
         this._handleResponse(resp, isNewAttachment);
         this.stopSpinner();

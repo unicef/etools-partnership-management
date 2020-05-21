@@ -1,5 +1,6 @@
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../utils/fire-custom-event.js';
 import {GenericObject, Constructor} from '../../typings/globals.types.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
@@ -159,7 +160,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
           }
           // @ts-ignore
           const deleteEndpoint = this.getEndpoint(this._deleteEpName, endpointParams);
-          this.sendRequest({
+          sendRequest({
             method: 'DELETE',
             endpoint: deleteEndpoint,
             body: {}

@@ -10,6 +10,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-date-time/calendar-lite.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../../../typings/globals.types';
@@ -109,7 +110,7 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
 
     const endpoint = this._getEndpoint();
     const method = this._isNew() ? 'POST' : 'PATCH';
-    this.sendRequest(
+    sendRequest(
       {
         method: method,
         endpoint: endpoint,
