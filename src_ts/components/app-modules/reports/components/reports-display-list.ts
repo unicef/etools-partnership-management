@@ -17,7 +17,7 @@ import {store, RootState} from '../../../../store';
 import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
+import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
 import {property} from '@polymer/decorators';
 
 
@@ -25,12 +25,11 @@ import {property} from '@polymer/decorators';
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
-class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(EtoolsAjaxRequestMixin(EndpointsMixin(PolymerElement))))) {
+class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(EndpointsMixin(PolymerElement)))) {
   static get is() {
     return 'reports-display-list';
   }
@@ -255,11 +254,9 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Etoo
           loadingSource: 'reports-list'
         });
 
-        const activeReportsReq = this.getActiveRequestByKey(this._endpointName);
-        if (activeReportsReq) {
-          // abort previous req and then fire a new one with updated params
-          this.abortActiveRequest(activeReportsReq);
-        }
+
+        // abort previous req and then fire a new one with updated params
+        abortRequestByKey(this._endpointName);
 
         this.fireRequest('reports', {}, {params: params}, this._endpointName)
           .then((response: any) => {

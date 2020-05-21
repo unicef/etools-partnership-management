@@ -12,7 +12,6 @@ import {property} from '@polymer/decorators';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrors
  */
@@ -25,9 +24,9 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       endpoint: EtoolsRequestEndpoint;
       csrf: boolean;
     } = {
-      endpoint: {url: ''},
-      csrf: true
-    };
+        endpoint: {url: ''},
+        csrf: true
+      };
 
     @property({type: Array, readOnly: true, notify: true})
     data: [] = [];
@@ -40,7 +39,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     fireDataLoaded: boolean = false;
 
     @property({type: Object})
-    _refreshInterval: GenericObject|null = null;
+    _refreshInterval: GenericObject | null = null;
 
     // Defined in the element that uses this mixin
     endpointName!: string;
