@@ -53,7 +53,8 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
       }
       this.serverErrors = this.serverErrors ? this.serverErrors : [];
       if (this.useToastEvent) {
-        if (this.serverErrors.length > 1) {
+        errorMessage = getErrorsArray(errors);
+        if (this.serverErrors !== undefined && this.serverErrors.length > 1) {
           errorMessage = this.serverErrors.join('\n');
         }
         fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
