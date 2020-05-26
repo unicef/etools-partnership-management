@@ -51,10 +51,10 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
       if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
         this.set('serverErrors', getErrorsArray(errors));
       }
-      this.serverErrors = this.serverErrors ? this.serverErrors : [];
+      this.serverErrors = this.serverErrors || [];
       if (this.useToastEvent) {
         errorMessage = getErrorsArray(errors);
-        if (this.serverErrors !== undefined && this.serverErrors.length > 1) {
+        if (this.serverErrors.length > 1) {
           errorMessage = this.serverErrors.join('\n');
         }
         fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
