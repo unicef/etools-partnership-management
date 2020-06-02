@@ -209,9 +209,6 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         break;
 
       case CONSTANTS.STATUSES.Ended.toLowerCase():
-        if (this.activeTab === 'attachments') {
-          availableOptions.push('Save');
-        }
         break;
 
         // legacy version of 'ended'
