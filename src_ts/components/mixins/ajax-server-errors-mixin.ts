@@ -48,9 +48,9 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
         ajaxMethod = 'GET';
       }
 
-      // if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
-      this.set('serverErrors', getErrorsArray(errors));
-      // }
+      if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
+        this.set('serverErrors', getErrorsArray(errors));
+      }
       this.serverErrors = this.serverErrors || [];
       if (this.useToastEvent) {
         if (this.serverErrors.length > 1) {
