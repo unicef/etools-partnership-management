@@ -5,6 +5,8 @@ import {Constructor} from '../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 
+const globalMessage = 'An error occurred. Please try again later.';
+
 /**
  * @polymer
  * @mixinFunction
@@ -39,27 +41,22 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
         loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
       });
 
-      const errors = tryGetResponseError(response);
-
-      // @ts-ignore
-      let errorMessage = this.globalMessage;
-
       if (!ajaxMethod) {
         ajaxMethod = 'GET';
       }
 
       if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
+        const errors = tryGetResponseError(response);
         this.set('serverErrors', getErrorsArray(errors));
       }
       this.serverErrors = this.serverErrors || [];
+
       if (this.useToastEvent) {
-        if (this.serverErrors.length > 1) {
-          errorMessage = this.serverErrors.join('\n');
-        }
-        fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
+        const toastMsg = this.serverErrors.length > 1 ? this.serverErrors.join('\n') : globalMessage;
+        fireEvent(this, 'toast', {text: toastMsg, showCloseBtn: true});
       } else {
         if (this.serverErrors.length === 0) {
-          this._fireAjaxErrorEvent(errorMessage);
+          this._fireAjaxErrorEvent(globalMessage);
         } else {
           this._fireAjaxErrorEvent(this.serverErrors);
         }
