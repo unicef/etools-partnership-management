@@ -52,7 +52,7 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
       this.serverErrors = this.serverErrors || [];
 
       if (this.useToastEvent) {
-        const toastMsg = this.serverErrors.length > 0 ? this.serverErrors.join('\n') : globalMessage;
+        const toastMsg = this.serverErrors.length ? this.serverErrors.join('\n') : globalMessage;
         fireEvent(this, 'toast', {text: toastMsg, showCloseBtn: true});
       } else {
         if (this.serverErrors.length === 0) {
