@@ -55,8 +55,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!url) {
         return '';
       }
-      // @ts-ignore
-      return url.split('?').shift().split('/').pop();
+      return url.split('?').shift()!.split('/').pop();
     }
 
     /**

@@ -47,17 +47,14 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
       }
 
       if (!this._toastQueue.length) {
-        // @ts-ignore
         this.push('_toastQueue', detail);
-        // @ts-ignore
-        const toastProperties = this._toast.prepareToastAndGetShowProperties(detail);
+        const toastProperties = this._toast!.prepareToastAndGetShowProperties(detail);
         this._showToast(toastProperties);
       } else {
         const alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
           return JSON.stringify(toastDetail) === JSON.stringify(detail);
         });
         if (alreadyInQueue.length === 0) {
-          // @ts-ignore
           this.push('_toastQueue', detail);
         } // else already in the queue
       }
@@ -66,8 +63,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
     public createToastNotificationElement() {
       this._toast = document.createElement('etools-toast') as any;
       this._toggleToast = this._toggleToast.bind(this);
-      // @ts-ignore
-      this._toast.addEventListener('toast-confirm', this._toggleToast);
+      this._toast!.addEventListener('toast-confirm', this._toggleToast);
       // @ts-ignore
       document.querySelector('body')!.appendChild(this._toast);
       this._toastAfterRenderSetup();
@@ -85,32 +81,26 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
       }
       // add close listener
       this.dequeueToast = this.dequeueToast.bind(this);
-      // @ts-ignore
-      this._toast.addEventListener('toast-closed', this.dequeueToast);
+      this._toast!.addEventListener('toast-closed', this.dequeueToast);
     }
 
     public dequeueToast() {
-      // @ts-ignore
       this.shift('_toastQueue');
       if (this._toastQueue.length) {
-        // @ts-ignore
-        const toastProperties = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
+        const toastProperties = this._toast!.prepareToastAndGetShowProperties(this._toastQueue[0]);
         this._showToast(toastProperties);
       }
     }
 
     protected _toggleToast() {
       if (this._toast) {
-        // @ts-ignore
         this._toast.toggle();
       }
     }
 
     protected _showToast(toastProperties: any) {
-      // @ts-ignore
       this.set('currentToastMessage', toastProperties.text);
-      // @ts-ignore
-      this._toast.show(toastProperties);
+      this._toast!.show(toastProperties);
     }
   }
   return ToastNotifsClass;
