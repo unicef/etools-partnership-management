@@ -1,8 +1,8 @@
 declare const moment: any;
+declare const Dexie: any;
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
 import {ListItemIntervention} from '../../../../typings/intervention.types';
-import Dexie from 'dexie';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property, customElement} from '@polymer/decorators';
@@ -131,8 +131,6 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      // TODO: to not use @ts-ignore we should import dexie in index.html then decalre it as global variable
-      // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
           // @ts-ignore

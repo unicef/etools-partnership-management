@@ -48,6 +48,7 @@ import {LabelAndValue} from '../../../../../typings/globals.types';
 import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure';
 import {MinimalStaffMember, StaffMember} from '../../../../../models/partners.models';
 import {GeneratePcaDialogEl} from './components/generate-PCA-dialog.js';
+import {EtoolsDropdownEl} from "@unicef-polymer/etools-dropdown/etools-dropdown";
 
 
 /**
@@ -735,13 +736,12 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
       reqFieldsSelectors.push('#cpStructure');
     }
-    reqFieldsSelectors.forEach(function(fSelector: string) {
-      // @ts-ignore
-      const field = this.shadowRoot.querySelector(fSelector);
+    reqFieldsSelectors.forEach((fSelector: string) => {
+      const field = (this.shadowRoot!.querySelector(fSelector) as EtoolsDropdownEl);
       if (field && !field.validate()) {
         valid = false;
       }
-    }.bind(this));
+    });
     return valid;
   }
 

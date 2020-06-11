@@ -175,15 +175,13 @@ class AppMenu extends connect(store)(
     this.envStateChanged(state);
   }
 
-  // @ts-ignore
-  private _menuSizeChange(newVal: boolean, oldVal: boolean): void {
+  _menuSizeChange(newVal: boolean, oldVal: boolean): void {
     if (newVal !== oldVal) {
       setTimeout(() => fireEvent(this, 'resize-main-layout'));
     }
   }
 
-  // @ts-ignore
-  private _toggleSmallMenu(e: Event): void {
+  _toggleSmallMenu(e: Event): void {
     // console.log("aaaaaaaaaaaaa");
     e.stopImmediatePropagation();
     fireEvent(this, 'toggle-small-menu');
