@@ -1,9 +1,9 @@
 import {PolymerElement} from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
-import Dexie from 'dexie';
 
 declare const moment: any;
+declare const Dexie: any;
 
 import {isEmptyObject} from '../../../utils/utils';
 import {setAgreements} from '../../../../actions/agreements';
@@ -120,7 +120,6 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
           // @ts-ignore
