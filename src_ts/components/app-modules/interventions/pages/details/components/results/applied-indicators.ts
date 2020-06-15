@@ -49,7 +49,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   _deleteEpName: string = 'getEditDeleteIndicator';
 
   @property({type: String})
-  resultLinkIndex!: string | number;
+  resultLinkIndex!: string;
 
   @property({type: Boolean})
   editMode!: boolean;
@@ -107,7 +107,6 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
 
   _editIndicator(event: CustomEvent) {
     const indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
-    // @ts-ignore
     const llResultIndex = parseInt(this.resultLinkIndex, 10);
     const indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
 

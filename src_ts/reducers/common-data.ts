@@ -1,4 +1,3 @@
-// @ts-ignore
 import {Reducer} from 'redux';
 import {
   UPDATE_COUNTRY_PROGRAMMES,

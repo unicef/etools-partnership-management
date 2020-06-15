@@ -228,7 +228,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   // get original/initial intervention frs numbers
   _getCurrentFrs(): Fr[] {
     return (this.intervention.frs_details &&
-            this.intervention.frs_details.frs instanceof Array)
+      this.intervention.frs_details.frs instanceof Array)
       ? this.intervention.frs_details.frs : [];
   }
 
@@ -331,10 +331,10 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
    */
   _frsDetailsErrorHandler(responseErr: any) {
     this.frsDialogEl.stopSpinner();
-
+    const toastMsg = (responseErr && responseErr.error) ? responseErr.error : 'Can not add/update FR numbers. Please try again later!';
     // show the invalid frs warning
     fireEvent(this, 'toast', {
-      text: responseErr.error,
+      text: toastMsg,
       showCloseBtn: true
     });
   }

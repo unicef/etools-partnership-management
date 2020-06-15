@@ -1,8 +1,8 @@
 declare const moment: any;
+declare const Dexie: any;
 import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store.js';
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import Dexie from 'dexie';
 import {isEmptyObject} from '../../../utils/utils';
 import {setPartners} from '../../../../actions/partners.js';
 import {fireEvent} from '../../../utils/fire-custom-event.js';
@@ -132,7 +132,6 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      // @ts-ignore
       Dexie.ignoreTransaction(function() {
         queryResult.count(function(count: number) {
           // @ts-ignore
