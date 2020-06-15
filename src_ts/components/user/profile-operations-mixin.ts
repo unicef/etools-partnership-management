@@ -5,7 +5,8 @@ import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data.js';
 import {fireEvent} from '../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
@@ -34,7 +35,7 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
         body: profile
       };
 
-      this.sendRequest(config).then(function(resp: any) {
+      sendRequest(config).then(function(resp: any) {
         self._handleResponse(resp);
       }).catch(function(error: any) {
         parseRequestErrorsAndShowAsToastMsgs(error, self);

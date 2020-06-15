@@ -11,6 +11,7 @@ import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixin
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.js';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
@@ -45,7 +46,7 @@ import clone from 'lodash-es/clone';
  * @appliesMixin RiskRatingMixin
  */
 class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(
-  PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
+    PaginationMixin(RiskRatingMixin(PolymerElement))))))) {
   static get template() {
     // language=HTML
     return html`
@@ -249,7 +250,7 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
             </div>
             <div class="col-1 col center-align">
               <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
-                [[getRiskRatingValue(partner.sea_risk_rating_name)]]
+                [[getRiskRatingValue(partner.sea_risk_rating_name, 1)]]
               </span>
             </div>
             <div class="col col-1 center-align">
@@ -257,8 +258,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
             </div>
         </div>
         <div class="row-h overview-row">
-            <div class="col col-2"></div>
-            <div class="col col-4">
+            <div class="col col-1"></div>
+            <div class="col col-3">
                 <etools-dropdown label="Basis For Risk Rating"
                                  options="[[basisOptions]]"
                                  selected="{{partner.basis_for_risk_rating}}"
@@ -572,10 +573,10 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     }
     const requestOptions = this._getEngagementsRequestOptions(partner.id);
 
-    this.sendRequest(requestOptions)
-      .then((results: any) => this._init(results))
-      // @ts-ignore
-      .catch((err: any) => this.handleErrorResponse(err));
+    sendRequest(requestOptions)
+        .then((results: any) => this._init(results))
+        // @ts-ignore
+        .catch((err: any) => this.handleErrorResponse(err));
 
     this.set('basisOptions', []);
     this._addBasisFromPartner();
@@ -607,8 +608,8 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
     }
     let engagements = this.allEngagements;
     engagements = engagements
-      .sort((a, b) => moment(b.status_date) - moment(a.status_date))
-      .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        .sort((a, b) => moment(b.status_date) - moment(a.status_date))
+        .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.set('engagements', engagements);
   }
 
@@ -633,13 +634,13 @@ class PartnerFinancialAssurance extends (EtoolsCurrency(CommonMixin(EndpointsMix
 
   public _getMinReqAudits(plannedEngagement: any) {
     return !plannedEngagement ? 0
-      : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
+        : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
   public _disableBasisForRiskRating(editMode: boolean, typeOfAssessment: any, rating: any) {
     return !editMode ||
-      (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
-      ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1;
+        (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
+        ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1;
   }
 
   _assessmentUpdated(e: CustomEvent) {

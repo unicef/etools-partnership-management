@@ -7,7 +7,8 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {AppliedIndicatorEl} from './applied-indicator.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 
 /**
@@ -48,7 +49,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   _deleteEpName: string = 'getEditDeleteIndicator';
 
   @property({type: String})
-  resultLinkIndex!: string | number;
+  resultLinkIndex!: string;
 
   @property({type: Boolean})
   editMode!: boolean;
@@ -106,7 +107,6 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
 
   _editIndicator(event: CustomEvent) {
     const indicatorIndex = parseInt((event.target as AppliedIndicatorEl).getAttribute('data-args')!, 10);
-    // @ts-ignore
     const llResultIndex = parseInt(this.resultLinkIndex, 10);
     const indicator = JSON.parse(JSON.stringify(this.dataItems[indicatorIndex]));
 
@@ -142,7 +142,7 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     }
     const self = this;
     const endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
-    this.sendRequest({
+    sendRequest({
       method: 'PATCH',
       endpoint: endpoint,
       body: {

@@ -1,5 +1,6 @@
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
@@ -8,7 +9,7 @@ import {deletePartner} from '../../../../actions/partners';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {Partner} from '../../../../models/partners.models';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {tryGetResponseError, formatServerErrorAsText} from '../../../utils/ajax-errors-parser.js';
+import {tryGetResponseError, formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 
 
 /**
@@ -64,7 +65,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
 
   _triggerPartnerRequest(options: any) {
     const ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then((resp: any) => {
+    return sendRequest(options).then((resp: any) => {
       this._handleSuccResponse(resp, ajaxMethod);
       return true;
     }).catch((error: any) => {
@@ -131,7 +132,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
     logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
       text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
-          'partner data from browser cache. Use refresh data functionality to update cached partners data.',
+        'partner data from browser cache. Use refresh data functionality to update cached partners data.',
       showCloseBtn: true
     });
   }

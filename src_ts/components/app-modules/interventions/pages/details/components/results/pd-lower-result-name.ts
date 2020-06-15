@@ -3,7 +3,8 @@ import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
@@ -113,7 +114,7 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
     this.set('disableConfirmBtn', true);
     const dialog = this.$.pdLowerResultNameDialog as EtoolsDialog;
     dialog.startSpinner();
-    return this.sendRequest({
+    return sendRequest({
       method: method,
       endpoint: endpoint,
       body: lowerResultData

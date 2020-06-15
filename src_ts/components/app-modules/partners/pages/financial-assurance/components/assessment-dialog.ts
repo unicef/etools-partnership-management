@@ -14,7 +14,8 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../../store';
 import {isJsonStrMatch, copy} from '../../../../../utils/utils';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {LabelAndValue} from '../../../../../../typings/globals.types.js';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
@@ -131,13 +132,9 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
   }
 
-  ready() {
-    super.ready();
-  }
-
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       // @ts-ignore
       this.set('assessment.report_attachment', uploadResponse.id);
     }
@@ -174,7 +171,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       body: this._getBody(isNew)
     };
 
-    this.sendRequest(options)
+    sendRequest(options)
       .then((resp: any) => {
         this._handleResponse(resp, isNew);
         this.stopSpinner();

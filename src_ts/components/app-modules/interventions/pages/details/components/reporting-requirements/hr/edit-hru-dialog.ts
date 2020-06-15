@@ -5,6 +5,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-date-time/calendar-lite';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import './hru-list.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
@@ -16,7 +17,7 @@ import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../../../../../../../utils/utils.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../../store.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
@@ -202,7 +203,8 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
     this.push('hruData', {
       end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
-      due_date: this._oneDayAfterEndDate(this.selectedDate)});
+      due_date: this._oneDayAfterEndDate(this.selectedDate)
+    });
   }
 
   _oneDayAfterEndDate(endDt: string) {
@@ -235,7 +237,7 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   _computeStartDate(i: number) {
-    return moment(this.hruData[i-1].end_date).add(1, 'days').format('YYYY-MM-DD');
+    return moment(this.hruData[i - 1].end_date).add(1, 'days').format('YYYY-MM-DD');
   }
 
   _saveHurData() {
@@ -247,7 +249,7 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     });
     const dialog = this.$.editHruDialog as EtoolsDialog;
     dialog.startSpinner();
-    this.sendRequest({
+    sendRequest({
       method: 'POST',
       endpoint: endpoint,
       body: {reporting_requirements: this.hruData}

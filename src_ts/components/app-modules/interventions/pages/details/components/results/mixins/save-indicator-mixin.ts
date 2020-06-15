@@ -1,13 +1,13 @@
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-// @ts-ignore
 import pick from 'lodash-es/pick';
-// @ts-ignore
 import keys from 'lodash-es/keys';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
+import {IndicatorDialogEl} from '../indicator-dialog';
 
 /**
  * @polymer
@@ -15,7 +15,6 @@ import {PolymerElement} from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  */
 function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
   class SaveIndicatorClass extends EndpointsMixin(baseClass) {
     [x: string]: any;
 
@@ -114,7 +113,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       const body = this._getIndicatorBody();
       const self = this;
 
-      this.sendRequest({
+      sendRequest({
         endpoint: endpoint,
         method: method,
         body: body
@@ -130,10 +129,10 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {validate(): boolean}).validate();
       if (this.isCluster) {
         valid = (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
-                && sectionSelected;
+          && sectionSelected;
       } else {
         valid = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
-                && sectionSelected;
+          && sectionSelected;
       }
       return valid;
     }
@@ -153,8 +152,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         indicatorData: response,
         actionParams: this.actionParams
       });
-      // @ts-ignore
-      this.$.indicatorDialog.opened = false;
+      (this.$.indicatorDialog as IndicatorDialogEl).opened = false;
     }
 
     _handleSaveIndicatorError(error: any) {
@@ -187,11 +185,11 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     _prepareBaselineAndTarget(indicator: any) {
       if (!indicator.target || indicator.target.v === undefined
-          || indicator.target.v === '') {
+        || indicator.target.v === '') {
         indicator.target = {v: 0, d: 1};
       }
       if (!indicator.baseline || indicator.baseline.v === ''
-          || indicator.baseline.v === undefined) {
+        || indicator.baseline.v === undefined) {
         indicator.baseline = {v: null, d: 1};
       }
       if (indicator.indicator) { // is new non-cluster indic

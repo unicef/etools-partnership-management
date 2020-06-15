@@ -93,6 +93,7 @@ import {property} from '@polymer/decorators';
 import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 setRootPath(BASE_URL);
 
 /**
@@ -484,7 +485,7 @@ class AppShell extends connect(store)(
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
     const defer: any = {};
-    defer.promise = new Promise(function (resolve, reject) {
+    defer.promise = new Promise(function(resolve, reject) {
       defer.resolve = resolve;
       defer.reject = reject;
     });
@@ -573,7 +574,8 @@ class AppShell extends connect(store)(
       // moduleMainEl is null => make the import
       import(pageUrl).then(() => {
         this._successfulImportCallback(appModuleMainElId);
-      }).catch((_err: any) => {
+      }).catch((err: any) => {
+        logError('Error importing component.', 'app-shell', err);
         this._pageNotFound();
       });
     }

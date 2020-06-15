@@ -8,6 +8,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
@@ -227,7 +228,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   // get original/initial intervention frs numbers
   _getCurrentFrs(): Fr[] {
     return (this.intervention.frs_details &&
-            this.intervention.frs_details.frs instanceof Array)
+      this.intervention.frs_details.frs instanceof Array)
       ? this.intervention.frs_details.frs : [];
   }
 
@@ -295,7 +296,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
     }
 
     // @ts-ignore
-    this.sendRequest({
+    sendRequest({
       endpoint: {url: url}
     }).then((resp: FrsDetails) => {
       this._frsDetailsSuccessHandler(resp);
@@ -330,10 +331,10 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
    */
   _frsDetailsErrorHandler(responseErr: any) {
     this.frsDialogEl.stopSpinner();
-
+    const toastMsg = (responseErr && responseErr.error) ? responseErr.error : 'Can not add/update FR numbers. Please try again later!';
     // show the invalid frs warning
     fireEvent(this, 'toast', {
-      text: responseErr.error,
+      text: toastMsg,
       showCloseBtn: true
     });
   }

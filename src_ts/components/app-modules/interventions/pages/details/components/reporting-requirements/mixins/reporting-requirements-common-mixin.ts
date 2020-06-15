@@ -1,8 +1,9 @@
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../../../../../config/app-constants';
 import {isEmptyObject} from '../../../../../../../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {Constructor} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
@@ -51,7 +52,7 @@ function ReportingRequirementsCommonMixin<T extends Constructor<PolymerElement>>
       // @ts-ignore *Defined in the component
       const type = this._getReportType();
       const endpoint = this._getEndpointObj(newId, type);
-      this.sendRequest({method: 'GET', endpoint: endpoint})
+      sendRequest({method: 'GET', endpoint: endpoint})
         .then((response: any) => {
           this.set('reportingRequirements',
             (type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SPECIAL)

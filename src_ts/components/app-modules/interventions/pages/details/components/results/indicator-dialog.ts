@@ -26,7 +26,7 @@ import './cluster-indicator-disaggregations.js';
 import './cluster-indicator.js';
 import './non-cluster-indicator.js';
 import {Indicator, Location} from '../../../../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '../../../../../../user/user-permissions';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';

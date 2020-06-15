@@ -6,7 +6,7 @@ import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {SharedStyles} from '../../../styles/shared-styles';
 declare const moment: any;
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../typings/globals.types';
@@ -64,7 +64,7 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   report!: GenericObject;
 
   @property({type: Object})
-  toastEventSource!: object;
+  toastEventSource!: HTMLElement;
 
   @property({type: String})
   selectedOverallStatus: string = '';

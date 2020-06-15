@@ -1,6 +1,7 @@
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {Constructor} from '../../../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
@@ -35,7 +36,7 @@ function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass:
         const endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
         const self = this;
 
-        this.sendRequest({
+        sendRequest({
           endpoint: endpoint
         }).then(function(response: any) {
           self._handleStaffMembersResponse(response);

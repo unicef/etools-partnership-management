@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {store} from '../../store';
-
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data';
@@ -34,7 +34,7 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       permissions!: UserPermissions;
 
       public requestUserData() {
-        this.sendRequest({
+        sendRequest({
           endpoint: this.getEndpoint(this.endpointName)
         }).then((res: any) => {
           // TODO: check response to make sure it contains a valid user

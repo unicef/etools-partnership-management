@@ -82,7 +82,7 @@ class EditCoreValuesAssessment extends CommonMixin(PolymerElement) {
 
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('item.attachment', uploadResponse.id);
     }
   }

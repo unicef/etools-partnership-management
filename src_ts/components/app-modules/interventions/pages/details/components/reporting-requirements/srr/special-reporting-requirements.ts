@@ -12,7 +12,8 @@ import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.j
 import {reportingRequirementsListStyles} from '../styles/reporting-requirements-lists-styles.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {AddEditSpecialRepReqEl} from './add-edit-special-rep-req.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
@@ -144,7 +145,7 @@ class SpecialReportingRequirements extends CommonMixin(ReportingRequirementsComm
     if (this._itemToDeleteIndex > -1) {
       const itemToDelete = this.reportingRequirements[this._itemToDeleteIndex] as any;
       const endpoint = this.getEndpoint('specialReportingRequirementsUpdate', {reportId: itemToDelete.id});
-      this.sendRequest({
+      sendRequest({
         method: 'DELETE',
         endpoint: endpoint
       }).then(() => {

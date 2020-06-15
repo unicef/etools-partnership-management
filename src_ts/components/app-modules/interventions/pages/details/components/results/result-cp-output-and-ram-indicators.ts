@@ -7,7 +7,8 @@ import MissingDropdownOptionsMixin from '../../../../../../mixins/missing-dropdo
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
@@ -142,7 +143,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
 
       const ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: cpOutputId});
       const self = this;
-      this.sendRequest({
+      sendRequest({
         endpoint: ramIndicatorsEndpoint
       }).then(function(response: any) {
         self._handleRamIndicatorsReqResponse(response);
@@ -155,7 +156,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
 
   _handleRamIndicatorsReqResponse(response: any) {
     if (this._thereAreSelectedIndicators() && // to prevent triggering validation
-        !this.preventRamIndicatorReset) {
+      !this.preventRamIndicatorReset) {
       this.set('selectedRamIndicatorsIds', []);
     }
     this.set('preventRamIndicatorReset', false);
@@ -254,7 +255,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
     this._setRamIndicatorsSpinnerText(this.saveResultLoadingMsg);
     this._showRamIndicatorsLoadingSpinner(true);
     this.set('disableConfirmBtn', true);
-    this.sendRequest({
+    sendRequest({
       method: method,
       endpoint: endpoint,
       body: result

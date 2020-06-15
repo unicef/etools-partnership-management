@@ -552,6 +552,7 @@ class InterventionsModule extends connect(store)(
           }
         });
     }
+    return;
   }
 
   _isNewIntervention() {

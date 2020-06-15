@@ -9,6 +9,7 @@ import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '../../../../layout/icons-actions.js';
 import './components/attachment-dialog.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import {InterventionAttachment, InterventionPermissionsFields} from '../../../../../typings/intervention.types.js';
@@ -23,7 +24,7 @@ import {store} from '../../../../../store.js';
 import {RootState} from '../../../../../store.js';
 import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import {IconsActionsEl} from '../../../../layout/icons-actions.js';
@@ -309,7 +310,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
       active: true,
       loadingSource: 'pd-attachments'
     });
-    this.sendRequest({
+    sendRequest({
       endpoint: this.getEndpoint('pdAttachments', {pdId: id})
     }).then((response: any) => {
       this.set('attachments', response);
@@ -365,7 +366,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
         active: true,
         loadingSource: 'pd-attachments-delete'
       });
-      this.sendRequest({
+      sendRequest({
         method: 'DELETE',
         endpoint: this.getEndpoint('updatePdAttachment', {attId: this.attMarkedToBeDeleted.id})
       }).then((_response: any) => {
@@ -399,7 +400,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
 
   _canEditAttachments(status: string) {
     return status !== CONSTANTS.STATUSES.Closed.toLowerCase() &&
-        status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
+      status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
   }
 }
 
