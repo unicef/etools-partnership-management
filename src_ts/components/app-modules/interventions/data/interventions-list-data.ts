@@ -103,7 +103,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (!contingency_pd && intervention.contingency_pd) {
+        if ((contingency_pd && !intervention.contingency_pd) || (!contingency_pd && intervention.contingency_pd)) {
           return false;
         }
 
@@ -152,6 +152,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
     }).then(function(result: any) {
       // @ts-ignore
       self._setFilteredInterventions(result);
+      // console.log(self.filteredInterventions);
       fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
     }).catch(function(error: any) {
       logError('Error querying interventions: ' + error, 'interventions-list-data');
