@@ -3,6 +3,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {SharedStyles} from '../styles/shared-styles.js';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles.js';
 import {property} from '@polymer/decorators';
+import {EtoolsDropdownEl} from "@unicef-polymer/etools-dropdown/etools-dropdown";
 
 /**
  *
@@ -69,8 +70,7 @@ class YearDropdown extends PolymerElement {
   }
 
   validate() {
-    // @ts-ignore
-    return this.$.yearSelector.validate();
+    return (this.$.yearSelector as EtoolsDropdownEl).validate();
   }
 
 }

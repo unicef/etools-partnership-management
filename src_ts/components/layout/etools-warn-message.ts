@@ -55,8 +55,7 @@ class EtoolsWarnMessage extends PolymerElement {
   @property({type: Array})
   _internalMsgs: WarnMessage[] = [];
 
-  // @ts-ignore
-  private _messagesChanged(msgs: string | string[]) {
+  _messagesChanged(msgs: string | string[]) {
     if (!msgs || msgs.length === 0) {
       return;
     }

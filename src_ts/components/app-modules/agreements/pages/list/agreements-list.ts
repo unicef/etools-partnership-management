@@ -47,7 +47,6 @@ let _agreementsLastNavigated = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-// @ts-ignore
 class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
   EndpointsMixin(PolymerElement)))))) {
 

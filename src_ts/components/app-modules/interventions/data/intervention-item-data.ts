@@ -29,8 +29,7 @@ import {Office, GenericObject} from '../../../../typings/globals.types';
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin EnvironmentFlagsMixin
  */
-// @ts-ignore
-class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)))) {
+class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)))) {
 
   @property({type: Object})
   pdEndpoints: {
@@ -117,7 +116,6 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _handleErrorResponse(response: any, ajaxMethod: string) {
-    // @ts-ignore
     this.handleErrorResponse(response, ajaxMethod, true);
     if (this.intervention && this.originalIntervention) {
       this._restoreUnsuccessfullyDeletedFrs();
@@ -456,8 +454,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     this.fireRequest(this.pdEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
       this._handleInterventionDeleteSuccess(id);
     }).catch((reqError: any) => {
-      // @ts-ignore
-      this.handleErrorResponse(reqError, reqMethod);
+      this.handleErrorResponse(reqError, reqMethod, false);
     });
   }
 
