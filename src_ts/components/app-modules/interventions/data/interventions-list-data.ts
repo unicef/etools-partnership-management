@@ -1,5 +1,5 @@
 declare const moment: any;
-declare const Dexie: any;
+import Dexie from 'dexie';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
 import {ListItemIntervention} from '../../../../typings/intervention.types';
