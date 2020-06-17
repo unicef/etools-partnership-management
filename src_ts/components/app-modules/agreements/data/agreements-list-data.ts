@@ -3,7 +3,7 @@ import ListDataMixin from '../../../mixins/list-data-mixin';
 import {store} from '../../../../store.js';
 
 declare const moment: any;
-declare const Dexie: any;
+import Dexie from 'dexie';
 
 import {isEmptyObject} from '../../../utils/utils';
 import {setAgreements} from '../../../../actions/agreements';
