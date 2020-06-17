@@ -74,7 +74,7 @@ export class Intervention {
   sections: [] =[];
   frs: number[] = [];
   frs_details = new FrsDetails();
-  contingency_pd: boolean = false;
+  contingency_pd?: boolean;
   planned_budget = new PlannedBudget();
   flat_locations: [] = [];
   result_links: ExpectedResult[] = [];
