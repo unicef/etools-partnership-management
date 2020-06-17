@@ -1,5 +1,5 @@
 declare const moment: any;
-declare const Dexie: any;
+import Dexie from 'dexie';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
 import {ListItemIntervention} from '../../../../typings/intervention.types';
@@ -57,7 +57,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
   query(field: string, order: string, searchString: string, documentTypes: string[],
     cpOutputs: string[], donors: string[], partners: string[], grants: string[],
     statuses: string[], sections: string[], unicefFocalPoints: string[],
-    offices: string[], cpStructures: string[], startDate: string,
+    offices: string[], cpStructures: string[], contingency_pd: boolean, startDate: string,
     endDate: string, endAfter: string, pageNumber: number, pageSize: number, showQueryLoading: boolean) {
 
     // If an active query transaction exists, abort it and start
@@ -100,6 +100,10 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           !self._filterFound(intervention, 'partner_name', false, partners) ||
           !self._filterFound(intervention, 'grants', true, grants) ||
           !self._filterFound(intervention, 'country_programme', false, cpStructures)) {
+          return false;
+        }
+
+        if ((contingency_pd && !intervention.contingency_pd) || (!contingency_pd && intervention.contingency_pd)) {
           return false;
         }
 

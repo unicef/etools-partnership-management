@@ -248,6 +248,7 @@ class InterventionDetails extends connect(store)(
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg"  hidden$="[[!_showContingencyPd(agreement)]]">
         <div class="col col-3">
+        
           <paper-toggle-button checked="{{intervention.contingency_pd}}"
                               disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
           </paper-toggle-button>
