@@ -1,5 +1,5 @@
-import {html} from '@polymer/polymer/polymer-element';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import { html } from "@polymer/polymer/polymer-element";
+import "@polymer/iron-flex-layout/iron-flex-layout.js";
 
 // language=HTML
 export const navMenuStyles = html`
@@ -109,7 +109,8 @@ export const navMenuStyles = html`
       padding: 8px 0 0;
     }
 
-    .nav-menu, .nav-menu iron-selector[role="navigation"] {
+    .nav-menu,
+    .nav-menu iron-selector[role="navigation"] {
       @apply --layout-flex;
     }
 

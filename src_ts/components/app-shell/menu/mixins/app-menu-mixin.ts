@@ -1,17 +1,18 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {Constructor} from '../../../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import { Constructor } from "../../../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
+import { property } from "@polymer/decorators";
 
 /**
  * App menu functionality mixin
  * @polymer
  * @mixinFunction
  */
-export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+export function AppMenuMixin<T extends Constructor<PolymerElement>>(
+  baseClass: T
+) {
   class AppMenuClass extends baseClass {
-
-    @property({type: Boolean})
+    @property({ type: Boolean })
     smallMenu: boolean = false;
 
     public connectedCallback() {
@@ -30,26 +31,28 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
       this._resizeMainLayout = this._resizeMainLayout.bind(this);
       this._toggleDrawer = this._toggleDrawer.bind(this);
 
-      this.addEventListener('toggle-small-menu', this._toggleSmallMenu);
-      this.addEventListener('resize-main-layout', this._resizeMainLayout);
-      this.addEventListener('drawer', this._toggleDrawer);
+      this.addEventListener("toggle-small-menu", this._toggleSmallMenu);
+      this.addEventListener("resize-main-layout", this._resizeMainLayout);
+      this.addEventListener("drawer", this._toggleDrawer);
     }
 
     private _removeMenuListeners(): void {
-      this.removeEventListener('toggle-small-menu', this._toggleSmallMenu);
-      this.removeEventListener('resize-main-layout', this._resizeMainLayout);
-      this.removeEventListener('drawer', this._toggleDrawer);
+      this.removeEventListener("toggle-small-menu", this._toggleSmallMenu);
+      this.removeEventListener("resize-main-layout", this._resizeMainLayout);
+      this.removeEventListener("drawer", this._toggleDrawer);
     }
 
     private _initMenuSize(): void {
-      this.set('smallMenu', this._isSmallMenuActive());
+      this.set("smallMenu", this._isSmallMenuActive());
     }
 
     private _isSmallMenuActive(): boolean {
       /**
        * etoolsPmpSmallMenu localStorage value must be 0 or 1
        */
-      const menuTypeStoredVal: string | null = localStorage.getItem('etoolsAppSmallMenuIsActive');
+      const menuTypeStoredVal: string | null = localStorage.getItem(
+        "etoolsAppSmallMenuIsActive"
+      );
       if (!menuTypeStoredVal) {
         return false;
       }
@@ -58,7 +61,7 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
 
     private _toggleSmallMenu(e: Event): void {
       e.stopImmediatePropagation();
-      this.set('smallMenu', !this.smallMenu);
+      this.set("smallMenu", !this.smallMenu);
       this._smallMenuValueChanged(this.smallMenu);
     }
 
@@ -70,7 +73,10 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
 
     private _smallMenuValueChanged(newVal: boolean) {
       const localStorageVal: number = newVal ? 1 : 0;
-      localStorage.setItem('etoolsAppSmallMenuIsActive', String(localStorageVal));
+      localStorage.setItem(
+        "etoolsAppSmallMenuIsActive",
+        String(localStorageVal)
+      );
     }
 
     private _updateDrawerStyles(): void {
@@ -85,11 +91,13 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
     }
 
     private _notifyLayoutResize(): void {
-      const layout = this.$.layout as PolymerElement & {notifyResize(): void};
+      const layout = this.$.layout as PolymerElement & { notifyResize(): void };
       if (layout) {
         layout.notifyResize();
       }
-      const headerLayout = this.$.appHeadLayout as PolymerElement & {notifyResize(): void};
+      const headerLayout = this.$.appHeadLayout as PolymerElement & {
+        notifyResize(): void;
+      };
       if (headerLayout) {
         headerLayout.notifyResize();
       }
@@ -102,5 +110,3 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
   }
   return AppMenuClass;
 }
-
-

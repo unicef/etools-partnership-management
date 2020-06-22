@@ -1,4 +1,3 @@
-
 export class ListFilterOption {
   constructor(item: ListFilterOption) {
     this.filterName = item.filterName;
@@ -17,13 +16,13 @@ export class ListFilterOption {
     this.disableMenuOption = item.disableMenuOption;
   }
 
-  filterName: string = '';
-  type: string = '';
+  filterName: string = "";
+  type: string = "";
   selectionOptions?: string[] | number[] | any[];
   optionValue?: string;
   optionLabel?: string;
   selectedValue?: any;
-  path: string = '';
+  path: string = "";
   selected: boolean = false;
   minWidth?: string;
   hideSearch?: boolean;
@@ -43,5 +42,6 @@ export interface SelectedFilterOption {
   disableMenuOption?: boolean;
 }
 
-export type ListOrSelectedFilterOption = ListFilterOption | SelectedFilterOption;// TODO
-
+export type ListOrSelectedFilterOption =
+  | ListFilterOption
+  | SelectedFilterOption; // TODO

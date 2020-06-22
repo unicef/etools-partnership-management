@@ -1,14 +1,17 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-icons/av-icons.js';
-import CONSTANTS from '../../../../config/app-constants.js';
-import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
-import {fireEvent} from '../../../utils/fire-custom-event.js';
-import '../../../layout/etools-status/etools-status.js';
-import '../../../layout/etools-status/etools-status-common-mixin.js';
-import './pd-termination.js';
-import {property} from '@polymer/decorators';
-import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/iron-icons/av-icons.js";
+import CONSTANTS from "../../../../config/app-constants.js";
+import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status-common-mixin";
+import { fireEvent } from "../../../utils/fire-custom-event.js";
+import "../../../layout/etools-status/etools-status.js";
+import "../../../layout/etools-status/etools-status-common-mixin.js";
+import "./pd-termination.js";
+import { property } from "@polymer/decorators";
+import {
+  StatusAction,
+  Status,
+} from "../../../../typings/etools-status.types.js";
+import EtoolsDialog from "@unicef-polymer/etools-dialog";
 
 /**
  * @polymer
@@ -16,92 +19,101 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
  * @appliesMixin EtoolsStatusCommonMixin
  */
 class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
-
   static get template() {
     return html`
-    <style>
-      :host {
-        width: 100%;
-      }
-    </style>
-    <etools-status statuses="[[possibleStatuses]]"
-                  actions="[[possibleActions]]"
-                  on-intervention-draft-event="_setStatusDraft"
-                  on-intervention-suspend-event="_setStatusSuspended"
-                  on-intervention-terminate-event="_setStatusTerminated"
-                  on-intervention-unsuspend-event="_unsuspendIntervention"
-                  on-intervention-delete-event="_openDeleteConfirmation">
-    </etools-status>
+      <style>
+        :host {
+          width: 100%;
+        }
+      </style>
+      <etools-status
+        statuses="[[possibleStatuses]]"
+        actions="[[possibleActions]]"
+        on-intervention-draft-event="_setStatusDraft"
+        on-intervention-suspend-event="_setStatusSuspended"
+        on-intervention-terminate-event="_setStatusTerminated"
+        on-intervention-unsuspend-event="_unsuspendIntervention"
+        on-intervention-delete-event="_openDeleteConfirmation"
+      >
+      </etools-status>
     `;
   }
 
-  @property({type: Number})
+  @property({ type: Number })
   interventionId!: number;
 
-  @property({type: String, observer: InterventionStatus.prototype._activeTabChanged})
+  @property({
+    type: String,
+    observer: InterventionStatus.prototype._activeTabChanged,
+  })
   activeTab!: string;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   newIntervention: boolean = false;
 
-  @property({type: String})
+  @property({ type: String })
   interventionAgreementStatus!: string;
 
-  @property({type: Array})
+  @property({ type: Array })
   possibleStatuses: Status[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   possibleActions: StatusAction[] = [
     {
-      label: 'Save',
+      label: "Save",
       hidden: true,
       primary: true,
-      event: 'save-intervention'
+      event: "save-intervention",
       // save-intervention event is handeled by the parnent
     },
     {
-      label: 'Change to draft',
+      label: "Change to draft",
       hidden: true,
-      event: 'intervention-draft-event'
+      event: "intervention-draft-event",
     },
     {
-      label: 'Suspend',
+      label: "Suspend",
       hidden: true,
-      event: 'intervention-suspend-event'
+      event: "intervention-suspend-event",
     },
     {
-      label: 'Unsuspend',
+      label: "Unsuspend",
       hidden: true,
-      event: 'intervention-unsuspend-event'
+      event: "intervention-unsuspend-event",
     },
     {
-      label: 'Terminate',
+      label: "Terminate",
       hidden: true,
-      event: 'intervention-terminate-event'
+      event: "intervention-terminate-event",
     },
     {
-      label: 'Delete',
+      label: "Delete",
       hidden: true,
-      event: 'intervention-delete-event'
-    }
+      event: "intervention-delete-event",
+    },
   ];
 
-  @property({type: String})
-  deleteWarningMessage: string = 'Are you sure you want to delete this PD/SSFA?';
+  @property({ type: String })
+  deleteWarningMessage: string =
+    "Are you sure you want to delete this PD/SSFA?";
 
-  @property({type: Object})
-  _terminationDialog!: EtoolsDialog & { resetValidations(): void }
-
+  @property({ type: Object })
+  _terminationDialog!: EtoolsDialog & { resetValidations(): void };
 
   ready() {
     super.ready();
-    this.set('sectionName', 'PD/SSFA');
+    this.set("sectionName", "PD/SSFA");
     this._handleStickyScroll();
     this._createStatusChangeWarningDialog();
     this._createDeleteConfirmationDialog();
 
-    this._triggerInterventionDeleteOnConfirm = this._triggerInterventionDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm as any);
+    this._triggerInterventionDeleteOnConfirm = this._triggerInterventionDeleteOnConfirm.bind(
+      this
+    );
+    this.deleteConfirmDialog.addEventListener(
+      "close",
+      this._triggerInterventionDeleteOnConfirm as any
+    );
 
     this._createTerminationDialog();
 
@@ -112,59 +124,62 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.deleteConfirmDialog.removeEventListener('close', this._triggerInterventionDeleteOnConfirm as any);
+    this.deleteConfirmDialog.removeEventListener(
+      "close",
+      this._triggerInterventionDeleteOnConfirm as any
+    );
     if (this._terminationDialog) {
-      document.querySelector('body')!.removeChild(this._terminationDialog);
+      document.querySelector("body")!.removeChild(this._terminationDialog);
     }
   }
 
   setPossibleStatuses() {
-    this.set('possibleStatuses', [
+    this.set("possibleStatuses", [
       {
         label: CONSTANTS.STATUSES.Draft,
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Signed,
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Active,
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Suspended,
-        icon: 'av:pause-circle-filled',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+        icon: "av:pause-circle-filled",
+        iconStyles: "color: " + this.getComputedStyleValue("--warning-color"),
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Terminated,
-        icon: 'report-problem',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        icon: "report-problem",
+        iconStyles: "color: " + this.getComputedStyleValue("--error-color"),
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Ended,
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Closed,
         hidden: false,
-        completed: false
-      }
+        completed: false,
+      },
     ]);
 
     this._computeAvailableStatuses(this.status);
   }
   _activeTabChanged(tab: any, _old: any) {
-    if (typeof tab === 'undefined') {
+    if (typeof tab === "undefined") {
       return;
     }
     this._computeAvailableActions(this.status);
@@ -179,47 +194,47 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
-        availableOptions.push('Save');
-        availableOptions.push('Delete');
+        availableOptions.push("Save");
+        availableOptions.push("Delete");
         break;
 
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        availableOptions.push('Terminate');
-        availableOptions.push('Suspend');
-        availableOptions.push('Save');
+        availableOptions.push("Terminate");
+        availableOptions.push("Suspend");
+        availableOptions.push("Save");
         break;
 
       case CONSTANTS.STATUSES.Active.toLowerCase():
-        availableOptions.push('Terminate');
-        availableOptions.push('Suspend');
-        availableOptions.push('Save');
+        availableOptions.push("Terminate");
+        availableOptions.push("Suspend");
+        availableOptions.push("Save");
         break;
 
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
-        availableOptions.push('Unsuspend');
+        availableOptions.push("Unsuspend");
         break;
 
       case CONSTANTS.STATUSES.Terminated.toLowerCase():
         break;
 
       case CONSTANTS.STATUSES.Closed.toLowerCase():
-        if (this.activeTab === 'attachments') {
-          availableOptions.push('Save');
+        if (this.activeTab === "attachments") {
+          availableOptions.push("Save");
         }
         break;
 
       case CONSTANTS.STATUSES.Ended.toLowerCase():
         break;
 
-        // legacy version of 'ended'
-      case 'implemented':
-        if (this.activeTab === 'attachments') {
-          availableOptions.push('Save');
+      // legacy version of 'ended'
+      case "implemented":
+        if (this.activeTab === "attachments") {
+          availableOptions.push("Save");
         }
         break;
 
       default:
-        availableOptions.push('Save');
+        availableOptions.push("Save");
         break;
     }
 
@@ -228,7 +243,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         const actionName = this.possibleActions[key].label;
 
         if (availableOptions.indexOf(actionName) > -1) {
-          this.set(['possibleActions', key, 'hidden'], false);
+          this.set(["possibleActions", key, "hidden"], false);
         }
       }
     }
@@ -247,7 +262,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Draft;
         break;
@@ -258,7 +273,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Signed;
         break;
@@ -269,7 +284,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Active;
         break;
@@ -280,7 +295,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Suspended,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Suspended;
         break;
@@ -291,7 +306,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Terminated,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Terminated;
         break;
@@ -302,7 +317,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Closed;
         break;
@@ -313,19 +328,19 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Ended;
         break;
 
-        // legacy version of 'ended'
-      case 'implemented':
+      // legacy version of 'ended'
+      case "implemented":
         availableStatuses = [
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
         activeStatus = CONSTANTS.STATUSES.Ended;
         break;
@@ -336,9 +351,9 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Active,
           CONSTANTS.STATUSES.Ended,
-          CONSTANTS.STATUSES.Closed
+          CONSTANTS.STATUSES.Closed,
         ];
-        activeStatus = '';
+        activeStatus = "";
         break;
     }
 
@@ -348,21 +363,21 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         completedFlag = true;
       }
       if (availableStatuses.indexOf(workingStatusLabel) > -1) {
-        this.set(['possibleStatuses', key, 'hidden'], false);
+        this.set(["possibleStatuses", key, "hidden"], false);
       }
-      this.set(['possibleStatuses', key, 'completed'], completedFlag);
+      this.set(["possibleStatuses", key, "completed"], completedFlag);
     }
   }
 
   _statusChangeConfirmationCallback(event: CustomEvent) {
     if (event.detail.confirmed) {
-      fireEvent(this, 'update-intervention-status', {
+      fireEvent(this, "update-intervention-status", {
         interventionId: this.interventionId,
-        status: this.newStatus + ''
+        status: this.newStatus + "",
       });
-      fireEvent(this, 'reload-list');
+      fireEvent(this, "reload-list");
     }
-    this.set('newStatus', '');
+    this.set("newStatus", "");
   }
 
   _statusChangeIsValid(newStatus: string) {
@@ -370,23 +385,36 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       return false;
     }
 
-    if (newStatus === CONSTANTS.STATUSES.Draft.toLowerCase() &&
-        this.status !== CONSTANTS.STATUSES.Draft.toLowerCase()) {
+    if (
+      newStatus === CONSTANTS.STATUSES.Draft.toLowerCase() &&
+      this.status !== CONSTANTS.STATUSES.Draft.toLowerCase()
+    ) {
       // if agreement was not saved (is new) or the status is already changed
       // from draft, stop status change
       return false;
     }
 
-    if (newStatus === CONSTANTS.STATUSES.Active.toLowerCase() &&
-        this.interventionAgreementStatus === CONSTANTS.STATUSES.Suspended.toLowerCase()) {
+    if (
+      newStatus === CONSTANTS.STATUSES.Active.toLowerCase() &&
+      this.interventionAgreementStatus ===
+        CONSTANTS.STATUSES.Suspended.toLowerCase()
+    ) {
       // prevent changing status from suspended to active is the agreement status is suspended
       return false;
     }
 
-    if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
-      if ([CONSTANTS.STATUSES.Active.toLowerCase(),
-        CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
+    if (
+      [
+        CONSTANTS.STATUSES.Suspended.toLowerCase(),
+        CONSTANTS.STATUSES.Terminated.toLowerCase(),
+      ].indexOf(newStatus) > -1
+    ) {
+      if (
+        [
+          CONSTANTS.STATUSES.Active.toLowerCase(),
+          CONSTANTS.STATUSES.Signed.toLowerCase(),
+        ].indexOf(this.status) < 0
+      ) {
         // prevent suspending or terminating anything other than signed or active intervention
         return false;
       }
@@ -397,33 +425,44 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   _computeWarningMessage(newStatus: string) {
     switch (newStatus) {
       case CONSTANTS.STATUSES.Terminated.toLowerCase():
-        this.set('warningMessage', 'You are about to terminate this PD/SSFA. Do you want to continue?');
+        this.set(
+          "warningMessage",
+          "You are about to terminate this PD/SSFA. Do you want to continue?"
+        );
         break;
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
-        this.set('warningMessage', 'You are about to suspend this PD/SSFA. Do you want to continue?');
+        this.set(
+          "warningMessage",
+          "You are about to suspend this PD/SSFA. Do you want to continue?"
+        );
         break;
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        this.set('warningMessage', 'You are about to unsuspend this PD/SSFA. Do you want to continue?');
+        this.set(
+          "warningMessage",
+          "You are about to unsuspend this PD/SSFA. Do you want to continue?"
+        );
         break;
       default:
-        this.set('warningMessage', this._getDefaultWarningMessage());
+        this.set("warningMessage", this._getDefaultWarningMessage());
         break;
     }
   }
 
   _setStatusTerminated() {
     // this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
-    if (!this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())) {
+    if (
+      !this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())
+    ) {
       return;
     }
 
     this._terminationDialog.resetValidations();
-    this._terminationDialog.set('interventionId', this.interventionId);
-    this._terminationDialog.set('termination', {
+    this._terminationDialog.set("interventionId", this.interventionId);
+    this._terminationDialog.set("termination", {
       date: null,
-      attachment_notice: null
+      attachment_notice: null,
     });
-    this._terminationDialog.set('opened', true);
+    this._terminationDialog.set("opened", true);
   }
 
   _setStatusDraft() {
@@ -440,17 +479,16 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
   _triggerInterventionDeleteOnConfirm(e: CustomEvent) {
     if (e.detail.confirmed) {
-      fireEvent(this, 'delete-intervention', {id: this.interventionId});
+      fireEvent(this, "delete-intervention", { id: this.interventionId });
     }
   }
 
   _createTerminationDialog() {
-    this._terminationDialog = document.createElement('pd-termination') as any;
-    document.querySelector('body')!.appendChild(this._terminationDialog);
+    this._terminationDialog = document.createElement("pd-termination") as any;
+    document.querySelector("body")!.appendChild(this._terminationDialog);
 
-    this._terminationDialog.set('terminationElSource', this);
+    this._terminationDialog.set("terminationElSource", this);
   }
-
 }
 
-window.customElements.define('intervention-status', InterventionStatus);
+window.customElements.define("intervention-status", InterventionStatus);

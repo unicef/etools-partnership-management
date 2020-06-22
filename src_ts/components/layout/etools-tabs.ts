@@ -1,19 +1,18 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
+import { timeOut } from "@polymer/polymer/lib/utils/async.js";
+import { Debouncer } from "@polymer/polymer/lib/utils/debounce.js";
 
-import '@polymer/iron-flex-layout/iron-flex-layout';
-import '@polymer/paper-tabs/paper-tabs';
+import "@polymer/iron-flex-layout/iron-flex-layout";
+import "@polymer/paper-tabs/paper-tabs";
 
-import {EtoolsTab} from '../../typings/globals.types';
-import {property} from '@polymer/decorators';
+import { EtoolsTab } from "../../typings/globals.types";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
  * @customElement
  */
 class EtoolsTabs extends PolymerElement {
-
   public static get template() {
     // main template
     // language=HTML
@@ -58,39 +57,37 @@ class EtoolsTabs extends PolymerElement {
         }
       </style>
 
-      <paper-tabs id="tabs"
-                  selected="{{activeTab}}"
-                  attr-for-selected="name"
-                  noink
-                  on-iron-select="_handleTabSelection">
-
+      <paper-tabs
+        id="tabs"
+        selected="{{activeTab}}"
+        attr-for-selected="name"
+        noink
+        on-iron-select="_handleTabSelection"
+      >
         <template is="dom-repeat" items="[[tabs]]">
           <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
-          <span class="tab-content">
-            [[item.tabLabel]]
-            <template is="dom-if" if="[[item.showTabCounter]]" restamp>
-              ([[item.counter]])
-            </template>
-          </span>
+            <span class="tab-content">
+              [[item.tabLabel]]
+              <template is="dom-if" if="[[item.showTabCounter]]" restamp>
+                ([[item.counter]])
+              </template>
+            </span>
           </paper-tab>
         </template>
-
       </paper-tabs>
     `;
   }
 
-  @property({type: String, notify: true})
+  @property({ type: String, notify: true })
   activeTab: string | null = null;
 
-  @property({type: Array})
+  @property({ type: Array })
   tabs: EtoolsTab[] = [];
 
   private _debouncer: Debouncer | null = null;
 
   static get observers() {
-    return [
-      'notifyTabsResize(tabs.*)'
-    ];
+    return ["notifyTabsResize(tabs.*)"];
   }
 
   _handleTabSelection() {
@@ -102,10 +99,12 @@ class EtoolsTabs extends PolymerElement {
       return;
     }
 
-    this._debouncer = Debouncer.debounce(this._debouncer,
-      timeOut.after(50), () => (this.$.tabs as any).notifyResize());
+    this._debouncer = Debouncer.debounce(
+      this._debouncer,
+      timeOut.after(50),
+      () => (this.$.tabs as any).notifyResize()
+    );
   }
-
 }
 
-window.customElements.define('etools-tabs', EtoolsTabs);
+window.customElements.define("etools-tabs", EtoolsTabs);

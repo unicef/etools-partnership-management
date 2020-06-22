@@ -1,26 +1,26 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/paper-checkbox/paper-checkbox';
-import '@unicef-polymer/etools-date-time/datepicker-lite.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-upload/etools-upload.js';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/paper-checkbox/paper-checkbox";
+import "@unicef-polymer/etools-date-time/datepicker-lite.js";
+import "@unicef-polymer/etools-dialog/etools-dialog.js";
+import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import "@unicef-polymer/etools-upload/etools-upload.js";
 
-import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import EndpointsMixin from "../../../../../endpoints/endpoints-mixin.js";
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
-import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles.js';
-import pmpEndpoints from '../../../../../endpoints/endpoints.js';
-import {connect} from 'pwa-helpers/connect-mixin';
-import {RootState, store} from '../../../../../../store';
-import {isJsonStrMatch, copy} from '../../../../../utils/utils';
-import {fireEvent} from '../../../../../utils/fire-custom-event';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../../typings/globals.types.js';
-import {PartnerAssessment} from '../../../../../../models/partners.models.js';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
-import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
+import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles.js";
+import { requiredFieldStarredStyles } from "../../../../../styles/required-field-styles.js";
+import pmpEndpoints from "../../../../../endpoints/endpoints.js";
+import { connect } from "pwa-helpers/connect-mixin";
+import { RootState, store } from "../../../../../../store";
+import { isJsonStrMatch, copy } from "../../../../../utils/utils";
+import { fireEvent } from "../../../../../utils/fire-custom-event";
+import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
+import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
+import { property } from "@polymer/decorators";
+import { LabelAndValue } from "../../../../../../typings/globals.types.js";
+import { PartnerAssessment } from "../../../../../../models/partners.models.js";
+import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
+import { PaperCheckboxElement } from "@polymer/paper-checkbox/paper-checkbox";
 
 /**
  * @polymer
@@ -28,7 +28,6 @@ import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
  * @appliesMixin EndpointsMixin
  */
 class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-
   static get template() {
     return html`
       ${gridLayoutStyles} ${requiredFieldStarredStyles}
@@ -42,7 +41,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         }
       </style>
 
-      <etools-dialog no-padding
+      <etools-dialog
+        no-padding
         keep-dialog-open
         id="assessmentDialog"
         opened="{{opened}}"
@@ -51,83 +51,97 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         dialog-title="Assessment"
         on-confirm-btn-clicked="_validateAndSaveAssessment"
         disable-confirm-btn="[[uploadInProgress]]"
-        disable-dismiss-btn="[[uploadInProgress]]">
-
+        disable-dismiss-btn="[[uploadInProgress]]"
+      >
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-dropdown id="assessmentType"
-                             label="Assessment Type"
-                             placeholder="&#8212;"
-                             options="[[assessmentTypes]]"
-                             selected="{{assessment.type}}"
-                             error-message="Please select Assessment Type"
-                             hide-search
-                             required
-                             auto-validate></etools-dropdown>
+            <etools-dropdown
+              id="assessmentType"
+              label="Assessment Type"
+              placeholder="&#8212;"
+              options="[[assessmentTypes]]"
+              selected="{{assessment.type}}"
+              error-message="Please select Assessment Type"
+              hide-search
+              required
+              auto-validate
+            ></etools-dropdown>
           </div>
           <div class="col col-5 padd-left">
-            <datepicker-lite id="dateSubmitted"
-                               label="Date of Assessment"
-                               value="{{assessment.completed_date}}"
-                               auto-validate
-                               max-date-error-msg="Date can not be in the future"
-                               max-date="[[getCurrentDate()]]"
-                               required
-                               selected-date-display-format="D MMM YYYY">
+            <datepicker-lite
+              id="dateSubmitted"
+              label="Date of Assessment"
+              value="{{assessment.completed_date}}"
+              auto-validate
+              max-date-error-msg="Date can not be in the future"
+              max-date="[[getCurrentDate()]]"
+              required
+              selected-date-display-format="D MMM YYYY"
+            >
             </datepicker-lite>
           </div>
         </div>
         <div class="row-h">
-          <etools-upload id="report"
-                         label="Report"
-                         accept=".doc,.docx,.pdf,.jpg,.png"
-                         file-url="[[assessment.report_attachment]]"
-                         upload-endpoint="[[uploadEndpoint]]"
-                         on-upload-finished="_uploadFinished"
-                         required
-                         readonly="[[_hasId(assessment.id)]]"
-                         show-change="[[!_hasId(assessment.id)]]"
-                         error-message="Please select the report file">
+          <etools-upload
+            id="report"
+            label="Report"
+            accept=".doc,.docx,.pdf,.jpg,.png"
+            file-url="[[assessment.report_attachment]]"
+            upload-endpoint="[[uploadEndpoint]]"
+            on-upload-finished="_uploadFinished"
+            required
+            readonly="[[_hasId(assessment.id)]]"
+            show-change="[[!_hasId(assessment.id)]]"
+            error-message="Please select the report file"
+          >
           </etools-upload>
         </div>
         <div class="row-h">
-          <paper-checkbox checked="[[!assessment.active]]" on-change="_archivedChanged">
+          <paper-checkbox
+            checked="[[!assessment.active]]"
+            on-change="_archivedChanged"
+          >
             Archived
           </paper-checkbox>
         </div>
-
       </etools-dialog>
     `;
   }
 
-  @property({type: Object})
+  @property({ type: Object })
   assessment!: PartnerAssessment;
 
-  @property({type: String})
+  @property({ type: String })
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  @property({type: Boolean, notify: true})
+  @property({ type: Boolean, notify: true })
   opened: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   uploadInProgress: boolean = false;
 
-  @property({type: Array})
+  @property({ type: Array })
   assessmentTypes!: LabelAndValue[];
 
-  @property({type: Object})
+  @property({ type: Object })
   toastEventSource!: PolymerElement;
 
-  @property({type: Object})
+  @property({ type: Object })
   originalAssessment!: PartnerAssessment;
 
-  private _validationSelectors: string[] = ['#assessmentType', '#dateSubmitted', '#report'];
+  private _validationSelectors: string[] = [
+    "#assessmentType",
+    "#dateSubmitted",
+    "#report",
+  ];
 
   public stateChanged(state: RootState) {
     if (!state.commonData) {
       return;
     }
-    if (!isJsonStrMatch(state.commonData.assessmentTypes, this.assessmentTypes)) {
+    if (
+      !isJsonStrMatch(state.commonData.assessmentTypes, this.assessmentTypes)
+    ) {
       this.assessmentTypes = [...state.commonData.assessmentTypes];
     }
   }
@@ -136,7 +150,7 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
       // @ts-ignore
-      this.set('assessment.report_attachment', uploadResponse.id);
+      this.set("assessment.report_attachment", uploadResponse.id);
     }
   }
 
@@ -166,20 +180,20 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     }
     const isNew = !this.assessment.id;
     const options = {
-      method: isNew ? 'POST' : 'PATCH',
+      method: isNew ? "POST" : "PATCH",
       endpoint: this._pickEndpoint(isNew, this.assessment.id),
-      body: this._getBody(isNew)
+      body: this._getBody(isNew),
     };
 
     sendRequest(options)
       .then((resp: any) => {
         this._handleResponse(resp, isNew);
         this.stopSpinner();
-      }).catch((error: any) => {
+      })
+      .catch((error: any) => {
         this._handleErrorResponse(error);
         this.stopSpinner();
       });
-
   }
 
   public _getBody(isNew: boolean) {
@@ -195,27 +209,24 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   public _pickEndpoint(isNew: boolean, assessId: any) {
-    const endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
-    const endpointParam = isNew ? undefined :
-      {assessmentId: assessId};
+    const endpointName = isNew ? "partnerAssessment" : "patchPartnerAssessment";
+    const endpointParam = isNew ? undefined : { assessmentId: assessId };
 
     // @ts-ignore
     return this.getEndpoint(endpointName, endpointParam);
   }
 
   public _handleResponse(response: any, isNew: boolean) {
-
-    this.set('opened', false);
+    this.set("opened", false);
 
     if (isNew) {
-      fireEvent(this, 'assessment-added', response);
+      fireEvent(this, "assessment-added", response);
     } else {
-      fireEvent(this, 'assessment-updated', {
+      fireEvent(this, "assessment-updated", {
         before: this.originalAssessment,
-        after: response
+        after: response,
       });
     }
-
   }
 
   public _handleErrorResponse(error: any) {
@@ -256,15 +267,13 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   public _archivedChanged(e: CustomEvent) {
-    this.set('assessment.active', !(e.target as PaperCheckboxElement).checked);
+    this.set("assessment.active", !(e.target as PaperCheckboxElement).checked);
   }
 
   getCurrentDate() {
     return new Date();
   }
-
-
 }
 
-window.customElements.define('assessment-dialog', AssessmentDialog);
-export {AssessmentDialog};
+window.customElements.define("assessment-dialog", AssessmentDialog);
+export { AssessmentDialog };

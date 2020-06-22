@@ -1,5 +1,5 @@
-import {Permission} from '../../../typings/globals.types';
-import {StaffMember} from '../../../models/partners.models';
+import { Permission } from "../../../typings/globals.types";
+import { StaffMember } from "../../../models/partners.models";
 
 class AgreementPermissionFields {
   constructor(forEdit: boolean) {
@@ -81,7 +81,7 @@ export class Agreement extends MinimalAgreement {
   partner_manager?: number | null = null;
   permissions?: Permission<AgreementPermissionFields> = {
     edit: new AgreementPermissionFields(true),
-    required: new AgreementPermissionFields(false)
+    required: new AgreementPermissionFields(false),
   };
   attachment?: string;
 
@@ -94,5 +94,3 @@ export class AgreementAmendment {
   types: string[] = [];
   signed_amendment_attachment: number | string | null = null;
 }
-
-

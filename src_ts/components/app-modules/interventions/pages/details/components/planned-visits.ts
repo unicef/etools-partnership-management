@@ -1,23 +1,26 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-button/paper-button.js';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/iron-icons/iron-icons.js";
+import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import "@polymer/paper-icon-button/paper-icon-button.js";
+import "@polymer/paper-input/paper-input.js";
+import "@polymer/paper-button/paper-button.js";
 
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '../../../../../layout/etools-form-element-wrapper.js';
-import RepeatableDataSetsMixin from '../../../../../mixins/repeatable-data-sets-mixin';
-import {DomRepeatEvent, GenericObject} from '../../../../../../typings/globals.types';
-import {PlannedVisit} from '../../../../../../typings/intervention.types';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../../styles/shared-styles.js';
-import {repeatableDataSetsStyles} from '../../../../../styles/repeatable-data-sets-styles.js';
-import {buttonsStyles} from '../../../../../styles/buttons-styles.js';
-import {fireEvent} from '../../../../../utils/fire-custom-event.js';
-import {property} from '@polymer/decorators';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
+import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import "../../../../../layout/etools-form-element-wrapper.js";
+import RepeatableDataSetsMixin from "../../../../../mixins/repeatable-data-sets-mixin";
+import {
+  DomRepeatEvent,
+  GenericObject,
+} from "../../../../../../typings/globals.types";
+import { PlannedVisit } from "../../../../../../typings/intervention.types";
+import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles.js";
+import { SharedStyles } from "../../../../../styles/shared-styles.js";
+import { repeatableDataSetsStyles } from "../../../../../styles/repeatable-data-sets-styles.js";
+import { buttonsStyles } from "../../../../../styles/buttons-styles.js";
+import { fireEvent } from "../../../../../utils/fire-custom-event.js";
+import { property } from "@polymer/decorators";
+import { EtoolsDropdownEl } from "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import { PaperInputElement } from "@polymer/paper-input/paper-input.js";
 
 /**
  * @polymer
@@ -25,11 +28,11 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
  * @appliesMixin RepeatableDataSetsMixin
  */
 class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
-
   static get template() {
     return html`
-     ${gridLayoutStyles} ${SharedStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
-     <style>
+      ${gridLayoutStyles} ${SharedStyles} ${repeatableDataSetsStyles}
+      ${buttonsStyles}
+      <style>
         [hidden] {
           display: none !important;
         }
@@ -50,7 +53,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
           text-align: center;
           --paper-input-container: {
             text-align: center;
-          };
+          }
         }
 
         div.col-1 {
@@ -85,11 +88,13 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
         .pv-container {
           @apply --layout-vertical-reverse;
         }
-
       </style>
 
       <div class="row-h extra-top-padd" hidden$="[[!editMode]]">
-        <paper-button class$="secondary-btn [[_getAddBtnPadding(dataItems.length)]]" on-tap="_addNewPlannedVisit">
+        <paper-button
+          class$="secondary-btn [[_getAddBtnPadding(dataItems.length)]]"
+          on-tap="_addNewPlannedVisit"
+        >
           ADD YEAR
         </paper-button>
       </div>
@@ -99,96 +104,114 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
           <div class="row-h item-container">
             <div class="item-actions-container">
               <div class="actions">
-                <paper-icon-button class="action delete"
-                                  on-tap="_openDeleteConfirmation"
-                                  data-args$="[[index]]"
-                                  disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
-                                  icon="cancel">
+                <paper-icon-button
+                  class="action delete"
+                  on-tap="_openDeleteConfirmation"
+                  data-args$="[[index]]"
+                  disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
+                  icon="cancel"
+                >
                 </paper-icon-button>
               </div>
             </div>
             <div class="item-content">
               <div class="row-h">
                 <div class="col col-1 yearContainer">
-                  <etools-dropdown id$="year_[[index]]"
-                                  class="year"
-                                  label="Year"
-                                  placeholder="&#8212;"
-                                  selected="{{item.year}}"
-                                  options="[[years]]"
-                                  required
-                                  error-message="Required"
-                                  trigger-value-change-event
-                                  on-etools-selected-item-changed="_yearChanged"
-                                  readonly$="[[!editMode]]"
-                                  auto-validate>
+                  <etools-dropdown
+                    id$="year_[[index]]"
+                    class="year"
+                    label="Year"
+                    placeholder="&#8212;"
+                    selected="{{item.year}}"
+                    options="[[years]]"
+                    required
+                    error-message="Required"
+                    trigger-value-change-event
+                    on-etools-selected-item-changed="_yearChanged"
+                    readonly$="[[!editMode]]"
+                    auto-validate
+                  >
                   </etools-dropdown>
                 </div>
                 <div class="col col-1">
-                  <paper-input id$="visit_[[index]]_q1"
-                              label="Quarter 1"
-                              value="{{item.programmatic_q1}}"
-                              type="number"
-                              min="0"
-                              allowed-pattern="[0-9\.]"
-                              placeholder="&#8212;"
-                              required$="[[item.year]]"
-                              error-message="Required"
-                              auto-validate
-                              readonly$="[[!editMode]]">
+                  <paper-input
+                    id$="visit_[[index]]_q1"
+                    label="Quarter 1"
+                    value="{{item.programmatic_q1}}"
+                    type="number"
+                    min="0"
+                    allowed-pattern="[0-9.]"
+                    placeholder="&#8212;"
+                    required$="[[item.year]]"
+                    error-message="Required"
+                    auto-validate
+                    readonly$="[[!editMode]]"
+                  >
                   </paper-input>
                 </div>
                 <div class="col col-1">
-                  <paper-input id$="visit_[[index]]_q2"
-                              label="Quarter 2"
-                              value="{{item.programmatic_q2}}"
-                              type="number"
-                              min="0"
-                              allowed-pattern="[0-9\.]"
-                              placeholder="&#8212;"
-                              required$="[[item.year]]"
-                              error-message="Required"
-                              auto-validate
-                              readonly$="[[!editMode]]">
+                  <paper-input
+                    id$="visit_[[index]]_q2"
+                    label="Quarter 2"
+                    value="{{item.programmatic_q2}}"
+                    type="number"
+                    min="0"
+                    allowed-pattern="[0-9.]"
+                    placeholder="&#8212;"
+                    required$="[[item.year]]"
+                    error-message="Required"
+                    auto-validate
+                    readonly$="[[!editMode]]"
+                  >
                   </paper-input>
                 </div>
                 <div class="col col-1">
-                  <paper-input id$="visit_[[index]]_q3"
-                              label="Quarter 3"
-                              value="{{item.programmatic_q3}}"
-                              type="number"
-                              min="0"
-                              allowed-pattern="[0-9\.]"
-                              placeholder="&#8212;"
-                              required$="[[item.year]]"
-                              error-message="Required"
-                              auto-validate
-                              readonly$="[[!editMode]]">
+                  <paper-input
+                    id$="visit_[[index]]_q3"
+                    label="Quarter 3"
+                    value="{{item.programmatic_q3}}"
+                    type="number"
+                    min="0"
+                    allowed-pattern="[0-9.]"
+                    placeholder="&#8212;"
+                    required$="[[item.year]]"
+                    error-message="Required"
+                    auto-validate
+                    readonly$="[[!editMode]]"
+                  >
                   </paper-input>
                 </div>
                 <div class="col col-1">
-                  <paper-input id$="visit_[[index]]_q4"
-                              label="Quarter 4"
-                              value="{{item.programmatic_q4}}"
-                              type="number"
-                              min="0"
-                              allowed-pattern="[0-9\.]"
-                              placeholder="&#8212;"
-                              required$="[[item.year]]"
-                              error-message="Required"
-                              auto-validate
-                              readonly$="[[!editMode]]">
+                  <paper-input
+                    id$="visit_[[index]]_q4"
+                    label="Quarter 4"
+                    value="{{item.programmatic_q4}}"
+                    type="number"
+                    min="0"
+                    allowed-pattern="[0-9.]"
+                    placeholder="&#8212;"
+                    required$="[[item.year]]"
+                    error-message="Required"
+                    auto-validate
+                    readonly$="[[!editMode]]"
+                  >
                   </paper-input>
                 </div>
                 <div class="col col-1">
-                  <etools-form-element-wrapper label="TOTAL" class="row-second-bg" no-placeholder>
-                    [[_getTotal(item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)]]
+                  <etools-form-element-wrapper
+                    label="TOTAL"
+                    class="row-second-bg"
+                    no-placeholder
+                  >
+                    [[_getTotal(item.programmatic_q1, item.programmatic_q2,
+                    item.programmatic_q3, item.programmatic_q4)]]
                   </etools-form-element-wrapper>
-
                 </div>
-                <div class="col col-4"
-                    hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3,
-                               item.programmatic_q4)]]">
+                <div
+                  class="col col-4"
+                  hidden$="[[!_showErrorMsg(item.year, item.programmatic_q1, item.programmatic_q2, item.programmatic_q3,
+                               item.programmatic_q4)]]"
+                >
                   <div class="error-msg">Total has to be greater than 0</div>
                 </div>
               </div>
@@ -197,35 +220,39 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
         </template>
       </div>
 
-      <div class$="row-h [[_getNoPVMsgPadding(dataItems.length)]]" hidden$="[[!_emptyList(dataItems.length)]]">
+      <div
+        class$="row-h [[_getNoPVMsgPadding(dataItems.length)]]"
+        hidden$="[[!_emptyList(dataItems.length)]]"
+      >
         <p>There are no planned visits added.</p>
       </div>
     `;
   }
 
-  @property({type: String})
-  _deleteEpName: string = 'interventionPVLinkDelete';
+  @property({ type: String })
+  _deleteEpName: string = "interventionPVLinkDelete";
 
-  @property({type: Array})
+  @property({ type: Array })
   years: [] = [];
 
   // @ts-ignore
-  @property({type: Boolean, observer: PlannedVisits.prototype._editModeChanged})
+  @property({
+    type: Boolean,
+    observer: PlannedVisits.prototype._editModeChanged,
+  })
   editMode!: boolean;
 
-  @property({type: Number})
+  @property({ type: Number })
   interventionId!: number;
 
-  @property({type: String})
+  @property({ type: String })
   interventionStatus!: string;
 
-  @property({type: Object})
+  @property({ type: Object })
   extraEndpointParams!: GenericObject;
 
   static get observers() {
-    return [
-      '_dataItemsChanged(dataItems)'
-    ];
+    return ["_dataItemsChanged(dataItems)"];
   }
 
   ready() {
@@ -234,14 +261,19 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _getAddBtnPadding(itemsLength: number) {
-    return (!itemsLength ? '' : 'padd-left-when-items') + ' planned-visits';
+    return (!itemsLength ? "" : "padd-left-when-items") + " planned-visits";
   }
   _getNoPVMsgPadding(itemsLength: number) {
-    return (!itemsLength && this.editMode) ? 'no-top-padd' : '';
+    return !itemsLength && this.editMode ? "no-top-padd" : "";
   }
 
   _getTotal(q1: string, q2: string, q3: string, q4: string) {
-    return (Number(q1) || 0) + (Number(q2) || 0) + (Number(q3) || 0) + (Number(q4) || 0);
+    return (
+      (Number(q1) || 0) +
+      (Number(q2) || 0) +
+      (Number(q3) || 0) +
+      (Number(q4) || 0)
+    );
   }
 
   _showErrorMsg(year: string, q1: string, q2: string, q3: string, q4: string) {
@@ -265,7 +297,9 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   _validateYear(index: number) {
     let valid = true;
-    const yearEl = this.shadowRoot!.querySelector('#year_' + index) as EtoolsDropdownEl;
+    const yearEl = this.shadowRoot!.querySelector(
+      "#year_" + index
+    ) as EtoolsDropdownEl;
 
     if (yearEl && !yearEl.validate()) {
       valid = false;
@@ -275,19 +309,34 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   _validateQuarters(item: PlannedVisit, index: number) {
     let valid = true;
-    const q1 = this.shadowRoot!.querySelector('#visit_' + index + '_q1') as PaperInputElement;
-    const q2 = this.shadowRoot!.querySelector('#visit_' + index + '_q2') as PaperInputElement;
-    const q3 = this.shadowRoot!.querySelector('#visit_' + index + '_q3') as PaperInputElement;
-    const q4 = this.shadowRoot!.querySelector('#visit_' + index + '_q4') as PaperInputElement;
+    const q1 = this.shadowRoot!.querySelector(
+      "#visit_" + index + "_q1"
+    ) as PaperInputElement;
+    const q2 = this.shadowRoot!.querySelector(
+      "#visit_" + index + "_q2"
+    ) as PaperInputElement;
+    const q3 = this.shadowRoot!.querySelector(
+      "#visit_" + index + "_q3"
+    ) as PaperInputElement;
+    const q4 = this.shadowRoot!.querySelector(
+      "#visit_" + index + "_q4"
+    ) as PaperInputElement;
 
-    [q1, q2, q3, q4].forEach(function(q) {
+    [q1, q2, q3, q4].forEach(function (q) {
       if (q) {
         if (!q.validate()) {
           valid = false;
         }
       }
     });
-    if (!this._getTotal(item.programmatic_q1, item.programmatic_q2, item.programmatic_q3, item.programmatic_q4)) {
+    if (
+      !this._getTotal(
+        item.programmatic_q1,
+        item.programmatic_q2,
+        item.programmatic_q3,
+        item.programmatic_q4
+      )
+    ) {
       valid = false;
     }
     return valid;
@@ -301,9 +350,9 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
 
   _dataItemsChanged(dataItems: any) {
     if (!Array.isArray(dataItems)) {
-      this.set('dataItems', []);
+      this.set("dataItems", []);
     }
-    this.set('extraEndpointParams', {intervention_id: this.interventionId});
+    this.set("extraEndpointParams", { intervention_id: this.interventionId });
   }
 
   /**
@@ -311,26 +360,41 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
    * and id assigned(only if is not saved))
    */
   _canBeRemoved(index: number, editMode: boolean) {
-    if (!editMode || !this.dataItems || !this.dataItems.length || !this.dataItems[index]) {
+    if (
+      !editMode ||
+      !this.dataItems ||
+      !this.dataItems.length ||
+      !this.dataItems[index]
+    ) {
       return false;
     }
     const plannedVisit = this.dataItems[index];
     const plannedVisitId = parseInt(plannedVisit.id, 10);
-    return (this._isDraft() || !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0));
+    return (
+      this._isDraft() ||
+      !(plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0)
+    );
   }
 
   _isDraft() {
-    return (this.interventionStatus === '' || this.interventionStatus === 'draft');
+    return (
+      this.interventionStatus === "" || this.interventionStatus === "draft"
+    );
   }
 
   _yearChanged(event: DomRepeatEvent) {
     const yearSelected = event.detail.selectedItem
       ? event.detail.selectedItem.value
       : null;
-    const yearDropdown = this.shadowRoot!.querySelector('#year_' + event.model.index);
+    const yearDropdown = this.shadowRoot!.querySelector(
+      "#year_" + event.model.index
+    );
 
-    if (this.isAlreadySelected(yearSelected, event.model.index, 'year')) {
-      fireEvent(this, 'toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
+    if (this.isAlreadySelected(yearSelected, event.model.index, "year")) {
+      fireEvent(this, "toast", {
+        text: "Year already selected on other planned visit item.",
+        showCloseBtn: true,
+      });
       this._clearSelectedYear(yearDropdown, event);
     }
   }
@@ -342,7 +406,7 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
       if (yearDropdown) {
         yearDropdown.selected = null;
       }
-      this.set('dataItems.' + event.model.index + '.year', null);
+      this.set("dataItems." + event.model.index + ".year", null);
     });
   }
 
@@ -351,14 +415,16 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
    */
   _addNewPlannedVisit() {
     if (!this.validate()) {
-      fireEvent(this, 'toast', {text: 'Already added planned visit data is not valid yet', showCloseBtn: true});
+      fireEvent(this, "toast", {
+        text: "Already added planned visit data is not valid yet",
+        showCloseBtn: true,
+      });
       return;
     }
     this._addElement();
   }
-
 }
 
-window.customElements.define('planned-visits', PlannedVisits);
+window.customElements.define("planned-visits", PlannedVisits);
 
-export {PlannedVisits as PlannedVisitsEl};
+export { PlannedVisits as PlannedVisitsEl };

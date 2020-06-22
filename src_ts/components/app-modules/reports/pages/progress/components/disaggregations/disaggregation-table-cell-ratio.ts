@@ -1,11 +1,11 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/app-layout/app-grid/app-grid-style.js';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/app-layout/app-grid/app-grid-style.js";
 
-import './disaggregation-field.js';
-import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
-import {disaggregationTableStyles} from './styles/disaggregation-table-styles.js';
-import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../../typings/globals.types.js';
+import "./disaggregation-field.js";
+import UtilsMixin from "../../../../../../mixins/utils-mixin.js";
+import { disaggregationTableStyles } from "./styles/disaggregation-table-styles.js";
+import { property } from "@polymer/decorators";
+import { GenericObject } from "../../../../../../../typings/globals.types.js";
 
 /**
  * @polymer
@@ -13,9 +13,8 @@ import {GenericObject} from '../../../../../../../typings/globals.types.js';
  * @appliesMixin UtilsMixin
  */
 class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
-
   static get is() {
-    return 'disaggregation-table-cell-ratio';
+    return "disaggregation-table-cell-ratio";
   }
 
   static get template() {
@@ -56,24 +55,25 @@ class DisaggregationTableCellRatio extends UtilsMixin(PolymerElement) {
 
       <div class="app-grid">
         <div class="item">
-          <span>[[_formatNumber(data.v, '-', 0, '\,')]]</span>
+          <span>[[_formatNumber(data.v, '-', 0, ',')]]</span>
         </div>
         <div class="item">
-          <span>[[_formatNumber(data.d, '-', 0, '\,')]]</span>
+          <span>[[_formatNumber(data.d, '-', 0, ',')]]</span>
         </div>
         <div class="computed-value">
-          <span>[[_formatNumber(data.v, '-', 0, '\,')]]</span>
+          <span>[[_formatNumber(data.v, '-', 0, ',')]]</span>
           /
-          <span>[[_formatNumber(data.d, '-', 0, '\,')]]</span>
+          <span>[[_formatNumber(data.d, '-', 0, ',')]]</span>
         </div>
       </div>
     `;
   }
 
-  @property({type: Object})
+  @property({ type: Object })
   data!: GenericObject;
-
 }
 
-window.customElements.define(DisaggregationTableCellRatio.is, DisaggregationTableCellRatio);
-
+window.customElements.define(
+  DisaggregationTableCellRatio.is,
+  DisaggregationTableCellRatio
+);

@@ -1,5 +1,5 @@
-import {GenericObject} from '../../typings/globals.types';
-import difference from 'lodash-es/difference';
+import { GenericObject } from "../../typings/globals.types";
+import difference from "lodash-es/difference";
 
 export const isObject = (a: any) => {
   return a && a.constructor === Object;
@@ -28,7 +28,7 @@ export const copy = (a: any) => {
 };
 
 // For simple objects, no nesting
-export const objectsAreTheSame = (obj1: any, obj2: any) =>{
+export const objectsAreTheSame = (obj1: any, obj2: any) => {
   if (obj1 === obj2) {
     return true;
   }
@@ -47,7 +47,7 @@ export const objectsAreTheSame = (obj1: any, obj2: any) =>{
 
   let areDiff = false;
   props1.forEach((p: string) => {
-    if ( obj1[p] !== obj2[p]) {
+    if (obj1[p] !== obj2[p]) {
       areDiff = true;
     }
   });
@@ -56,7 +56,10 @@ export const objectsAreTheSame = (obj1: any, obj2: any) =>{
 
 export function arraysAreEqual(array1: [], array2: []) {
   let differencesArray = [];
-  if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
+  if (
+    (!array1 && array2 && array2.length) ||
+    (!array2 && array1 && array1.length)
+  ) {
     return false;
   }
   if (array1.length > array2.length) {
@@ -66,5 +69,3 @@ export function arraysAreEqual(array1: [], array2: []) {
   }
   return isEmptyObject(differencesArray);
 }
-
-

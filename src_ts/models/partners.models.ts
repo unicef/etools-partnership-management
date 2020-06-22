@@ -1,8 +1,8 @@
-import {GenericObject} from '../typings/globals.types';
-import {ModelsCommon} from './models.common';
+import { GenericObject } from "../typings/globals.types";
+import { ModelsCommon } from "./models.common";
 
 export class PartnerAssessment {
-  id: number| null = null;
+  id: number | null = null;
   type: string | null = null;
   completed_date: string | null = null;
   report_attachment: any | null = null;
@@ -13,8 +13,8 @@ export class PartnerAssessment {
 
 export class PartnerCoreValAssessment extends ModelsCommon {
   id: number | null = null;
-  date: string = ''; // TODO: use a date object
-  attachment: string | number = '';
+  date: string = ""; // TODO: use a date object
+  attachment: string | number = "";
 
   constructor(data: GenericObject) {
     super();
@@ -22,19 +22,15 @@ export class PartnerCoreValAssessment extends ModelsCommon {
   }
 }
 
-export class PartnerIntervention {
+export class PartnerIntervention {}
 
-}
-
-export class PartnerPlannedEngagement {
-
-}
+export class PartnerPlannedEngagement {}
 
 export class MinimalStaffMember extends ModelsCommon {
-  id: number | null= null;
-  name: string = '';
-  first_name: string = '';
-  last_name: string = '';
+  id: number | null = null;
+  name: string = "";
+  first_name: string = "";
+  last_name: string = "";
   active: boolean = true;
 
   constructor(staffMemberData: GenericObject) {
@@ -42,15 +38,15 @@ export class MinimalStaffMember extends ModelsCommon {
 
     if (Object.keys(staffMemberData)) {
       this.setObjProperties(staffMemberData);
-      this.name = this.first_name + ' ' + this.last_name;
+      this.name = this.first_name + " " + this.last_name;
     }
   }
 }
 
 export class StaffMember extends MinimalStaffMember {
-  title: string = '';
-  email: string = '';
-  phone: string = '';
+  title: string = "";
+  email: string = "";
+  phone: string = "";
 
   constructor(staffMemberData: GenericObject) {
     super(staffMemberData);
@@ -63,45 +59,45 @@ export class StaffMember extends MinimalStaffMember {
 
 export class Partner extends ModelsCommon {
   id: null | number = null;
-  alternate_name: string = '';
+  alternate_name: string = "";
   assessments: PartnerAssessment[] = [];
-  basis_for_risk_rating: string = '';
+  basis_for_risk_rating: string = "";
   blocked: boolean = false;
-  city: string = '';
-  core_values_assessment_date: string = ''; // TODO: update type to date
+  city: string = "";
+  core_values_assessment_date: string = ""; // TODO: update type to date
   core_values_assessments: PartnerCoreValAssessment[] = [];
-  country: string = '';
-  created: string = ''; // TODO: update type to date
-  cso_type: string = '';
+  country: string = "";
+  created: string = ""; // TODO: update type to date
+  cso_type: string = "";
   deleted_flag: boolean = false;
-  description: string = '';
-  email: string = '';
+  description: string = "";
+  email: string = "";
   // TODO: check expiring_assessment_flag warning, it might be related to a flag from this object
   flags: GenericObject = {};
   hact_min_requirements: GenericObject = {};
   hact_values: GenericObject = {};
   hidden: boolean = false;
   interventions: PartnerIntervention[] = [];
-  last_assessment_date: string = ''; // TODO: update type to date
-  name: string = '';
-  partner_type: string = '';
-  partner_type_slug: string = ''; // TODO: if cannot be used => remove property
-  phone_number: string = '';
+  last_assessment_date: string = ""; // TODO: update type to date
+  name: string = "";
+  partner_type: string = "";
+  partner_type_slug: string = ""; // TODO: if cannot be used => remove property
+  phone_number: string = "";
   planned_engagement: PartnerPlannedEngagement = {};
   planned_visits: any[] = [];
-  postal_code: string = '';
-  psea_assessment_date: string = '';
-  rating: string = '';
-  sea_risk_rating_name: string = '';
+  postal_code: string = "";
+  psea_assessment_date: string = "";
+  rating: string = "";
+  sea_risk_rating_name: string = "";
   shared_with: string[] = [];
-  short_name: string = '';
+  short_name: string = "";
   staff_members: StaffMember[] = [];
-  street_address: string = '';
-  total_ct_cp: string = '';
-  total_ct_cy: string = '';
-  total_ct_ytd: string = '';
-  type_of_assessment: string = '';
-  vendor_number: string = '';
+  street_address: string = "";
+  total_ct_cp: string = "";
+  total_ct_cy: string = "";
+  total_ct_ytd: string = "";
+  type_of_assessment: string = "";
+  vendor_number: string = "";
   vision_synced: boolean = false;
   [key: string]: any;
 
@@ -116,7 +112,7 @@ export class Partner extends ModelsCommon {
   getSaveCVARequestPayload(cvaData: GenericObject) {
     return {
       id: this.id,
-      core_values_assessments: [new PartnerCoreValAssessment(cvaData)]
+      core_values_assessments: [new PartnerCoreValAssessment(cvaData)],
     };
   }
 
@@ -137,11 +133,6 @@ export class Partner extends ModelsCommon {
     // TODO2 dependent on TODO1= true: normalize the other prop data that contains partner types
     // assessments, core_values_assessments, interventions, planned_engagement
   }
-
 }
 
-export class PartnerListItem {
-
-}
-
-
+export class PartnerListItem {}

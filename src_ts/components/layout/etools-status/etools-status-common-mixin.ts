@@ -1,14 +1,17 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import ScrollControlMixin from '../../mixins/scroll-control-mixin';
-import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
-import {Status, StatusAction} from '../../../typings/etools-status.types';
-import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import { timeOut } from "@polymer/polymer/lib/utils/async.js";
+import { Debouncer } from "@polymer/polymer/lib/utils/debounce.js";
+import ScrollControlMixin from "../../mixins/scroll-control-mixin";
+import {
+  removeDialog,
+  createDynamicDialog,
+} from "@unicef-polymer/etools-dialog/dynamic-dialog";
+import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging.js";
+import { Constructor } from "../../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
+import { property } from "@polymer/decorators";
+import { Status, StatusAction } from "../../../typings/etools-status.types";
+import EtoolsDialog from "@unicef-polymer/etools-dialog";
 declare const ShadyCSS: any;
 
 /**
@@ -17,61 +20,63 @@ declare const ShadyCSS: any;
  * @mixinFunction
  * @appliesMixin ScrollControlMixin
  **/
-function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(
+  baseClass: T
+) {
+  class EtoolsStatusCommonClass extends ScrollControlMixin(
+    baseClass as Constructor<PolymerElement>
+  ) {
+    @property({ type: String })
+    status: string = "";
 
-  class EtoolsStatusCommonClass extends ScrollControlMixin(baseClass as Constructor<PolymerElement>) {
+    @property({ type: String })
+    newStatus: string = "";
 
-    @property({type: String})
-    status: string = '';
+    @property({ type: String })
+    warningMessage: string = "";
 
-    @property({type: String})
-    newStatus: string = '';
-
-    @property({type: String})
-    warningMessage: string = '';
-
-    @property({type: Boolean})
+    @property({ type: Boolean })
     editMode: boolean = true;
 
-    @property({type: Boolean})
+    @property({ type: Boolean })
     active!: boolean;
 
-    @property({type: Number})
+    @property({ type: Number })
     minimumDistanceFromWindowTop: number = 76;
 
-    @property({type: String})
+    @property({ type: String })
     sectionName!: string; // PD/SSFA, Partners, Agreements
 
-    @property({type: Array})
+    @property({ type: Array })
     possibleStatuses!: Status[];
 
-    @property({type: Array})
+    @property({ type: Array })
     possibleActions!: StatusAction[];
 
-    @property({type: Object})
+    @property({ type: Object })
     warningDialog!: EtoolsDialog;
 
-    @property({type: Object})
+    @property({ type: Object })
     deleteConfirmDialog!: EtoolsDialog;
 
-    @property({type: String})
-    deleteWarningMessage!: string
+    @property({ type: String })
+    deleteWarningMessage!: string;
 
     private _resetStatusActionsDebouncer!: Debouncer;
     private _statusActiveChangeDebouncer!: Debouncer;
     private statusChangeWarningDialogContent!: HTMLElement;
 
     static get observers() {
-      return [
-        '_handleStatusChange(status)',
-        '_activeFlagChanged(active)'
-      ];
+      return ["_handleStatusChange(status)", "_activeFlagChanged(active)"];
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
       if (this.warningDialog) {
-        this.warningDialog.removeEventListener('close', this._statusChangeConfirmationCallback as any);
+        this.warningDialog.removeEventListener(
+          "close",
+          this._statusChangeConfirmationCallback as any
+        );
         removeDialog(this.warningDialog);
       }
       if (this.deleteConfirmDialog) {
@@ -83,11 +88,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
 
     _activeFlagChanged(active: boolean) {
       if (active) {
-        this._statusActiveChangeDebouncer = Debouncer.debounce(this._statusActiveChangeDebouncer,
+        this._statusActiveChangeDebouncer = Debouncer.debounce(
+          this._statusActiveChangeDebouncer,
           timeOut.after(20),
           () => {
             this._forceScollPositionRecalculation.bind(this);
-          });
+          }
+        );
       }
     }
 
@@ -135,8 +142,8 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _setNotStickyStyles() {
-      const statusElem = this.shadowRoot!.querySelector('etools-status');
-      statusElem!.classList.remove('sticky-status');
+      const statusElem = this.shadowRoot!.querySelector("etools-status");
+      statusElem!.classList.remove("sticky-status");
     }
 
     _resetScrollHandler() {
@@ -147,15 +154,18 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _scrollChangedHandler() {
-      this._waitForBoundingClientRectToBeSet()
-        .then((containerDistanceFromViewportTop) => {
-          const statusElem = this.shadowRoot!.querySelector('etools-status');
-          if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-            statusElem!.classList.add('sticky-status');
+      this._waitForBoundingClientRectToBeSet().then(
+        (containerDistanceFromViewportTop) => {
+          const statusElem = this.shadowRoot!.querySelector("etools-status");
+          if (
+            containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop
+          ) {
+            statusElem!.classList.add("sticky-status");
           } else {
-            statusElem!.classList.remove('sticky-status');
+            statusElem!.classList.remove("sticky-status");
           }
-        });
+        }
+      );
     }
 
     _waitForBoundingClientRectToBeSet() {
@@ -177,16 +187,21 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _createStatusChangeWarningDialog() {
-      this.statusChangeWarningDialogContent = document.createElement('p');
-      this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-      this._statusChangeConfirmationCallback = this._statusChangeConfirmationCallback.bind(this);
+      this.statusChangeWarningDialogContent = document.createElement("p");
+      this.statusChangeWarningDialogContent.setAttribute(
+        "id",
+        "statusChangeWarningContent"
+      );
+      this._statusChangeConfirmationCallback = this._statusChangeConfirmationCallback.bind(
+        this
+      );
       const conf: any = {
-        title: this.sectionName + ' status change',
-        size: 'md',
-        okBtnText: 'Yes',
-        cancelBtnText: 'Cancel',
+        title: this.sectionName + " status change",
+        size: "md",
+        okBtnText: "Yes",
+        cancelBtnText: "Cancel",
         closeCallback: this._statusChangeConfirmationCallback,
-        content: this.statusChangeWarningDialogContent
+        content: this.statusChangeWarningDialogContent,
       };
       this.warningDialog = createDynamicDialog(conf);
     }
@@ -197,26 +212,31 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
           this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
           this.warningDialog.opened = true;
         } else {
-          logWarn('#statusChangeWarningContent element not found!', 'pmp ' +
-              this.sectionName + ' status change');
+          logWarn(
+            "#statusChangeWarningContent element not found!",
+            "pmp " + this.sectionName + " status change"
+          );
         }
       } else {
-        logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
+        logWarn(
+          "warningDialog not created!",
+          "pmp " + this.sectionName + " status change"
+        );
       }
     }
 
     _setAllActionsToHidden() {
       const possibleActions = this.possibleActions;
       possibleActions.forEach((_elem: any, index: number) => {
-        this.set(['possibleActions', index, 'hidden'], true);
+        this.set(["possibleActions", index, "hidden"], true);
       });
     }
 
     _setAllStatusesToHidden() {
       const possibleStatuses = this.possibleStatuses;
       possibleStatuses.forEach((_elem: any, index: number) => {
-        this.set(['possibleStatuses', index, 'hidden'], true);
-        this.set(['possibleStatuses', index, 'completed'], false);
+        this.set(["possibleStatuses", index, "hidden"], true);
+        this.set(["possibleStatuses", index, "completed"], false);
       });
     }
 
@@ -224,21 +244,23 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       if (!this._statusChangeIsValid(newStatus)) {
         return;
       }
-      this.set('newStatus', newStatus);
+      this.set("newStatus", newStatus);
       this._computeWarningMessage(newStatus);
       this._showStatusChangeConfirmationDialog();
     }
 
     _handleStatusChange(status: string) {
-      if (typeof status === 'undefined') {
+      if (typeof status === "undefined") {
         return;
       }
-      this._resetStatusActionsDebouncer = Debouncer.debounce(this._resetStatusActionsDebouncer,
+      this._resetStatusActionsDebouncer = Debouncer.debounce(
+        this._resetStatusActionsDebouncer,
         timeOut.after(50),
         () => {
           this._computeAvailableStatuses(status);
           this._computeAvailableActions(status);
-        });
+        }
+      );
     }
 
     _statusChangeConfirmationCallback(_event: CustomEvent) {
@@ -260,12 +282,17 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
 
     _computeWarningMessage(_newStatus: string) {
       // children might want to overwrite this
-      this.set('warningMessage', this._getDefaultWarningMessage());
+      this.set("warningMessage", this._getDefaultWarningMessage());
     }
 
     _getDefaultWarningMessage() {
-      return 'You are changing the status from <strong>\''
-          + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+      return (
+        "You are changing the status from <strong>'" +
+        this.status +
+        "'</strong> to <strong>'" +
+        this.newStatus +
+        "'</strong>. Do you want to continue?"
+      );
     }
 
     getComputedStyleValue(varName: string) {
@@ -277,13 +304,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _createDeleteConfirmationDialog() {
-      const warnDeleteContent = document.createElement('div');
+      const warnDeleteContent = document.createElement("div");
       warnDeleteContent.innerHTML = this.deleteWarningMessage;
       const conf: any = {
-        size: 'md',
-        okBtnText: 'Yes',
-        cancelBtnText: 'No',
-        content: warnDeleteContent
+        size: "md",
+        okBtnText: "Yes",
+        cancelBtnText: "No",
+        content: warnDeleteContent,
       };
       this.deleteConfirmDialog = createDynamicDialog(conf);
     }

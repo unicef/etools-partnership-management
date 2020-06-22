@@ -1,88 +1,92 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import '@polymer/iron-flex-layout/iron-flex-layout';
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import orderBy from 'lodash-es/orderBy';
-import '@unicef-polymer/etools-dropdown/etools-dropdown';
-import {store, RootState} from '../../store';
-import {SharedStyles} from '../styles/shared-styles';
-import {requiredFieldStarredStyles} from '../styles/required-field-styles';
-import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
-import {CpStructure, GenericObject} from '../../typings/globals.types';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {property} from '@polymer/decorators';
+import { PolymerElement, html } from "@polymer/polymer";
+import { Debouncer } from "@polymer/polymer/lib/utils/debounce.js";
+import { timeOut } from "@polymer/polymer/lib/utils/async.js";
+import "@polymer/iron-flex-layout/iron-flex-layout";
+import { connect } from "pwa-helpers/connect-mixin.js";
+import orderBy from "lodash-es/orderBy";
+import "@unicef-polymer/etools-dropdown/etools-dropdown";
+import { store, RootState } from "../../store";
+import { SharedStyles } from "../styles/shared-styles";
+import { requiredFieldStarredStyles } from "../styles/required-field-styles";
+import { isJsonStrMatch, isEmptyObject } from "../utils/utils";
+import { CpStructure, GenericObject } from "../../typings/globals.types";
+import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging.js";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
  * @customElement
  */
 export class EtoolsCpStructure extends connect(store)(PolymerElement) {
-
   static get template() {
     return html`
-          ${SharedStyles} ${requiredFieldStarredStyles}
-          <style>
-            :host {
-              @apply --layout-horizontal;
-            }
+      ${SharedStyles} ${requiredFieldStarredStyles}
+      <style>
+        :host {
+          @apply --layout-horizontal;
+        }
 
-            *[hidden] {
-              display: none !important;
-            }
+        *[hidden] {
+          display: none !important;
+        }
 
-            #cpStructure {
-              width: 100%;
-            }
-          </style>
+        #cpStructure {
+          width: 100%;
+        }
+      </style>
 
-          <etools-dropdown id="cpStructure"
-                            label="CP Structure"
-                            placeholder="&#8212;"
-                            options="[[sortedCountryProgrammes]]"
-                            option-value="id"
-                            option-label="name"
-                            selected="{{selectedCp}}"
-                            hide-search
-                            readonly$="[[!editMode]]"
-                            required$="[[required]]"
-                            auto-validate
-                            error-message="Please select CP Structure">
-          </etools-dropdown>
-        `;
+      <etools-dropdown
+        id="cpStructure"
+        label="CP Structure"
+        placeholder="&#8212;"
+        options="[[sortedCountryProgrammes]]"
+        option-value="id"
+        option-label="name"
+        selected="{{selectedCp}}"
+        hide-search
+        readonly$="[[!editMode]]"
+        required$="[[required]]"
+        auto-validate
+        error-message="Please select CP Structure"
+      >
+      </etools-dropdown>
+    `;
   }
 
-  @property({type: Array})
+  @property({ type: Array })
   countryProgrammes!: CpStructure[];
 
-  @property({type: Array})
+  @property({ type: Array })
   sortedCountryProgrammes!: CpStructure[];
 
-  @property({type: String, notify: true})
+  @property({ type: String, notify: true })
   selectedCp!: string;
 
-  @property({type: Object})
+  @property({ type: Object })
   appModuleItem: GenericObject | null = null;
 
-  @property({type: String})
+  @property({ type: String })
   module!: string;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   editMode: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   required: boolean = false;
 
   private cpInitDebouncer!: Debouncer;
 
   static get observers() {
-    return [
-      '_countryProgrammesChanged(countryProgrammes, appModuleItem)'
-    ];
+    return ["_countryProgrammesChanged(countryProgrammes, appModuleItem)"];
   }
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.countryProgrammes, state.commonData!.countryProgrammes)) {
+    if (
+      !isJsonStrMatch(
+        this.countryProgrammes,
+        state.commonData!.countryProgrammes
+      )
+    ) {
       this.countryProgrammes = state.commonData!.countryProgrammes;
     }
   }
@@ -97,7 +101,9 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
       return cpOptions[0];
     } else {
       // more than 1 cp available, use first one found that is active, not special and not future
-      return cpOptions.find((cp: CpStructure) => cp.active && !cp.future && !cp.special);
+      return cpOptions.find(
+        (cp: CpStructure) => cp.active && !cp.future && !cp.special
+      );
     }
   }
 
@@ -106,13 +112,19 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
       return;
     }
 
-    const currentCP = this._getCurrentCountryProgramme(this.sortedCountryProgrammes);
+    const currentCP = this._getCurrentCountryProgramme(
+      this.sortedCountryProgrammes
+    );
 
-    this.set('selectedCp', currentCP ? currentCP.id : null);
+    this.set("selectedCp", currentCP ? currentCP.id : null);
   }
 
-  _countryProgrammesChanged(_countryProgrammes: CpStructure[], appModuleItem: any) {
-    this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer,
+  _countryProgrammesChanged(
+    _countryProgrammes: CpStructure[],
+    appModuleItem: any
+  ) {
+    this.cpInitDebouncer = Debouncer.debounce(
+      this.cpInitDebouncer,
       timeOut.after(10),
       () => {
         if (appModuleItem) {
@@ -126,13 +138,16 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
             }
           }
         }
-      });
+      }
+    );
   }
 
   _prepareCpsForDisplay() {
-    const displayableCps = orderBy(this.countryProgrammes,
-      ['future', 'active', 'special'],
-      ['desc', 'desc', 'asc']);
+    const displayableCps = orderBy(
+      this.countryProgrammes,
+      ["future", "active", "special"],
+      ["desc", "desc", "asc"]
+    );
 
     // NOTE: Do not remove this code yet, it might be restored in the future
     // if (!this.appModuleItem || !this.appModuleItem.id) {
@@ -169,20 +184,22 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
     return this.countryProgrammes.some((cp: CpStructure) => {
       return parseInt(cp.id, 10) === parseInt(cpId, 10) && cp.expired;
     });
-
   }
 
   _getExpiredCPWarning() {
-    let msg = '';
+    let msg = "";
     switch (this.module) {
-      case 'agreements':
-        msg = 'Agreement ' + this.appModuleItem ? this.appModuleItem!.agreement_number : '';
+      case "agreements":
+        msg =
+          "Agreement " + this.appModuleItem
+            ? this.appModuleItem!.agreement_number
+            : "";
         break;
-      case 'interventions':
-        msg = 'PD/SSFA ' + this.appModuleItem ? this.appModuleItem!.number : '';
+      case "interventions":
+        msg = "PD/SSFA " + this.appModuleItem ? this.appModuleItem!.number : "";
         break;
     }
-    return msg + ' has an old/expired CP Structure!';
+    return msg + " has an old/expired CP Structure!";
   }
 
   resetCpDropdownInvalidState() {
@@ -198,13 +215,11 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
   }
 
   _getCpStructureDropdown() {
-    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
-    {
+    return this.shadowRoot!.querySelector("#cpStructure") as PolymerElement & {
       resetInvalidState(): void;
       validate(): boolean;
     };
   }
-
 }
 
-window.customElements.define('etools-cp-structure', EtoolsCpStructure);
+window.customElements.define("etools-cp-structure", EtoolsCpStructure);

@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {Constructor} from '../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
+import { Constructor } from "../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
 
 /**
  * @polymer
@@ -9,34 +9,34 @@ import {PolymerElement} from '@polymer/polymer';
 function RiskRatingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class RiskRatingClass extends baseClass {
     public getRiskRatingValue(riskRating: string, shortVersion?: 1 | 0) {
-      if (typeof riskRating === 'string' && riskRating !== '') {
+      if (typeof riskRating === "string" && riskRating !== "") {
         return riskRating;
       } else {
-        return shortVersion ? 'N/A' : 'Not Available';
+        return shortVersion ? "N/A" : "Not Available";
       }
     }
 
     public getRiskRatingClass(riskRating: string) {
-      let riskRatingClass = '';
+      let riskRatingClass = "";
       if (riskRating) {
-        if (riskRating.includes('High')) {
-          riskRating = 'high';
-        } else if (riskRating.includes('Moderate')) {
-          riskRating = 'moderate';
-        } else if (riskRating.includes('Low')) {
-          riskRating = 'low';
-        } else if (riskRating.includes('Significant')) {
-          riskRating = 'significant';
-        } else if (riskRating.includes('Required')) {
-          riskRating = 'not-required';
-        } else if (riskRating.includes('Assessed')) {
-          riskRating = 'not-assessed';
+        if (riskRating.includes("High")) {
+          riskRating = "high";
+        } else if (riskRating.includes("Moderate")) {
+          riskRating = "moderate";
+        } else if (riskRating.includes("Low")) {
+          riskRating = "low";
+        } else if (riskRating.includes("Significant")) {
+          riskRating = "significant";
+        } else if (riskRating.includes("Required")) {
+          riskRating = "not-required";
+        } else if (riskRating.includes("Assessed")) {
+          riskRating = "not-assessed";
         }
-        riskRatingClass = riskRating.toLowerCase().split(' ').join('-');
+        riskRatingClass = riskRating.toLowerCase().split(" ").join("-");
       } else {
-        riskRatingClass = 'unavailable';
+        riskRatingClass = "unavailable";
       }
-      return riskRatingClass + ' risk-rating-field';
+      return riskRatingClass + " risk-rating-field";
     }
   }
   return RiskRatingClass;

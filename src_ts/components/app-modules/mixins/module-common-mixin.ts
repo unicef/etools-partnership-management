@@ -1,23 +1,28 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {ListQueryParams} from '../../../typings/route.types.js';// TODO - load using tsconfig
-import '../../../typings/globals.types.js';
-import {PolymerElement} from '@polymer/polymer';
+import { ListQueryParams } from "../../../typings/route.types.js"; // TODO - load using tsconfig
+import "../../../typings/globals.types.js";
+import { PolymerElement } from "@polymer/polymer";
 
-import {fireEvent} from '../../utils/fire-custom-event.js';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../../typings/globals.types.js';
-import {property} from '@polymer/decorators';
+import { fireEvent } from "../../utils/fire-custom-event.js";
+import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging.js";
+import { Constructor } from "../../../typings/globals.types.js";
+import { property } from "@polymer/decorators";
 
 /**
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
  */
-function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function ModuleMainElCommonFunctionalityMixin<
+  T extends Constructor<PolymerElement>
+>(baseClass: T) {
   class ModuleMainElCommonFunctionalityClass extends baseClass {
-
     /* Gets updated by app-route */
-    @property({type: Object, observer: ModuleMainElCommonFunctionalityClass.prototype._handleQueryParams})
+    @property({
+      type: Object,
+      observer:
+        ModuleMainElCommonFunctionalityClass.prototype._handleQueryParams,
+    })
     listPageQueryParams!: object;
 
     /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
@@ -28,12 +33,11 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
         click on the Interventions left side menu item => the intervention list is
         still filtered by intervention status).
     */
-    @property({type: Object})
+    @property({ type: Object })
     preservedListQueryParams: object = {};
 
-    @property({type: Array})
+    @property({ type: Array })
     serverErrors: any[] = [];
-
 
     ready() {
       super.ready();
@@ -41,31 +45,40 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
       this._setServerErrors = this._setServerErrors.bind(this);
       this._reloadListData = this._reloadListData.bind(this);
 
-      this.addEventListener('clear-server-errors', this._clearServerErrors as any);
-      this.addEventListener('set-server-errors', this._setServerErrors as any);
-      this.addEventListener('reload-list', this._reloadListData as any);
+      this.addEventListener(
+        "clear-server-errors",
+        this._clearServerErrors as any
+      );
+      this.addEventListener("set-server-errors", this._setServerErrors as any);
+      this.addEventListener("reload-list", this._reloadListData as any);
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      this.removeEventListener('clear-server-errors', this._clearServerErrors);
-      this.removeEventListener('set-server-errors', this._setServerErrors as any);
-      this.removeEventListener('reload-list', this._reloadListData as any);
+      this.removeEventListener("clear-server-errors", this._clearServerErrors);
+      this.removeEventListener(
+        "set-server-errors",
+        this._setServerErrors as any
+      );
+      this.removeEventListener("reload-list", this._reloadListData as any);
     }
 
     _clearServerErrors() {
-      this.set('serverErrors', []);
+      this.set("serverErrors", []);
     }
 
     _setServerErrors(e: CustomEvent) {
-      this.set('serverErrors', e.detail);
+      this.set("serverErrors", e.detail);
     }
 
     _handleQueryParams(params: ListQueryParams) {
-      if (params !== null && Object.keys(params).length &&
-      // @ts-ignore
-          this.routeData.tab !== 'reports') {
-        this.set('preservedListQueryParams', params);
+      if (
+        params !== null &&
+        Object.keys(params).length &&
+        // @ts-ignore
+        this.routeData.tab !== "reports"
+      ) {
+        this.set("preservedListQueryParams", params);
       }
     }
 
@@ -74,24 +87,29 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
     }
 
     _removeStrDash(str: string) {
-      return str ? str.replace(new RegExp('-', 'g'), ' ') : '';
+      return str ? str.replace(new RegExp("-", "g"), " ") : "";
     }
 
     _showPageTabs(page: string) {
-      return page !== 'list';
+      return page !== "list";
     }
 
-    _showTabChangeLoadingMsg(e: CustomEvent | null, loadingSource: string, tabPrefix: string, tab?: string) {
-      const clickedTabName = tab ? tab : e!.detail.item.getAttribute('name');
+    _showTabChangeLoadingMsg(
+      e: CustomEvent | null,
+      loadingSource: string,
+      tabPrefix: string,
+      tab?: string
+    ) {
+      const clickedTabName = tab ? tab : e!.detail.item.getAttribute("name");
       const tabEl = this.shadowRoot!.querySelector(tabPrefix + clickedTabName);
       if (tabEl instanceof PolymerElement) {
         // tab element already loaded, no need for loading messages
         return;
       }
-      fireEvent(this, 'global-loading', {
-        message: 'Loading...',
+      fireEvent(this, "global-loading", {
+        message: "Loading...",
         active: true,
-        loadingSource: loadingSource
+        loadingSource: loadingSource,
       });
     }
 
@@ -99,24 +117,35 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
      * "other" can be any property that must be defined before the method
      * is executed (main item displayed on the page, activePage)
      */
-    _showSidebarStatus(listPageActive: boolean, tabAttached: boolean, other?: boolean) {
+    _showSidebarStatus(
+      listPageActive: boolean,
+      tabAttached: boolean,
+      other?: boolean
+    ) {
       const showStatus = !listPageActive && !!tabAttached;
-      return !other ? showStatus : (showStatus && other);
+      return !other ? showStatus : showStatus && other;
     }
 
     _reloadListData(e: CustomEvent) {
       e.stopImmediatePropagation();
       try {
-        const listElem = (this.shadowRoot!.querySelector('#list') as PolymerElement & {_filterListData(forceNoLoading: boolean): void});
+        const listElem = this.shadowRoot!.querySelector(
+          "#list"
+        ) as PolymerElement & {
+          _filterListData(forceNoLoading: boolean): void;
+        };
         if (listElem && listElem._filterListData) {
           listElem._filterListData(true);
         }
       } catch (err) {
         // @ts-ignore
-        logWarn('List refresh error occurred', '[' + this.moduleName +'-module]', err);
+        logWarn(
+          "List refresh error occurred",
+          "[" + this.moduleName + "-module]",
+          err
+        );
       }
     }
-
   }
   return ModuleMainElCommonFunctionalityClass;
 }

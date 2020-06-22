@@ -1,4 +1,4 @@
-import {html} from '@polymer/polymer/polymer-element.js';
+import { html } from "@polymer/polymer/polymer-element.js";
 
 export const frWarningsStyles = html`
   <style>
@@ -14,7 +14,7 @@ export const frWarningsStyles = html`
       --etools-tooltip-trigger-icon: {
         color: var(--error-color);
         margin-left: 24px !important;
-      };
+      }
     }
 
     .fr-val-not-available {

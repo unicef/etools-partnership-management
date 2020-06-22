@@ -1,6 +1,5 @@
-import * as a from '../actions/agreements.js';
-import {MinimalAgreement} from '../components/app-modules/agreements/agreement.types.js';
-
+import * as a from "../actions/agreements.js";
+import { MinimalAgreement } from "../components/app-modules/agreements/agreement.types.js";
 
 export class AgreementsState {
   list: MinimalAgreement[] = [];
@@ -13,11 +12,11 @@ const agreements = (state = INITIAL_STATE, action: any) => {
     case a.SET_AGREEMENTS:
       return {
         ...state,
-        list: action.agreements
+        list: action.agreements,
       };
     case a.ADD_EDIT_AGREEMENT: {
       const agreementsCopy: MinimalAgreement[] = state.list.slice(0);
-      const index = agreementsCopy.findIndex((agr: MinimalAgreement) =>{
+      const index = agreementsCopy.findIndex((agr: MinimalAgreement) => {
         return agr.id === action.agreement.id;
       });
 
@@ -27,7 +26,7 @@ const agreements = (state = INITIAL_STATE, action: any) => {
         agreementsCopy.push(action.agreement);
       }
       return {
-        list: agreementsCopy
+        list: agreementsCopy,
       };
     }
 

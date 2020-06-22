@@ -1,40 +1,40 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-icons/iron-icons';
-import '@polymer/paper-button/paper-button';
-import '@polymer/iron-pages/iron-pages';
-import '@polymer/app-route/app-route';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/iron-icons/iron-icons";
+import "@polymer/paper-button/paper-button";
+import "@polymer/iron-pages/iron-pages";
+import "@polymer/app-route/app-route";
 
-import {connect} from 'pwa-helpers/connect-mixin';
-import {store} from '../../../store';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import { connect } from "pwa-helpers/connect-mixin";
+import { store } from "../../../store";
+import { GestureEventListeners } from "@polymer/polymer/lib/mixins/gesture-event-listeners";
 
-import ModuleRoutingMixin from '../mixins/module-routing-mixin';
-import ScrollControlMixin from '../../mixins/scroll-control-mixin';
-import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
+import ModuleRoutingMixin from "../mixins/module-routing-mixin";
+import ScrollControlMixin from "../../mixins/scroll-control-mixin";
+import ModuleMainElCommonFunctionalityMixin from "../mixins/module-common-mixin";
 
-import '../../layout/page-content-header';
-import '../../layout/page-content-header-slotted-styles';
-import '../../layout/etools-tabs';
-import '../../layout/etools-error-messages-box';
-import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
+import "../../layout/page-content-header";
+import "../../layout/page-content-header-slotted-styles";
+import "../../layout/etools-tabs";
+import "../../layout/etools-error-messages-box";
+import { pageContentHeaderSlottedStyles } from "../../layout/page-content-header-slotted-styles";
 
-import {UserPermissions, EtoolsTab} from '../../../typings/globals.types';
-import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
+import { UserPermissions, EtoolsTab } from "../../../typings/globals.types";
+import { RESET_UNSAVED_UPLOADS } from "../../../actions/upload-status";
 
-import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {SharedStyles} from '../../styles/shared-styles';
-import {buttonsStyles} from '../../styles/buttons-styles';
-import {isEmptyObject} from '../../utils/utils';
+import { pageLayoutStyles } from "../../styles/page-layout-styles";
+import { SharedStyles } from "../../styles/shared-styles";
+import { buttonsStyles } from "../../styles/buttons-styles";
+import { isEmptyObject } from "../../utils/utils";
 
-import './data/partner-item-data.js';
-import './components/new-partner-dialog.js';
-import './components/partner-status.js';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
-import {Partner} from '../../../models/partners.models';
-import {PartnerItemData} from './data/partner-item-data.js';
-import {NewPartnerDialog} from './components/new-partner-dialog.js';
-import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
+import "./data/partner-item-data.js";
+import "./components/new-partner-dialog.js";
+import "./components/partner-status.js";
+import { fireEvent } from "../../utils/fire-custom-event";
+import { property } from "@polymer/decorators";
+import { Partner } from "../../../models/partners.models";
+import { PartnerItemData } from "./data/partner-item-data.js";
+import { NewPartnerDialog } from "./components/new-partner-dialog.js";
+import StaffMembersDataMixin from "../partners/mixins/staff-members-data-mixin.js";
 
 /**
  * @polymer
@@ -49,182 +49,224 @@ import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.j
 class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
-    ScrollControlMixin(ModuleRoutingMixin(
-      ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement)))))) {
-
+    ScrollControlMixin(
+      ModuleRoutingMixin(
+        ModuleMainElCommonFunctionalityMixin(
+          StaffMembersDataMixin(PolymerElement)
+        )
+      )
+    )
+  )
+) {
   public static get template() {
     // main template
     // language=HTML
     return html`
-        ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
-        <style>
-          :host {
-              display: block;
-          }
-        </style>
+      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles}
+      ${pageContentHeaderSlottedStyles}
+      <style>
+        :host {
+          display: block;
+        }
+      </style>
 
-        <app-route
-          route="{{route}}"
-          pattern="/list"
-          query-params="{{listPageQueryParams}}"
-          active="{{listActive}}"></app-route>
+      <app-route
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"
+      ></app-route>
 
-        <app-route
-          route="{{route}}"
-          pattern="/:id/:tab"
-          active="{{tabsActive}}"
-          data="{{routeData}}"></app-route>
+      <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"
+      ></app-route>
 
-        <page-content-header with-tabs-visible="[[tabsActive]]">
-          <div slot="page-title">
-            <template is="dom-if" if="[[listActive]]">
-              <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
-              <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
-            </template>
-            <template is="dom-if" if="[[tabsActive]]">
-              <span>[[partner.name]]</span>
-            </template>
-          </div>
+      <page-content-header with-tabs-visible="[[tabsActive]]">
+        <div slot="page-title">
+          <template is="dom-if" if="[[listActive]]">
+            <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
+            <span hidden$="[[!showOnlyGovernmentType]]"
+              >Government Partners</span
+            >
+          </template>
+          <template is="dom-if" if="[[tabsActive]]">
+            <span>[[partner.name]]</span>
+          </template>
+        </div>
 
-          <div slot="title-row-actions" class="content-header-actions">
-            <div class="action" hidden$="[[!listActive]]">
-              <a target="_blank" href$="[[csvDownloadUrl]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
-              </a>
-            </div>
-            <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
-              <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
-                <iron-icon icon="add"></iron-icon>
-                Import Partner
+        <div slot="title-row-actions" class="content-header-actions">
+          <div class="action" hidden$="[[!listActive]]">
+            <a target="_blank" href$="[[csvDownloadUrl]]">
+              <paper-button>
+                <iron-icon icon="file-download"></iron-icon>
+                Export
               </paper-button>
-            </div>
+            </a>
           </div>
+          <div
+            class="action"
+            hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]"
+          >
+            <paper-button
+              class="primary-btn with-prefix"
+              on-tap="_openNewPartnerDialog"
+            >
+              <iron-icon icon="add"></iron-icon>
+              Import Partner
+            </paper-button>
+          </div>
+        </div>
 
-          <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-            <etools-tabs slot="tabs"
-                         tabs="[[partnerTabs]]"
-                         active-tab="{{routeData.tab}}"
-                         on-iron-select="_handleTabSelectAction"></etools-tabs>
-          </template>
-        </page-content-header>
+        <template is="dom-if" if="[[_showPageTabs(activePage)]]">
+          <etools-tabs
+            slot="tabs"
+            tabs="[[partnerTabs]]"
+            active-tab="{{routeData.tab}}"
+            on-iron-select="_handleTabSelectAction"
+          ></etools-tabs>
+        </template>
+      </page-content-header>
 
-        <div id="main">
-          <div id="pageContent">
+      <div id="main">
+        <div id="pageContent">
+          <etools-error-messages-box
+            id="errorsBox"
+            title="Errors Saving Partner"
+            errors="{{serverErrors}}"
+          ></etools-error-messages-box>
+          <iron-pages
+            id="partnersPages"
+            selected="{{activePage}}"
+            attr-for-selected="name"
+            role="main"
+          >
+            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+              <partners-list
+                id="list"
+                name="list"
+                show-only-government-type="[[showOnlyGovernmentType]]"
+                current-module="[[currentModule]]"
+                active="[[listActive]]"
+                csv-download-url="{{csvDownloadUrl}}"
+                url-params="[[preservedListQueryParams]]"
+              >
+              </partners-list>
+            </template>
 
-            <etools-error-messages-box id="errorsBox"
-                                       title="Errors Saving Partner"
-                                       errors="{{serverErrors}}"></etools-error-messages-box>
-            <iron-pages id="partnersPages"
-                        selected="{{activePage}}"
-                        attr-for-selected="name"
-                        role="main">
+            <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
+              <partner-overview
+                name="overview"
+                partner="[[partner]]"
+              ></partner-overview>
+            </template>
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-                <partners-list id="list"
-                               name="list"
-                               show-only-government-type="[[showOnlyGovernmentType]]"
-                               current-module="[[currentModule]]"
-                               active="[[listActive]]"
-                               csv-download-url="{{csvDownloadUrl}}"
-                               url-params="[[preservedListQueryParams]]">
-                </partners-list>
-              </template>
+            <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
+              <partner-details
+                id="partnerDetails"
+                name="details"
+                partner="[[partner]]"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+              ></partner-details>
+            </template>
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
-                <partner-overview name="overview" partner="[[partner]]"></partner-overview>
-              </template>
+            <template
+              is="dom-if"
+              if="[[_pageEquals(activePage, 'financial-assurance')]]"
+            >
+              <partner-financial-assurance
+                id="financialAssurance"
+                partner="[[partner]]"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                name="financial-assurance"
+              >
+              </partner-financial-assurance>
+            </template>
+          </iron-pages>
+        </div>
+        <!-- page content end -->
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-                <partner-details id="partnerDetails"
-                                 name="details"
-                                 partner="[[partner]]"
-                                 edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
-              </template>
+        <!-- sidebar content start -->
+        <template
+          is="dom-if"
+          if="[[_showSidebarStatus(listActive, tabAttached, partner)]]"
+        >
+          <div id="sidebar">
+            <partner-status
+              on-save-partner="_validateAndTriggerPartnerSave"
+              on-delete-partner="_deletePartner"
+              active="[[!listActive]]"
+              partner="[[partner]]"
+              edit-mode$="[[_hasEditPermissions(permissions)]]"
+            >
+            </partner-status>
+          </div>
+          <!-- sidebar content end -->
+        </template>
+      </div>
+      <!-- main container end -->
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
-                <partner-financial-assurance id="financialAssurance"
-                                             partner="[[partner]]"
-                                             edit-mode="[[_hasEditPermissions(permissions)]]"
-                                             name="financial-assurance">
-                </partner-financial-assurance>
-              </template>
-
-            </iron-pages>
-
-          </div> <!-- page content end -->
-
-          <!-- sidebar content start -->
-          <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
-            <div id="sidebar">
-              <partner-status
-                  on-save-partner="_validateAndTriggerPartnerSave"
-                  on-delete-partner="_deletePartner"
-                  active="[[!listActive]]"
-                  partner="[[partner]]"
-                  edit-mode$="[[_hasEditPermissions(permissions)]]">
-              </partner-status>
-            </div> <!-- sidebar content end -->
-          </template>
-        </div> <!-- main container end -->
-
-        <partner-item-data id="partnerData"
-                       partner-id="[[selectedPartnerId]]"
-                       partner="{{partner}}"
-                       error-event-name="partner-save-error">
-        </partner-item-data>
+      <partner-item-data
+        id="partnerData"
+        partner-id="[[selectedPartnerId]]"
+        partner="{{partner}}"
+        error-event-name="partner-save-error"
+      >
+      </partner-item-data>
     `;
   }
 
-  @property({type: Array})
-  partnerTabs: EtoolsTab[] = [{
-    tab: 'overview',
-    tabLabel: 'Overview',
-    hidden: false
-  },
-  {
-    tab: 'details',
-    tabLabel: 'Partner Details',
-    hidden: false
-  },
-  {
-    tab: 'financial-assurance',
-    tabLabel: 'Assurance',
-    hidden: false
-  }];
+  @property({ type: Array })
+  partnerTabs: EtoolsTab[] = [
+    {
+      tab: "overview",
+      tabLabel: "Overview",
+      hidden: false,
+    },
+    {
+      tab: "details",
+      tabLabel: "Partner Details",
+      hidden: false,
+    },
+    {
+      tab: "financial-assurance",
+      tabLabel: "Assurance",
+      hidden: false,
+    },
+  ];
 
-  @property({type: String})
-  moduleName: string = 'partners';
+  @property({ type: String })
+  moduleName: string = "partners";
 
-  @property({type: String})
-  csvDownloadUrl: string = '';
+  @property({ type: String })
+  csvDownloadUrl: string = "";
 
-  @property({type: Number})
+  @property({ type: Number })
   selectedPartnerId: number | null = null;
 
-  @property({type: Object, observer: '_partnerChanged'})
+  @property({ type: Object, observer: "_partnerChanged" })
   partner!: Partner;
 
-  @property({type: Object})
+  @property({ type: Object })
   permissions!: UserPermissions;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   showOnlyGovernmentType: boolean = false;
 
-  @property({type: String})
-  currentModule: string = '';
+  @property({ type: String })
+  currentModule: string = "";
 
-  @property({type: Object})
+  @property({ type: Object })
   originalPartnerData!: Partner;
 
   newPartnerDialog!: NewPartnerDialog;
 
   public static get observers() {
     return [
-      '_pageChanged(listActive, tabsActive, routeData, currentModule)',
-      '_observeRouteDataId(routeData.id)'
+      "_pageChanged(listActive, tabsActive, routeData, currentModule)",
+      "_observeRouteDataId(routeData.id)",
     ];
   }
 
@@ -237,7 +279,10 @@ class PartnersModule extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, "global-loading", {
+      active: false,
+      loadingSource: "main-page",
+    });
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
@@ -254,27 +299,56 @@ class PartnersModule extends connect(store)(
     this._partnerSaveError = this._partnerSaveError.bind(this);
     this._partnerContactsUpdated = this._partnerContactsUpdated.bind(this);
     this._saveCoreValuesAssessment = this._saveCoreValuesAssessment.bind(this);
-    this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(this);
+    this._handlePartnerSelectionLoadingMsg = this._handlePartnerSelectionLoadingMsg.bind(
+      this
+    );
     this._updateBasisForRiskRating = this._updateBasisForRiskRating.bind(this);
 
-    this.addEventListener('partner-save-error', this._partnerSaveError as any);
-    this.addEventListener('partner-contacts-updated', this._partnerContactsUpdated as any);
-    this.addEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
-    this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
-    this.addEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
+    this.addEventListener("partner-save-error", this._partnerSaveError as any);
+    this.addEventListener(
+      "partner-contacts-updated",
+      this._partnerContactsUpdated as any
+    );
+    this.addEventListener(
+      "save-core-values-assessment",
+      this._saveCoreValuesAssessment as any
+    );
+    this.addEventListener(
+      "trigger-partner-loading-msg",
+      this._handlePartnerSelectionLoadingMsg
+    );
+    this.addEventListener(
+      "assessment-updated-step3",
+      this._updateBasisForRiskRating as any
+    );
   }
 
   public _removeListeners() {
-    this.removeEventListener('partner-save-error', this._partnerSaveError as any);
-    this.removeEventListener('partner-contacts-updated', this._partnerContactsUpdated as any);
-    this.removeEventListener('save-core-values-assessment', this._saveCoreValuesAssessment as any);
-    this.removeEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
-    this.removeEventListener('assessment-updated-step3', this._updateBasisForRiskRating as any);
+    this.removeEventListener(
+      "partner-save-error",
+      this._partnerSaveError as any
+    );
+    this.removeEventListener(
+      "partner-contacts-updated",
+      this._partnerContactsUpdated as any
+    );
+    this.removeEventListener(
+      "save-core-values-assessment",
+      this._saveCoreValuesAssessment as any
+    );
+    this.removeEventListener(
+      "trigger-partner-loading-msg",
+      this._handlePartnerSelectionLoadingMsg
+    );
+    this.removeEventListener(
+      "assessment-updated-step3",
+      this._updateBasisForRiskRating as any
+    );
   }
 
   public _partnerContactsUpdated(e: CustomEvent) {
     this.partner.updateStaffMembers(e.detail);
-    this.notifyPath('partner.staff_members');
+    this.notifyPath("partner.staff_members");
   }
 
   public _saveCoreValuesAssessment(e: CustomEvent) {
@@ -282,40 +356,56 @@ class PartnersModule extends connect(store)(
   }
 
   public _updateBasisForRiskRating(e: CustomEvent) {
-    this._savePartner({id: this.partner.id, basis_for_risk_rating: e.detail});
+    this._savePartner({ id: this.partner.id, basis_for_risk_rating: e.detail });
   }
 
   public _createNewPartnerDialog() {
-    this.newPartnerDialog = document.createElement('new-partner-dialog') as NewPartnerDialog;
-    this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
+    this.newPartnerDialog = document.createElement(
+      "new-partner-dialog"
+    ) as NewPartnerDialog;
+    this.newPartnerDialog.setAttribute("id", "newPartnerDialog");
 
-    document.querySelector('body')!.appendChild(this.newPartnerDialog);
+    document.querySelector("body")!.appendChild(this.newPartnerDialog);
 
     this._createPartner = this._createPartner.bind(this);
-    this.newPartnerDialog.addEventListener('create-partner', this._createPartner as any);
+    this.newPartnerDialog.addEventListener(
+      "create-partner",
+      this._createPartner as any
+    );
   }
 
   public _removeNewPartnerDialogFromDom() {
     if (this.newPartnerDialog) {
-      this.newPartnerDialog.removeEventListener('create-partner', this._createPartner as any);
+      this.newPartnerDialog.removeEventListener(
+        "create-partner",
+        this._createPartner as any
+      );
 
-      document.querySelector('body')!.removeChild(this.newPartnerDialog);
+      document.querySelector("body")!.removeChild(this.newPartnerDialog);
     }
   }
 
-  public _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any, _currentModule: string) {
+  public _pageChanged(
+    listActive: boolean,
+    tabsActive: boolean,
+    routeData: any,
+    _currentModule: string
+  ) {
     // Using isActiveModule will prevent wrong page import
-    if (!this.isActiveModule(this.currentModule) || (!listActive && !tabsActive)) {
+    if (
+      !this.isActiveModule(this.currentModule) ||
+      (!listActive && !tabsActive)
+    ) {
       return;
     }
 
     this.scrollToTopOnCondition(!listActive);
 
     const fileImportDetails = {
-      filenamePrefix: 'partner',
-      importErrMsg: 'Partners page import error occurred',
-      errMsgPrefixTmpl: '[partner(s) ##page##]',
-      loadingMsgSource: 'partners-page'
+      filenamePrefix: "partner",
+      importErrMsg: "Partners page import error occurred",
+      errMsgPrefixTmpl: "[partner(s) ##page##]",
+      loadingMsgSource: "partners-page",
     };
     this.setActivePage(listActive, routeData.tab, fileImportDetails);
   }
@@ -325,11 +415,13 @@ class PartnersModule extends connect(store)(
   }
 
   public _savePartner(newPartnerData: any) {
-    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
+    const partnerData = this.shadowRoot!.querySelector(
+      "#partnerData"
+    ) as PartnerItemData;
     if (partnerData) {
       partnerData.savePartner(newPartnerData).then((successful: any) => {
         if (successful) {
-          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+          store.dispatch({ type: RESET_UNSAVED_UPLOADS });
         }
       });
     }
@@ -337,48 +429,52 @@ class PartnersModule extends connect(store)(
 
   public _deletePartner(e: CustomEvent) {
     e.stopImmediatePropagation();
-    fireEvent(this, 'global-loading', {
+    fireEvent(this, "global-loading", {
       active: true,
-      message: 'Deleting partner...',
-      loadingSource: 'partner-data'
+      message: "Deleting partner...",
+      loadingSource: "partner-data",
     });
 
-    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
+    const partnerData = this.shadowRoot!.querySelector(
+      "#partnerData"
+    ) as PartnerItemData;
     if (partnerData) {
       partnerData.deletePartner(this.partner);
     }
   }
 
   public _handlePartnerDeleted() {
-    fireEvent(this, 'global-loading', {
+    fireEvent(this, "global-loading", {
       active: false,
-      loadingSource: 'partner-data'
+      loadingSource: "partner-data",
     });
-    fireEvent(this, 'toast', {
-      text: 'Partner successfully deleted',
-      showCloseBtn: true
+    fireEvent(this, "toast", {
+      text: "Partner successfully deleted",
+      showCloseBtn: true,
     });
-    fireEvent(this, 'update-main-path', {
-      path: 'partners/list'
+    fireEvent(this, "update-main-path", {
+      path: "partners/list",
     });
   }
 
   public _observeRouteDataId(id: any) {
     // Using isActiveModule will prevent wrong partner details request
     // (with an id from other app module, like reports)
-    if (!this.isActiveModule(this.currentModule) || typeof id === 'undefined') {
+    if (!this.isActiveModule(this.currentModule) || typeof id === "undefined") {
       return;
     }
-    if (this.route && this.route.prefix.indexOf('partners') > -1) {
-      this.set('selectedPartnerId', id);
+    if (this.route && this.route.prefix.indexOf("partners") > -1) {
+      this.set("selectedPartnerId", id);
     }
   }
 
   public _partnerSaveError(event: CustomEvent) {
     event.stopImmediatePropagation();
-    if ((event.detail instanceof Array && event.detail.length > 0) ||
-        (typeof event.detail === 'string' && event.detail !== '')) {
-      fireEvent(this, 'set-server-errors', event.detail);
+    if (
+      (event.detail instanceof Array && event.detail.length > 0) ||
+      (typeof event.detail === "string" && event.detail !== "")
+    ) {
+      fireEvent(this, "set-server-errors", event.detail);
       this.scrollToTop();
     }
   }
@@ -392,40 +488,44 @@ class PartnersModule extends connect(store)(
   }
 
   public _createPartner(event: CustomEvent) {
-    const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
+    const partnerData = this.shadowRoot!.querySelector(
+      "#partnerData"
+    ) as PartnerItemData;
     if (partnerData) {
-      partnerData.createPartner(event.detail, this._newPartnerCreated,
-        this._handleCreatePartnerError);
+      partnerData.createPartner(
+        event.detail,
+        this._newPartnerCreated,
+        this._handleCreatePartnerError
+      );
     }
   }
 
   public _newPartnerCreated(partner: any) {
-    fireEvent(this, 'update-main-path', {
-      path: 'partners/' + partner.id + '/details'
+    fireEvent(this, "update-main-path", {
+      path: "partners/" + partner.id + "/details",
     });
   }
 
   public _handleCreatePartnerError(errorDetails: any) {
-    fireEvent(this, 'toast', {
+    fireEvent(this, "toast", {
       text: errorDetails,
-      showCloseBtn: true
+      showCloseBtn: true,
     });
   }
 
   public _partnerChanged(partner: any) {
     if (!isEmptyObject(partner)) {
       // dismiss partner details pages loading
-      fireEvent(this, 'global-loading', {
+      fireEvent(this, "global-loading", {
         active: false,
-        loadingSource: 'partner-data'
+        loadingSource: "partner-data",
       });
 
       // keep a copy of loaded partner to be able to check changed data
-      this.set('originalPartnerData', new Partner(partner));
+      this.set("originalPartnerData", new Partner(partner));
     }
-    fireEvent(this, 'clear-server-errors');
+    fireEvent(this, "clear-server-errors");
   }
-
 
   public _validateAndTriggerPartnerSave(event: CustomEvent) {
     event.stopImmediatePropagation();
@@ -442,16 +542,18 @@ class PartnersModule extends connect(store)(
 
   public _getModifiedData(partner: any) {
     const updatableFields = [
-      'alternate_name',
-      'shared_with',
-      'planned_engagement',
-      'basis_for_risk_rating'
+      "alternate_name",
+      "shared_with",
+      "planned_engagement",
+      "basis_for_risk_rating",
     ];
     const changes: any = {};
     updatableFields.forEach((fieldName) => {
-
-      if (['shared_with', 'planned_engagement'].indexOf(fieldName) > -1) {
-        if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
+      if (["shared_with", "planned_engagement"].indexOf(fieldName) > -1) {
+        if (
+          JSON.stringify(partner[fieldName]) !==
+          JSON.stringify(this.originalPartnerData[fieldName])
+        ) {
           changes[fieldName] = partner[fieldName];
         }
       } else {
@@ -464,24 +566,23 @@ class PartnersModule extends connect(store)(
   }
 
   public _handleTabSelectAction(e: CustomEvent) {
-    this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+    this._showTabChangeLoadingMsg(e, "partners-page", "partner-");
   }
 
   public _handlePartnerSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
+    this._showTabChangeLoadingMsg(null, "partners-page", "partner-", "details");
   }
 
   /**
    * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
    */
   public _showPartnersPageLoadingMessage() {
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
+    fireEvent(this, "global-loading", {
+      message: "Loading...",
       active: true,
-      loadingSource: 'partners-page'
+      loadingSource: "partners-page",
     });
   }
-
 }
 
-window.customElements.define('partners-module', PartnersModule);
+window.customElements.define("partners-module", PartnersModule);

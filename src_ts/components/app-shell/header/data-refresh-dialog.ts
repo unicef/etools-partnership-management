@@ -1,16 +1,19 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/paper-checkbox/paper-checkbox.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import '@polymer/iron-label/iron-label.js';
-import {SharedStyles} from '../../styles/shared-styles';
-import {gridLayoutStyles} from '../../styles/grid-layout-styles';
-import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin';
-import {store} from '../../../store';
-import {RESET_UPLOADS_IN_PROGRESS, RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/paper-checkbox/paper-checkbox.js";
+import "@unicef-polymer/etools-dialog/etools-dialog.js";
+import "@polymer/iron-label/iron-label.js";
+import { SharedStyles } from "../../styles/shared-styles";
+import { gridLayoutStyles } from "../../styles/grid-layout-styles";
+import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging.js";
+import EtoolsPageRefreshMixin from "@unicef-polymer/etools-behaviors/etools-page-refresh-mixin";
+import { store } from "../../../store";
+import {
+  RESET_UPLOADS_IN_PROGRESS,
+  RESET_UNSAVED_UPLOADS,
+} from "../../../actions/upload-status";
+import { fireEvent } from "../../utils/fire-custom-event";
+import { property } from "@polymer/decorators";
+import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
 
 /**
  * @polymer
@@ -19,9 +22,8 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
  * @appliesMixin EtoolsPageRefreshMixin
  */
 class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
-
   static get is() {
-    return 'data-refresh-dialog';
+    return "data-refresh-dialog";
   }
 
   static get template() {
@@ -50,71 +52,70 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
             font-size: 16px;
           }
         }
-
       </style>
       <etools-dialog
-          id="refreshDialog"
-          size="sm"
-          no-padding
-          ok-btn-text="Refresh data"
-          cancel-btn-text="Cancel"
-          dialog-title="Refresh data"
-          disable-confirm-btn="[[!anySelected]]"
-          on-close="_handleDialogClosed">
+        id="refreshDialog"
+        size="sm"
+        no-padding
+        ok-btn-text="Refresh data"
+        cancel-btn-text="Cancel"
+        dialog-title="Refresh data"
+        disable-confirm-btn="[[!anySelected]]"
+        on-close="_handleDialogClosed"
+      >
         <div id="content-box">
-            <div class="title-indent">Select the data you want to refresh:</div>
-            <div class="row-h row-indent">
-              <div class="col col-6">
-                <paper-checkbox checked="{{partnersSelected}}">
-                  Partners/Government
-                </paper-checkbox>
-              </div>
-              <div class="col col-6">
-                <paper-checkbox checked="{{interventionsSelected}}">
-                  PD/SSFA
-                </paper-checkbox>
-              </div>
+          <div class="title-indent">Select the data you want to refresh:</div>
+          <div class="row-h row-indent">
+            <div class="col col-6">
+              <paper-checkbox checked="{{partnersSelected}}">
+                Partners/Government
+              </paper-checkbox>
             </div>
-            <div class="row-h row-indent">
-              <div class="col col-6">
-                <paper-checkbox checked="{{agreementsSelected}}">
-                  Agreements
-                </paper-checkbox>
-              </div>
-              <div class="col col-6">
-                <paper-checkbox checked="{{allSelected}}">
-                  All
-                </paper-checkbox>
-              </div>
+            <div class="col col-6">
+              <paper-checkbox checked="{{interventionsSelected}}">
+                PD/SSFA
+              </paper-checkbox>
             </div>
-
+          </div>
+          <div class="row-h row-indent">
+            <div class="col col-6">
+              <paper-checkbox checked="{{agreementsSelected}}">
+                Agreements
+              </paper-checkbox>
+            </div>
+            <div class="col col-6">
+              <paper-checkbox checked="{{allSelected}}">
+                All
+              </paper-checkbox>
+            </div>
+          </div>
         </div>
       </etools-dialog>
     `;
   }
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   interventionsSelected: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   partnersSelected: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   agreementsSelected: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   allSelected: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   anySelected: boolean = false;
 
-  @property({type: String, notify: true})
+  @property({ type: String, notify: true })
   page!: string;
 
   static get observers() {
     return [
-      '_singleSectionChanged(interventionsSelected, partnersSelected, agreementsSelected)',
-      '_allSelectedChanged(allSelected)'
+      "_singleSectionChanged(interventionsSelected, partnersSelected, agreementsSelected)",
+      "_allSelectedChanged(allSelected)",
     ];
   }
 
@@ -129,18 +130,24 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
       return;
     }
 
-    this.set('interventionsSelected', true);
-    this.set('partnersSelected', true);
-    this.set('agreementsSelected', true);
-    this.set('anySelected', true);
+    this.set("interventionsSelected", true);
+    this.set("partnersSelected", true);
+    this.set("agreementsSelected", true);
+    this.set("anySelected", true);
   }
 
   _singleSectionChanged() {
-    const allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
-    const anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
+    const allSelected =
+      this.interventionsSelected &&
+      this.partnersSelected &&
+      this.agreementsSelected;
+    const anySelected =
+      this.interventionsSelected ||
+      this.partnersSelected ||
+      this.agreementsSelected;
 
-    this.set('allSelected', allSelected);
-    this.set('anySelected', anySelected);
+    this.set("allSelected", allSelected);
+    this.set("anySelected", anySelected);
   }
 
   _handleDialogClosed(closingReason: CustomEvent) {
@@ -148,69 +155,107 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
       return;
     }
 
-    store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
-    store.dispatch({type: RESET_UNSAVED_UPLOADS});
+    store.dispatch({ type: RESET_UPLOADS_IN_PROGRESS });
+    store.dispatch({ type: RESET_UNSAVED_UPLOADS });
 
-    fireEvent(this, 'global-loading', {message: 'Refreshing data...', active: true});
+    fireEvent(this, "global-loading", {
+      message: "Refreshing data...",
+      active: true,
+    });
 
     const afterDataRefreshLandingPage: string = this._getAfterRefreshLandingPage();
-    const restampLandingPage: boolean = this.page === afterDataRefreshLandingPage ||
-        (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
+    const restampLandingPage: boolean =
+      this.page === afterDataRefreshLandingPage ||
+      (this.page === "government-partners" &&
+        afterDataRefreshLandingPage === "partners");
 
     if (this.allSelected) {
-      fireEvent(this, 'update-main-path', {path: afterDataRefreshLandingPage});
+      fireEvent(this, "update-main-path", {
+        path: afterDataRefreshLandingPage,
+      });
       this.refresh();
       return;
     }
 
     // clear only data sets
     const self = this;
-    window.EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
-      function() {
+    window.EtoolsPmpApp.DexieDb.transaction(
+      "rw",
+      "listsExpireMapTable",
+      "partners",
+      "agreements",
+      "interventions",
+      function () {
         if (self.partnersSelected) {
           window.EtoolsPmpApp.DexieDb.partners.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
+          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete("partners");
         }
         if (self.agreementsSelected) {
           window.EtoolsPmpApp.DexieDb.agreements.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
+          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete("agreements");
         }
         if (self.interventionsSelected) {
           window.EtoolsPmpApp.DexieDb.interventions.clear();
-          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+          window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete(
+            "interventions"
+          );
         }
-      }).then(function() {
-      // transaction succeeded
-      self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
-    }).catch(function(error: any) {
-      // transaction failed
-      logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
-      self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+      }
+    )
+      .then(function () {
+        // transaction succeeded
+        self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+      })
+      .catch(function (error: any) {
+        // transaction failed
+        logWarn("Dexie data clearing failed.", "data-refresh-dialog", error);
+        self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+      });
+  }
+
+  _handleSuccess(
+    afterDataRefreshLandingPage: string,
+    restampLandingPage: boolean
+  ) {
+    this._triggerMainRoutePathUpdate(
+      afterDataRefreshLandingPage,
+      restampLandingPage
+    );
+    fireEvent(this, "toast", {
+      text: "Data successfully refreshed",
+      showCloseBtn: true,
     });
   }
 
-  _handleSuccess(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
-    this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-    fireEvent(this, 'toast', {text: 'Data successfully refreshed', showCloseBtn: true});
+  _handleFailure(
+    afterDataRefreshLandingPage: string,
+    restampLandingPage: boolean
+  ) {
+    this._triggerMainRoutePathUpdate(
+      afterDataRefreshLandingPage,
+      restampLandingPage
+    );
+    fireEvent(this, "toast", {
+      text: "There was an error while refreshing the data",
+      showCloseBtn: true,
+    });
   }
 
-  _handleFailure(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
-    this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-    fireEvent(this, 'toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
-  }
-
-  _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
-    const routePath = afterDataRefreshLandingPage + '/list';
+  _triggerMainRoutePathUpdate(
+    afterDataRefreshLandingPage: string,
+    restampLandingPage: boolean
+  ) {
+    const routePath = afterDataRefreshLandingPage + "/list";
     if (restampLandingPage) {
-      this.set('page', null);
+      this.set("page", null);
       setTimeout(() => {
-        fireEvent(this, 'global-loading', {active: false});
-        this.set('page', afterDataRefreshLandingPage);
-        fireEvent(this, 'update-main-path', {path: routePath});
+        fireEvent(this, "global-loading", { active: false });
+        this.set("page", afterDataRefreshLandingPage);
+        fireEvent(this, "update-main-path", { path: routePath });
       }, 10);
     } else {
-      fireEvent(this, 'global-loading', {active: false});
-      fireEvent(this, 'update-main-path', {path: routePath});
+      fireEvent(this, "global-loading", { active: false });
+      fireEvent(this, "update-main-path", { path: routePath });
     }
     this._resetRefreshSelection();
   }
@@ -220,24 +265,26 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
       return this.page;
     }
     if (this.partnersSelected) {
-      return this.page === 'government-partners' ? 'government-partners' : 'partners';
+      return this.page === "government-partners"
+        ? "government-partners"
+        : "partners";
     }
     if (this.agreementsSelected) {
-      return 'agreements';
+      return "agreements";
     }
     if (this.interventionsSelected) {
-      return 'interventions';
+      return "interventions";
     }
     return this.page;
   }
 
   _resetRefreshSelection() {
-    this.set('partnersSelected', false);
-    this.set('agreementsSelected', false);
-    this.set('interventionsSelected', false);
+    this.set("partnersSelected", false);
+    this.set("agreementsSelected", false);
+    this.set("interventionsSelected", false);
   }
 }
 
 window.customElements.define(DataRefreshDialog.is, DataRefreshDialog);
 
-export {DataRefreshDialog};
+export { DataRefreshDialog };

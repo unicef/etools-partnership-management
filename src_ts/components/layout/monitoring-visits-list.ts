@@ -1,15 +1,15 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@unicef-polymer/etools-loading/etools-loading.js';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@unicef-polymer/etools-loading/etools-loading.js";
 declare const moment: any;
-import CommonMixin from '../mixins/common-mixin';
-import EndpointsMixin from '../endpoints/endpoints-mixin';
-import {isEmptyObject} from '../utils/utils';
-import {SharedStyles} from '../styles/shared-styles';
-import {gridLayoutStyles} from '../styles/grid-layout-styles';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {property} from '@polymer/decorators';
+import CommonMixin from "../mixins/common-mixin";
+import EndpointsMixin from "../endpoints/endpoints-mixin";
+import { isEmptyObject } from "../utils/utils";
+import { SharedStyles } from "../styles/shared-styles";
+import { gridLayoutStyles } from "../styles/grid-layout-styles";
+import { logError } from "@unicef-polymer/etools-behaviors/etools-logging.js";
+import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
+import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
@@ -19,7 +19,6 @@ import {property} from '@polymer/decorators';
  * @appliesMixin CommonMixin
  */
 class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
-
   static get template() {
     return html`
       ${SharedStyles} ${gridLayoutStyles}
@@ -39,13 +38,19 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       </style>
 
       <div class="monitoring-visits-container">
-        <etools-loading loading-text="Loading..."
-                        active$="[[showLoading]]"></etools-loading>
+        <etools-loading
+          loading-text="Loading..."
+          active$="[[showLoading]]"
+        ></etools-loading>
 
-        <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
+        <div
+          hidden$="[[_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]"
+        >
           <etools-data-table-header
-                id="listHeader"
-                label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results" no-collapse>
+            id="listHeader"
+            label="Showing [[_getVisitsCount(monitoringVisits.length, tpmActivities.length)]] results"
+            no-collapse
+          >
             <etools-data-table-column class="col-2" field="reference_number">
               Reference #
             </etools-data-table-column>
@@ -66,14 +71,21 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
             </etools-data-table-column>
           </etools-data-table-header>
 
-          <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit">
+          <template
+            id="rows"
+            is="dom-repeat"
+            items="[[monitoringVisits]]"
+            as="visit"
+          >
             <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-2">
-                  <a class="truncate"
+                  <a
+                    class="truncate"
                     href$="/t2f/edit-travel/[[visit.trip_id]]"
                     title="[[visit.reference_number]]"
-                    target="_blank">
+                    target="_blank"
+                  >
                     [[visit.reference_number]]
                   </a>
                 </span>
@@ -81,98 +93,127 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
                   <span class="truncate"> [[visit.primary_traveler]] </span>
                 </span>
                 <span class="col-data col-2" title="[[visit.travel_type]]">
-                    [[visit.travel_type]]
+                  [[visit.travel_type]]
                 </span>
-                <span class="col-data col-2" title="[[getDateDisplayValue(visit.travel_latest_date)]]">
-                    [[getDateDisplayValue(visit.travel_latest_date)]]
+                <span
+                  class="col-data col-2"
+                  title="[[getDateDisplayValue(visit.travel_latest_date)]]"
+                >
+                  [[getDateDisplayValue(visit.travel_latest_date)]]
                 </span>
-                <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
-                    [[getDisplayValue(visit.locations)]]
+                <span
+                  class="col-data col-2"
+                  title="[[getDisplayValue(visit.locations)]]"
+                >
+                  [[getDisplayValue(visit.locations)]]
                 </span>
-                <span class="col-data col-2 capitalize" title="[[visit.status]]">
-                    [[visit.status]]
+                <span
+                  class="col-data col-2 capitalize"
+                  title="[[visit.status]]"
+                >
+                  [[visit.status]]
                 </span>
               </div>
             </etools-data-table-row>
           </template>
 
-          <template id="rows" is="dom-repeat" items="[[tpmActivities]]" as="visit">
+          <template
+            id="rows"
+            is="dom-repeat"
+            items="[[tpmActivities]]"
+            as="visit"
+          >
             <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-2">
-                  <a class="truncate"
+                  <a
+                    class="truncate"
                     href$="/tpm/visits/[[visit.tpm_visit]]/details"
                     title="[[visit.visit_reference]]"
-                    target="_blank">
+                    target="_blank"
+                  >
                     [[visit.visit_reference]]
                   </a>
                 </span>
                 <span class="col-data col-2" title="[[visit.tpm_partner_name]]">
                   <span class="truncate"> [[visit.tpm_partner_name]] </span>
                 </span>
-                <span class="col-data col-2" title="[[getDisplayType(visit.is_pv)]]">
-                    [[getDisplayType(visit.is_pv)]]
+                <span
+                  class="col-data col-2"
+                  title="[[getDisplayType(visit.is_pv)]]"
+                >
+                  [[getDisplayType(visit.is_pv)]]
                 </span>
-                <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
-                    [[getDateDisplayValue(visit.date)]]
+                <span
+                  class="col-data col-2"
+                  title="[[getDateDisplayValue(visit.date)]]"
+                >
+                  [[getDateDisplayValue(visit.date)]]
                 </span>
-                <span class="col-data col-2" title="[[getLocNames(visit.locations_details)]]">
-                    [[getLocNames(visit.locations_details)]]
+                <span
+                  class="col-data col-2"
+                  title="[[getLocNames(visit.locations_details)]]"
+                >
+                  [[getLocNames(visit.locations_details)]]
                 </span>
-                <span class="col-data col-2 capitalize" title="[[visit.status]]">
-                    [[visit.status]]
+                <span
+                  class="col-data col-2 capitalize"
+                  title="[[visit.status]]"
+                >
+                  [[visit.status]]
                 </span>
               </div>
             </etools-data-table-row>
           </template>
         </div>
-        <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]">
+        <div
+          class="row-h"
+          hidden$="[[!_hideMonitoringVisits(monitoringVisits.length, tpmActivities.length)]]"
+        >
           <p>There are no activities.</p>
         </div>
       </div>
     `;
   }
 
-  @property({type: String})
+  @property({ type: String })
   endpointName!: string;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   initComplete: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   showLoading: boolean = true;
 
-  @property({type: Array})
+  @property({ type: Array })
   monitoringVisits: any[] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   tpmActivities: any[] = [];
 
-  @property({type: Number, observer: '_interventionIdChanged'})
+  @property({ type: Number, observer: "_interventionIdChanged" })
   interventionId!: number;
 
-  @property({type: Number, observer: '_partnerIdChanged'})
+  @property({ type: Number, observer: "_partnerIdChanged" })
   partnerId!: number;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({ type: Boolean, reflectToAttribute: true })
   showTpmVisits: boolean = false;
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({ type: Boolean, reflectToAttribute: true })
   interventionOverview: boolean = false;
 
   static get observers() {
-    return [
-      'showTpmVisitsAndIdChanged(partnerId, showTpmVisits)'
-    ];
+    return ["showTpmVisitsAndIdChanged(partnerId, showTpmVisits)"];
   }
 
   _interventionIdChanged(intervId: string) {
-    this._getT2fVisits(intervId, 'monitoringVisits');
+    this._getT2fVisits(intervId, "monitoringVisits");
   }
 
   _partnerIdChanged(partnerId: string) {
     if (!this.interventionOverview) {
-      this._getT2fVisits(partnerId, 'partnerT2fProgrammaticVisits');
+      this._getT2fVisits(partnerId, "partnerT2fProgrammaticVisits");
     }
   }
 
@@ -181,68 +222,79 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       return;
     }
 
-    this.set('showLoading', true);
+    this.set("showLoading", true);
     const monitoringVisitsEndpoint = this.getEndpoint(endpointName, {
-      id: interventionOrPartnerId, year: moment().year()
+      id: interventionOrPartnerId,
+      year: moment().year(),
     });
     const self = this;
     sendRequest({
-      endpoint: monitoringVisitsEndpoint
-    }).then(function(resp: any) {
-      self.set('monitoringVisits', resp);
-      self.set('showLoading', false);
-    }).catch(function(error: any) {
-      self.set('showLoading', false);
-      parseRequestErrorsAndShowAsToastMsgs(error, self);
-    });
+      endpoint: monitoringVisitsEndpoint,
+    })
+      .then(function (resp: any) {
+        self.set("monitoringVisits", resp);
+        self.set("showLoading", false);
+      })
+      .catch(function (error: any) {
+        self.set("showLoading", false);
+        parseRequestErrorsAndShowAsToastMsgs(error, self);
+      });
   }
 
   _getVisitsCount(t2flength: number, tpmLength: number) {
-    return this.showTpmVisits ? (t2flength + tpmLength) : t2flength;
+    return this.showTpmVisits ? t2flength + tpmLength : t2flength;
   }
 
   getDisplayType(is_pv: boolean) {
-    return is_pv ? 'TPM Programmatic' : 'TPM Monitoring';
+    return is_pv ? "TPM Programmatic" : "TPM Monitoring";
   }
 
   _hideMonitoringVisits(t2flength: number, tpmLength: number) {
     let shouldHide = t2flength === 0;
     if (this.showTpmVisits) {
-      shouldHide = shouldHide && (tpmLength === 0);
+      shouldHide = shouldHide && tpmLength === 0;
     }
     return shouldHide;
   }
 
   showTpmVisitsAndIdChanged(partnerId: string, showTpmVisits: boolean) {
     if (!showTpmVisits || !partnerId) {
-      this.set('tpmActivities', []);
+      this.set("tpmActivities", []);
       return;
     }
-    const endpoint = this.interventionId ?
-      this.getEndpoint('interventionTPMActivities', {year: moment().year(), interventionId: this.interventionId}) :
-      this.getEndpoint('partnerTPMActivities', {year: moment().year(), partnerId: this.partnerId});
+    const endpoint = this.interventionId
+      ? this.getEndpoint("interventionTPMActivities", {
+          year: moment().year(),
+          interventionId: this.interventionId,
+        })
+      : this.getEndpoint("partnerTPMActivities", {
+          year: moment().year(),
+          partnerId: this.partnerId,
+        });
 
     sendRequest({
-      endpoint: endpoint
-    }).then((resp: any) => {
-      this.set('tpmActivities', resp);
-      this.set('showLoading', false);
-    }).catch((_error: any) => {
-      this.set('showLoading', false);
-      logError('Error on get TPM visits');
-    });
+      endpoint: endpoint,
+    })
+      .then((resp: any) => {
+        this.set("tpmActivities", resp);
+        this.set("showLoading", false);
+      })
+      .catch((_error: any) => {
+        this.set("showLoading", false);
+        logError("Error on get TPM visits");
+      });
   }
 
   getLocNames(locations: any) {
     if (isEmptyObject(locations)) {
-      return '-';
+      return "-";
     }
 
     if (locations.length === 1) {
       return locations[0].name;
     }
-    return locations.map((a: any) => a.name ? a.name : '').join(', ');
+    return locations.map((a: any) => (a.name ? a.name : "")).join(", ");
   }
 }
 
-window.customElements.define('monitoring-visits-list', MonitoringVisitsList);
+window.customElements.define("monitoring-visits-list", MonitoringVisitsList);

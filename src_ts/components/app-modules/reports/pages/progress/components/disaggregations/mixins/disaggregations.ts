@@ -1,29 +1,30 @@
-import {Constructor} from '../../../../../../../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
+import { Constructor } from "../../../../../../../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
 
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-
 
 /**
  * Disaggregation table mixin
  * @polymer
  * @mixinFunction
  */
-function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function DisaggregationsMixin<T extends Constructor<PolymerElement>>(
+  baseClass: T
+) {
   class DisaggregationsClass extends baseClass {
-  // Used to display rows for two and three disaggregations.
-  // It will NOT work for one and zero disaggregations.
+    // Used to display rows for two and three disaggregations.
+    // It will NOT work for one and zero disaggregations.
     _determineRows(self: any, rows: any, columns: any) {
       const rowsForDisplay: object[] = [];
-      rows.forEach(function(x: any) {
-        let formatted = '';
+      rows.forEach(function (x: any) {
+        let formatted = "";
 
-        const rowData = columns.map(function(z: any) {
+        const rowData = columns.map(function (z: any) {
           formatted = self._formatDisaggregationIds([x.id, z.id]);
 
           return {
             key: formatted,
-            data: self.data.disaggregation[formatted]
+            data: self.data.disaggregation[formatted],
           };
         });
 
@@ -35,8 +36,8 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: 
           id: x.id,
           total: {
             key: formatted,
-            data: self.data.disaggregation[formatted]
-          }
+            data: self.data.disaggregation[formatted],
+          },
         });
       });
 
@@ -46,24 +47,22 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: 
     // Accepts a list of disaggregation IDs, sorts them, and
     // structures them in "()" format for lookup.
     _formatDisaggregationIds(unsortedIds: any) {
-    // IDs must be in ascending order.
-      const ids = unsortedIds.sort(function(a: number, b: number) {
+      // IDs must be in ascending order.
+      const ids = unsortedIds.sort(function (a: number, b: number) {
         return a - b;
       });
-      let sortedString = '';
+      let sortedString = "";
 
       if (ids.length === 1) {
-        sortedString = ids[0] + ',';
+        sortedString = ids[0] + ",";
       } else {
-        sortedString = ids.join(', ');
+        sortedString = ids.join(", ");
       }
 
-      return '(' + sortedString + ')';
+      return "(" + sortedString + ")";
     }
   }
   return DisaggregationsClass;
 }
 
 export default DisaggregationsMixin;
-
-

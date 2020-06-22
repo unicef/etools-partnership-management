@@ -1,32 +1,43 @@
-import EndpointsMixin from '../endpoints/endpoints-mixin';
-import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
+import EndpointsMixin from "../endpoints/endpoints-mixin";
+import {
+  logError,
+  logWarn,
+} from "@unicef-polymer/etools-behaviors/etools-logging.js";
+import { Constructor } from "../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
+function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(
+  baseClass: T
+) {
   class MissingDropdownOptionsClass extends EndpointsMixin(baseClass) {
-
-    public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
+    public setDropdownMissingOptionsAjaxDetails(
+      dropdownEl: any,
+      endpointName: any,
+      params: any
+    ) {
       const self = this;
-      setTimeout(function() {
+      setTimeout(function () {
         try {
           if (dropdownEl) {
             const endpointUrl = self.getMissingOptionsEndpointUrl(endpointName);
-            params = (params) ? params : {};
+            params = params ? params : {};
 
-            dropdownEl.set('ajaxParams', params);
-            dropdownEl.set('url', endpointUrl);
+            dropdownEl.set("ajaxParams", params);
+            dropdownEl.set("url", endpointUrl);
           } else {
-            logWarn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+            logWarn(
+              "Esmm element is null and the endpoint " +
+                endpointName +
+                " url can not be assigned to it!"
+            );
           }
         } catch (err) {
-          logError('An error occurred at ghost data esmm setup.', err);
+          logError("An error occurred at ghost data esmm setup.", err);
         }
       });
     }
@@ -40,11 +51,10 @@ function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(base
     }
 
     public getCleanEsmmOptions(options: any) {
-      return (options instanceof Array) ? options.slice(0) : [];
+      return options instanceof Array ? options.slice(0) : [];
     }
   }
   return MissingDropdownOptionsClass;
 }
 
 export default MissingDropdownOptionsMixin;
-

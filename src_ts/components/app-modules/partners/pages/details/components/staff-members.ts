@@ -1,26 +1,25 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/paper-toggle-button/paper-toggle-button';
-import '@polymer/paper-icon-button/paper-icon-button';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/paper-toggle-button/paper-toggle-button";
+import "@polymer/paper-icon-button/paper-icon-button";
 
-import '@unicef-polymer/etools-content-panel/etools-content-panel';
-import '@unicef-polymer/etools-data-table/etools-data-table';
+import "@unicef-polymer/etools-content-panel/etools-content-panel";
+import "@unicef-polymer/etools-data-table/etools-data-table";
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
-import {SharedStyles} from '../../../../../styles/shared-styles';
-import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
+import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles";
+import { SharedStyles } from "../../../../../styles/shared-styles";
+import { etoolsCpHeaderActionsBarStyles } from "../../../../../styles/etools-cp-header-actions-bar-styles";
 
-import '../../../../../layout/icons-actions';
-import './add-edit-staff-members';
-import {property} from '@polymer/decorators';
-import {StaffMember} from '../../../../../../models/partners.models';
-import {AddEditStaffMembersEl} from './add-edit-staff-members';
+import "../../../../../layout/icons-actions";
+import "./add-edit-staff-members";
+import { property } from "@polymer/decorators";
+import { StaffMember } from "../../../../../../models/partners.models";
+import { AddEditStaffMembersEl } from "./add-edit-staff-members";
 
 /**
  * @polymer
  * @customElement
  */
 class StaffMembers extends PolymerElement {
-
   static get template() {
     // language=HTML
     return html`
@@ -54,23 +53,25 @@ class StaffMembers extends PolymerElement {
           word-break: break-all;
           word-wrap: break-word;
         }
-
       </style>
 
-      <etools-content-panel class="content-section" panel-title="Partner Contacts ([[dataItems.length]])"
-                            show-expand-btn>
+      <etools-content-panel
+        class="content-section"
+        panel-title="Partner Contacts ([[dataItems.length]])"
+        show-expand-btn
+      >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showInactive"
-                               checked="{{showInactive}}">
+          <paper-toggle-button id="showInactive" checked="{{showInactive}}">
             Show Inactive
           </paper-toggle-button>
-          <div class="separator" hidden$="[[!editMode]]">
-          </div>
-          <paper-icon-button icon="add-box"
-                             disabled="[[!editMode]]"
-                             hidden$="[[!editMode]]"
-                             title="Add"
-                             on-click="_addPartnerContact">
+          <div class="separator" hidden$="[[!editMode]]"></div>
+          <paper-icon-button
+            icon="add-box"
+            disabled="[[!editMode]]"
+            hidden$="[[!editMode]]"
+            title="Add"
+            on-click="_addPartnerContact"
+          >
           </paper-icon-button>
         </div>
 
@@ -97,31 +98,42 @@ class StaffMembers extends PolymerElement {
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
+            <etools-data-table-row
+              secondary-bg-on-hover
+              no-collapse
+              hidden$="[[!_isVisible(item.active, showInactive)]]"
+            >
               <div slot="row-data" class="p-relative">
-              <span class="col-data col-2">
-                [[_displayValue(item.title)]]
-              </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.first_name)]]
-              </span>
+                  [[_displayValue(item.title)]]
+                </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.last_name)]]
-              </span>
+                  [[_displayValue(item.first_name)]]
+                </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.phone)]]
-              </span>
+                  [[_displayValue(item.last_name)]]
+                </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.email)]]
-              </span>
+                  [[_displayValue(item.phone)]]
+                </span>
+                <span class="col-data col-2">
+                  [[_displayValue(item.email)]]
+                </span>
                 <span class="col-data col-2 center-align">
-                <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
-                <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
-              </span>
-                <icons-actions item$="[[item]]"
-                               hidden$="[[!editMode]]"
-                               show-delete="[[showDelete]]"
-                               on-edit="_editPartnerContact">
+                  <span hidden$="[[item.active]]" class="placeholder-style"
+                    >&#8212;</span
+                  >
+                  <iron-icon
+                    icon="check"
+                    hidden$="[[!item.active]]"
+                  ></iron-icon>
+                </span>
+                <icons-actions
+                  item$="[[item]]"
+                  hidden$="[[!editMode]]"
+                  show-delete="[[showDelete]]"
+                  on-edit="_editPartnerContact"
+                >
                 </icons-actions>
               </div>
             </etools-data-table-row>
@@ -131,33 +143,30 @@ class StaffMembers extends PolymerElement {
         <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
           <p>There are no staff members added.</p>
         </div>
-
       </etools-content-panel>
     `;
   }
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   showInactive: boolean = false;
 
-  @property({type: Object})
+  @property({ type: Object })
   addEditDialog!: AddEditStaffMembersEl;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   showDelete: boolean = false;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   editMode: boolean = false;
 
-  @property({type: Array})
+  @property({ type: Array })
   dataItems: StaffMember[] = [];
 
-  @property({type: Number})
+  @property({ type: Number })
   partnerId: number | null = null;
 
   static get observers() {
-    return [
-      'dataItemsChanged(dataItems, dataItems.*)'
-    ];
+    return ["dataItemsChanged(dataItems, dataItems.*)"];
   }
 
   ready() {
@@ -184,14 +193,16 @@ class StaffMembers extends PolymerElement {
   }
 
   _createAddEditDialog() {
-    this.addEditDialog = document.createElement('add-edit-staff-members') as any;
+    this.addEditDialog = document.createElement(
+      "add-edit-staff-members"
+    ) as any;
     this.addEditDialog.mainEl = this;
-    document.querySelector('body')!.appendChild(this.addEditDialog);
+    document.querySelector("body")!.appendChild(this.addEditDialog);
   }
 
   _removeAddEditDialog() {
     if (this.addEditDialog) {
-      document.querySelector('body')!.removeChild(this.addEditDialog);
+      document.querySelector("body")!.removeChild(this.addEditDialog);
     }
   }
 
@@ -201,7 +212,9 @@ class StaffMembers extends PolymerElement {
   }
 
   _editPartnerContact(e: Event) {
-    this.addEditDialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
+    this.addEditDialog.item = JSON.parse(
+      (e.target as PolymerElement).getAttribute("item")!
+    );
     this.openAddEditDialog();
   }
 
@@ -220,9 +233,8 @@ class StaffMembers extends PolymerElement {
   }
 
   _displayValue(value: any) {
-    return value ? value : '—';
+    return value ? value : "—";
   }
-
 }
 
-window.customElements.define('staff-members', StaffMembers);
+window.customElements.define("staff-members", StaffMembers);

@@ -1,22 +1,22 @@
 declare const moment: any;
-import {convertDate} from '../../../../../../../utils/date-utils';
-import {Constructor} from '../../../../../../../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import { convertDate } from "../../../../../../../utils/date-utils";
+import { Constructor } from "../../../../../../../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
  * @mixinFunction
  */
-function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function GenerateQuarterlyReportingRequirementsMixin<
+  T extends Constructor<PolymerElement>
+>(baseClass: T) {
   class GenerateQuarterlyRepReqClass extends baseClass {
-
-    @property({type: Number})
+    @property({ type: Number })
     DUE_DATE_DAYS_TO_ADD: number = 30;
 
-    @property({type: String})
-    datesFormat: string = 'YYYY-MM-DD';
-
+    @property({ type: String })
+    datesFormat: string = "YYYY-MM-DD";
 
     /**
      * Used to generate (one time) QPR first dates set.
@@ -36,7 +36,12 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
       const qprData = [];
       let start = String(pdStartDateStr);
       let end = this._generateEndDate(start, pdEndDateStr);
-      while (this._generatedEndIsBeforePdEnd(end.format(this.datesFormat), pdEndDateStr)) {
+      while (
+        this._generatedEndIsBeforePdEnd(
+          end.format(this.datesFormat),
+          pdEndDateStr
+        )
+      ) {
         // add dates to qpr data list
         qprData.push(this._getQPRDatesSet(start, end));
         // recalculate next dates set
@@ -52,7 +57,7 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
       return {
         start_date: start,
         end_date: end.format(this.datesFormat),
-        due_date: this._generateDueDate(end).format(this.datesFormat)
+        due_date: this._generateDueDate(end).format(this.datesFormat),
       };
     }
 
@@ -62,14 +67,14 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
 
     _generateEndDate(startStr: string, pdEndStr: string) {
       const d = moment.utc(convertDate(startStr));
-      let month = d.get('M');
-      if (d.get('D') <= 15) {
+      let month = d.get("M");
+      if (d.get("D") <= 15) {
         month += 2;
       } else {
         month += 3;
       }
-      d.set('M', month);
-      d.endOf('month');
+      d.set("M", month);
+      d.endOf("month");
 
       if (d.isAfter(pdEndStr)) {
         return moment.utc(convertDate(pdEndStr));
@@ -78,16 +83,14 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
     }
 
     _generateDueDate(momentEndDate: any) {
-      return moment(momentEndDate).add(this.DUE_DATE_DAYS_TO_ADD, 'd');
+      return moment(momentEndDate).add(this.DUE_DATE_DAYS_TO_ADD, "d");
     }
 
     _getNextStartDateStr(momentEndDate: any) {
-      return moment(momentEndDate).add(1, 'd').format(this.datesFormat);
+      return moment(momentEndDate).add(1, "d").format(this.datesFormat);
     }
-
   }
   return GenerateQuarterlyRepReqClass;
 }
 
 export default GenerateQuarterlyReportingRequirementsMixin;
-

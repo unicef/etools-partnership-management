@@ -1,17 +1,19 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import {RootState} from '../../store';
-import {PolymerElement} from '@polymer/polymer';
-import {Constructor} from '../../typings/globals.types';
-import {InterventionsModule} from '../app-modules/interventions/interventions-module';
-import {property} from '@polymer/decorators';
+import { RootState } from "../../store";
+import { PolymerElement } from "@polymer/polymer";
+import { Constructor } from "../../typings/globals.types";
+import { InterventionsModule } from "../app-modules/interventions/interventions-module";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
  * @mixinFunction
  */
-function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(
+  baseClass: T
+) {
   class AmendmentModeUIClass extends baseClass {
-    @property({type: Boolean})
+    @property({ type: Boolean })
     amendmentModeActive: boolean = false;
 
     public amdStateChanged(state: RootState) {
@@ -21,14 +23,16 @@ function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: 
     }
 
     protected _getPageContainerClass(amendmentModeActive: boolean): string {
-      return amendmentModeActive ? 'in-amendment' : '';
+      return amendmentModeActive ? "in-amendment" : "";
     }
 
     protected _closeAmendment() {
       /**
        * For now amendment mode is PD specific, but if needed can be used on any page with this method code updated
        */
-      const intervElem = this.shadowRoot!.querySelector('#interventions') as unknown as InterventionsModule;
+      const intervElem = (this.shadowRoot!.querySelector(
+        "#interventions"
+      ) as unknown) as InterventionsModule;
       if (intervElem) {
         intervElem._showFinalizeAmendmentDialog();
       }

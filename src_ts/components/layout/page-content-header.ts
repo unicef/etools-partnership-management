@@ -1,6 +1,6 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import {property} from '@polymer/decorators';
+import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
+import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
@@ -8,7 +8,7 @@ import {property} from '@polymer/decorators';
  */
 class PageContentHeader extends PolymerElement {
   static get is() {
-    return 'page-content-header';
+    return "page-content-header";
   }
 
   static get template() {
@@ -75,7 +75,6 @@ class PageContentHeader extends PolymerElement {
             padding: 0 5px 5px 5px;
           }
         }
-
       </style>
 
       <div class="content-header-row title-row">
@@ -91,9 +90,8 @@ class PageContentHeader extends PolymerElement {
     `;
   }
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({ type: Boolean, reflectToAttribute: true })
   withTabsVisible: boolean = false;
-
 }
 
 window.customElements.define(PageContentHeader.is, PageContentHeader);

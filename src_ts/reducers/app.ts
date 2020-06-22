@@ -8,14 +8,11 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import {Reducer} from 'redux';
-import {
-  UPDATE_DRAWER_STATE,
-  AppAction
-} from '../actions/app.js';
+import { Reducer } from "redux";
+import { UPDATE_DRAWER_STATE, AppAction } from "../actions/app.js";
 
 export class AppState {
-  page: string = '';
+  page: string = "";
   drawerOpened: boolean = false;
 }
 
@@ -26,7 +23,7 @@ const app: Reducer<AppState, AppAction> = (state = INITIAL_STATE, action) => {
     case UPDATE_DRAWER_STATE:
       return {
         ...state,
-        drawerOpened: action.opened
+        drawerOpened: action.opened,
       };
     default:
       return state;

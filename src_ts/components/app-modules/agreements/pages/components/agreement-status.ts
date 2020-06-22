@@ -1,102 +1,106 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-icons/av-icons.js';
-import CONSTANTS from '../../../../../config/app-constants';
-import EtoolsStatusCommonMixin from '../../../../layout/etools-status/etools-status-common-mixin';
-import '../../../../layout/etools-status/etools-status.js';
-import '../../../../layout/etools-status/etools-status-common-mixin.js';
-import {fireEvent} from '../../../../utils/fire-custom-event';
-import {property} from '@polymer/decorators';
-import '../../data/agreement-termination';
-import {AgreementTermination} from '../../data/agreement-termination';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/iron-icons/av-icons.js";
+import CONSTANTS from "../../../../../config/app-constants";
+import EtoolsStatusCommonMixin from "../../../../layout/etools-status/etools-status-common-mixin";
+import "../../../../layout/etools-status/etools-status.js";
+import "../../../../layout/etools-status/etools-status-common-mixin.js";
+import { fireEvent } from "../../../../utils/fire-custom-event";
+import { property } from "@polymer/decorators";
+import "../../data/agreement-termination";
+import { AgreementTermination } from "../../data/agreement-termination";
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
-
+class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   static get template() {
     return html`
-        <style>
-          :host {
-            width: 100%;
-          }
-        </style>
-        <etools-status statuses="[[possibleStatuses]]"
-                      actions="[[possibleActions]]"
-                      on-agreement-suspend-event="_setStatusSuspended"
-                      on-agreement-terminate-event="_openTerminationDialog"
-                      on-agreement-unsuspend-event="_unsuspendAgreement"
-                      on-agreement-delete-event="_openDeleteConfirmation">
-        </etools-status>
+      <style>
+        :host {
+          width: 100%;
+        }
+      </style>
+      <etools-status
+        statuses="[[possibleStatuses]]"
+        actions="[[possibleActions]]"
+        on-agreement-suspend-event="_setStatusSuspended"
+        on-agreement-terminate-event="_openTerminationDialog"
+        on-agreement-unsuspend-event="_unsuspendAgreement"
+        on-agreement-delete-event="_openDeleteConfirmation"
+      >
+      </etools-status>
     `;
   }
 
-  @property({type: Number})
+  @property({ type: Number })
   agreementId: number | null = null;
 
-  @property({type: String})
-  agreementType: string = '';
+  @property({ type: String })
+  agreementType: string = "";
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   newAgreement: boolean = false;
 
-  @property({type: Array})
+  @property({ type: Array })
   possibleStatuses: any = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   possibleActions: any = [
     {
-      label: 'Save',
+      label: "Save",
       hidden: true,
       primary: true,
-      event: 'save-agreement'
+      event: "save-agreement",
       // save-agreement event is handeled by the parnent
     },
     {
-      label: 'Suspend',
+      label: "Suspend",
       hidden: true,
-      event: 'agreement-suspend-event'
+      event: "agreement-suspend-event",
     },
     {
-      label: 'Unsuspend',
+      label: "Unsuspend",
       hidden: true,
-      event: 'agreement-unsuspend-event'
+      event: "agreement-unsuspend-event",
     },
     {
-      label: 'Terminate',
+      label: "Terminate",
       hidden: true,
-      event: 'agreement-terminate-event'
+      event: "agreement-terminate-event",
     },
     {
-      label: 'Delete',
+      label: "Delete",
       hidden: true,
-      event: 'agreement-delete-event'
-    }];
+      event: "agreement-delete-event",
+    },
+  ];
 
-  @property({type: String})
-  deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
+  @property({ type: String })
+  deleteWarningMessage: string =
+    "Are you sure you want to delete this agreement?";
 
-  @property({type: Object})
+  @property({ type: Object })
   _terminationDialog!: AgreementTermination;
 
   static get observers() {
-    return [
-      '_handleStatusChange(status, agreementId)'
-    ];
+    return ["_handleStatusChange(status, agreementId)"];
   }
 
   ready() {
     super.ready();
-    this.set('sectionName', 'Agreement');
+    this.set("sectionName", "Agreement");
     this._handleStickyScroll();
 
     this._createStatusChangeWarningDialog();
     this._createDeleteConfirmationDialog();
     this._createTerminationDialog();
     this._triggerAgDeleteOnConfirm = this._triggerAgDeleteOnConfirm.bind(this);
-    this.deleteConfirmDialog.addEventListener('close', this._triggerAgDeleteOnConfirm as any);
+    this.deleteConfirmDialog.addEventListener(
+      "close",
+      this._triggerAgDeleteOnConfirm as any
+    );
 
     // has to be run async for shadycss to load
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -104,40 +108,43 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.deleteConfirmDialog.removeEventListener('close', this._triggerAgDeleteOnConfirm as any);
+    this.deleteConfirmDialog.removeEventListener(
+      "close",
+      this._triggerAgDeleteOnConfirm as any
+    );
   }
 
   setPossibleStatuses() {
-    this.set('possibleStatuses', [
+    this.set("possibleStatuses", [
       {
         label: CONSTANTS.STATUSES.Draft,
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Signed,
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Suspended,
-        icon: 'av:pause-circle-filled',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+        icon: "av:pause-circle-filled",
+        iconStyles: "color: " + this.getComputedStyleValue("--warning-color"),
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Terminated,
-        icon: 'report-problem',
-        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        icon: "report-problem",
+        iconStyles: "color: " + this.getComputedStyleValue("--error-color"),
         hidden: false,
-        completed: false
+        completed: false,
       },
       {
         label: CONSTANTS.STATUSES.Ended,
         hidden: false,
-        completed: false
-      }
+        completed: false,
+      },
     ]);
 
     this._computeAvailableStatuses(this.status);
@@ -152,20 +159,20 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
-        availableOptions.push('Save');
-        availableOptions.push('Delete');
+        availableOptions.push("Save");
+        availableOptions.push("Delete");
         break;
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        availableOptions.push('Save');
+        availableOptions.push("Save");
         if (this.agreementType !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          availableOptions.push('Suspend');
-          availableOptions.push('Terminate');
+          availableOptions.push("Suspend");
+          availableOptions.push("Terminate");
         }
         break;
 
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
         if (this.agreementType !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
-          availableOptions.push('Unsuspend');
+          availableOptions.push("Unsuspend");
         }
         break;
 
@@ -176,7 +183,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         break;
 
       default:
-        availableOptions.push('Save');
+        availableOptions.push("Save");
         break;
     }
 
@@ -185,7 +192,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         const actionName = this.possibleActions[key].label;
 
         if (availableOptions.indexOf(actionName) > -1) {
-          this.set(['possibleActions', key, 'hidden'], false);
+          this.set(["possibleActions", key, "hidden"], false);
         }
       }
     }
@@ -202,7 +209,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         availableStatuses = [
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
+          CONSTANTS.STATUSES.Ended,
         ];
         activeStatus = CONSTANTS.STATUSES.Draft;
         break;
@@ -211,7 +218,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         availableStatuses = [
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
+          CONSTANTS.STATUSES.Ended,
         ];
         activeStatus = CONSTANTS.STATUSES.Signed;
         break;
@@ -221,7 +228,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Suspended,
-          CONSTANTS.STATUSES.Ended
+          CONSTANTS.STATUSES.Ended,
         ];
         activeStatus = CONSTANTS.STATUSES.Suspended;
         break;
@@ -231,7 +238,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
           CONSTANTS.STATUSES.Terminated,
-          CONSTANTS.STATUSES.Ended
+          CONSTANTS.STATUSES.Ended,
         ];
         activeStatus = CONSTANTS.STATUSES.Terminated;
         break;
@@ -240,7 +247,7 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         availableStatuses = [
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
+          CONSTANTS.STATUSES.Ended,
         ];
         activeStatus = CONSTANTS.STATUSES.Ended;
         break;
@@ -248,9 +255,9 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         availableStatuses = [
           CONSTANTS.STATUSES.Draft,
           CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
+          CONSTANTS.STATUSES.Ended,
         ];
-        activeStatus = '';
+        activeStatus = "";
         break;
     }
 
@@ -260,21 +267,21 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         completedFlag = true;
       }
       if (availableStatuses.indexOf(workingStatusLabel) > -1) {
-        this.set(['possibleStatuses', key, 'hidden'], false);
+        this.set(["possibleStatuses", key, "hidden"], false);
       }
-      this.set(['possibleStatuses', key, 'completed'], completedFlag);
+      this.set(["possibleStatuses", key, "completed"], completedFlag);
     }
   }
 
   _statusChangeConfirmationCallback(event: CustomEvent) {
     if (event.detail.confirmed) {
-      fireEvent(this, 'update-agreement-status', {
+      fireEvent(this, "update-agreement-status", {
         agreementId: this.agreementId,
-        status: this.newStatus + ''
+        status: this.newStatus + "",
       });
-      fireEvent(this, 'reload-list');
+      fireEvent(this, "reload-list");
     }
-    this.set('newStatus', '');
+    this.set("newStatus", "");
   }
 
   _statusChangeIsValid(newStatus: string) {
@@ -289,8 +296,12 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         return false;
       }
     }
-    if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-    CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+    if (
+      [
+        CONSTANTS.STATUSES.Suspended.toLowerCase(),
+        CONSTANTS.STATUSES.Terminated.toLowerCase(),
+      ].indexOf(newStatus) > -1
+    ) {
       if (this.status !== CONSTANTS.STATUSES.Signed.toLowerCase()) {
         // prevent suspending or terminating anything other than signed agreement
         return false;
@@ -302,40 +313,53 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
   _computeWarningMessage(newStatus: string) {
     switch (newStatus) {
       case CONSTANTS.STATUSES.Terminated.toLowerCase():
-        this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?');
+        this.set(
+          "warningMessage",
+          "You are about to terminate this Agreement. Do you want to continue?"
+        );
         break;
       case CONSTANTS.STATUSES.Suspended.toLowerCase():
-        this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?');
+        this.set(
+          "warningMessage",
+          "You are about to suspend this Agreement. Do you want to continue?"
+        );
         break;
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?');
+        this.set(
+          "warningMessage",
+          "You are about to unsuspend this Agreement. Do you want to continue?"
+        );
         break;
       default:
-        this.set('warningMessage', this._getDefaultWarningMessage());
+        this.set("warningMessage", this._getDefaultWarningMessage());
         break;
     }
   }
 
   _openTerminationDialog() {
     // this._updateStatus(CONSTANTS.STATUSES.Terminated.toLowerCase());
-    if (!this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())) {
+    if (
+      !this._statusChangeIsValid(CONSTANTS.STATUSES.Terminated.toLowerCase())
+    ) {
       return;
     }
 
     this._terminationDialog.resetValidations();
-    this._terminationDialog.set('agreementId', this.agreementId);
-    this._terminationDialog.set('termination', {
+    this._terminationDialog.set("agreementId", this.agreementId);
+    this._terminationDialog.set("termination", {
       date: null,
-      attachment_notice: null
+      attachment_notice: null,
     });
-    this._terminationDialog.set('opened', true);
+    this._terminationDialog.set("opened", true);
   }
 
   _createTerminationDialog() {
-    this._terminationDialog = document.createElement('agreement-termination') as any;
-    document.querySelector('body')!.appendChild(this._terminationDialog);
+    this._terminationDialog = document.createElement(
+      "agreement-termination"
+    ) as any;
+    document.querySelector("body")!.appendChild(this._terminationDialog);
 
-    this._terminationDialog.set('terminationElSource', this);
+    this._terminationDialog.set("terminationElSource", this);
   }
 
   _setStatusSuspended() {
@@ -348,9 +372,9 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
   _triggerAgDeleteOnConfirm(e: CustomEvent) {
     if (e.detail.confirmed) {
-      fireEvent(this, 'delete-agreement', {id: this.agreementId});
+      fireEvent(this, "delete-agreement", { id: this.agreementId });
     }
   }
 }
 
-window.customElements.define('agreement-status', AgreementStatus);
+window.customElements.define("agreement-status", AgreementStatus);

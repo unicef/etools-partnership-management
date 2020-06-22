@@ -1,36 +1,40 @@
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import {Constructor, EtoolsTab} from '../../../../../../../../typings/globals.types';
-import {PolymerElement} from '@polymer/polymer';
-import {property} from '@polymer/decorators';
+import {
+  Constructor,
+  EtoolsTab,
+} from "../../../../../../../../typings/globals.types";
+import { PolymerElement } from "@polymer/polymer";
+import { property } from "@polymer/decorators";
 
 /**
  * @polymer
  * @mixinFunction
  */
-function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(
+  baseClass: T
+) {
   class IndicatorDialogTabsClass extends baseClass {
-
-    @property({type: Array})
+    @property({ type: Array })
     indicatorDataTabs: EtoolsTab[] = [
       {
-        tab: 'details',
-        tabLabel: 'Details'
+        tab: "details",
+        tabLabel: "Details",
       },
       {
-        tab: 'disaggregations',
-        tabLabel: 'Disaggregations',
+        tab: "disaggregations",
+        tabLabel: "Disaggregations",
         showTabCounter: true,
-        counter: 0
-      }
+        counter: 0,
+      },
     ];
 
-    @property({type: String})
-    activeTab: string = 'details';
+    @property({ type: String })
+    activeTab: string = "details";
 
     static get observers() {
       return [
-        '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
-        '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)'
+        "_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)",
+        "_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)",
       ];
     }
 
@@ -38,7 +42,10 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
      * Update disaggegations tab counter
      */
     _updateDisaggregationsNrInTabLabel(disaggregationsCount: number) {
-      return this.set(['indicatorDataTabs', 1, 'counter'], disaggregationsCount);
+      return this.set(
+        ["indicatorDataTabs", 1, "counter"],
+        disaggregationsCount
+      );
     }
 
     _setDisaggregationsCount1(disaggregs: [], prpDisaggregs: []) {
@@ -50,19 +57,26 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
       this._setDisaggregationsCount2(disaggregs.length, prpDisaggregs.length);
     }
 
-    _setDisaggregationsCount2(disaggregsLength: number, prpDisaggregsLength: number) {
-      if (typeof disaggregsLength === 'undefined' || typeof prpDisaggregsLength === 'undefined') {
+    _setDisaggregationsCount2(
+      disaggregsLength: number,
+      prpDisaggregsLength: number
+    ) {
+      if (
+        typeof disaggregsLength === "undefined" ||
+        typeof prpDisaggregsLength === "undefined"
+      ) {
         return;
       }
       // @ts-ignore
-      const disaggregationsNr = this.isCluster ? prpDisaggregsLength : disaggregsLength;
+      const disaggregationsNr = this.isCluster
+        ? prpDisaggregsLength
+        : disaggregsLength;
       this._updateDisaggregationsNrInTabLabel(disaggregationsNr);
     }
 
     updateActiveTab(tab: string) {
-      this.set('activeTab', tab);
+      this.set("activeTab", tab);
     }
-
   }
   return IndicatorDialogTabsClass;
 }

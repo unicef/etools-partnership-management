@@ -1,5 +1,5 @@
-import {Permission} from './globals.types';
-import CONSTANTS from '../config/app-constants';
+import { Permission } from "./globals.types";
+import CONSTANTS from "../config/app-constants";
 
 export class PlannedBudget {
   currency?: string;
@@ -14,18 +14,18 @@ export class InterventionAttachment {
   active: boolean = true;
   type?: number;
   intervention?: number;
-  attachment_document?: string | number| File;
+  attachment_document?: string | number | File;
   [key: string]: undefined | number | string | boolean | File;
 }
 
 export class FrsDetails {
-  currencies_match: boolean = false
-  earliest_start_date: string | null = null
+  currencies_match: boolean = false;
+  earliest_start_date: string | null = null;
   frs: Fr[] = [];
   latest_end_date: string | null = null;
   multi_curr_flag: boolean = false;
   total_actual_amt: number = 0;
-  total_frs_amt: string = '0';
+  total_frs_amt: string = "0";
   total_intervention_amt: number = 0;
   total_outstanding_amt: number = 0;
 }
@@ -48,7 +48,7 @@ export interface Fr {
 
 export class Intervention {
   id: number | null = null;
-  agreement?: number ;
+  agreement?: number;
   document_type?: string;
   country_programme?: number;
   number?: string;
@@ -56,11 +56,11 @@ export class Intervention {
   prc_review_attachment?: number | string;
   signed_pd_attachment?: number | string;
   title?: string;
-  status: string = '';
-  start: string = '';
-  end: string = '';
+  status: string = "";
+  start: string = "";
+  end: string = "";
   submitted_to_prc: boolean = false;
-  submission_date_prc?: string ;
+  submission_date_prc?: string;
   review_date_prc?: string;
   submission_date?: string;
   signed_by_unicef_date?: string;
@@ -71,7 +71,7 @@ export class Intervention {
   partner_focal_points: [] = [];
   partner_authorized_officer_signatory?: string;
   offices: [] = [];
-  sections: [] =[];
+  sections: [] = [];
   frs: number[] = [];
   frs_details = new FrsDetails();
   contingency_pd?: boolean;
@@ -82,19 +82,19 @@ export class Intervention {
   in_amendment: boolean = false;
   amendments: InterventionAmendment[] = [];
   // distributions: [];
-  activation_letter_attachment: number| string| null = null;
+  activation_letter_attachment: number | string | null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: Permission<InterventionPermissionsFields>;
   [key: string]: any;
 
   // TODOO
   public isDraft() {
-    return this.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-        status === '';
+    return (
+      this.status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === ""
+    );
   }
   public isContingencyAndHasActivationLetter() {
-    return this.contingency_pd &&
-      this.activation_letter_attachment;
+    return this.contingency_pd && this.activation_letter_attachment;
   }
 }
 
@@ -107,27 +107,27 @@ export class InterventionAmendment {
   types: string[] = [];
   other_description: string | null = null;
   signed_date: string | null = null;
-  signed_amendment_attachment: number| string | null = null;
+  signed_amendment_attachment: number | string | null = null;
   internal_prc_review: number | string | null = null;
 }
 
 export class ListItemIntervention {
-  start: string = '';
-  end: string = '';
-  frs_earliest_start_date: string | null= '';
-  frs_latest_end_date: string | null= '';
-  partner_name?: string = '';
+  start: string = "";
+  end: string = "";
+  frs_earliest_start_date: string | null = "";
+  frs_latest_end_date: string | null = "";
+  partner_name?: string = "";
   cp_outputs: number[] = [];
   unicef_budget: number = 0;
   cso_contribution: number = 0;
   country_programme?: number;
-  title?: string = '';
-  status: string = '';
-  number?: string = '';
+  title?: string = "";
+  status: string = "";
+  number?: string = "";
   offices: [] = [];
   sections: number[] = [];
   section_names: string[] | null = null;
-  document_type?: string ='';
+  document_type?: string = "";
   unicef_focal_points: [] = [];
   [key: string]: any;
 }
@@ -143,7 +143,6 @@ export class SelectedSection {
 }
 
 export class InterventionPermissionsFields {
-
   id: boolean = false;
   status: boolean = false;
 
@@ -207,7 +206,8 @@ export interface ExpectedResult {
   ram_indicator_names: number[];
 }
 
-export interface ResultLinkLowerResult { // ll_result
+export interface ResultLinkLowerResult {
+  // ll_result
   id: number;
   name: string;
   applied_indicators: Indicator[];
@@ -219,19 +219,20 @@ export interface ResultLinkLowerResult { // ll_result
 
 export class IndicatorIndicator {
   id: number | null = null;
-  title: string = '';
-  display_type: string = 'percentage';
-  unit: string = 'number'
+  title: string = "";
+  display_type: string = "percentage";
+  unit: string = "number";
 }
 
-export class Indicator {// Indicator
+export class Indicator {
+  // Indicator
   id: number | null = null;
   is_active: boolean = true;
   is_high_frequency: boolean = false;
   indicator: IndicatorIndicator | null = new IndicatorIndicator();
   section: number | null = null;
-  baseline: {v?: string | number; d?: string | number} = {};
-  target: {v?: string | number; d: string | number} = {d: '1'};
+  baseline: { v?: string | number; d?: string | number } = {};
+  target: { v?: string | number; d: string | number } = { d: "1" };
   means_of_verification: string | null = null;
   locations: number[] = [];
   disaggregation: string[] = [];
@@ -240,8 +241,8 @@ export class Indicator {// Indicator
   cluster_indicator_id: number | null = null;
   cluster_indicator_title: string | null = null;
   response_plan_name: string | null = null;
-  numerator_label: string = '';
-  denominator_label: string = '';
+  numerator_label: string = "";
+  denominator_label: string = "";
 }
 
 export interface CpOutput {
@@ -254,16 +255,16 @@ export interface CpOutput {
 export class PlannedVisit {
   id: number | null = null;
   year: string | null = null;
-  programmatic_q1: string = '0';
-  programmatic_q2: string = '0';
-  programmatic_q3: string = '0';
-  programmatic_q4: string = '0';
+  programmatic_q1: string = "0";
+  programmatic_q2: string = "0";
+  programmatic_q3: string = "0";
+  programmatic_q4: string = "0";
   programmatic: any;
 }
 
 export class Disaggregation {
   id: string | null = null;
-  name: string = '';
+  name: string = "";
   active: boolean = true;
   disaggregation_values: DisaggregationValue[] = [];
 }
@@ -289,4 +290,3 @@ export interface AdminLevel {
   created: string;
   modified: string;
 }
-

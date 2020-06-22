@@ -1,38 +1,48 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-tabs/paper-tab.js';
-import '@polymer/paper-tabs/paper-tabs.js';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
-import EnvironmentFlagsMixin from '../../../../../../environment-flags/environment-flags-mixin';
-import SaveIndicatorMixin from './mixins/save-indicator-mixin';
-import IndicatorDialogTabsMixin from './mixins/indicator-dialog-tabs-mixin';
-import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../../../store';
-import {isEmptyObject, isJsonStrMatch, copy} from '../../../../../../utils/utils';
-import {User, GenericObject} from '../../../../../../../typings/globals.types';
-import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
-import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
-import {SharedStyles} from '../../../../../../styles/shared-styles';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import './mixins/indicator-dialog-tabs-mixin.js';
-import './mixins/save-indicator-mixin.js';
-import './indicator-dissaggregations.js';
-import './cluster-indicator-disaggregations.js';
-import './cluster-indicator.js';
-import './non-cluster-indicator.js';
-import {Indicator, Location} from '../../../../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {userIsPme} from '../../../../../../user/user-permissions';
-import {property} from '@polymer/decorators';
-import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {ClusterIndicatorEl} from './cluster-indicator.js';
-import {NonClusterIndicatorEl} from './non-cluster-indicator.js';
+import { PolymerElement, html } from "@polymer/polymer";
+import "@polymer/iron-pages/iron-pages.js";
+import "@polymer/iron-icons/iron-icons.js";
+import "@polymer/paper-input/paper-input.js";
+import "@polymer/paper-tabs/paper-tab.js";
+import "@polymer/paper-tabs/paper-tabs.js";
+import "@polymer/paper-dropdown-menu/paper-dropdown-menu.js";
+import "@polymer/paper-item/paper-item.js";
+import "@polymer/paper-toggle-button/paper-toggle-button.js";
+import EnvironmentFlagsMixin from "../../../../../../environment-flags/environment-flags-mixin";
+import SaveIndicatorMixin from "./mixins/save-indicator-mixin";
+import IndicatorDialogTabsMixin from "./mixins/indicator-dialog-tabs-mixin";
+import { connect } from "pwa-helpers/connect-mixin";
+import { store, RootState } from "../../../../../../../store";
+import {
+  isEmptyObject,
+  isJsonStrMatch,
+  copy,
+} from "../../../../../../utils/utils";
+import {
+  User,
+  GenericObject,
+} from "../../../../../../../typings/globals.types";
+import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
+import { requiredFieldStarredStyles } from "../../../../../../styles/required-field-styles";
+import { SharedStyles } from "../../../../../../styles/shared-styles";
+import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import "@unicef-polymer/etools-dialog/etools-dialog.js";
+import "./mixins/indicator-dialog-tabs-mixin.js";
+import "./mixins/save-indicator-mixin.js";
+import "./indicator-dissaggregations.js";
+import "./cluster-indicator-disaggregations.js";
+import "./cluster-indicator.js";
+import "./non-cluster-indicator.js";
+import {
+  Indicator,
+  Location,
+} from "../../../../../../../typings/intervention.types";
+import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
+import { userIsPme } from "../../../../../../user/user-permissions";
+import { property } from "@polymer/decorators";
+import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
+import { EtoolsDropdownEl } from "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import { ClusterIndicatorEl } from "./cluster-indicator.js";
+import { NonClusterIndicatorEl } from "./non-cluster-indicator.js";
 
 /**
  * @polymer
@@ -41,13 +51,14 @@ import {NonClusterIndicatorEl} from './non-cluster-indicator.js';
  * @appliesMixin SaveIndicatorMixin
  * @appliesMixin EnvironmentFlagsMixin
  */
-class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
-  SaveIndicatorMixin(
-    EnvironmentFlagsMixin(PolymerElement)))) {
-
+class IndicatorDialog extends connect(store)(
+  IndicatorDialogTabsMixin(
+    SaveIndicatorMixin(EnvironmentFlagsMixin(PolymerElement))
+  )
+) {
   static get template() {
     return html`
-     ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -83,136 +94,166 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
           --etools-dialog-scrollable: {
             min-height: 400px;
             font-size: 16px;
-          };
+          }
         }
       </style>
 
-      <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
-                    on-close="_cleanUp" no-padding
-                    on-confirm-btn-clicked="_validateAndSaveIndicator"
-                    ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
-                    spinner-text="[[spinnerText]]">
+      <etools-dialog
+        id="indicatorDialog"
+        size="lg"
+        dialog-title="Indicator"
+        on-close="_cleanUp"
+        no-padding
+        on-confirm-btn-clicked="_validateAndSaveIndicator"
+        ok-btn-text="Save"
+        keep-dialog-open
+        disable-confirm-btn="[[disableConfirmBtn]]"
+        spinner-text="[[spinnerText]]"
+      >
+        <etools-tabs
+          id="indicatorTabs"
+          tabs="[[indicatorDataTabs]]"
+          active-tab="{{activeTab}}"
+          border-bottom
+          on-iron-select="_centerDialog"
+        ></etools-tabs>
 
-        <etools-tabs id="indicatorTabs"
-                    tabs="[[indicatorDataTabs]]"
-                    active-tab="{{activeTab}}"
-                    border-bottom
-                    on-iron-select="_centerDialog"></etools-tabs>
-
-        <iron-pages id="indicatorPages"
-                    selected="{{activeTab}}"
-                    attr-for-selected="name"
-                    fallback-selection="details">
+        <iron-pages
+          id="indicatorPages"
+          selected="{{activeTab}}"
+          attr-for-selected="name"
+          fallback-selection="details"
+        >
           <div name="details">
             <div class="row-h flex-c">
               <div class="col col-4">
-                <etools-dropdown id="sectionDropdw"
-                                label="Section"
-                                selected="{{indicator.section}}"
-                                placeholder="&#8212;"
-                                options="[[sectionOptions]]"
-                                option-label="name"
-                                option-value="id"
-                                required
-                                auto-validate
-                                error-message="Please select section(s)"
-                                disable-on-focus-handling
-                                fit-into="etools-dialog">
+                <etools-dropdown
+                  id="sectionDropdw"
+                  label="Section"
+                  selected="{{indicator.section}}"
+                  placeholder="&#8212;"
+                  options="[[sectionOptions]]"
+                  option-label="name"
+                  option-value="id"
+                  required
+                  auto-validate
+                  error-message="Please select section(s)"
+                  disable-on-focus-handling
+                  fit-into="etools-dialog"
+                >
                 </etools-dropdown>
               </div>
             </div>
             <div class="row-h">
-              <paper-toggle-button disabled$="[[_clusterToggleIsDisabled(indicator)]]"
-                                  checked="{{isCluster}}"></paper-toggle-button>
+              <paper-toggle-button
+                disabled$="[[_clusterToggleIsDisabled(indicator)]]"
+                checked="{{isCluster}}"
+              ></paper-toggle-button>
               Cluster Indicator
             </div>
             <div class="indicator-content">
               <template is="dom-if" if="[[!isCluster]]">
-                <non-cluster-indicator id="nonClusterIndicatorEl"
-                                      indicator="{{indicator}}"
-                                      location-options="[[locationOptions]]"
-                                      intervention-status="[[interventionStatus]]"></non-cluster-indicator>
+                <non-cluster-indicator
+                  id="nonClusterIndicatorEl"
+                  indicator="{{indicator}}"
+                  location-options="[[locationOptions]]"
+                  intervention-status="[[interventionStatus]]"
+                ></non-cluster-indicator>
               </template>
               <template is="dom-if" if="[[isCluster]]">
-                <cluster-indicator id="clusterIndicatorEl"
-                                  indicator="{{indicator}}"
-                                  prp-disaggregations="{{prpDisaggregations}}"
-                                  location-options="[[locationOptions]]"></cluster-indicator>
+                <cluster-indicator
+                  id="clusterIndicatorEl"
+                  indicator="{{indicator}}"
+                  prp-disaggregations="{{prpDisaggregations}}"
+                  location-options="[[locationOptions]]"
+                ></cluster-indicator>
               </template>
             </div>
           </div>
           <div class="row-padding" name="disaggregations">
-            <div hidden$="[[_hideAddDisaggreations(isCluster, currentUser)]]" class="createDisaggreg">If disaggregation
-              groups that you need are not
-              pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
+            <div
+              hidden$="[[_hideAddDisaggreations(isCluster, currentUser)]]"
+              class="createDisaggreg"
+            >
+              If disaggregation groups that you need are not pre-defined yet,
+              you can create them
+              <a href="/pmp/settings" target="_blank">here</a>.
             </div>
             <template is="dom-if" if="[[!isCluster]]" restamp>
-              <indicator-dissaggregations data-items="{{disaggregations}}"
-                                          on-add-new-disaggreg="_updateScroll">
+              <indicator-dissaggregations
+                data-items="{{disaggregations}}"
+                on-add-new-disaggreg="_updateScroll"
+              >
               </indicator-dissaggregations>
             </template>
             <template is="dom-if" if="[[isCluster]]" restamp>
-              <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
+              <cluster-indicator-disaggregations
+                disaggregations="[[prpDisaggregations]]"
+              >
               </cluster-indicator-disaggregations>
             </template>
           </div>
         </iron-pages>
-
       </etools-dialog>
-
     `;
   }
 
-  @property({type: Object})
+  @property({ type: Object })
   indicator!: Indicator;
 
-  @property({type: Object})
+  @property({ type: Object })
   actionParams!: object;
 
-  @property({type: Array})
+  @property({ type: Array })
   disaggregations: [] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   prpDisaggregations: [] = [];
 
-  @property({type: Array})
+  @property({ type: Array })
   sections!: GenericObject[];
 
-  @property({type: Array})
+  @property({ type: Array })
   sectionOptionsIds!: [];
 
-  @property({type: Array, computed: '_computeOptions(sectionOptionsIds, sections)'})
+  @property({
+    type: Array,
+    computed: "_computeOptions(sectionOptionsIds, sections)",
+  })
   sectionOptions!: GenericObject[];
 
-  @property({type: Array})
+  @property({ type: Array })
   locations!: Location[];
 
-  @property({type: Array})
+  @property({ type: Array })
   locationOptionsIds!: [];
 
-  @property({type: Array, computed: '_computeOptions(locationOptionsIds, locations)'})
+  @property({
+    type: Array,
+    computed: "_computeOptions(locationOptionsIds, locations)",
+  })
   locationOptions!: Location[];
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   isCluster: boolean = false;
 
-  @property({type: Object})
+  @property({ type: Object })
   toastEventSource!: PolymerElement;
 
-  @property({type: Boolean})
+  @property({ type: Boolean })
   disableConfirmBtn: boolean = false;
 
-  @property({type: String})
-  spinnerText: string = 'Saving...';
+  @property({ type: String })
+  spinnerText: string = "Saving...";
 
-  @property({type: String})
+  @property({ type: String })
   interventionStatus!: string;
 
-  @property({type: Object})
-  currentUser!: User;// What???
+  @property({ type: Object })
+  currentUser!: User; // What???
 
   static get observers() {
-    return ['resetValidationsAndStyle(isCluster)'];
+    return ["resetValidationsAndStyle(isCluster)"];
   }
 
   stateChanged(state: RootState) {
@@ -249,15 +290,15 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     this._stopSpinner = this._stopSpinner.bind(this);
     this._showToast = this._showToast.bind(this);
 
-    this.addEventListener('start-spinner', this._startSpinner as any);
-    this.addEventListener('stop-spinner', this._stopSpinner as any);
-    this.addEventListener('show-toast', this._showToast as any);
+    this.addEventListener("start-spinner", this._startSpinner as any);
+    this.addEventListener("stop-spinner", this._stopSpinner as any);
+    this.addEventListener("show-toast", this._showToast as any);
   }
 
   _removeIndicatorDialogListeners() {
-    this.removeEventListener('start-spinner', this._startSpinner as any);
-    this.removeEventListener('stop-spinner', this._stopSpinner as any);
-    this.removeEventListener('show-toast', this._showToast as any);
+    this.removeEventListener("start-spinner", this._startSpinner as any);
+    this.removeEventListener("stop-spinner", this._stopSpinner as any);
+    this.removeEventListener("show-toast", this._showToast as any);
   }
 
   _clusterToggleIsDisabled(indicator: any) {
@@ -268,7 +309,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   }
 
   openIndicatorDialog() {
-    this.updateActiveTab('details');
+    this.updateActiveTab("details");
     this.disableConfirmBtn = false;
     (this.$.indicatorDialog as EtoolsDialog).opened = true;
   }
@@ -278,30 +319,34 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   }
 
   setIndicatorData(data: any, actionParams: any, interventionStatus: string) {
-    this.set('actionParams', actionParams);
-    this.set('interventionStatus', interventionStatus);
+    this.set("actionParams", actionParams);
+    this.set("interventionStatus", interventionStatus);
 
-    if (!data) { // new indicator
+    if (!data) {
+      // new indicator
       this.isCluster = false;
-      this.set('indicator', new Indicator());
-      this.set('disaggregations', []);
+      this.set("indicator", new Indicator());
+      this.set("disaggregations", []);
       this.preselectSectionAndLocation();
       return;
     }
 
     this.isCluster = !!data.cluster_indicator_id;
-    this.set('indicator', data);
+    this.set("indicator", data);
     if (!this.isCluster) {
-      this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
+      this.set(
+        "disaggregations",
+        this._convertToArrayOfObj(this.indicator.disaggregation)
+      );
     }
   }
 
   preselectSectionAndLocation() {
     if (this.sectionOptions && this.sectionOptions.length === 1) {
-      this.set('indicator.section', this.sectionOptions[0].id);
+      this.set("indicator.section", this.sectionOptions[0].id);
     }
     if (this.locationOptions && this.locationOptions.length === 1) {
-      this.set('indicator.locations', [this.locationOptions[0].id]);
+      this.set("indicator.locations", [this.locationOptions[0].id]);
     }
   }
 
@@ -310,12 +355,12 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     if (!disaggregations) {
       return [];
     }
-    return disaggregations.map(function(id: number) {
+    return disaggregations.map(function (id: number) {
       /**
        * disaggregId and not simply id to avoid repeatable-behavior
        * from trying to make an endpoint request on Delete
        */
-      return {disaggregId: id};
+      return { disaggregId: id };
     });
   }
 
@@ -330,13 +375,13 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
       e.stopImmediatePropagation();
     }
     (this.$.indicatorDialog as EtoolsDialog).stopSpinner();
-    this.spinnerText = 'Saving...';
+    this.spinnerText = "Saving...";
   }
 
   _startSpinner(e: CustomEvent) {
     if (e) {
       e.stopImmediatePropagation();
-      this.set('spinnerText', e.detail.spinnerText);
+      this.set("spinnerText", e.detail.spinnerText);
     }
     (this.$.indicatorDialog as EtoolsDialog).startSpinner();
   }
@@ -345,24 +390,33 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
   }
 
-  resetValidationsAndStyle(isCluster: boolean | undefined, skipUndefinedCheck: boolean) {
-    if (typeof isCluster === 'undefined' && !skipUndefinedCheck) {
+  resetValidationsAndStyle(
+    isCluster: boolean | undefined,
+    skipUndefinedCheck: boolean
+  ) {
+    if (typeof isCluster === "undefined" && !skipUndefinedCheck) {
       return;
     }
     let indicatorEl: ClusterIndicatorEl | NonClusterIndicatorEl;
     if (this.isCluster) {
-      indicatorEl = this.shadowRoot!.querySelector('#clusterIndicatorEl') as ClusterIndicatorEl;
-      this.updateStyles({'--border-color': 'var(--ternary-color)'});
+      indicatorEl = this.shadowRoot!.querySelector(
+        "#clusterIndicatorEl"
+      ) as ClusterIndicatorEl;
+      this.updateStyles({ "--border-color": "var(--ternary-color)" });
     } else {
-      indicatorEl = this.shadowRoot!.querySelector('#nonClusterIndicatorEl') as unknown as NonClusterIndicatorEl;
-      this.updateStyles({'--border-color': 'var(--dark-divider-color)'});
+      indicatorEl = (this.shadowRoot!.querySelector(
+        "#nonClusterIndicatorEl"
+      ) as unknown) as NonClusterIndicatorEl;
+      this.updateStyles({ "--border-color": "var(--dark-divider-color)" });
     }
     if (indicatorEl) {
       indicatorEl.resetValidations();
       this.updateStyles();
     }
 
-    const sectionDropdown = this.shadowRoot!.querySelector('#sectionDropdw') as EtoolsDropdownEl;
+    const sectionDropdown = this.shadowRoot!.querySelector(
+      "#sectionDropdw"
+    ) as EtoolsDropdownEl;
     sectionDropdown.resetInvalidState();
   }
 
@@ -370,7 +424,9 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     this.indicator = new Indicator();
     this.disaggregations = [];
     this.prpDisaggregations = [];
-    const clusterIndicEl = this.shadowRoot!.querySelector('#clusterIndicatorEl') as ClusterIndicatorEl;
+    const clusterIndicEl = this.shadowRoot!.querySelector(
+      "#clusterIndicatorEl"
+    ) as ClusterIndicatorEl;
     if (this.isCluster && clusterIndicEl) {
       clusterIndicEl.resetFieldValues();
     }
@@ -384,7 +440,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     let options: GenericObject[] = [];
     if (!isEmptyObject(optionsIds) && !isEmptyObject(allOptions)) {
       // filter options
-      const ids = optionsIds.map(id => parseInt(id, 10));
+      const ids = optionsIds.map((id) => parseInt(id, 10));
 
       options = allOptions.filter((opt: any) => {
         return ids.indexOf(parseInt(opt.id, 10)) > -1;
@@ -396,8 +452,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   _hideAddDisaggreations(isCluster: boolean, currentUser: User) {
     return isCluster || !userIsPme(currentUser);
   }
-
 }
 
-window.customElements.define('indicator-dialog', IndicatorDialog);
-export {IndicatorDialog as IndicatorDialogEl};
+window.customElements.define("indicator-dialog", IndicatorDialog);
+export { IndicatorDialog as IndicatorDialogEl };
