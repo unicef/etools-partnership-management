@@ -1,23 +1,23 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import { EtoolsCurrency } from "@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
-import CommonMixin from "../../../../mixins/common-mixin.js";
-import RiskRatingMixin from "../../../../mixins/risk-rating-mixin.js";
+import CommonMixin from '../../../../mixins/common-mixin.js';
+import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 
-import { pageCommonStyles } from "../../../../styles/page-common-styles.js";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles.js";
-import { SharedStyles } from "../../../../styles/shared-styles.js";
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
 
-import FrNumbersConsistencyMixin from "../../../interventions/mixins/fr-numbers-consistency-mixin.js";
-import { pmpCustomIcons } from "../../../../styles/custom-iconsets/pmp-icons.js";
-import { frWarningsStyles } from "../../../interventions/styles/fr-warnings-styles.js";
-import { riskRatingStyles } from "../../../../styles/risk-rating-styles";
-import { fireEvent } from "../../../../utils/fire-custom-event";
-import { property } from "@polymer/decorators";
-import { Partner } from "../../../../../models/partners.models.js";
+import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {frWarningsStyles} from '../../../interventions/styles/fr-warnings-styles.js';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {Partner} from '../../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -28,14 +28,11 @@ import { Partner } from "../../../../../models/partners.models.js";
  * @appliesMixin RiskRatingMixin
  * @appliesMixin FrNumbersConsistencyixin
  */
-class PartnerOverview extends EtoolsCurrency(
-  CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement)))
-) {
+class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbersConsistencyMixin(PolymerElement)))) {
   static get template() {
     // language=HTML
     return html`
-      ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
-      ${riskRatingStyles} ${frWarningsStyles}
+      ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles} ${frWarningsStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -115,10 +112,7 @@ class PartnerOverview extends EtoolsCurrency(
         }
       </style>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Partner Overview"
-      >
+      <etools-content-panel class="content-section" panel-title="Partner Overview">
         <div class="hact-heading">
           <div class="row-h">
             <div class="col col-5"><strong> TOTAL CASH TRANSFERS </strong></div>
@@ -152,32 +146,24 @@ class PartnerOverview extends EtoolsCurrency(
             <div class="col col-2 center-align">
               <strong>
                 [[partner.hact_values.programmatic_visits.planned.total]] /
-                <span class="green"
-                  >[[partner.hact_min_requirements.programme_visits]]</span
-                >
+                <span class="green">[[partner.hact_min_requirements.programme_visits]]</span>
                 / [[partner.hact_values.programmatic_visits.completed.total]]
               </strong>
             </div>
             <div class="col col-2 center-align">
               <strong>
-                <span class="green"
-                  >[[partner.hact_min_requirements.spot_checks]]
-                </span>
+                <span class="green">[[partner.hact_min_requirements.spot_checks]] </span>
                 / [[partner.hact_values.spot_checks.completed.total]]
               </strong>
             </div>
             <div class="col col-2 center-align">
               <strong>
-                <span class="green"
-                  >[[_getMinReqAudits(partner.planned_engagement)]]
-                </span>
+                <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
                 / [[partner.hact_values.audits.completed]]
               </strong>
             </div>
             <div class="col col-1 center-align">
-              <div
-                class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]"
-              >
+              <div class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
                 [[getRiskRatingValue(partner.sea_risk_rating_name, 1)]]
               </div>
             </div>
@@ -195,17 +181,10 @@ class PartnerOverview extends EtoolsCurrency(
             </div>
           </div>
           <div class="hact-body">
-            <template
-              is="dom-repeat"
-              items="[[partner.interventions]]"
-              as="partnership"
-            >
+            <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
               <div class="row-h">
                 <div class="col col-3 block word-break">
-                  <a
-                    class="primary"
-                    href="interventions/[[partnership.id]]/details"
-                  >
+                  <a class="primary" href="interventions/[[partnership.id]]/details">
                     <strong>[[partnership.number]]</strong> </a
                   ><br />
                   <span>
@@ -220,16 +199,9 @@ class PartnerOverview extends EtoolsCurrency(
                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start,
                                                         partnership.frs_earliest_start_date)]]"
                   >
-                    <span slot="field"
-                      >[[getDateDisplayValue(partnership.start)]]</span
-                    >
-                    <iron-icon
-                      icon="pmp-custom-icons:not-equal"
-                      slot="custom-icon"
-                    ></iron-icon>
-                    <span slot="message"
-                      >[[getFrsStartDateValidationMsg()]]</span
-                    >
+                    <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
+                    <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                    <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
                   </etools-info-tooltip>
                   <etools-info-tooltip
                     class="fr-nr-warn"
@@ -237,24 +209,14 @@ class PartnerOverview extends EtoolsCurrency(
                     icon-first
                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
                   >
-                    <span slot="field"
-                      >[[getDateDisplayValue(partnership.end)]]</span
-                    >
-                    <iron-icon
-                      icon="pmp-custom-icons:not-equal"
-                      slot="custom-icon"
-                    ></iron-icon>
+                    <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
+                    <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                     <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
                   </etools-info-tooltip>
                 </div>
                 <div class="col col-2 right-align">
-                  <span class="amount-currency"
-                    >[[partnership.budget_currency]]</span
-                  >
-                  <span
-                    >[[displayCurrencyAmount(partnership.unicef_cash, '0',
-                    0)]]</span
-                  >
+                  <span class="amount-currency">[[partnership.budget_currency]]</span>
+                  <span>[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</span>
                 </div>
                 <div class="col col-2 right-align">
                   <etools-info-tooltip
@@ -264,16 +226,10 @@ class PartnerOverview extends EtoolsCurrency(
                     hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent,
                                       partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]"
                   >
-                    <span
-                      slot="field"
-                      class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]"
-                    >
-                      <span class="amount-currency"
-                        >[[partnership.fr_currency]]</span
-                      >
+                    <span slot="field" class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">
+                      <span class="amount-currency">[[partnership.fr_currency]]</span>
                       <span
-                        >[[getFrsTotal(partnership.fr_currencies_are_consistent,
-                        partnership.frs_total_frs_amt)]]</span
+                        >[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_frs_amt)]]</span
                       >
                     </span>
                     <iron-icon
@@ -300,18 +256,10 @@ class PartnerOverview extends EtoolsCurrency(
                       slot="field"
                       class$="[[getFrsValueNAClass(partnership.multi_curr_flag, 'true')]] partner-overview"
                     >
-                      <span class="amount-currency"
-                        >[[partnership.fr_currency]]</span
-                      >
-                      <span
-                        >[[getFrsTotal(partnership.multi_curr_flag,
-                        partnership.actual_amount, 'true')]]</span
-                      >
+                      <span class="amount-currency">[[partnership.fr_currency]]</span>
+                      <span>[[getFrsTotal(partnership.multi_curr_flag, partnership.actual_amount, 'true')]]</span>
                     </span>
-                    <iron-icon
-                      icon="pmp-custom-icons:not-equal"
-                      slot="custom-icon"
-                    ></iron-icon>
+                    <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                     <span slot="message">
                       <span>[[getFrsMultiCurrFlagErrTooltipMsg()]]</span>
                     </span>
@@ -328,7 +276,7 @@ class PartnerOverview extends EtoolsCurrency(
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   partner!: Partner;
 
   public connectedCallback() {
@@ -337,20 +285,17 @@ class PartnerOverview extends EtoolsCurrency(
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "partners-page",
+      loadingSource: 'partners-page'
     });
 
-    fireEvent(this, "tab-content-attached");
+    fireEvent(this, 'tab-content-attached');
   }
 
   public _getMinReqAudits(plannedEngagement: any) {
-    return !plannedEngagement
-      ? 0
-      : Number(plannedEngagement.scheduled_audit) +
-          Number(plannedEngagement.special_audit);
+    return !plannedEngagement ? 0 : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 }
 
-window.customElements.define("partner-overview", PartnerOverview);
+window.customElements.define('partner-overview', PartnerOverview);

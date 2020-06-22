@@ -1,7 +1,7 @@
-import "@polymer/polymer/lib/elements/custom-style.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import '@polymer/polymer/lib/elements/custom-style.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
-const documentContainer = document.createElement("template");
+const documentContainer = document.createElement('template');
 // language=HTML
 documentContainer.innerHTML = `
   <custom-style>

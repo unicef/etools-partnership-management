@@ -8,32 +8,29 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
-import { GestureEventListeners } from "@polymer/polymer/lib/mixins/gesture-event-listeners";
-import { afterNextRender } from "@polymer/polymer/lib/utils/render-status";
-import {
-  setPassiveTouchGestures,
-  setRootPath,
-} from "@polymer/polymer/lib/utils/settings.js";
-import { connect } from "pwa-helpers/connect-mixin.js";
-import { installMediaQueryWatcher } from "pwa-helpers/media-query.js";
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
+import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 // import {installRouter} from 'pwa-helpers/router.js';
 
 // This element is connected to the Redux store.
-import { store, RootState } from "../../store.js";
+import {store, RootState} from '../../store.js';
 
 // These are the actions needed by this element.
 import {
   // navigate,
-  updateDrawerState,
-} from "../../actions/app.js";
+  updateDrawerState
+} from '../../actions/app.js';
 
 // Lazy loading CommonData reducer.
-import commonData from "../../reducers/common-data.js";
-import pageData from "../../reducers/page-data.js";
-import uploadStatus from "../../reducers/upload-status.js";
-import agreements from "../../reducers/agreements.js";
-import partners from "../../reducers/partners.js";
+import commonData from '../../reducers/common-data.js';
+import pageData from '../../reducers/page-data.js';
+import uploadStatus from '../../reducers/upload-status.js';
+import agreements from '../../reducers/agreements.js';
+import partners from '../../reducers/partners.js';
 
 store.addReducers({
   // @ts-ignore
@@ -41,69 +38,62 @@ store.addReducers({
   uploadStatus,
   partners,
   agreements,
-  pageData,
+  pageData
 });
 
 // These are the elements needed by this element.
-import "@polymer/app-layout/app-drawer-layout/app-drawer-layout.js";
-import "@polymer/app-layout/app-drawer/app-drawer.js";
-import "@polymer/app-layout/app-header-layout/app-header-layout.js";
-import "@polymer/app-route/app-location.js";
-import "@polymer/app-layout/app-header/app-header.js";
-import "@polymer/app-layout/app-toolbar/app-toolbar.js";
+import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
+import '@polymer/app-layout/app-drawer/app-drawer.js';
+import '@polymer/app-layout/app-header-layout/app-header-layout.js';
+import '@polymer/app-route/app-location.js';
+import '@polymer/app-layout/app-header/app-header.js';
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-import "@polymer/app-route/app-route.js";
+import '@polymer/app-route/app-route.js';
 
-import { AppShellStyles } from "./app-shell-styles";
+import {AppShellStyles} from './app-shell-styles';
 
-import LoadingMixin from "@unicef-polymer/etools-loading/etools-loading-mixin.js";
-import "etools-piwik-analytics/etools-piwik-analytics.js";
-import { AppMenuMixin } from "./menu/mixins/app-menu-mixin.js";
-import CommonDataMixin from "../common-data-mixins/common-data.js";
-import ToastNotificationsMixin from "../toast-notifications/toast-notification-mixin.js";
-import ScrollControlMixin from "../mixins/scroll-control-mixin.js";
-import AmendmentModeUIMixin from "../amendment-mode/amendment-mode-UI-mixin.js";
-import UserDataMixin from "../user/user-data-mixin";
+import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin.js';
+import 'etools-piwik-analytics/etools-piwik-analytics.js';
+import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
+import CommonDataMixin from '../common-data-mixins/common-data.js';
+import ToastNotificationsMixin from '../toast-notifications/toast-notification-mixin.js';
+import ScrollControlMixin from '../mixins/scroll-control-mixin.js';
+import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
+import UserDataMixin from '../user/user-data-mixin';
 
-import "./menu/app-menu.js";
-import "./header/page-header.js";
-import "./header/data-refresh-dialog";
-import { DataRefreshDialog } from "./header/data-refresh-dialog";
-import "./footer/page-footer.js";
+import './menu/app-menu.js';
+import './header/page-header.js';
+import './header/data-refresh-dialog';
+import {DataRefreshDialog} from './header/data-refresh-dialog';
+import './footer/page-footer.js';
 
-import "../environment-flags/environment-flags";
-import "../app-modules/partners/data/partners-list-data.js";
-import "../app-modules/agreements/data/agreements-list-data.js";
+import '../environment-flags/environment-flags';
+import '../app-modules/partners/data/partners-list-data.js';
+import '../app-modules/agreements/data/agreements-list-data.js';
 
-import "./app-theme.js";
-import "../styles/app-mixins.js";
-import UtilsMixin from "../mixins/utils-mixin.js";
+import './app-theme.js';
+import '../styles/app-mixins.js';
+import UtilsMixin from '../mixins/utils-mixin.js';
 
 // import global config and dexie db config
-import "../../config/config.js";
-import {
-  RESET_UNSAVED_UPLOADS,
-  RESET_UPLOADS_IN_PROGRESS,
-} from "../../actions/upload-status.js";
+import '../../config/config.js';
+import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../actions/upload-status.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
 
-import { BASE_URL } from "../../config/config";
-import { setInAmendment } from "../../actions/page-data.js";
-import UploadsMixin from "../mixins/uploads-mixin.js";
-import { fireEvent } from "../utils/fire-custom-event.js";
-import { objectsAreTheSame } from "../utils/utils.js";
-import { AppDrawerElement } from "@polymer/app-layout/app-drawer/app-drawer.js";
-import { property } from "@polymer/decorators";
-import {
-  GenericObject,
-  User,
-  UserPermissions,
-} from "../../typings/globals.types.js";
-import { createDynamicDialog } from "@unicef-polymer/etools-dialog/dynamic-dialog";
-import EtoolsDialog from "@unicef-polymer/etools-dialog";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
+import {BASE_URL} from '../../config/config';
+import {setInAmendment} from '../../actions/page-data.js';
+import UploadsMixin from '../mixins/uploads-mixin.js';
+import {fireEvent} from '../utils/fire-custom-event.js';
+import {objectsAreTheSame} from '../utils/utils.js';
+import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
+import {property} from '@polymer/decorators';
+import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
+import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 setRootPath(BASE_URL);
 
 /**
@@ -127,11 +117,7 @@ class AppShell extends connect(store)(
       AppMenuMixin(
         ToastNotificationsMixin(
           ScrollControlMixin(
-            AmendmentModeUIMixin(
-              UtilsMixin(
-                LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))
-              )
-            )
+            AmendmentModeUIMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
           )
         )
       )
@@ -146,11 +132,7 @@ class AppShell extends connect(store)(
 
       <environment-flags></environment-flags>
 
-      <etools-piwik-analytics
-        page="[[subroute.prefix]]"
-        user="[[user]]"
-        toast="[[currentToastMessage]]"
-      >
+      <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
       </etools-piwik-analytics>
 
       <app-location
@@ -170,13 +152,7 @@ class AppShell extends connect(store)(
       >
       </app-route>
 
-      <app-drawer-layout
-        id="layout"
-        responsive-width="850px"
-        fullbleed
-        narrow="{{narrow}}"
-        small-menu$="[[smallMenu]]"
-      >
+      <app-drawer-layout id="layout" responsive-width="850px" fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
         <!-- Drawer content -->
         <app-drawer
           id="drawer"
@@ -187,11 +163,7 @@ class AppShell extends connect(store)(
           small-menu$="[[smallMenu]]"
         >
           <!-- App main menu(left sidebar) -->
-          <app-menu
-            root-path="[[rootPath]]"
-            selected-option="[[module]]"
-            small-menu$="[[smallMenu]]"
-          ></app-menu>
+          <app-menu root-path="[[rootPath]]" selected-option="[[module]]" small-menu$="[[smallMenu]]"></app-menu>
         </app-drawer>
 
         <!-- Main content -->
@@ -201,16 +173,8 @@ class AppShell extends connect(store)(
           </app-header>
 
           <!-- Main content -->
-          <main
-            role="main"
-            id="page-container"
-            class$="[[_getPageContainerClass(amendmentModeActive)]]"
-          >
-            <template
-              is="dom-if"
-              if="[[_activeModuleIs(module, 'partners|government-partners')]]"
-              restamp
-            >
+          <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
+            <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
               <partners-module
                 id="partners"
                 class="main-page"
@@ -222,25 +186,12 @@ class AppShell extends connect(store)(
               </partners-module>
             </template>
 
-            <template
-              is="dom-if"
-              if="[[_activeModuleIs(module, 'agreements')]]"
-              restamp
-            >
-              <agreements-module
-                id="agreements"
-                class="main-page"
-                route="{{subroute}}"
-                permissions="[[permissions]]"
-              >
+            <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
+              <agreements-module id="agreements" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
               </agreements-module>
             </template>
 
-            <template
-              is="dom-if"
-              if="[[_activeModuleIs(module, 'interventions')]]"
-              restamp
-            >
+            <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
               <interventions-module
                 id="interventions"
                 class="main-page"
@@ -250,37 +201,17 @@ class AppShell extends connect(store)(
               </interventions-module>
             </template>
 
-            <template
-              is="dom-if"
-              if="[[_activeModuleIs(module, 'reports')]]"
-              restamp
-            >
-              <reports-module
-                id="reports"
-                class="main-page"
-                route="{{subroute}}"
-                permissions="[[permissions]]"
-              >
+            <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
+              <reports-module id="reports" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
               </reports-module>
             </template>
 
-            <template
-              is="dom-if"
-              if="[[_activeModuleIs(module, 'not-found')]]"
-              restamp
-            >
+            <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
               <not-found class="main-page"></not-found>
             </template>
 
-            <template
-              is="dom-if"
-              if="[[_activeModuleIs(module, 'settings')]]"
-              restamp
-            >
-              <settings-module
-                id="settings"
-                class="main-page"
-              ></settings-module>
+            <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
+              <settings-module id="settings" class="main-page"></settings-module>
             </template>
           </main>
 
@@ -288,30 +219,24 @@ class AppShell extends connect(store)(
 
           <div id="floating-footer" hidden$="[[!amendmentModeActive]]">
             <strong> AMENDMENT MODE </strong>
-            | All fields in the details tab are now open for editing. Please
-            save before clicking "I am done".
-            <paper-button class="primary-btn" on-tap="_closeAmendment"
-              >I AM DONE</paper-button
-            >
+            | All fields in the details tab are now open for editing. Please save before clicking "I am done".
+            <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
           </div>
         </app-header-layout>
       </app-drawer-layout>
 
-      <data-refresh-dialog
-        id="dataRefreshDialog"
-        page="{{module}}"
-      ></data-refresh-dialog>
+      <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
       <partners-list-data></partners-list-data>
       <agreements-list-data></agreements-list-data>
     `;
   }
 
-  @property({ type: Boolean })
-  _drawerOpened: boolean = false;
+  @property({type: Boolean})
+  _drawerOpened = false;
 
-  @property({ type: String })
-  _page: string = "";
+  @property({type: String})
+  _page = '';
 
   /**
    * `module` property represents the current displayed module of the PMP app.
@@ -321,63 +246,59 @@ class AppShell extends connect(store)(
   @property({
     type: String,
     reflectToAttribute: true,
-    observer: AppShell.prototype._moduleChanged,
+    observer: AppShell.prototype._moduleChanged
   })
   module!: string;
 
-  @property({ type: Object })
+  @property({type: Object})
   route!: GenericObject;
 
-  @property({ type: Object })
-  routeData!: { module: string };
+  @property({type: Object})
+  routeData!: {module: string};
 
-  @property({ type: Object })
+  @property({type: Object})
   subroute!: object;
 
   // This shouldn't be neccessary, but the Analyzer isn't picking up
   // Polymer.Element#rootPath
-  @property({ type: String })
+  @property({type: String})
   rootPath!: string;
 
-  @property({ type: Boolean, reflectToAttribute: true })
+  @property({type: Boolean, reflectToAttribute: true})
   narrow!: boolean;
 
-  @property({ type: Object })
+  @property({type: Object})
   user!: User;
 
-  @property({ type: Object })
+  @property({type: Object})
   permissions!: UserPermissions;
 
-  @property({ type: String })
+  @property({type: String})
   _lastActivePartnersModule!: string;
 
-  @property({ type: Array })
-  _prpModules: string[] = ["reports", "settings"];
+  @property({type: Array})
+  _prpModules: string[] = ['reports', 'settings'];
 
-  @property({ type: String })
-  _appModuleMainElUrlTmpl: string =
-    "../app-modules/##module##/##main-el-name##-module.js";
+  @property({type: String})
+  _appModuleMainElUrlTmpl = '../app-modules/##module##/##main-el-name##-module.js';
 
-  @property({ type: Object, observer: AppShell.prototype.appLocRouteChanged })
+  @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
   appLocRoute!: {
     path: string;
     __queryParams: GenericObject;
   };
 
-  @property({ type: Object })
+  @property({type: Object})
   leavePageDialog!: EtoolsDialog;
 
-  @property({ type: Object })
+  @property({type: Object})
   appLocQueryParams!: object;
 
-  @property({ type: String })
+  @property({type: String})
   appLocPath!: string;
 
   public static get observers() {
-    return [
-      "_routePageChanged(routeData.module)",
-      "_scrollToTopOnPageChange(module)",
-    ];
+    return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
 
   ready() {
@@ -385,20 +306,18 @@ class AppShell extends connect(store)(
 
     this._initListeners();
     this._createLeavePageDialog();
-    window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector(
-      "#contentContainer"
-    );
+    window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
     this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
 
-    if (this.module !== "not-found") {
+    if (this.module !== 'not-found') {
       /*
        * Activate the global loading with default message.
        * This will be triggered once at page load or, after page load, on menu option tap event.
        * The loading message is disabled by *-module.html elements ready callback (in both cases)
        */
-      fireEvent(this, "global-loading", {
+      fireEvent(this, 'global-loading', {
         active: true,
-        loadingSource: "main-page",
+        loadingSource: 'main-page'
       });
     }
   }
@@ -412,9 +331,7 @@ class AppShell extends connect(store)(
     this.loadCommonData();
 
     // installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
-    installMediaQueryWatcher(`(min-width: 460px)`, () =>
-      store.dispatch(updateDrawerState(false))
-    );
+    installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
     this.createToastNotificationElement();
   }
@@ -444,9 +361,7 @@ class AppShell extends connect(store)(
   public appLocRouteChanged(appLocRoute: any) {
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
-        if (
-          objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)
-        ) {
+        if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
           return;
         } else {
           if (this.isInterventionReports(this.appLocRoute.path)) {
@@ -466,10 +381,7 @@ class AppShell extends connect(store)(
   public routeChanged() {
     if (
       this.appLocRoute.path === this.route.path &&
-      objectsAreTheSame(
-        this.appLocRoute.__queryParams,
-        this.route.__queryParams
-      )
+      objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)
     ) {
       return;
     }
@@ -479,15 +391,13 @@ class AppShell extends connect(store)(
      * first with changes to the path , without the changes to the query string, which ruins everything
      */
     this.setProperties({
-      appLocQueryParams: this.route.__queryParams
-        ? JSON.parse(JSON.stringify(this.route.__queryParams))
-        : {},
-      appLocPath: this.route.path,
+      appLocQueryParams: this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
+      appLocPath: this.route.path
     });
   }
 
   public isInterventionReports(path: string) {
-    const pattern = new RegExp("\\/pmp\\/interventions\\/\\d*\\/reports", "i");
+    const pattern = new RegExp('\\/pmp\\/interventions\\/\\d*\\/reports', 'i');
     return pattern.test(path);
   }
 
@@ -499,29 +409,20 @@ class AppShell extends connect(store)(
     this._openDataRefreshDialog = this._openDataRefreshDialog.bind(this);
     this._drawerChanged = this._drawerChanged.bind(this);
 
-    this.addEventListener("404", this._pageNotFound);
-    this.addEventListener("update-main-path", this._updateMainPath as any);
-    this.addEventListener("forbidden", this._onForbidden);
-    this.addEventListener(
-      "open-data-refresh-dialog",
-      this._openDataRefreshDialog
-    );
-    this.addEventListener("app-drawer-transitioned", this._drawerChanged);
+    this.addEventListener('404', this._pageNotFound);
+    this.addEventListener('update-main-path', this._updateMainPath as any);
+    this.addEventListener('forbidden', this._onForbidden);
+    this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+    this.addEventListener('app-drawer-transitioned', this._drawerChanged);
   }
 
   private _removeListeners() {
-    this.removeEventListener("404", this._pageNotFound);
-    this.removeEventListener("update-main-path", this._updateMainPath as any);
-    this.removeEventListener(
-      "update-route-query-params",
-      this._updateQueryParams as any
-    );
-    this.removeEventListener("forbidden", this._onForbidden);
-    this.removeEventListener(
-      "open-data-refresh-dialog",
-      this._openDataRefreshDialog
-    );
-    this.removeEventListener("app-drawer-transitioned", this._drawerChanged);
+    this.removeEventListener('404', this._pageNotFound);
+    this.removeEventListener('update-main-path', this._updateMainPath as any);
+    this.removeEventListener('update-route-query-params', this._updateQueryParams as any);
+    this.removeEventListener('forbidden', this._onForbidden);
+    this.removeEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+    this.removeEventListener('app-drawer-transitioned', this._drawerChanged);
   }
 
   public disconnectedCallback() {
@@ -531,9 +432,7 @@ class AppShell extends connect(store)(
 
   public _drawerChanged() {
     // need this for catching drawer closing event and keep _drawerOpened updated
-    store.dispatch(
-      updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened))
-    );
+    store.dispatch(updateDrawerState(Boolean((this.$.drawer as AppDrawerElement).opened)));
   }
 
   // @ts-ignore
@@ -547,11 +446,11 @@ class AppShell extends connect(store)(
   }
 
   private _onForbidden() {
-    window.location.href = window.location.origin + "/login/";
+    window.location.href = window.location.origin + '/login/';
   }
 
   private _updateMainPath(e: CustomEvent) {
-    if (e.detail.path !== this.route.path.replace(this.rootPath, "")) {
+    if (e.detail.path !== this.route.path.replace(this.rootPath, '')) {
       // set route.path only if received path is different
       this._updatePath(e.detail.path);
     }
@@ -559,22 +458,22 @@ class AppShell extends connect(store)(
   }
 
   private _updateQueryParams(e: CustomEvent) {
-    this.set("appLocQueryParams", e.detail);
+    this.set('appLocQueryParams', e.detail);
   }
 
   private _updatePath(path: string) {
     this.setProperties({
       appLocQueryParams: {},
-      appLocPath: this.rootPath + path,
+      appLocPath: this.rootPath + path
     });
   }
 
   private _pageNotFound() {
-    this._updatePath("not-found");
+    this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-    fireEvent(this, "toast", {
-      text: "An error occurred.",
-      showCloseBtn: true,
+    fireEvent(this, 'toast', {
+      text: 'An error occurred.',
+      showCloseBtn: true
     });
   }
 
@@ -616,7 +515,7 @@ class AppShell extends connect(store)(
     // If no routePage was found in the route data, routePage will be an empty string.
     // Default to 'partners/list' in that case.
     if (!routePage) {
-      this._updatePath("partners/list");
+      this._updatePath('partners/list');
       return;
     }
 
@@ -624,7 +523,7 @@ class AppShell extends connect(store)(
       if (!accessGranted) {
         this._pageNotFound();
       } else {
-        this.set("module", routePage);
+        this.set('module', routePage);
       }
     });
 
@@ -641,20 +540,20 @@ class AppShell extends connect(store)(
     // set last partners active page... needed to make a difference between partners and government-partners
     this._updateLastPartnersModuleActivePage(module);
     // clear loading messages queue
-    fireEvent(this, "clear-loading-messages", {
+    fireEvent(this, 'clear-loading-messages', {
       bubbles: true,
-      composed: true,
+      composed: true
     });
     store.dispatch(setInAmendment(false));
   }
 
   // @ts-ignore
   private _getModuleMainElUrl(elementName: string) {
-    let url = this._appModuleMainElUrlTmpl.replace("##module##", elementName);
-    if (elementName === "not-found") {
-      url = url.replace("-module.", ".");
+    let url = this._appModuleMainElUrlTmpl.replace('##module##', elementName);
+    if (elementName === 'not-found') {
+      url = url.replace('-module.', '.');
     }
-    return url.replace("##main-el-name##", elementName);
+    return url.replace('##main-el-name##', elementName);
   }
 
   /**
@@ -681,7 +580,7 @@ class AppShell extends connect(store)(
           this._successfulImportCallback(appModuleMainElId);
         })
         .catch((err: any) => {
-          logError("Error importing component.", "app-shell", err);
+          logError('Error importing component.', 'app-shell', err);
           this._pageNotFound();
         });
     }
@@ -689,11 +588,11 @@ class AppShell extends connect(store)(
 
   // @ts-ignore
   private _getAppModuleMainElId(module: string) {
-    return module === "government-partners" ? "partners" : module;
+    return module === 'government-partners' ? 'partners' : module;
   }
 
   private _getModuleMainElement(moduleId: string) {
-    return this.shadowRoot!.querySelector("#" + moduleId);
+    return this.shadowRoot!.querySelector('#' + moduleId);
   }
 
   /**
@@ -711,56 +610,55 @@ class AppShell extends connect(store)(
 
   // @ts-ignore
   private _activeModuleIs(activeModule: string, expectedModule: string) {
-    const pagesToMatch = expectedModule.split("|");
+    const pagesToMatch = expectedModule.split('|');
     return pagesToMatch.indexOf(activeModule) > -1;
   }
 
   // @ts-ignore
   private _redirectToProperListPage() {
-    if (this.route.path.indexOf("not-found") > -1) {
+    if (this.route.path.indexOf('not-found') > -1) {
       return;
     }
-    if (this.route.path === this.rootPath || this.route.path === "/") {
+    if (this.route.path === this.rootPath || this.route.path === '/') {
       // setting the default path when user enters the app
       // redirect from /pmp/ to /pmp/partners/list
-      this.set("route.path", this.rootPath + "partners/list");
+      this.set('route.path', this.rootPath + 'partners/list');
       return;
     }
     // redirect from /pmp/<module> to /pmp/<module>/list
     let currentPath = this.route.path;
-    if (currentPath.indexOf("settings") > -1) {
+    if (currentPath.indexOf('settings') > -1) {
       return;
     }
-    if (currentPath.substr(-1) === "/") {
-      currentPath = currentPath.slice(0, currentPath.lastIndexOf("/"));
+    if (currentPath.substr(-1) === '/') {
+      currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
     }
     if (currentPath === this.rootPath + this.routeData.module) {
-      this.set("route.path", this.rootPath + this.routeData.module + "/list");
+      this.set('route.path', this.rootPath + this.routeData.module + '/list');
     }
   }
 
   // @ts-ignore
   private _showOnlyGovernmentPartners(module: string) {
-    return module === "government-partners";
+    return module === 'government-partners';
   }
 
   private _updateLastPartnersModuleActivePage(module: string) {
-    if (module && ["partners", "government-partners"].indexOf(module) > -1) {
-      this.set("_lastActivePartnersModule", module);
+    if (module && ['partners', 'government-partners'].indexOf(module) > -1) {
+      this.set('_lastActivePartnersModule', module);
     }
   }
 
   private _createLeavePageDialog() {
-    const msg = document.createElement("span");
-    msg.innerText =
-      "Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!";
+    const msg = document.createElement('span');
+    msg.innerText = 'Are you sure you want to leave this page? All file uploads in progress or unsaved will be lost!';
     const conf: any = {
-      title: "Are you sure you want to leave this page?",
-      size: "md",
-      okBtnText: "Leave",
-      cancelBtnText: "Stay",
+      title: 'Are you sure you want to leave this page?',
+      size: 'md',
+      okBtnText: 'Leave',
+      cancelBtnText: 'Stay',
       closeCallback: this._onLeavePageConfirmation.bind(this),
-      content: msg,
+      content: msg
     };
     this.leavePageDialog = createDynamicDialog(conf);
   }
@@ -773,23 +671,23 @@ class AppShell extends connect(store)(
   private _onLeavePageConfirmation(e: CustomEvent) {
     if (e.detail.confirmed) {
       // leave
-      store.dispatch({ type: RESET_UNSAVED_UPLOADS });
-      store.dispatch({ type: RESET_UPLOADS_IN_PROGRESS });
+      store.dispatch({type: RESET_UNSAVED_UPLOADS});
+      store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
       this.route = JSON.parse(JSON.stringify(this.appLocRoute));
     } else {
       // stay
       // revert url
       this.appLocRoute = JSON.parse(JSON.stringify(this.route));
 
-      fireEvent(this, "clear-loading-messages", {
+      fireEvent(this, 'clear-loading-messages', {
         bubbles: true,
-        composed: true,
+        composed: true
       });
-      this.shadowRoot!.querySelector("app-menu")!
-        .shadowRoot!.querySelector("iron-selector")!
+      this.shadowRoot!.querySelector('app-menu')!
+        .shadowRoot!.querySelector('iron-selector')!
         .select(this.routeData.module);
     }
   }
 }
 
-window.customElements.define("app-shell", AppShell);
+window.customElements.define('app-shell', AppShell);

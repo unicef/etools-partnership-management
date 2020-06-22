@@ -1,15 +1,15 @@
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../store";
-import { PolymerElement, html } from "@polymer/polymer";
-import { timeOut } from "@polymer/polymer/lib/utils/async.js";
-import { Debouncer } from "@polymer/polymer/lib/utils/debounce.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-icons/av-icons.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import { etoolsStatusStyles } from "./etools-status-styles";
-import "./etools-action-button.js";
-import { StatusAction, Status } from "../../../typings/etools-status.types";
-import { property } from "@polymer/decorators";
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {PolymerElement, html} from '@polymer/polymer';
+import {timeOut} from '@polymer/polymer/lib/utils/async.js';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/av-icons.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import {etoolsStatusStyles} from './etools-status-styles';
+import './etools-action-button.js';
+import {StatusAction, Status} from '../../../typings/etools-status.types';
+import {property} from '@polymer/decorators';
 
 /**
  * Etools item(partner/agreement/intervention/report etc.) status display element
@@ -24,21 +24,12 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
         <div class="top-container">
           <template is="dom-repeat" items="[[availableStatuses]]" as="status">
             <div class="divider-line"></div>
-            <div
-              class$="status-container [[_getStatusCssClass(status, index)]]"
-            >
+            <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
-                <span
-                  class="icon-wrapper"
-                  style$="[[status.iconContainerStyles]]"
-                >
+                <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
                   <span>[[_getTrueIndex(index)]]</span>
                   <iron-icon class="done-icon" icon="done"></iron-icon>
-                  <iron-icon
-                    class="custom-icon"
-                    icon$="[[status.icon]]"
-                    style$="[[status.iconStyles]]"
-                  ></iron-icon>
+                  <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
                 </span>
               </div>
 
@@ -61,35 +52,32 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     `;
   }
 
-  @property({ type: Array })
+  @property({type: Array})
   statuses: Status[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   availableStatuses!: Status[];
 
-  @property({ type: Array })
+  @property({type: Array})
   actions: StatusAction[] = [];
 
-  @property({ type: Boolean })
-  hideActions: boolean = true;
+  @property({type: Boolean})
+  hideActions = true;
 
-  @property({ type: Number })
+  @property({type: Number})
   uploadsInProgress!: number;
 
-  @property({ type: Number })
+  @property({type: Number})
   unsavedUploads!: number;
 
-  @property({ type: Boolean })
-  showInfoIcon: boolean = false;
+  @property({type: Boolean})
+  showInfoIcon = false;
 
   private _statusChangedDebouncer!: Debouncer;
   private _actionsOptionsChangedDebouncer!: Debouncer;
 
   static get observers() {
-    return [
-      "_handleStatusChanged(statuses, statuses.*)",
-      "_handleActionsChanged(actions, actions.*)",
-    ];
+    return ['_handleStatusChanged(statuses, statuses.*)', '_handleActionsChanged(actions, actions.*)'];
   }
 
   stateChanged(state: RootState) {
@@ -105,10 +93,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return Number(uploadsInProgress) === 0;
   }
 
-  getUploadInProgressOrUnsavedTooltip(
-    uploadsInProgress: string,
-    unsavedUploads: string
-  ) {
+  getUploadInProgressOrUnsavedTooltip(uploadsInProgress: string, unsavedUploads: string) {
     if (Number(uploadsInProgress) > 0) {
       this.showInfoIcon = true;
       return 'Uploads in progress, you can save after they\'re finished.';
@@ -119,7 +104,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
       return 'Don\'t forget to save uploaded files!';
     }
     this.showInfoIcon = false;
-    return "";
+    return '';
   }
 
   _showInfoIcon(actionsBtnTooltip: string) {
@@ -127,13 +112,9 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
   }
 
   _handleStatusChanged(statuses: Status[]) {
-    this._statusChangedDebouncer = Debouncer.debounce(
-      this._statusChangedDebouncer,
-      timeOut.after(10),
-      () => {
-        this._computeAvailableStatuses(statuses);
-      }
-    );
+    this._statusChangedDebouncer = Debouncer.debounce(this._statusChangedDebouncer, timeOut.after(10), () => {
+      this._computeAvailableStatuses(statuses);
+    });
   }
 
   _handleActionsChanged() {
@@ -145,32 +126,32 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
         this.actions.forEach((elem: StatusAction) => {
           hidden = elem.hidden && hidden;
         });
-        this.set("hideActions", hidden);
+        this.set('hideActions', hidden);
       }
     );
   }
 
   _getStatusIcon(icon: string) {
-    return icon || "done";
+    return icon || 'done';
   }
 
   _getCustomIconColor(color: string) {
     if (color) {
-      return "color: " + color;
+      return 'color: ' + color;
     }
-    return "";
+    return '';
   }
 
   _getStatusCssClass(status: Status, index: number) {
-    let cls = "";
+    let cls = '';
     if (status.completed && !status.icon) {
-      cls = "completed";
+      cls = 'completed';
     } else if (status.completed && status.icon) {
-      cls = "custom";
+      cls = 'custom';
     } else if (index === 0) {
-      cls = "pending";
+      cls = 'pending';
     }
-    return cls + " etools-status";
+    return cls + ' etools-status';
   }
 
   _getTrueIndex(index: number) {
@@ -178,14 +159,14 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
   }
 
   _computeAvailableStatuses(statuses: Status[]) {
-    this.set("availableStatuses", []);
+    this.set('availableStatuses', []);
     setTimeout(() => {
       const filteredStatuses = statuses.filter((elem) => {
         return !elem.hidden;
       });
-      this.set("availableStatuses", filteredStatuses);
+      this.set('availableStatuses', filteredStatuses);
     }, 0);
   }
 }
 
-window.customElements.define("etools-status", EtoolsStatus);
+window.customElements.define('etools-status', EtoolsStatus);

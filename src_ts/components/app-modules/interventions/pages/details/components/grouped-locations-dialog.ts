@@ -1,13 +1,13 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../../store";
-import { isJsonStrMatch } from "../../../../../utils/utils";
-import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles";
-import { Location } from "../../../../../../typings/intervention.types";
-import { property } from "@polymer/decorators";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../store';
+import {isJsonStrMatch} from '../../../../../utils/utils';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {Location} from '../../../../../../typings/intervention.types';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 class GroupedLocations {
   adminLevelLocation: Location | null = null;
@@ -67,12 +67,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
           padding-bottom: 0px;
         }
       </style>
-      <etools-dialog
-        id="groupedLocDialog"
-        size="md"
-        dialog-title="Locations PD/SSFA Covers"
-        hide-confirm-btn
-      >
+      <etools-dialog id="groupedLocDialog" size="md" dialog-title="Locations PD/SSFA Covers" hide-confirm-btn>
         <etools-dropdown
           id="adminLevelsDropdw"
           label="Group Locations By"
@@ -99,11 +94,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
             <div class="parent-padding">
               <div class="adminLevelLoc">[[item.adminLevelLocation.name]]</div>
               <div class="left-padding">
-                <template
-                  is="dom-repeat"
-                  items="[[item.subordinateLocations]]"
-                  as="subordinateLoc"
-                >
+                <template is="dom-repeat" items="[[item.subordinateLocations]]" as="subordinateLoc">
                   <div class="child-bottom-padding">
                     - [[subordinateLoc.name]]
                   </div>
@@ -118,35 +109,35 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
 
   @property({
     type: Array,
-    observer: GroupedLocationsDialog.prototype.adminLevelsChanged,
+    observer: GroupedLocationsDialog.prototype.adminLevelsChanged
   })
-  adminLevels!: { id: number; name: string; admin_level: any }[];
+  adminLevels!: {id: number; name: string; admin_level: any}[];
 
   @property({
     type: String,
-    observer: GroupedLocationsDialog.prototype.adminLevelChanged,
+    observer: GroupedLocationsDialog.prototype.adminLevelChanged
   })
   adminLevel!: string | null;
 
-  @property({ type: Array })
+  @property({type: Array})
   locations!: Location[];
 
-  @property({ type: Array })
+  @property({type: Array})
   interventionLocations!: Location[];
 
   // @ts-ignore
   @property({
     type: Array,
     notify: true,
-    observer: GroupedLocationsDialog.prototype.interventionLocationIdsChanged,
+    observer: GroupedLocationsDialog.prototype.interventionLocationIdsChanged
   })
   interventionLocationIds!: [];
 
-  @property({ type: Array })
+  @property({type: Array})
   groupedLocations!: GroupedLocations[] | null;
 
-  @property({ type: String })
-  message: string = "";
+  @property({type: String})
+  message = '';
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
@@ -166,7 +157,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
 
   _removeCountry(adminLevels: any) {
     const index = adminLevels.findIndex(function (al: any) {
-      return al.name === "Country";
+      return al.name === 'Country';
     });
     if (index > -1) {
       adminLevels.splice(index, 1);
@@ -188,9 +179,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     locationIds = locationIds.map(function (loc) {
       return parseInt(loc);
     });
-    const interventionLocations: Location[] = this.locations.filter(function (
-      loc: any
-    ) {
+    const interventionLocations: Location[] = this.locations.filter(function (loc: any) {
       return locationIds.indexOf(parseInt(loc.id)) > -1;
     });
 
@@ -199,7 +188,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 
   adminLevelChanged(selectedAdminLevel: any) {
-    this.message = "";
+    this.message = '';
     const groupedLocations: GroupedLocations[] = [];
     const locationsUnableToGroup = [];
 
@@ -220,23 +209,17 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
       }
 
       // Find admin level parent location
-      const adminLevelLocation = this._findAdminLevelParent(
-        this.interventionLocations[i],
-        selectedAdminLevel
-      );
+      const adminLevelLocation = this._findAdminLevelParent(this.interventionLocations[i], selectedAdminLevel);
       if (!adminLevelLocation) {
         locationsUnableToGroup.push(this.interventionLocations[i].name);
         continue;
       }
       // Check if admin level parent Location is already a parent to another intervention location
-      const existingGroup = this._findInGroupedLocations(
-        groupedLocations,
-        adminLevelLocation
-      );
+      const existingGroup = this._findInGroupedLocations(groupedLocations, adminLevelLocation);
       if (!existingGroup) {
         groupedLocations.push({
           adminLevelLocation: adminLevelLocation,
-          subordinateLocations: [this.interventionLocations[i]],
+          subordinateLocations: [this.interventionLocations[i]]
         });
       } else {
         existingGroup.subordinateLocations.push(this.interventionLocations[i]);
@@ -244,8 +227,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     }
 
     if (locationsUnableToGroup && locationsUnableToGroup.length) {
-      this.message =
-        "Locations unable to group: " + locationsUnableToGroup.join(", ");
+      this.message = 'Locations unable to group: ' + locationsUnableToGroup.join(', ');
     }
 
     this.groupedLocations = groupedLocations;
@@ -253,18 +235,12 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     (this.$.groupedLocDialog as EtoolsDialog).notifyResize();
   }
 
-  _findInGroupedLocations(
-    groupedLocations: GroupedLocations[],
-    adminLevelLocation: any
-  ) {
+  _findInGroupedLocations(groupedLocations: GroupedLocations[], adminLevelLocation: any) {
     if (!groupedLocations || !groupedLocations.length) {
       return null;
     }
     const existingGroup = groupedLocations.find(function (g) {
-      return (
-        parseInt((g.adminLevelLocation!.id as unknown) as string) ===
-        parseInt(adminLevelLocation.id)
-      );
+      return parseInt((g.adminLevelLocation!.id as unknown) as string) === parseInt(adminLevelLocation.id);
     });
 
     if (!existingGroup) {
@@ -273,16 +249,11 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     return existingGroup;
   }
 
-  _findAdminLevelParent(
-    location: Location,
-    adminLevel: string
-  ): Location | null {
+  _findAdminLevelParent(location: Location, adminLevel: string): Location | null {
     if (!location.parent) {
       return null;
     }
-    const parentLoc: Location | undefined = this.locations.find(function (
-      loc: any
-    ) {
+    const parentLoc: Location | undefined = this.locations.find(function (loc: any) {
       return parseInt(loc.id) === parseInt(location.parent as string);
     });
     if (!parentLoc) {
@@ -299,9 +270,6 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 }
 
-window.customElements.define(
-  "grouped-locations-dialog",
-  GroupedLocationsDialog
-);
+window.customElements.define('grouped-locations-dialog', GroupedLocationsDialog);
 
-export { GroupedLocationsDialog };
+export {GroupedLocationsDialog};

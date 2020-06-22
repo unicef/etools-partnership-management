@@ -1,20 +1,20 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import { gridLayoutStyles } from "../../../../../../../styles/grid-layout-styles";
-import EndpointsMixin from "../../../../../../../endpoints/endpoints-mixin";
-import { prepareDatepickerDate } from "../../../../../../../utils/date-utils";
+import {PolymerElement, html} from '@polymer/polymer';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
+import {prepareDatepickerDate} from '../../../../../../../utils/date-utils';
 
-import "@polymer/iron-label/iron-label.js";
-import "@polymer/paper-input/paper-input.js";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
+import '@polymer/iron-label/iron-label.js';
+import '@polymer/paper-input/paper-input.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 
-import "@unicef-polymer/etools-date-time/calendar-lite.js";
-import { fireEvent } from "../../../../../../../utils/fire-custom-event";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../../../typings/globals.types";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
+import '@unicef-polymer/etools-date-time/calendar-lite.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 
 /**
  * @polymer
@@ -69,27 +69,22 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
           </div>
         </div>
         <div class="row-h">
-          <paper-input
-            label="Reporting Requirement"
-            placeholder="&#8212;"
-            value="{{item.description}}"
-          >
-          </paper-input>
+          <paper-input label="Reporting Requirement" placeholder="&#8212;" value="{{item.description}}"> </paper-input>
         </div>
       </etools-dialog>
     `;
   }
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   opened!: boolean;
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId!: number;
 
-  @property({ type: Object })
+  @property({type: Object})
   item!: GenericObject;
 
-  @property({ type: Object })
+  @property({type: Object})
   toastMsgLoadingSource!: PolymerElement;
 
   _isNew() {
@@ -99,13 +94,13 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
   _getEndpoint() {
     if (this._isNew()) {
       // new/create
-      return this.getEndpoint("specialReportingRequirements", {
-        intervId: this.interventionId,
+      return this.getEndpoint('specialReportingRequirements', {
+        intervId: this.interventionId
       });
     } else {
       // already saved... update/delete
-      return this.getEndpoint("specialReportingRequirementsUpdate", {
-        reportId: this.item.id,
+      return this.getEndpoint('specialReportingRequirementsUpdate', {
+        reportId: this.item.id
       });
     }
   }
@@ -115,24 +110,20 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
     dialog.startSpinner();
 
     const endpoint = this._getEndpoint();
-    const method = this._isNew() ? "POST" : "PATCH";
+    const method = this._isNew() ? 'POST' : 'PATCH';
     sendRequest({
       method: method,
       endpoint: endpoint,
-      body: this._getBody(),
+      body: this._getBody()
     })
       .then((response: any) => {
-        fireEvent(this, "reporting-requirements-saved", response);
+        fireEvent(this, 'reporting-requirements-saved', response);
         dialog.stopSpinner();
         this.opened = false;
       })
       .catch((error: any) => {
         dialog.stopSpinner();
-        logError(
-          "Failed to save/update special report requirement!",
-          "add-edit-special-rep-req",
-          error
-        );
+        logError('Failed to save/update special report requirement!', 'add-edit-special-rep-req', error);
         parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
       });
   }
@@ -140,7 +131,7 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
   _getBody() {
     return {
       due_date: this.item.due_date,
-      description: this.item.description,
+      description: this.item.description
     };
   }
 
@@ -149,5 +140,5 @@ class AddEditSpecialRepReq extends EndpointsMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("add-edit-special-rep-req", AddEditSpecialRepReq);
-export { AddEditSpecialRepReq as AddEditSpecialRepReqEl };
+window.customElements.define('add-edit-special-rep-req', AddEditSpecialRepReq);
+export {AddEditSpecialRepReq as AddEditSpecialRepReqEl};

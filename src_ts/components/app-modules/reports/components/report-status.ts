@@ -1,8 +1,8 @@
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-icons/image-icons.js";
-import { PolymerElement, html } from "@polymer/polymer";
-import { property } from "@polymer/decorators/lib/decorators";
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/image-icons.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators/lib/decorators';
 
 /**
  * @polymer
@@ -11,7 +11,7 @@ import { property } from "@polymer/decorators/lib/decorators";
  */
 class ReportStatus extends PolymerElement {
   static get is() {
-    return "report-status";
+    return 'report-status';
   }
 
   static get template() {
@@ -28,25 +28,25 @@ class ReportStatus extends PolymerElement {
           margin-top: -2px;
         }
 
-        :host([status-type="default"]) iron-icon {
+        :host([status-type='default']) iron-icon {
           color: var(--primary-color);
         }
 
-        :host([status-type="submitted"]) iron-icon,
-        :host([status-type="success"]) iron-icon {
+        :host([status-type='submitted']) iron-icon,
+        :host([status-type='success']) iron-icon {
           color: var(--success-color);
         }
 
-        :host([status-type="no-status"]) iron-icon,
-        :host([status-type="error"]) iron-icon {
+        :host([status-type='no-status']) iron-icon,
+        :host([status-type='error']) iron-icon {
           color: var(--dark-error-color);
         }
 
-        :host([status-type="neutral"]) iron-icon {
+        :host([status-type='neutral']) iron-icon {
           color: var(--secondary-text-color);
         }
 
-        :host([status-type="warning"]) iron-icon {
+        :host([status-type='warning']) iron-icon {
           color: var(--warning-color);
         }
 
@@ -65,120 +65,120 @@ class ReportStatus extends PolymerElement {
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   status!: string;
 
-  @property({ type: Boolean })
-  noLabel: boolean = false;
+  @property({type: Boolean})
+  noLabel = false;
 
-  @property({ type: Boolean })
-  noIcon: boolean = false;
+  @property({type: Boolean})
+  noIcon = false;
 
   @property({
     type: String,
-    computed: "_computeStatusType(status)",
-    reflectToAttribute: true,
+    computed: '_computeStatusType(status)',
+    reflectToAttribute: true
   })
   statusType!: string;
 
   @property({
     type: String,
-    computed: "_computeLabel(status, final, reportType)",
+    computed: '_computeLabel(status, final, reportType)'
   })
   label!: string;
 
-  @property({ type: String, computed: "_computeIcon(statusType)" })
+  @property({type: String, computed: '_computeIcon(statusType)'})
   icon!: string;
 
-  @property({ type: Boolean })
-  final: boolean = false;
+  @property({type: Boolean})
+  final = false;
 
-  @property({ type: String })
-  reportType: string = "";
+  @property({type: String})
+  reportType = '';
 
   _computeStatusType(status: null | undefined | string) {
-    if (status === null || typeof status === "undefined") {
-      return "no-status";
+    if (status === null || typeof status === 'undefined') {
+      return 'no-status';
     }
     switch (status) {
-      case "1":
-      case "Met":
-      case "OnT":
-      case "Com":
-      case "Acc":
-        return "success";
-      case "Sub":
-        return "submitted";
-      case "2":
-      case "Ove":
-      case "Sen":
-        return "error";
-      case "3":
-      case "Due":
-      case "NoP":
-      case "Ong":
-        return "neutral";
-      case "Rej":
-      case "Con":
-      case "Pla":
-        return "warning";
-      case "NoS":
-        return "no-status";
+      case '1':
+      case 'Met':
+      case 'OnT':
+      case 'Com':
+      case 'Acc':
+        return 'success';
+      case 'Sub':
+        return 'submitted';
+      case '2':
+      case 'Ove':
+      case 'Sen':
+        return 'error';
+      case '3':
+      case 'Due':
+      case 'NoP':
+      case 'Ong':
+        return 'neutral';
+      case 'Rej':
+      case 'Con':
+      case 'Pla':
+        return 'warning';
+      case 'NoS':
+        return 'no-status';
       default:
-        return "default";
+        return 'default';
     }
   }
 
   _computeLabel(status: string, final: string, reportType: string) {
     switch (status) {
-      case "1":
-        return "Nothing due";
-      case "2":
-      case "Ove":
-        return "Overdue";
-      case "3":
-      case "Due":
-        return "Due";
-      case "Sub":
-        return "Submitted";
-      case "Rej":
-        return "Rejected";
-      case "Met":
-        return final ? "Met results as planned" : "Met";
-      case "OnT":
-        return "On Track";
-      case "NoP":
-        return "No Progress";
-      case "Con":
-        return final ? "Constrained (partially met result)" : "Constrained";
-      case "Ong":
-        return "Ongoing";
-      case "Pla":
-        return "Planned";
-      case "Com":
-        return "Completed";
-      case "NoS":
-        return "No Status";
-      case "Sen":
-        return "Sent Back";
-      case "Acc":
-        return reportType !== "HR" ? "Accepted" : "Received";
+      case '1':
+        return 'Nothing due';
+      case '2':
+      case 'Ove':
+        return 'Overdue';
+      case '3':
+      case 'Due':
+        return 'Due';
+      case 'Sub':
+        return 'Submitted';
+      case 'Rej':
+        return 'Rejected';
+      case 'Met':
+        return final ? 'Met results as planned' : 'Met';
+      case 'OnT':
+        return 'On Track';
+      case 'NoP':
+        return 'No Progress';
+      case 'Con':
+        return final ? 'Constrained (partially met result)' : 'Constrained';
+      case 'Ong':
+        return 'Ongoing';
+      case 'Pla':
+        return 'Planned';
+      case 'Com':
+        return 'Completed';
+      case 'NoS':
+        return 'No Status';
+      case 'Sen':
+        return 'Sent Back';
+      case 'Acc':
+        return reportType !== 'HR' ? 'Accepted' : 'Received';
       default:
-        return "No Status";
+        return 'No Status';
     }
   }
 
   _computeIcon(type: string) {
     switch (type) {
-      case "success":
-        return "icons:check-circle";
-      case "submitted":
-        return "icons:assignment-turned-in";
-      case "error":
-      case "warning":
-        return "icons:error";
+      case 'success':
+        return 'icons:check-circle';
+      case 'submitted':
+        return 'icons:assignment-turned-in';
+      case 'error':
+      case 'warning':
+        return 'icons:error';
       default:
-        return "image:lens";
+        return 'image:lens';
     }
   }
 }

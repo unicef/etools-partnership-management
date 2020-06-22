@@ -1,8 +1,8 @@
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import UtilsMixin from "../../../../../mixins/utils-mixin.js";
-import { PolymerElement, html } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../typings/globals.types.js";
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import UtilsMixin from '../../../../../mixins/utils-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -11,7 +11,7 @@ import { GenericObject } from "../../../../../../typings/globals.types.js";
  */
 class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   static get is() {
-    return "indicator-report-target";
+    return 'indicator-report-target';
   }
 
   static get template() {
@@ -77,9 +77,7 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
       </div>
       <div class="target-row">
         <span>Total cumulative progress:</span>
-        <span
-          title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]"
-        >
+        <span title$="[[_getCumulativeProgress(displayType, cumulativeProgress)]]">
           [[_getCumulativeProgress(displayType, cumulativeProgress)]]
         </span>
       </div>
@@ -92,31 +90,31 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   target!: GenericObject;
 
-  @property({ type: String })
-  cumulativeProgress: string = "-";
+  @property({type: String})
+  cumulativeProgress = '-';
 
-  @property({ type: String })
-  achievement: string = "-";
+  @property({type: String})
+  achievement = '-';
 
-  @property({ type: Boolean, reflectToAttribute: true })
-  bold: boolean = false;
+  @property({type: Boolean, reflectToAttribute: true})
+  bold = false;
 
-  @property({ type: String })
-  displayType: string = "number";
+  @property({type: String})
+  displayType = 'number';
 
   _getTargetValue(displayType: string, target: any) {
     switch (displayType) {
-      case "number":
-        return this._formatNumber(target.v, "-", 0, ",");
-      case "ratio":
-        return target.v + "/" + target.d;
-      case "percentage":
-        return target.v + "%";
+      case 'number':
+        return this._formatNumber(target.v, '-', 0, ',');
+      case 'ratio':
+        return target.v + '/' + target.d;
+      case 'percentage':
+        return target.v + '%';
     }
-    return "-";
+    return '-';
   }
 
   _getCumulativeProgress(displayType: string, cumulativeVal: string) {

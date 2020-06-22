@@ -1,4 +1,4 @@
-import { html } from "@polymer/polymer/polymer-element.js";
+import {html} from '@polymer/polymer/polymer-element.js';
 
 export const SharedStyles = html`
   <style>
@@ -197,7 +197,7 @@ export const SharedStyles = html`
     }
 
     .input-label[empty]::after {
-      content: "—";
+      content: '—';
       color: var(--secondary-text-color);
     }
     .placeholder-style {

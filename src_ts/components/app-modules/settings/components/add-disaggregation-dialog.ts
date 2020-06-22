@@ -1,28 +1,25 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@polymer/paper-input/paper-input.js";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-input/paper-input.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
-import EndpointsMixin from "../../../endpoints/endpoints-mixin.js";
-import RepeatableDataSetsMixin from "../../../mixins/repeatable-data-sets-mixin.js";
+import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
+import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
 
-import { gridLayoutStyles } from "../../../styles/grid-layout-styles.js";
-import { buttonsStyles } from "../../../styles/buttons-styles";
-import { SharedStyles } from "../../../styles/shared-styles.js";
-import { requiredFieldStarredStyles } from "../../../styles/required-field-styles.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store } from "../../../../store";
-import { addDisaggregation } from "../../../../actions/common-data";
-import { actionIconBtnsStyles } from "../../../styles/action-icon-btns-styles.js";
-import {
-  Disaggregation,
-  DisaggregationValue,
-} from "../../../../typings/intervention.types";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { property } from "@polymer/decorators/lib/decorators";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog";
-import { PaperInputElement } from "@polymer/paper-input/paper-input";
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles.js';
+import {buttonsStyles} from '../../../styles/buttons-styles';
+import {SharedStyles} from '../../../styles/shared-styles.js';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../../../store';
+import {addDisaggregation} from '../../../../actions/common-data';
+import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles.js';
+import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {property} from '@polymer/decorators/lib/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {PaperInputElement} from '@polymer/paper-input/paper-input';
 
 /**
  * @polymer
@@ -31,14 +28,11 @@ import { PaperInputElement } from "@polymer/paper-input/paper-input";
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class AddDisaggregationDialog extends connect(store)(
-  RepeatableDataSetsMixin(EndpointsMixin(PolymerElement))
-) {
+class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(EndpointsMixin(PolymerElement))) {
   static get template() {
     // language=HTML
     return html`
-      ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles}
-      ${requiredFieldStarredStyles} ${actionIconBtnsStyles}
+      ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${actionIconBtnsStyles}
       <style>
         paper-input {
           width: 100%;
@@ -94,13 +88,7 @@ class AddDisaggregationDialog extends connect(store)(
               <label class="paper-label">Disaggregation Group</label>
               <div class="layout-horizontal groups">
                 <template is="dom-repeat" items="[[dataItems]]">
-                  <paper-input
-                    class="newGroup"
-                    no-label-float
-                    label="New Group"
-                    value="{{item.value}}"
-                  >
-                  </paper-input>
+                  <paper-input class="newGroup" no-label-float label="New Group" value="{{item.value}}"> </paper-input>
                   <paper-icon-button
                     class="action delete no-padding"
                     icon="cancel"
@@ -110,10 +98,7 @@ class AddDisaggregationDialog extends connect(store)(
                   >
                   </paper-icon-button>
                 </template>
-                <paper-button
-                  class="secondary-btn"
-                  on-tap="_addNewGroup"
-                  title="Add Disaggregation Group"
+                <paper-button class="secondary-btn" on-tap="_addNewGroup" title="Add Disaggregation Group"
                   >+Add
                 </paper-button>
               </div>
@@ -124,36 +109,36 @@ class AddDisaggregationDialog extends connect(store)(
     `;
   }
 
-  @property({ type: Object, observer: "_disaggregationChanged" })
+  @property({type: Object, observer: '_disaggregationChanged'})
   disaggregation!: Disaggregation;
 
-  @property({ type: Array })
+  @property({type: Array})
   dataItems!: [];
 
-  @property({ type: Object })
+  @property({type: Object})
   toastEventSource!: HTMLElement;
 
-  @property({ type: Boolean })
-  disableConfirmBtn: boolean = false;
+  @property({type: Boolean})
+  disableConfirmBtn = false;
 
   ready() {
     super.ready();
     this.dataSetModel = {
       value: null,
-      active: true,
+      active: true
     };
     this.editMode = true;
   }
 
   broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
     localStorage.setItem(
-      "update-redux",
+      'update-redux',
       JSON.stringify({
-        type: "ADD_DISAGGREGATION",
-        disaggregation: disaggregation,
+        type: 'ADD_DISAGGREGATION',
+        disaggregation: disaggregation
       })
     );
-    localStorage.removeItem("update-redux");
+    localStorage.removeItem('update-redux');
   }
 
   initializeDisaggregation() {
@@ -179,7 +164,7 @@ class AddDisaggregationDialog extends connect(store)(
   }
 
   _disaggregationChanged(disaggreg: Disaggregation) {
-    this.set("dataItems", disaggreg.disaggregation_values);
+    this.set('dataItems', disaggreg.disaggregation_values);
     if (!this.dataItems) {
       this.dataItems = [];
     }
@@ -196,9 +181,9 @@ class AddDisaggregationDialog extends connect(store)(
     this.startSpinner();
     const self = this;
     const requestParams = {
-      method: "POST",
-      endpoint: this.getEndpoint("disaggregations"),
-      body: this._getBody(),
+      method: 'POST',
+      endpoint: this.getEndpoint('disaggregations'),
+      body: this._getBody()
     };
     return sendRequest(requestParams)
       .then(function (response: any) {
@@ -234,24 +219,17 @@ class AddDisaggregationDialog extends connect(store)(
   }
 
   _isEmpty(value: any) {
-    return value === null || typeof value === "undefined" || value === "";
+    return value === null || typeof value === 'undefined' || value === '';
   }
 
   validate() {
-    return (this.shadowRoot!.querySelector(
-      "#disaggregateByEl"
-    ) as PaperInputElement).validate();
+    return (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).validate();
   }
 
   resetValidations() {
-    (this.shadowRoot!.querySelector(
-      "#disaggregateByEl"
-    ) as PaperInputElement).invalid = false;
+    (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).invalid = false;
   }
 }
 
-window.customElements.define(
-  "add-disaggregation-dialog",
-  AddDisaggregationDialog
-);
-export { AddDisaggregationDialog as AddDisaggregationDialogEl };
+window.customElements.define('add-disaggregation-dialog', AddDisaggregationDialog);
+export {AddDisaggregationDialog as AddDisaggregationDialogEl};

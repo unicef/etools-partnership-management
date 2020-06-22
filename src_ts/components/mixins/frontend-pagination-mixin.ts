@@ -1,35 +1,29 @@
-import { Constructor } from "../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
-function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class FrontendPaginationClass extends baseClass {
-    @property({ type: Object })
+    @property({type: Object})
     pagination = {
       pageSize: 10,
       pageNumber: 1,
-      totalResults: null,
+      totalResults: null
     };
 
-    @property({ type: Array })
+    @property({type: Array})
     dataItems!: [];
 
     public _pageSizeChanged(ev: CustomEvent) {
-      this.set("pagination.pageNumber", 1);
-      this.set("pagination.pageSize", parseInt(ev.detail.value));
+      this.set('pagination.pageNumber', 1);
+      this.set('pagination.pageSize', parseInt(ev.detail.value));
     }
 
     public _pageNumberChanged(ev: CustomEvent) {
-      this.set("pagination.pageNumber", parseInt(ev.detail.value));
+      this.set('pagination.pageNumber', parseInt(ev.detail.value));
     }
 
-    public _paginationChanged(
-      pageNumber: number,
-      pageSize: number,
-      listData: any
-    ) {
+    public _paginationChanged(pageNumber: number, pageSize: number, listData: any) {
       if (this._anyUndefined([pageNumber, pageSize, listData])) {
         return;
       }
@@ -44,7 +38,7 @@ function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(
     }
 
     public _isUndefined(item: any) {
-      return typeof item === "undefined";
+      return typeof item === 'undefined';
     }
   }
   return FrontendPaginationClass;

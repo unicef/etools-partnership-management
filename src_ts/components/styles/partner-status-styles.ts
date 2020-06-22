@@ -1,5 +1,5 @@
-import { html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import {html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const partnerStatusStyles = html` <style>
@@ -43,7 +43,7 @@ export const partnerStatusStyles = html` <style>
   }
 
   .marked-for-deletion iron-icon:after {
-    content: "\\00d7";
+    content: '\\00d7';
     color: var(--light-primary-text-color);
     position: absolute;
     z-index: 1;

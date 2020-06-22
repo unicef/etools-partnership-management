@@ -1,41 +1,39 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import { GenericObject, Constructor } from "../../../typings/globals.types"; // TODO - load using tsconfig
-import "../../../typings/globals.types.js";
+import {GenericObject, Constructor} from '../../../typings/globals.types'; // TODO - load using tsconfig
+import '../../../typings/globals.types.js';
 
-import { PolymerElement } from "@polymer/polymer/polymer-element";
-import { fireEvent } from "../../utils/fire-custom-event";
-import { getDomainByEnv } from "../../../config/config";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { property } from "@polymer/decorators";
-import { Route } from "../../../typings/route.types";
+import {PolymerElement} from '@polymer/polymer/polymer-element';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {getDomainByEnv} from '../../../config/config';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {Route} from '../../../typings/route.types';
 /**
  * Module main elements common functionality
  * @polymer
  * @mixinFunction
  */
-function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ModuleRoutingClass extends baseClass {
-    @property({ type: Boolean })
+    @property({type: Boolean})
     listActive!: boolean;
 
-    @property({ type: Boolean })
+    @property({type: Boolean})
     tabsActive!: boolean;
 
-    @property({ type: Object })
+    @property({type: Object})
     route!: Route;
 
-    @property({ type: Object })
+    @property({type: Object})
     routeData!: object;
 
-    @property({ type: String })
+    @property({type: String})
     rootPath!: string;
 
-    @property({ type: String })
+    @property({type: String})
     moduleName!: string;
 
-    @property({ type: String, notify: true, observer: "_activePageChanged" })
+    @property({type: String, notify: true, observer: '_activePageChanged'})
     activePage!: string;
 
     /**
@@ -46,34 +44,23 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
      *             - the previous activePage value is not the list &&
      *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
      */
-    @property({ type: Boolean })
-    tabAttached: boolean = false;
+    @property({type: Boolean})
+    tabAttached = false;
 
     ready() {
       super.ready();
 
-      this._requestedTabContentHasBeenAttached = this._requestedTabContentHasBeenAttached.bind(
-        this
-      );
-      this.addEventListener(
-        "tab-content-attached",
-        this._requestedTabContentHasBeenAttached
-      );
+      this._requestedTabContentHasBeenAttached = this._requestedTabContentHasBeenAttached.bind(this);
+      this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      this.removeEventListener(
-        "tab-content-attached",
-        this._requestedTabContentHasBeenAttached
-      );
+      this.removeEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached);
     }
 
-    _activePageChanged(
-      currentModule: string | undefined,
-      previousPage: string
-    ) {
-      if (typeof currentModule === "undefined") {
+    _activePageChanged(currentModule: string | undefined, previousPage: string) {
+      if (typeof currentModule === 'undefined') {
         return;
       }
       this._resetTabAttachedFlagIfNeeded(currentModule, previousPage);
@@ -84,35 +71,26 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
      * Used to make sure sidebar doesn't show while tab element is still loading
      */
     _requestedTabContentHasBeenAttached() {
-      this.set("tabAttached", true);
+      this.set('tabAttached', true);
     }
 
     /*
      * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
      */
     _resetTabAttachedFlagIfNeeded(currentModule: string, previousPage: string) {
-      const selectedTab = this.shadowRoot!.querySelector(
-        '[name="' + currentModule + '"]'
-      );
-      if (
-        this.listActive ||
-        (!selectedTab && previousPage && previousPage === "list")
-      ) {
-        this.set("tabAttached", false);
+      const selectedTab = this.shadowRoot!.querySelector('[name="' + currentModule + '"]');
+      if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
+        this.set('tabAttached', false);
       }
       if (selectedTab) {
         // tab already loaded, make sure the flag is true when coming from the list
-        this.set("tabAttached", true);
+        this.set('tabAttached', true);
       }
     }
 
     _getFilenamePrefix(listActive: boolean, fileImportDetails: GenericObject) {
       // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
-      return (
-        (listActive
-          ? fileImportDetails.filenamePrefix + "s"
-          : fileImportDetails.filenamePrefix) + "-"
-      );
+      return (listActive ? fileImportDetails.filenamePrefix + 's' : fileImportDetails.filenamePrefix) + '-';
     }
 
     /**
@@ -122,13 +100,9 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
      * @param {function} appendBasePathAdditionalFolder
      * @return {string}
      */
-    _getFileBaseUrl(
-      currentModule: string,
-      page: string,
-      appendBasePathAdditionalFolder?: object | null
-    ) {
-      let baseUrl = currentModule + "/pages/" + page + "/";
-      if (typeof appendBasePathAdditionalFolder === "function") {
+    _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object | null) {
+      let baseUrl = currentModule + '/pages/' + page + '/';
+      if (typeof appendBasePathAdditionalFolder === 'function') {
         // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
         baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
       }
@@ -137,29 +111,22 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
 
     _handleSuccessfulImport(page: string, successCallback?: object) {
       // set active page
-      this.set("activePage", page);
-      if (typeof successCallback === "function") {
+      this.set('activePage', page);
+      if (typeof successCallback === 'function') {
         successCallback.bind(this)();
       }
     }
 
-    _handleFailedImport(
-      err: GenericObject,
-      page: string,
-      fileImportDetails: GenericObject
-    ) {
+    _handleFailedImport(err: GenericObject, page: string, fileImportDetails: GenericObject) {
       // log page element import failed error
-      const importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace(
-        "##page##",
-        page
-      );
+      const importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
       logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
 
-      fireEvent(this, "global-loading", {
+      fireEvent(this, 'global-loading', {
         active: false,
-        loadingSource: fileImportDetails.loadingMsgSource,
+        loadingSource: fileImportDetails.loadingMsgSource
       });
-      fireEvent(this, "404");
+      fireEvent(this, '404');
     }
 
     setActivePage(
@@ -170,31 +137,25 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
       appendBasePathAdditionalFolder?: object | null,
       successfulImportCallback?: object
     ) {
-      const page = listActive ? "list" : tab;
+      const page = listActive ? 'list' : tab;
 
       if (listActive) {
         // clear server errors for the list
-        fireEvent(this, "clear-server-errors");
+        fireEvent(this, 'clear-server-errors');
       } else {
-        if (
-          typeof canAccessTab === "function" &&
-          !canAccessTab.bind(this, page)()
-        ) {
+        if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
           // the user can not access this tab (ex: prp tabs on interventions)
-          fireEvent(this, "404");
+          fireEvent(this, '404');
           return;
         }
       }
 
       if (page && page !== this.activePage) {
         // import main page element
-        const importFilenamePrefix = this._getFilenamePrefix(
-          listActive,
-          fileImportDetails
-        );
+        const importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
 
         const baseUrl = this._getFileBaseUrl(
-          fileImportDetails.filenamePrefix + "s",
+          fileImportDetails.filenamePrefix + 's',
           page,
           appendBasePathAdditionalFolder
         );
@@ -212,7 +173,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
     }
 
     _updateNewItemPageFlag(routeData: GenericObject, listActive: boolean) {
-      return routeData && routeData.id === "new" && !listActive;
+      return routeData && routeData.id === 'new' && !listActive;
     }
 
     importPageElement(fileName: string, baseUrl: string) {
@@ -223,22 +184,13 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(
            * So non-absolute paths will be relative to
            * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
            */
-          const pageUrl =
-            getDomainByEnv() +
-            "/src/components/app-modules/" +
-            baseUrl +
-            fileName +
-            ".js";
+          const pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
           import(pageUrl)
             .then(() => {
               resolve();
             })
             .catch((err) => {
-              logError(
-                "Error importing component",
-                "module-routing-mixin",
-                err
-              );
+              logError('Error importing component', 'module-routing-mixin', err);
               reject(err);
             });
         } else {

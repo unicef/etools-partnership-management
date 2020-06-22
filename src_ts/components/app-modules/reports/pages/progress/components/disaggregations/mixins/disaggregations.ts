@@ -1,5 +1,5 @@
-import { Constructor } from "../../../../../../../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 
@@ -8,23 +8,21 @@ import { PolymerElement } from "@polymer/polymer";
  * @polymer
  * @mixinFunction
  */
-function DisaggregationsMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class DisaggregationsClass extends baseClass {
     // Used to display rows for two and three disaggregations.
     // It will NOT work for one and zero disaggregations.
     _determineRows(self: any, rows: any, columns: any) {
       const rowsForDisplay: object[] = [];
       rows.forEach(function (x: any) {
-        let formatted = "";
+        let formatted = '';
 
         const rowData = columns.map(function (z: any) {
           formatted = self._formatDisaggregationIds([x.id, z.id]);
 
           return {
             key: formatted,
-            data: self.data.disaggregation[formatted],
+            data: self.data.disaggregation[formatted]
           };
         });
 
@@ -36,8 +34,8 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(
           id: x.id,
           total: {
             key: formatted,
-            data: self.data.disaggregation[formatted],
-          },
+            data: self.data.disaggregation[formatted]
+          }
         });
       });
 
@@ -51,15 +49,15 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(
       const ids = unsortedIds.sort(function (a: number, b: number) {
         return a - b;
       });
-      let sortedString = "";
+      let sortedString = '';
 
       if (ids.length === 1) {
-        sortedString = ids[0] + ",";
+        sortedString = ids[0] + ',';
       } else {
-        sortedString = ids.join(", ");
+        sortedString = ids.join(', ');
       }
 
-      return "(" + sortedString + ")";
+      return '(' + sortedString + ')';
     }
   }
   return DisaggregationsClass;

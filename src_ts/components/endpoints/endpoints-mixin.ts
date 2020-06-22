@@ -1,21 +1,14 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import { RootState } from "../../store";
+import {RootState} from '../../store';
 
-import {
-  EtoolsRequestEndpoint,
-  sendRequest,
-} from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import pmpEndpoints from "./endpoints.js";
-import {
-  tokenEndpointsHost,
-  tokenStorageKeys,
-  getTokenEndpoints,
-} from "../../config/config";
-import { isJsonStrMatch } from "../utils/utils";
-import { Constructor, User, GenericObject } from "../../typings/globals.types";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging.js";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import pmpEndpoints from './endpoints.js';
+import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
+import {isJsonStrMatch} from '../utils/utils';
+import {Constructor, User, GenericObject} from '../../typings/globals.types';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -23,44 +16,35 @@ import { property } from "@polymer/decorators";
  */
 function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class EndpointsMixinClass extends (baseClass as Constructor<PolymerElement>) {
-    @property({ type: Object })
+    @property({type: Object})
     prpCountries!: GenericObject[];
 
-    @property({ type: Object })
+    @property({type: Object})
     currentUser!: User;
 
     public endStateChanged(state: RootState) {
-      if (
-        !isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)
-      ) {
+      if (!isJsonStrMatch(state.commonData!.PRPCountryData, this.prpCountries)) {
         this.prpCountries = [...state.commonData!.PRPCountryData];
       }
       if (!isJsonStrMatch(state.commonData!.currentUser, this.currentUser)) {
-        this.currentUser = JSON.parse(
-          JSON.stringify(state.commonData!.currentUser)
-        );
+        this.currentUser = JSON.parse(JSON.stringify(state.commonData!.currentUser));
       }
     }
 
     protected _getPrpCountryId() {
-      const currentCountry = this.currentUser.countries_available.find(
-        (country: object) => {
-          return (country as any).id === this.currentUser.country.id;
-        }
-      );
+      const currentCountry = this.currentUser.countries_available.find((country: object) => {
+        return (country as any).id === this.currentUser.country.id;
+      });
       const prpCountry = this.prpCountries.find((prpCountry: object) => {
-        return (
-          (prpCountry as any).business_area_code ===
-          currentCountry!.business_area_code
-        );
+        return (prpCountry as any).business_area_code === currentCountry!.business_area_code;
       });
 
       if (!prpCountry) {
         const countryNotFoundInPrpWarning =
-          "Error: " +
+          'Error: ' +
           this.currentUser.country.name +
-          " country data was " +
-          "not found in the available PRP countries by business_area_code!";
+          ' country data was ' +
+          'not found in the available PRP countries by business_area_code!';
         throw new Error(countryNotFoundInPrpWarning);
       }
 
@@ -68,31 +52,20 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected _urlTemplateHasCountryId(template: string): boolean {
-      return template.indexOf("<%=countryId%>") > -1;
+      return template.indexOf('<%=countryId%>') > -1;
     }
 
     public getEndpoint(endpointName: string, data?: object) {
-      const endpoint = JSON.parse(
-        JSON.stringify((pmpEndpoints as any)[endpointName])
-      );
-      const authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(
-        endpoint
-      );
-      const baseSite = authorizationTokenMustBeAdded
-        ? tokenEndpointsHost(endpoint.token)
-        : window.location.origin;
+      const endpoint = JSON.parse(JSON.stringify((pmpEndpoints as any)[endpointName]));
+      const authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
+      const baseSite = authorizationTokenMustBeAdded ? tokenEndpointsHost(endpoint.token) : window.location.origin;
 
       if (this._hasUrlTemplate(endpoint)) {
-        if (
-          data &&
-          authorizationTokenMustBeAdded &&
-          this._urlTemplateHasCountryId(endpoint.template)
-        ) {
+        if (data && authorizationTokenMustBeAdded && this._urlTemplateHasCountryId(endpoint.template)) {
           // we need to get corresponding PRP country ID
           (data as any).countryId = this._getPrpCountryId();
         }
-        endpoint.url =
-          baseSite + this._generateUrlFromTemplate(endpoint.template, data);
+        endpoint.url = baseSite + this._generateUrlFromTemplate(endpoint.template, data);
       } else {
         if (endpoint.url.indexOf(baseSite) === -1) {
           endpoint.url = baseSite + endpoint.url;
@@ -104,15 +77,13 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     protected _generateUrlFromTemplate(tmpl: string, data: object | undefined) {
       if (!tmpl) {
-        throw new Error(
-          "To generate URL from endpoint url template you need valid template string"
-        );
+        throw new Error('To generate URL from endpoint url template you need valid template string');
       }
 
       if (data && Object.keys(data).length > 0) {
         for (const k in data) {
           if (Object.prototype.hasOwnProperty.call(data, k)) {
-            const replacePattern = new RegExp("<%=" + k + "%>", "gi");
+            const replacePattern = new RegExp('<%=' + k + '%>', 'gi');
             tmpl = tmpl.replace(replacePattern, (data as any)[k]);
           }
         }
@@ -122,11 +93,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected _hasUrlTemplate(endpoint: object) {
-      return (
-        endpoint &&
-        endpoint.hasOwnProperty("template") &&
-        (endpoint as any).template !== ""
-      );
+      return endpoint && endpoint.hasOwnProperty('template') && (endpoint as any).template !== '';
     }
 
     protected _getDeferrer() {
@@ -140,7 +107,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     public authorizationTokenMustBeAdded(endpoint: object): boolean {
-      return endpoint && "token" in endpoint;
+      return endpoint && 'token' in endpoint;
     }
 
     public getCurrentToken(tokenKey: string) {
@@ -148,15 +115,12 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     public storeToken(tokenKey: string, tokenBase64Encoded: string) {
-      localStorage.setItem(
-        (tokenStorageKeys as any)[tokenKey],
-        tokenBase64Encoded
-      );
+      localStorage.setItem((tokenStorageKeys as any)[tokenKey], tokenBase64Encoded);
     }
 
     public decodeBase64Token(encodedToken: string) {
-      const base64Url = encodedToken.split(".")[1];
-      const base64 = base64Url.replace("-", "+").replace("_", "/");
+      const base64Url = encodedToken.split('.')[1];
+      const base64 = base64Url.replace('-', '+').replace('_', '/');
       return JSON.parse(window.atob(base64));
     }
 
@@ -166,12 +130,12 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     public getAuthorizationHeader(token: string) {
-      return { Authorization: "JWT " + token };
+      return {Authorization: 'JWT ' + token};
     }
 
     public requestToken(endpoint: EtoolsRequestEndpoint) {
       return sendRequest({
-        endpoint: endpoint,
+        endpoint: endpoint
       });
     }
 
@@ -211,10 +175,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           this.requestToken(this.getEndpoint(tokenEndpointName))
             .then(function (response: any) {
               self.storeToken(options.endpoint.token, response.token);
-              options = self._buildOptionsWithTokenHeader(
-                options,
-                response.token
-              );
+              options = self._buildOptionsWithTokenHeader(options, response.token);
               defer.resolve(options);
             })
             .catch(function (error: any) {
@@ -228,22 +189,15 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return defer.promise;
     }
 
-    protected _addAdditionalRequestOptions(
-      options: any,
-      requestAdditionalOptions: any
-    ) {
+    protected _addAdditionalRequestOptions(options: any, requestAdditionalOptions: any) {
       if (requestAdditionalOptions) {
         Object.keys(requestAdditionalOptions).forEach(function (key) {
           switch (key) {
-            case "endpoint":
+            case 'endpoint':
               break;
-            case "headers":
+            case 'headers':
               // add additional headers
-              options.headers = Object.assign(
-                {},
-                options.headers,
-                requestAdditionalOptions[key]
-              );
+              options.headers = Object.assign({}, options.headers, requestAdditionalOptions[key]);
               break;
             default:
               options[key] = requestAdditionalOptions[key];
@@ -260,17 +214,14 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       activeReqKey?: string
     ) {
       if (!endpoint) {
-        logError("Endpoint name is missing.", "Endpoints:fireRequest");
+        logError('Endpoint name is missing.', 'Endpoints:fireRequest');
         return;
       }
       const defer = this._getDeferrer();
       const self = this;
       this.addTokenToRequestOptions(endpoint, endpointTemplateData)
         .then(function (requestOptions: any) {
-          const options = self._addAdditionalRequestOptions(
-            requestOptions,
-            requestAdditionalOptions
-          );
+          const options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
           return sendRequest(options, activeReqKey);
         })
         .then(function (endpointResponse: any) {

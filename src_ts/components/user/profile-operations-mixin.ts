@@ -1,15 +1,15 @@
-import { store } from "../../store";
-import { isEmptyObject } from "../utils/utils";
+import {store} from '../../store';
+import {isEmptyObject} from '../utils/utils';
 
-import EndpointsMixin from "../endpoints/endpoints-mixin.js";
-import UserDataMixin from "./user-data-mixin.js";
-import { updateCurrentUser } from "../../actions/common-data.js";
-import { fireEvent } from "../utils/fire-custom-event";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { Constructor } from "../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import EndpointsMixin from '../endpoints/endpoints-mixin.js';
+import UserDataMixin from './user-data-mixin.js';
+import {updateCurrentUser} from '../../actions/common-data.js';
+import {fireEvent} from '../utils/fire-custom-event';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -17,25 +17,21 @@ import { property } from "@polymer/decorators";
  * @appliesMixin EndpointsMixin
  * @appliesMixin UserDataMixin
  */
-function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
-  class ProfileOperationsClass extends EndpointsMixin(
-    UserDataMixin(baseClass)
-  ) {
-    @property({ type: Boolean })
-    _saveActionInProgress: boolean = false;
+function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
+  class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
+    @property({type: Boolean})
+    _saveActionInProgress = false;
 
-    @property({ type: String })
-    profileSaveLoadingMsgSource: string = "profile-modal";
+    @property({type: String})
+    profileSaveLoadingMsgSource = 'profile-modal';
 
     protected _dispatchSaveProfileRequest(profile: any) {
       const self = this;
       const config = {
         // @ts-ignore *defined in component
         endpoint: this.getEndpoint(this.endpointName),
-        method: "PATCH",
-        body: profile,
+        method: 'PATCH',
+        body: profile
       };
 
       sendRequest(config)
@@ -51,19 +47,19 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(
     public saveProfile(profile: any) {
       if (isEmptyObject(profile)) {
         // empty profile means no changes found
-        fireEvent(this, "toast", {
-          text: "All changes are saved.",
-          showCloseBtn: false,
+        fireEvent(this, 'toast', {
+          text: 'All changes are saved.',
+          showCloseBtn: false
         });
         return;
       }
 
-      fireEvent(this, "global-loading", {
-        message: "Saving...",
+      fireEvent(this, 'global-loading', {
+        message: 'Saving...',
         active: true,
-        loadingSource: this.profileSaveLoadingMsgSource,
+        loadingSource: this.profileSaveLoadingMsgSource
       });
-      this.set("_saveActionInProgress", true);
+      this.set('_saveActionInProgress', true);
       this._dispatchSaveProfileRequest(profile);
     }
 
@@ -74,11 +70,11 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(
 
     protected _hideProfileSaveLoadingMsg() {
       if (this._saveActionInProgress) {
-        fireEvent(this, "global-loading", {
+        fireEvent(this, 'global-loading', {
           active: false,
-          loadingSource: this.profileSaveLoadingMsgSource,
+          loadingSource: this.profileSaveLoadingMsgSource
         });
-        this.set("_saveActionInProgress", false);
+        this.set('_saveActionInProgress', false);
       }
     }
   }

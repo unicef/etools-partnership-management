@@ -1,38 +1,38 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/paper-input/paper-input.js";
-import "@polymer/paper-toggle-button/paper-toggle-button.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@unicef-polymer/etools-data-table/etools-data-table.js";
-import "@polymer/iron-icon/iron-icon";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import { EtoolsCurrency } from "@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
-import EndpointsMixin from "../../../../endpoints/endpoints-mixin.js";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import AjaxServerErrorsMixin from "../../../../mixins/ajax-server-errors-mixin.js";
-import PaginationMixin from "../../../../mixins/pagination-mixin.js";
-import RiskRatingMixin from "../../../../mixins/risk-rating-mixin.js";
-import CommonMixin from "../../../../mixins/common-mixin.js";
+import EndpointsMixin from '../../../../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import AjaxServerErrorsMixin from '../../../../mixins/ajax-server-errors-mixin.js';
+import PaginationMixin from '../../../../mixins/pagination-mixin.js';
+import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
+import CommonMixin from '../../../../mixins/common-mixin.js';
 
-import { pageCommonStyles } from "../../../../styles/page-common-styles";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles";
-import { SharedStyles } from "../../../../styles/shared-styles";
-import { riskRatingStyles } from "../../../../styles/risk-rating-styles";
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 
 declare const moment: any;
-import { AP_DOMAIN } from "../../../../../config/config";
+import {AP_DOMAIN} from '../../../../../config/config';
 
-import "./components/assessments-items.js";
-import "../../../../layout/monitoring-visits-list.js";
-import { fireEvent } from "../../../../utils/fire-custom-event";
-import { property } from "@polymer/decorators";
-import { PartnerAssessment } from "../../../../../models/partners.models";
-import { LabelAndValue } from "../../../../../typings/globals.types";
-import "./components/hact-edit-dialog";
-import clone from "lodash-es/clone";
+import './components/assessments-items.js';
+import '../../../../layout/monitoring-visits-list.js';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {PartnerAssessment} from '../../../../../models/partners.models';
+import {LabelAndValue} from '../../../../../typings/globals.types';
+import './components/hact-edit-dialog';
+import clone from 'lodash-es/clone';
 
 /**
  * @polymer
@@ -46,17 +46,12 @@ import clone from "lodash-es/clone";
  * @appliesMixin RiskRatingMixin
  */
 class PartnerFinancialAssurance extends EtoolsCurrency(
-  CommonMixin(
-    EndpointsMixin(
-      AjaxServerErrorsMixin(PaginationMixin(RiskRatingMixin(PolymerElement)))
-    )
-  )
+  CommonMixin(EndpointsMixin(AjaxServerErrorsMixin(PaginationMixin(RiskRatingMixin(PolymerElement)))))
 ) {
   static get template() {
     // language=HTML
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
-      ${riskRatingStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
       <style include="data-table-styles">
         :host {
           --paper-input-container-input-webkit-spinner: {
@@ -194,10 +189,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         }
       </style>
 
-      <etools-content-panel
-        panel-title="[[_getYear()]] Overview"
-        class="content-section"
-      >
+      <etools-content-panel panel-title="[[_getYear()]] Overview" class="content-section">
         <div class="row-h overview-header">
           <etools-data-table-column class="col col-1">
             HACT Risk Rating
@@ -205,10 +197,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <etools-data-table-column class="col col-2">
             Type of Assessment - Date of Assessment
           </etools-data-table-column>
-          <etools-data-table-column
-            class="col col-1 center-align"
-            title="Jan-Dec"
-          >
+          <etools-data-table-column class="col col-1 center-align" title="Jan-Dec">
             Cash Transfers (USD)
           </etools-data-table-column>
           <etools-data-table-column class="col col-2 center-align">
@@ -250,25 +239,19 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
           <div class="col col-2 center-align hact-values">
             <strong>
               [[partner.hact_values.programmatic_visits.planned.total]] /
-              <span class="green">
-                [[partner.hact_min_requirements.programme_visits]]</span
-              >
+              <span class="green"> [[partner.hact_min_requirements.programme_visits]]</span>
               / [[partner.hact_values.programmatic_visits.completed.total]]
             </strong>
           </div>
           <div class="col col-2 center-align hact-values">
             <strong>
-              <span class="green"
-                >[[partner.planned_engagement.spot_check_required]]
-              </span>
+              <span class="green">[[partner.planned_engagement.spot_check_required]] </span>
               / [[partner.hact_values.spot_checks.completed.total]]
             </strong>
           </div>
           <div class="col-2 col center-align hact-values">
             <strong>
-              <span class="green"
-                >[[_getMinReqAudits(partner.planned_engagement)]]
-              </span>
+              <span class="green">[[_getMinReqAudits(partner.planned_engagement)]] </span>
               / [[partner.hact_values.audits.completed]]
             </strong>
           </div>
@@ -295,24 +278,14 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         </div>
       </etools-content-panel>
 
-      <etools-content-panel
-        panel-title="Assurance Activities"
-        class="content-section"
-      >
+      <etools-content-panel panel-title="Assurance Activities" class="content-section">
         <div slot="panel-btns">
-          <paper-icon-button
-            icon="create"
-            title="Edit"
-            on-click="_openHactEditDialog"
-          >
-          </paper-icon-button>
+          <paper-icon-button icon="create" title="Edit" on-click="_openHactEditDialog"> </paper-icon-button>
         </div>
         <div class="planning-wrapper">
           <div class="layout-horizontal">
             <div class="table-main col-4 no-r-padd">
-              <div
-                class="table-main panel-row-tall row-h panel-table-row darker-bg"
-              >
+              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
                 <div class="col-4 table-title">PROGRAMMATIC VISITS</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
@@ -335,9 +308,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
                   [[partner.hact_values.programmatic_visits.planned.q4]]
                 </div>
                 <div class="col-2 darker-bg layout-horizontal totals">
-                  <strong
-                    >[[partner.hact_values.programmatic_visits.planned.total]]</strong
-                  >
+                  <strong>[[partner.hact_values.programmatic_visits.planned.total]]</strong>
                 </div>
               </div>
 
@@ -355,20 +326,14 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
                 <div class="quarter">
                   [[partner.hact_values.programmatic_visits.completed.q4]]
                 </div>
-                <div
-                  class="col-2 darker-bg totals layout-horizontal center-align"
-                >
-                  <strong
-                    >[[partner.hact_values.programmatic_visits.completed.total]]</strong
-                  >
+                <div class="col-2 darker-bg totals layout-horizontal center-align">
+                  <strong>[[partner.hact_values.programmatic_visits.completed.total]]</strong>
                 </div>
               </div>
             </div>
 
             <div class="table-main col-4 margin-l no-r-padd">
-              <div
-                class="table-main panel-row-tall row-h panel-table-row darker-bg"
-              >
+              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
                 <div class="col-4 table-title">SPOT CHECKS</div>
                 <div class="quarter">Q1</div>
                 <div class="quarter">Q2</div>
@@ -391,9 +356,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
                   [[partner.planned_engagement.spot_check_planned_q4]]
                 </div>
                 <div class="col-2 darker-bg totals layout-horizontal">
-                  <strong
-                    >[[partner.planned_engagement.total_spot_check_planned]]</strong
-                  >
+                  <strong>[[partner.planned_engagement.total_spot_check_planned]]</strong>
                 </div>
               </div>
 
@@ -411,36 +374,26 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
                 <div class="quarter">
                   [[partner.hact_values.spot_checks.completed.q4]]
                 </div>
-                <div
-                  class="col-2 darker-bg totals layout-horizontal center-align"
-                >
-                  <strong
-                    >[[partner.hact_values.spot_checks.completed.total]]</strong
-                  >
+                <div class="col-2 darker-bg totals layout-horizontal center-align">
+                  <strong>[[partner.hact_values.spot_checks.completed.total]]</strong>
                 </div>
               </div>
             </div>
 
             <div class="table-main col-2 margin-l no-r-padd">
-              <div
-                class="table-main panel-row-tall row-h panel-table-row darker-bg"
-              >
+              <div class="table-main panel-row-tall row-h panel-table-row darker-bg">
                 <div class="flex-c table-title">AUDITS</div>
                 <div class="col-5 center-align">TOTAL</div>
               </div>
               <div class="row-h panel-table-row ">
                 <div class="flex-c">Required</div>
-                <div
-                  class="col-5 layout-horizontal center-align totals darker-bg"
-                >
+                <div class="col-5 layout-horizontal center-align totals darker-bg">
                   [[partner.hact_min_requirements.audits]]
                 </div>
               </div>
               <div class="row-h panel-table-row ">
                 <div class="flex-c">Completed</div>
-                <div
-                  class="col-5 layout-horizontal center-align totals darker-bg"
-                >
+                <div class="col-5 layout-horizontal center-align totals darker-bg">
                   [[partner.hact_values.audits.completed]]
                 </div>
               </div>
@@ -454,21 +407,15 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         class="content-section"
         panel-title="Assessments  and Assurance ([[allEngagements.length]])"
       >
-        <div
-          class="panel-row-tall panel-table-row layout-horizontal engagements-header"
-        >
+        <div class="panel-row-tall panel-table-row layout-horizontal engagements-header">
           <etools-data-table-column class="col-3">
             Engagement Type
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Date
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Amount Tested <br />(USD)
-          </etools-data-table-column>
-          <etools-data-table-column class="col-3 col">
-            Outstanding Findings <br />(USD)
-          </etools-data-table-column>
+          <etools-data-table-column class="col-2"> Amount Tested <br />(USD) </etools-data-table-column>
+          <etools-data-table-column class="col-3 col"> Outstanding Findings <br />(USD) </etools-data-table-column>
           <etools-data-table-column class="col">
             Report
           </etools-data-table-column>
@@ -498,13 +445,8 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
         </etools-data-table-footer>
       </etools-content-panel>
 
-      <etools-content-panel
-        id="monitoring-visits-panel"
-        class="content-section"
-        panel-title="Programmatic Visits"
-      >
-        <monitoring-visits-list partner-id="[[partner.id]]" show-tpm-visits>
-        </monitoring-visits-list>
+      <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Programmatic Visits">
+        <monitoring-visits-list partner-id="[[partner.id]]" show-tpm-visits> </monitoring-visits-list>
       </etools-content-panel>
 
       <assessments-items
@@ -517,46 +459,46 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   auditorPortalBasePath: string = AP_DOMAIN;
 
-  @property({ type: Array })
+  @property({type: Array})
   engagements: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   allEngagements: any[] = [];
 
   @property({
     type: Object,
     reflectToAttribute: true,
-    observer: "_partnerReceived",
+    observer: '_partnerReceived'
   })
   partner: any = {};
 
-  @property({ type: Object })
+  @property({type: Object})
   TYPES: any = {
-    audit: "Audit",
-    ma: "Micro Assessment",
-    sc: "Spot Check",
-    sa: "Special Audit",
+    audit: 'Audit',
+    ma: 'Micro Assessment',
+    sc: 'Spot Check',
+    sa: 'Special Audit'
   };
 
-  @property({ type: Array })
+  @property({type: Array})
   basisOptions: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   auditOptions: any[] = [
-    { label: "NO", value: "NO" },
-    { label: "YES", value: "YES" },
+    {label: 'NO', value: 'NO'},
+    {label: 'YES', value: 'YES'}
   ];
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   editMode!: boolean;
 
   private _hactDialog!: any;
 
   static get observers() {
-    return ["_paginate(paginator.page, paginator.page_size)"];
+    return ['_paginate(paginator.page, paginator.page_size)'];
   }
 
   public connectedCallback() {
@@ -566,38 +508,29 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
      * triggered by parent element on stamp or by tap event on tabs
      */
 
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "partners-page",
+      loadingSource: 'partners-page'
     });
 
-    fireEvent(this, "tab-content-attached");
+    fireEvent(this, 'tab-content-attached');
     this._assessmentUpdated = this._assessmentUpdated.bind(this);
     this._assessmentAdded = this._assessmentAdded.bind(this);
 
-    this.addEventListener(
-      "assessment-updated-step2",
-      this._assessmentUpdated as any
-    );
-    this.addEventListener(
-      "assessment-added-step2",
-      this._assessmentAdded as any
-    );
+    this.addEventListener('assessment-updated-step2', this._assessmentUpdated as any);
+    this.addEventListener('assessment-added-step2', this._assessmentAdded as any);
 
     this._createHactEditDialog();
   }
 
   _createHactEditDialog() {
-    this._hactDialog = document.createElement("hact-edit-dialog") as any;
-    this._hactDialog.setAttribute("id", "_hactDialog");
+    this._hactDialog = document.createElement('hact-edit-dialog') as any;
+    this._hactDialog.setAttribute('id', '_hactDialog');
 
-    document.querySelector("body")!.appendChild(this._hactDialog);
+    document.querySelector('body')!.appendChild(this._hactDialog);
     this._refreshPartner = this._refreshPartner.bind(this);
-    this._hactDialog.set("toastSource", this);
-    this._hactDialog.addEventListener(
-      "hact-values-saved",
-      this._refreshPartner
-    );
+    this._hactDialog.set('toastSource', this);
+    this._hactDialog.addEventListener('hact-values-saved', this._refreshPartner);
   }
 
   _refreshPartner(e: CustomEvent) {
@@ -605,40 +538,31 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
   }
 
   _removeListeners() {
-    this.removeEventListener(
-      "assessment-updated-step2",
-      this._assessmentUpdated as any
-    );
-    this.removeEventListener(
-      "assessment-added-step2",
-      this._assessmentAdded as any
-    );
-    this._hactDialog.removeEventListener(
-      "hact-values-saved",
-      this._refreshPartner as any
-    );
+    this.removeEventListener('assessment-updated-step2', this._assessmentUpdated as any);
+    this.removeEventListener('assessment-added-step2', this._assessmentAdded as any);
+    this._hactDialog.removeEventListener('hact-values-saved', this._refreshPartner as any);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this._removeListeners();
     if (this._hactDialog) {
-      document.querySelector("body")!.removeChild(this._hactDialog);
+      document.querySelector('body')!.removeChild(this._hactDialog);
     }
   }
 
   public _init(engagements: any) {
-    this.set("allEngagements", engagements);
+    this.set('allEngagements', engagements);
 
-    this.set("engagements", []);
+    this.set('engagements', []);
 
     this.set(
-      "paginator",
+      'paginator',
       JSON.parse(
         JSON.stringify({
           count: engagements.length,
           page: 1,
-          page_size: 5,
+          page_size: 5
         })
       )
     );
@@ -651,13 +575,13 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
 
   public _getEngagementsRequestOptions(partnerId: any) {
     return {
-      endpoint: this.getEndpoint("engagements"),
+      endpoint: this.getEndpoint('engagements'),
       params: {
-        ordering: "unique_id",
-        status: "final",
-        partner: partnerId,
+        ordering: 'unique_id',
+        status: 'final',
+        partner: partnerId
       },
-      csrf: true,
+      csrf: true
     };
   }
 
@@ -672,31 +596,27 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
       // @ts-ignore
       .catch((err: any) => this.handleErrorResponse(err));
 
-    this.set("basisOptions", []);
+    this.set('basisOptions', []);
     this._addBasisFromPartner();
   }
 
   public _addBasisFromPartner() {
-    this.set("basisOptions", [
+    this.set('basisOptions', [
       ...this.basisOptions,
       ...this.partner.assessments.map((a: PartnerAssessment) => ({
         label: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`,
-        value: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`,
-      })),
+        value: `${a.type} - ${this.getDateDisplayValue(a.completed_date!)}`
+      }))
     ]);
   }
 
   public _addBasisFromEngagements(engagements: any) {
-    this.set("basisOptions", [
+    this.set('basisOptions', [
       ...this.basisOptions,
       ...engagements.map((e: any) => ({
-        label: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(
-          e.status_date
-        )}`,
-        value: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(
-          e.status_date
-        )}`,
-      })),
+        label: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`,
+        value: `${this.TYPES[e.engagement_type]} - ${this.getDateDisplayValue(e.status_date)}`
+      }))
     ]);
   }
 
@@ -708,7 +628,7 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     engagements = engagements
       .sort((a, b) => moment(b.status_date) - moment(a.status_date))
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-    this.set("engagements", engagements);
+    this.set('engagements', engagements);
   }
 
   public _getYear() {
@@ -731,21 +651,14 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
   // }
 
   public _getMinReqAudits(plannedEngagement: any) {
-    return !plannedEngagement
-      ? 0
-      : Number(plannedEngagement.scheduled_audit) +
-          Number(plannedEngagement.special_audit);
+    return !plannedEngagement ? 0 : Number(plannedEngagement.scheduled_audit) + Number(plannedEngagement.special_audit);
   }
 
-  public _disableBasisForRiskRating(
-    editMode: boolean,
-    typeOfAssessment: any,
-    rating: any
-  ) {
+  public _disableBasisForRiskRating(editMode: boolean, typeOfAssessment: any, rating: any) {
     return (
       !editMode ||
-      (typeOfAssessment === "Micro Assessment" && rating === "Non Required") ||
-      ["Low Risk Assumed", "High Risk Assumed"].indexOf(typeOfAssessment) > -1
+      (typeOfAssessment === 'Micro Assessment' && rating === 'Non Required') ||
+      ['Low Risk Assumed', 'High Risk Assumed'].indexOf(typeOfAssessment) > -1
     );
   }
 
@@ -757,26 +670,17 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     this._updateBassisForRiskRatingOptions(e.detail.before, e.detail.after);
   }
 
-  _updateBassisForRiskRatingOptions(
-    oldAssessm: PartnerAssessment,
-    updatedAssessm: PartnerAssessment
-  ) {
-    const oldBasisTxt = `${oldAssessm.type} - ${this.getDateDisplayValue(
-      oldAssessm.completed_date!
-    )}`;
-    const updatedBasisTxt = `${
-      updatedAssessm.type
-    } - ${this.getDateDisplayValue(updatedAssessm.completed_date!)}`;
+  _updateBassisForRiskRatingOptions(oldAssessm: PartnerAssessment, updatedAssessm: PartnerAssessment) {
+    const oldBasisTxt = `${oldAssessm.type} - ${this.getDateDisplayValue(oldAssessm.completed_date!)}`;
+    const updatedBasisTxt = `${updatedAssessm.type} - ${this.getDateDisplayValue(updatedAssessm.completed_date!)}`;
 
     if (this.partner.basis_for_risk_rating === oldBasisTxt) {
-      fireEvent(this, "assessment-updated-step3", updatedBasisTxt);
+      fireEvent(this, 'assessment-updated-step3', updatedBasisTxt);
     } else {
-      const index = this.basisOptions.findIndex(
-        (b: LabelAndValue) => b.label === oldBasisTxt
-      );
-      this.splice("basisOptions", index, 1, {
+      const index = this.basisOptions.findIndex((b: LabelAndValue) => b.label === oldBasisTxt);
+      this.splice('basisOptions', index, 1, {
         label: updatedBasisTxt,
-        value: updatedBasisTxt,
+        value: updatedBasisTxt
       });
     }
   }
@@ -785,13 +689,11 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     if (!e.detail || !Object.keys(e.detail)) {
       return;
     }
-    const basisVal = `${e.detail.type} - ${this.getDateDisplayValue(
-      e.detail.completed_date!
-    )}`;
+    const basisVal = `${e.detail.type} - ${this.getDateDisplayValue(e.detail.completed_date!)}`;
 
-    this.push("basisOptions", {
+    this.push('basisOptions', {
       value: basisVal,
-      label: basisVal,
+      label: basisVal
     });
   }
 
@@ -801,7 +703,4 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
   }
 }
 
-window.customElements.define(
-  "partner-financial-assurance",
-  PartnerFinancialAssurance
-);
+window.customElements.define('partner-financial-assurance', PartnerFinancialAssurance);

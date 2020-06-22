@@ -1,22 +1,22 @@
-import "@polymer/paper-styles/element-styles/paper-material-styles.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-icon/iron-icon.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/iron-label/iron-label.js";
-import { EtoolsCurrency } from "@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js";
+import '@polymer/paper-styles/element-styles/paper-material-styles.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/iron-label/iron-label.js';
+import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
-import "../../../../layout/etools-form-element-wrapper.js";
+import '../../../../layout/etools-form-element-wrapper.js';
 
-import "./sent-bk-comments.js";
-import CommonMixin from "../../../../mixins/common-mixin.js";
-import { PolymerElement, html } from "@polymer/polymer";
-import { fireEvent } from "../../../../utils/fire-custom-event.js";
-import CONSTANTS from "../../../../../config/app-constants.js";
-import { pageCommonStyles } from "../../../../styles/page-common-styles.js";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles.js";
-import { SharedStyles } from "../../../../styles/shared-styles.js";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../typings/globals.types.js";
+import './sent-bk-comments.js';
+import CommonMixin from '../../../../mixins/common-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import CONSTANTS from '../../../../../config/app-constants.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -26,7 +26,7 @@ import { GenericObject } from "../../../../../typings/globals.types.js";
  */
 class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
   static get is() {
-    return "report-summary";
+    return 'report-summary';
   }
 
   static get template() {
@@ -36,7 +36,7 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
         .remove-padding {
           padding: 0 !important;
         }
-        iron-icon[icon="speaker-notes"] {
+        iron-icon[icon='speaker-notes'] {
           color: var(--primary-color);
           padding-top: 14px;
           padding-left: 8px;
@@ -63,23 +63,14 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
       <div class="content-section paper-material remove-padding" elevation="1">
         <div class="row-h b-border">
           <div class="col col-5">
-            <etools-form-element-wrapper
-              label="Submitted By"
-              value="[[getDisplayValue(report.submitted_by)]]"
-            >
+            <etools-form-element-wrapper label="Submitted By" value="[[getDisplayValue(report.submitted_by)]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-2">
-            <etools-form-element-wrapper
-              label="Submission Date"
-              value="[[_displayOrDefault(report.submission_date)]]"
-            >
+            <etools-form-element-wrapper label="Submission Date" value="[[_displayOrDefault(report.submission_date)]]">
             </etools-form-element-wrapper>
           </div>
-          <div
-            class="col col-3 report-status"
-            hidden$="[[statusIs(report.status, 'Sub')]]"
-          >
+          <div class="col col-3 report-status" hidden$="[[statusIs(report.status, 'Sub')]]">
             <etools-form-element-wrapper
               label="Report Status"
               class="w-auto"
@@ -93,10 +84,7 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
             ></iron-icon>
           </div>
           <div class="col col-2" hidden$="[[statusIs(report.status, 'Sub')]]">
-            <etools-form-element-wrapper
-              label="Date of Status"
-              value="[[_displayOrDefault(report.review_date)]]"
-            >
+            <etools-form-element-wrapper label="Date of Status" value="[[_displayOrDefault(report.review_date)]]">
             </etools-form-element-wrapper>
           </div>
         </div>
@@ -128,22 +116,14 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
             </etools-form-element-wrapper>
           </div>
         </div>
-        <div
-          class="row-padding"
-          hidden$="[[isPrpSRReport(report.report_type)]]"
-        >
+        <div class="row-padding" hidden$="[[isPrpSRReport(report.report_type)]]">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
               <iron-label for="file_[[index]]">
                 [[item.type]]
               </iron-label>
 
-              <a
-                class="primary"
-                id="file_[[index]]"
-                href="[[item.path]]"
-                target="_blank"
-              >
+              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">
                 [[item.file_name]]
               </a>
             </div>
@@ -153,13 +133,13 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   report!: GenericObject;
 
-  @property({ type: Array })
+  @property({type: Array})
   reportAttachments!: any[];
 
-  @property({ type: Object })
+  @property({type: Object})
   sentBkCommentsDialog!: any;
 
   ready() {
@@ -173,22 +153,22 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
      * Disable loading message for report summary tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "reports-page",
+      loadingSource: 'reports-page'
     });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.sentBkCommentsDialog) {
-      document.querySelector("body")!.removeChild(this.sentBkCommentsDialog);
+      document.querySelector('body')!.removeChild(this.sentBkCommentsDialog);
     }
   }
 
   _createSentBkCommentsDialog() {
-    this.sentBkCommentsDialog = document.createElement("sent-bk-comments");
-    document.querySelector("body")!.appendChild(this.sentBkCommentsDialog);
+    this.sentBkCommentsDialog = document.createElement('sent-bk-comments');
+    document.querySelector('body')!.appendChild(this.sentBkCommentsDialog);
   }
 
   /**
@@ -202,25 +182,25 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
 
   _displayOrDefault(val: string) {
     if (!val) {
-      return "-";
+      return '-';
     }
     return val;
   }
 
   getReportStatus(status: string, username: string) {
-    let stat = "";
+    let stat = '';
     switch (status) {
-      case "Acc":
-        stat = "Accepted by ";
+      case 'Acc':
+        stat = 'Accepted by ';
         break;
-      case "Sen":
-        stat = "Sent back by ";
+      case 'Sen':
+        stat = 'Sent back by ';
         break;
       default:
-        stat = "";
+        stat = '';
     }
 
-    return stat + (username ? username : "N/A");
+    return stat + (username ? username : 'N/A');
   }
 
   statusIs(currentStatus: string, status: string) {

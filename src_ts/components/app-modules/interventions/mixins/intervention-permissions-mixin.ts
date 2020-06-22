@@ -1,16 +1,13 @@
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import {
-  Intervention,
-  InterventionPermissionsFields,
-} from "../../../../typings/intervention.types";
-import CONSTANTS from "../../../../config/app-constants";
-import { store } from "../../../../store.js";
-import { setPageDataPermissions } from "../../../../actions/page-data";
-import { isEmptyObject } from "../../../utils/utils";
-import { fireEvent } from "../../../utils/fire-custom-event";
-import { Constructor, Permission } from "../../../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import {Intervention, InterventionPermissionsFields} from '../../../../typings/intervention.types';
+import CONSTANTS from '../../../../config/app-constants';
+import {store} from '../../../../store.js';
+import {setPageDataPermissions} from '../../../../actions/page-data';
+import {isEmptyObject} from '../../../utils/utils';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {Constructor, Permission} from '../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * PD/SSFA permissions mixin
@@ -18,15 +15,13 @@ import { property } from "@polymer/decorators";
  * @mixinFunction
  * @appliesMixin ReduxPermissionsUpdaterMixin
  */
-function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class InterventionPermissionsClass extends baseClass {
     /* eslint-enable arrow-parens */
-    @property({ type: Object })
+    @property({type: Object})
     _intervNoEditPerm: Permission<InterventionPermissionsFields> = {
       edit: new InterventionPermissionsFields(),
-      required: new InterventionPermissionsFields(),
+      required: new InterventionPermissionsFields()
     };
 
     // ---*Defined in the component
@@ -45,54 +40,50 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
     }
 
     _initPermissionsListeners() {
-      this._signedDocChangedForDraft = this._signedDocChangedForDraft.bind(
-        this
-      );
+      this._signedDocChangedForDraft = this._signedDocChangedForDraft.bind(this);
       this._restoreInterventionOriginalDataAndPermissions = this._restoreInterventionOriginalDataAndPermissions.bind(
         this
       );
 
       this.addEventListener(
-        "signed-doc-change-for-draft",
+        'signed-doc-change-for-draft',
         this._signedDocChangedForDraft as EventListenerOrEventListenerObject
       );
       this.addEventListener(
-        "restore-original-permissions",
-        this
-          ._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject
+        'restore-original-permissions',
+        this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject
       );
     }
 
     _removePermissionsListeners() {
       this.removeEventListener(
-        "signed-doc-change-for-draft",
+        'signed-doc-change-for-draft',
         this._signedDocChangedForDraft as EventListenerOrEventListenerObject
       );
       this.removeEventListener(
-        "restore-original-permissions",
-        this
-          ._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject
+        'restore-original-permissions',
+        this._restoreInterventionOriginalDataAndPermissions as EventListenerOrEventListenerObject
       );
     }
 
     _getNewIntervRequiredFields() {
-      return ["partner", "agreement", "document_type", "title"];
+      return ['partner', 'agreement', 'document_type', 'title'];
     }
 
     _getDraftToSignedRequiredFields(intervention: Intervention) {
       const fields = [
-        "offices",
-        "unicef_focal_points",
-        "partner_focal_points",
-        "sections",
-        "partner_authorized_officer_signatory",
-        "signed_by_partner_date",
-        "signed_by_unicef_date",
-        "signed_pd_attachment",
-        "submission_date",
+        'offices',
+        'unicef_focal_points',
+        'partner_focal_points',
+        'sections',
+        'partner_authorized_officer_signatory',
+        'signed_by_partner_date',
+        'signed_by_unicef_date',
+        'signed_pd_attachment',
+        'submission_date'
       ];
       if (!intervention.contingency_pd) {
-        fields.push("start", "end");
+        fields.push('start', 'end');
       }
       return fields;
     }
@@ -112,7 +103,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
           newIntervPerm.required[fieldName] = true;
         }
       }
-      const notEditableFieldsForDraft = ["amendments", "frs"];
+      const notEditableFieldsForDraft = ['amendments', 'frs'];
       // set editable fields
       for (fieldName in newIntervPerm.edit) {
         if (notEditableFieldsForDraft.indexOf(fieldName) === -1) {
@@ -123,7 +114,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
     }
 
     _setPermissions(perm: Permission<InterventionPermissionsFields>) {
-      this.set("intervention.permissions", perm);
+      this.set('intervention.permissions', perm);
       store.dispatch(setPageDataPermissions(perm));
       this._updateRelatedPermStyles();
     }
@@ -135,32 +126,32 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
       forceReviewUiValidationOnAttach?: boolean
     ) {
       setTimeout(() => {
-        const details = this.shadowRoot!.querySelector(
-          "#interventionDetails"
-        ) as PolymerElement & { validate(): boolean };
-        const reviewAndSign = this.shadowRoot!.querySelector(
-          "#interventionReviewAndSign"
-        ) as PolymerElement & { validate(): boolean };
-        if (details && typeof details.updateStyles === "function") {
+        const details = this.shadowRoot!.querySelector('#interventionDetails') as PolymerElement & {
+          validate(): boolean;
+        };
+        const reviewAndSign = this.shadowRoot!.querySelector('#interventionReviewAndSign') as PolymerElement & {
+          validate(): boolean;
+        };
+        if (details && typeof details.updateStyles === 'function') {
           details.updateStyles();
 
           if (forceDetUiValidationOnAttach) {
             // trigger validations (in case a save attempt failed and the tab fields validation messages should show)
             details.validate();
-            this.set("_forceDetUiValidationOnAttach", false);
+            this.set('_forceDetUiValidationOnAttach', false);
           }
         }
 
         if (onlyDetails) {
           return;
         }
-        if (reviewAndSign && typeof reviewAndSign.updateStyles === "function") {
+        if (reviewAndSign && typeof reviewAndSign.updateStyles === 'function') {
           reviewAndSign.updateStyles();
 
           if (forceReviewUiValidationOnAttach) {
             // trigger validations (in case a save attempt failed and the tab fields validation messages should show)
             reviewAndSign.validate();
-            this.set("_forceReviewUiValidationOnAttach", false);
+            this.set('_forceReviewUiValidationOnAttach', false);
           }
         }
       }, 50);
@@ -170,10 +161,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
       this._setPermissions(this._getNoEditPermissionsClone());
     }
 
-    setInterventionPermissions(
-      newIntervention: boolean,
-      perm?: Permission<InterventionPermissionsFields>
-    ) {
+    setInterventionPermissions(newIntervention: boolean, perm?: Permission<InterventionPermissionsFields>) {
       if (newIntervention) {
         this._setPermissions(this._getNewInterventionPermissions());
       } else {
@@ -186,9 +174,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
 
     getDraftToSignedTransitionPermissions(intervention: Intervention) {
       const currentPerm = intervention.permissions;
-      const reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields(
-        intervention
-      );
+      const reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields(intervention);
       const perm = JSON.parse(JSON.stringify(currentPerm));
       reqFieldsForSignedStatus.forEach(function (field) {
         perm.required[field] = true;
@@ -200,20 +186,17 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
     checkAndUpdatePlannedBudgetPermissions(status?: string) {
       if (
         status === CONSTANTS.STATUSES.Signed.toLowerCase() &&
-        this.get("intervention.permissions.edit.planned_budget") &&
-        !this.get("intervention.in_amendment")
+        this.get('intervention.permissions.edit.planned_budget') &&
+        !this.get('intervention.in_amendment')
       ) {
         // there is a special requirement that in signed status only unicef_cash should be editable
         // but in amendment mode all of planned budget should be editable
-        this.set("intervention.permissions.edit.planned_budget", false);
-        this.set(
-          "intervention.permissions.edit.planned_budget_unicef_cash",
-          true
-        );
+        this.set('intervention.permissions.edit.planned_budget', false);
+        this.set('intervention.permissions.edit.planned_budget_unicef_cash', true);
       } else {
         this.set(
-          "intervention.permissions.edit.planned_budget_unicef_cash",
-          this.get("intervention.permissions.edit.planned_budget")
+          'intervention.permissions.edit.planned_budget_unicef_cash',
+          this.get('intervention.permissions.edit.planned_budget')
         );
       }
       store.dispatch(setPageDataPermissions(this.intervention.permissions));
@@ -225,57 +208,41 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
      * new/unsaved amendments are deleted
      */
     restoreDetailsTabOriginalValuesRelatedToAmendments() {
-      const status = this.get("intervention.status");
+      const status = this.get('intervention.status');
 
-      if (
-        [
-          CONSTANTS.STATUSES.Signed.toLowerCase(),
-          CONSTANTS.STATUSES.Active.toLowerCase(),
-        ].indexOf(status) === -1
-      ) {
+      if ([CONSTANTS.STATUSES.Signed.toLowerCase(), CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) === -1) {
         return;
       }
       let fieldsToRestore = [
-        "agreement",
-        "document_type",
-        "title",
-        "country_programme",
-        "sections",
-        "planned_budget",
-        "result_links",
-        "planned_visits",
+        'agreement',
+        'document_type',
+        'title',
+        'country_programme',
+        'sections',
+        'planned_budget',
+        'result_links',
+        'planned_visits'
       ];
-      if (status === "active") {
-        fieldsToRestore = fieldsToRestore.concat(["start", "end"]);
+      if (status === 'active') {
+        fieldsToRestore = fieldsToRestore.concat(['start', 'end']);
       }
 
-      const unicefCashCopy = this.get(
-        "intervention.planned_budget.unicef_cash_local"
-      );
+      const unicefCashCopy = this.get('intervention.planned_budget.unicef_cash_local');
 
       fieldsToRestore.forEach((field: string) => {
-        const dataPath = "intervention." + field;
-        const originalDataPath = "originalIntervention." + field;
-        this.set(
-          dataPath,
-          JSON.parse(JSON.stringify(this.get(originalDataPath)))
-        );
-        if (
-          field === "planned_budget" &&
-          status === CONSTANTS.STATUSES.Signed.toLowerCase()
-        ) {
+        const dataPath = 'intervention.' + field;
+        const originalDataPath = 'originalIntervention.' + field;
+        this.set(dataPath, JSON.parse(JSON.stringify(this.get(originalDataPath))));
+        if (field === 'planned_budget' && status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
           // if planned_budget we need to make sure in signed status unicef_cash remains the same
-          this.set(
-            "intervention.planned_budget.unicef_cash_local",
-            unicefCashCopy
-          );
+          this.set('intervention.planned_budget.unicef_cash_local', unicefCashCopy);
         }
       });
-      fireEvent(this, "toast", {
+      fireEvent(this, 'toast', {
         text:
-          "There are no new/unsaved amendments.\n" +
-          "All fields unlocked by amendments are restored to the original values.",
-        showCloseBtn: true,
+          'There are no new/unsaved amendments.\n' +
+          'All fields unlocked by amendments are restored to the original values.',
+        showCloseBtn: true
       });
     }
 
@@ -296,10 +263,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
     }
 
     _canRestoreOriginalPermissions() {
-      if (
-        !isEmptyObject(this.originalIntervention) &&
-        !isEmptyObject(this.intervention)
-      ) {
+      if (!isEmptyObject(this.originalIntervention) && !isEmptyObject(this.intervention)) {
         // avoid restoring previous intervention permissions
         return this.originalIntervention.id === this.intervention.id;
       }
@@ -309,30 +273,24 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
     _signedDocChangedForDraft(e: CustomEvent) {
       e.stopImmediatePropagation();
       if (e.detail.docSelected) {
-        this.setInterventionPermissions(
-          false,
-          this.getDraftToSignedTransitionPermissions(this.intervention)
-        );
+        this.setInterventionPermissions(false, this.getDraftToSignedTransitionPermissions(this.intervention));
       } else {
         if (!this._canRestoreOriginalPermissions()) {
           return;
         }
-        this.setInterventionPermissions(
-          false,
-          this.originalIntervention.permissions
-        );
+        this.setInterventionPermissions(false, this.originalIntervention.permissions);
         this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
         // update validation errors
-        const details = this.shadowRoot!.querySelector(
-          "#interventionDetails"
-        ) as PolymerElement & { validate(): boolean };
-        if (details && typeof details.validate === "function") {
+        const details = this.shadowRoot!.querySelector('#interventionDetails') as PolymerElement & {
+          validate(): boolean;
+        };
+        if (details && typeof details.validate === 'function') {
           details.validate();
         }
-        const reviewAndSign = this.shadowRoot!.querySelector(
-          "#interventionReviewAndSign"
-        ) as PolymerElement & { validate(): boolean };
-        if (reviewAndSign && typeof reviewAndSign.validate === "function") {
+        const reviewAndSign = this.shadowRoot!.querySelector('#interventionReviewAndSign') as PolymerElement & {
+          validate(): boolean;
+        };
+        if (reviewAndSign && typeof reviewAndSign.validate === 'function') {
           reviewAndSign.validate();
         }
       }
@@ -343,10 +301,7 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(
       if (!this._canRestoreOriginalPermissions()) {
         return;
       }
-      this.setInterventionPermissions(
-        false,
-        this.originalIntervention.permissions
-      );
+      this.setInterventionPermissions(false, this.originalIntervention.permissions);
       this.checkAndUpdatePlannedBudgetPermissions();
       this.restoreDetailsTabOriginalValuesRelatedToAmendments();
     }

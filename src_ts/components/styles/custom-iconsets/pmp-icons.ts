@@ -1,5 +1,5 @@
-import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
-import { html } from "@polymer/polymer";
+import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
+import {html} from '@polymer/polymer';
 /* eslint-disable max-len */
 
 export const pmpMainIcons = html`
@@ -14,12 +14,7 @@ export const pmpMainIcons = html`
           fill="none"
           fill-rule="evenodd"
         >
-          <g
-            id="32"
-            transform="translate(-98.000000, -371.000000)"
-            fill-rule="nonzero"
-            fill="#FFFFFF"
-          >
+          <g id="32" transform="translate(-98.000000, -371.000000)" fill-rule="nonzero" fill="#FFFFFF">
             <g id="App-wrapper" transform="translate(80.000000, 353.000000)">
               <g id="pm">
                 <path

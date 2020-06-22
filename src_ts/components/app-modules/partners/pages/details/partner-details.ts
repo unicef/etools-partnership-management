@@ -1,37 +1,37 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-icons/communication-icons.js";
-import "@polymer/paper-input/paper-input";
-import "@polymer/paper-toggle-button/paper-toggle-button.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/communication-icons.js';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
 
-import CommonMixin from "../../../../mixins/common-mixin.js";
-import RiskRatingMixin from "../../../../mixins/risk-rating-mixin.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown-multi.js";
-import "@unicef-polymer/etools-data-table/etools-data-table.js";
-import "../../../../layout/etools-form-element-wrapper.js";
+import CommonMixin from '../../../../mixins/common-mixin.js';
+import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '../../../../layout/etools-form-element-wrapper.js';
 
-import "../../../../layout/etools-error-messages-box.js";
-import "../../../../layout/icons-actions.js";
+import '../../../../layout/etools-error-messages-box.js';
+import '../../../../layout/icons-actions.js';
 
-import { pageCommonStyles } from "../../../../styles/page-common-styles.js";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles.js";
-import { SharedStyles } from "../../../../styles/shared-styles.js";
-import { riskRatingStyles } from "../../../../styles/risk-rating-styles.js";
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
 
-import { isEmptyObject, isJsonStrMatch } from "../../../../utils/utils.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../store.js";
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
 
-import "./components/edit-core-values-assessment";
-import "./components/staff-members";
-import { fireEvent } from "../../../../utils/fire-custom-event.js";
-import { convertDate } from "../../../../utils/date-utils";
-import { property } from "@polymer/decorators";
-import { LabelAndValue } from "../../../../../typings/globals.types.js";
-import { EditCoreValuesAssessmentEl } from "./components/edit-core-values-assessment";
-import { Partner } from "../../../../../models/partners.models.js";
+import './components/edit-core-values-assessment';
+import './components/staff-members';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {convertDate} from '../../../../utils/date-utils';
+import {property} from '@polymer/decorators';
+import {LabelAndValue} from '../../../../../typings/globals.types.js';
+import {EditCoreValuesAssessmentEl} from './components/edit-core-values-assessment';
+import {Partner} from '../../../../../models/partners.models.js';
 declare const moment: any;
 
 /**
@@ -41,14 +41,11 @@ declare const moment: any;
  * @appliesMixin CommonMixin
  * @appliesMixin RiskRatingMixin
  */
-class PartnerDetails extends connect(store)(
-  CommonMixin(RiskRatingMixin(PolymerElement))
-) {
+class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerElement))) {
   static get template() {
     // language=HTML
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
-      ${riskRatingStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${riskRatingStyles}
       <style include="data-table-styles">
         :host {
           @apply --layout-vertical;
@@ -85,24 +82,14 @@ class PartnerDetails extends connect(store)(
         }
       </style>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Partner Details"
-      >
+      <etools-content-panel class="content-section" panel-title="Partner Details">
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper
-              label="Full Name"
-              title$="[[partner.name]]"
-              value="[[partner.name]]"
-            >
+            <etools-form-element-wrapper label="Full Name" title$="[[partner.name]]" value="[[partner.name]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper
-              label="Short Name"
-              value="[[partner.short_name]]"
-            >
+            <etools-form-element-wrapper label="Short Name" value="[[partner.short_name]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
@@ -117,17 +104,11 @@ class PartnerDetails extends connect(store)(
 
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper
-              label="Vendor Number"
-              value="[[partner.vendor_number]]"
-            >
+            <etools-form-element-wrapper label="Vendor Number" value="[[partner.vendor_number]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper
-              label="Partner Type"
-              value="[[_partnerComputedType]]"
-            >
+            <etools-form-element-wrapper label="Partner Type" value="[[_partnerComputedType]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
@@ -142,32 +123,18 @@ class PartnerDetails extends connect(store)(
         </div>
 
         <div class="row-h flex-c">
-          <etools-form-element-wrapper
-            label="Address"
-            title$="[[partner.address]]"
-            value="[[partner.address]]"
-          >
-            <iron-icon
-              slot="prefix"
-              icon="communication:location-on"
-            ></iron-icon>
+          <etools-form-element-wrapper label="Address" title$="[[partner.address]]" value="[[partner.address]]">
+            <iron-icon slot="prefix" icon="communication:location-on"></iron-icon>
           </etools-form-element-wrapper>
         </div>
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-form-element-wrapper
-              label="Phone Number"
-              value="[[partner.phone_number]]"
-            >
+            <etools-form-element-wrapper label="Phone Number" value="[[partner.phone_number]]">
               <iron-icon slot="prefix" icon="communication:phone"></iron-icon>
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
-            <etools-form-element-wrapper
-              label="E-mail address"
-              title$="[[partner.email]]"
-              value="[[partner.email]]"
-            >
+            <etools-form-element-wrapper label="E-mail address" title$="[[partner.email]]" value="[[partner.email]]">
               <iron-icon icon="communication:email" slot="prefix"></iron-icon>
             </etools-form-element-wrapper>
           </div>
@@ -176,10 +143,7 @@ class PartnerDetails extends connect(store)(
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- HACT Risk rating -->
-            <etools-form-element-wrapper
-              label="HACT Risk Rating"
-              no-placeholder
-            >
+            <etools-form-element-wrapper label="HACT Risk Rating" no-placeholder>
               <span class$="[[getRiskRatingClass(partner.rating)]]">
                 [[getRiskRatingValue(partner.rating)]]
               </span>
@@ -187,10 +151,7 @@ class PartnerDetails extends connect(store)(
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
-            <etools-form-element-wrapper
-              label="Type of Assessment"
-              value="[[partner.type_of_assessment]]"
-            >
+            <etools-form-element-wrapper label="Type of Assessment" value="[[partner.type_of_assessment]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
@@ -208,9 +169,7 @@ class PartnerDetails extends connect(store)(
           <div class="col col-4">
             <!-- PSEA risk rating -->
             <etools-form-element-wrapper label="SEA Risk Rating" no-placeholder>
-              <span
-                class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]"
-              >
+              <span class$="[[getRiskRatingClass(partner.sea_risk_rating_name)]]">
                 [[getRiskRatingValue(partner.sea_risk_rating_name)]]
               </span>
             </etools-form-element-wrapper>
@@ -228,15 +187,9 @@ class PartnerDetails extends connect(store)(
         </div>
       </etools-content-panel>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Core Values Assessments"
-      >
+      <etools-content-panel class="content-section" panel-title="Core Values Assessments">
         <div slot="panel-btns" id="show-archived">
-          <paper-toggle-button
-            id="showArchived"
-            checked="{{showArchivedAssessments}}"
-          >
+          <paper-toggle-button id="showArchived" checked="{{showArchivedAssessments}}">
             Show Archived
           </paper-toggle-button>
         </div>
@@ -262,39 +215,19 @@ class PartnerDetails extends connect(store)(
             >
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-4">
-                  <span hidden$="[[_isEmptyDate(item.date)]]"
-                    >[[getDateDisplayValue(item.date)]]</span
-                  >
-                  <span
-                    hidden$="[[!_isEmptyDate(item.date)]]"
-                    class="placeholder-style"
-                    >&#8212;</span
-                  >
+                  <span hidden$="[[_isEmptyDate(item.date)]]">[[getDateDisplayValue(item.date)]]</span>
+                  <span hidden$="[[!_isEmptyDate(item.date)]]" class="placeholder-style">&#8212;</span>
                 </span>
                 <span class="col-data col-6">
-                  <iron-icon
-                    icon="attachment"
-                    hidden$="[[!item.attachment]]"
-                  ></iron-icon>
-                  <span hidden$="[[item.attachment]]" class="placeholder-style"
-                    >&#8212;</span
-                  >
-                  <a
-                    class="cvs-file"
-                    href$="[[item.attachment]]"
-                    target="_blank"
-                    download
+                  <iron-icon icon="attachment" hidden$="[[!item.attachment]]"></iron-icon>
+                  <span hidden$="[[item.attachment]]" class="placeholder-style">&#8212;</span>
+                  <a class="cvs-file" href$="[[item.attachment]]" target="_blank" download
                     >[[getFileNameFromURL(item.attachment)]]</a
                   >
                 </span>
                 <span class="col-data col-2">
-                  <span hidden$="[[item.archived]]" class="placeholder-style"
-                    >&#8212;</span
-                  >
-                  <iron-icon
-                    icon="check"
-                    hidden$="[[!item.archived]]"
-                  ></iron-icon>
+                  <span hidden$="[[item.archived]]" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="check" hidden$="[[!item.archived]]"></iron-icon>
                 </span>
                 <icons-actions
                   item$="[[item]]"
@@ -307,10 +240,7 @@ class PartnerDetails extends connect(store)(
             </etools-data-table-row>
           </template>
         </div>
-        <div
-          class="row-h"
-          hidden$="[[!_empty(partner.core_values_assessments)]]"
-        >
+        <div class="row-h" hidden$="[[!_empty(partner.core_values_assessments)]]">
           There are no Core Value Assessments.
         </div>
       </etools-content-panel>
@@ -325,34 +255,34 @@ class PartnerDetails extends connect(store)(
     `;
   }
 
-  @property({ type: Object, notify: true, observer: "_partnerChanged" })
+  @property({type: Object, notify: true, observer: '_partnerChanged'})
   partner!: Partner;
 
-  @property({ type: Boolean })
-  editMode: boolean = false;
+  @property({type: Boolean})
+  editMode = false;
 
-  @property({ type: Array })
+  @property({type: Array})
   csoTypes: LabelAndValue[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   partnerTypes: LabelAndValue[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   sharedPartenerValues: LabelAndValue[] = [];
 
-  @property({ type: Boolean })
-  showCoreValuesAssessmentAttachment: boolean = false;
+  @property({type: Boolean})
+  showCoreValuesAssessmentAttachment = false;
 
-  @property({ type: String, computed: "_computePartnerType(partner)" })
-  _partnerComputedType: string = "";
+  @property({type: String, computed: '_computePartnerType(partner)'})
+  _partnerComputedType = '';
 
-  @property({ type: Boolean })
-  showArchivedAssessments: boolean = false;
+  @property({type: Boolean})
+  showArchivedAssessments = false;
 
-  @property({ type: Boolean })
-  showDelete: boolean = false;
+  @property({type: Boolean})
+  showDelete = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   editCVADialog!: EditCoreValuesAssessmentEl;
 
   stateChanged(state: RootState) {
@@ -362,12 +292,7 @@ class PartnerDetails extends connect(store)(
     if (!isJsonStrMatch(this.csoTypes, state.commonData!.partnerTypes)) {
       this.partnerTypes = state.commonData!.partnerTypes;
     }
-    if (
-      !isJsonStrMatch(
-        this.sharedPartenerValues,
-        state.commonData!.agencyChoices
-      )
-    ) {
+    if (!isJsonStrMatch(this.sharedPartenerValues, state.commonData!.agencyChoices)) {
       this.sharedPartenerValues = state.commonData!.agencyChoices;
     }
   }
@@ -378,18 +303,18 @@ class PartnerDetails extends connect(store)(
      * Disable loading message for details tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "partners-page",
+      loadingSource: 'partners-page'
     });
-    fireEvent(this, "tab-content-attached");
+    fireEvent(this, 'tab-content-attached');
     this._createEditCoreValuesAssessmentsDialog();
   }
 
   public disconnectedCallback() {
     super.disconnectedCallback();
     if (this.editCVADialog) {
-      document.querySelector("body")!.removeChild(this.editCVADialog);
+      document.querySelector('body')!.removeChild(this.editCVADialog);
     }
   }
 
@@ -401,18 +326,14 @@ class PartnerDetails extends connect(store)(
   }
 
   public _createEditCoreValuesAssessmentsDialog() {
-    this.editCVADialog = document.createElement(
-      "edit-core-values-assessment"
-    ) as any;
+    this.editCVADialog = document.createElement('edit-core-values-assessment') as any;
     this.editCVADialog.parent = this;
 
-    document.querySelector("body")!.appendChild(this.editCVADialog);
+    document.querySelector('body')!.appendChild(this.editCVADialog);
   }
 
   public _editCoreValuesAssessment(e: CustomEvent) {
-    this.editCVADialog.item = JSON.parse(
-      (e.target as PolymerElement).getAttribute("item")!
-    );
+    this.editCVADialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
     this.editCVADialog.open();
   }
 
@@ -427,20 +348,14 @@ class PartnerDetails extends connect(store)(
     if (!isEmptyObject(partner)) {
       // decide if we should show core values assessment attachment
       this.set(
-        "showCoreValuesAssessmentAttachment",
+        'showCoreValuesAssessmentAttachment',
         this._showCoreValueAssessment(partner.partner_type, partner.cso_type)
       );
 
-      this._displayAssessmentNotification(
-        partner.core_values_assessment_date,
-        "Core Values Assessment"
-      );
+      this._displayAssessmentNotification(partner.core_values_assessment_date, 'Core Values Assessment');
 
-      if (partner.type_of_assessment === "Micro Assessment") {
-        this._displayAssessmentNotification(
-          partner.last_assessment_date,
-          "Micro Assessment"
-        );
+      if (partner.type_of_assessment === 'Micro Assessment') {
+        this._displayAssessmentNotification(partner.last_assessment_date, 'Micro Assessment');
       }
 
       this._sortCvaDescByDate();
@@ -448,10 +363,7 @@ class PartnerDetails extends connect(store)(
   }
 
   public _sortCvaDescByDate() {
-    if (
-      !this.partner.core_values_assessments ||
-      this.partner.core_values_assessments.length <= 1
-    ) {
+    if (!this.partner.core_values_assessments || this.partner.core_values_assessments.length <= 1) {
       return;
     }
 
@@ -461,54 +373,39 @@ class PartnerDetails extends connect(store)(
     });
   }
 
-  public _displayAssessmentNotification(
-    assessmentDateString: any,
-    assessmentType: any
-  ) {
+  public _displayAssessmentNotification(assessmentDateString: any, assessmentType: any) {
     if (!assessmentDateString) {
       return;
     }
-    const datesFormat = "YYYY-MM-DD";
+    const datesFormat = 'YYYY-MM-DD';
     const today = moment.utc().format(datesFormat);
     const assessmentDate = convertDate(assessmentDateString);
-    const assessmentExpDate = moment(assessmentDate).add(60, "months");
+    const assessmentExpDate = moment(assessmentDate).add(60, 'months');
 
-    const daysUntilExpire = assessmentExpDate.diff(today, "days");
+    const daysUntilExpire = assessmentExpDate.diff(today, 'days');
 
-    let notifMessage = "";
+    let notifMessage = '';
     if (daysUntilExpire < 1) {
-      notifMessage =
-        "The " +
-        assessmentType +
-        " is expired (" +
-        assessmentExpDate.format(datesFormat) +
-        ")";
+      notifMessage = 'The ' + assessmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
     } else {
-      const notifStartDate = moment(assessmentDate).add(57, "months");
+      const notifStartDate = moment(assessmentDate).add(57, 'months');
       if (moment(today).isAfter(notifStartDate)) {
-        notifMessage =
-          "The " +
-          assessmentType +
-          " will expire in " +
-          daysUntilExpire +
-          " days";
+        notifMessage = 'The ' + assessmentType + ' will expire in ' + daysUntilExpire + ' days';
       }
     }
     if (notifMessage) {
       setTimeout(() => {
-        fireEvent(this, "toast", { text: notifMessage, showCloseBtn: true });
+        fireEvent(this, 'toast', {text: notifMessage, showCloseBtn: true});
       }, 0);
     }
   }
 
   public _computePartnerType(partner: any) {
-    return !isEmptyObject(partner)
-      ? this._getPartnerType(partner.partner_type, partner.cso_type)
-      : "";
+    return !isEmptyObject(partner) ? this._getPartnerType(partner.partner_type, partner.cso_type) : '';
   }
 
   public _getPartnerType(partnerType: any, csoType: any) {
-    return csoType !== null ? partnerType + "/" + csoType : partnerType;
+    return csoType !== null ? partnerType + '/' + csoType : partnerType;
   }
 
   /**
@@ -517,12 +414,8 @@ class PartnerDetails extends connect(store)(
    */
   public _showCoreValueAssessment(partnerType: any, csoType: any) {
     return (
-      partnerType === "Civil Society Organization" &&
-      [
-        "National",
-        "Academic Institution",
-        "Community Based Organization",
-      ].indexOf(csoType) > -1
+      partnerType === 'Civil Society Organization' &&
+      ['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1
     );
   }
 
@@ -539,4 +432,4 @@ class PartnerDetails extends connect(store)(
   }
 }
 
-window.customElements.define("partner-details", PartnerDetails);
+window.customElements.define('partner-details', PartnerDetails);

@@ -1,25 +1,23 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import EnvironmentFlagsMixin from "../../../environment-flags/environment-flags-mixin";
-import pmpEndpoints from "../../../endpoints/endpoints";
-import "@unicef-polymer/etools-dialog/etools-dialog";
-import "@unicef-polymer/etools-upload/etools-upload";
-import "@unicef-polymer/etools-date-time/datepicker-lite";
-import "../../../layout/etools-warn-message";
-import { SharedStyles } from "../../../styles/shared-styles";
-import { gridLayoutStyles } from "../../../styles/grid-layout-styles";
-import { requiredFieldStarredStyles } from "../../../styles/required-field-styles";
-import { fireEvent } from "../../../utils/fire-custom-event";
-import { property } from "@polymer/decorators";
-import CONSTANTS from "../../../../config/app-constants";
+import {PolymerElement, html} from '@polymer/polymer';
+import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import pmpEndpoints from '../../../endpoints/endpoints';
+import '@unicef-polymer/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-upload/etools-upload';
+import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '../../../layout/etools-warn-message';
+import {SharedStyles} from '../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import CONSTANTS from '../../../../config/app-constants';
 
 /**
  * @polymer
  * @customElement
  * @appliesMixin EnvironmentFlagsMixin
  */
-export class AgreementTermination extends EnvironmentFlagsMixin(
-  PolymerElement
-) {
+export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
   static get template() {
     return html`
       ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
@@ -72,31 +70,31 @@ export class AgreementTermination extends EnvironmentFlagsMixin(
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId!: number;
 
-  @property({ type: Number })
+  @property({type: Number})
   agreementId!: number;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   opened!: boolean;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   warningOpened!: boolean;
 
-  @property({ type: Object })
-  termination!: { attachment_id: number };
+  @property({type: Object})
+  termination!: {attachment_id: number};
 
-  @property({ type: Object })
+  @property({type: Object})
   terminationElSource!: PolymerElement;
 
-  @property({ type: Boolean })
-  uploadInProgress: boolean = false;
+  @property({type: Boolean})
+  uploadInProgress = false;
 
-  private _validationSelectors: string[] = ["#terminationNotice"];
+  private _validationSelectors: string[] = ['#terminationNotice'];
 
   connectedCallback() {
     super.connectedCallback();
@@ -115,14 +113,14 @@ export class AgreementTermination extends EnvironmentFlagsMixin(
   }
 
   _terminateAgreement() {
-    fireEvent(this.terminationElSource, "terminate-agreement", {
+    fireEvent(this.terminationElSource, 'terminate-agreement', {
       agreementId: this.agreementId,
       terminationData: {
-        fileId: this.termination.attachment_id,
+        fileId: this.termination.attachment_id
       },
-      status: CONSTANTS.STATUSES.Terminated.toLowerCase() + "",
+      status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
     });
-    this.set("opened", false);
+    this.set('opened', false);
   }
 
   // TODO: refactor validation at some point (common with ag add amendment dialog and more)
@@ -130,7 +128,7 @@ export class AgreementTermination extends EnvironmentFlagsMixin(
     this._validationSelectors.forEach((selector: string) => {
       const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
-        el.set("invalid", false);
+        el.set('invalid', false);
       }
     });
   }
@@ -152,9 +150,9 @@ export class AgreementTermination extends EnvironmentFlagsMixin(
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set("termination.attachment_id", uploadResponse.id);
+      this.set('termination.attachment_id', uploadResponse.id);
     }
   }
 }
 
-window.customElements.define("agreement-termination", AgreementTermination);
+window.customElements.define('agreement-termination', AgreementTermination);

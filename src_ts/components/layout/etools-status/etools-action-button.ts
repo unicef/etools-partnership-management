@@ -1,17 +1,17 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import { timeOut } from "@polymer/polymer/lib/utils/async.js";
-import { Debouncer } from "@polymer/polymer/lib/utils/debounce.js";
-import { DomRepeatEvent } from "../../../typings/globals.types";
-import "@polymer/paper-button/paper-button.js";
-import "@polymer/paper-menu-button/paper-menu-button.js";
-import "@polymer/paper-listbox/paper-listbox.js";
-import "@polymer/paper-item/paper-item.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import { fireEvent } from "../../utils/fire-custom-event";
-import { property } from "@polymer/decorators";
-import { StatusAction } from "../../../typings/etools-status.types";
+import {PolymerElement, html} from '@polymer/polymer';
+import {timeOut} from '@polymer/polymer/lib/utils/async.js';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import {DomRepeatEvent} from '../../../typings/globals.types';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-menu-button/paper-menu-button.js';
+import '@polymer/paper-listbox/paper-listbox.js';
+import '@polymer/paper-item/paper-item.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {StatusAction} from '../../../typings/etools-status.types';
 
 /**
  * @polymer
@@ -35,10 +35,7 @@ class EtoolsActionButton extends PolymerElement {
         }
 
         paper-button.grey {
-          background-color: var(
-            --etools-action-button-dropdown-higlight-bg,
-            rgba(0, 0, 0, 0.54)
-          );
+          background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, 0.54));
         }
 
         paper-menu-button {
@@ -46,8 +43,7 @@ class EtoolsActionButton extends PolymerElement {
         }
 
         paper-icon-button {
-          border-left: 2px solid
-            var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
+          border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
         }
 
         .main-btn-part {
@@ -85,7 +81,7 @@ class EtoolsActionButton extends PolymerElement {
           min-width: 120px;
         }
 
-        iron-icon[icon="info-outline"] {
+        iron-icon[icon='info-outline'] {
           padding-left: 5px;
         }
       </style>
@@ -93,29 +89,17 @@ class EtoolsActionButton extends PolymerElement {
       <template is="dom-if" if="[[primaryAction]]">
         <paper-button raised disabled$="[[disabled]]">
           <div on-tap="_handlePrimaryClick" class="main-btn-part">
-            <iron-icon
-              icon="info-outline"
-              hidden$="[[!showInfoIcon]]"
-            ></iron-icon>
+            <iron-icon icon="info-outline" hidden$="[[!showInfoIcon]]"></iron-icon>
             [[primaryAction.label]]
           </div>
 
           <template is="dom-if" if="[[secondaryActions.length]]">
             <paper-menu-button horizontal-align="right">
-              <paper-icon-button
-                icon="expand-more"
-                slot="dropdown-trigger"
-              ></paper-icon-button>
+              <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
               <paper-listbox slot="dropdown-content">
                 <div class="list-wrapper">
-                  <template
-                    is="dom-repeat"
-                    items="[[secondaryActions]]"
-                    as="item"
-                  >
-                    <paper-item on-tap="_handleSecondaryClick">
-                      [[item.label]]</paper-item
-                    >
+                  <template is="dom-repeat" items="[[secondaryActions]]" as="item">
+                    <paper-item on-tap="_handleSecondaryClick"> [[item.label]]</paper-item>
                   </template>
                 </div>
               </paper-listbox>
@@ -126,38 +110,34 @@ class EtoolsActionButton extends PolymerElement {
     `;
   }
 
-  @property({ type: Array })
+  @property({type: Array})
   actions: StatusAction[] = [];
 
-  @property({ type: Object })
+  @property({type: Object})
   primaryAction!: StatusAction;
 
-  @property({ type: Array })
+  @property({type: Array})
   secondaryActions: StatusAction[] = [];
 
-  @property({ type: Boolean })
-  disabled: boolean = false;
+  @property({type: Boolean})
+  disabled = false;
 
-  @property({ type: Boolean })
-  showInfoIcon: boolean = false;
+  @property({type: Boolean})
+  showInfoIcon = false;
 
   private _actionsChangedDebouncer!: Debouncer;
 
   static get observers() {
-    return ["_actionsChanged(actions, actions.*)"];
+    return ['_actionsChanged(actions, actions.*)'];
   }
 
   _actionsChanged(actions: any[], actionsData: any) {
-    if (typeof actions === "undefined" && typeof actionsData === "undefined") {
+    if (typeof actions === 'undefined' && typeof actionsData === 'undefined') {
       return;
     }
-    this._actionsChangedDebouncer = Debouncer.debounce(
-      this._actionsChangedDebouncer,
-      timeOut.after(10),
-      () => {
-        this._handleActionsChanged();
-      }
-    );
+    this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer, timeOut.after(10), () => {
+      this._handleActionsChanged();
+    });
   }
 
   _handleActionsChanged() {
@@ -166,8 +146,8 @@ class EtoolsActionButton extends PolymerElement {
       return;
     }
 
-    this.set("primaryAction", null);
-    this.set("secondaryActions", []);
+    this.set('primaryAction', null);
+    this.set('secondaryActions', []);
 
     let primaryAction = actions.find((elem: any) => {
       return elem.primary && !elem.hidden;
@@ -181,8 +161,8 @@ class EtoolsActionButton extends PolymerElement {
       primaryAction = secondaryActions.pop();
     }
 
-    this.set("primaryAction", primaryAction);
-    this.set("secondaryActions", secondaryActions);
+    this.set('primaryAction', primaryAction);
+    this.set('secondaryActions', secondaryActions);
   }
 
   _handleSecondaryClick(event: DomRepeatEvent) {
@@ -195,4 +175,4 @@ class EtoolsActionButton extends PolymerElement {
   }
 }
 
-window.customElements.define("etools-action-button", EtoolsActionButton);
+window.customElements.define('etools-action-button', EtoolsActionButton);

@@ -8,20 +8,17 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { Action, ActionCreator } from "redux";
-export const UPDATE_DRAWER_STATE = "UPDATE_DRAWER_STATE";
+import {Action, ActionCreator} from 'redux';
+export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
-export interface AppActionUpdateDrawerState
-  extends Action<"UPDATE_DRAWER_STATE"> {
+export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
 }
 export type AppAction = AppActionUpdateDrawerState;
 
-export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (
-  opened: boolean
-) => {
+export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
   return {
     type: UPDATE_DRAWER_STATE,
-    opened,
+    opened
   };
 };

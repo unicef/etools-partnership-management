@@ -1,9 +1,9 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/polymer/lib/elements/dom-repeat";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/polymer/lib/elements/dom-repeat';
+import {property} from '@polymer/decorators';
 
 export class WarnMessage {
-  public msg: string = "";
+  public msg = '';
   constructor(m: string) {
     this.msg = m;
   }
@@ -46,10 +46,10 @@ class EtoolsWarnMessage extends PolymerElement {
     `;
   }
 
-  @property({ type: String, observer: "_messagesChanged" })
+  @property({type: String, observer: '_messagesChanged'})
   messages: string | string[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   _internalMsgs: WarnMessage[] = [];
 
   _messagesChanged(msgs: string | string[]) {
@@ -63,4 +63,4 @@ class EtoolsWarnMessage extends PolymerElement {
   }
 }
 
-window.customElements.define("etools-warn-message", EtoolsWarnMessage);
+window.customElements.define('etools-warn-message', EtoolsWarnMessage);

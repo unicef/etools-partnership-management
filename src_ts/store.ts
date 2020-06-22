@@ -8,26 +8,19 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import {
-  createStore,
-  compose,
-  applyMiddleware,
-  combineReducers,
-  Reducer,
-  StoreEnhancer,
-} from "redux";
-import thunk, { ThunkMiddleware } from "redux-thunk";
-import { lazyReducerEnhancer } from "pwa-helpers/lazy-reducer-enhancer.js";
+import {createStore, compose, applyMiddleware, combineReducers, Reducer, StoreEnhancer} from 'redux';
+import thunk, {ThunkMiddleware} from 'redux-thunk';
+import {lazyReducerEnhancer} from 'pwa-helpers/lazy-reducer-enhancer.js';
 
-import app, { AppState } from "./reducers/app.js";
-import { AppAction } from "./actions/app.js";
+import app, {AppState} from './reducers/app.js';
+import {AppAction} from './actions/app.js';
 
-import { CommonDataState } from "./reducers/common-data.js";
-import { UploadStatusState } from "./reducers/upload-status.js";
-import { CommonDataAction } from "./actions/common-data.js";
-import { PartnersState } from "./reducers/partners.js";
-import { AgreementsState } from "./reducers/agreements.js";
-import { PageDataState } from "./reducers/page-data.js";
+import {CommonDataState} from './reducers/common-data.js';
+import {UploadStatusState} from './reducers/upload-status.js';
+import {CommonDataAction} from './actions/common-data.js';
+import {PartnersState} from './reducers/partners.js';
+import {AgreementsState} from './reducers/agreements.js';
+import {PageDataState} from './reducers/page-data.js';
 
 declare global {
   interface Window {
@@ -54,8 +47,7 @@ export type RootAction = AppAction | CommonDataAction;
 const devCompose: <Ext0, Ext1, StateExt0, StateExt1>(
   f1: StoreEnhancer<Ext0, StateExt0>,
   f2: StoreEnhancer<Ext1, StateExt1>
-) => StoreEnhancer<Ext0 & Ext1, StateExt0 & StateExt1> =
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+) => StoreEnhancer<Ext0 & Ext1, StateExt0 & StateExt1> = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // Initializes the Redux store with a lazyReducerEnhancer (so that you can
 // lazily add reducers after the store has been created) and redux-thunk (so
@@ -64,39 +56,34 @@ const devCompose: <Ext0, Ext1, StateExt0, StateExt1>(
 // https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management
 export const store = createStore(
   (state) => state as Reducer<RootState, RootAction>,
-  devCompose(
-    lazyReducerEnhancer(combineReducers),
-    applyMiddleware(thunk as ThunkMiddleware<RootState, RootAction>)
-  )
+  devCompose(lazyReducerEnhancer(combineReducers), applyMiddleware(thunk as ThunkMiddleware<RootState, RootAction>))
 );
 
 // Initially loaded reducers.
 store.addReducers({
   // @ts-ignore
-  app,
+  app
 });
 
-window.addEventListener("storage", function (e) {
-  if (e.key !== "update-redux" || !e.newValue) {
+window.addEventListener('storage', function (e) {
+  if (e.key !== 'update-redux' || !e.newValue) {
     return;
   }
   store.dispatch(JSON.parse(e.newValue));
 });
 
-window.addEventListener("beforeunload", function (e) {
+window.addEventListener('beforeunload', function (e) {
   const state = store.getState();
   if (!(state as any).uploadStatus) {
     return;
   }
-  const uploadsInprogressNumber: number = (state as any).uploadStatus
-    .uploadsInProgress;
-  const unsavedUploadsNumber: number = (state as any).uploadStatus
-    .unsavedUploads;
+  const uploadsInprogressNumber: number = (state as any).uploadStatus.uploadsInProgress;
+  const unsavedUploadsNumber: number = (state as any).uploadStatus.unsavedUploads;
   if (uploadsInprogressNumber > 0 || unsavedUploadsNumber > 0) {
     // Cancel the event as stated by the standard.
     e.preventDefault();
     // Chrome requires returnValue to be set.
-    e.returnValue = "Are you sure? Uploads in progress will be lost!";
+    e.returnValue = 'Are you sure? Uploads in progress will be lost!';
   }
 });
 

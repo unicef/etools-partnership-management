@@ -1,19 +1,16 @@
-import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging.js";
-import { Constructor } from "../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function ScrollControlMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ScrollControlClass extends baseClass {
-    @property({ type: Object })
-    contentContainer: PolymerElement | null =
-      window.EtoolsPmpApp.ContentContainer;
+    @property({type: Object})
+    contentContainer: PolymerElement | null = window.EtoolsPmpApp.ContentContainer;
 
     public connectedCallback() {
       super.connectedCallback();
@@ -27,25 +24,22 @@ function ScrollControlMixin<T extends Constructor<PolymerElement>>(
     }
 
     protected _getContentContainer() {
-      const appShell = document.querySelector("app-shell");
+      const appShell = document.querySelector('app-shell');
       if (!appShell) {
         return null;
       }
       // @ts-ignore
-      const appHeadLayout = appShell.shadowRoot.querySelector("#appHeadLayout");
+      const appHeadLayout = appShell.shadowRoot.querySelector('#appHeadLayout');
       if (!appHeadLayout) {
         return null;
       }
       // @ts-ignore
-      return appHeadLayout.shadowRoot.querySelector("#contentContainer");
+      return appHeadLayout.shadowRoot.querySelector('#contentContainer');
     }
 
     public scrollToTop() {
       if (!this.contentContainer) {
-        logWarn(
-          "Can not scroll! `contentContainer` object is null or undefined",
-          "scroll-control-mixin"
-        );
+        logWarn('Can not scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
         return;
       }
       // @ts-ignore

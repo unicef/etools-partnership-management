@@ -1,17 +1,14 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "../../../layout/etools-status/etools-status.js";
-import { createDynamicDialog } from "@unicef-polymer/etools-dialog/dynamic-dialog";
-import EtoolsStatusCommonMixin from "../../../layout/etools-status/etools-status-common-mixin";
-import CONSTANTS from "../../../../config/app-constants.js";
-import { isEmptyObject } from "../../../utils/utils";
-import { fireEvent } from "../../../utils/fire-custom-event.js";
-import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { property } from "@polymer/decorators";
-import {
-  StatusAction,
-  Status,
-} from "../../../../typings/etools-status.types.js";
-import { Partner } from "../../../../models/partners.models.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '../../../layout/etools-status/etools-status.js';
+import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
+import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
+import CONSTANTS from '../../../../config/app-constants.js';
+import {isEmptyObject} from '../../../utils/utils';
+import {fireEvent} from '../../../utils/fire-custom-event.js';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
+import {Partner} from '../../../../models/partners.models.js';
 
 /**
  * @polymer
@@ -54,60 +51,58 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Object, notify: true })
+  @property({type: Object, notify: true})
   partner!: Partner;
 
-  @property({ type: Boolean })
-  editMode: boolean = false;
+  @property({type: Boolean})
+  editMode = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   deleteWarningDialogContent: any = null;
 
-  @property({ type: Array })
+  @property({type: Array})
   possibleStatuses: Status[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   possibleActions: StatusAction[] = [
     {
-      label: "Save",
+      label: 'Save',
       hidden: true,
       primary: true,
       // save action is handled inside the parent
-      event: "save-partner",
+      event: 'save-partner'
     },
     {
-      label: "Delete",
+      label: 'Delete',
       hidden: true,
-      event: "partner-delete",
-    },
+      event: 'partner-delete'
+    }
   ];
 
   static get observers() {
     return [
-      "_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked, possibleStatuses)",
-      "_computeAvailableActions(partner.hidden, editMode)",
+      '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked, possibleStatuses)',
+      '_computeAvailableActions(partner.hidden, editMode)'
     ];
   }
 
   ready() {
     super.ready();
 
-    this.deleteWarningDialogContent = document.createElement("div");
-    this.deleteWarningDialogContent.setAttribute("id", "deleteWarningContent");
-    this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(
-      this
-    );
+    this.deleteWarningDialogContent = document.createElement('div');
+    this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
+    this._dialogConfirmationCallback = this._dialogConfirmationCallback.bind(this);
     this.warningDialog = createDynamicDialog({
-      title: "Delete Confirmation",
-      size: "md",
-      okBtnText: "Yes",
-      cancelBtnText: "No",
+      title: 'Delete Confirmation',
+      size: 'md',
+      okBtnText: 'Yes',
+      cancelBtnText: 'No',
       closeCallback: this._dialogConfirmationCallback,
-      content: this.deleteWarningDialogContent,
+      content: this.deleteWarningDialogContent
     });
 
     this.warningDialog.updateStyles({
-      "--paper-dialog-scrollable": "var(--pmp-paper-dialog-content)",
+      '--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'
     });
 
     this._handleStickyScroll();
@@ -116,73 +111,51 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.warningDialog.removeEventListener(
-      "close",
-      this._dialogConfirmationCallback as any
-    );
+    this.warningDialog.removeEventListener('close', this._dialogConfirmationCallback as any);
   }
 
   setPossibleStatuses() {
-    this.set("possibleStatuses", [
+    this.set('possibleStatuses', [
       {
         label: CONSTANTS.PARTNER_STATUSES.NotSynced,
-        icon: "info",
-        iconStyles:
-          "width: 19px; height: 19px; color: " +
-          this.getComputedStyleValue("--primary-background-color"),
-        iconContainerStyles:
-          "background-color: " +
-          this.getComputedStyleValue("--status-not-synced-color"),
+        icon: 'info',
+        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
         hidden: true,
-        completed: false,
+        completed: false
       },
       {
         label: CONSTANTS.PARTNER_STATUSES.SyncedFromVISION,
-        icon: "autorenew",
-        iconStyles:
-          "width: 19px; height: 19px; color: " +
-          this.getComputedStyleValue("--primary-background-color"),
-        iconContainerStyles:
-          "background-color: " +
-          this.getComputedStyleValue("--status-synced-color"),
+        icon: 'autorenew',
+        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
         hidden: true,
-        completed: false,
+        completed: false
       },
       {
         label: CONSTANTS.PARTNER_STATUSES.BlockedInVISION,
-        icon: "block",
-        iconStyles:
-          "width: 19px; height: 19px; color: " +
-          this.getComputedStyleValue("--primary-background-color"),
-        iconContainerStyles:
-          "background-color: " +
-          this.getComputedStyleValue("--status-blocked-color"),
+        icon: 'block',
+        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
         hidden: true,
-        completed: false,
+        completed: false
       },
       {
         label: CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION,
-        icon: "delete-forever",
-        iconStyles: "color: " + this.getComputedStyleValue("--error-color"),
-        iconContainerStyles:
-          "background-color: " +
-          this.getComputedStyleValue("--primary-background-color"),
+        icon: 'delete-forever',
+        iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+        iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
         hidden: true,
-        completed: false,
-      },
+        completed: false
+      }
     ]);
   }
 
-  _partnerStatusChanged(
-    visionSynced: boolean,
-    deletedFlag: boolean,
-    blocked: boolean,
-    possibleStatuses: object[]
-  ) {
+  _partnerStatusChanged(visionSynced: boolean, deletedFlag: boolean, blocked: boolean, possibleStatuses: object[]) {
     if (
-      typeof visionSynced === "undefined" &&
-      typeof deletedFlag === "undefined" &&
-      typeof blocked === "undefined" &&
+      typeof visionSynced === 'undefined' &&
+      typeof deletedFlag === 'undefined' &&
+      typeof blocked === 'undefined' &&
       isEmptyObject(possibleStatuses)
     ) {
       return;
@@ -200,19 +173,15 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   // }
   _showDeleteConfirmationDialog() {
     if (!this.warningDialog) {
-      logWarn("warningDialog not created!", "pmp partner status change");
+      logWarn('warningDialog not created!', 'pmp partner status change');
       return;
     }
 
     if (!this.deleteWarningDialogContent) {
-      logWarn(
-        "#deleteWarningContent element not found!",
-        "pmp partner status change"
-      );
+      logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
       return;
     }
-    const warningMessage =
-      "Are you sure you want to delete partner " + this.partner.name + "?";
+    const warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';
     this.deleteWarningDialogContent.innerHTML = warningMessage;
     this.warningDialog.opened = true;
   }
@@ -222,7 +191,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       if (!this.editMode) {
         return;
       }
-      fireEvent(this, "delete-partner", { id: this.partner.id });
+      fireEvent(this, 'delete-partner', {id: this.partner.id});
     }
   }
 
@@ -231,14 +200,14 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       return;
     }
     this._setAllActionsToHidden();
-    const availableOptions = ["Save", "Delete"];
+    const availableOptions = ['Save', 'Delete'];
 
     for (const key in this.possibleActions) {
       if (this.possibleActions[key].label) {
         const actionName = this.possibleActions[key].label;
 
         if (availableOptions.indexOf(actionName) > -1) {
-          this.set(["possibleActions", key, "hidden"], false);
+          this.set(['possibleActions', key, 'hidden'], false);
         }
       }
     }
@@ -266,8 +235,8 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
     for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
       if (this.possibleStatuses[key].label === activeStatus) {
-        this.set(["possibleStatuses", key, "completed"], true);
-        this.set(["possibleStatuses", key, "hidden"], false);
+        this.set(['possibleStatuses', key, 'completed'], true);
+        this.set(['possibleStatuses', key, 'hidden'], false);
       }
     }
   }
@@ -275,15 +244,14 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     return (
       this.partner.vision_synced === true &&
       this.partner.deleted_flag === false &&
-      (typeof this.partner.blocked === "undefined" ||
-        this.partner.blocked === false)
+      (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false)
     );
   }
 
   _showBlockedStatus() {
     return (
       this.partner.deleted_flag === false &&
-      typeof this.partner.blocked !== "undefined" &&
+      typeof this.partner.blocked !== 'undefined' &&
       this.partner.blocked === true
     );
   }
@@ -297,4 +265,4 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("partner-status", PartnerStatus);
+window.customElements.define('partner-status', PartnerStatus);

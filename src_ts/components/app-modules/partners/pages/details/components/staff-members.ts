@@ -1,19 +1,19 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-toggle-button/paper-toggle-button";
-import "@polymer/paper-icon-button/paper-icon-button";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-toggle-button/paper-toggle-button';
+import '@polymer/paper-icon-button/paper-icon-button';
 
-import "@unicef-polymer/etools-content-panel/etools-content-panel";
-import "@unicef-polymer/etools-data-table/etools-data-table";
+import '@unicef-polymer/etools-content-panel/etools-content-panel';
+import '@unicef-polymer/etools-data-table/etools-data-table';
 
-import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles";
-import { SharedStyles } from "../../../../../styles/shared-styles";
-import { etoolsCpHeaderActionsBarStyles } from "../../../../../styles/etools-cp-header-actions-bar-styles";
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 
-import "../../../../../layout/icons-actions";
-import "./add-edit-staff-members";
-import { property } from "@polymer/decorators";
-import { StaffMember } from "../../../../../../models/partners.models";
-import { AddEditStaffMembersEl } from "./add-edit-staff-members";
+import '../../../../../layout/icons-actions';
+import './add-edit-staff-members';
+import {property} from '@polymer/decorators';
+import {StaffMember} from '../../../../../../models/partners.models';
+import {AddEditStaffMembersEl} from './add-edit-staff-members';
 
 /**
  * @polymer
@@ -120,13 +120,8 @@ class StaffMembers extends PolymerElement {
                   [[_displayValue(item.email)]]
                 </span>
                 <span class="col-data col-2 center-align">
-                  <span hidden$="[[item.active]]" class="placeholder-style"
-                    >&#8212;</span
-                  >
-                  <iron-icon
-                    icon="check"
-                    hidden$="[[!item.active]]"
-                  ></iron-icon>
+                  <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
                 </span>
                 <icons-actions
                   item$="[[item]]"
@@ -147,26 +142,26 @@ class StaffMembers extends PolymerElement {
     `;
   }
 
-  @property({ type: Boolean })
-  showInactive: boolean = false;
+  @property({type: Boolean})
+  showInactive = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   addEditDialog!: AddEditStaffMembersEl;
 
-  @property({ type: Boolean })
-  showDelete: boolean = false;
+  @property({type: Boolean})
+  showDelete = false;
 
-  @property({ type: Boolean })
-  editMode: boolean = false;
+  @property({type: Boolean})
+  editMode = false;
 
-  @property({ type: Array })
+  @property({type: Array})
   dataItems: StaffMember[] = [];
 
-  @property({ type: Number })
+  @property({type: Number})
   partnerId: number | null = null;
 
   static get observers() {
-    return ["dataItemsChanged(dataItems, dataItems.*)"];
+    return ['dataItemsChanged(dataItems, dataItems.*)'];
   }
 
   ready() {
@@ -193,16 +188,14 @@ class StaffMembers extends PolymerElement {
   }
 
   _createAddEditDialog() {
-    this.addEditDialog = document.createElement(
-      "add-edit-staff-members"
-    ) as any;
+    this.addEditDialog = document.createElement('add-edit-staff-members') as any;
     this.addEditDialog.mainEl = this;
-    document.querySelector("body")!.appendChild(this.addEditDialog);
+    document.querySelector('body')!.appendChild(this.addEditDialog);
   }
 
   _removeAddEditDialog() {
     if (this.addEditDialog) {
-      document.querySelector("body")!.removeChild(this.addEditDialog);
+      document.querySelector('body')!.removeChild(this.addEditDialog);
     }
   }
 
@@ -212,9 +205,7 @@ class StaffMembers extends PolymerElement {
   }
 
   _editPartnerContact(e: Event) {
-    this.addEditDialog.item = JSON.parse(
-      (e.target as PolymerElement).getAttribute("item")!
-    );
+    this.addEditDialog.item = JSON.parse((e.target as PolymerElement).getAttribute('item')!);
     this.openAddEditDialog();
   }
 
@@ -233,8 +224,8 @@ class StaffMembers extends PolymerElement {
   }
 
   _displayValue(value: any) {
-    return value ? value : "—";
+    return value ? value : '—';
   }
 }
 
-window.customElements.define("staff-members", StaffMembers);
+window.customElements.define('staff-members', StaffMembers);

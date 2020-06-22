@@ -1,75 +1,69 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-input/paper-input.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@polymer/paper-toggle-button/paper-toggle-button.js";
-import "@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown-multi.js";
-import "@unicef-polymer/etools-upload/etools-upload.js";
-import "@unicef-polymer/etools-date-time/datepicker-lite.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
-import "../../../../layout/etools-form-element-wrapper.js";
-import "../../../../layout/etools-cp-structure.js";
-import "../../../../layout/year-dropdown.js";
+import '../../../../layout/etools-form-element-wrapper.js';
+import '../../../../layout/etools-cp-structure.js';
+import '../../../../layout/year-dropdown.js';
 
-import UploadsMixin from "../../../../mixins/uploads-mixin";
-import FrNumbersConsistencyMixin from "../../mixins/fr-numbers-consistency-mixin";
-import CommonMixin from "../../../../mixins/common-mixin";
-import StaffMembersDataMixin from "../../../partners/mixins/staff-members-data-mixin";
-import EnvironmentFlagsMixin from "../../../../environment-flags/environment-flags-mixin";
-import MissingDropdownOptionsMixin from "../../../../mixins/missing-dropdown-options-mixin";
-import CONSTANTS from "../../../../../config/app-constants";
-import { Agreement } from "../../../agreements/agreement.types";
+import UploadsMixin from '../../../../mixins/uploads-mixin';
+import FrNumbersConsistencyMixin from '../../mixins/fr-numbers-consistency-mixin';
+import CommonMixin from '../../../../mixins/common-mixin';
+import StaffMembersDataMixin from '../../../partners/mixins/staff-members-data-mixin';
+import EnvironmentFlagsMixin from '../../../../environment-flags/environment-flags-mixin';
+import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
+import CONSTANTS from '../../../../../config/app-constants';
+import {Agreement} from '../../../agreements/agreement.types';
 import {
   Intervention,
   ExpectedResult,
   InterventionPermissionsFields,
-  Location,
-} from "../../../../../typings/intervention.types";
-import { fireEvent } from "../../../../utils/fire-custom-event";
-import {
-  LabelAndValue,
-  Permission,
-  GenericObject,
-  Office,
-  MinimalUser,
-} from "../../../../../typings/globals.types";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../store";
-import { pageCommonStyles } from "../../../../styles/page-common-styles";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles";
-import { SharedStyles } from "../../../../styles/shared-styles";
-import { requiredFieldStarredStyles } from "../../../../styles/required-field-styles";
-import { buttonsStyles } from "../../../../styles/buttons-styles";
-import { frWarningsStyles } from "../../styles/fr-warnings-styles";
-import { isEmptyObject, isJsonStrMatch, copy } from "../../../../utils/utils";
+  Location
+} from '../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {LabelAndValue, Permission, GenericObject, Office, MinimalUser} from '../../../../../typings/globals.types';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles';
+import {buttonsStyles} from '../../../../styles/buttons-styles';
+import {frWarningsStyles} from '../../styles/fr-warnings-styles';
+import {isEmptyObject, isJsonStrMatch, copy} from '../../../../utils/utils';
 
-import "./components/agreement-selector.js";
-import "./components/planned-budget.js";
-import "./components/results/expected-results.js";
-import "./components/planned-visits.js";
-import { setPageDataPermissions } from "../../../../../actions/page-data.js";
-import "./components/reporting-requirements/partner-reporting-requirements.js";
-import "./components/grouped-locations-dialog.js";
+import './components/agreement-selector.js';
+import './components/planned-budget.js';
+import './components/results/expected-results.js';
+import './components/planned-visits.js';
+import {setPageDataPermissions} from '../../../../../actions/page-data.js';
+import './components/reporting-requirements/partner-reporting-requirements.js';
+import './components/grouped-locations-dialog.js';
 import {
   DECREASE_UPLOADS_IN_PROGRESS,
   INCREASE_UNSAVED_UPLOADS,
-  DECREASE_UNSAVED_UPLOADS,
-} from "../../../../../actions/upload-status.js";
-import { pmpCustomIcons } from "../../../../styles/custom-iconsets/pmp-icons.js";
-import { dateDiff, isFutureDate } from "../../../../utils/date-utils";
-import { property } from "@polymer/decorators";
-import { ExpectedResultsEl } from "./components/results/expected-results.js";
-import { AgreementSelector } from "./components/agreement-selector.js";
-import { GroupedLocationsDialog } from "./components/grouped-locations-dialog.js";
-import { PlannedBudgetEl } from "./components/planned-budget.js";
-import { EtoolsCpStructure } from "../../../../layout/etools-cp-structure.js";
-import { EtoolsDropdownEl } from "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import { etoolsCpHeaderActionsBarStyles } from "../../../../styles/etools-cp-header-actions-bar-styles.js";
-import { PaperInputElement } from "@polymer/paper-input/paper-input.js";
+  DECREASE_UNSAVED_UPLOADS
+} from '../../../../../actions/upload-status.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
+import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
+import {property} from '@polymer/decorators';
+import {ExpectedResultsEl} from './components/results/expected-results.js';
+import {AgreementSelector} from './components/agreement-selector.js';
+import {GroupedLocationsDialog} from './components/grouped-locations-dialog.js';
+import {PlannedBudgetEl} from './components/planned-budget.js';
+import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {etoolsCpHeaderActionsBarStyles} from '../../../../styles/etools-cp-header-actions-bar-styles.js';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
@@ -84,19 +78,14 @@ import { PaperInputElement } from "@polymer/paper-input/paper-input.js";
 class InterventionDetails extends connect(store)(
   EnvironmentFlagsMixin(
     CommonMixin(
-      UploadsMixin(
-        FrNumbersConsistencyMixin(
-          StaffMembersDataMixin(MissingDropdownOptionsMixin(PolymerElement))
-        )
-      )
+      UploadsMixin(FrNumbersConsistencyMixin(StaffMembersDataMixin(MissingDropdownOptionsMixin(PolymerElement))))
     )
   )
 ) {
   static get template() {
     return html`
-      ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
-      ${requiredFieldStarredStyles} ${buttonsStyles} ${frWarningsStyles}
-      ${etoolsCpHeaderActionsBarStyles}
+      ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${buttonsStyles} ${frWarningsStyles} ${etoolsCpHeaderActionsBarStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -161,10 +150,7 @@ class InterventionDetails extends connect(store)(
         }
       </style>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Partnership Information"
-      >
+      <etools-content-panel class="content-section" panel-title="Partnership Information">
         <div class="row-h">
           <agreement-selector
             id="agreementSelector"
@@ -197,11 +183,7 @@ class InterventionDetails extends connect(store)(
             hidden$="[[!_showRefYear(intervention.document_type,
                                                                           intervention.status)]]"
           >
-            <year-dropdown
-              id="ref-year"
-              label="Ref. Year"
-              selected-year="{{intervention.reference_number_year}}"
-            >
+            <year-dropdown id="ref-year" label="Ref. Year" selected-year="{{intervention.reference_number_year}}">
             </year-dropdown>
           </div>
           <div class="col flex-c">
@@ -283,14 +265,8 @@ class InterventionDetails extends connect(store)(
         </div>
       </etools-content-panel>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="PD or SSFA Details"
-      >
-        <div
-          class="row-h flex-c row-second-bg"
-          hidden$="[[!_showContingencyPd(agreement)]]"
-        >
+      <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
+        <div class="row-h flex-c row-second-bg" hidden$="[[!_showContingencyPd(agreement)]]">
           <div class="col col-3">
             <paper-toggle-button
               checked="{{intervention.contingency_pd}}"
@@ -340,10 +316,7 @@ class InterventionDetails extends connect(store)(
                 selected-date-display-format="D MMM YYYY"
               >
               </datepicker-lite>
-              <iron-icon
-                icon="pmp-custom-icons:not-equal"
-                slot="custom-icon"
-              ></iron-icon>
+              <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
               <span slot="message">[[_frsStartConsistencyWarning]]</span>
             </etools-info-tooltip>
           </div>
@@ -367,28 +340,15 @@ class InterventionDetails extends connect(store)(
                 selected-date-display-format="D MMM YYYY"
               >
               </datepicker-lite>
-              <iron-icon
-                icon="pmp-custom-icons:not-equal"
-                slot="custom-icon"
-              ></iron-icon>
+              <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
               <span slot="message">[[_frsEndConsistencyWarning]]</span>
             </etools-info-tooltip>
           </div>
-          <div
-            class="col col-3"
-            hidden$="[[!intervention.termination_doc_attachment]]"
-          >
-            <etools-upload
-              label="Termination Notice"
-              file-url="[[intervention.termination_doc_attachment]]"
-              readonly
-            >
+          <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
+            <etools-upload label="Termination Notice" file-url="[[intervention.termination_doc_attachment]]" readonly>
             </etools-upload>
           </div>
-          <div
-            class="col col-3"
-            hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]"
-          >
+          <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
             <div class="expiry-warning">
               <span>[[_daysUntilExpiry(intervention.end)]]</span>
             </div>
@@ -425,16 +385,11 @@ class InterventionDetails extends connect(store)(
 
         <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
           <div class="row-h flex-c">
-            <etools-form-element-wrapper
-              label="Clusters PD/SSFA Contributes To"
-              no-placeholder
-            >
+            <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To" no-placeholder>
               <template is="dom-repeat" items="[[intervention.cluster_names]]">
                 <span class="names-padding">[[item]]</span>
               </template>
-              <span hidden$="[[!_isEmpty(intervention.cluster_names.length)]]"
-                >—</span
-              >
+              <span hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">—</span>
             </etools-form-element-wrapper>
           </div>
         </template>
@@ -494,11 +449,7 @@ class InterventionDetails extends connect(store)(
                 Show Inactive
               </paper-toggle-button>
               <template is="dom-if" if="[[permissions.edit.result_links]]">
-                <paper-icon-button
-                  icon="add-box"
-                  title="Add"
-                  on-click="openCpOutputAndRamIndicatorsDialog"
-                >
+                <paper-icon-button icon="add-box" title="Add" on-click="openCpOutputAndRamIndicatorsDialog">
                 </paper-icon-button>
               </template>
             </div>
@@ -536,10 +487,7 @@ class InterventionDetails extends connect(store)(
       >
       </planned-budget>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Planned Programmatic Visits"
-      >
+      <etools-content-panel class="content-section" panel-title="Planned Programmatic Visits">
         <planned-visits
           id="plannedVisits"
           data-items="{{intervention.planned_visits}}"
@@ -572,89 +520,89 @@ class InterventionDetails extends connect(store)(
   @property({
     type: Object,
     notify: true,
-    observer: InterventionDetails.prototype._interventionChanged,
+    observer: InterventionDetails.prototype._interventionChanged
   })
   intervention!: Intervention;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   userEditPermission!: boolean;
 
-  @property({ type: Object })
+  @property({type: Object})
   permissions!: Permission<InterventionPermissionsFields>;
 
   @property({
     type: Number,
     notify: true,
-    observer: InterventionDetails.prototype._selectedPartnerIdChanged,
+    observer: InterventionDetails.prototype._selectedPartnerIdChanged
   })
   selectedPartnerId!: number;
 
-  @property({ type: Array })
+  @property({type: Array})
   documentTypes!: LabelAndValue[];
 
-  @property({ type: Array })
+  @property({type: Array})
   pcaDocTypes!: LabelAndValue[];
 
-  @property({ type: Array })
+  @property({type: Array})
   ssfaDocTypes!: LabelAndValue[];
 
-  @property({ type: Array })
+  @property({type: Array})
   sections!: GenericObject[];
 
-  @property({ type: Array })
+  @property({type: Array})
   offices!: Office[];
 
-  @property({ type: Array })
+  @property({type: Array})
   unicefUsersData!: MinimalUser[];
 
-  @property({ type: Array })
+  @property({type: Array})
   years: [] = [];
 
-  @property({ type: Object })
+  @property({type: Object})
   agreement!: object;
 
-  @property({ type: Object })
+  @property({type: Object})
   originalIntervention!: Intervention;
 
-  @property({ type: Boolean })
-  interventionRequiredField: boolean = false; // TODO is this used?
+  @property({type: Boolean})
+  interventionRequiredField = false; // TODO is this used?
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   newIntervention!: boolean;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   fieldsResetted!: boolean;
 
-  @property({ type: String })
-  _frsStartConsistencyWarning: string = "";
+  @property({type: String})
+  _frsStartConsistencyWarning = '';
 
-  @property({ type: String })
-  _frsEndConsistencyWarning: string = "";
+  @property({type: String})
+  _frsEndConsistencyWarning = '';
 
-  @property({ type: Array })
+  @property({type: Array})
   locations!: Location[];
 
-  @property({ type: String })
-  noOfPdOutputs: string | number = "0";
+  @property({type: String})
+  noOfPdOutputs: string | number = '0';
 
-  @property({ type: Boolean })
-  thereAreInactiveIndicators: boolean = false;
+  @property({type: Boolean})
+  thereAreInactiveIndicators = false;
 
-  @property({ type: Boolean })
-  showInactiveIndicators: boolean = false;
+  @property({type: Boolean})
+  showInactiveIndicators = false;
 
   private locationsDialog!: GroupedLocationsDialog;
 
   static get observers() {
     return [
-      "_newInterventionFlagChanged(newIntervention)",
-      "_setYears(intervention.start, intervention.end)",
-      "_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, " +
-        "intervention.start, intervention.status)",
-      "_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)",
-      "_contingencyPDChanged(intervention.contingency_pd)",
-      "_updateNoOfPdOutputs(intervention.result_links.*)",
-      "_updateActivationLetterRequiredFields(intervention.activation_letter_attachment)",
+      '_newInterventionFlagChanged(newIntervention)',
+      '_setYears(intervention.start, intervention.end)',
+      '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
+        'intervention.start, intervention.status)',
+      '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
+      '_contingencyPDChanged(intervention.contingency_pd)',
+      '_updateNoOfPdOutputs(intervention.result_links.*)',
+      '_updateActivationLetterRequiredFields(intervention.activation_letter_attachment)'
     ];
   }
 
@@ -662,12 +610,7 @@ class InterventionDetails extends connect(store)(
     if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
       this.permissions = copy(state.pageData!.permissions);
     }
-    if (
-      !isJsonStrMatch(
-        this.documentTypes,
-        state.commonData!.interventionDocTypes
-      )
-    ) {
+    if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
       this.documentTypes = [...state.commonData!.interventionDocTypes];
     }
     if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
@@ -677,9 +620,7 @@ class InterventionDetails extends connect(store)(
     if (!isJsonStrMatch(this.offices, state.commonData!.offices)) {
       this.offices = [...state.commonData!.offices];
     }
-    if (
-      !isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)
-    ) {
+    if (!isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)) {
       this.unicefUsersData = [...state.commonData!.unicefUsersData];
     }
     if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
@@ -690,10 +631,8 @@ class InterventionDetails extends connect(store)(
 
   ready() {
     super.ready();
-    this.locationsDialog = document.createElement(
-      "grouped-locations-dialog"
-    ) as any;
-    document.querySelector("body")!.appendChild(this.locationsDialog);
+    this.locationsDialog = document.createElement('grouped-locations-dialog') as any;
+    document.querySelector('body')!.appendChild(this.locationsDialog);
   }
 
   connectedCallback() {
@@ -702,38 +641,31 @@ class InterventionDetails extends connect(store)(
      * Disable loading message for details tab elements load,
      * triggered by parent element on stamp or by click event on tabs
      */
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "interv-page",
+      loadingSource: 'interv-page'
     });
     // @ts-ignore
-    this.setDropdownMissingOptionsAjaxDetails(
-      this.$.unicefFocalPts,
-      "unicefUsers",
-      { dropdown: true }
-    );
-    fireEvent(this, "tab-content-attached");
+    this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+    fireEvent(this, 'tab-content-attached');
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.locationsDialog) {
-      document.querySelector("body")!.removeChild(this.locationsDialog);
+      document.querySelector('body')!.removeChild(this.locationsDialog);
     }
   }
   _showRefYear(pdType: string, status: string) {
     if (this.intervention) {
-      if (pdType === "SSFA") {
-        this.set("intervention.reference_number_year", null);
+      if (pdType === 'SSFA') {
+        this.set('intervention.reference_number_year', null);
         return false; // no ref year for SSFA
       } else if (!this.intervention.reference_number_year) {
-        this.set(
-          "intervention.reference_number_year",
-          new Date().getFullYear()
-        );
+        this.set('intervention.reference_number_year', new Date().getFullYear());
       }
     }
-    return ["", "draft"].indexOf(status) >= 0;
+    return ['', 'draft'].indexOf(status) >= 0;
   }
 
   _updateNoOfPdOutputs() {
@@ -768,9 +700,7 @@ class InterventionDetails extends connect(store)(
   }
 
   openCpOutputAndRamIndicatorsDialog() {
-    const expectedResultsElem = (this.shadowRoot!.querySelector(
-      "#expectedResults"
-    ) as unknown) as ExpectedResultsEl;
+    const expectedResultsElem = (this.shadowRoot!.querySelector('#expectedResults') as unknown) as ExpectedResultsEl;
     if (!expectedResultsElem) {
       return;
     }
@@ -779,32 +709,22 @@ class InterventionDetails extends connect(store)(
 
   _updateActivationLetterRequiredFields(activationLetterAtt: any) {
     if (activationLetterAtt) {
-      this.set("permissions.required.start", true);
-      this.set("permissions.required.end", true);
+      this.set('permissions.required.start', true);
+      this.set('permissions.required.end', true);
     } else {
       if (this.originalIntervention && this.originalIntervention.permissions) {
-        this.set(
-          "permissions.required.start",
-          this.originalIntervention.permissions.required.start
-        );
-        this.set(
-          "permissions.required.end",
-          this.originalIntervention.permissions.required.end
-        );
+        this.set('permissions.required.start', this.originalIntervention.permissions.required.start);
+        this.set('permissions.required.end', this.originalIntervention.permissions.required.end);
       }
     }
   }
 
-  _showDaysUntilExpiry(
-    status: string,
-    _agreement: Agreement,
-    _intervention: Intervention
-  ) {
+  _showDaysUntilExpiry(status: string, _agreement: Agreement, _intervention: Intervention) {
     return !this._isTerminated(status);
   }
 
   _isDraft(status: string) {
-    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === "";
+    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === '';
   }
 
   _isTerminated(status: string) {
@@ -818,17 +738,13 @@ class InterventionDetails extends connect(store)(
   }
 
   _contingencyPDChanged(newValue: boolean) {
-    if (
-      newValue &&
-      this.intervention.status === CONSTANTS.STATUSES.Signed.toLowerCase()
-    ) {
+    if (newValue && this.intervention.status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
       this._updateDatesRequiredState(false);
     } else {
       if (
-        [
-          CONSTANTS.STATUSES.Signed.toLowerCase(),
-          CONSTANTS.STATUSES.Active.toLowerCase(),
-        ].indexOf(this.intervention.status) > -1
+        [CONSTANTS.STATUSES.Signed.toLowerCase(), CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(
+          this.intervention.status
+        ) > -1
       ) {
         this._updateDatesRequiredState(true);
       }
@@ -838,15 +754,13 @@ class InterventionDetails extends connect(store)(
   }
 
   _updateDatesRequiredState(isRequired: boolean) {
-    this.set("intervention.permissions.required.start", isRequired);
-    this.set("intervention.permissions.required.end", isRequired);
+    this.set('intervention.permissions.required.start', isRequired);
+    this.set('intervention.permissions.required.end', isRequired);
     store.dispatch(setPageDataPermissions(this.intervention.permissions));
   }
 
   _showContingencyPd(agreement: Agreement) {
-    return (
-      agreement && CONSTANTS.AGREEMENT_TYPES.PCA === agreement.agreement_type
-    );
+    return agreement && CONSTANTS.AGREEMENT_TYPES.PCA === agreement.agreement_type;
   }
 
   _initDocTypes(documentTypes: LabelAndValue[]) {
@@ -863,21 +777,17 @@ class InterventionDetails extends connect(store)(
         ssfaTypes.push(type);
       }
     });
-    this.set("pcaDocTypes", pcaTypes);
-    this.set("ssfaDocTypes", ssfaTypes);
+    this.set('pcaDocTypes', pcaTypes);
+    this.set('ssfaDocTypes', ssfaTypes);
   }
 
   _interventionChanged(intervention: Intervention, _old: any) {
-    if (
-      intervention &&
-      typeof intervention === "object" &&
-      Object.keys(intervention).length > 0
-    ) {
+    if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
       if (!intervention.id) {
-        this.set("selectedPartnerId", undefined);
+        this.set('selectedPartnerId', undefined);
       }
 
-      this.set("fieldsResetted", false);
+      this.set('fieldsResetted', false);
       this._newInterventionFlagChanged();
     }
   }
@@ -889,59 +799,51 @@ class InterventionDetails extends connect(store)(
   }
 
   _resetValidations() {
-    ((this.$
-      .agreementSelector as unknown) as AgreementSelector).resetValidations();
+    ((this.$.agreementSelector as unknown) as AgreementSelector).resetValidations();
     (this.$.documentType as EtoolsDropdownEl).resetInvalidState();
     (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
     (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
-    const fields = [
-      "documentType",
-      "unicefOffices",
-      "unicefFocalPts",
-      "partnerFocalPts",
-      "intStart",
-      "intEnd",
-    ];
+    const fields = ['documentType', 'unicefOffices', 'unicefFocalPts', 'partnerFocalPts', 'intStart', 'intEnd'];
     if (!this._isIE()) {
-      fields.push("title");
+      fields.push('title');
     }
     fields.forEach((field) => {
-      this.fieldValidationReset("#" + field);
+      this.fieldValidationReset('#' + field);
     });
 
     this._resetIETitleFieldValidation();
 
-    this.set("fieldsResetted", true);
+    this.set('fieldsResetted', true);
   }
 
   _isIE() {
-    const appShell = document.querySelector("app-shell");
-    return appShell!.classList.contains("ie");
+    const appShell = document.querySelector('app-shell');
+    return appShell!.classList.contains('ie');
   }
 
   _resetIETitleFieldValidation() {
     const isIE = this._isIE();
-    const title = this.shadowRoot!.querySelector("#title") as PolymerElement;
+    const title = this.shadowRoot!.querySelector('#title') as PolymerElement;
     if (title && isIE) {
       // IE11 #title style force update
       setTimeout(() => {
-        title.set("invalid", false);
+        title.set('invalid', false);
         title.updateStyles();
       }, 0);
     }
   }
 
   _activateAutoValidation(e: CustomEvent) {
-    (e.target as PaperInputElement).set("autoValidate", true);
+    (e.target as PaperInputElement).set('autoValidate', true);
   }
 
   _setYears(interventionStart: string, interventionEnd: string) {
     if (
-      typeof interventionStart === "string" &&
-      interventionStart !== "" &&
-      typeof interventionEnd === "string" &&
-      interventionEnd !== ""
+      typeof interventionStart === 'string' &&
+      interventionStart !== '' &&
+      typeof interventionEnd === 'string' &&
+      interventionEnd !== ''
     ) {
       let start = parseInt(interventionStart.substr(0, 4), 10);
       const end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
@@ -949,18 +851,18 @@ class InterventionDetails extends connect(store)(
       while (start <= end) {
         years.push({
           value: start,
-          label: start,
+          label: start
         });
         start++;
       }
-      this.set("years", years);
+      this.set('years', years);
     } else {
-      this.set("years", []);
+      this.set('years', []);
     }
   }
 
   _selectedPartnerIdChanged(id: any, oldId: any) {
-    if (typeof oldId === "number" && id !== oldId && !this.agreement) {
+    if (typeof oldId === 'number' && id !== oldId && !this.agreement) {
       // Prevent reset on changes caused by initialization of the fields
       this._resetDropdowns();
     }
@@ -972,14 +874,10 @@ class InterventionDetails extends connect(store)(
     // Test case - go to existing intervention , then go to New intervention
 
     // reset partner focal points options and value
-    this.set("intervention.partner_focal_points", []);
-    this.set("staffMembers", []);
-    const partnerFpDropDown = (this.$
-      .partnerFocalPts as unknown) as EtoolsDropdownEl;
-    if (
-      partnerFpDropDown &&
-      (!partnerFpDropDown.options || !partnerFpDropDown.options.length)
-    ) {
+    this.set('intervention.partner_focal_points', []);
+    this.set('staffMembers', []);
+    const partnerFpDropDown = (this.$.partnerFocalPts as unknown) as EtoolsDropdownEl;
+    if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
       partnerFpDropDown.selected = null;
     }
   }
@@ -1010,57 +908,43 @@ class InterventionDetails extends connect(store)(
   }
 
   _resetSelectedDocType(options: LabelAndValue[]) {
-    if (
-      !this.intervention ||
-      !this.intervention.document_type ||
-      options === undefined
-    ) {
+    if (!this.intervention || !this.intervention.document_type || options === undefined) {
       return;
     }
     if (!options || !options.length) {
-      this.set("intervention.document_type", null);
+      this.set('intervention.document_type', null);
       return;
     }
-    const selIsInOptions = options.find(
-      (o) => o.value === this.intervention.document_type
-    );
+    const selIsInOptions = options.find((o) => o.value === this.intervention.document_type);
     if (!selIsInOptions) {
-      this.set("intervention.document_type", null);
+      this.set('intervention.document_type', null);
     }
   }
 
   validate() {
     let valid = true;
     const fieldSelectors = [
-      "#agreementSelector",
-      "#documentType",
-      "#title",
-      "#unicefOffices",
-      "#unicefFocalPts",
-      "#partnerFocalPts",
-      "#cpStructure",
-      "#sections",
-      "#plannedBudget",
-      "#plannedVisits",
+      '#agreementSelector',
+      '#documentType',
+      '#title',
+      '#unicefOffices',
+      '#unicefFocalPts',
+      '#partnerFocalPts',
+      '#cpStructure',
+      '#sections',
+      '#plannedBudget',
+      '#plannedVisits'
     ];
 
-    if (
-      this._isContingencyAndHasActivationLetter() ||
-      this.intervention.status === "active"
-    ) {
-      fieldSelectors.push("#intStart", "#intEnd");
+    if (this._isContingencyAndHasActivationLetter() || this.intervention.status === 'active') {
+      fieldSelectors.push('#intStart', '#intEnd');
     }
 
-    if (
-      this.intervention.document_type !== "SSFA" &&
-      this._isDraft(this.intervention.status)
-    ) {
-      fieldSelectors.push("#ref-year");
+    if (this.intervention.document_type !== 'SSFA' && this._isDraft(this.intervention.status)) {
+      fieldSelectors.push('#ref-year');
     }
     fieldSelectors.forEach((selector: string) => {
-      const field = this.shadowRoot!.querySelector(
-        selector
-      ) as PolymerElement & { validate(): boolean };
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }
@@ -1069,10 +953,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _isContingencyAndHasActivationLetter() {
-    return (
-      this.intervention.contingency_pd &&
-      this.intervention.activation_letter_attachment
-    );
+    return this.intervention.contingency_pd && this.intervention.activation_letter_attachment;
   }
 
   _isContingencyAndDraft(contingency: boolean, status: string) {
@@ -1084,28 +965,24 @@ class InterventionDetails extends connect(store)(
       const today = new Date().toString();
       const diff = dateDiff(today, end);
       if (diff) {
-        return diff + " days until expiry";
+        return diff + ' days until expiry';
       }
     }
-    return "";
+    return '';
   }
 
-  _checkFrsStartConsistency(
-    frsEarliestStartDate: string,
-    interventionStart: string,
-    interventionStatus: string
-  ) {
+  _checkFrsStartConsistency(frsEarliestStartDate: string, interventionStart: string, interventionStatus: string) {
     if (
       this.newIntervention ||
-      this.emptyFrsList(this.intervention, "interventionDetails") ||
-      interventionStatus === "closed"
+      this.emptyFrsList(this.intervention, 'interventionDetails') ||
+      interventionStatus === 'closed'
     ) {
-      this.set("_frsStartConsistencyWarning", null);
+      this.set('_frsStartConsistencyWarning', null);
       (this.$.intStart as PolymerElement).updateStyles();
       return;
     }
     this.set(
-      "_frsStartConsistencyWarning",
+      '_frsStartConsistencyWarning',
       this.checkFrsAndIntervDateConsistency(
         interventionStart,
         frsEarliestStartDate,
@@ -1116,28 +993,19 @@ class InterventionDetails extends connect(store)(
     (this.$.intStart as PolymerElement).updateStyles();
   }
 
-  _checkFrsEndConsistency(
-    frsLatestEndDate: string,
-    interventionEnd: string,
-    interventionStatus: string
-  ) {
+  _checkFrsEndConsistency(frsLatestEndDate: string, interventionEnd: string, interventionStatus: string) {
     if (
       this.newIntervention ||
-      this.emptyFrsList(this.intervention, "interventionDetails") ||
-      interventionStatus === "closed"
+      this.emptyFrsList(this.intervention, 'interventionDetails') ||
+      interventionStatus === 'closed'
     ) {
-      this.set("_frsEndConsistencyWarning", "");
+      this.set('_frsEndConsistencyWarning', '');
       (this.$.intEnd as PolymerElement).updateStyles();
       return;
     }
     this.set(
-      "_frsEndConsistencyWarning",
-      this.checkFrsAndIntervDateConsistency(
-        interventionEnd,
-        frsLatestEndDate,
-        this.frsValidationFields.end_date,
-        true
-      )
+      '_frsEndConsistencyWarning',
+      this.checkFrsAndIntervDateConsistency(interventionEnd, frsLatestEndDate, this.frsValidationFields.end_date, true)
     );
     (this.$.intEnd as PolymerElement).updateStyles();
   }
@@ -1147,14 +1015,11 @@ class InterventionDetails extends connect(store)(
       return;
     }
     // Override intervention cluster names to cover delete and edit indicators also, besides create
-    this.set(
-      "intervention.cluster_names",
-      this._extractClusterNamesFromIndicators()
-    );
+    this.set('intervention.cluster_names', this._extractClusterNamesFromIndicators());
 
     // Reset intervention, to trigger observers in other components
     // TODO: find a way to get rid of next line
-    this.set("intervention", JSON.parse(JSON.stringify(this.intervention)));
+    this.set('intervention', JSON.parse(JSON.stringify(this.intervention)));
   }
 
   _extractClusterNamesFromIndicators() {
@@ -1194,30 +1059,28 @@ class InterventionDetails extends connect(store)(
       [
         CONSTANTS.STATUSES.Draft.toLowerCase(),
         CONSTANTS.STATUSES.Signed.toLowerCase(),
-        CONSTANTS.STATUSES.Active.toLowerCase(),
+        CONSTANTS.STATUSES.Active.toLowerCase()
       ].indexOf(status) > -1
     );
   }
 
   _activationLetterUploadFinished(e: CustomEvent) {
-    store.dispatch({ type: DECREASE_UPLOADS_IN_PROGRESS });
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = e.detail.success;
-      this.set("intervention.activation_letter_attachment", response.id);
-      store.dispatch({ type: INCREASE_UNSAVED_UPLOADS });
+      this.set('intervention.activation_letter_attachment', response.id);
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
   _activationLetterDelete(_e: CustomEvent) {
-    this.set("intervention.activation_letter_attachment", null);
-    store.dispatch({ type: DECREASE_UNSAVED_UPLOADS });
+    this.set('intervention.activation_letter_attachment', null);
+    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
   showActivationLetterDeleteBtn(status: string) {
     return (
-      this._isDraft(status) &&
-      !!this.originalIntervention &&
-      !this.originalIntervention.activation_letter_attachment
+      this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.activation_letter_attachment
     );
   }
 
@@ -1226,30 +1089,26 @@ class InterventionDetails extends connect(store)(
       [
         CONSTANTS.STATUSES.Draft.toLowerCase(),
         CONSTANTS.STATUSES.Signed.toLowerCase(),
-        CONSTANTS.STATUSES.Active.toLowerCase(),
+        CONSTANTS.STATUSES.Active.toLowerCase()
       ].indexOf(status) > -1 &&
       resultLinks &&
       resultLinks.length
     );
   }
 
-  showSeparator(
-    status: string,
-    resultLinks: [],
-    resultLinkPermission: boolean
-  ) {
+  showSeparator(status: string, resultLinks: [], resultLinkPermission: boolean) {
     return this.showExportResults(status, resultLinks) && resultLinkPermission;
   }
 
   exportExpectedResults() {
     // @ts-ignore
-    const endpoint = this.getEndpoint("expectedResultsExport", {
-      intervention_id: this.intervention.id,
+    const endpoint = this.getEndpoint('expectedResultsExport', {
+      intervention_id: this.intervention.id
     }).url;
-    window.open(endpoint, "_blank");
+    window.open(endpoint, '_blank');
   }
 }
 
-window.customElements.define("intervention-details", InterventionDetails);
+window.customElements.define('intervention-details', InterventionDetails);
 
 export default InterventionDetails;

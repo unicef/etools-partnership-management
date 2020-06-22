@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
-import { prettyDate } from "../utils/date-utils";
-import { Constructor } from "../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
+import {prettyDate} from '../utils/date-utils';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
 
 /**
  * @polymer
@@ -15,41 +15,39 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
      */
     // TODO - apply single responsability
     getDisplayValue(value: any, separator: string, skipSpaces: boolean) {
-      if (typeof value === "string" && value !== "") {
+      if (typeof value === 'string' && value !== '') {
         return value;
       } else if (Array.isArray(value) && value.length > 0) {
         if (!separator) {
-          separator = ", ";
+          separator = ', ';
         }
         if (skipSpaces) {
-          return value
-            .filter((v) => v !== undefined && v !== "" && v !== null)
-            .join(separator);
+          return value.filter((v) => v !== undefined && v !== '' && v !== null).join(separator);
         }
         return value.join(separator);
-      } else if (typeof value === "number") {
+      } else if (typeof value === 'number') {
         return value;
       }
-      return "-";
+      return '-';
     }
     /**
      * Prepare date string and return it in a user readable format
      */
     getDateDisplayValue(dateString: string) {
       const formatedDate = prettyDate(dateString);
-      return formatedDate ? formatedDate : "-";
+      return formatedDate ? formatedDate : '-';
     }
 
     prepareEtoolsFileDataFromUrl(fileUrl: string) {
       let files: object[] = [];
-      if (typeof fileUrl === "string" && fileUrl !== "") {
+      if (typeof fileUrl === 'string' && fileUrl !== '') {
         const fileName = this.getFileNameFromURL(fileUrl);
         files = [
           {
             id: null,
             file_name: fileName,
-            path: fileUrl,
-          },
+            path: fileUrl
+          }
         ];
       }
       return files;
@@ -57,9 +55,9 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     getFileNameFromURL(url: string) {
       if (!url) {
-        return "";
+        return '';
       }
-      return url.split("?").shift()!.split("/").pop();
+      return url.split('?').shift()!.split('/').pop();
     }
 
     /**
@@ -70,14 +68,12 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!useValidate) {
         useValidate = false;
       }
-      const field = this.shadowRoot!.querySelector(
-        selector
-      ) as PolymerElement & { validate(): boolean };
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field) {
         if (useValidate) {
           field.validate();
         } else {
-          field.set("invalid", false);
+          field.set('invalid', false);
         }
       }
       return field;

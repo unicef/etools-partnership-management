@@ -8,190 +8,161 @@
  subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { Action, ActionCreator } from "redux";
-import { ThunkAction } from "redux-thunk";
-import { RootState } from "../store.js";
-import { LabelAndValue } from "../typings/globals.types.js";
+import {Action, ActionCreator} from 'redux';
+import {ThunkAction} from 'redux-thunk';
+import {RootState} from '../store.js';
+import {LabelAndValue} from '../typings/globals.types.js';
 
-export const UPDATE_COUNTRY_PROGRAMMES = "UPDATE_COUNTRY_PROGRAMMES";
-export const UPDATE_DISAGGREGATIONS = "UPDATE_DISAGGREGATIONS";
-export const PATCH_DISAGGREGATION = "PATCH_DISAGGREGATION";
-export const ADD_DISAGGREGATION = "ADD_DISAGGREGATION";
-export const UPDATE_FILE_TYPES = "UPDATE_FILE_TYPES";
-export const UPDATE_CP_OUTPUTS = "UPDATE_CP_OUTPUTS";
-export const UPDATE_SIGNED_BY_UNICEF_USERS = "UPDATE_SIGNED_BY_UNICEF_USERS";
-export const UPDATE_DONORS = "UPDATE_DONORS";
-export const UPDATE_GRANTS = "UPDATE_GRANTS";
-export const UPDATE_INTERVENTION_DOC_TYPES = "UPDATE_INTERVENTION_DOC_TYPES";
-export const UPDATE_INTERVENTION_STATUSES = "UPDATE_INTERVENTION_STATUSES";
-export const UPDATE_CURRENCIES = "UPDATE_CURRENCIES";
-export const UPDATE_AGREEMENT_TYPES = "UPDATE_AGREEMENT_TYPES";
-export const UPDATE_AGREEMENT_STATUSES = "UPDATE_AGREEMENT_STATUSES";
-export const UPDATE_AGENCY_CHOICES = "UPDATE_AGENCY_CHOICES";
-export const UPDATE_AGREEMENT_AMENDMENT_TYPES =
-  "UPDATE_AGREEMENT_AMENDMENT_TYPES";
-export const UPDATE_CSO_TYPES = "UPDATE_CSO_TYPES";
-export const UPDATE_PARTNER_TYPES = "UPDATE_PARTNER_TYPES";
-export const UPDATE_SEA_RISK_RATINGS = "UPDATE_SEA_RISK_RATINGS";
-export const UPDATE_ASSESSMENT_TYPES = "UPDATE_ASSESSMENT_TYPES";
-export const UPDATE_INTERVENTION_AMENDMENT_TYPES =
-  "UPDATE_INTERVENTION_AMENDMENT_TYPES";
-export const UPDATE_LOCATION_TYPES = "UPDATE_LOCATION_TYPES";
-export const UPDATE_PARTNER_RISK_RATINGS = "UPDATE_PARTNER_RISK_RATINGS";
-export const UPDATE_LOCATIONS = "UPDATE_LOCATIONS";
-export const UPDATE_OFFICES = "UPDATE_OFFICES";
-export const UPDATE_PRP_COUNTRIES = "UPDATE_PRP_COUNTRIES";
-export const UPDATE_SECTIONS = "UPDATE_SECTIONS";
-export const UPDATE_UNICEF_USERS = "UPDATE_UNICEF_USERS";
-export const UPDATE_USER_COUNTRY_DATA = "UPDATE_USER_COUNTRY_DATA";
-export const UPDATE_ENV_FLAGS = "UPDATE_ENV_FLAGS";
-export const UPDATE_CURRENT_USER = "UPDATE_CURRENT_USER";
+export const UPDATE_COUNTRY_PROGRAMMES = 'UPDATE_COUNTRY_PROGRAMMES';
+export const UPDATE_DISAGGREGATIONS = 'UPDATE_DISAGGREGATIONS';
+export const PATCH_DISAGGREGATION = 'PATCH_DISAGGREGATION';
+export const ADD_DISAGGREGATION = 'ADD_DISAGGREGATION';
+export const UPDATE_FILE_TYPES = 'UPDATE_FILE_TYPES';
+export const UPDATE_CP_OUTPUTS = 'UPDATE_CP_OUTPUTS';
+export const UPDATE_SIGNED_BY_UNICEF_USERS = 'UPDATE_SIGNED_BY_UNICEF_USERS';
+export const UPDATE_DONORS = 'UPDATE_DONORS';
+export const UPDATE_GRANTS = 'UPDATE_GRANTS';
+export const UPDATE_INTERVENTION_DOC_TYPES = 'UPDATE_INTERVENTION_DOC_TYPES';
+export const UPDATE_INTERVENTION_STATUSES = 'UPDATE_INTERVENTION_STATUSES';
+export const UPDATE_CURRENCIES = 'UPDATE_CURRENCIES';
+export const UPDATE_AGREEMENT_TYPES = 'UPDATE_AGREEMENT_TYPES';
+export const UPDATE_AGREEMENT_STATUSES = 'UPDATE_AGREEMENT_STATUSES';
+export const UPDATE_AGENCY_CHOICES = 'UPDATE_AGENCY_CHOICES';
+export const UPDATE_AGREEMENT_AMENDMENT_TYPES = 'UPDATE_AGREEMENT_AMENDMENT_TYPES';
+export const UPDATE_CSO_TYPES = 'UPDATE_CSO_TYPES';
+export const UPDATE_PARTNER_TYPES = 'UPDATE_PARTNER_TYPES';
+export const UPDATE_SEA_RISK_RATINGS = 'UPDATE_SEA_RISK_RATINGS';
+export const UPDATE_ASSESSMENT_TYPES = 'UPDATE_ASSESSMENT_TYPES';
+export const UPDATE_INTERVENTION_AMENDMENT_TYPES = 'UPDATE_INTERVENTION_AMENDMENT_TYPES';
+export const UPDATE_LOCATION_TYPES = 'UPDATE_LOCATION_TYPES';
+export const UPDATE_PARTNER_RISK_RATINGS = 'UPDATE_PARTNER_RISK_RATINGS';
+export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
+export const UPDATE_OFFICES = 'UPDATE_OFFICES';
+export const UPDATE_PRP_COUNTRIES = 'UPDATE_PRP_COUNTRIES';
+export const UPDATE_SECTIONS = 'UPDATE_SECTIONS';
+export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
+export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
+export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
+export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 
-export interface CommonDataActionUpdateCountryProgrammes
-  extends Action<"UPDATE_COUNTRY_PROGRAMMES"> {
+export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: object[];
 }
 
-export interface CommonDataActionUpdateDisaggregations
-  extends Action<"UPDATE_DISAGGREGATIONS"> {
+export interface CommonDataActionUpdateDisaggregations extends Action<'UPDATE_DISAGGREGATIONS'> {
   disaggregations: object[];
 }
 
-export interface CommonDataActionPatchDisaggregation
-  extends Action<"PATCH_DISAGGREGATION"> {
+export interface CommonDataActionPatchDisaggregation extends Action<'PATCH_DISAGGREGATION'> {
   disaggregation: object;
 }
 
-export interface CommonDataActionAddDisaggregation
-  extends Action<"ADD_DISAGGREGATION"> {
+export interface CommonDataActionAddDisaggregation extends Action<'ADD_DISAGGREGATION'> {
   disaggregation: object;
 }
 
-export interface CommonDataActionUpdateFileTypes
-  extends Action<"UPDATE_FILE_TYPES"> {
+export interface CommonDataActionUpdateFileTypes extends Action<'UPDATE_FILE_TYPES'> {
   fileTypes: object[];
 }
 
-export interface CommonDataActionUpdateCpOutputs
-  extends Action<"UPDATE_CP_OUTPUTS"> {
+export interface CommonDataActionUpdateCpOutputs extends Action<'UPDATE_CP_OUTPUTS'> {
   cpOutputs: object[];
 }
 
-export interface CommonDataActionUpdateSignedByUnicefUsers
-  extends Action<"UPDATE_SIGNED_BY_UNICEF_USERS"> {
+export interface CommonDataActionUpdateSignedByUnicefUsers extends Action<'UPDATE_SIGNED_BY_UNICEF_USERS'> {
   signedByUnicefUsers: object[];
 }
 
-export interface CommonDataActionUpdateDonors extends Action<"UPDATE_DONORS"> {
+export interface CommonDataActionUpdateDonors extends Action<'UPDATE_DONORS'> {
   donors: object[];
 }
 
-export interface CommonDataActionUpdateGrants extends Action<"UPDATE_GRANTS"> {
+export interface CommonDataActionUpdateGrants extends Action<'UPDATE_GRANTS'> {
   grants: object[];
 }
 
-export interface CommonDataActionUpdateInterventionDocTypes
-  extends Action<"UPDATE_INTERVENTION_DOC_TYPES"> {
+export interface CommonDataActionUpdateInterventionDocTypes extends Action<'UPDATE_INTERVENTION_DOC_TYPES'> {
   intDocTypes: object[];
 }
 
-export interface CommonDataActionUpdateInterventionStatuses
-  extends Action<"UPDATE_INTERVENTION_STATUSES"> {
+export interface CommonDataActionUpdateInterventionStatuses extends Action<'UPDATE_INTERVENTION_STATUSES'> {
   statuses: object[];
 }
 
-export interface CommonDataActionUpdateCurrencies
-  extends Action<"UPDATE_CURRENCIES"> {
+export interface CommonDataActionUpdateCurrencies extends Action<'UPDATE_CURRENCIES'> {
   currencies: object[];
 }
 
-export interface CommonDataActionUpdateAgreementTypes
-  extends Action<"UPDATE_AGREEMENT_TYPES"> {
+export interface CommonDataActionUpdateAgreementTypes extends Action<'UPDATE_AGREEMENT_TYPES'> {
   types: object[];
 }
 
-export interface CommonDataActionUpdateAgreementStatuses
-  extends Action<"UPDATE_AGREEMENT_STATUSES"> {
+export interface CommonDataActionUpdateAgreementStatuses extends Action<'UPDATE_AGREEMENT_STATUSES'> {
   statuses: object[];
 }
 
-export interface CommonDataActionUpdateAgencyChoices
-  extends Action<"UPDATE_AGENCY_CHOICES"> {
+export interface CommonDataActionUpdateAgencyChoices extends Action<'UPDATE_AGENCY_CHOICES'> {
   agencyChoices: object[];
 }
 
-export interface CommonDataActionUpdateAgreementAmendmentTypes
-  extends Action<"UPDATE_AGREEMENT_AMENDMENT_TYPES"> {
+export interface CommonDataActionUpdateAgreementAmendmentTypes extends Action<'UPDATE_AGREEMENT_AMENDMENT_TYPES'> {
   types: object[];
 }
 
-export interface CommonDataActionUpdateCsoTypes
-  extends Action<"UPDATE_CSO_TYPES"> {
+export interface CommonDataActionUpdateCsoTypes extends Action<'UPDATE_CSO_TYPES'> {
   csoTypes: object[];
 }
 
-export interface CommonDataActionUpdatePartnerTypes
-  extends Action<"UPDATE_PARTNER_TYPES"> {
+export interface CommonDataActionUpdatePartnerTypes extends Action<'UPDATE_PARTNER_TYPES'> {
   partnerTypes: object[];
 }
 
-export interface CommonDataActionUpdateAssessmentTypes
-  extends Action<"UPDATE_ASSESSMENT_TYPES"> {
+export interface CommonDataActionUpdateAssessmentTypes extends Action<'UPDATE_ASSESSMENT_TYPES'> {
   assessmentTypes: object[];
 }
 
 export interface CommonDataActionUpdateInterventionAmendmentTypes
-  extends Action<"UPDATE_INTERVENTION_AMENDMENT_TYPES"> {
+  extends Action<'UPDATE_INTERVENTION_AMENDMENT_TYPES'> {
   intAmendTypes: object[];
 }
 
-export interface CommonDataActionUpdateLocationTypes
-  extends Action<"UPDATE_LOCATION_TYPES"> {
+export interface CommonDataActionUpdateLocationTypes extends Action<'UPDATE_LOCATION_TYPES'> {
   locationTypes: object[];
 }
 
-export interface CommonDataActionUpdatePartnerRiskRatings
-  extends Action<"UPDATE_PARTNER_RISK_RATINGS"> {
+export interface CommonDataActionUpdatePartnerRiskRatings extends Action<'UPDATE_PARTNER_RISK_RATINGS'> {
   ratings: object[];
 }
 
-export interface CommonDataActionUpdateLocations
-  extends Action<"UPDATE_LOCATIONS"> {
+export interface CommonDataActionUpdateLocations extends Action<'UPDATE_LOCATIONS'> {
   locations: object[];
 }
 
-export interface CommonDataActionUpdateOffices
-  extends Action<"UPDATE_OFFICES"> {
+export interface CommonDataActionUpdateOffices extends Action<'UPDATE_OFFICES'> {
   offices: object[];
 }
 
-export interface CommonDataActionUpdatePRPCountries
-  extends Action<"UPDATE_PRP_COUNTRIES"> {
+export interface CommonDataActionUpdatePRPCountries extends Action<'UPDATE_PRP_COUNTRIES'> {
   PRPCountryData: object[];
 }
 
-export interface CommonDataActionUpdateSections
-  extends Action<"UPDATE_SECTIONS"> {
+export interface CommonDataActionUpdateSections extends Action<'UPDATE_SECTIONS'> {
   sections: object[];
 }
 
-export interface CommonDataActionUpdateUnicefUsers
-  extends Action<"UPDATE_UNICEF_USERS"> {
+export interface CommonDataActionUpdateUnicefUsers extends Action<'UPDATE_UNICEF_USERS'> {
   unicefUsersData: object[];
 }
 
-export interface CommonDataActionUpdateUserCountryData
-  extends Action<"UPDATE_USER_COUNTRY_DATA"> {
+export interface CommonDataActionUpdateUserCountryData extends Action<'UPDATE_USER_COUNTRY_DATA'> {
   countryData: object;
 }
 
-export interface CommonDataActionUpdateEnvFlags
-  extends Action<"UPDATE_ENV_FLAGS"> {
+export interface CommonDataActionUpdateEnvFlags extends Action<'UPDATE_ENV_FLAGS'> {
   envFlags: object;
 }
 
-export interface CommonDataActionUpdateCurrentUser
-  extends Action<"UPDATE_CURRENT_USER"> {
+export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURRENT_USER'> {
   user: object;
 }
 
@@ -235,7 +206,7 @@ export const updateCountryProgrammes: ActionCreator<CommonDataActionUpdateCountr
 ) => {
   return {
     type: UPDATE_COUNTRY_PROGRAMMES,
-    countryProgrammes,
+    countryProgrammes
   };
 };
 
@@ -244,43 +215,35 @@ export const updateDisaggregations: ActionCreator<CommonDataActionUpdateDisaggre
 ) => {
   return {
     type: UPDATE_DISAGGREGATIONS,
-    disaggregations,
+    disaggregations
   };
 };
 
-export const patchDisaggregation: ActionCreator<CommonDataActionPatchDisaggregation> = (
-  disaggregation: object
-) => {
+export const patchDisaggregation: ActionCreator<CommonDataActionPatchDisaggregation> = (disaggregation: object) => {
   return {
     type: PATCH_DISAGGREGATION,
-    disaggregation,
+    disaggregation
   };
 };
 
-export const addDisaggregation: ActionCreator<CommonDataActionAddDisaggregation> = (
-  disaggregation: object
-) => {
+export const addDisaggregation: ActionCreator<CommonDataActionAddDisaggregation> = (disaggregation: object) => {
   return {
     type: ADD_DISAGGREGATION,
-    disaggregation,
+    disaggregation
   };
 };
 
-export const updateFileTypes: ActionCreator<CommonDataActionUpdateFileTypes> = (
-  fileTypes: object[]
-) => {
+export const updateFileTypes: ActionCreator<CommonDataActionUpdateFileTypes> = (fileTypes: object[]) => {
   return {
     type: UPDATE_FILE_TYPES,
-    fileTypes,
+    fileTypes
   };
 };
 
-export const updateCpOutputs: ActionCreator<CommonDataActionUpdateCpOutputs> = (
-  cpOutputs: object[]
-) => {
+export const updateCpOutputs: ActionCreator<CommonDataActionUpdateCpOutputs> = (cpOutputs: object[]) => {
   return {
     type: UPDATE_CP_OUTPUTS,
-    cpOutputs,
+    cpOutputs
   };
 };
 
@@ -289,25 +252,21 @@ export const updateSignedByUnicefUsers: ActionCreator<CommonDataActionUpdateSign
 ) => {
   return {
     type: UPDATE_SIGNED_BY_UNICEF_USERS,
-    signedByUnicefUsers,
+    signedByUnicefUsers
   };
 };
 
-export const updateDonors: ActionCreator<CommonDataActionUpdateDonors> = (
-  donors: object[]
-) => {
+export const updateDonors: ActionCreator<CommonDataActionUpdateDonors> = (donors: object[]) => {
   return {
     type: UPDATE_DONORS,
-    donors,
+    donors
   };
 };
 
-export const updateGrants: ActionCreator<CommonDataActionUpdateGrants> = (
-  grants: object[]
-) => {
+export const updateGrants: ActionCreator<CommonDataActionUpdateGrants> = (grants: object[]) => {
   return {
     type: UPDATE_GRANTS,
-    grants,
+    grants
   };
 };
 
@@ -316,7 +275,7 @@ export const updateInterventionDocTypes: ActionCreator<CommonDataActionUpdateInt
 ) => {
   return {
     type: UPDATE_INTERVENTION_DOC_TYPES,
-    intDocTypes,
+    intDocTypes
   };
 };
 
@@ -325,43 +284,35 @@ export const updateInterventionStatuses: ActionCreator<CommonDataActionUpdateInt
 ) => {
   return {
     type: UPDATE_INTERVENTION_STATUSES,
-    statuses,
+    statuses
   };
 };
 
-export const updateCurrencies: ActionCreator<CommonDataActionUpdateCurrencies> = (
-  currencies: object[]
-) => {
+export const updateCurrencies: ActionCreator<CommonDataActionUpdateCurrencies> = (currencies: object[]) => {
   return {
     type: UPDATE_CURRENCIES,
-    currencies,
+    currencies
   };
 };
 
-export const updateAgreementTypes: ActionCreator<CommonDataActionUpdateAgreementTypes> = (
-  types: object[]
-) => {
+export const updateAgreementTypes: ActionCreator<CommonDataActionUpdateAgreementTypes> = (types: object[]) => {
   return {
     type: UPDATE_AGREEMENT_TYPES,
-    types,
+    types
   };
 };
 
-export const updateAgreementStatuses: ActionCreator<CommonDataActionUpdateAgreementStatuses> = (
-  statuses: object[]
-) => {
+export const updateAgreementStatuses: ActionCreator<CommonDataActionUpdateAgreementStatuses> = (statuses: object[]) => {
   return {
     type: UPDATE_AGREEMENT_STATUSES,
-    statuses,
+    statuses
   };
 };
 
-export const updateAgencyChoices: ActionCreator<CommonDataActionUpdateAgencyChoices> = (
-  agencyChoices: object[]
-) => {
+export const updateAgencyChoices: ActionCreator<CommonDataActionUpdateAgencyChoices> = (agencyChoices: object[]) => {
   return {
     type: UPDATE_AGENCY_CHOICES,
-    agencyChoices,
+    agencyChoices
   };
 };
 
@@ -370,32 +321,28 @@ export const updateAgreementAmendmentTypes: ActionCreator<CommonDataActionUpdate
 ) => {
   return {
     type: UPDATE_AGREEMENT_AMENDMENT_TYPES,
-    types,
+    types
   };
 };
 
-export const updateCsoTypes: ActionCreator<CommonDataActionUpdateCsoTypes> = (
-  csoTypes: object[]
-) => {
+export const updateCsoTypes: ActionCreator<CommonDataActionUpdateCsoTypes> = (csoTypes: object[]) => {
   return {
     type: UPDATE_CSO_TYPES,
-    csoTypes,
+    csoTypes
   };
 };
 
-export const updatePartnerTypes: ActionCreator<CommonDataActionUpdatePartnerTypes> = (
-  partnerTypes: object[]
-) => {
+export const updatePartnerTypes: ActionCreator<CommonDataActionUpdatePartnerTypes> = (partnerTypes: object[]) => {
   return {
     type: UPDATE_PARTNER_TYPES,
-    partnerTypes,
+    partnerTypes
   };
 };
 
 export const updateSeaRiskRatings = (seaRiskRatings: LabelAndValue[]) => {
   return {
     type: UPDATE_SEA_RISK_RATINGS,
-    seaRiskRatings,
+    seaRiskRatings
   };
 };
 
@@ -404,7 +351,7 @@ export const updateAssessmentTypes: ActionCreator<CommonDataActionUpdateAssessme
 ) => {
   return {
     type: UPDATE_ASSESSMENT_TYPES,
-    assessmentTypes,
+    assessmentTypes
   };
 };
 
@@ -413,16 +360,14 @@ export const updateInterventionAmendmentTypes: ActionCreator<CommonDataActionUpd
 ) => {
   return {
     type: UPDATE_INTERVENTION_AMENDMENT_TYPES,
-    intAmendTypes,
+    intAmendTypes
   };
 };
 
-export const updateLocationTypes: ActionCreator<CommonDataActionUpdateLocationTypes> = (
-  locationTypes: object[]
-) => {
+export const updateLocationTypes: ActionCreator<CommonDataActionUpdateLocationTypes> = (locationTypes: object[]) => {
   return {
     type: UPDATE_LOCATION_TYPES,
-    locationTypes,
+    locationTypes
   };
 };
 
@@ -431,78 +376,62 @@ export const updatePartnerRiskRatings: ActionCreator<CommonDataActionUpdatePartn
 ) => {
   return {
     type: UPDATE_PARTNER_RISK_RATINGS,
-    ratings,
+    ratings
   };
 };
 
-export const updateLocations: ActionCreator<CommonDataActionUpdateLocations> = (
-  locations: object[]
-) => {
+export const updateLocations: ActionCreator<CommonDataActionUpdateLocations> = (locations: object[]) => {
   return {
     type: UPDATE_LOCATIONS,
-    locations,
+    locations
   };
 };
 
-export const updateOfficesData: ActionCreator<CommonDataActionUpdateOffices> = (
-  offices: object[]
-) => {
+export const updateOfficesData: ActionCreator<CommonDataActionUpdateOffices> = (offices: object[]) => {
   return {
     type: UPDATE_OFFICES,
-    offices,
+    offices
   };
 };
 
-export const updatePRPCountries: ActionCreator<CommonDataActionUpdatePRPCountries> = (
-  PRPCountryData: object[]
-) => {
+export const updatePRPCountries: ActionCreator<CommonDataActionUpdatePRPCountries> = (PRPCountryData: object[]) => {
   return {
     type: UPDATE_PRP_COUNTRIES,
-    PRPCountryData,
+    PRPCountryData
   };
 };
 
-export const updateSections: ActionCreator<CommonDataActionUpdateSections> = (
-  sections: object[]
-) => {
+export const updateSections: ActionCreator<CommonDataActionUpdateSections> = (sections: object[]) => {
   return {
     type: UPDATE_SECTIONS,
-    sections,
+    sections
   };
 };
 
-export const updateUnicefUsers: ActionCreator<CommonDataActionUpdateUnicefUsers> = (
-  unicefUsersData: object[]
-) => {
+export const updateUnicefUsers: ActionCreator<CommonDataActionUpdateUnicefUsers> = (unicefUsersData: object[]) => {
   return {
     type: UPDATE_UNICEF_USERS,
-    unicefUsersData,
+    unicefUsersData
   };
 };
 
-export const updateUserCountryData: ActionCreator<CommonDataActionUpdateUserCountryData> = (
-  countryData: object[]
-) => {
+export const updateUserCountryData: ActionCreator<CommonDataActionUpdateUserCountryData> = (countryData: object[]) => {
   return {
     type: UPDATE_USER_COUNTRY_DATA,
-    countryData,
+    countryData
   };
 };
 
-export const updateEnvFlags: ActionCreator<CommonDataActionUpdateEnvFlags> = (
-  envFlags: object
-) => {
+export const updateEnvFlags: ActionCreator<CommonDataActionUpdateEnvFlags> = (envFlags: object) => {
   return {
     type: UPDATE_ENV_FLAGS,
-    envFlags,
+    envFlags
   };
 };
 
-export const updateCurrentUser: ActionCreator<CommonDataActionUpdateCurrentUser> = (
-  user: object
-) => {
+export const updateCurrentUser: ActionCreator<CommonDataActionUpdateCurrentUser> = (user: object) => {
   return {
     type: UPDATE_CURRENT_USER,
-    user,
+    user
   };
 };

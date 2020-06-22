@@ -1,4 +1,4 @@
-import { PolymerElement } from "@polymer/polymer";
+import {PolymerElement} from '@polymer/polymer';
 
 /*
  * The type Constructor<T> is an alias for the construct signature
@@ -72,8 +72,8 @@ export interface DomRepeatEvent extends CustomEvent {
 }
 
 export class Paginator {
-  page: number = 1;
-  page_size: number = 10;
+  page = 1;
+  page_size = 10;
   count: number | null = null;
   visible_range: string[] | number[] = [];
 }

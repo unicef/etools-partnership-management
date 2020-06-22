@@ -1,13 +1,13 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../typings/globals.types";
-import { fireEvent } from "../../../../../utils/fire-custom-event";
-import EtoolsDialog from "@unicef-polymer/etools-dialog";
-import EndpointsMixin from "../../../../../endpoints/endpoints-mixin";
-import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles";
-import clone from "lodash-es/clone";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser";
+import {PolymerElement, html} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
+import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import clone from 'lodash-es/clone';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
 class HactEditDialog extends EndpointsMixin(PolymerElement) {
   static get template() {
@@ -27,10 +27,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
         }
 
         .heading {
-          border-bottom: var(
-            --header-bottom-line,
-            1px solid rgba(0, 0, 0, 0.12)
-          );
+          border-bottom: var(--header-bottom-line, 1px solid rgba(0, 0, 0, 0.12));
           padding-bottom: 10px;
           padding-top: 10px;
           width: 100%;
@@ -174,44 +171,44 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Object, observer: "_partnerChanged" })
+  @property({type: Object, observer: '_partnerChanged'})
   partner!: GenericObject;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   isGovPartner = false;
 
   // Spot Checks and Audits changes get put here for PATCH request
-  @property({ type: Object })
+  @property({type: Object})
   editableValues!: GenericObject;
 
   // Programmatic Visits changes here due to different endpoint for PATCH
-  @property({ type: Array })
+  @property({type: Array})
   selectedAudits!: string[];
 
-  @property({ type: Array })
+  @property({type: Array})
   auditOptions = [
     {
-      label: "Scheduled Audit",
-      value: "Scheduled Audit",
+      label: 'Scheduled Audit',
+      value: 'Scheduled Audit'
     },
     {
-      label: "Special Audit",
-      value: "Special Audit",
-    },
+      label: 'Special Audit',
+      value: 'Special Audit'
+    }
   ];
-  @property({ type: Array })
+  @property({type: Array})
   auditMap = [
     {
-      label: "Special Audit",
-      prop: "special_audit",
+      label: 'Special Audit',
+      prop: 'special_audit'
     },
     {
-      label: "Scheduled Audit",
-      prop: "scheduled_audit",
-    },
+      label: 'Scheduled Audit',
+      prop: 'scheduled_audit'
+    }
   ];
 
-  @property({ type: Object })
+  @property({type: Object})
   toastSource!: PolymerElement;
 
   openDialog() {
@@ -222,9 +219,9 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     if (!partner) {
       return;
     }
-    this.set("isGovPartner", this.partner.partner_type_slug === "Gov");
+    this.set('isGovPartner', this.partner.partner_type_slug === 'Gov');
 
-    let editableValues = { planned_engagement: {}, planned_visits: {} };
+    const editableValues = {planned_engagement: {}, planned_visits: {}};
     editableValues.planned_engagement = clone(partner.planned_engagement);
 
     if (this.isGovPartner) {
@@ -233,26 +230,20 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
         programmatic_q1: planned.q1,
         programmatic_q2: planned.q2,
         programmatic_q3: planned.q3,
-        programmatic_q4: planned.q4,
+        programmatic_q4: planned.q4
       };
       editableValues.planned_visits = planned_visits;
     }
 
-    const hasAudit = (auditType: any) =>
-      partner.planned_engagement[auditType.prop];
-    //const selectedAudits = compose(map(prop('label')), filter(hasAudit))(this.auditMap);
-    const selectedAudits = this.auditMap
-      .filter(hasAudit)
-      .map((a: any) => a.label);
-    this.setProperties({ editableValues, selectedAudits });
+    const hasAudit = (auditType: any) => partner.planned_engagement[auditType.prop];
+    // const selectedAudits = compose(map(prop('label')), filter(hasAudit))(this.auditMap);
+    const selectedAudits = this.auditMap.filter(hasAudit).map((a: any) => a.label);
+    this.setProperties({editableValues, selectedAudits});
   }
 
   _auditsChanged() {
     this.auditMap.map((audit: any) =>
-      this.set(
-        `editableValues.planned_engagement.${audit.prop}`,
-        this.selectedAudits.includes(audit.label)
-      )
+      this.set(`editableValues.planned_engagement.${audit.prop}`, this.selectedAudits.includes(audit.label))
     );
   }
 
@@ -263,7 +254,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
 
   _handleSaveResponse(resp: any) {
     (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
-    fireEvent(this, "hact-values-saved", { partner: resp });
+    fireEvent(this, 'hact-values-saved', {partner: resp});
     this._closeDialog();
   }
 
@@ -271,22 +262,20 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     this.setProperties({
       editableValues: null,
       selectedAudits: null,
-      partner: null,
+      partner: null
     });
     (this.$.editPartnersDialog as EtoolsDialog).opened = false;
   }
 
   savePartnerDetails(body: any, partnerId: string) {
     const params = {
-      method: "PATCH",
-      endpoint: this.getEndpoint("partnerDetails", { id: partnerId }),
-      body,
+      method: 'PATCH',
+      endpoint: this.getEndpoint('partnerDetails', {id: partnerId}),
+      body
     };
     sendRequest(params)
       .then((resp: any) => {
-        window.EtoolsPmpApp.DexieDb.partners
-          .put(resp)
-          .then(() => this._handleSaveResponse(resp));
+        window.EtoolsPmpApp.DexieDb.partners.put(resp).then(() => this._handleSaveResponse(resp));
       })
       .catch((err: any) => {
         (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();
@@ -295,4 +284,4 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("hact-edit-dialog", HactEditDialog);
+window.customElements.define('hact-edit-dialog', HactEditDialog);

@@ -1,16 +1,16 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import EnvironmentFlagsMixin from "../../../environment-flags/environment-flags-mixin";
-import pmpEndpoints from "../../../endpoints/endpoints";
+import {PolymerElement, html} from '@polymer/polymer';
+import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import pmpEndpoints from '../../../endpoints/endpoints';
 declare const moment: any;
-import "@unicef-polymer/etools-dialog/etools-dialog";
-import "@unicef-polymer/etools-upload/etools-upload";
-import "@unicef-polymer/etools-date-time/datepicker-lite";
-import "../../../layout/etools-warn-message";
-import { SharedStyles } from "../../../styles/shared-styles";
-import { gridLayoutStyles } from "../../../styles/grid-layout-styles";
-import { requiredFieldStarredStyles } from "../../../styles/required-field-styles";
-import { fireEvent } from "../../../utils/fire-custom-event";
-import { property } from "@polymer/decorators";
+import '@unicef-polymer/etools-dialog/etools-dialog';
+import '@unicef-polymer/etools-upload/etools-upload';
+import '@unicef-polymer/etools-date-time/datepicker-lite';
+import '../../../layout/etools-warn-message';
+import {SharedStyles} from '../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -95,38 +95,34 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
         on-close="_terminationConfirmed"
       >
         <div class="row-h">
-          Please make sure that the reporting requirements for the PD are
-          updated with the correct dates
+          Please make sure that the reporting requirements for the PD are updated with the correct dates
         </div>
       </etools-dialog>
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId!: number;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   opened!: boolean;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   warningOpened!: boolean;
 
-  @property({ type: Object })
-  termination!: { date: string; attachment_notice: number };
+  @property({type: Object})
+  termination!: {date: string; attachment_notice: number};
 
-  @property({ type: Object })
+  @property({type: Object})
   terminationElSource!: PolymerElement;
 
-  @property({ type: Boolean })
-  uploadInProgress: boolean = false;
+  @property({type: Boolean})
+  uploadInProgress = false;
 
-  private _validationSelectors: string[] = [
-    "#terminationDate",
-    "#terminationNotice",
-  ];
+  private _validationSelectors: string[] = ['#terminationDate', '#terminationNotice'];
 
   connectedCallback() {
     super.connectedCallback();
@@ -134,7 +130,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
   }
 
   _getMaxDate() {
-    return moment(Date.now()).add(30, "d").toDate();
+    return moment(Date.now()).add(30, 'd').toDate();
   }
 
   _handleDialogClosed() {
@@ -145,12 +141,8 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
     if (!this.validate()) {
       return;
     }
-    if (
-      this.environmentFlags &&
-      !this.environmentFlags.prp_mode_off &&
-      this.environmentFlags.prp_server_on
-    ) {
-      this.set("warningOpened", true);
+    if (this.environmentFlags && !this.environmentFlags.prp_mode_off && this.environmentFlags.prp_server_on) {
+      this.set('warningOpened', true);
     } else {
       this._terminatePD();
     }
@@ -164,14 +156,14 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
 
   _terminatePD() {
     if (this.validate()) {
-      fireEvent(this.terminationElSource, "terminate-pd", {
+      fireEvent(this.terminationElSource, 'terminate-pd', {
         interventionId: this.interventionId,
         terminationData: {
           date: this.termination.date,
-          fileId: this.termination.attachment_notice,
-        },
+          fileId: this.termination.attachment_notice
+        }
       });
-      this.set("opened", false);
+      this.set('opened', false);
     }
   }
 
@@ -180,7 +172,7 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
     this._validationSelectors.forEach((selector: string) => {
       const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
-        el.set("invalid", false);
+        el.set('invalid', false);
       }
     });
   }
@@ -202,9 +194,9 @@ class PdTermination extends EnvironmentFlagsMixin(PolymerElement) {
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set("termination.attachment_notice", uploadResponse.id);
+      this.set('termination.attachment_notice', uploadResponse.id);
     }
   }
 }
 
-window.customElements.define("pd-termination", PdTermination);
+window.customElements.define('pd-termination', PdTermination);

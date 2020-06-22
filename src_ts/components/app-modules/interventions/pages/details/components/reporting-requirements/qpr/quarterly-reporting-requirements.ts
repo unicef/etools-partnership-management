@@ -1,17 +1,17 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import ReportingRequirementsCommonMixin from "../mixins/reporting-requirements-common-mixin";
-import CONSTANTS from "../../../../../../../../config/app-constants";
-import { buttonsStyles } from "../../../../../../../styles/buttons-styles";
-import { gridLayoutStyles } from "../../../../../../../styles/grid-layout-styles";
-import GenerateQuarterlyReportingRequirementsMixin from "../mixins/generate-quarterly-reporting-requirements-mixin";
+import {PolymerElement, html} from '@polymer/polymer';
+import ReportingRequirementsCommonMixin from '../mixins/reporting-requirements-common-mixin';
+import CONSTANTS from '../../../../../../../../config/app-constants';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import GenerateQuarterlyReportingRequirementsMixin from '../mixins/generate-quarterly-reporting-requirements-mixin';
 
-import "@polymer/paper-button/paper-button.js";
-import { fireEvent } from "../../../../../../../utils/fire-custom-event";
+import '@polymer/paper-button/paper-button.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
 
-import "./edit-qpr-dialog.js";
-import "./qpr-list.js";
-import { property } from "@polymer/decorators";
-import { EditQprDialogEl } from "./edit-qpr-dialog.js";
+import './edit-qpr-dialog.js';
+import './qpr-list.js';
+import {property} from '@polymer/decorators';
+import {EditQprDialogEl} from './edit-qpr-dialog.js';
 
 /**
  * @polymer
@@ -41,10 +41,7 @@ class QuarterlyReportingRequirements extends GenerateQuarterlyReportingRequireme
           There are no quarterly reporting requirements set.
         </div>
         <div class="row-h" hidden$="[[!editMode]]">
-          <paper-button
-            class="secondary-btn"
-            on-click="openQuarterlyRepRequirementsDialog"
-          >
+          <paper-button class="secondary-btn" on-click="openQuarterlyRepRequirementsDialog">
             Add Requirements
           </paper-button>
         </div>
@@ -52,16 +49,16 @@ class QuarterlyReportingRequirements extends GenerateQuarterlyReportingRequireme
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   interventionStart!: string;
 
-  @property({ type: String })
+  @property({type: String})
   interventionEnd!: string;
 
-  @property({ type: Object })
+  @property({type: Object})
   editQprDialog!: EditQprDialogEl;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   editMode!: boolean;
 
   ready() {
@@ -75,47 +72,36 @@ class QuarterlyReportingRequirements extends GenerateQuarterlyReportingRequireme
   }
 
   _createEditQprDialog() {
-    this.editQprDialog = document.createElement("edit-qpr-dialog") as any;
-    this.editQprDialog.set("toastMsgLoadingSource", this);
-    this._onReportingRequirementsSaved = this._onReportingRequirementsSaved.bind(
-      this
-    );
-    this.editQprDialog.addEventListener(
-      "reporting-requirements-saved",
-      this._onReportingRequirementsSaved as any
-    );
-    document.querySelector("body")!.appendChild(this.editQprDialog);
+    this.editQprDialog = document.createElement('edit-qpr-dialog') as any;
+    this.editQprDialog.set('toastMsgLoadingSource', this);
+    this._onReportingRequirementsSaved = this._onReportingRequirementsSaved.bind(this);
+    this.editQprDialog.addEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved as any);
+    document.querySelector('body')!.appendChild(this.editQprDialog);
   }
 
   _removeEditQprDialog() {
     if (this.editQprDialog) {
-      this.editQprDialog.removeEventListener(
-        "reporting-requirements-saved",
-        this._onReportingRequirementsSaved as any
-      );
-      document.querySelector("body")!.removeChild(this.editQprDialog);
+      this.editQprDialog.removeEventListener('reporting-requirements-saved', this._onReportingRequirementsSaved as any);
+      document.querySelector('body')!.removeChild(this.editQprDialog);
     }
   }
 
   openQuarterlyRepRequirementsDialog() {
     if (!this.interventionStart || !this.interventionEnd) {
-      fireEvent(this, "toast", {
-        text: "You have to fill PD Start Date and End Date first!",
-        showCloseBtn: true,
+      fireEvent(this, 'toast', {
+        text: 'You have to fill PD Start Date and End Date first!',
+        showCloseBtn: true
       });
       return;
     }
     let qprData = [];
     if (this.requirementsCount === 0) {
-      qprData = this.generateQPRData(
-        this.interventionStart,
-        this.interventionEnd
-      );
+      qprData = this.generateQPRData(this.interventionStart, this.interventionEnd);
     } else {
       qprData = JSON.parse(JSON.stringify(this.reportingRequirements));
     }
-    this.editQprDialog.set("qprData", qprData);
-    this.editQprDialog.set("interventionId", this.interventionId);
+    this.editQprDialog.set('qprData', qprData);
+    this.editQprDialog.set('interventionId', this.interventionId);
     this.editQprDialog.openQprDialog();
   }
 
@@ -124,8 +110,5 @@ class QuarterlyReportingRequirements extends GenerateQuarterlyReportingRequireme
   }
 }
 
-window.customElements.define(
-  "quarterly-reporting-requirements",
-  QuarterlyReportingRequirements
-);
-export { QuarterlyReportingRequirements as QuarterlyReportingRequirementsEL };
+window.customElements.define('quarterly-reporting-requirements', QuarterlyReportingRequirements);
+export {QuarterlyReportingRequirements as QuarterlyReportingRequirementsEL};

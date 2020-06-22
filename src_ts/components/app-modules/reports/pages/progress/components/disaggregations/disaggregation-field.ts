@@ -1,11 +1,11 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-input/paper-input.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-input/paper-input.js';
 
-import { GenericObject } from "../../../../../../../typings/globals.types";
-import { fireEvent } from "../../../../../../utils/fire-custom-event";
-import { toNumericValues } from "./mixins/disaggregation-field";
-import { property } from "@polymer/decorators";
-import { PaperInputElement } from "@polymer/paper-input/paper-input.js";
+import {GenericObject} from '../../../../../../../typings/globals.types';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {toNumericValues} from './mixins/disaggregation-field';
+import {property} from '@polymer/decorators';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
@@ -13,7 +13,7 @@ import { PaperInputElement } from "@polymer/paper-input/paper-input.js";
  */
 class DisaggregationField extends PolymerElement {
   static get is() {
-    return "disaggregation-field";
+    return 'disaggregation-field';
   }
 
   static get template() {
@@ -52,38 +52,38 @@ class DisaggregationField extends PolymerElement {
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   key!: string;
 
-  @property({ type: String })
+  @property({type: String})
   coords!: string;
 
-  @property({ type: Number })
+  @property({type: Number})
   min!: number;
 
-  @property({ type: String })
+  @property({type: String})
   validator!: string;
 
-  @property({ type: Number, notify: true })
+  @property({type: Number, notify: true})
   value!: number;
 
-  @property({ type: Boolean, notify: true })
+  @property({type: Boolean, notify: true})
   invalid!: boolean;
 
   ready() {
     super.ready();
     this._handleInput = this._handleInput.bind(this);
-    this.addEventListener("field.input", this._handleInput as any);
+    this.addEventListener('field.input', this._handleInput as any);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    fireEvent(this, "register-field", this);
+    fireEvent(this, 'register-field', this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener("field.input", this._handleInput as any);
+    this.removeEventListener('field.input', this._handleInput as any);
   }
 
   validate() {
@@ -99,9 +99,9 @@ class DisaggregationField extends PolymerElement {
 
     change[this.key] = (e.target as any).value;
 
-    fireEvent(this, "field-value-changed", {
+    fireEvent(this, 'field-value-changed', {
       key: this.coords,
-      value: toNumericValues(change),
+      value: toNumericValues(change)
     });
   }
 }

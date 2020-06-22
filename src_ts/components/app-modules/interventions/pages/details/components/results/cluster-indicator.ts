@@ -1,18 +1,18 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown-multi.js";
-import IndicatorsCommonMixin from "./mixins/indicators-common-mixin";
-import EndpointsMixin from "../../../../../../endpoints/endpoints-mixin";
-import { fireEvent } from "../../../../../../utils/fire-custom-event";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
-import { requiredFieldStarredStyles } from "../../../../../../styles/required-field-styles";
-import { SharedStyles } from "../../../../../../styles/shared-styles";
-import { RootState, store } from "../../../../../../../store";
-import { connect } from "pwa-helpers/connect-mixin";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../../typings/globals.types";
-import { Indicator } from "../../../../../../../typings/intervention.types";
-import { PaperInputElement } from "@polymer/paper-input/paper-input";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import IndicatorsCommonMixin from './mixins/indicators-common-mixin';
+import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {RootState, store} from '../../../../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types';
+import {Indicator} from '../../../../../../../typings/intervention.types';
+import {PaperInputElement} from '@polymer/paper-input/paper-input';
 
 /**
  * @polymer
@@ -20,9 +20,7 @@ import { PaperInputElement } from "@polymer/paper-input/paper-input";
  * @appliesMixin IndicatorsCommonMixin
  * @appliesMixin EndpointsMixin
  */
-class ClusterIndicator extends connect(store)(
-  IndicatorsCommonMixin(EndpointsMixin(PolymerElement))
-) {
+class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMixin(PolymerElement))) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
@@ -45,9 +43,7 @@ class ClusterIndicator extends connect(store)(
           <div class="col col-6">
             <div class="layout-vertical">
               <label class="paper-label">Response Plan</label>
-              <label
-                class="input-label"
-                empty$="[[!indicator.response_plan_name]]"
+              <label class="input-label" empty$="[[!indicator.response_plan_name]]"
                 >[[indicator.response_plan_name]]</label
               >
             </div>
@@ -55,18 +51,14 @@ class ClusterIndicator extends connect(store)(
           <div class="col col-6">
             <div class="layout-vertical">
               <label class="paper-label">Cluster</label>
-              <label class="input-label" empty$="[[!indicator.cluster_name]]"
-                >[[indicator.cluster_name]]</label
-              >
+              <label class="input-label" empty$="[[!indicator.cluster_name]]">[[indicator.cluster_name]]</label>
             </div>
           </div>
         </div>
         <div class="row-h flex-c">
           <div class="layout-vertical">
             <label class="paper-label">Indicator</label>
-            <label
-              class="input-label"
-              empty$="[[!indicator.cluster_indicator_title]]"
+            <label class="input-label" empty$="[[!indicator.cluster_indicator_title]]"
               >[[indicator.cluster_indicator_title]]</label
             >
           </div>
@@ -128,10 +120,7 @@ class ClusterIndicator extends connect(store)(
         </div>
       </template>
 
-      <div
-        class="row-h flex-c"
-        hidden$="[[_typeMatches(prpClusterIndicator, 'number')]]"
-      >
+      <div class="row-h flex-c" hidden$="[[_typeMatches(prpClusterIndicator, 'number')]]">
         <div class="col col-4">
           <paper-input
             id="numeratorLbl"
@@ -209,10 +198,7 @@ class ClusterIndicator extends connect(store)(
         </div>
       </template>
 
-      <template
-        is="dom-if"
-        if="[[!_typeMatches(prpClusterIndicator, 'ratio')]]"
-      >
+      <template is="dom-if" if="[[!_typeMatches(prpClusterIndicator, 'ratio')]]">
         <div class="row-h flex-c">
           <div class="col col-4">
             <paper-input
@@ -246,10 +232,7 @@ class ClusterIndicator extends connect(store)(
       <div class="row-h flex-c">
         <div class="layout-vertical">
           <label class="paper-label">Means of Verification</label>
-          <label
-            class="input-label"
-            empty$="[[!prpClusterIndicator.means_of_verification]]"
-          >
+          <label class="input-label" empty$="[[!prpClusterIndicator.means_of_verification]]">
             [[prpClusterIndicator.means_of_verification]]
           </label>
         </div>
@@ -274,47 +257,44 @@ class ClusterIndicator extends connect(store)(
     `;
   }
 
-  @property({ type: Object, observer: "indicatorChanged" })
+  @property({type: Object, observer: 'indicatorChanged'})
   indicator!: Indicator;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   isNewIndicator!: boolean;
 
-  @property({ type: Array })
+  @property({type: Array})
   clusters!: [];
 
-  @property({ type: String })
+  @property({type: String})
   clusterId!: string | undefined;
 
-  @property({ type: Array })
+  @property({type: Array})
   locationOptions!: [];
 
-  @property({ type: String })
+  @property({type: String})
   responsePlanId!: string | undefined;
 
-  @property({ type: String, observer: "_clusterChanged" })
+  @property({type: String, observer: '_clusterChanged'})
   cluster!: string;
 
-  @property({ type: Array })
+  @property({type: Array})
   prpClusterIndicators!: [];
 
-  @property({ type: Object, observer: "_responsePlanChanged" })
+  @property({type: Object, observer: '_responsePlanChanged'})
   responsePlan!: object;
 
-  @property({ type: Array })
+  @property({type: Array})
   responsePlans!: GenericObject[];
 
-  @property({ type: Object, observer: "_selectedPrpClusterIndicatorChanged" })
+  @property({type: Object, observer: '_selectedPrpClusterIndicatorChanged'})
   prpClusterIndicator!: GenericObject;
 
-  @property({ type: Array, notify: true })
+  @property({type: Array, notify: true})
   prpDisaggregations!: [];
 
   static get observers() {
-    return [
-      "_baselineChanged(indicator.baseline.v)",
-      "_targetChanged(indicator.target.v)",
-    ];
+    return ['_baselineChanged(indicator.baseline.v)', '_targetChanged(indicator.target.v)'];
   }
 
   stateChanged(state: RootState) {
@@ -325,13 +305,13 @@ class ClusterIndicator extends connect(store)(
     super.connectedCallback();
 
     const self = this;
-    this.fireRequest("getResponsePlans", {})
+    this.fireRequest('getResponsePlans', {})
       .then(function (response: any) {
         self.responsePlans = response;
       })
       .catch(function (error: any) {
-        fireEvent(self, "show-toast", {
-          error: { response: error.message || error.response },
+        fireEvent(self, 'show-toast', {
+          error: {response: error.message || error.response}
         });
       });
 
@@ -339,13 +319,13 @@ class ClusterIndicator extends connect(store)(
   }
 
   indicatorChanged(indicator: any) {
-    if (typeof indicator === "undefined") {
+    if (typeof indicator === 'undefined') {
       return;
     }
     if (!indicator || !indicator.id) {
-      this.set("isNewIndicator", true);
+      this.set('isNewIndicator', true);
     } else {
-      this.set("isNewIndicator", false);
+      this.set('isNewIndicator', false);
       if (indicator.cluster_indicator_id) {
         this._getPrpClusterIndicator(indicator.cluster_indicator_id);
       }
@@ -353,17 +333,17 @@ class ClusterIndicator extends connect(store)(
   }
 
   _getPrpClusterIndicator(clusterIndicId: string) {
-    fireEvent(this, "start-spinner", { spinnerText: "Loading..." });
+    fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
     const self = this;
-    this.fireRequest("getPrpClusterIndicator", { id: clusterIndicId })
+    this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
       .then(function (response: any) {
         self.prpClusterIndicator = response;
-        fireEvent(self, "stop-spinner");
+        fireEvent(self, 'stop-spinner');
       })
       .catch(function (error: any) {
-        fireEvent(self, "stop-spinner");
-        fireEvent(self, "show-toast", {
-          error: { response: error.message || error.response },
+        fireEvent(self, 'stop-spinner');
+        fireEvent(self, 'show-toast', {
+          error: {response: error.message || error.response}
         });
       });
   }
@@ -390,7 +370,7 @@ class ClusterIndicator extends connect(store)(
 
   _clusterChanged(cluster: any) {
     this.prpClusterIndicators = [];
-    this.set("indicator.cluster_indicator_id", undefined);
+    this.set('indicator.cluster_indicator_id', undefined);
 
     if (!cluster) {
       return;
@@ -403,19 +383,17 @@ class ClusterIndicator extends connect(store)(
     if (!clusterId) {
       return;
     }
-    fireEvent(this, "start-spinner", { spinnerText: "Loading..." });
+    fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
     const self = this;
-    this.fireRequest("getPrpClusterIndicators", { id: clusterId })
+    this.fireRequest('getPrpClusterIndicators', {id: clusterId})
       .then(function (response: any) {
-        self.prpClusterIndicators = self._unnestIndicatorTitle(
-          response.results
-        );
-        fireEvent(self, "stop-spinner");
+        self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
+        fireEvent(self, 'stop-spinner');
       })
       .catch(function (error: any) {
-        fireEvent(self, "stop-spinner");
-        fireEvent(self, "show-toast", {
-          error: { response: error.message || error.response },
+        fireEvent(self, 'stop-spinner');
+        fireEvent(self, 'show-toast', {
+          error: {response: error.message || error.response}
         });
       });
   }
@@ -431,23 +409,23 @@ class ClusterIndicator extends connect(store)(
 
   _selectedPrpClusterIndicatorChanged(prpClusterIndic: any) {
     if (!prpClusterIndic) {
-      this.set("prpDisaggregations", []);
+      this.set('prpDisaggregations', []);
       if (this.indicator) {
         this.indicator.baseline = {};
-        this.indicator.target = { d: "1" };
+        this.indicator.target = {d: '1'};
       }
       return;
     }
 
-    this.set("indicator.cluster_indicator_title", prpClusterIndic.title);
-    this.set("prpDisaggregations", prpClusterIndic.disaggregations);
+    this.set('indicator.cluster_indicator_title', prpClusterIndic.title);
+    this.set('prpDisaggregations', prpClusterIndic.disaggregations);
 
-    if (prpClusterIndic.blueprint.display_type === "number") {
+    if (prpClusterIndic.blueprint.display_type === 'number') {
       this._resetDenominator(1);
       this._resetRatioLabels();
-    } else if (prpClusterIndic.blueprint.display_type === "percentage") {
+    } else if (prpClusterIndic.blueprint.display_type === 'percentage') {
       this._resetDenominator(100);
-    } else if (prpClusterIndic.blueprint.display_type === "ratio") {
+    } else if (prpClusterIndic.blueprint.display_type === 'ratio') {
       this.indicator.target.d = prpClusterIndic.target.d;
     }
   }
@@ -458,57 +436,48 @@ class ClusterIndicator extends connect(store)(
   }
 
   _resetRatioLabels() {
-    this.indicator.numerator_label = "";
-    this.indicator.denominator_label = "";
+    this.indicator.numerator_label = '';
+    this.indicator.denominator_label = '';
   }
 
   validate() {
-    const elemIds = ["clusterIndicatorDropdw", "locationsDropdw"];
+    const elemIds = ['clusterIndicatorDropdw', 'locationsDropdw'];
     ([] as string[]).push.apply(elemIds, this._getIndicatorTargetElId());
     return this.validateComponents(elemIds);
   }
 
   _getIndicatorTargetElId(): string[] {
     if (!this.prpClusterIndicator || !this.prpClusterIndicator.blueprint) {
-      return ["targetEl", "baselineEl"];
+      return ['targetEl', 'baselineEl'];
     }
-    if (this.prpClusterIndicator.blueprint.display_type === "ratio") {
-      return [
-        "baselineNumerator",
-        "baselineDenominator",
-        "targetNumerator",
-        "targetDenominator",
-      ];
+    if (this.prpClusterIndicator.blueprint.display_type === 'ratio') {
+      return ['baselineNumerator', 'baselineDenominator', 'targetNumerator', 'targetDenominator'];
     }
 
-    return ["targetEl", "baselineEl"];
+    return ['targetEl', 'baselineEl'];
   }
 
   resetValidations() {
     setTimeout(() => {
-      this._resetInvalid("#clusterIndicatorDropdw");
+      this._resetInvalid('#clusterIndicatorDropdw');
 
-      this._resetInvalid("#locationsDropdw");
+      this._resetInvalid('#locationsDropdw');
 
-      this._resetInvalid("#targetEl");
+      this._resetInvalid('#targetEl');
 
-      const targetNumerator = this.shadowRoot!.querySelector(
-        "#targetNumerator"
-      ) as PaperInputElement;
+      const targetNumerator = this.shadowRoot!.querySelector('#targetNumerator') as PaperInputElement;
       if (targetNumerator) {
         targetNumerator.invalid = false;
 
-        this._resetInvalid("#targetDenominator");
-        this._resetInvalid("#baselineNumerator");
-        this._resetInvalid("#baselineDenominator");
+        this._resetInvalid('#targetDenominator');
+        this._resetInvalid('#baselineNumerator');
+        this._resetInvalid('#baselineDenominator');
       }
     }, 10);
   }
 
   _resetInvalid(elSelector: string) {
-    const elem = this.shadowRoot!.querySelector(
-      elSelector
-    ) as PolymerElement & { invalid: boolean };
+    const elem = this.shadowRoot!.querySelector(elSelector) as PolymerElement & {invalid: boolean};
     if (elem) {
       elem.invalid = false;
     }
@@ -528,5 +497,5 @@ class ClusterIndicator extends connect(store)(
   }
 }
 
-window.customElements.define("cluster-indicator", ClusterIndicator);
-export { ClusterIndicator as ClusterIndicatorEl };
+window.customElements.define('cluster-indicator', ClusterIndicator);
+export {ClusterIndicator as ClusterIndicatorEl};

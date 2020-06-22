@@ -1,27 +1,27 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@polymer/paper-styles/element-styles/paper-material-styles.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-styles/element-styles/paper-material-styles.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel';
 
-import "../../../../layout/etools-ram-indicators";
+import '../../../../layout/etools-ram-indicators';
 
-import "../../components/report-status";
-import "./components/report-overall";
-import "./components/indicator-report-target";
-import "./components/indicator-details";
-import "./components/sr-details";
+import '../../components/report-status';
+import './components/report-overall';
+import './components/indicator-report-target';
+import './components/indicator-details';
+import './components/sr-details';
 
-import UtilsMixin from "../../../../mixins/utils-mixin";
-import CommonMixin from "../../../../mixins/common-mixin";
-import { pageCommonStyles } from "../../../../styles/page-common-styles";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles";
-import { isEmptyObject } from "../../../../utils/utils";
-import { CpOutput } from "../../../../../typings/intervention.types";
-import { fireEvent } from "../../../../utils/fire-custom-event";
-import { PaperIconButtonElement } from "@polymer/paper-icon-button/paper-icon-button.js";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../typings/globals.types";
+import UtilsMixin from '../../../../mixins/utils-mixin';
+import CommonMixin from '../../../../mixins/common-mixin';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {isEmptyObject} from '../../../../utils/utils';
+import {CpOutput} from '../../../../../typings/intervention.types';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -31,7 +31,7 @@ import { GenericObject } from "../../../../../typings/globals.types";
  */
 class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
   static get is() {
-    return "report-progress";
+    return 'report-progress';
   }
 
   static get template() {
@@ -99,10 +99,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
       <!-- TODO: split this element and create separate elements for displaying SR vs QPR/HR req -->
       <template is="dom-if" if="[[_equals(report.report_type, 'SR')]]">
-        <sr-details
-          report="[[report]]"
-          report-attachments="[[reportAttachments]]"
-        ></sr-details>
+        <sr-details report="[[report]]" report-attachments="[[reportAttachments]]"></sr-details>
       </template>
 
       <template is="dom-if" if="[[!_equals(report.report_type, 'SR')]]">
@@ -117,16 +114,8 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
           </div>
         </div>
 
-        <template
-          is="dom-repeat"
-          items="[[report.programme_document.cp_outputs]]"
-          as="result"
-          index-as="resultIndex"
-        >
-          <etools-content-panel
-            class="content-section"
-            panel-title="CP Output: [[result.title]]"
-          >
+        <template is="dom-repeat" items="[[report.programme_document.cp_outputs]]" as="result" index-as="resultIndex">
+          <etools-content-panel class="content-section" panel-title="CP Output: [[result.title]]">
             <!-- RAM indicators display -->
             <etools-ram-indicators
               class="row-h"
@@ -134,12 +123,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
               cp-id="[[result.external_cp_output_id]]"
             ></etools-ram-indicators>
 
-            <template
-              is="dom-repeat"
-              items="[[result.ll_outputs]]"
-              as="lowerResult"
-              index-as="lowerResultIndex"
-            >
+            <template is="dom-repeat" items="[[result.ll_outputs]]" as="lowerResult" index-as="lowerResultIndex">
               <report-overall
                 lower-result-title="[[lowerResult.title]]"
                 latest-indicator="[[_getLowerResultLatestIndicator(lowerResult.id)]]"
@@ -153,9 +137,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
               >
                 <div class="indicator">
                   <div class="layout-horizontal">
-                    <div
-                      class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]"
-                    >
+                    <div class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]">
                       <paper-icon-button
                         on-click="_toggle"
                         toggles-ind-details$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
@@ -167,8 +149,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                     <div class="indicator-header layout-horizontal flex-c">
                       <div class="col col-8 indicator-header-title">
                         <h3>
-                          [[_ternary(indicatorReport.reportable.blueprint.unit,
-                          'number', '#', '%')]]
+                          [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
                           [[indicatorReport.reportable.blueprint.title]]
                         </h3>
                         <div class="layout-horizontal calculation-formula">
@@ -181,9 +162,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                           <span class="calculation-formula-delimiter">|</span>
                           <span>
                             calculation across reporting periods:
-                            <strong
-                              >[[_calculationFormulaAcrossPeriods(indicatorReport)]]</strong
-                            >
+                            <strong>[[_calculationFormulaAcrossPeriods(indicatorReport)]]</strong>
                           </span>
                         </div>
                       </div>
@@ -222,10 +201,10 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   report!: GenericObject;
 
-  @property({ type: Object })
+  @property({type: Object})
   reportAttachments!: GenericObject;
 
   connectedCallback() {
@@ -234,23 +213,21 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
      * Disable loading message for report progress tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "reports-page",
+      loadingSource: 'reports-page'
     });
   }
 
   _computeIcon(opened: boolean) {
-    return opened ? "icons:expand-less" : "icons:expand-more";
+    return opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
   _toggle(e: CustomEvent) {
-    const toggles = (e.target as PaperIconButtonElement).getAttribute(
-      "toggles-ind-details"
-    );
-    const indicatorCollapsibleContent = this.shadowRoot!.querySelector(
-      "#collapse-" + toggles
-    ) as PolymerElement & { toggle(): void };
+    const toggles = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
+    const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {
+      toggle(): void;
+    };
     if (indicatorCollapsibleContent) {
       indicatorCollapsibleContent.toggle();
     }
@@ -258,14 +235,8 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
   _indicatorDetailsTransitioningComplete(e: CustomEvent) {
     const indicatorCollapsibleContent = e.target as Element;
-    const indicatorDetails = indicatorCollapsibleContent!.querySelector(
-      "indicator-details"
-    );
-    if (
-      indicatorDetails &&
-      !e.detail.value &&
-      (indicatorCollapsibleContent as any)!.opened
-    ) {
+    const indicatorDetails = indicatorCollapsibleContent!.querySelector('indicator-details');
+    if (indicatorDetails && !e.detail.value && (indicatorCollapsibleContent as any)!.opened) {
       // trigger indicator details request
       // @ts-ignore
       indicatorDetails.getIndicatorDetails();
@@ -273,11 +244,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
   }
 
   _getClusterIndicatorClass(indicatorReport: any) {
-    return (
-      (indicatorReport && indicatorReport.is_cluster_indicator
-        ? "cluster-indicator"
-        : "") + " report-progress"
-    );
+    return (indicatorReport && indicatorReport.is_cluster_indicator ? 'cluster-indicator' : '') + ' report-progress';
   }
 
   _noReportDataToShow(cpOutputs: CpOutput[]) {
@@ -288,11 +255,9 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
     if (!lowerResultId || isEmptyObject(this.report.indicator_reports)) {
       return {};
     }
-    const latestIndicatorReport = this.report.indicator_reports.find(
-      (rep: any) => {
-        return rep.reportable_object_id === lowerResultId;
-      }
-    );
+    const latestIndicatorReport = this.report.indicator_reports.find((rep: any) => {
+      return rep.reportable_object_id === lowerResultId;
+    });
     return latestIndicatorReport ? latestIndicatorReport : {};
   }
 
@@ -306,8 +271,8 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
   }
 
   _calculationFormulaAcrossPeriods(indicator: any) {
-    return indicator.reportable.blueprint.display_type === "ratio"
-      ? "latest"
+    return indicator.reportable.blueprint.display_type === 'ratio'
+      ? 'latest'
       : indicator.reportable.blueprint.calculation_formula_across_periods;
   }
 }

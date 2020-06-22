@@ -1,38 +1,36 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import { store } from "../../store";
+import {store} from '../../store';
 
-import * as commonDataActions from "../../actions/common-data.js";
+import * as commonDataActions from '../../actions/common-data.js';
 
-import EndpointsMixin from "../endpoints/endpoints-mixin.js";
-import { isEmptyObject } from "../utils/utils";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { Constructor } from "../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import EnvironmentFlagsMixin from "../environment-flags/environment-flags-mixin";
-import { property } from "@polymer/decorators";
+import EndpointsMixin from '../endpoints/endpoints-mixin.js';
+import {isEmptyObject} from '../utils/utils';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {Constructor} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import EnvironmentFlagsMixin from '../environment-flags/environment-flags-mixin';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
 function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  class CommonDataClass extends EnvironmentFlagsMixin(
-    EndpointsMixin(baseClass)
-  ) {
-    @property({ type: Object })
+  class CommonDataClass extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
+    @property({type: Object})
     commonDataEndpoints = {
       pmp: [
-        "countryProgrammes",
-        "dropdownsPmp",
-        "dropdownsStatic",
-        "locations",
-        "offices",
-        "sections",
-        "unicefUsers",
-        "userCountryDetails",
+        'countryProgrammes',
+        'dropdownsPmp',
+        'dropdownsStatic',
+        'locations',
+        'offices',
+        'sections',
+        'unicefUsers',
+        'userCountryDetails'
       ],
-      pmpPrpSections: ["disaggregations"],
-      prp: ["getPRPCountries"],
+      pmpPrpSections: ['disaggregations'],
+      prp: ['getPRPCountries']
     };
 
     public loadCommonData() {
@@ -43,11 +41,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     protected _getStaticData(endpointsNames: string[]) {
       endpointsNames.forEach((endpointName: string) => {
-        this._makeRequest(
-          endpointName,
-          this._getEndpointSuccessHandler(endpointName),
-          this._errorHandler
-        );
+        this._makeRequest(endpointName, this._getEndpointSuccessHandler(endpointName), this._errorHandler);
       });
     }
 
@@ -62,11 +56,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       });
     }
 
-    protected _makeRequest(
-      endpointName: string,
-      successHandler: any,
-      errorHandler: any
-    ) {
+    protected _makeRequest(endpointName: string, successHandler: any, errorHandler: any) {
       this.fireRequest(endpointName, {})
         .then((resp: any) => {
           successHandler.bind(this, resp)();
@@ -77,30 +67,30 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected _errorHandler(err: any) {
-      logError("Error getting static data", "static-common-data", err);
+      logError('Error getting static data', 'static-common-data', err);
     }
 
     protected _getEndpointSuccessHandler(endpointName: string) {
       switch (endpointName) {
-        case "countryProgrammes":
+        case 'countryProgrammes':
           return this._handleCountryProgrammesResponse;
-        case "dropdownsPmp":
+        case 'dropdownsPmp':
           return this._handleDropdownsPmpResponse;
-        case "dropdownsStatic":
+        case 'dropdownsStatic':
           return this._handleDropdownsStaticResponse;
-        case "locations":
+        case 'locations':
           return this._handleLocationsResponse;
-        case "offices":
+        case 'offices':
           return this._handleOfficesResponse;
-        case "sections":
+        case 'sections':
           return this._handleSectionsResponse;
-        case "unicefUsers":
+        case 'unicefUsers':
           return this._handleUnicefUsersResponse;
-        case "userCountryDetails":
+        case 'userCountryDetails':
           return this._handleUserCountryDataResponse;
-        case "disaggregations":
+        case 'disaggregations':
           return this._handleDisaggregationsResponse;
-        case "getPRPCountries":
+        case 'getPRPCountries':
           return this._handlePRPCountryDataResponse;
         default:
           return null;
@@ -128,39 +118,27 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!isEmptyObject(response)) {
         // set file types value
         if (this._validReqResponseData(response.file_types)) {
-          store.dispatch(
-            commonDataActions.updateFileTypes((response as any).file_types)
-          );
+          store.dispatch(commonDataActions.updateFileTypes((response as any).file_types));
         }
 
         // set CP Outputs values
         if (this._validReqResponseData(response.cp_outputs)) {
-          store.dispatch(
-            commonDataActions.updateCpOutputs((response as any).cp_outputs)
-          );
+          store.dispatch(commonDataActions.updateCpOutputs((response as any).cp_outputs));
         }
 
         // set Signed By UNICEF Users
         if (this._validReqResponseData(response.signed_by_unicef_users)) {
-          store.dispatch(
-            commonDataActions.updateSignedByUnicefUsers(
-              (response as any).signed_by_unicef_users
-            )
-          );
+          store.dispatch(commonDataActions.updateSignedByUnicefUsers((response as any).signed_by_unicef_users));
         }
 
         // set donors
         if (this._validReqResponseData(response.donors)) {
-          store.dispatch(
-            commonDataActions.updateDonors((response as any).donors)
-          );
+          store.dispatch(commonDataActions.updateDonors((response as any).donors));
         }
 
         // set donors
         if (this._validReqResponseData(response.grants)) {
-          store.dispatch(
-            commonDataActions.updateGrants((response as any).grants)
-          );
+          store.dispatch(commonDataActions.updateGrants((response as any).grants));
         }
       }
     }
@@ -169,112 +147,62 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (!isEmptyObject(response)) {
         // set intervention_doc_type values
         if (this._validReqResponseData(response.intervention_doc_type)) {
-          store.dispatch(
-            commonDataActions.updateInterventionDocTypes(
-              response.intervention_doc_type
-            )
-          );
+          store.dispatch(commonDataActions.updateInterventionDocTypes(response.intervention_doc_type));
         }
         // set intervention_status values
         if (this._validReqResponseData(response.intervention_status)) {
-          store.dispatch(
-            commonDataActions.updateInterventionStatuses(
-              (response as any).intervention_status
-            )
-          );
+          store.dispatch(commonDataActions.updateInterventionStatuses((response as any).intervention_status));
         }
         // set currencies data
         if (this._validReqResponseData(response.currencies)) {
-          store.dispatch(
-            commonDataActions.updateCurrencies((response as any).currencies)
-          );
+          store.dispatch(commonDataActions.updateCurrencies((response as any).currencies));
         }
         // set agreement types data
         if (this._validReqResponseData(response.agreement_types)) {
-          store.dispatch(
-            commonDataActions.updateAgreementTypes(
-              (response as any).agreement_types
-            )
-          );
+          store.dispatch(commonDataActions.updateAgreementTypes((response as any).agreement_types));
         }
         // set agreement statuses data
         if (this._validReqResponseData(response.agreement_status)) {
-          store.dispatch(
-            commonDataActions.updateAgreementStatuses(
-              (response as any).agreement_status
-            )
-          );
+          store.dispatch(commonDataActions.updateAgreementStatuses((response as any).agreement_status));
         }
         // set agency data
         if (this._validReqResponseData(response.agency_choices)) {
-          store.dispatch(
-            commonDataActions.updateAgencyChoices(
-              (response as any).agency_choices
-            )
-          );
+          store.dispatch(commonDataActions.updateAgencyChoices((response as any).agency_choices));
         }
         // set agreement amendment data
         if (this._validReqResponseData(response.agreement_amendment_types)) {
-          store.dispatch(
-            commonDataActions.updateAgreementAmendmentTypes(
-              (response as any).agreement_amendment_types
-            )
-          );
+          store.dispatch(commonDataActions.updateAgreementAmendmentTypes((response as any).agreement_amendment_types));
         }
         // set cso types data
         if (this._validReqResponseData(response.cso_types)) {
-          store.dispatch(
-            commonDataActions.updateCsoTypes((response as any).cso_types)
-          );
+          store.dispatch(commonDataActions.updateCsoTypes((response as any).cso_types));
         }
         // set partner types data
         if (this._validReqResponseData(response.partner_types)) {
-          store.dispatch(
-            commonDataActions.updatePartnerTypes(
-              (response as any).partner_types
-            )
-          );
+          store.dispatch(commonDataActions.updatePartnerTypes((response as any).partner_types));
         }
 
         if (this._validReqResponseData(response.sea_risk_ratings)) {
-          store.dispatch(
-            commonDataActions.updateSeaRiskRatings(
-              (response as any).sea_risk_ratings
-            )
-          );
+          store.dispatch(commonDataActions.updateSeaRiskRatings((response as any).sea_risk_ratings));
         }
 
         // set assessment types data
         if (this._validReqResponseData(response.assessment_types)) {
-          store.dispatch(
-            commonDataActions.updateAssessmentTypes(
-              (response as any).assessment_types
-            )
-          );
+          store.dispatch(commonDataActions.updateAssessmentTypes((response as any).assessment_types));
         }
         // set intervention ammendment data
         if (this._validReqResponseData(response.intervention_amendment_types)) {
           store.dispatch(
-            commonDataActions.updateInterventionAmendmentTypes(
-              (response as any).intervention_amendment_types
-            )
+            commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types)
           );
         }
         // set admin level/location types
         if (this._validReqResponseData(response.location_types)) {
-          store.dispatch(
-            commonDataActions.updateLocationTypes(
-              (response as any).location_types
-            )
-          );
+          store.dispatch(commonDataActions.updateLocationTypes((response as any).location_types));
         }
 
         if (this._validReqResponseData(response.partner_risk_rating)) {
-          store.dispatch(
-            commonDataActions.updatePartnerRiskRatings(
-              (response as any).partner_risk_rating
-            )
-          );
+          store.dispatch(commonDataActions.updatePartnerRiskRatings((response as any).partner_risk_rating));
         }
       }
     }

@@ -1,5 +1,5 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-icons/communication-icons";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-icons/communication-icons';
 
 /* eslint-disable max-len */
 
@@ -9,7 +9,7 @@ import "@polymer/iron-icons/communication-icons";
  */
 class SupportBtn extends PolymerElement {
   static get is() {
-    return "support-btn";
+    return 'support-btn';
   }
 
   static get template() {
@@ -53,4 +53,4 @@ class SupportBtn extends PolymerElement {
   }
 }
 
-window.customElements.define("support-btn", SupportBtn);
+window.customElements.define('support-btn', SupportBtn);

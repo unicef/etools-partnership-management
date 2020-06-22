@@ -1,23 +1,23 @@
-import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-selector/iron-selector.js";
-import "@polymer/iron-pages/iron-pages.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-item/paper-item.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-selector/iron-selector.js';
+import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 
-import "./qpr/quarterly-reporting-requirements.js";
-import "./hr/humanitarian-reporting-req-unicef.js";
-import "./hr/humanitarian-reporting-req-cluster.js";
-import "./srr/special-reporting-requirements.js";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../../../store.js";
-import { property } from "@polymer/decorators";
-import { HumanitarianReportingReqUnicefEl } from "./hr/humanitarian-reporting-req-unicef.js";
-import { QuarterlyReportingRequirementsEL } from "./qpr/quarterly-reporting-requirements.js";
+import './qpr/quarterly-reporting-requirements.js';
+import './hr/humanitarian-reporting-req-unicef.js';
+import './hr/humanitarian-reporting-req-cluster.js';
+import './srr/special-reporting-requirements.js';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store.js';
+import {property} from '@polymer/decorators';
+import {HumanitarianReportingReqUnicefEl} from './hr/humanitarian-reporting-req-unicef.js';
+import {QuarterlyReportingRequirementsEL} from './qpr/quarterly-reporting-requirements.js';
 
 /**
  * @polymer
@@ -86,21 +86,12 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Partner Reporting Requirements"
-      >
+      <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
         <div class="flex-c layout-horizontal">
           <div class="reports-menu nav-menu">
-            <iron-selector
-              selected="{{selectedReportType}}"
-              attr-for-selected="name"
-              selectable="paper-item"
-            >
+            <iron-selector selected="{{selectedReportType}}" attr-for-selected="name" selectable="paper-item">
               <paper-item name="qtyProgress" class="nav-menu-item qpr">
-                <span
-                  >Quarterly Progress Reports ([[qprRequirementsCount]])</span
-                >
+                <span>Quarterly Progress Reports ([[qprRequirementsCount]])</span>
                 <paper-icon-button
                   class="edit-rep-req"
                   icon="create"
@@ -109,10 +100,7 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
                 ></paper-icon-button>
               </paper-item>
               <paper-item name="humanitarianUnicef" class="nav-menu-item">
-                <span
-                  >Humanitarian Reports - UNICEF
-                  ([[hrUnicefRequirementsCount]])</span
-                >
+                <span>Humanitarian Reports - UNICEF ([[hrUnicefRequirementsCount]])</span>
                 <paper-icon-button
                   class="edit-rep-req"
                   icon="create"
@@ -178,35 +166,35 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
     `;
   }
 
-  @property({ type: String })
-  selectedReportType: string = "qtyProgress";
+  @property({type: String})
+  selectedReportType = 'qtyProgress';
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId!: number;
 
-  @property({ type: Date })
+  @property({type: Date})
   interventionStart!: Date;
 
-  @property({ type: String })
+  @property({type: String})
   interventionEnd!: string;
 
-  @property({ type: Array })
+  @property({type: Array})
   expectedResults!: [];
 
   // count properties
-  @property({ type: Number })
-  qprRequirementsCount: number = 0;
+  @property({type: Number})
+  qprRequirementsCount = 0;
 
-  @property({ type: Number })
-  hrUnicefRequirementsCount: number = 0;
+  @property({type: Number})
+  hrUnicefRequirementsCount = 0;
 
-  @property({ type: Number })
-  hrClusterRequirementsCount: number = 0;
+  @property({type: Number})
+  hrClusterRequirementsCount = 0;
 
-  @property({ type: Number })
-  specialRequirementsCount: number = 0;
+  @property({type: Number})
+  specialRequirementsCount = 0;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   editMode!: boolean;
 
   stateChanged(state: RootState) {
@@ -214,13 +202,11 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
   }
 
   _openQprEditDialog() {
-    (this.$
-      .qpr as QuarterlyReportingRequirementsEL).openQuarterlyRepRequirementsDialog();
+    (this.$.qpr as QuarterlyReportingRequirementsEL).openQuarterlyRepRequirementsDialog();
   }
 
   _openHruEditDialog() {
-    (this.$
-      .hru as HumanitarianReportingReqUnicefEl).openUnicefHumanitarianRepReqDialog();
+    (this.$.hru as HumanitarianReportingReqUnicefEl).openUnicefHumanitarianRepReqDialog();
   }
 
   _hideRepReqEditBtn(editMode: boolean, qprCount: number) {
@@ -228,7 +214,4 @@ class PartnerReportingRequirements extends connect(store)(PolymerElement) {
   }
 }
 
-window.customElements.define(
-  "partner-reporting-requirements",
-  PartnerReportingRequirements
-);
+window.customElements.define('partner-reporting-requirements', PartnerReportingRequirements);

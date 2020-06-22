@@ -1,6 +1,6 @@
-import { html, htmlLiteral } from "@polymer/polymer/lib/utils/html-tag.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import { BASE_URL } from "../../config/config.js";
+import {html, htmlLiteral} from '@polymer/polymer/lib/utils/html-tag.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {BASE_URL} from '../../config/config.js';
 
 const baseUrlData: ReadonlyArray<string> = [BASE_URL];
 const baseUrl = htmlLiteral(baseUrlData as TemplateStringsArray);
@@ -9,7 +9,7 @@ const baseUrl = htmlLiteral(baseUrlData as TemplateStringsArray);
 export const requiredFieldStarredStyles = html` <style>
   :host > * {
     --required-star-style: {
-      background: url(${baseUrl}"/images/required.svg") no-repeat 99% 20%/8px;
+      background: url(${baseUrl}'/images/required.svg') no-repeat 99% 20%/8px;
       width: auto !important;
       max-width: 100%;
       right: auto;

@@ -1,5 +1,5 @@
-import { html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import {html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 // language=HTML
 export const listFilterStyles = html` <style>

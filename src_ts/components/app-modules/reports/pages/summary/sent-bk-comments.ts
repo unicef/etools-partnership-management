@@ -1,7 +1,7 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import "../../../../layout/etools-form-element-wrapper.js";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '../../../../layout/etools-form-element-wrapper.js';
+import {property} from '@polymer/decorators';
 
 /*
  * @customElement
@@ -10,7 +10,7 @@ import { property } from "@polymer/decorators";
  */
 class SentBkComments extends PolymerElement {
   static get is() {
-    return "sent-bk-comments";
+    return 'sent-bk-comments';
   }
 
   static get template() {
@@ -21,12 +21,7 @@ class SentBkComments extends PolymerElement {
         }
       </style>
 
-      <etools-dialog
-        opened="{{opened}}"
-        dialog-title="Sent Back Comments"
-        size="md"
-        hide-confirm-btn
-      >
+      <etools-dialog opened="{{opened}}" dialog-title="Sent Back Comments" size="md" hide-confirm-btn>
         <etools-form-element-wrapper
           label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
           value="[[report.sent_back_feedback]]"
@@ -36,19 +31,17 @@ class SentBkComments extends PolymerElement {
     `;
   }
 
-  @property({ type: String })
-  report: string = "";
+  @property({type: String})
+  report = '';
 
-  @property({ type: Boolean })
-  opened: boolean = false;
+  @property({type: Boolean})
+  opened = false;
 
   _getHeading(reviewDt: string, reviewedBy: string) {
     if (!reviewDt && !reviewedBy) {
-      return "";
+      return '';
     }
-    return (
-      (reviewDt ? reviewDt : "N/A") + " " + (reviewedBy ? reviewedBy : "N/A")
-    );
+    return (reviewDt ? reviewDt : 'N/A') + ' ' + (reviewedBy ? reviewedBy : 'N/A');
   }
 }
 

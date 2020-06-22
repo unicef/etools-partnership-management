@@ -1,25 +1,25 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-label/iron-label.js";
-import "@polymer/paper-button/paper-button.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-label/iron-label.js';
+import '@polymer/paper-button/paper-button.js';
 
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
 
-import { prepareDatepickerDate } from "../../../../../../../utils/date-utils.js";
-import EndpointsMixin from "../../../../../../../endpoints/endpoints-mixin.js";
-import "./qpr-list.js";
-import { fireEvent } from "../../../../../../../utils/fire-custom-event.js";
-import CONSTANTS from "../../../../../../../../config/app-constants.js";
+import {prepareDatepickerDate} from '../../../../../../../utils/date-utils.js';
+import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
+import './qpr-list.js';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
+import CONSTANTS from '../../../../../../../../config/app-constants.js';
 
-import "@unicef-polymer/etools-date-time/calendar-lite.js";
-import { gridLayoutStyles } from "../../../../../../../styles/grid-layout-styles.js";
-import { buttonsStyles } from "../../../../../../../styles/buttons-styles.js";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../../../typings/globals.types.js";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
-import { QprListEl } from "./qpr-list.js";
+import '@unicef-polymer/etools-date-time/calendar-lite.js';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles.js';
+import {buttonsStyles} from '../../../../../../../styles/buttons-styles.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../../typings/globals.types.js';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {QprListEl} from './qpr-list.js';
 
 /**
  * @polymer
@@ -65,9 +65,7 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
         spinner-text="Saving..."
       >
         <div class="layout-horizontal">
-          <span id="qpr-edit-info"
-            >All dates in the future can be edited before saving. | Or</span
-          >
+          <span id="qpr-edit-info">All dates in the future can be edited before saving. | Or</span>
           <paper-button class="secondary-btn" on-click="_addNewQpr">
             Add Requirement
           </paper-button>
@@ -95,12 +93,8 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
         on-close="_updateQprData"
         ok-btn-text="Save"
       >
-        <div
-          class="row-h"
-          hidden$="[[_hideEditedIndexInfo(_qprDatesSetEditedIndex)]]"
-        >
-          You are editing ID
-          [[_getEditedQprDatesSetId(_qprDatesSetEditedIndex)]]
+        <div class="row-h" hidden$="[[_hideEditedIndexInfo(_qprDatesSetEditedIndex)]]">
+          You are editing ID [[_getEditedQprDatesSetId(_qprDatesSetEditedIndex)]]
         </div>
 
         <div class="row-h">
@@ -148,33 +142,33 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId!: number;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   inAmendment!: boolean;
 
-  @property({ type: Array })
+  @property({type: Array})
   qprData: GenericObject[] = [];
 
-  @property({ type: Boolean })
-  addOrModifyQprDialogOpened: boolean = false;
+  @property({type: Boolean})
+  addOrModifyQprDialogOpened = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   toastMsgLoadingSource!: PolymerElement;
 
-  @property({ type: Object })
+  @property({type: Object})
   _qprDatesSetModel = {
     start_date: null,
     end_date: null,
-    due_date: null,
+    due_date: null
   };
 
-  @property({ type: Object })
+  @property({type: Object})
   _editedQprDatesSet!: GenericObject;
 
-  @property({ type: Number })
-  _qprDatesSetEditedIndex: number = -1;
+  @property({type: Number})
+  _qprDatesSetEditedIndex = -1;
 
   openQprDialog() {
     (this.$.editQprDialog as EtoolsDialog).opened = true;
@@ -185,8 +179,8 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
   }
 
   _addNewQpr() {
-    this.set("_editedQprDatesSet", Object.assign({}, this._qprDatesSetModel));
-    this.set("addOrModifyQprDialogOpened", true);
+    this.set('_editedQprDatesSet', Object.assign({}, this._qprDatesSetModel));
+    this.set('addOrModifyQprDialogOpened', true);
   }
 
   _duplicateDueDate(dueDate: any) {
@@ -201,40 +195,31 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
   _updateQprData(e: CustomEvent) {
     if (e.detail.confirmed) {
       if (this._duplicateDueDate(this._editedQprDatesSet.due_date)) {
-        fireEvent(this.toastMsgLoadingSource, "toast", {
-          text:
-            "Requirement dates not added, selected Due Date is already in the list.",
-          showCloseBtn: true,
+        fireEvent(this.toastMsgLoadingSource, 'toast', {
+          text: 'Requirement dates not added, selected Due Date is already in the list.',
+          showCloseBtn: true
         });
         return;
       }
       if (this._qprDatesSetEditedIndex < 0) {
         // add
-        this.push("qprData", this._editedQprDatesSet);
+        this.push('qprData', this._editedQprDatesSet);
       } else {
         // edit
-        this.splice(
-          "qprData",
-          this._qprDatesSetEditedIndex,
-          1,
-          this._editedQprDatesSet
-        );
+        this.splice('qprData', this._qprDatesSetEditedIndex, 1, this._editedQprDatesSet);
       }
     }
-    this.set("_qprDatesSetEditedIndex", -1);
+    this.set('_qprDatesSetEditedIndex', -1);
   }
 
   _editQprDatesSet(e: CustomEvent) {
-    this.set("_qprDatesSetEditedIndex", e.detail.index);
-    this.set(
-      "_editedQprDatesSet",
-      Object.assign({}, this.qprData[this._qprDatesSetEditedIndex])
-    );
-    this.set("addOrModifyQprDialogOpened", true);
+    this.set('_qprDatesSetEditedIndex', e.detail.index);
+    this.set('_editedQprDatesSet', Object.assign({}, this.qprData[this._qprDatesSetEditedIndex]));
+    this.set('addOrModifyQprDialogOpened', true);
   }
 
   _deleteQprDatesSet(e: CustomEvent) {
-    this.splice("qprData", e.detail.index, 1);
+    this.splice('qprData', e.detail.index, 1);
   }
 
   _hideEditedIndexInfo(index: number) {
@@ -246,28 +231,24 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
   }
 
   _saveModifiedQprData() {
-    const endpoint = this.getEndpoint("reportingRequirements", {
+    const endpoint = this.getEndpoint('reportingRequirements', {
       intervId: this.interventionId,
-      reportType: CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR,
+      reportType: CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR
     });
     const dialog = this.$.editQprDialog as EtoolsDialog;
     dialog.startSpinner();
     sendRequest({
-      method: "POST",
+      method: 'POST',
       endpoint: endpoint,
-      body: { reporting_requirements: this.qprData },
+      body: {reporting_requirements: this.qprData}
     })
       .then((response: any) => {
-        fireEvent(
-          this,
-          "reporting-requirements-saved",
-          response.reporting_requirements
-        );
+        fireEvent(this, 'reporting-requirements-saved', response.reporting_requirements);
         dialog.stopSpinner();
         this.closeQprDialog();
       })
       .catch((error: any) => {
-        logError("Failed to save/update qpr data!", "edit-qpr-dialog", error);
+        logError('Failed to save/update qpr data!', 'edit-qpr-dialog', error);
         parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
         dialog.stopSpinner();
       });
@@ -278,6 +259,6 @@ class EditQprDialog extends EndpointsMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("edit-qpr-dialog", EditQprDialog);
+window.customElements.define('edit-qpr-dialog', EditQprDialog);
 
-export { EditQprDialog as EditQprDialogEl };
+export {EditQprDialog as EditQprDialogEl};

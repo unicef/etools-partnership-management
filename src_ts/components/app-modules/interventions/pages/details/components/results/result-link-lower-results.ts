@@ -1,25 +1,25 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import "@unicef-polymer/etools-data-table/etools-data-table.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
-import "../../../../../../mixins/repeatable-data-sets-mixin.js";
-import "../../../../../../layout/icons-actions.js";
+import '../../../../../../mixins/repeatable-data-sets-mixin.js';
+import '../../../../../../layout/icons-actions.js';
 
-import RepeatableDataSetsMixin from "../../../../../../mixins/repeatable-data-sets-mixin";
-import { fireEvent } from "../../../../../../utils/fire-custom-event";
-import { DomRepeatEvent } from "../../../../../../../typings/globals.types";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
-import { SharedStyles } from "../../../../../../styles/shared-styles";
+import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {DomRepeatEvent} from '../../../../../../../typings/globals.types';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
 
-import "./pd-lower-result-name.js";
-import "./applied-indicators.js";
-import { Indicator } from "../../../../../../../typings/intervention.types.js";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { property } from "@polymer/decorators";
-import { IconsActionsEl } from "../../../../../../layout/icons-actions.js";
-import { PaperIconButtonElement } from "@polymer/paper-icon-button/paper-icon-button.js";
+import './pd-lower-result-name.js';
+import './applied-indicators.js';
+import {Indicator} from '../../../../../../../typings/intervention.types.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
+import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 
 /**
  * @polymer
@@ -114,32 +114,21 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
       <div hidden$="[[!_emptyList(dataItems.length)]]">
         <etools-data-table-header no-title no-collapse>
-          <etools-data-table-column class="col-12"
-            >PD Output or SSFA Expected Result</etools-data-table-column
-          >
+          <etools-data-table-column class="col-12">PD Output or SSFA Expected Result</etools-data-table-column>
         </etools-data-table-header>
       </div>
 
-      <div
-        class="lower-results-list"
-        hidden$="[[_emptyList(dataItems.length)]]"
-      >
+      <div class="lower-results-list" hidden$="[[_emptyList(dataItems.length)]]">
         <div class="header-container header-text border-b">
           <div class$="[[getColumnLength('result', thereAreIndicators)]]">
             PD Output or SSFA Expected Result
           </div>
           <div class="col flex-c">
             <div class="col col-8">Performance Indicator</div>
-            <div
-              class="col col-2 right-align"
-              hidden$="[[!thereAreIndicators]]"
-            >
+            <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">
               Baseline
             </div>
-            <div
-              class="col col-2 right-align"
-              hidden$="[[!thereAreIndicators]]"
-            >
+            <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">
               Target
             </div>
           </div>
@@ -150,9 +139,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
             class="layout-horizontal lower-result-row"
             hidden$="[[allIndicatorsAreInactive(item.applied_indicators, showInactiveIndicators, forceVisibilityRecalc)]]"
           >
-            <div
-              class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative"
-            >
+            <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
               <icons-actions
                 hidden$="[[!editMode]]"
                 data-args$="[[index]]"
@@ -201,57 +188,46 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: String })
-  _deleteEpName: string = "lowerResultsDelete";
+  @property({type: String})
+  _deleteEpName = 'lowerResultsDelete';
 
-  @property({ type: String })
+  @property({type: String})
   interventionStatus!: string;
 
-  @property({ type: Number })
+  @property({type: Number})
   cpOutputId!: number;
 
-  @property({ type: Boolean })
-  editMode: boolean = false;
+  @property({type: Boolean})
+  editMode = false;
 
-  @property({ type: Number })
+  @property({type: Number})
   expectedResultId!: number;
 
-  @property({ type: Boolean })
-  thereAreIndicators: boolean = false;
+  @property({type: Boolean})
+  thereAreIndicators = false;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   showInactiveIndicators!: boolean;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   forceVisibilityRecalc!: boolean;
 
   static get observers() {
-    return [
-      "_dataItemsChanged(dataItems.*)",
-      "_makeSureDataItemsAreValid(dataItems)",
-    ];
+    return ['_dataItemsChanged(dataItems.*)', '_makeSureDataItemsAreValid(dataItems)'];
   }
 
   ready() {
     super.ready();
-    this._updateInterventionLocAndClusters = this._updateInterventionLocAndClusters.bind(
-      this
-    );
-    this.addEventListener(
-      "delete-confirm",
-      this._updateInterventionLocAndClusters
-    );
+    this._updateInterventionLocAndClusters = this._updateInterventionLocAndClusters.bind(this);
+    this.addEventListener('delete-confirm', this._updateInterventionLocAndClusters);
   }
 
   disconnectedCallback() {
-    this.removeEventListener(
-      "delete-confirm",
-      this._updateInterventionLocAndClusters
-    );
+    this.removeEventListener('delete-confirm', this._updateInterventionLocAndClusters);
   }
 
   _dataItemsChanged(dataItemsMutation: any) {
-    if (typeof dataItemsMutation === "undefined") {
+    if (typeof dataItemsMutation === 'undefined') {
       return;
     }
 
@@ -263,10 +239,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     this.forceVisibilityRecalc = true;
 
     for (const i in this.dataItems) {
-      if (
-        this.dataItems[i].applied_indicators &&
-        this.dataItems[i].applied_indicators.length
-      ) {
+      if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
         this.thereAreIndicators = true;
         break;
       }
@@ -276,64 +249,50 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
   allIndicatorsAreInactive(indicators: Indicator[]) {
     this.forceVisibilityRecalc = false;
     const allIndicatorsAreDeactivated =
-      indicators instanceof Array &&
-      indicators.length > 0 &&
-      indicators.every((i) => !i.is_active);
+      indicators instanceof Array && indicators.length > 0 && indicators.every((i) => !i.is_active);
     return allIndicatorsAreDeactivated ? !this.showInactiveIndicators : false;
   }
 
   getColumnLength(column: string, thereAreIndicators: boolean) {
     // * result-link-lower-results class is added for browsers that use shaddy dom
     switch (column) {
-      case "result":
-        return (
-          (thereAreIndicators ? "col-4" : "col-8") +
-          " result-link-lower-results"
-        );
-      case "indicator":
-        return (
-          (thereAreIndicators ? "col-8" : "col-4") +
-          " result-link-lower-results"
-        );
+      case 'result':
+        return (thereAreIndicators ? 'col-4' : 'col-8') + ' result-link-lower-results';
+      case 'indicator':
+        return (thereAreIndicators ? 'col-8' : 'col-4') + ' result-link-lower-results';
       default:
-        return "";
+        return '';
     }
   }
 
   _updateInterventionLocAndClusters() {
-    fireEvent(this, "indicators-changed");
+    fireEvent(this, 'indicators-changed');
   }
 
   _addNewLowerResult() {
-    fireEvent(this, "add-new-lower-result", {
-      expectedResultId: this.expectedResultId,
+    fireEvent(this, 'add-new-lower-result', {
+      expectedResultId: this.expectedResultId
     });
   }
 
   _editLowerResult(e: CustomEvent) {
     e.stopPropagation();
-    const index = parseInt(
-      (e.target as IconsActionsEl).getAttribute("data-args")!,
-      10
-    );
+    const index = parseInt((e.target as IconsActionsEl).getAttribute('data-args')!, 10);
     if (index < 0) {
-      logError("Can not edit, invalid index selected", "lower-results");
+      logError('Can not edit, invalid index selected', 'lower-results');
       return;
     }
 
     const lowerResult = this.dataItems[index];
     if (!lowerResult) {
-      logError(
-        "Lower result not found in data items by index: " + index,
-        "lower-results"
-      );
+      logError('Lower result not found in data items by index: ' + index, 'lower-results');
       return;
     }
 
-    fireEvent(this, "edit-lower-result", {
+    fireEvent(this, 'edit-lower-result', {
       expectedResultId: this.expectedResultId,
       lowerResultId: lowerResult.id,
-      lowerResultName: lowerResult.name,
+      lowerResultName: lowerResult.name
     });
   }
 
@@ -346,20 +305,12 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     const resultMap = {
       cpOutputId: this.cpOutputId,
       llResultIndex: event.model.index,
-      llResultId: parseInt(
-        (event.target as PaperIconButtonElement).getAttribute(
-          "data-ll-result-id"
-        )!,
-        10
-      ),
+      llResultId: parseInt((event.target as PaperIconButtonElement).getAttribute('data-ll-result-id')!, 10),
       indicatorData: null,
-      appliedIndicatorsIndex: null,
+      appliedIndicatorsIndex: null
     };
-    fireEvent(this, "open-indicator-dialog", resultMap);
+    fireEvent(this, 'open-indicator-dialog', resultMap);
   }
 }
 
-window.customElements.define(
-  "result-link-lower-results",
-  ResultLinkLowerResults
-);
+window.customElements.define('result-link-lower-results', ResultLinkLowerResults);

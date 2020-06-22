@@ -1,20 +1,20 @@
-import "@polymer/polymer/lib/mixins/gesture-event-listeners.js";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/paper-input/paper-input.js";
-import "@polymer/paper-button/paper-button.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
+import '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
 
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import RepeatableDataSetsMixin from "../../../../../../mixins/repeatable-data-sets-mixin";
-import { PolymerElement, html } from "@polymer/polymer";
-import { fireEvent } from "../../../../../../utils/fire-custom-event";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
-import { repeatableDataSetsStyles } from "../../../../../../styles/repeatable-data-sets-styles";
-import { buttonsStyles } from "../../../../../../styles/buttons-styles";
-import { property } from "@polymer/decorators";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog";
-import { PaperInputElement } from "@polymer/paper-input/paper-input";
-import { PaperDialogElement } from "@polymer/paper-dialog/paper-dialog";
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import RepeatableDataSetsMixin from '../../../../../../mixins/repeatable-data-sets-mixin';
+import {PolymerElement, html} from '@polymer/polymer';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {repeatableDataSetsStyles} from '../../../../../../styles/repeatable-data-sets-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {PaperInputElement} from '@polymer/paper-input/paper-input';
+import {PaperDialogElement} from '@polymer/paper-dialog/paper-dialog';
 
 /**
  * @polymer
@@ -108,34 +108,33 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Boolean })
-  editMode: boolean = true;
+  @property({type: Boolean})
+  editMode = true;
 
   // TODO: check if deleteDialog is still used
   // @property({type: Object, observer: '_delConfirmationDialogChange'})
   // deleteDialog!: object;
 
-  @property({ type: String })
-  deleteConfirmationMessage: string =
-    "Are you sure you want to delete this FR Number?";
+  @property({type: String})
+  deleteConfirmationMessage = 'Are you sure you want to delete this FR Number?';
 
-  @property({ type: Boolean })
-  disableConfirmBtn: boolean = true;
+  @property({type: Boolean})
+  disableConfirmBtn = true;
 
-  @property({ type: String })
+  @property({type: String})
   interventionStatus!: string;
 
   static get observers() {
-    return ["_itemsLengthChanged(dataItems.length)"];
+    return ['_itemsLengthChanged(dataItems.length)'];
   }
 
   ready() {
     super.ready();
-    this.dataSetModel = { fr_number: null };
+    this.dataSetModel = {fr_number: null};
   }
 
   _showDeleteFrBtn(interventionStatus: string, dataItemsLength: number) {
-    return !(interventionStatus === "active" && dataItemsLength === 1);
+    return !(interventionStatus === 'active' && dataItemsLength === 1);
   }
 
   // _delConfirmationDialogChange() {
@@ -173,9 +172,7 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
     let valid = true;
     if (this.dataItems instanceof Array && this.dataItems.length > 0) {
       this.dataItems.forEach((_item, index) => {
-        const lastItem = this.shadowRoot!.querySelector(
-          "#fr-nr-" + index
-        ) as PaperInputElement;
+        const lastItem = this.shadowRoot!.querySelector('#fr-nr-' + index) as PaperInputElement;
         if (lastItem && !lastItem.validate()) {
           valid = false;
         }
@@ -206,9 +203,7 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _getPaperDialog() {
-    return this.$.frsDialog.shadowRoot!.querySelector(
-      "paper-dialog"
-    ) as PaperDialogElement;
+    return this.$.frsDialog.shadowRoot!.querySelector('paper-dialog') as PaperDialogElement;
   }
 
   _emptyList(length: number) {
@@ -217,14 +212,14 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
 
   _frNrValueChanged() {
     if (!this.validate()) {
-      this.set("disableConfirmBtn", true);
+      this.set('disableConfirmBtn', true);
       return;
     }
-    this.set("disableConfirmBtn", false);
+    this.set('disableConfirmBtn', false);
   }
 
   _itemsLengthChanged(length: number) {
-    if (typeof length === "undefined") {
+    if (typeof length === 'undefined') {
       return;
     }
     this._frNrValueChanged();
@@ -235,8 +230,8 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
       return;
     }
     // resend fr number changes back to main fund reservations element
-    fireEvent(this, "update-frs-dialog-close", {
-      frs: this._getUpdatedFrsNumbers(),
+    fireEvent(this, 'update-frs-dialog-close', {
+      frs: this._getUpdatedFrsNumbers()
     });
   }
 
@@ -251,5 +246,5 @@ class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("update-fr-numbers", UpdateFrNumbers);
-export { UpdateFrNumbers as UpdateFrNumbersEl };
+window.customElements.define('update-fr-numbers', UpdateFrNumbers);
+export {UpdateFrNumbers as UpdateFrNumbersEl};

@@ -1,301 +1,288 @@
 const pmpEdpoints = {
   changeCountry: {
-    url: "/api/v3/users/changecountry/",
+    url: '/api/v3/users/changecountry/'
   },
   unicefUsers: {
-    url: "/api/v3/users/?verbosity=minimal",
+    url: '/api/v3/users/?verbosity=minimal',
     exp: 60 * 60 * 1000, // 1h
-    cachingKey: "unicefUsers",
+    cachingKey: 'unicefUsers'
   },
   myProfile: {
-    url: "/api/v3/users/profile/",
+    url: '/api/v3/users/profile/'
   },
   agreements: {
-    template: "/api/v2/agreements/",
+    template: '/api/v2/agreements/',
     exp: 30 * 60 * 1000, // 30min
-    cacheTableName: "agreements",
+    cacheTableName: 'agreements'
   },
   agreementDetails: {
-    template: "/api/v2/agreements/<%=id%>/",
+    template: '/api/v2/agreements/<%=id%>/'
   },
   agreementDelete: {
-    template: "/api/v2/agreements/delete/<%=id%>/",
+    template: '/api/v2/agreements/delete/<%=id%>/'
   },
   partnerAssessmentDelete: {
-    template: "/api/v2/partners/assessments/<%=id%>/",
+    template: '/api/v2/partners/assessments/<%=id%>/'
   },
   interventionResultLinkDelete: {
-    template: "/api/v2/interventions/result-links/<%=id%>/",
+    template: '/api/v2/interventions/result-links/<%=id%>/'
   },
   agreementAmendmentsDelete: {
-    template: "/api/v2/agreements/amendments/<%=id%>/",
+    template: '/api/v2/agreements/amendments/<%=id%>/'
   },
   agreementAmendmentsTypeDelete: {
-    template: "/api/v2/agreements/amendments/types/<%=id%>/",
+    template: '/api/v2/agreements/amendments/types/<%=id%>/'
   },
   countries: {
-    url: "/api/countries/", // API request receives a 404 for now
+    url: '/api/countries/', // API request receives a 404 for now
     exp: 6 * 60 * 60 * 1000, // 6h
-    cachingKey: "countries",
+    cachingKey: 'countries'
   },
   partners: {
-    url: "/api/v2/partners/",
+    url: '/api/v2/partners/',
     exp: 6 * 60 * 60 * 1000, // 6h
-    cacheTableName: "partners",
+    cacheTableName: 'partners'
   },
   partnerDetails: {
-    template: "/api/v2/partners/<%=id%>/",
+    template: '/api/v2/partners/<%=id%>/'
     // exp: 6 * 1000, // 6 sec
     // if this caching key is missing then the data will be cached with the url as key
     // cachingKey: 'partnerDetails'
   },
   createPartner: {
-    template: "/api/v2/partners/add/?vendor=<%=vendor%>",
+    template: '/api/v2/partners/add/?vendor=<%=vendor%>'
   },
   deletePartner: {
-    template: "/api/v2/partners/delete/<%=id%>/",
+    template: '/api/v2/partners/delete/<%=id%>/'
   },
   partnerStaffMembers: {
-    template: "/api/v2/partners/<%=id%>/staff-members/",
+    template: '/api/v2/partners/<%=id%>/staff-members/'
   },
   interventions: {
-    url: "/api/v2/interventions/",
+    url: '/api/v2/interventions/',
     exp: 10 * 60 * 1000,
-    cacheTableName: "interventions",
+    cacheTableName: 'interventions'
   },
   interventionDetails: {
-    template: "/api/v2/interventions/<%=id%>/",
+    template: '/api/v2/interventions/<%=id%>/'
   },
   interventionDelete: {
-    template: "/api/v2/interventions/delete/<%=id%>/",
+    template: '/api/v2/interventions/delete/<%=id%>/'
   },
   pdAttachments: {
-    template: "/api/v2/interventions/<%=pdId%>/attachments/",
+    template: '/api/v2/interventions/<%=pdId%>/attachments/'
   },
   updatePdAttachment: {
-    template: "/api/v2/interventions/attachments/<%=attId%>/",
+    template: '/api/v2/interventions/attachments/<%=attId%>/'
   },
   dropdownsPmp: {
-    url: "/api/v2/dropdowns/pmp",
+    url: '/api/v2/dropdowns/pmp',
     exp: 6 * 60 * 60 * 1000, // 6h
-    cachingKey: "dropdownsPmp",
+    cachingKey: 'dropdownsPmp'
   },
   dropdownsStatic: {
-    url: "/api/v2/dropdowns/static",
+    url: '/api/v2/dropdowns/static',
     exp: 6 * 60 * 60 * 1000, // 6h
-    cachingKey: "dropdownsStatic",
+    cachingKey: 'dropdownsStatic'
   },
   locations: {
-    url: "/api/locations-light",
+    url: '/api/locations-light',
     exp: 60 * 60 * 60 * 1000, // 60h
-    cachingKey: "locations",
+    cachingKey: 'locations'
   },
   offices: {
-    url: "/api/offices",
+    url: '/api/offices',
     exp: 6 * 60 * 60 * 1000, // 6h
-    cachingKey: "offices",
+    cachingKey: 'offices'
   },
   // TODO: might not be needed, gov in simple removed
   countryProgrammes: {
-    cachingKey: "countryProgrammes",
+    cachingKey: 'countryProgrammes',
     exp: 5 * 60 * 1000, // 5min
-    url: "/api/v2/reports/countryprogramme/",
+    url: '/api/v2/reports/countryprogramme/'
   },
   sections: {
-    url: "/api/v2/reports/sections/",
+    url: '/api/v2/reports/sections/',
     exp: 6 * 60 * 60 * 1000,
-    cachingKey: "sections",
+    cachingKey: 'sections'
   },
   ramIndicators: {
-    template: "/api/v2/reports/results/<%=id%>/indicators/",
+    template: '/api/v2/reports/results/<%=id%>/indicators/'
   },
   monitoringVisits: {
-    template: "/api/t2f/travels/activities/partnership/<%=id%>/?year=<%=year%>",
+    template: '/api/t2f/travels/activities/partnership/<%=id%>/?year=<%=year%>'
   },
   partnerT2fProgrammaticVisits: {
-    template:
-      "/api/t2f/travels/activities/<%=id%>/?year=<%=year%>&status=completed",
+    template: '/api/t2f/travels/activities/<%=id%>/?year=<%=year%>&status=completed'
   },
   partnerTPMActivities: {
     template:
-      "/api/tpm/activities/?tpm_visit__status=unicef_approved&is_pv=true&date__year=<%=year%>&partner=<%=partnerId%>",
+      '/api/tpm/activities/?tpm_visit__status=unicef_approved&is_pv=true&date__year=<%=year%>&partner=<%=partnerId%>'
   },
   interventionTPMActivities: {
     template:
-      "/api/tpm/activities/?tpm_visit__status=unicef_approved&date__year=<%=year%>&intervention=<%=interventionId%>",
+      '/api/tpm/activities/?tpm_visit__status=unicef_approved&date__year=<%=year%>&intervention=<%=interventionId%>'
   },
   sectorLocationsDelete: {
-    template: "/api/v2/interventions/sector-locations/<%=id%>/",
+    template: '/api/v2/interventions/sector-locations/<%=id%>/'
   },
   cpOutputsByIdsAsValues: {
     // it's gonna be used for getting old cp outputs for esmm dropdown
-    url: "/api/v2/reports/results",
+    url: '/api/v2/reports/results'
   },
   frNumbersDetails: {
-    url: "/api/v2/funds/frs",
+    url: '/api/v2/funds/frs'
   },
   userCountryDetails: {
-    url: "/api/v3/users/country/",
+    url: '/api/v3/users/country/'
   },
   environmentFlags: {
-    url: "/api/v2/environment/flags/",
+    url: '/api/v2/environment/flags/'
   },
   createIndicator: {
-    template: "/api/v2/interventions/lower-results/<%=id%>/indicators/",
+    template: '/api/v2/interventions/lower-results/<%=id%>/indicators/'
   },
   getEditDeleteIndicator: {
-    template: "/api/v2/interventions/applied-indicators/<%=id%>/",
+    template: '/api/v2/interventions/applied-indicators/<%=id%>/'
   },
   getPrpClusterIndicators: {
     // by cluster id
-    template: "/api/indicator/ca/?clusters=<%=id%>",
-    token: "prp",
+    template: '/api/indicator/ca/?clusters=<%=id%>',
+    token: 'prp'
   },
   getPrpClusterIndicator: {
     // by id
-    template: "/api/indicator/<%=id%>/",
-    token: "prp",
+    template: '/api/indicator/<%=id%>/',
+    token: 'prp'
   },
   getResponsePlans: {
-    template: "/api/core/workspace/<%=countryId%>/response-plan/",
-    token: "prp",
+    template: '/api/core/workspace/<%=countryId%>/response-plan/',
+    token: 'prp'
   },
   pdExpectedResults: {
-    template: "/api/v2/interventions/<%=pdId%>/result-links/",
+    template: '/api/v2/interventions/<%=pdId%>/result-links/'
   },
   pdExpectedResultDetails: {
-    template: "/api/v2/interventions/result-links/<%=resultId%>/",
+    template: '/api/v2/interventions/result-links/<%=resultId%>/'
   },
   pdLowerResults: {
-    template: "/api/v2/interventions/result-links/<%=resultId%>/lower-results/",
+    template: '/api/v2/interventions/result-links/<%=resultId%>/lower-results/'
   },
   pdLowerResultDetails: {
-    template: "/api/v2/interventions/lower-results/<%=llResultId%>/",
+    template: '/api/v2/interventions/lower-results/<%=llResultId%>/'
   },
   lowerResultsDelete: {
-    template: "/api/v2/reports/lower_results/<%=id%>/",
+    template: '/api/v2/reports/lower_results/<%=id%>/'
   },
   disaggregations: {
-    url: "/api/v2/reports/disaggregations/",
+    url: '/api/v2/reports/disaggregations/'
   },
   patchDisaggregations: {
-    template: "/api/v2/reports/disaggregations/<%=id%>/",
+    template: '/api/v2/reports/disaggregations/<%=id%>/'
   },
   interventionProgress: {
-    template:
-      "/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/?external=1",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/?external=1',
+    token: 'prp'
   },
   interventionAmendmentAdd: {
-    template: "/api/v2/interventions/<%=intervId%>/amendments/",
+    template: '/api/v2/interventions/<%=intervId%>/amendments/'
   },
   reports: {
-    template: "/api/unicef/<%=countryId%>/progress-reports/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/',
+    token: 'prp'
   },
   hrClusterReportingRequirements: {
-    template: "/api/indicator/reporting-frequencies/",
-    token: "prp",
+    template: '/api/indicator/reporting-frequencies/',
+    token: 'prp'
   },
   reportDetails: {
-    template: "/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/',
+    token: 'prp'
   },
   reportAttachments: {
-    template:
-      "/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachments/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/attachments/',
+    token: 'prp'
   },
   reportIndicatorsDetails: {
-    template: "/api/indicator/indicator-reports/",
-    token: "prp",
+    template: '/api/indicator/indicator-reports/',
+    token: 'prp'
   },
   reportingRequirements: {
-    template:
-      "/api/v2/interventions/<%=intervId%>/reporting-requirements/<%=reportType%>/",
+    template: '/api/v2/interventions/<%=intervId%>/reporting-requirements/<%=reportType%>/'
   },
   specialReportingRequirements: {
-    template:
-      "/api/v2/reports/interventions/<%=intervId%>/special-reporting-requirements/",
+    template: '/api/v2/reports/interventions/<%=intervId%>/special-reporting-requirements/'
   },
   specialReportingRequirementsUpdate: {
-    template:
-      "/api/v2/reports/interventions/special-reporting-requirements/<%=reportId%>/",
+    template: '/api/v2/reports/interventions/special-reporting-requirements/<%=reportId%>/'
   },
   reportRequirementsList: {
-    template: "/api/v2/interventions/<%=intervId%>/reporting-periods/",
+    template: '/api/v2/interventions/<%=intervId%>/reporting-periods/'
   },
   reportRequirementsItem: {
-    template: "/api/v2/interventions/reporting-periods/<%=reportId%>/",
+    template: '/api/v2/interventions/reporting-periods/<%=reportId%>/'
   },
   reportReview: {
-    template:
-      "/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/',
+    token: 'prp'
   },
   progressReports: {
-    template: "/api/unicef/<%=countryId%>/progress-reports/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/',
+    token: 'prp'
   },
   getPRPCountries: {
-    template: "/api/core/workspace/",
+    template: '/api/core/workspace/',
     exp: 60 * 60 * 60 * 1000,
-    token: "prp",
-    cachingKey: "prpCountries",
+    token: 'prp',
+    cachingKey: 'prpCountries'
   },
   downloadReportAnexC: {
-    template:
-      "/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/annex-C-export-PDF/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/annex-C-export-PDF/',
+    token: 'prp'
   },
   downloadReportXls: {
-    template:
-      "/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=xlsx",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=xlsx',
+    token: 'prp'
   },
   downloadReportPdf: {
-    template:
-      "/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=pdf",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/?page=1&export=pdf',
+    token: 'prp'
   },
   reportIndicatorsExport: {
-    template: "/api/unicef/<%=countryId%>/programme-document/indicators/",
-    token: "prp",
+    template: '/api/unicef/<%=countryId%>/programme-document/indicators/',
+    token: 'prp'
   },
   // tokens get/refresh endpoints
   prpToken: {
-    url: "/api/jwt/get",
+    url: '/api/jwt/get'
   },
   engagements: {
-    url: "/api/audit/engagements/hact/",
+    url: '/api/audit/engagements/hact/'
   },
   resultExports: {
-    url: "/api/v2/reports/applied-indicators/intervention/",
+    url: '/api/v2/reports/applied-indicators/intervention/'
   },
   pdLocationsExport: {
-    url: "/api/v2/interventions/locations/",
+    url: '/api/v2/interventions/locations/'
   },
   attachmentsUpload: {
-    url: "/api/v2/attachments/upload/",
+    url: '/api/v2/attachments/upload/'
   },
   cpOutputRamIndicators: {
-    template:
-      "/api/v2/interventions/<%=intervention_id%>/output_cp_indicators/<%=cp_output_id%>/",
+    template: '/api/v2/interventions/<%=intervention_id%>/output_cp_indicators/<%=cp_output_id%>/'
   },
   partnerAssessment: {
-    template: "/api/v2/partners/assessments/",
+    template: '/api/v2/partners/assessments/'
   },
   patchPartnerAssessment: {
-    template: "/api/v2/partners/assessments/<%=assessmentId%>/",
+    template: '/api/v2/partners/assessments/<%=assessmentId%>/'
   },
   expectedResultsExport: {
-    template:
-      "/api/v2/reports/interventions/results/<%=intervention_id%>/?format=docx_table",
+    template: '/api/v2/reports/interventions/results/<%=intervention_id%>/?format=docx_table'
   },
   interventionPVLinkDelete: {
-    template:
-      "/api/v2/interventions/<%=intervention_id%>/planned-visits/<%=id%>/",
-  },
+    template: '/api/v2/interventions/<%=intervention_id%>/planned-visits/<%=id%>/'
+  }
 };
 
 export default pmpEdpoints;

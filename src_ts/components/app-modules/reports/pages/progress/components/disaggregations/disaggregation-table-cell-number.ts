@@ -1,9 +1,9 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "./disaggregation-field.js";
-import UtilsMixin from "../../../../../../mixins/utils-mixin.js";
-import { disaggregationTableStyles } from "./styles/disaggregation-table-styles.js";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../../typings/globals.types.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import './disaggregation-field.js';
+import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles.js';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -12,7 +12,7 @@ import { GenericObject } from "../../../../../../../typings/globals.types.js";
  */
 class DisaggregationTableCellNumber extends UtilsMixin(PolymerElement) {
   static get is() {
-    return "disaggregation-table-cell-number";
+    return 'disaggregation-table-cell-number';
   }
 
   static get template() {
@@ -27,10 +27,7 @@ class DisaggregationTableCellNumber extends UtilsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   data!: GenericObject;
 }
-window.customElements.define(
-  DisaggregationTableCellNumber.is,
-  DisaggregationTableCellNumber
-);
+window.customElements.define(DisaggregationTableCellNumber.is, DisaggregationTableCellNumber);

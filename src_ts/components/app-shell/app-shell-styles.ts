@@ -1,10 +1,10 @@
-import { html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import {html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
-import { appDrawerStyles } from "./menu/styles/app-drawer-styles";
-import { pageLayoutStyles } from "../styles/page-layout-styles";
-import { SharedStyles } from "../styles/shared-styles";
-import { buttonsStyles } from "../styles/buttons-styles";
+import {appDrawerStyles} from './menu/styles/app-drawer-styles';
+import {pageLayoutStyles} from '../styles/page-layout-styles';
+import {SharedStyles} from '../styles/shared-styles';
+import {buttonsStyles} from '../styles/buttons-styles';
 
 // language=HTML
 export const AppShellStyles = html`
@@ -33,9 +33,7 @@ export const AppShellStyles = html`
       padding: 12px 12px 12px 65px;
       position: fixed;
       bottom: 0;
-      width: calc(
-        100% - var(--app-drawer-width, 0px)
-      ); /* 0px instead of 0 is an IE requirement */
+      width: calc(100% - var(--app-drawer-width, 0px)); /* 0px instead of 0 is an IE requirement */
       z-index: 52; /* paper-buttons have a z-index of 51 */
     }
 

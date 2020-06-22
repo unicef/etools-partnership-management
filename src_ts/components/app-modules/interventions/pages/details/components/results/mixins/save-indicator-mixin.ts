@@ -1,22 +1,20 @@
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-import pick from "lodash-es/pick";
-import keys from "lodash-es/keys";
-import EndpointsMixin from "../../../../../../../endpoints/endpoints-mixin";
-import { fireEvent } from "../../../../../../../utils/fire-custom-event";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { Constructor } from "../../../../../../../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { IndicatorDialogEl } from "../indicator-dialog";
+import pick from 'lodash-es/pick';
+import keys from 'lodash-es/keys';
+import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
+import {fireEvent} from '../../../../../../../utils/fire-custom-event';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {IndicatorDialogEl} from '../indicator-dialog';
 
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class SaveIndicatorClass extends EndpointsMixin(baseClass) {
     [x: string]: any;
 
@@ -24,24 +22,24 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
     private nonClusterIndicatorCreateModel = {
       indicator: {
         title: null,
-        unit: "number",
-        display_type: "percentage",
+        unit: 'number',
+        display_type: 'percentage'
       },
       section: null,
       baseline: {
         v: 0,
-        d: 1,
+        d: 1
       },
       target: {
         v: 0,
-        d: 1,
+        d: 1
       },
       means_of_verification: null,
       locations: [],
       disaggregation: [],
       is_high_frequency: false,
       numerator_label: null,
-      denominator_label: null,
+      denominator_label: null
     };
     // @ts-ignore
     private nonClusterIndicatorEditModel = {
@@ -49,29 +47,29 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
       section: null,
       baseline: {
         v: 0,
-        d: 1,
+        d: 1
       },
       target: {
         v: 0,
-        d: 1,
+        d: 1
       },
       means_of_verification: null,
       locations: [],
       disaggregation: [],
       is_high_frequency: false,
       numerator_label: null,
-      denominator_label: null,
+      denominator_label: null
     };
     // @ts-ignore
     private clusterIndicatorCreateModel = {
       section: null,
       baseline: {
         v: 0,
-        d: 1,
+        d: 1
       },
       target: {
         v: 0,
-        d: 1,
+        d: 1
       },
       locations: [],
       cluster_indicator_id: null,
@@ -79,7 +77,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
       cluster_name: null,
       response_plan_name: null,
       numerator_label: null,
-      denominator_label: null,
+      denominator_label: null
     };
     // @ts-ignore
     private clusterIndicatorEditModel = {
@@ -87,21 +85,21 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
       section: null,
       baseline: {
         v: 0,
-        d: 1,
+        d: 1
       },
       target: {
         v: 0,
-        d: 1,
+        d: 1
       },
       locations: [],
       numerator_label: null,
-      denominator_label: null,
+      denominator_label: null
     };
 
     _validateAndSaveIndicator() {
       if (!this.validate()) {
         // @ts-ignore *Defined in component
-        this.activeTab = "details";
+        this.activeTab = 'details';
         this._centerDialog();
         return;
       }
@@ -111,16 +109,16 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
       this.disableConfirmBtn = true;
 
       const endpoint = this.getEndpoint(this._getEndpointName(), {
-        id: this._getIdForEndpoint(),
+        id: this._getIdForEndpoint()
       });
-      const method = this.indicator.id ? "PATCH" : "POST";
+      const method = this.indicator.id ? 'PATCH' : 'POST';
       const body = this._getIndicatorBody();
       const self = this;
 
       sendRequest({
         endpoint: endpoint,
         method: method,
-        body: body,
+        body: body
       })
         .then(function (resp: any) {
           self._handleSaveIndicatorResponse(resp);
@@ -132,41 +130,37 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
 
     validate() {
       let valid = true;
-      const sectionSelected = (this.shadowRoot!.querySelector(
-        "#sectionDropdw"
-      )! as PolymerElement & { validate(): boolean }).validate();
+      const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {
+        validate(): boolean;
+      }).validate();
       if (this.isCluster) {
         valid =
-          (this.shadowRoot!.querySelector(
-            "#clusterIndicatorEl"
-          )! as PolymerElement & { validate(): boolean }).validate() &&
-          sectionSelected;
+          (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {
+            validate(): boolean;
+          }).validate() && sectionSelected;
       } else {
         valid =
-          (this.shadowRoot!.querySelector(
-            "#nonClusterIndicatorEl"
-          )! as PolymerElement & { validate(): boolean }).validate() &&
-          sectionSelected;
+          (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {
+            validate(): boolean;
+          }).validate() && sectionSelected;
       }
       return valid;
     }
 
     _getIdForEndpoint() {
-      return this.indicator.id
-        ? this.indicator.id
-        : this.actionParams.llResultId;
+      return this.indicator.id ? this.indicator.id : this.actionParams.llResultId;
     }
 
     _getEndpointName() {
-      return this.indicator.id ? "getEditDeleteIndicator" : "createIndicator";
+      return this.indicator.id ? 'getEditDeleteIndicator' : 'createIndicator';
     }
 
     _handleSaveIndicatorResponse(response: any) {
       this._stopSpinner();
 
-      fireEvent(this, "indicator-dialog-close", {
+      fireEvent(this, 'indicator-dialog-close', {
         indicatorData: response,
-        actionParams: this.actionParams,
+        actionParams: this.actionParams
       });
       (this.$.indicatorDialog as IndicatorDialogEl).opened = false;
     }
@@ -186,40 +180,32 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
 
       this._prepareBaselineAndTarget(body);
 
-      if (body.hasOwnProperty("disaggregation")) {
+      if (body.hasOwnProperty('disaggregation')) {
         body.disaggregation = this._prepareDisaggregationIds();
       }
       if (this.isCluster && !body.id) {
         body.indicator = null;
       }
 
-      if (body.indicator && body.indicator.unit === "number") {
-        body.indicator.display_type = "number";
+      if (body.indicator && body.indicator.unit === 'number') {
+        body.indicator.display_type = 'number';
       }
       return body;
     }
 
     _prepareBaselineAndTarget(indicator: any) {
-      if (
-        !indicator.target ||
-        indicator.target.v === undefined ||
-        indicator.target.v === ""
-      ) {
-        indicator.target = { v: 0, d: 1 };
+      if (!indicator.target || indicator.target.v === undefined || indicator.target.v === '') {
+        indicator.target = {v: 0, d: 1};
       }
-      if (
-        !indicator.baseline ||
-        indicator.baseline.v === "" ||
-        indicator.baseline.v === undefined
-      ) {
-        indicator.baseline = { v: null, d: 1 };
+      if (!indicator.baseline || indicator.baseline.v === '' || indicator.baseline.v === undefined) {
+        indicator.baseline = {v: null, d: 1};
       }
       if (indicator.indicator) {
         // is new non-cluster indic
-        if (indicator.indicator.unit === "number") {
+        if (indicator.indicator.unit === 'number') {
           this._updateBaselineTargetD(indicator, 1);
           this._resetRatioLabels(indicator);
-        } else if (indicator.indicator.display_type === "percentage") {
+        } else if (indicator.indicator.display_type === 'percentage') {
           this._updateBaselineTargetD(indicator, 100);
           this._resetLabel(indicator);
         }
@@ -231,11 +217,11 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
       indicator.target.d = d;
     }
     _resetRatioLabels(indicator: any) {
-      indicator.numerator_label = "";
-      indicator.denominator_label = "";
+      indicator.numerator_label = '';
+      indicator.denominator_label = '';
     }
     _resetLabel(indicator: any) {
-      indicator.label = "";
+      indicator.label = '';
     }
 
     _prepareDisaggregationIds(): number[] {
@@ -243,24 +229,20 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(
         return [];
       }
       // @ts-ignore *Defined in component
-      this.disaggregations = this.disaggregations.filter(
-        this._notEmptyDisaggregs
-      );
+      this.disaggregations = this.disaggregations.filter(this._notEmptyDisaggregs);
 
-      return this.disaggregations.map(function (item: { disaggregId: number }) {
+      return this.disaggregations.map(function (item: {disaggregId: number}) {
         return item.disaggregId;
       });
     }
 
-    _notEmptyDisaggregs(d: { disaggregId: number }): boolean {
+    _notEmptyDisaggregs(d: {disaggregId: number}): boolean {
       return !!d.disaggregId;
     }
 
     _getIndicatorModelForSave() {
-      let modelName = this.isCluster
-        ? "clusterIndicator"
-        : "nonClusterIndicator";
-      modelName += this.indicator.id ? "EditModel" : "CreateModel";
+      let modelName = this.isCluster ? 'clusterIndicator' : 'nonClusterIndicator';
+      modelName += this.indicator.id ? 'EditModel' : 'CreateModel';
       return JSON.parse(JSON.stringify(this[modelName]));
     }
   }

@@ -1,15 +1,12 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
-import AjaxServerErrorsMixin from "./ajax-server-errors-mixin";
-import EndpointsMixin from "../endpoints/endpoints-mixin";
-import {
-  EtoolsRequestEndpoint,
-  sendRequest,
-} from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { fireEvent } from "../utils/fire-custom-event";
-import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { Constructor, GenericObject } from "../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import AjaxServerErrorsMixin from './ajax-server-errors-mixin';
+import EndpointsMixin from '../endpoints/endpoints-mixin';
+import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {fireEvent} from '../utils/fire-custom-event';
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {Constructor, GenericObject} from '../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -19,25 +16,25 @@ import { property } from "@polymer/decorators";
  */
 function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ListDataClass extends EndpointsMixin(AjaxServerErrorsMixin(baseClass)) {
-    @property({ type: Object })
+    @property({type: Object})
     options: {
       endpoint: EtoolsRequestEndpoint;
       csrf: boolean;
     } = {
-      endpoint: { url: "" },
-      csrf: true,
+      endpoint: {url: ''},
+      csrf: true
     };
 
-    @property({ type: Array, readOnly: true, notify: true })
+    @property({type: Array, readOnly: true, notify: true})
     data: [] = [];
 
-    @property({ type: String })
-    globalMessage: string = "An error occurred while trying to fetch the data!";
+    @property({type: String})
+    globalMessage = 'An error occurred while trying to fetch the data!';
 
-    @property({ type: Boolean })
-    fireDataLoaded: boolean = false;
+    @property({type: Boolean})
+    fireDataLoaded = false;
 
-    @property({ type: Object })
+    @property({type: Object})
     _refreshInterval: GenericObject | null = null;
 
     // Defined in the element that uses this mixin
@@ -47,7 +44,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     // -----
 
     static get observers() {
-      return ["_endpointChanged(options.endpoint)"];
+      return ['_endpointChanged(options.endpoint)'];
     }
 
     disconnectedCallback() {
@@ -62,9 +59,9 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     _elementReady() {
       if (!this.endpointName) {
-        logWarn("Please specify an endpointName property", "list-data-mixin");
+        logWarn('Please specify an endpointName property', 'list-data-mixin');
       } else {
-        this.set("options.endpoint", this.getEndpoint(this.endpointName));
+        this.set('options.endpoint', this.getEndpoint(this.endpointName));
         this._requestListData();
       }
     }
@@ -89,10 +86,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       this._setData(res);
       if (this.fireDataLoaded) {
         if (!this.dataLoadedEventName) {
-          logWarn(
-            "Please specify data loaded event name(dataLoadedEventName property)",
-            "list-data-mixin"
-          );
+          logWarn('Please specify data loaded event name(dataLoadedEventName property)', 'list-data-mixin');
         } else {
           fireEvent(this, this.dataLoadedEventName);
         }
@@ -100,14 +94,10 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _endpointChanged(newEndpoint: any) {
-      if (typeof newEndpoint === "undefined") {
+      if (typeof newEndpoint === 'undefined') {
         return;
       }
-      if (
-        newEndpoint &&
-        newEndpoint.hasOwnProperty("exp") &&
-        newEndpoint.exp > 0
-      ) {
+      if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
         this._removeAutomaticDataRefreshLoop();
         this._setAutomaticDataRefreshLoop(newEndpoint);
       }
@@ -117,7 +107,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (this._refreshInterval !== null) {
         // @ts-ignore
         clearInterval(this._refreshInterval);
-        this.set("_refreshInterval", null);
+        this.set('_refreshInterval', null);
       }
     }
 

@@ -1,26 +1,21 @@
-import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
-import { GestureEventListeners } from "@polymer/polymer/lib/mixins/gesture-event-listeners.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/app-layout/app-toolbar/app-toolbar.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../store";
-import { _checkEnvironment } from "../../../config/config";
-import { updateDrawerState } from "../../../actions/app";
-import "@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown";
-import "@unicef-polymer/etools-app-selector/etools-app-selector";
-import "../header/countries-dropdown";
-import ProfileOperationsMixin from "../../user/profile-operations-mixin";
-import { isJsonStrMatch } from "../../utils/utils";
-import { fireEvent } from "../../utils/fire-custom-event";
-import {
-  GenericObject,
-  User,
-  MinimalUser,
-  LabelAndValue,
-} from "../../../typings/globals.types";
-import "../../layout/support-btn";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../store';
+import {_checkEnvironment} from '../../../config/config';
+import {updateDrawerState} from '../../../actions/app';
+import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+import '@unicef-polymer/etools-app-selector/etools-app-selector';
+import '../header/countries-dropdown';
+import ProfileOperationsMixin from '../../user/profile-operations-mixin';
+import {isJsonStrMatch} from '../../utils/utils';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
+import '../../layout/support-btn';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -189,62 +184,52 @@ class PageHeader extends connect(store)(
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   rootPath!: string;
 
-  @property({ type: Array })
+  @property({type: Array})
   countries!: any[];
 
-  @property({ type: Array })
+  @property({type: Array})
   offices: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   sections: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   users: MinimalUser[] = [];
 
   @property({
     type: Array,
     notify: true,
-    computed: "_convertCollection(sections)",
+    computed: '_convertCollection(sections)'
   })
   allSections: LabelAndValue[] = [];
 
   @property({
     type: Array,
     notify: true,
-    computed: "_convertCollection(offices)",
+    computed: '_convertCollection(offices)'
   })
   allOffices: LabelAndValue[] = [];
 
-  @property({ type: Array, notify: true, computed: "_convertUsers(users)" })
+  @property({type: Array, notify: true, computed: '_convertUsers(users)'})
   allUsers: LabelAndValue[] = [];
 
-  @property({ type: String })
+  @property({type: String})
   environment: string | null = _checkEnvironment();
 
-  @property({ type: Object })
+  @property({type: Object})
   profile: User | null = null;
 
-  @property({ type: Array })
-  editableFields: string[] = [
-    "office",
-    "section",
-    "job_title",
-    "phone_number",
-    "oic",
-    "supervisor",
-  ];
+  @property({type: Array})
+  editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
 
-  @property({ type: Object })
+  @property({type: Object})
   userProfileDialog!: GenericObject;
 
   public static get observers() {
-    return [
-      "_updateCountriesList(profile.countries_available)",
-      "_profileChanged(profile)",
-    ];
+    return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
   }
 
   public connectedCallback() {
@@ -265,16 +250,11 @@ class PageHeader extends connect(store)(
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
     }
-    if (
-      state.commonData.currentUser !== null &&
-      !isJsonStrMatch(state.commonData.currentUser, this.profile)
-    ) {
+    if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
 
       if (this.profile && this.profile.countries_available) {
-        this.countries = this._updateCountriesList(
-          this.profile.countries_available
-        );
+        this.countries = this._updateCountriesList(this.profile.countries_available);
       }
     }
   }
@@ -286,7 +266,7 @@ class PageHeader extends connect(store)(
   public _setBgColor() {
     // If not production environment, changing header color to red
     if (this.environment) {
-      this.updateStyles({ "--header-bg-color": "var(--nonprod-header-color)" });
+      this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
     }
   }
 
@@ -298,7 +278,7 @@ class PageHeader extends connect(store)(
     const countriesList: any[] = countries.map((arrayItem) => {
       return {
         id: arrayItem.id,
-        name: arrayItem.name,
+        name: arrayItem.name
       };
     });
 
@@ -317,14 +297,11 @@ class PageHeader extends connect(store)(
 
   // @ts-ignore
   private _openDataRefreshDialog() {
-    fireEvent(this, "open-data-refresh-dialog");
+    fireEvent(this, 'open-data-refresh-dialog');
   }
 
   public _saveProfile(e: any) {
-    const modifiedFields = this._getModifiedFields(
-      this.profile,
-      e.detail.profile
-    );
+    const modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
     this.saveProfile(modifiedFields);
   }
 
@@ -332,14 +309,14 @@ class PageHeader extends connect(store)(
     return data.map((d: any) => {
       return {
         value: parseInt(d.id, 10),
-        label: d.name,
+        label: d.name
       };
     });
   }
 
   protected _convertCollection(data: any) {
     return data.map((item: any) => {
-      return { label: item.name, value: item.id };
+      return {label: item.name, value: item.id};
     });
   }
 
@@ -357,7 +334,7 @@ class PageHeader extends connect(store)(
   protected _signOut() {
     this._clearDexieDbs();
     this._clearLocalStorage();
-    window.location.href = window.location.origin + "/logout";
+    window.location.href = window.location.origin + '/logout';
   }
 
   protected _clearDexieDbs() {
@@ -370,12 +347,12 @@ class PageHeader extends connect(store)(
 
   protected _profileChanged(profile: User | null) {
     if (profile) {
-      const appSelector = this.shadowRoot!.querySelector("#app-selector");
+      const appSelector = this.shadowRoot!.querySelector('#app-selector');
       if (appSelector) {
-        (appSelector as PolymerElement).set("user", profile);
+        (appSelector as PolymerElement).set('user', profile);
       }
     }
   }
 }
 
-window.customElements.define("page-header", PageHeader);
+window.customElements.define('page-header', PageHeader);

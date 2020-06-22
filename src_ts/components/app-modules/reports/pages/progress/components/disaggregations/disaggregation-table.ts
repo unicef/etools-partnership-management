@@ -1,14 +1,14 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import UtilsMixin from "../../../../../../mixins/utils-mixin";
+import {PolymerElement, html} from '@polymer/polymer';
+import UtilsMixin from '../../../../../../mixins/utils-mixin';
 
-import "./table-content/three-disaggregations";
-import "./table-content/two-disaggregations";
-import "./table-content/one-disaggregation";
-import "./table-content/zero-disaggregations";
-import { disaggregationTableStyles } from "./styles/disaggregation-table-styles";
-import { Disaggregation } from "../../../../../../../typings/intervention.types";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../../typings/globals.types";
+import './table-content/three-disaggregations';
+import './table-content/two-disaggregations';
+import './table-content/one-disaggregation';
+import './table-content/zero-disaggregations';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
+import {Disaggregation} from '../../../../../../../typings/intervention.types';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../../typings/globals.types';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.
@@ -21,7 +21,7 @@ import { GenericObject } from "../../../../../../../typings/globals.types";
  */
 class DisaggregationTable extends UtilsMixin(PolymerElement) {
   static get is() {
-    return "disaggregation-table";
+    return 'disaggregation-table';
   }
 
   static get template() {
@@ -124,71 +124,71 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
    * `editable` and `editableBool` is only kept here because disaggregation elements are common with PRP app,
    * it will always be `0` and `false` in PMP.
    */
-  @property({ type: Number })
-  editable: number = 0;
+  @property({type: Number})
+  editable = 0;
 
-  @property({ type: Object, observer: "_cloneData" })
+  @property({type: Object, observer: '_cloneData'})
   data!: GenericObject;
 
   @property({
     type: Object,
-    computed: "_computeViewData(formattedData, totals)",
+    computed: '_computeViewData(formattedData, totals)'
   })
   viewData!: GenericObject;
 
-  @property({ type: Object })
+  @property({type: Object})
   formattedData!: GenericObject;
 
   @property({
     type: Array,
-    computed: "_computeMapping(editableBool, formattedData, mapping)",
+    computed: '_computeMapping(editableBool, formattedData, mapping)'
   })
   formattedMapping!: any[];
 
-  @property({ type: Boolean, computed: "_computeEditableBool(editable)" })
+  @property({type: Boolean, computed: '_computeEditableBool(editable)'})
   editableBool!: boolean;
 
-  @property({ type: String, computed: "_computeIndicatorType(data)" })
+  @property({type: String, computed: '_computeIndicatorType(data)'})
   indicatorType!: string;
 
-  @property({ type: Array })
+  @property({type: Array})
   fields!: any[];
 
-  @property({ type: Array })
+  @property({type: Array})
   mapping!: any[];
 
-  @property({ type: Object })
+  @property({type: Object})
   labels!: GenericObject;
 
   @property({
     type: Boolean,
-    computed: "_computeLabelVisibility(indicatorType)",
+    computed: '_computeLabelVisibility(indicatorType)'
   })
   viewLabel!: boolean;
 
-  @property({ type: Object })
+  @property({type: Object})
   totals!: GenericObject;
 
   static get observers() {
-    return ["_resetFields(formattedData.disaggregation_reported_on)"];
+    return ['_resetFields(formattedData.disaggregation_reported_on)'];
   }
 
   connectedCallback() {
     super.connectedCallback();
     if (!this.totals) {
-      this.set("totals", {});
+      this.set('totals', {});
     }
   }
 
   _resetFields(reportedOn: any) {
-    if (typeof reportedOn === "undefined") {
+    if (typeof reportedOn === 'undefined') {
       return;
     }
-    this.set("fields", []);
+    this.set('fields', []);
   }
 
   _computeLabelVisibility(indicatorType: string) {
-    if (String(indicatorType) === "number") {
+    if (String(indicatorType) === 'number') {
       return false;
     } else {
       return true;
@@ -200,11 +200,7 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   }
 
   _computeMapping(editableBool: boolean, formattedData: any, mapping: any) {
-    if (
-      typeof editableBool === "undefined" ||
-      typeof formattedData === "undefined" ||
-      typeof mapping === "undefined"
-    ) {
+    if (typeof editableBool === 'undefined' || typeof formattedData === 'undefined' || typeof mapping === 'undefined') {
       return;
     }
     const reportedOn = formattedData.disaggregation_reported_on;
@@ -217,26 +213,23 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   }
 
   _computeIndicatorType(data: any) {
-    if (typeof data === "undefined") {
+    if (typeof data === 'undefined') {
       return;
     }
     return data.display_type;
   }
 
   _cloneData(data: any) {
-    if (typeof data === "undefined") {
+    if (typeof data === 'undefined') {
       return;
     }
-    this.set("formattedData", JSON.parse(JSON.stringify(data)));
-    this.set(
-      "totals",
-      JSON.parse(JSON.stringify(this.formattedData.disaggregation))
-    );
+    this.set('formattedData', JSON.parse(JSON.stringify(data)));
+    this.set('totals', JSON.parse(JSON.stringify(this.formattedData.disaggregation)));
   }
 
   _computeViewData(data: any, totals: number) {
     return Object.assign({}, data, {
-      disaggregation: Object.assign({}, data.disaggregation, totals),
+      disaggregation: Object.assign({}, data.disaggregation, totals)
     });
   }
 }

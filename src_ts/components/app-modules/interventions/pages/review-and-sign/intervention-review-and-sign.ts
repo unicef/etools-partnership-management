@@ -1,49 +1,42 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-checkbox/paper-checkbox";
-import "@polymer/paper-input/paper-input.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-checkbox/paper-checkbox';
+import '@polymer/paper-input/paper-input.js';
 
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import "@unicef-polymer/etools-upload/etools-upload.js";
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
 
-import "@unicef-polymer/etools-date-time/datepicker-lite.js";
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
-import "../../../../layout/etools-form-element-wrapper.js";
+import '../../../../layout/etools-form-element-wrapper.js';
 
-import "./components/amendments/pd-amendments.js";
-import "./components/fund-reservations/fund-reservations.js";
-import CommonMixin from "../../../../mixins/common-mixin.js";
-import MissingDropdownOptionsMixin from "../../../../mixins/missing-dropdown-options-mixin.js";
-import UploadsMixin from "../../../../mixins/uploads-mixin.js";
-import { fireEvent } from "../../../../utils/fire-custom-event.js";
-import {
-  Intervention,
-  Fr,
-  InterventionPermissionsFields,
-} from "../../../../../typings/intervention.types.js";
-import { Agreement } from "../../../agreements/agreement.types.js";
-import CONSTANTS from "../../../../../config/app-constants.js";
-import { pageCommonStyles } from "../../../../styles/page-common-styles.js";
-import { gridLayoutStyles } from "../../../../styles/grid-layout-styles.js";
-import { SharedStyles } from "../../../../styles/shared-styles.js";
-import { requiredFieldStarredStyles } from "../../../../styles/required-field-styles.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../store.js";
-import { isJsonStrMatch, copy } from "../../../../utils/utils.js";
+import './components/amendments/pd-amendments.js';
+import './components/fund-reservations/fund-reservations.js';
+import CommonMixin from '../../../../mixins/common-mixin.js';
+import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin.js';
+import UploadsMixin from '../../../../mixins/uploads-mixin.js';
+import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {Intervention, Fr, InterventionPermissionsFields} from '../../../../../typings/intervention.types.js';
+import {Agreement} from '../../../agreements/agreement.types.js';
+import CONSTANTS from '../../../../../config/app-constants.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {requiredFieldStarredStyles} from '../../../../styles/required-field-styles.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../store.js';
+import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
 import {
   DECREASE_UPLOADS_IN_PROGRESS,
   INCREASE_UNSAVED_UPLOADS,
-  DECREASE_UNSAVED_UPLOADS,
-} from "../../../../../actions/upload-status.js";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging.js";
-import { property } from "@polymer/decorators";
-import {
-  Permission,
-  MinimalUser,
-} from "../../../../../typings/globals.types.js";
-import DatePickerLite from "@unicef-polymer/etools-date-time/datepicker-lite.js";
+  DECREASE_UNSAVED_UPLOADS
+} from '../../../../../actions/upload-status.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
+import {Permission, MinimalUser} from '../../../../../typings/globals.types.js';
+import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
 /**
  * @polymer
@@ -58,8 +51,7 @@ class InterventionReviewAndSign extends connect(store)(
 ) {
   static get template() {
     return html`
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
-      ${requiredFieldStarredStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           @apply --layout-vertical;
@@ -90,10 +82,7 @@ class InterventionReviewAndSign extends connect(store)(
         }
       </style>
 
-      <etools-content-panel
-        class="content-section"
-        panel-title="Signatures & Dates"
-      >
+      <etools-content-panel class="content-section" panel-title="Signatures & Dates">
         <div class="row-h flex-c">
           <div class="col col-3">
             <!-- Document Submission Date -->
@@ -124,10 +113,7 @@ class InterventionReviewAndSign extends connect(store)(
             </etools-form-element-wrapper>
           </div>
         </div>
-        <template
-          is="dom-if"
-          if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]"
-        >
+        <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]">
           <div class="row-h flex-c row-second-bg">
             <div class="col col-3">
               <!-- Submission Date to PRC -->
@@ -270,10 +256,7 @@ class InterventionReviewAndSign extends connect(store)(
             >
             </etools-upload>
           </div>
-          <template
-            is="dom-if"
-            if="[[_showDaysToSignedFields(intervention.status)]]"
-          >
+          <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
             <div class="col col-3">
               <paper-input
                 label="Days from Submission to Signed"
@@ -317,39 +300,39 @@ class InterventionReviewAndSign extends connect(store)(
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   originalIntervention!: Intervention;
 
-  @property({ type: Object, notify: true, observer: "_interventionChanged" })
+  @property({type: Object, notify: true, observer: '_interventionChanged'})
   intervention!: Intervention;
 
-  @property({ type: Object })
+  @property({type: Object})
   permissions!: Permission<InterventionPermissionsFields>;
 
-  @property({ type: Array })
+  @property({type: Array})
   signedByUnicefUsers!: MinimalUser[];
 
-  @property({ type: Object, observer: "_agreementChanged" })
+  @property({type: Object, observer: '_agreementChanged'})
   agreement!: Agreement;
 
-  @property({ type: Array })
+  @property({type: Array})
   agreementAuthorizedOfficers!: [];
 
-  @property({ type: Boolean })
-  _lockSubmitToPrc: boolean = false;
+  @property({type: Boolean})
+  _lockSubmitToPrc = false;
 
-  @property({ type: String })
+  @property({type: String})
   partnerDateValidatorErrorMessage!: string;
 
-  @property({ type: String })
+  @property({type: String})
   unicefDateValidatorErrorMessage!: string;
 
   static get observers() {
     return [
-      "_interventionDocTypeChanged(intervention.document_type)",
-      "_signedPdDocHasChanged(intervention.signed_pd_attachment)",
-      "_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)",
-      "_resetFieldsAndValidations(intervention.submitted_to_prc)",
+      '_interventionDocTypeChanged(intervention.document_type)',
+      '_signedPdDocHasChanged(intervention.signed_pd_attachment)',
+      '_updateStyles(permissions.edit.prc_review_attachment, _lockSubmitToPrc)',
+      '_resetFieldsAndValidations(intervention.submitted_to_prc)'
     ];
   }
 
@@ -358,12 +341,7 @@ class InterventionReviewAndSign extends connect(store)(
       this.permissions = copy(state.pageData!.permissions);
     }
 
-    if (
-      !isJsonStrMatch(
-        this.signedByUnicefUsers,
-        state.commonData!.unicefUsersData
-      )
-    ) {
+    if (!isJsonStrMatch(this.signedByUnicefUsers, state.commonData!.unicefUsersData)) {
       this.signedByUnicefUsers = copy(state.commonData!.unicefUsersData);
     }
     this.uploadsStateChanged(state);
@@ -375,16 +353,12 @@ class InterventionReviewAndSign extends connect(store)(
      * Disable loading message for review and sign tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "interv-page",
+      loadingSource: 'interv-page'
     });
-    this.setDropdownMissingOptionsAjaxDetails(
-      this.$.signedByUnicef,
-      "unicefUsers",
-      { dropdown: true }
-    );
-    fireEvent(this, "tab-content-attached");
+    this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
+    fireEvent(this, 'tab-content-attached');
   }
 
   _resetFieldsAndValidations(submittedToPrc: boolean) {
@@ -395,19 +369,15 @@ class InterventionReviewAndSign extends connect(store)(
       });
     } else {
       if (this.intervention.prc_review_attachment) {
-        store.dispatch({ type: DECREASE_UNSAVED_UPLOADS });
+        store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
       }
       this._resetPrcFields();
     }
   }
 
   _resetPrcFieldsValidations() {
-    (this.shadowRoot!.querySelector(
-      "#submissionDatePrcField"
-    )! as DatePickerLite).invalid = false;
-    (this.shadowRoot!.querySelector(
-      "#reviewDatePrcField"
-    )! as DatePickerLite).invalid = false;
+    (this.shadowRoot!.querySelector('#submissionDatePrcField')! as DatePickerLite).invalid = false;
+    (this.shadowRoot!.querySelector('#reviewDatePrcField')! as DatePickerLite).invalid = false;
   }
 
   _updateStyles() {
@@ -415,18 +385,18 @@ class InterventionReviewAndSign extends connect(store)(
   }
 
   _isDraft(status: string) {
-    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === "";
+    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === '';
   }
 
   _interventionChanged(intervention: Intervention) {
     // check if submitted to PRC was already saved
     if (intervention && intervention.id && intervention.submitted_to_prc) {
-      this.set("_lockSubmitToPrc", true);
+      this.set('_lockSubmitToPrc', true);
     } else {
-      this.set("_lockSubmitToPrc", false);
+      this.set('_lockSubmitToPrc', false);
     }
     if (!intervention.prc_review_attachment) {
-      this.set("intervention.prc_review_attachment", null);
+      this.set('intervention.prc_review_attachment', null);
     }
   }
 
@@ -435,44 +405,33 @@ class InterventionReviewAndSign extends connect(store)(
   }
 
   _agreementChanged(agreement: Agreement) {
-    if (
-      agreement &&
-      typeof agreement === "object" &&
-      Object.keys(agreement).length > 0
-    ) {
-      const authorizedOfficerData = agreement.authorized_officers!.map(
-        (officer) => {
-          return {
-            value:
-              typeof officer.id === "string"
-                ? parseInt(officer.id, 10)
-                : officer.id,
-            label: officer.first_name + " " + officer.last_name,
-          };
-        }
-      );
+    if (agreement && typeof agreement === 'object' && Object.keys(agreement).length > 0) {
+      const authorizedOfficerData = agreement.authorized_officers!.map((officer) => {
+        return {
+          value: typeof officer.id === 'string' ? parseInt(officer.id, 10) : officer.id,
+          label: officer.first_name + ' ' + officer.last_name
+        };
+      });
 
-      this.set("agreementAuthorizedOfficers", authorizedOfficerData);
+      this.set('agreementAuthorizedOfficers', authorizedOfficerData);
     }
   }
 
   validate() {
     let valid = true;
     const fieldSelectors = [
-      "#signedByAuthorizedOfficer",
-      "#signedByPartnerDateField",
-      "#signedByUnicefDateField",
-      "#signedIntervFile",
-      "#submissionDateField",
+      '#signedByAuthorizedOfficer',
+      '#signedByPartnerDateField',
+      '#signedByUnicefDateField',
+      '#signedIntervFile',
+      '#submissionDateField'
     ];
     if (this.intervention.prc_review_attachment) {
-      const dateFields = ["#submissionDatePrcField", "#reviewDatePrcField"];
+      const dateFields = ['#submissionDatePrcField', '#reviewDatePrcField'];
       fieldSelectors.push(...dateFields);
     }
     fieldSelectors.forEach((selector: string) => {
-      const field = this.shadowRoot!.querySelector(
-        selector
-      ) as PolymerElement & { validate(): boolean };
+      const field = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
       if (field && !field.validate()) {
         valid = false;
       }
@@ -497,46 +456,37 @@ class InterventionReviewAndSign extends connect(store)(
     return !this._isDraft(status);
   }
 
-  _isSubmittedToPrcCheckReadonly(
-    isPrcDocEditable: boolean,
-    lockSubmitToPrc: boolean
-  ) {
+  _isSubmittedToPrcCheckReadonly(isPrcDocEditable: boolean, lockSubmitToPrc: boolean) {
     return !isPrcDocEditable || lockSubmitToPrc;
   }
 
   _interventionDocTypeChanged(interventionDocumentType: string) {
-    if (typeof interventionDocumentType === "undefined") {
+    if (typeof interventionDocumentType === 'undefined') {
       return;
     }
 
-    const submittedToPrc = this._showSubmittedToPrcFields(
-      this.intervention.submitted_to_prc
-    );
+    const submittedToPrc = this._showSubmittedToPrcFields(this.intervention.submitted_to_prc);
     if (!submittedToPrc) {
-      this.set("intervention.submitted_to_prc", false);
+      this.set('intervention.submitted_to_prc', false);
       this._resetPrcFields();
     }
   }
 
   _resetPrcFields() {
-    this.set("intervention.intervention.submission_date_prc", null);
-    this.set("intervention.review_date_prc", null);
-    this.set("intervention.prc_review_attachment", null);
+    this.set('intervention.intervention.submission_date_prc', null);
+    this.set('intervention.review_date_prc', null);
+    this.set('intervention.prc_review_attachment', null);
   }
 
   // update FR Number on intervention
   _handleFrsUpdate(e: CustomEvent) {
     e.stopImmediatePropagation();
     try {
-      this.set("intervention.frs_details", e.detail.frsDetails);
+      this.set('intervention.frs_details', e.detail.frsDetails);
       const frIds = e.detail.frsDetails.frs.map((fr: Fr) => fr.id);
-      this.set("intervention.frs", frIds);
+      this.set('intervention.frs', frIds);
     } catch (err) {
-      logError(
-        "[_handleFrsUpdate] An error occurred during FR Numbers update",
-        null,
-        err
-      );
+      logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
     }
   }
 
@@ -545,23 +495,20 @@ class InterventionReviewAndSign extends connect(store)(
    * for the intervention to move in signed status are required; only for draft status.
    */
   _signedPdDocHasChanged(signedDocument: any) {
-    if (typeof signedDocument === "undefined") {
+    if (typeof signedDocument === 'undefined') {
       return;
     }
     // this functionality is available only after pd is saved and in draft status
-    if (
-      this.intervention &&
-      this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase()
-    ) {
+    if (this.intervention && this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase()) {
       setTimeout(() => {
         // delay micro task execution; set to make sure _signedDocChangedForDraft will run on page load
         if (signedDocument) {
           // new document uploaded or file url provided
-          fireEvent(this, "signed-doc-change-for-draft", { docSelected: true });
+          fireEvent(this, 'signed-doc-change-for-draft', {docSelected: true});
         } else {
           // there is no signedDocument
-          fireEvent(this, "signed-doc-change-for-draft", {
-            docSelected: false,
+          fireEvent(this, 'signed-doc-change-for-draft', {
+            docSelected: false
           });
         }
       }, 0);
@@ -569,48 +516,40 @@ class InterventionReviewAndSign extends connect(store)(
   }
 
   _signedPDUploadFinished(e: CustomEvent) {
-    store.dispatch({ type: DECREASE_UPLOADS_IN_PROGRESS });
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = e.detail.success;
-      this.set("intervention.signed_pd_attachment", response.id);
-      store.dispatch({ type: INCREASE_UNSAVED_UPLOADS });
+      this.set('intervention.signed_pd_attachment', response.id);
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
   _signedPDDocDelete(_e: CustomEvent) {
-    this.set("intervention.signed_pd_attachment", null);
-    store.dispatch({ type: DECREASE_UNSAVED_UPLOADS });
+    this.set('intervention.signed_pd_attachment', null);
+    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
   }
 
   _prcRevDocUploadFinished(e: CustomEvent) {
-    store.dispatch({ type: DECREASE_UPLOADS_IN_PROGRESS });
+    store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
       const response = e.detail.success;
-      this.set("intervention.prc_review_attachment", response.id);
-      store.dispatch({ type: INCREASE_UNSAVED_UPLOADS });
+      this.set('intervention.prc_review_attachment', response.id);
+      store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
   }
 
   _prcRevDocDelete(_e: CustomEvent) {
-    this.set("intervention.prc_review_attachment", null);
-    store.dispatch({ type: DECREASE_UNSAVED_UPLOADS });
+    this.set('intervention.prc_review_attachment', null);
+    store.dispatch({type: DECREASE_UNSAVED_UPLOADS});
     this._resetPrcFieldsValidations();
   }
 
   showPrcReviewDeleteBtn(status: string) {
-    return (
-      this._isDraft(status) &&
-      !!this.originalIntervention &&
-      !this.originalIntervention.prc_review_attachment
-    );
+    return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.prc_review_attachment;
   }
 
   showSignedPDDeleteBtn(status: string) {
-    return (
-      this._isDraft(status) &&
-      !!this.originalIntervention &&
-      !this.originalIntervention.signed_pd_attachment
-    );
+    return this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.signed_pd_attachment;
   }
 
   getCurrentDate() {
@@ -618,9 +557,6 @@ class InterventionReviewAndSign extends connect(store)(
   }
 }
 
-window.customElements.define(
-  "intervention-review-and-sign",
-  InterventionReviewAndSign
-);
+window.customElements.define('intervention-review-and-sign', InterventionReviewAndSign);
 
 export default InterventionReviewAndSign;

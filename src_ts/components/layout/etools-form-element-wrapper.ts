@@ -1,9 +1,9 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-input/paper-input-container.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-input/paper-input-container.js';
 
-import { SharedStyles } from "../styles/shared-styles";
-import { requiredFieldStarredStyles } from "../styles/required-field-styles";
-import { property } from "@polymer/decorators";
+import {SharedStyles} from '../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -73,65 +73,57 @@ class EtoolsFormElementWrapper extends PolymerElement {
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   label!: string;
 
-  @property({ type: String })
-  value: string = "";
+  @property({type: String})
+  value = '';
 
-  @property({ type: Boolean })
-  alwaysFloatLabel: boolean = true;
+  @property({type: Boolean})
+  alwaysFloatLabel = true;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   noLabelFloat!: boolean;
 
   @property({
     type: Boolean,
     reflectToAttribute: true,
-    observer: "_requiredChanged",
+    observer: '_requiredChanged'
   })
   required!: boolean;
 
-  @property({ type: Boolean })
-  noPlaceholder: boolean = false;
+  @property({type: Boolean})
+  noPlaceholder = false;
 
   connectedCallback() {
     super.connectedCallback();
-    const appShell = document.querySelector("app-shell");
-    if (appShell && appShell.classList.contains("ie")) {
-      this.classList.add("ie");
+    const appShell = document.querySelector('app-shell');
+    if (appShell && appShell.classList.contains('ie')) {
+      this.classList.add('ie');
     }
   }
 
   _requiredChanged(req: any) {
-    if (typeof req === "undefined") {
+    if (typeof req === 'undefined') {
       return;
     }
     this.updateStyles();
   }
 
   _getPlaceholderClass(value: string) {
-    const cssclass =
-      typeof value === "string" && value.trim() !== ""
-        ? ""
-        : this.noPlaceholder
-        ? ""
-        : "placeholder";
-    return cssclass + " etools-form-element-wrapper";
+    const cssclass = typeof value === 'string' && value.trim() !== '' ? '' : this.noPlaceholder ? '' : 'placeholder';
+    return cssclass + ' etools-form-element-wrapper';
   }
 
   _getDisplayValue(value: string) {
-    return typeof value === "string" && value.trim() !== ""
-      ? value == "-"
-        ? "N/A"
+    return typeof value === 'string' && value.trim() !== ''
+      ? value == '-'
+        ? 'N/A'
         : value.trim()
       : this.noPlaceholder
-      ? ""
-      : "—";
+      ? ''
+      : '—';
   }
 }
 
-window.customElements.define(
-  "etools-form-element-wrapper",
-  EtoolsFormElementWrapper
-);
+window.customElements.define('etools-form-element-wrapper', EtoolsFormElementWrapper);

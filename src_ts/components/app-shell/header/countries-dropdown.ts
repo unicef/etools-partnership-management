@@ -1,15 +1,15 @@
-import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
-import { connect } from "pwa-helpers/connect-mixin.js";
-import { store, RootState } from "../../../store.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import EtoolsPageRefreshMixin from "@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js";
-import EndpointsMixin from "../../endpoints/endpoints-mixin.js";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { fireEvent } from "../../utils/fire-custom-event.js";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../typings/globals.types.js";
-import { EtoolsDropdownEl } from "@unicef-polymer/etools-dropdown/etools-dropdown.js";
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store, RootState} from '../../../store.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
+import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {fireEvent} from '../../utils/fire-custom-event.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../typings/globals.types.js';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 /**
  * @polymer
@@ -18,9 +18,7 @@ import { EtoolsDropdownEl } from "@unicef-polymer/etools-dropdown/etools-dropdow
  * @appliesMixin EndpointsMixin
  * @appliesMixin EtoolsPageRefreshMixin
  */
-class CountriesDropdown extends connect(store)(
-  EtoolsPageRefreshMixin(EndpointsMixin(PolymerElement))
-) {
+class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsMixin(PolymerElement))) {
   public static get template() {
     // main template
     // language=HTML
@@ -100,23 +98,21 @@ class CountriesDropdown extends connect(store)(
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   currentCountry: GenericObject = {};
 
-  @property({ type: Array, observer: "_countrySelectorUpdate" })
+  @property({type: Array, observer: '_countrySelectorUpdate'})
   countries: any[] = [];
 
-  @property({ type: Boolean })
-  countrySelectorVisible: boolean = false;
+  @property({type: Boolean})
+  countrySelectorVisible = false;
 
   public connectedCallback() {
     super.connectedCallback();
 
     setTimeout(() => {
-      const fitInto = document
-        .querySelector("app-shell")!
-        .shadowRoot!.querySelector("#appHeadLayout");
-      (this.$.countrySelector as EtoolsDropdownEl).set("fitInto", fitInto);
+      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
+      (this.$.countrySelector as EtoolsDropdownEl).set('fitInto', fitInto);
     }, 0);
   }
 
@@ -142,16 +138,16 @@ class CountriesDropdown extends connect(store)(
 
   protected _triggerCountryChangeRequest(countryId: any) {
     const self = this;
-    fireEvent(this, "global-loading", {
-      message: "Please wait while country data is changing...",
+    fireEvent(this, 'global-loading', {
+      message: 'Please wait while country data is changing...',
       active: true,
-      loadingSource: "country-change",
+      loadingSource: 'country-change'
     });
 
     sendRequest({
-      endpoint: this.getEndpoint("changeCountry"),
-      method: "POST",
-      body: { country: countryId },
+      endpoint: this.getEndpoint('changeCountry'),
+      method: 'POST',
+      body: {country: countryId}
     })
       .then(() => {
         self._handleResponse();
@@ -162,7 +158,7 @@ class CountriesDropdown extends connect(store)(
   }
 
   protected _handleResponse() {
-    fireEvent(this, "update-main-path", { path: "partners" });
+    fireEvent(this, 'update-main-path', {path: 'partners'});
     this.refresh();
   }
 
@@ -173,19 +169,16 @@ class CountriesDropdown extends connect(store)(
   }
 
   protected _handleError(error: any) {
-    logError("Country change failed!", "countries-dropdown", error);
-    (this.$.countrySelector as EtoolsDropdownEl).set(
-      "selected",
-      this.currentCountry.id
-    );
-    fireEvent(this, "toast", {
-      text: "Something went wrong changing your workspace. Please try again",
+    logError('Country change failed!', 'countries-dropdown', error);
+    (this.$.countrySelector as EtoolsDropdownEl).set('selected', this.currentCountry.id);
+    fireEvent(this, 'toast', {
+      text: 'Something went wrong changing your workspace. Please try again'
     });
-    fireEvent(this, "global-loading", {
+    fireEvent(this, 'global-loading', {
       active: false,
-      loadingSource: "country-change",
+      loadingSource: 'country-change'
     });
   }
 }
 
-window.customElements.define("countries-dropdown", CountriesDropdown);
+window.customElements.define('countries-dropdown', CountriesDropdown);

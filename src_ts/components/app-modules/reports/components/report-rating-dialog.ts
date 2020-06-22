@@ -1,18 +1,18 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-radio-button/paper-radio-button.js";
-import "@polymer/paper-radio-group/paper-radio-group.js";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import EndpointsMixin from "../../../endpoints/endpoints-mixin";
-import { SharedStyles } from "../../../styles/shared-styles";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-radio-button/paper-radio-button.js';
+import '@polymer/paper-radio-group/paper-radio-group.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import EndpointsMixin from '../../../endpoints/endpoints-mixin';
+import {SharedStyles} from '../../../styles/shared-styles';
 declare const moment: any;
-import { fireEvent } from "../../../utils/fire-custom-event";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { property } from "@polymer/decorators/lib/decorators";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog";
-import { GenericObject } from "../../../../typings/globals.types";
-import { RootState, store } from "../../../../store";
-import { connect } from "pwa-helpers/connect-mixin";
-import CONSTANTS from "../../../../config/app-constants.js";
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {property} from '@polymer/decorators/lib/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {GenericObject} from '../../../../typings/globals.types';
+import {RootState, store} from '../../../../store';
+import {connect} from 'pwa-helpers/connect-mixin';
+import CONSTANTS from '../../../../config/app-constants.js';
 
 /*
   status: 'accepted'/'sent back'
@@ -24,9 +24,7 @@ import CONSTANTS from "../../../../config/app-constants.js";
  * @customElement
  * @appliesMixin EndpointsMixin
  */
-class ReportRatingDialog extends connect(store)(
-  EndpointsMixin(PolymerElement)
-) {
+class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${SharedStyles}
@@ -48,13 +46,9 @@ class ReportRatingDialog extends connect(store)(
       >
         <div id="content-box" hidden$="[[isSRReport]]">
           <p>
-            Rate the overall progress of this PD/SSFA in light of this report
-            and monitoring visits.
+            Rate the overall progress of this PD/SSFA in light of this report and monitoring visits.
           </p>
-          <paper-radio-group
-            id="overallStatus"
-            selected="{{selectedOverallStatus}}"
-          >
+          <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
             <paper-radio-button name="Met"> Met</paper-radio-button>
             <paper-radio-button name="OnT"> On track</paper-radio-button>
             <paper-radio-button name="NoP"> No progress</paper-radio-button>
@@ -65,22 +59,22 @@ class ReportRatingDialog extends connect(store)(
     `;
   }
   static get is() {
-    return "report-rating-dialog";
+    return 'report-rating-dialog';
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   report!: GenericObject;
 
-  @property({ type: Object })
+  @property({type: Object})
   toastEventSource!: HTMLElement;
 
-  @property({ type: String })
-  selectedOverallStatus: string = "";
+  @property({type: String})
+  selectedOverallStatus = '';
 
-  @property({ type: String })
-  okBtnText: string = "";
+  @property({type: String})
+  okBtnText = '';
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   isSRReport!: boolean;
 
   stateChanged(state: RootState) {
@@ -88,15 +82,14 @@ class ReportRatingDialog extends connect(store)(
   }
 
   open() {
-    this.isSRReport =
-      this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
-    this.set("selectedOverallStatus", this.isSRReport ? "Met" : "");
-    this.okBtnText = this.isSRReport ? "Accept Report" : "Rate & Accept Report";
-    (this.$.reportRatingDialog as EtoolsDialog).set("opened", true);
+    this.isSRReport = this.report.report_type === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+    this.set('selectedOverallStatus', this.isSRReport ? 'Met' : '');
+    this.okBtnText = this.isSRReport ? 'Accept Report' : 'Rate & Accept Report';
+    (this.$.reportRatingDialog as EtoolsDialog).set('opened', true);
   }
 
   close() {
-    (this.$.reportRatingDialog as EtoolsDialog).set("opened", false);
+    (this.$.reportRatingDialog as EtoolsDialog).set('opened', false);
   }
 
   startSpinner() {
@@ -108,25 +101,21 @@ class ReportRatingDialog extends connect(store)(
   }
 
   getCurrentDate() {
-    return moment(new Date()).format("D-MMM-YYYY");
+    return moment(new Date()).format('D-MMM-YYYY');
   }
 
   saveStatus() {
     const self = this;
     const requestBody = {
-      status: "Acc",
+      status: 'Acc',
       overall_status: this.selectedOverallStatus,
       reviewed_by_name: this.currentUser.name,
-      review_date: this.getCurrentDate(),
+      review_date: this.getCurrentDate()
     };
     this.startSpinner();
-    this.fireRequest(
-      "reportReview",
-      { reportId: this.report.id },
-      { method: "POST", body: requestBody }
-    )
+    this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
       .then(function (response: any) {
-        fireEvent(self, "report-accepted", { report: response });
+        fireEvent(self, 'report-accepted', {report: response});
         self.stopSpinner();
         self.close();
       })
@@ -142,4 +131,4 @@ class ReportRatingDialog extends connect(store)(
 }
 
 window.customElements.define(ReportRatingDialog.is, ReportRatingDialog);
-export { ReportRatingDialog as ReportRatingDialogEl };
+export {ReportRatingDialog as ReportRatingDialogEl};

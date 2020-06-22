@@ -1,29 +1,29 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-input/paper-input.js";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown-multi.js";
-import "@unicef-polymer/etools-upload/etools-upload.js";
-import "@unicef-polymer/etools-date-time/datepicker-lite.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-input/paper-input.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 
-import "../../../../../../layout/etools-warn-message";
-import EndpointsMixin from "../../../../../../endpoints/endpoints-mixin";
-import { fireEvent } from "../../../../../../utils/fire-custom-event";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../../../store";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
-import { buttonsStyles } from "../../../../../../styles/buttons-styles";
-import { SharedStyles } from "../../../../../../styles/shared-styles";
-import { requiredFieldStarredStyles } from "../../../../../../styles/required-field-styles";
-import pmpEndpoints from "../../../../../../endpoints/endpoints";
-import { isJsonStrMatch } from "../../../../../../utils/utils";
-import { LabelAndValue } from "../../../../../../../typings/globals.types";
-import { InterventionAmendment } from "../../../../../../../typings/intervention.types";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser";
-import CONSTANTS from "../../../../../../../config/app-constants";
-import { property } from "@polymer/decorators";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog";
-import { EtoolsDropdownMultiEl } from "@unicef-polymer/etools-dropdown/etools-dropdown-multi";
+import '../../../../../../layout/etools-warn-message';
+import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import pmpEndpoints from '../../../../../../endpoints/endpoints';
+import {isJsonStrMatch} from '../../../../../../utils/utils';
+import {LabelAndValue} from '../../../../../../../typings/globals.types';
+import {InterventionAmendment} from '../../../../../../../typings/intervention.types';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import CONSTANTS from '../../../../../../../config/app-constants';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 
 /**
  * @polymer
@@ -31,13 +31,10 @@ import { EtoolsDropdownMultiEl } from "@unicef-polymer/etools-dropdown/etools-dr
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
-class AddAmendmentDialog extends connect(store)(
-  EndpointsMixin(PolymerElement)
-) {
+class AddAmendmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   static get template() {
     return html`
-      ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles}
-      ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         paper-input#other {
           width: 100%;
@@ -99,10 +96,7 @@ class AddAmendmentDialog extends connect(store)(
           >
           </etools-warn-message>
         </div>
-        <div
-          class="row-h"
-          hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]"
-        >
+        <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
           <paper-input
             id="other"
             placeholder="&#8212;"
@@ -147,66 +141,56 @@ class AddAmendmentDialog extends connect(store)(
     `;
   }
 
-  @property({ type: String })
-  endpointName: string = "interventionAmendmentAdd";
+  @property({type: String})
+  endpointName = 'interventionAmendmentAdd';
 
-  @property({ type: Object })
+  @property({type: Object})
   toastEventSource!: PolymerElement;
 
-  @property({ type: Boolean })
-  datePickerOpen: boolean = false;
+  @property({type: Boolean})
+  datePickerOpen = false;
 
-  @property({ type: Boolean, notify: true, observer: "_resetFields" })
-  opened: boolean = false;
+  @property({type: Boolean, notify: true, observer: '_resetFields'})
+  opened = false;
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId: number | null = null;
 
-  @property({ type: String })
-  interventionDocumentType: string = "";
+  @property({type: String})
+  interventionDocumentType = '';
 
-  @property({ type: Array })
+  @property({type: Array})
   amendmentTypes!: LabelAndValue[];
 
-  @property({ type: Object })
+  @property({type: Object})
   newAmendment!: InterventionAmendment;
 
-  @property({ type: String })
+  @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
   @property({
     type: Boolean,
-    computed: "getUploadInProgress(amdUploadInProgress, prcUploadInProgress)",
+    computed: 'getUploadInProgress(amdUploadInProgress, prcUploadInProgress)'
   })
-  uploadInProgress: boolean = false;
+  uploadInProgress = false;
 
-  @property({ type: Boolean })
-  amdUploadInProgress: boolean = false;
+  @property({type: Boolean})
+  amdUploadInProgress = false;
 
-  @property({ type: Boolean })
-  prcUploadInProgress: boolean = false;
+  @property({type: Boolean})
+  prcUploadInProgress = false;
 
-  @property({ type: Array })
+  @property({type: Array})
   filteredAmendmentTypes!: LabelAndValue[];
 
-  private _validationSelectors: string[] = [
-    "#amendment-types",
-    "#signed-date",
-    "#signed-agreement-upload",
-    "#other",
-  ];
+  private _validationSelectors: string[] = ['#amendment-types', '#signed-date', '#signed-agreement-upload', '#other'];
 
   static get observers() {
-    return ["_filterAmendmentTypes(amendmentTypes, interventionDocumentType)"];
+    return ['_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'];
   }
 
   stateChanged(state: RootState) {
-    if (
-      !isJsonStrMatch(
-        this.amendmentTypes,
-        state.commonData!.interventionAmendmentTypes
-      )
-    ) {
+    if (!isJsonStrMatch(this.amendmentTypes, state.commonData!.interventionAmendmentTypes)) {
       this.amendmentTypes = [...state.commonData!.interventionAmendmentTypes];
     }
   }
@@ -221,51 +205,38 @@ class AddAmendmentDialog extends connect(store)(
   }
 
   resetAmendment() {
-    this.set("newAmendment", new InterventionAmendment());
+    this.set('newAmendment', new InterventionAmendment());
   }
 
   startSpinner() {
-    (this.shadowRoot!.querySelector(
-      "#add-amendment"
-    ) as EtoolsDialog).startSpinner();
+    (this.shadowRoot!.querySelector('#add-amendment') as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    (this.shadowRoot!.querySelector(
-      "#add-amendment"
-    ) as EtoolsDialog).stopSpinner();
+    (this.shadowRoot!.querySelector('#add-amendment') as EtoolsDialog).stopSpinner();
   }
 
-  _filterAmendmentTypes(
-    amendmentTypes: LabelAndValue[],
-    interventionDocumentType: string
-  ) {
+  _filterAmendmentTypes(amendmentTypes: LabelAndValue[], interventionDocumentType: string) {
     if (!amendmentTypes || !interventionDocumentType) {
       return;
     }
     if (interventionDocumentType === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-      this.filteredAmendmentTypes = this.amendmentTypes.filter(
-        (type: LabelAndValue) => {
-          return ["no_cost", "other"].indexOf(type.value) > -1;
-        }
-      );
+      this.filteredAmendmentTypes = this.amendmentTypes.filter((type: LabelAndValue) => {
+        return ['no_cost', 'other'].indexOf(type.value) > -1;
+      });
     } else {
-      this.filteredAmendmentTypes = JSON.parse(
-        JSON.stringify(this.amendmentTypes)
-      );
+      this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
     }
-    const typesDropdw = this.shadowRoot!.querySelector(
-      "#amendment-types"
-    ) as EtoolsDropdownMultiEl;
+    const typesDropdw = this.shadowRoot!.querySelector('#amendment-types') as EtoolsDropdownMultiEl;
 
     if (typesDropdw) {
-      typesDropdw.set("invalid", false); // to fix eager validation
+      typesDropdw.set('invalid', false); // to fix eager validation
     }
   }
 
   _showOtherInput() {
     const amdTypes = this.newAmendment.types;
-    return amdTypes && amdTypes.indexOf("other") > -1;
+    return amdTypes && amdTypes.indexOf('other') > -1;
   }
 
   isValidAmendment() {
@@ -274,7 +245,7 @@ class AddAmendmentDialog extends connect(store)(
       const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {
         validate(): boolean;
       };
-      if (selector === "#other" && !this._showOtherInput()) {
+      if (selector === '#other' && !this._showOtherInput()) {
         return;
       }
       if (el && !el.validate()) {
@@ -293,7 +264,7 @@ class AddAmendmentDialog extends connect(store)(
     this._validationSelectors.forEach((selector: string) => {
       const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
-        el.set("invalid", false);
+        el.set('invalid', false);
       }
     });
   }
@@ -305,34 +276,32 @@ class AddAmendmentDialog extends connect(store)(
     const messages: string[] = [];
     types.forEach((amdType: string) => {
       switch (amdType) {
-        case "admin_error":
+        case 'admin_error':
+          messages.push('Corrections in the programme document due to typos or administrative error.');
+          break;
+        case 'budget_lte_20':
           messages.push(
-            "Corrections in the programme document due to typos or administrative error."
+            'Changes to the budget of activities resulting in a change in the UNICEF contribution ≤20% of ' +
+              'previously approved cash and/or supplies, with or without changes to the programme results.'
           );
           break;
-        case "budget_lte_20":
+        case 'budget_gt_20':
           messages.push(
-            "Changes to the budget of activities resulting in a change in the UNICEF contribution ≤20% of " +
-              "previously approved cash and/or supplies, with or without changes to the programme results."
+            'Changes to the budget of activities resulting in a change in the UNICEF contribution >20% of ' +
+              'previously approved cash and/or supplies, with or without changes to the programme results.'
           );
           break;
-        case "budget_gt_20":
+        case 'no_cost':
+          messages.push('No cost extension');
+          break;
+        case 'change':
           messages.push(
-            "Changes to the budget of activities resulting in a change in the UNICEF contribution >20% of " +
-              "previously approved cash and/or supplies, with or without changes to the programme results."
+            'Changes to planned results, population or geographical coverage of the programme with no ' +
+              'change in UNICEF contribution.'
           );
           break;
-        case "no_cost":
-          messages.push("No cost extension");
-          break;
-        case "change":
-          messages.push(
-            "Changes to planned results, population or geographical coverage of the programme with no " +
-              "change in UNICEF contribution."
-          );
-          break;
-        case "other":
-          messages.push("Other");
+        case 'other':
+          messages.push('Other');
           break;
       }
     });
@@ -351,11 +320,11 @@ class AddAmendmentDialog extends connect(store)(
       delete newAmendment.internal_prc_review;
     }
     const options = {
-      method: "POST",
+      method: 'POST',
       endpoint: this.getEndpoint(this.endpointName, {
-        intervId: this.interventionId,
+        intervId: this.interventionId
       }),
-      body: newAmendment,
+      body: newAmendment
     };
     this.startSpinner();
     sendRequest(options)
@@ -370,8 +339,8 @@ class AddAmendmentDialog extends connect(store)(
   }
 
   _handleResponse(response: InterventionAmendment) {
-    this.set("opened", false);
-    fireEvent(this, "amendment-added", response);
+    this.set('opened', false);
+    fireEvent(this, 'amendment-added', response);
   }
 
   _handleErrorResponse(error: any) {
@@ -381,14 +350,14 @@ class AddAmendmentDialog extends connect(store)(
   _amendmentUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set("newAmendment.signed_amendment_attachment", uploadResponse.id);
+      this.set('newAmendment.signed_amendment_attachment', uploadResponse.id);
     }
   }
 
   _prcReviewUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set("newAmendment.internal_prc_review", uploadResponse.id);
+      this.set('newAmendment.internal_prc_review', uploadResponse.id);
     }
   }
 
@@ -397,5 +366,5 @@ class AddAmendmentDialog extends connect(store)(
   }
 }
 
-window.customElements.define("add-amendment-dialog", AddAmendmentDialog);
-export { AddAmendmentDialog };
+window.customElements.define('add-amendment-dialog', AddAmendmentDialog);
+export {AddAmendmentDialog};

@@ -1,9 +1,9 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
-import { SharedStyles } from "../../../../../../styles/shared-styles";
-import { buttonsStyles } from "../../../../../../styles/buttons-styles";
-import { GenericObject } from "../../../../../../../typings/globals.types";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
+import {GenericObject} from '../../../../../../../typings/globals.types';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -11,7 +11,7 @@ import { property } from "@polymer/decorators";
  */
 class ClusterIndicatorDisaggregations extends PolymerElement {
   static get is() {
-    return "cluster-indicator-disaggregations";
+    return 'cluster-indicator-disaggregations';
   }
 
   static get template() {
@@ -38,33 +38,26 @@ class ClusterIndicatorDisaggregations extends PolymerElement {
             <div class="col col-4">
               <div class="layout-vertical">
                 <label class="paper-label">Disaggregate By</label>
-                <label class="input-label" empty$="[[!item.name]]"
-                  >[[item.name]]</label
-                >
+                <label class="input-label" empty$="[[!item.name]]">[[item.name]]</label>
               </div>
             </div>
             <div class="col col-8">
               <div class="layout-vertical">
                 <label class="paper-label">Disaggregation Groups</label>
-                <label class="input-label" empty$="[[!item.choices]]"
-                  >[[_getGroupNames(item.choices)]]</label
-                >
+                <label class="input-label" empty$="[[!item.choices]]">[[_getGroupNames(item.choices)]]</label>
               </div>
             </div>
           </div>
         </template>
       </div>
 
-      <div
-        class="row-h"
-        hidden$="[[!_noDisaggregations(disaggregations, disaggregations.length)]]"
-      >
+      <div class="row-h" hidden$="[[!_noDisaggregations(disaggregations, disaggregations.length)]]">
         <p>There are no disaggregations added.</p>
       </div>
     `;
   }
 
-  @property({ type: Array })
+  @property({type: Array})
   disaggregations!: [];
 
   _noDisaggregations(disaggregations: any, disaggregLength: number) {
@@ -72,16 +65,13 @@ class ClusterIndicatorDisaggregations extends PolymerElement {
   }
   _getGroupNames(groups: GenericObject[]) {
     if (!groups) {
-      return "";
+      return '';
     }
-    let groupNames = "";
+    let groupNames = '';
     groups.forEach(function (g) {
-      groupNames += g.value + "; ";
+      groupNames += g.value + '; ';
     });
     return groupNames;
   }
 }
-window.customElements.define(
-  ClusterIndicatorDisaggregations.is,
-  ClusterIndicatorDisaggregations
-);
+window.customElements.define(ClusterIndicatorDisaggregations.is, ClusterIndicatorDisaggregations);

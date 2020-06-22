@@ -1,4 +1,4 @@
-import { html } from "@polymer/polymer/polymer-element.js";
+import {html} from '@polymer/polymer/polymer-element.js';
 
 // language=HTML
 export const pageLayoutStyles = html` <style>

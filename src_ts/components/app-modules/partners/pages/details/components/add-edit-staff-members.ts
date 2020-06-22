@@ -1,21 +1,21 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-input/paper-input";
-import "@polymer/paper-checkbox/paper-checkbox";
-import "@polymer/iron-icons/communication-icons";
-import "@unicef-polymer/etools-dialog/etools-dialog";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-checkbox/paper-checkbox';
+import '@polymer/iron-icons/communication-icons';
+import '@unicef-polymer/etools-dialog/etools-dialog';
 
-import "../../../../../layout/etools-form-element-wrapper";
-import { gridLayoutStyles } from "../../../../../styles/grid-layout-styles";
-import { SharedStyles } from "../../../../../styles/shared-styles";
-import { requiredFieldStarredStyles } from "../../../../../styles/required-field-styles";
-import { fireEvent } from "../../../../../utils/fire-custom-event";
-import { property } from "@polymer/decorators";
-import { StaffMember } from "../../../../../../models/partners.models";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog";
-import EndpointsMixin from "../../../../../endpoints/endpoints-mixin";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser";
-import { ValidatableField } from "../../../../../../typings/globals.types";
+import '../../../../../layout/etools-form-element-wrapper';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
+import {property} from '@polymer/decorators';
+import {StaffMember} from '../../../../../../models/partners.models';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {ValidatableField} from '../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -132,27 +132,27 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Object })
+  @property({type: Object})
   item!: StaffMember;
 
-  @property({ type: Array })
+  @property({type: Array})
   dataItems: StaffMember[] = [];
 
-  @property({ type: Object })
+  @property({type: Object})
   mainEl!: HTMLElement;
 
-  @property({ type: Number })
+  @property({type: Number})
   partnerId: number | null = null;
 
-  @property({ type: Array })
-  fieldSelectors: string[] = ["#firstName", "#lastName", "#email", "#title"];
+  @property({type: Array})
+  fieldSelectors: string[] = ['#firstName', '#lastName', '#email', '#title'];
 
   open() {
     this.resetValidations();
     (this.$.staffMemberDialog as EtoolsDialog).opened = true;
   }
 
-  _isNewStaffMember(item: { id: number | null }) {
+  _isNewStaffMember(item: {id: number | null}) {
     return !item || !item.id;
   }
 
@@ -181,25 +181,21 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
   _savePartnerContact() {
     if (this.validate()) {
       const dialog: EtoolsDialog = this.$.staffMemberDialog as EtoolsDialog;
-      const endpoint = this.getEndpoint("partnerDetails", {
-        id: this.partnerId,
+      const endpoint = this.getEndpoint('partnerDetails', {
+        id: this.partnerId
       });
       dialog.startSpinner();
 
       sendRequest({
         endpoint: endpoint,
-        method: "PATCH",
+        method: 'PATCH',
         body: {
           id: this.id,
-          staff_members: [this.item],
-        },
+          staff_members: [this.item]
+        }
       })
         .then((response: any) => {
-          fireEvent(
-            this.mainEl,
-            "partner-contacts-updated",
-            response.staff_members
-          );
+          fireEvent(this.mainEl, 'partner-contacts-updated', response.staff_members);
           dialog.stopSpinner();
           dialog.opened = false;
         })
@@ -211,6 +207,6 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("add-edit-staff-members", AddEditStaffMembers);
+window.customElements.define('add-edit-staff-members', AddEditStaffMembers);
 
-export { AddEditStaffMembers as AddEditStaffMembersEl };
+export {AddEditStaffMembers as AddEditStaffMembersEl};

@@ -1,17 +1,14 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import uniq from "lodash-es/uniq";
-import "@unicef-polymer/etools-data-table/etools-data-table.js";
-import EndpointsMixin from "../../../../../../../endpoints/endpoints-mixin";
-import CommonMixin from "../../../../../../../mixins/common-mixin";
-import {
-  ResultLinkLowerResult,
-  ExpectedResult,
-} from "../../../../../../../../typings/intervention.types";
-import { isEmptyObject } from "../../../../../../../utils/utils";
-import { gridLayoutStyles } from "../../../../../../../styles/grid-layout-styles";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer';
+import uniq from 'lodash-es/uniq';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
+import CommonMixin from '../../../../../../../mixins/common-mixin';
+import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typings/intervention.types';
+import {isEmptyObject} from '../../../../../../../utils/utils';
+import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @customElement
@@ -20,9 +17,7 @@ import { property } from "@polymer/decorators";
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  */
-class HumanitarianReportingReqCluster extends CommonMixin(
-  EndpointsMixin(PolymerElement)
-) {
+class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return html`
       ${gridLayoutStyles}
@@ -38,22 +33,14 @@ class HumanitarianReportingReqCluster extends CommonMixin(
 
       <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
         <etools-data-table-header no-collapse no-title class="w100">
-          <etools-data-table-column class="col-2"
-            >Frequency</etools-data-table-column
-          >
-          <etools-data-table-column class="flex-c"
-            >Due Dates</etools-data-table-column
-          >
+          <etools-data-table-column class="col-2">Frequency</etools-data-table-column>
+          <etools-data-table-column class="flex-c">Due Dates</etools-data-table-column>
         </etools-data-table-header>
         <template is="dom-repeat" items="{{reportingRequirements}}">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
-              <span class="col-data col-2"
-                >[[getFrequencyForDisplay(item.frequency)]]</span
-              >
-              <span class="col-data flex-c"
-                >[[getDatesForDisplay(item.cs_dates)]]</span
-              >
+              <span class="col-data col-2">[[getFrequencyForDisplay(item.frequency)]]</span>
+              <span class="col-data flex-c">[[getDatesForDisplay(item.cs_dates)]]</span>
             </div>
           </etools-data-table-row>
         </template>
@@ -67,22 +54,21 @@ class HumanitarianReportingReqCluster extends CommonMixin(
 
   @property({
     type: Array,
-    observer:
-      HumanitarianReportingReqCluster.prototype.reportingRequirementsChanged,
+    observer: HumanitarianReportingReqCluster.prototype.reportingRequirementsChanged
   })
   reportingRequirements!: [];
 
   // @ts-ignore
   @property({
     type: String,
-    observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged,
+    observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged
   })
   interventionId!: string;
 
-  @property({ type: Number, notify: true })
-  requirementsCount: number = 0;
+  @property({type: Number, notify: true})
+  requirementsCount = 0;
 
-  @property({ type: Array })
+  @property({type: Array})
   expectedResults!: [];
 
   ready() {
@@ -102,22 +88,18 @@ class HumanitarianReportingReqCluster extends CommonMixin(
     }
 
     this.fireRequest(
-      "hrClusterReportingRequirements",
+      'hrClusterReportingRequirements',
       {},
       {
-        method: "POST",
-        body: { reportable_ids: clusterIndicIds },
+        method: 'POST',
+        body: {reportable_ids: clusterIndicIds}
       }
     )
       .then((response: any) => {
-        this.set("reportingRequirements", response);
+        this.set('reportingRequirements', response);
       })
       .catch((error: any) => {
-        logError(
-          "Failed to get hr cluster requirements from API!",
-          "humanitarian-reporting-req-cluster",
-          error
-        );
+        logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
         parseRequestErrorsAndShowAsToastMsgs(error, this);
         this.reportingRequirements = [];
       });
@@ -142,19 +124,19 @@ class HumanitarianReportingReqCluster extends CommonMixin(
   }
 
   reportingRequirementsChanged(repReq: any) {
-    this.set("requirementsCount", isEmptyObject(repReq) ? 0 : repReq.length);
+    this.set('requirementsCount', isEmptyObject(repReq) ? 0 : repReq.length);
   }
 
   getDatesForDisplay(dates: []) {
     if (!dates) {
-      return "";
+      return '';
     }
     if (Array.isArray(dates)) {
       if (!dates.length) {
-        return "";
+        return '';
       }
       const formatedDates = dates.map((d) => this.getDateDisplayValue(d));
-      return formatedDates.join(", ");
+      return formatedDates.join(', ');
     } else {
       return this.getDateDisplayValue(dates);
     }
@@ -162,16 +144,16 @@ class HumanitarianReportingReqCluster extends CommonMixin(
 
   getFrequencyForDisplay(shortenFreq: string) {
     switch (shortenFreq) {
-      case "Wee":
-        return "Weekly";
-      case "Mon":
-        return "Monthly";
-      case "Qua":
-        return "Quarterly";
-      case "Csd":
-        return "Custom";
+      case 'Wee':
+        return 'Weekly';
+      case 'Mon':
+        return 'Monthly';
+      case 'Qua':
+        return 'Quarterly';
+      case 'Csd':
+        return 'Custom';
       default:
-        return "Custom";
+        return 'Custom';
     }
   }
 
@@ -180,7 +162,4 @@ class HumanitarianReportingReqCluster extends CommonMixin(
   }
 }
 
-window.customElements.define(
-  "humanitarian-reporting-req-cluster",
-  HumanitarianReportingReqCluster
-);
+window.customElements.define('humanitarian-reporting-req-cluster', HumanitarianReportingReqCluster);

@@ -1,24 +1,24 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-styles/element-styles/paper-material-styles.js";
-import "@polymer/paper-tooltip/paper-tooltip.js";
-import "@unicef-polymer/etools-data-table/etools-data-table";
-import "@polymer/iron-media-query/iron-media-query.js";
-import "./report-status";
-import { Debouncer } from "@polymer/polymer/lib/utils/debounce";
-import { timeOut } from "@polymer/polymer/lib/utils/async";
-import { fireEvent } from "../../../utils/fire-custom-event";
-import { GenericObject, User } from "../../../../typings/globals.types";
-import EndpointsMixin from "../../../endpoints/endpoints-mixin";
-import CommonMixin from "../../../mixins/common-mixin";
-import PaginationMixin from "../../../mixins/pagination-mixin";
-import { gridLayoutStyles } from "../../../styles/grid-layout-styles";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../store";
-import { isJsonStrMatch, isEmptyObject } from "../../../utils/utils";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging.js";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { abortRequestByKey } from "@unicef-polymer/etools-ajax/etools-iron-request";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-styles/element-styles/paper-material-styles.js';
+import '@polymer/paper-tooltip/paper-tooltip.js';
+import '@unicef-polymer/etools-data-table/etools-data-table';
+import '@polymer/iron-media-query/iron-media-query.js';
+import './report-status';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
+import {timeOut} from '@polymer/polymer/lib/utils/async';
+import {fireEvent} from '../../../utils/fire-custom-event';
+import {GenericObject, User} from '../../../../typings/globals.types';
+import EndpointsMixin from '../../../endpoints/endpoints-mixin';
+import CommonMixin from '../../../mixins/common-mixin';
+import PaginationMixin from '../../../mixins/pagination-mixin';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../store';
+import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -28,11 +28,9 @@ import { property } from "@polymer/decorators";
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
  */
-class ReportsDisplayList extends connect(store)(
-  PaginationMixin(CommonMixin(EndpointsMixin(PolymerElement)))
-) {
+class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(EndpointsMixin(PolymerElement)))) {
   static get is() {
-    return "reports-display-list";
+    return 'reports-display-list';
   }
 
   static get template() {
@@ -73,10 +71,7 @@ class ReportsDisplayList extends connect(store)(
           position: relative;
         }
       </style>
-      <iron-media-query
-        query="(max-width: 767px)"
-        query-matches="{{lowResolutionLayout}}"
-      ></iron-media-query>
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
       <div id="list" class="paper-material" elevation="1">
         <template is="dom-if" if="[[!reports.length]]">
           <div class="row-h">
@@ -113,21 +108,11 @@ class ReportsDisplayList extends connect(store)(
             </template>
           </etools-data-table-header>
 
-          <template
-            is="dom-repeat"
-            items="[[reports]]"
-            as="report"
-            on-dom-change="_listDataChanged"
-          >
-            <etools-data-table-row
-              low-resolution-layout="[[lowResolutionLayout]]"
-            >
+          <template is="dom-repeat" items="[[reports]]" as="report" on-dom-change="_listDataChanged">
+            <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]">
               <div slot="row-data">
                 <span class="col-data col-2" data-col-header-label="Report #">
-                  <span
-                    id$="tooltip-trigger-[[report.id]]"
-                    class="tooltip-trigger"
-                  >
+                  <span id$="tooltip-trigger-[[report.id]]" class="tooltip-trigger">
                     <a
                       class="view-report"
                       href$="reports/[[report.id]]/progress"
@@ -135,57 +120,35 @@ class ReportsDisplayList extends connect(store)(
                     >
                       [[_getReportTitle(report)]]
                     </a>
-                    <span hidden$="[[_canViewReport(report.status)]]"
-                      >[[_getReportTitle(report)]]</span
-                    >
+                    <span hidden$="[[_canViewReport(report.status)]]">[[_getReportTitle(report)]]</span>
                     <template is="dom-if" if="[[report.is_final]]">
                       <span class="final-badge">final</span>
                     </template>
                   </span>
-                  <paper-tooltip
-                    for$="tooltip-trigger-[[report.id]]"
-                    position="right"
-                    fit-to-visible-bounds
-                  >
+                  <paper-tooltip for$="tooltip-trigger-[[report.id]]" position="right" fit-to-visible-bounds>
                     [[report.programme_document.title]]
                   </paper-tooltip>
                 </span>
                 <span class="col-data flex-c" data-col-header-label="Partner">
-                  <span
-                    id$="tooltip-partner-[[report.id]]"
-                    class="tooltip-trigger"
-                  >
+                  <span id$="tooltip-partner-[[report.id]]" class="tooltip-trigger">
                     [[_displayOrDefault(report.partner_name)]]
                   </span>
 
-                  <paper-tooltip
-                    for$="tooltip-partner-[[report.id]]"
-                    position="right"
-                    fit-to-visible-bounds
-                  >
+                  <paper-tooltip for$="tooltip-partner-[[report.id]]" position="right" fit-to-visible-bounds>
                     [[report.partner_vendor_number]]
                   </paper-tooltip>
                 </span>
-                <span
-                  class="col-data flex-c"
-                  data-col-header-label="Report Status"
-                >
+                <span class="col-data flex-c" data-col-header-label="Report Status">
                   <report-status status="[[report.status]]"></report-status>
                 </span>
                 <span class="col-data flex-c" data-col-header-label="Due Date">
                   [[_displayOrDefault(report.due_date)]]
                 </span>
-                <span
-                  class="col-data flex-c"
-                  data-col-header-label="Reporting Period"
-                >
+                <span class="col-data flex-c" data-col-header-label="Reporting Period">
                   [[getDisplayValue(report.reporting_period)]]
                 </span>
                 <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-                  <span
-                    class="col-data col-2"
-                    data-col-header-label="PD/SSFA ref.#"
-                  >
+                  <span class="col-data col-2" data-col-header-label="PD/SSFA ref.#">
                     <a
                       class="pd-ref truncate"
                       href$="interventions/[[report.programme_document.external_id]]/details"
@@ -221,39 +184,39 @@ class ReportsDisplayList extends connect(store)(
     `;
   }
 
-  @property({ type: Number })
-  interventionId: number = 0;
+  @property({type: Number})
+  interventionId = 0;
 
-  @property({ type: Array })
+  @property({type: Array})
   reports: [] = [];
 
-  @property({ type: Boolean })
-  noPdSsfaRef: boolean = false;
+  @property({type: Boolean})
+  noPdSsfaRef = false;
 
-  @property({ type: Object, notify: true })
+  @property({type: Object, notify: true})
   queryParams!: GenericObject;
 
-  @property({ type: Number })
-  debounceInterval: number = 100;
+  @property({type: Number})
+  debounceInterval = 100;
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   waitQueryParamsInit!: boolean;
 
-  @property({ type: String })
-  _endpointName: string = "reports";
+  @property({type: String})
+  _endpointName = 'reports';
 
-  @property({ type: Object })
+  @property({type: Object})
   _lastParamsUsed!: object;
 
-  @property({ type: Boolean })
-  lowResolutionLayout: boolean = false;
+  @property({type: Boolean})
+  lowResolutionLayout = false;
 
   private _loadReportsDataDebouncer!: Debouncer;
 
   static get observers() {
     return [
-      "_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size," +
-        " paginator.page, queryParams.*, queryParams.status.length)",
+      '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size,' +
+        ' paginator.page, queryParams.*, queryParams.status.length)'
     ];
   }
 
@@ -269,11 +232,7 @@ class ReportsDisplayList extends connect(store)(
     _page: string,
     qParamsData: any
   ) {
-    if (
-      isEmptyObject(currentUser) ||
-      this._queryParamsNotInitialized(qParamsData) ||
-      isEmptyObject(prpCountries)
-    ) {
+    if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) || isEmptyObject(prpCountries)) {
       return;
     }
 
@@ -283,33 +242,30 @@ class ReportsDisplayList extends connect(store)(
       () => {
         const params = this._prepareReqParamsObj(interventionId);
 
-        if (
-          isJsonStrMatch(this._lastParamsUsed, params) ||
-          (this.noPdSsfaRef && !params.programme_document_ext)
-        ) {
+        if (isJsonStrMatch(this._lastParamsUsed, params) || (this.noPdSsfaRef && !params.programme_document_ext)) {
           return;
         }
 
         this._lastParamsUsed = Object.assign({}, params);
 
-        fireEvent(this, "global-loading", {
-          message: "Loading...",
+        fireEvent(this, 'global-loading', {
+          message: 'Loading...',
           active: true,
-          loadingSource: "reports-list",
+          loadingSource: 'reports-list'
         });
 
         // abort previous req and then fire a new one with updated params
         abortRequestByKey(this._endpointName);
 
-        this.fireRequest("reports", {}, { params: params }, this._endpointName)
+        this.fireRequest('reports', {}, {params: params}, this._endpointName)
           .then((response: any) => {
             if (response) {
-              this.set("reports", response.results);
+              this.set('reports', response.results);
               this.updatePaginatorTotalResults(response);
             }
-            fireEvent(this, "global-loading", {
+            fireEvent(this, 'global-loading', {
               active: false,
-              loadingSource: "reports-list",
+              loadingSource: 'reports-list'
             });
           })
           .catch((error: any) => {
@@ -317,16 +273,12 @@ class ReportsDisplayList extends connect(store)(
               // req aborted
               return;
             }
-            logError(
-              "Reports list data request failed!",
-              "reports-list",
-              error
-            );
+            logError('Reports list data request failed!', 'reports-list', error);
 
             parseRequestErrorsAndShowAsToastMsgs(error, this);
-            fireEvent(this, "global-loading", {
+            fireEvent(this, 'global-loading', {
               active: false,
-              loadingSource: "reports-list",
+              loadingSource: 'reports-list'
             });
           });
       }
@@ -338,17 +290,12 @@ class ReportsDisplayList extends connect(store)(
     if (interventionId > 0) {
       params.programme_document_ext = interventionId;
     }
-    params = Object.assign(
-      {},
-      params,
-      this._preserveExistingQueryParams(),
-      this.getRequestPaginationParams()
-    );
+    params = Object.assign({}, params, this._preserveExistingQueryParams(), this.getRequestPaginationParams());
     return params;
   }
 
   _canViewReport(status: string) {
-    return ["Acc", "Sen", "Sub"].indexOf(status) > -1;
+    return ['Acc', 'Sen', 'Sub'].indexOf(status) > -1;
   }
 
   _preserveExistingQueryParams() {
@@ -356,10 +303,8 @@ class ReportsDisplayList extends connect(store)(
     if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach((k: any) => {
         if (
-          (this.queryParams[k] instanceof Array &&
-            this.queryParams[k].length > 0) ||
-          (this.queryParams[k] instanceof Array === false &&
-            this.queryParams[k])
+          (this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
+          (this.queryParams[k] instanceof Array === false && this.queryParams[k])
         ) {
           params[k] = this.queryParams[k];
         }
@@ -369,16 +314,12 @@ class ReportsDisplayList extends connect(store)(
   }
 
   _queryParamsNotInitialized(qParamsData: any) {
-    return (
-      this.waitQueryParamsInit &&
-      !qParamsData.value &&
-      qParamsData.path === "queryParams"
-    );
+    return this.waitQueryParamsInit && !qParamsData.value && qParamsData.path === 'queryParams';
   }
 
   _displayOrDefault(val: any) {
     if (!val) {
-      return "-";
+      return '-';
     }
     return val;
   }
@@ -390,13 +331,11 @@ class ReportsDisplayList extends connect(store)(
   // TODO: this is the same function from lists common mixin, but we do not need that entire functionality here
   // refactor in near future
   _listDataChanged() {
-    const rows = this.shadowRoot!.querySelectorAll(
-      "etools-data-table-row"
-    ) as any; // TODO: etools-data-table typings
+    const rows = this.shadowRoot!.querySelectorAll('etools-data-table-row') as any; // TODO: etools-data-table typings
     if (rows && rows.length) {
       for (let i = 0; i < rows.length; i++) {
         if (rows[i].detailsOpened) {
-          rows[i].set("detailsOpened", false);
+          rows[i].set('detailsOpened', false);
         }
       }
     }

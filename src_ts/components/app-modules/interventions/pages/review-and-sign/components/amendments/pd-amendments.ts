@@ -1,22 +1,22 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/iron-icons/iron-icons.js";
-import "@polymer/paper-icon-button/paper-icon-button.js";
-import CommonMixin from "../../../../../../mixins/common-mixin.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import CommonMixin from '../../../../../../mixins/common-mixin.js';
 
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@unicef-polymer/etools-data-table/etools-data-table.js";
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
-import "./add-amendment-dialog.js";
-import { SharedStyles } from "../../../../../../styles/shared-styles.js";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles.js";
-import { fireEvent } from "../../../../../../utils/fire-custom-event.js";
-import { connect } from "pwa-helpers/connect-mixin";
-import { store, RootState } from "../../../../../../../store.js";
-import { setInAmendment } from "../../../../../../../actions/page-data.js";
-import { isJsonStrMatch } from "../../../../../../utils/utils.js";
-import { LabelAndValue } from "../../../../../../../typings/globals.types.js";
-import { property } from "@polymer/decorators";
-import { AddAmendmentDialog } from "./add-amendment-dialog";
+import './add-amendment-dialog.js';
+import {SharedStyles} from '../../../../../../styles/shared-styles.js';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
+import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store, RootState} from '../../../../../../../store.js';
+import {setInAmendment} from '../../../../../../../actions/page-data.js';
+import {isJsonStrMatch} from '../../../../../../utils/utils.js';
+import {LabelAndValue} from '../../../../../../../typings/globals.types.js';
+import {property} from '@polymer/decorators';
+import {AddAmendmentDialog} from './add-amendment-dialog';
 
 /**
  * @polymer
@@ -56,21 +56,12 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
       <etools-content-panel panel-title="Amendments">
         <template is="dom-if" if="[[editMode]]">
           <div slot="panel-btns">
-            <paper-icon-button
-              icon="add-box"
-              title="Add Amendment"
-              on-tap="_showAddAmendmentDialog"
-            >
+            <paper-icon-button icon="add-box" title="Add Amendment" on-tap="_showAddAmendmentDialog">
             </paper-icon-button>
           </div>
         </template>
         <div class="p-relative" id="amendments-wrapper">
-          <etools-data-table-header
-            id="listHeader"
-            no-collapse
-            no-title
-            hidden$="[[_emptyList(amendments.length)]]"
-          >
+          <etools-data-table-header id="listHeader" no-collapse no-title hidden$="[[_emptyList(amendments.length)]]">
             <etools-data-table-column class="col-1">
               Ref #
             </etools-data-table-column>
@@ -107,47 +98,26 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
                   <iron-icon icon="attachment" class="attachment"></iron-icon>
                   <span class="break-word file-label">
                     <!-- target="_blank" is there for IE -->
-                    <a
-                      href$="[[item.signed_amendment_attachment]]"
-                      target="_blank"
-                      download
-                    >
+                    <a href$="[[item.signed_amendment_attachment]]" target="_blank" download>
                       [[getFileNameFromURL(item.signed_amendment_attachment)]]
                     </a>
                   </span>
                 </span>
                 <span class="col-data flex-c">
-                  <span
-                    hidden$="[[item.internal_prc_review]]"
-                    class="placeholder-style"
-                    >&#8212;</span
-                  >
-                  <iron-icon
-                    icon="attachment"
-                    class="attachment"
-                    hidden$="[[!item.internal_prc_review]]"
-                  ></iron-icon>
+                  <span hidden$="[[item.internal_prc_review]]" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="attachment" class="attachment" hidden$="[[!item.internal_prc_review]]"></iron-icon>
                   <span class="break-word file-label">
                     <!-- target="_blank" is there for IE -->
-                    <a
-                      href$="[[item.internal_prc_review]]"
-                      target="_blank"
-                      download
-                    >
+                    <a href$="[[item.internal_prc_review]]" target="_blank" download>
                       [[getFileNameFromURL(item.internal_prc_review)]]
                     </a>
                   </span>
                 </span>
                 <div class="col-data flex-c break-word">
-                  <span
-                    hidden$="[[_showOtherInput(item.types, item.types.length, index)]]"
-                    class="placeholder-style"
+                  <span hidden$="[[_showOtherInput(item.types, item.types.length, index)]]" class="placeholder-style"
                     >&#8212;</span
                   >
-                  <template
-                    is="dom-if"
-                    if="[[_showOtherInput(item.types, item.types.length, index)]]"
-                  >
+                  <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
                     <div class="other-description">
                       [[item.other_description]]
                     </div>
@@ -166,41 +136,36 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     `;
   }
 
-  @property({ type: Array, notify: true })
+  @property({type: Array, notify: true})
   amendments: [] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   filteredAmendmentTypes!: LabelAndValue[];
 
-  @property({ type: Array })
+  @property({type: Array})
   amendmentTypes!: LabelAndValue[];
 
-  @property({ type: String })
-  interventionDocumentType: string = "";
+  @property({type: String})
+  interventionDocumentType = '';
 
-  @property({ type: Boolean })
-  inAmendment: boolean = false;
+  @property({type: Boolean})
+  inAmendment = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   addAmendmentDialog!: AddAmendmentDialog;
 
-  @property({ type: Boolean, reflectToAttribute: true })
-  editMode: boolean = false;
+  @property({type: Boolean, reflectToAttribute: true})
+  editMode = false;
 
-  @property({ type: Number })
+  @property({type: Number})
   interventionId: number | null = null;
 
   static get observers() {
-    return ["_dataHasChanged(amendments)"];
+    return ['_dataHasChanged(amendments)'];
   }
 
   stateChanged(state: RootState) {
-    if (
-      !isJsonStrMatch(
-        this.amendmentTypes,
-        state.commonData!.interventionAmendmentTypes
-      )
-    ) {
+    if (!isJsonStrMatch(this.amendmentTypes, state.commonData!.interventionAmendmentTypes)) {
       this.amendmentTypes = [...state.commonData!.interventionAmendmentTypes];
     }
 
@@ -220,27 +185,19 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   }
 
   _createAddAmendmentDialog() {
-    this.addAmendmentDialog = document.createElement(
-      "add-amendment-dialog"
-    ) as any;
-    this.addAmendmentDialog.setAttribute("id", "addAmendmentDialog");
+    this.addAmendmentDialog = document.createElement('add-amendment-dialog') as any;
+    this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
     this.addAmendmentDialog.toastEventSource = this;
 
     this.newAmendmentAdded = this.newAmendmentAdded.bind(this);
-    this.addAmendmentDialog.addEventListener(
-      "amendment-added",
-      this.newAmendmentAdded as any
-    );
-    document.querySelector("body")!.appendChild(this.addAmendmentDialog);
+    this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded as any);
+    document.querySelector('body')!.appendChild(this.addAmendmentDialog);
   }
 
   _removeAddAmendmentDialog() {
     if (this.addAmendmentDialog) {
-      this.addAmendmentDialog.removeEventListener(
-        "amendment-added",
-        this.newAmendmentAdded as any
-      );
-      document.querySelector("body")!.removeChild(this.addAmendmentDialog);
+      this.addAmendmentDialog.removeEventListener('amendment-added', this.newAmendmentAdded as any);
+      document.querySelector('body')!.removeChild(this.addAmendmentDialog);
     }
   }
 
@@ -255,7 +212,7 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
       const amdTypesLabels = amdTypes.map((t: LabelAndValue) => {
         return t.label;
       });
-      return amdTypesLabels.join(", ");
+      return amdTypesLabels.join(', ');
     }
     return null;
   }
@@ -272,14 +229,14 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     event.stopImmediatePropagation();
     const data = event.detail;
     this._unlockInterventionDetailsFields();
-    this.push("amendments", data);
+    this.push('amendments', data);
     store.dispatch(setInAmendment(true));
-    fireEvent(this, "new-amendment-added");
+    fireEvent(this, 'new-amendment-added');
   }
 
   _dataHasChanged(amendments: any) {
     if (amendments instanceof Array === false) {
-      this.set("amendments", []);
+      this.set('amendments', []);
     }
   }
 
@@ -287,7 +244,7 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     if (!this.inAmendment) {
       // we need the new permissions for ammendment mode;
       // after the permissions are updated, the fields will automatically unlock
-      fireEvent(this, "refresh-intervention-permissions");
+      fireEvent(this, 'refresh-intervention-permissions');
     }
   }
 
@@ -295,7 +252,7 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
     if (!selectedAmdTypes || !selectedAmdTypes.length) {
       return false;
     }
-    return selectedAmdTypes.indexOf("other") > -1;
+    return selectedAmdTypes.indexOf('other') > -1;
   }
 
   _emptyList(listLength: number) {
@@ -303,4 +260,4 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   }
 }
 
-window.customElements.define("pd-amendments", PdAmendments);
+window.customElements.define('pd-amendments', PdAmendments);

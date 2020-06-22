@@ -1,18 +1,15 @@
-import { Paginator, Constructor } from "../../typings/globals.types";
-import CONSTANTS from "../../config/app-constants";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import {Paginator, Constructor} from '../../typings/globals.types';
+import CONSTANTS from '../../config/app-constants';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class PaginationClass extends baseClass {
-    @property({ type: Object, notify: true })
+    @property({type: Object, notify: true})
     paginator = new Paginator();
 
     static get observers() {
-      return [
-        "_pageInsidePaginationRange(paginator.page, paginator.count)",
-        "resetPageNumber(paginator.page_size)",
-      ];
+      return ['_pageInsidePaginationRange(paginator.page, paginator.count)', 'resetPageNumber(paginator.page_size)'];
     }
 
     pageSizeChanged(e: CustomEvent) {
@@ -27,7 +24,7 @@ function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     getRequestPaginationParams() {
       return {
         page: this.paginator.page,
-        page_size: this.paginator.page_size,
+        page_size: this.paginator.page_size
       };
     }
 
@@ -35,19 +32,19 @@ function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (reqResponse && reqResponse.count) {
         const count = parseInt(reqResponse.count, 10);
         if (!isNaN(count)) {
-          this.set("paginator.count", count);
+          this.set('paginator.count', count);
           return;
         }
       }
-      this.set("paginator.count", 0);
+      this.set('paginator.count', 0);
     }
 
     setPageSize(size: number) {
-      this.set("paginator.page_size", size);
+      this.set('paginator.page_size', size);
     }
 
     setPageNumber(page: number) {
-      this.set("paginator.page", page);
+      this.set('paginator.page', page);
     }
 
     resetPageNumber() {
@@ -56,9 +53,7 @@ function PaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     setPaginationDataFromUrlParams(urlParams: any) {
       this.setPageNumber(urlParams.page ? parseInt(urlParams.page) : 1);
-      this.setPageSize(
-        urlParams.size ? parseInt(urlParams.size) : CONSTANTS.DEFAULT_LIST_SIZE
-      );
+      this.setPageSize(urlParams.size ? parseInt(urlParams.size) : CONSTANTS.DEFAULT_LIST_SIZE);
     }
 
     _pageInsidePaginationRange(page: number, totalResults: string) {

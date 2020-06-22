@@ -1,24 +1,22 @@
-import { logWarn } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { Constructor } from "../../../../../../../../typings/globals.types";
-import { PolymerElement } from "@polymer/polymer";
-import { property } from "@polymer/decorators";
+import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {Constructor} from '../../../../../../../../typings/globals.types';
+import {PolymerElement} from '@polymer/polymer';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
  * @mixinFunction
  */
-function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(
-  baseClass: T
-) {
+function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class IndicatorsCommonClass extends baseClass {
-    @property({ type: String }) // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
-    numberPattern: string = "(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)";
+    @property({type: String}) // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
+    numberPattern = '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)';
 
-    @property({ type: String }) // any number starting from 1
-    digitsNotStartingWith0Pattern: string = "^[1-9]{1}(\\d+)?$";
+    @property({type: String}) // any number starting from 1
+    digitsNotStartingWith0Pattern = '^[1-9]{1}(\\d+)?$';
 
-    @property({ type: String })
-    digitsPattern: string = "^\\d+";
+    @property({type: String})
+    digitsPattern = '^\\d+';
 
     _baselineChanged(baselineV: string) {
       // @ts-ignore
@@ -28,7 +26,7 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(
       // @ts-ignore
       if (this._displayTypeIsPercentage(this.indicator)) {
         const val = this._getValidPercentageValue(baselineV);
-        this.set("indicator.baseline.v", val);
+        this.set('indicator.baseline.v', val);
       }
     }
 
@@ -40,19 +38,17 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(
       // @ts-ignore
       if (this._displayTypeIsPercentage(this.indicator)) {
         const val = this._getValidPercentageValue(targetV);
-        this.set("indicator.target.v", val);
+        this.set('indicator.target.v', val);
       }
     }
 
     _isEmptyExcept0(value: string) {
-      return value === null || value === undefined || value === "";
+      return value === null || value === undefined || value === '';
     }
 
     _displayTypeIsPercentage(indicator: any) {
       return (
-        indicator.indicator &&
-        indicator.indicator.unit === "percentage" &&
-        indicator.indicator.display_type !== "ratio"
+        indicator.indicator && indicator.indicator.unit === 'percentage' && indicator.indicator.display_type !== 'ratio'
       );
     }
 
@@ -70,13 +66,11 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(
     validateComponents(elemIds: string[]) {
       let valid = true;
       elemIds.forEach((elemId) => {
-        const elem = this.shadowRoot!.querySelector(
-          "#" + elemId
-        ) as PolymerElement & { validate(): boolean };
+        const elem = this.shadowRoot!.querySelector('#' + elemId) as PolymerElement & {validate(): boolean};
         if (elem) {
           valid = elem.validate() && valid;
         } else {
-          logWarn("Elem " + elemId + " not found");
+          logWarn('Elem ' + elemId + ' not found');
         }
       });
       return valid;

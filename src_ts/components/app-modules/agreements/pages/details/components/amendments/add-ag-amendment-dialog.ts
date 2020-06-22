@@ -1,16 +1,16 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import "@unicef-polymer/etools-dropdown/etools-dropdown-multi.js";
-import "@unicef-polymer/etools-upload/etools-upload.js";
-import "@unicef-polymer/etools-date-time/datepicker-lite.js";
-import pmpEndpoints from "../../../../../../endpoints/endpoints.js";
-import { AgreementAmendment } from "../../../../agreement.types";
-import { SharedStyles } from "../../../../../../styles/shared-styles";
-import { gridLayoutStyles } from "../../../../../../styles/grid-layout-styles";
-import { requiredFieldStarredStyles } from "../../../../../../styles/required-field-styles";
-import { fireEvent } from "../../../../../../utils/fire-custom-event.js";
-import { property } from "@polymer/decorators";
-import { LabelAndValue } from "../../../../../../../typings/globals.types.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-upload/etools-upload.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
+import {AgreementAmendment} from '../../../../agreement.types';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
+import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
+import {property} from '@polymer/decorators';
+import {LabelAndValue} from '../../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -86,11 +86,7 @@ class AddAgAmendmentDialog extends PolymerElement {
           </etools-dropdown-multi>
         </div>
 
-        <template
-          is="dom-if"
-          if="[[_showAuthorizedOfficersField(showAuthorizedOfficers, _aoTypeSelected)]]"
-          restamp
-        >
+        <template is="dom-if" if="[[_showAuthorizedOfficersField(showAuthorizedOfficers, _aoTypeSelected)]]" restamp>
           <div class="row-h flex-c">
             <etools-dropdown-multi
               id="officers"
@@ -111,79 +107,67 @@ class AddAgAmendmentDialog extends PolymerElement {
     `;
   }
 
-  @property({ type: Boolean })
-  opened: boolean = false;
+  @property({type: Boolean})
+  opened = false;
 
-  @property({ type: Boolean })
-  datePickerOpen: boolean = false;
+  @property({type: Boolean})
+  datePickerOpen = false;
 
-  @property({ type: String })
+  @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
-  @property({ type: Array })
+  @property({type: Array})
   amendmentTypes: [] = [];
 
-  @property({ type: Object })
+  @property({type: Object})
   amendment!: AgreementAmendment;
 
-  @property({ type: Boolean })
-  autoValidate: boolean = false;
+  @property({type: Boolean})
+  autoValidate = false;
 
-  @property({ type: Boolean })
-  showAuthorizedOfficers: boolean = false;
+  @property({type: Boolean})
+  showAuthorizedOfficers = false;
 
-  @property({ type: Array })
+  @property({type: Array})
   authorizedOfficersOptions: [] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   authorizedOfficers: [] = [];
 
-  @property({ type: Boolean })
-  _aoTypeSelected: boolean = false;
+  @property({type: Boolean})
+  _aoTypeSelected = false;
 
-  @property({ type: Boolean })
-  uploadInProgress: boolean = false;
+  @property({type: Boolean})
+  uploadInProgress = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   toastEventSource!: PolymerElement;
 
-  private _validationSelectors: string[] = [
-    "#signedDate",
-    "#signedAmendment",
-    "#amendmentTypes",
-    "#officers",
-  ];
+  private _validationSelectors: string[] = ['#signedDate', '#signedAmendment', '#amendmentTypes', '#officers'];
 
-  initData(
-    authorizedOfficers: any,
-    showAuthorizedOfficers: boolean,
-    amendmentTypes: LabelAndValue[]
-  ) {
-    this.set("amendment", new AgreementAmendment());
-    this.set("amendmentTypes", amendmentTypes);
-    this.set(
-      "authorizedOfficersOptions",
-      JSON.parse(JSON.stringify(authorizedOfficers))
-    );
-    this.set("authorizedOfficers", []);
-    this.set("showAuthorizedOfficers", showAuthorizedOfficers);
-    this.set("autoValidate", true);
-    this.set("_aoTypeSelected", false);
+  initData(authorizedOfficers: any, showAuthorizedOfficers: boolean, amendmentTypes: LabelAndValue[]) {
+    this.set('amendment', new AgreementAmendment());
+    this.set('amendmentTypes', amendmentTypes);
+    this.set('authorizedOfficersOptions', JSON.parse(JSON.stringify(authorizedOfficers)));
+    this.set('authorizedOfficers', []);
+    this.set('showAuthorizedOfficers', showAuthorizedOfficers);
+    this.set('autoValidate', true);
+    this.set('_aoTypeSelected', false);
     this._resetValidations();
   }
 
   _validateAndSaveAmendment() {
     if (this.validate()) {
-      fireEvent(this, "update-amendment-and-ao", {
+      fireEvent(this, 'update-amendment-and-ao', {
         amendment: this.amendment,
-        ao: JSON.parse(JSON.stringify(this.authorizedOfficers)),
+        ao: JSON.parse(JSON.stringify(this.authorizedOfficers))
       });
-      this.set("opened", false);
+      this.set('opened', false);
     }
   }
 
   _handleDialogClosed() {
-    this.set("autoValidate", false);
+    this.set('autoValidate', false);
     this._resetValidations();
   }
 
@@ -191,7 +175,7 @@ class AddAgAmendmentDialog extends PolymerElement {
     this._validationSelectors.forEach((selector: string) => {
       const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
-        el.set("invalid", false);
+        el.set('invalid', false);
       }
     });
   }
@@ -209,34 +193,25 @@ class AddAgAmendmentDialog extends PolymerElement {
     return isValid;
   }
 
-  _showAuthorizedOfficersField(
-    showAuthorizedOfficers: boolean,
-    _aoTypeSelected: boolean
-  ) {
+  _showAuthorizedOfficersField(showAuthorizedOfficers: boolean, _aoTypeSelected: boolean) {
     return showAuthorizedOfficers && _aoTypeSelected;
   }
 
   _onAmendmentTypesSelected() {
-    this.set("_aoTypeSelected", this._isAoTypeSelected());
+    this.set('_aoTypeSelected', this._isAoTypeSelected());
   }
 
   _isAoTypeSelected() {
-    if (
-      !(
-        this.amendment &&
-        this.amendment.types instanceof Array &&
-        this.amendment.types.length > 0
-      )
-    ) {
+    if (!(this.amendment && this.amendment.types instanceof Array && this.amendment.types.length > 0)) {
       return false;
     }
-    return this.amendment.types.indexOf("Change authorized officer") > -1;
+    return this.amendment.types.indexOf('Change authorized officer') > -1;
   }
 
   _uploadFinished(e: CustomEvent) {
     if (e.detail.success) {
       const uploadResponse = e.detail.success;
-      this.set("amendment.signed_amendment_attachment", uploadResponse.id);
+      this.set('amendment.signed_amendment_attachment', uploadResponse.id);
     }
   }
 
@@ -245,6 +220,6 @@ class AddAgAmendmentDialog extends PolymerElement {
   }
 }
 
-window.customElements.define("add-ag-amendment-dialog", AddAgAmendmentDialog);
+window.customElements.define('add-ag-amendment-dialog', AddAgAmendmentDialog);
 
-export { AddAgAmendmentDialog };
+export {AddAgAmendmentDialog};

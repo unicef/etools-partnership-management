@@ -1,20 +1,20 @@
-import "@polymer/iron-pages/iron-pages.js";
-import "@polymer/paper-tabs/paper-tab.js";
-import "@polymer/paper-tabs/paper-tabs.js";
-import "@polymer/app-layout/app-grid/app-grid-style.js";
+import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/paper-tabs/paper-tab.js';
+import '@polymer/paper-tabs/paper-tabs.js';
+import '@polymer/app-layout/app-grid/app-grid-style.js';
 
-import "@unicef-polymer/etools-loading/etools-loading.js";
+import '@unicef-polymer/etools-loading/etools-loading.js';
 
-import "../../../components/report-status.js";
-import "./disaggregations/disaggregation-table.js";
-import { isEmptyObject } from "../../../../../utils/utils.js";
-import { PolymerElement, html } from "@polymer/polymer";
-import EndpointsMixin from "../../../../../endpoints/endpoints-mixin.js";
-import UtilsMixin from "../../../../../mixins/utils-mixin.js";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging";
-import { property } from "@polymer/decorators";
-import { GenericObject } from "../../../../../../typings/globals.types.js";
+import '../../../components/report-status.js';
+import './disaggregations/disaggregation-table.js';
+import {isEmptyObject} from '../../../../../utils/utils.js';
+import {PolymerElement, html} from '@polymer/polymer';
+import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
+import UtilsMixin from '../../../../../mixins/utils-mixin.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types.js';
 
 /**
  * @polymer
@@ -24,7 +24,7 @@ import { GenericObject } from "../../../../../../typings/globals.types.js";
  */
 class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
   static get is() {
-    return "indicator-details";
+    return 'indicator-details';
   }
 
   static get template() {
@@ -84,7 +84,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
         }
 
         .tab-header dd::after {
-          content: "\\A";
+          content: '\\A';
           white-space: pre;
         }
 
@@ -99,84 +99,48 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
       <!-- TODO: Check if this can be replaced using etools-tabs element (future task) -->
       <template is="dom-if" if="[[!loading]]">
         <paper-tabs selected="{{selected}}" selectable="paper-tab" scrollable>
-          <template
-            is="dom-repeat"
-            items="[[locationData]]"
-            as="topLevelLocation"
-          >
+          <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
             <paper-tab>
-              <report-status
-                status="[[_computeLocationStatus(topLevelLocation)]]"
-                no-label
-              ></report-status>
+              <report-status status="[[_computeLocationStatus(topLevelLocation)]]" no-label></report-status>
               [[topLevelLocation.title]]
             </paper-tab>
           </template>
         </paper-tabs>
 
         <iron-pages selected="{{selected}}">
-          <template
-            is="dom-repeat"
-            items="[[locationData]]"
-            as="topLevelLocation"
-          >
+          <template is="dom-repeat" items="[[locationData]]" as="topLevelLocation">
             <div>
-              <paper-tabs
-                selected="{{topLevelLocation.selected}}"
-                selectable="paper-tab"
-                scrollable
-              >
-                <template
-                  is="dom-repeat"
-                  items="[[topLevelLocation.byEntity]]"
-                  as="location"
-                >
+              <paper-tabs selected="{{topLevelLocation.selected}}" selectable="paper-tab" scrollable>
+                <template is="dom-repeat" items="[[topLevelLocation.byEntity]]" as="location">
                   <paper-tab>[[location.reporting_entity.title]]</paper-tab>
                 </template>
               </paper-tabs>
 
               <iron-pages selected="{{topLevelLocation.selected}}">
-                <template
-                  is="dom-repeat"
-                  items="[[topLevelLocation.byEntity]]"
-                  as="location"
-                >
+                <template is="dom-repeat" items="[[topLevelLocation.byEntity]]" as="location">
                   <div>
                     <div class="tab-header">
                       <dl>
-                        <template
-                          is="dom-if"
-                          if="[[_equals(location.display_type, 'number')]]"
-                          restamp="true"
-                        >
+                        <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
                           <dt>
-                            Location progress against
-                            [[location.reporting_entity.title]] target:
+                            Location progress against [[location.reporting_entity.title]] target:
                           </dt>
                           <dd>
-                            [[_formatNumber(location.location_progress.v, '0',
-                            0, ',')]]
+                            [[_formatNumber(location.location_progress.v, '0', 0, ',')]]
                           </dd>
                           <dt>Previous location progress:</dt>
                           <dd>
-                            [[_formatNumber(location.previous_location_progress.v,
-                            '0', 0, ',')]]
+                            [[_formatNumber(location.previous_location_progress.v, '0', 0, ',')]]
                           </dd>
                         </template>
-                        <template
-                          is="dom-if"
-                          if="[[!_equals(location.display_type, 'number')]]"
-                          restamp="true"
-                        >
+                        <template is="dom-if" if="[[!_equals(location.display_type, 'number')]]" restamp="true">
                           <dt>Location progress:</dt>
                           <dd>
-                            [[_formatIndicatorValue(location.display_type,
-                            location.location_progress.c, 1)]]
+                            [[_formatIndicatorValue(location.display_type, location.location_progress.c, 1)]]
                           </dd>
                           <dt>Previous location progress:</dt>
                           <dd>
-                            [[_formatIndicatorValue(location.display_type,
-                            location.previous_location_progress.c, 1)]]
+                            [[_formatIndicatorValue(location.display_type, location.previous_location_progress.c, 1)]]
                           </dd>
                         </template>
                       </dl>
@@ -202,24 +166,24 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
     `;
   }
 
-  @property({ type: Number })
+  @property({type: Number})
   indicatorReportId!: number;
 
-  @property({ type: Object })
+  @property({type: Object})
   indicatorReport: GenericObject = {};
 
-  @property({ type: Boolean })
-  loading: boolean = false;
+  @property({type: Boolean})
+  loading = false;
 
-  @property({ type: Number })
-  selected: number = 0;
+  @property({type: Number})
+  selected = 0;
 
-  @property({ type: Boolean, reflectToAttribute: true })
-  isClusterIndicator: boolean = false;
+  @property({type: Boolean, reflectToAttribute: true})
+  isClusterIndicator = false;
 
   @property({
     type: Array,
-    computed: "_computeLocationData(indicatorReport.indicator_location_data)",
+    computed: '_computeLocationData(indicatorReport.indicator_location_data)'
   })
   locationData!: any[];
 
@@ -228,8 +192,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
       this.indicatorReportId &&
       (isEmptyObject(this.indicatorReport) ||
         (!isEmptyObject(this.indicatorReport) &&
-          this.indicatorReport.id !==
-            parseInt(String(this.indicatorReportId), 10)))
+          this.indicatorReport.id !== parseInt(String(this.indicatorReportId), 10)))
     );
   }
 
@@ -242,49 +205,42 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
     const params = this._computeParams(String(this.indicatorReportId));
     this._showLoading();
     const self = this;
-    this.fireRequest("reportIndicatorsDetails", {}, { params: params })
+    this.fireRequest('reportIndicatorsDetails', {}, {params: params})
       .then(function (response: any) {
-        self.set("indicatorReport", response && response[0] ? response[0] : {});
+        self.set('indicatorReport', response && response[0] ? response[0] : {});
         self._hideLoading();
       })
       .catch(function (error: any) {
-        logError(
-          "Indicator details data request failed!",
-          "reports-indicator-details",
-          error
-        );
+        logError('Indicator details data request failed!', 'reports-indicator-details', error);
         parseRequestErrorsAndShowAsToastMsgs(error, self);
         self._hideLoading();
       });
   }
 
   _showLoading() {
-    this.set("loading", true);
+    this.set('loading', true);
   }
 
   _hideLoading() {
-    this.set("loading", false);
+    this.set('loading', false);
   }
 
   _computeParams(indicatorReportId: string) {
     return {
       pks: indicatorReportId,
-      limit: 1,
+      limit: 1
     };
   }
 
   _computeLocationData(rawLocationData: any) {
-    const byLocation = (rawLocationData || []).reduce(function (
-      acc: any,
-      location: any
-    ) {
+    const byLocation = (rawLocationData || []).reduce(function (acc: any, location: any) {
       const locationId = location.location.id;
 
-      if (typeof acc[locationId] === "undefined") {
+      if (typeof acc[locationId] === 'undefined') {
         acc[locationId] = {
           title: location.location.title,
           byEntity: [],
-          selected: 0,
+          selected: 0
         };
       }
 
@@ -293,8 +249,7 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
         acc[locationId].selected = acc[locationId].byEntity.length - 1;
       }
       return acc;
-    },
-    {});
+    }, {});
 
     return Object.keys(byLocation)
       .map(function (key) {

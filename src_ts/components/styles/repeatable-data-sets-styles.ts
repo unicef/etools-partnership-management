@@ -1,7 +1,7 @@
-import { html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import {html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
-import { actionIconBtnsStyles } from "./action-icon-btns-styles.js";
+import {actionIconBtnsStyles} from './action-icon-btns-styles.js';
 
 // language=HTML
 export const repeatableDataSetsStyles = html` ${actionIconBtnsStyles}

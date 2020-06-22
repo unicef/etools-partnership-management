@@ -1,6 +1,6 @@
-import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {property} from '@polymer/decorators';
 
 /**
  * page footer element
@@ -68,8 +68,8 @@ class PageFooter extends PolymerElement {
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   rootPath!: string;
 }
 
-window.customElements.define("page-footer", PageFooter);
+window.customElements.define('page-footer', PageFooter);

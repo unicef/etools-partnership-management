@@ -1,14 +1,14 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@polymer/paper-input/paper-input.js";
-import "@unicef-polymer/etools-dialog/etools-dialog.js";
-import EndpointsMixin from "../../../../../../endpoints/endpoints-mixin";
-import { fireEvent } from "../../../../../../utils/fire-custom-event";
-import { sendRequest } from "@unicef-polymer/etools-ajax/etools-ajax-request";
-import { parseRequestErrorsAndShowAsToastMsgs } from "@unicef-polymer/etools-ajax/ajax-error-parser.js";
-import { logError } from "@unicef-polymer/etools-behaviors/etools-logging.js";
-import { property } from "@polymer/decorators";
-import EtoolsDialog from "@unicef-polymer/etools-dialog/etools-dialog.js";
-import { PaperInputElement } from "@polymer/paper-input/paper-input.js";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@polymer/paper-input/paper-input.js';
+import '@unicef-polymer/etools-dialog/etools-dialog.js';
+import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin';
+import {fireEvent} from '../../../../../../utils/fire-custom-event';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
+import {property} from '@polymer/decorators';
+import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
 /**
  * @polymer
@@ -50,37 +50,37 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
     `;
   }
 
-  @property({ type: Number })
+  @property({type: Number})
   expectedResultId!: number;
 
-  @property({ type: Number })
+  @property({type: Number})
   lowerResultId!: number;
 
-  @property({ type: String })
+  @property({type: String})
   lowerResultName!: string;
 
-  @property({ type: Boolean })
-  opened: boolean = false;
+  @property({type: Boolean})
+  opened = false;
 
-  @property({ type: Boolean })
-  disableConfirmBtn: boolean = false;
+  @property({type: Boolean})
+  disableConfirmBtn = false;
 
-  @property({ type: Object })
+  @property({type: Object})
   toastEventSource!: PolymerElement;
 
   openDialog() {
-    (this.$.pdLowerResultNameDialog as EtoolsDialog).set("opened", true);
+    (this.$.pdLowerResultNameDialog as EtoolsDialog).set('opened', true);
   }
 
   closeDialog() {
-    (this.$.pdLowerResultNameDialog as EtoolsDialog).set("opened", false);
+    (this.$.pdLowerResultNameDialog as EtoolsDialog).set('opened', false);
   }
 
   resetData() {
-    this.set("disableConfirmBtn", false);
-    this.set("lowerResultId", null);
-    this.set("lowerResultName", undefined);
-    this.set("expectedResultId", null);
+    this.set('disableConfirmBtn', false);
+    this.set('lowerResultId', null);
+    this.set('lowerResultName', undefined);
+    this.set('expectedResultId', null);
     (this.$.pdLowerResultNameField as PaperInputElement).invalid = false;
   }
 
@@ -90,62 +90,49 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
     }
     const lowerResult = {
       name: this.lowerResultName,
-      result_link: this.expectedResultId,
+      result_link: this.expectedResultId
     };
     if (!lowerResult.result_link) {
-      logError(
-        "Expected result ID is missing! Can not save lower result name.",
-        "lower-result-name-modal"
-      );
+      logError('Expected result ID is missing! Can not save lower result name.', 'lower-result-name-modal');
       return false;
     }
 
     let endpoint;
     let method;
     if (!this.lowerResultId) {
-      endpoint = this.getEndpoint("pdLowerResults", {
-        resultId: lowerResult.result_link,
+      endpoint = this.getEndpoint('pdLowerResults', {
+        resultId: lowerResult.result_link
       });
-      method = "POST";
+      method = 'POST';
     } else {
-      endpoint = this.getEndpoint("pdLowerResultDetails", {
-        llResultId: this.lowerResultId,
+      endpoint = this.getEndpoint('pdLowerResultDetails', {
+        llResultId: this.lowerResultId
       });
-      method = "PATCH";
+      method = 'PATCH';
     }
-    return this._saveLowerResult(
-      endpoint,
-      method,
-      lowerResult,
-      this._lowerResultSuccessfullySaved
-    );
+    return this._saveLowerResult(endpoint, method, lowerResult, this._lowerResultSuccessfullySaved);
   }
 
-  _saveLowerResult(
-    endpoint: any,
-    method: string,
-    lowerResultData: any,
-    successCallback: any
-  ) {
-    this.set("disableConfirmBtn", true);
+  _saveLowerResult(endpoint: any, method: string, lowerResultData: any, successCallback: any) {
+    this.set('disableConfirmBtn', true);
     const dialog = this.$.pdLowerResultNameDialog as EtoolsDialog;
     dialog.startSpinner();
     return sendRequest({
       method: method,
       endpoint: endpoint,
-      body: lowerResultData,
+      body: lowerResultData
     })
       .then((response: any) => {
         dialog.stopSpinner();
-        this.set("disableConfirmBtn", false);
-        if (typeof successCallback === "function") {
+        this.set('disableConfirmBtn', false);
+        if (typeof successCallback === 'function') {
           successCallback.bind(this, response)();
         }
         return true;
       })
       .catch((error: any) => {
         dialog.stopSpinner();
-        this.set("disableConfirmBtn", false);
+        this.set('disableConfirmBtn', false);
         parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
         return false;
       });
@@ -155,12 +142,12 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
     const data = {
       lowerResultId: this.lowerResultId,
       expectedResultId: this.expectedResultId,
-      lowerResult: response,
+      lowerResult: response
     };
 
     this._initializeToBeAbleToAddIndicator(data.lowerResult);
 
-    fireEvent(this, "lower-result-saved", data);
+    fireEvent(this, 'lower-result-saved', data);
     this.closeDialog();
   }
 
@@ -171,6 +158,6 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
   }
 }
 
-window.customElements.define("pd-lower-result-name", PdLowerResultName);
+window.customElements.define('pd-lower-result-name', PdLowerResultName);
 
-export { PdLowerResultName as PdLowerResultNameEl };
+export {PdLowerResultName as PdLowerResultNameEl};

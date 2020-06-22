@@ -1,10 +1,10 @@
-import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
-import { GestureEventListeners } from "@polymer/polymer/lib/mixins/gesture-event-listeners";
-import "@unicef-polymer/etools-content-panel/etools-content-panel.js";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
-import "@polymer/paper-button/paper-button.js";
-import { buttonsStyles } from "../styles/buttons-styles.js";
-import { property } from "@polymer/decorators";
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-button/paper-button.js';
+import {buttonsStyles} from '../styles/buttons-styles.js';
+import {property} from '@polymer/decorators';
 
 /**
  * @polymer
@@ -73,10 +73,7 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
         <ul>
           <template is="dom-repeat" items="[[errors]]">
             <li hidden$="[[_startsWithEmptySpace(item)]]">[[item]]</li>
-            <li
-              hidden$="[[!_startsWithEmptySpace(item)]]"
-              class="cancel-li-display"
-            >
+            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">
               [[item]]
             </li>
           </template>
@@ -91,21 +88,21 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
     `;
   }
 
-  @property({ type: String })
+  @property({type: String})
   title!: string;
 
-  @property({ type: Array, notify: true })
+  @property({type: Array, notify: true})
   errors = [];
 
   @property({
     type: Boolean,
-    computed: "_errorsLengthChanged(errors)",
-    reflectToAttribute: true,
+    computed: '_errorsLengthChanged(errors)',
+    reflectToAttribute: true
   })
   hidden!: boolean;
 
   _startsWithEmptySpace(val: string) {
-    return val.startsWith(" ");
+    return val.startsWith(' ');
   }
 
   _errorsLengthChanged(errors: []) {
@@ -113,11 +110,8 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   }
 
   _resetErrors() {
-    this.set("errors", []);
+    this.set('errors', []);
   }
 }
 
-window.customElements.define(
-  "etools-error-messages-box",
-  EtoolsErrorMessagesBox
-);
+window.customElements.define('etools-error-messages-box', EtoolsErrorMessagesBox);

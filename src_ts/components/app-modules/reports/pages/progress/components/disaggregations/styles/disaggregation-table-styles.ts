@@ -1,9 +1,7 @@
-import { html } from "@polymer/polymer/polymer-element.js";
-import "@polymer/iron-flex-layout/iron-flex-layout-classes.js";
+import {html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
-export const disaggregationTableStyles = html` <style
-  include="iron-flex iron-flex-alignment"
->
+export const disaggregationTableStyles = html` <style include="iron-flex iron-flex-alignment">
   :host {
     display: block;
   }

@@ -1,9 +1,9 @@
-import { PolymerElement, html } from "@polymer/polymer";
-import "@unicef-polymer/etools-dropdown/etools-dropdown.js";
-import { SharedStyles } from "../styles/shared-styles.js";
-import { requiredFieldStarredStyles } from "../styles/required-field-styles.js";
-import { property } from "@polymer/decorators";
-import { EtoolsDropdownEl } from "@unicef-polymer/etools-dropdown/etools-dropdown";
+import {PolymerElement, html} from '@polymer/polymer';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {SharedStyles} from '../styles/shared-styles.js';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles.js';
+import {property} from '@polymer/decorators';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 
 /**
  *
@@ -45,13 +45,13 @@ class YearDropdown extends PolymerElement {
     `;
   }
 
-  @property({ type: String })
-  label: string = "Year";
+  @property({type: String})
+  label = 'Year';
 
-  @property({ type: Number, notify: true })
+  @property({type: Number, notify: true})
   selectedYear!: number;
 
-  @property({ type: Array })
+  @property({type: Array})
   years: any[] = [];
 
   ready() {
@@ -59,10 +59,10 @@ class YearDropdown extends PolymerElement {
     const year = this._getCurrentYear();
     const optYears = [];
     for (let i = year - 5; i <= year + 5; i++) {
-      optYears.push({ value: i, label: i });
+      optYears.push({value: i, label: i});
     }
 
-    this.set("years", optYears);
+    this.set('years', optYears);
   }
 
   _getCurrentYear() {
@@ -74,4 +74,4 @@ class YearDropdown extends PolymerElement {
   }
 }
 
-window.customElements.define("year-dropdown", YearDropdown);
+window.customElements.define('year-dropdown', YearDropdown);

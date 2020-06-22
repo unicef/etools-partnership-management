@@ -1,5 +1,5 @@
-import { GenericObject } from "../typings/globals.types";
-import { ModelsCommon } from "./models.common";
+import {GenericObject} from '../typings/globals.types';
+import {ModelsCommon} from './models.common';
 
 export class PartnerAssessment {
   id: number | null = null;
@@ -7,14 +7,14 @@ export class PartnerAssessment {
   completed_date: string | null = null;
   report_attachment: any | null = null;
   report: any | null = null;
-  active: boolean = true;
+  active = true;
   partner: number | null = null;
 }
 
 export class PartnerCoreValAssessment extends ModelsCommon {
   id: number | null = null;
-  date: string = ""; // TODO: use a date object
-  attachment: string | number = "";
+  date = ''; // TODO: use a date object
+  attachment: string | number = '';
 
   constructor(data: GenericObject) {
     super();
@@ -28,25 +28,25 @@ export class PartnerPlannedEngagement {}
 
 export class MinimalStaffMember extends ModelsCommon {
   id: number | null = null;
-  name: string = "";
-  first_name: string = "";
-  last_name: string = "";
-  active: boolean = true;
+  name = '';
+  first_name = '';
+  last_name = '';
+  active = true;
 
   constructor(staffMemberData: GenericObject) {
     super();
 
     if (Object.keys(staffMemberData)) {
       this.setObjProperties(staffMemberData);
-      this.name = this.first_name + " " + this.last_name;
+      this.name = this.first_name + ' ' + this.last_name;
     }
   }
 }
 
 export class StaffMember extends MinimalStaffMember {
-  title: string = "";
-  email: string = "";
-  phone: string = "";
+  title = '';
+  email = '';
+  phone = '';
 
   constructor(staffMemberData: GenericObject) {
     super(staffMemberData);
@@ -59,46 +59,46 @@ export class StaffMember extends MinimalStaffMember {
 
 export class Partner extends ModelsCommon {
   id: null | number = null;
-  alternate_name: string = "";
+  alternate_name = '';
   assessments: PartnerAssessment[] = [];
-  basis_for_risk_rating: string = "";
-  blocked: boolean = false;
-  city: string = "";
-  core_values_assessment_date: string = ""; // TODO: update type to date
+  basis_for_risk_rating = '';
+  blocked = false;
+  city = '';
+  core_values_assessment_date = ''; // TODO: update type to date
   core_values_assessments: PartnerCoreValAssessment[] = [];
-  country: string = "";
-  created: string = ""; // TODO: update type to date
-  cso_type: string = "";
-  deleted_flag: boolean = false;
-  description: string = "";
-  email: string = "";
+  country = '';
+  created = ''; // TODO: update type to date
+  cso_type = '';
+  deleted_flag = false;
+  description = '';
+  email = '';
   // TODO: check expiring_assessment_flag warning, it might be related to a flag from this object
   flags: GenericObject = {};
   hact_min_requirements: GenericObject = {};
   hact_values: GenericObject = {};
-  hidden: boolean = false;
+  hidden = false;
   interventions: PartnerIntervention[] = [];
-  last_assessment_date: string = ""; // TODO: update type to date
-  name: string = "";
-  partner_type: string = "";
-  partner_type_slug: string = ""; // TODO: if cannot be used => remove property
-  phone_number: string = "";
+  last_assessment_date = ''; // TODO: update type to date
+  name = '';
+  partner_type = '';
+  partner_type_slug = ''; // TODO: if cannot be used => remove property
+  phone_number = '';
   planned_engagement: PartnerPlannedEngagement = {};
   planned_visits: any[] = [];
-  postal_code: string = "";
-  psea_assessment_date: string = "";
-  rating: string = "";
-  sea_risk_rating_name: string = "";
+  postal_code = '';
+  psea_assessment_date = '';
+  rating = '';
+  sea_risk_rating_name = '';
   shared_with: string[] = [];
-  short_name: string = "";
+  short_name = '';
   staff_members: StaffMember[] = [];
-  street_address: string = "";
-  total_ct_cp: string = "";
-  total_ct_cy: string = "";
-  total_ct_ytd: string = "";
-  type_of_assessment: string = "";
-  vendor_number: string = "";
-  vision_synced: boolean = false;
+  street_address = '';
+  total_ct_cp = '';
+  total_ct_cy = '';
+  total_ct_ytd = '';
+  type_of_assessment = '';
+  vendor_number = '';
+  vision_synced = false;
   [key: string]: any;
 
   constructor(partnerDataObj: GenericObject) {
@@ -112,7 +112,7 @@ export class Partner extends ModelsCommon {
   getSaveCVARequestPayload(cvaData: GenericObject) {
     return {
       id: this.id,
-      core_values_assessments: [new PartnerCoreValAssessment(cvaData)],
+      core_values_assessments: [new PartnerCoreValAssessment(cvaData)]
     };
   }
 

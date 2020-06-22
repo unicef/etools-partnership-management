@@ -1,5 +1,5 @@
-import { html } from "@polymer/polymer";
-import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import {html} from '@polymer/polymer';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 export const etoolsStatusStyles = html`
   <style>
@@ -151,8 +151,7 @@ export const etoolsStatusStyles = html`
         width: calc(100% - 48px);
       }
       .bottom-container {
-        border-top: 1px solid
-          var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding: 24px;
         flex-direction: row-reverse;
         display: flex;
@@ -164,8 +163,7 @@ export const etoolsStatusStyles = html`
         border-left: none;
         margin-top: 32px;
         padding-top: 24px;
-        border-top: 1px solid
-          var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
       }
     }
 
@@ -176,8 +174,7 @@ export const etoolsStatusStyles = html`
         width: auto;
       }
       .bottom-container {
-        border-top: 1px solid
-          var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding: 24px;
         flex-direction: row;
         display: block;
@@ -185,8 +182,7 @@ export const etoolsStatusStyles = html`
       .divider-line {
         margin: 8px 11px;
         border-top: none;
-        border-left: 1px solid
-          var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
+        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding-top: 40px;
       }
     }
