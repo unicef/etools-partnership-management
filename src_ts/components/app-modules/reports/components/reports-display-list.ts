@@ -206,7 +206,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
   _endpointName = 'reports';
 
   @property({type: Object})
-  _lastParamsUsed!: object;
+  _lastParamsUsed!: GenericObject;
 
   @property({type: Boolean})
   lowResolutionLayout = false;

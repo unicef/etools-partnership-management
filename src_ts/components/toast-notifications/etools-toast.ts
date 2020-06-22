@@ -4,6 +4,7 @@ import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
 import {PaperToastElement} from '@polymer/paper-toast/paper-toast.js';
 import {PaperButtonElement} from '@polymer/paper-button/paper-button.js';
+import {GenericObject} from '../../typings/globals.types';
 
 /**
  * @polymer
@@ -57,9 +58,9 @@ class EtoolsToast extends PolymerElement {
     `;
   }
 
-  public fitInto: object | null = null;
+  public fitInto: GenericObject | null = null;
 
-  public show(details: object) {
+  public show(details: GenericObject) {
     return (this.$.toast as PaperToastElement).show(details);
   }
 

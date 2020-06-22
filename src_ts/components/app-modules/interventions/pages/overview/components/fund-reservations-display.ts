@@ -13,6 +13,7 @@ import {Intervention, FrsDetails} from '../../../../../../typings/intervention.t
 import {pmpCustomIcons} from '../../../../../styles/custom-iconsets/pmp-icons.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
 import {property} from '@polymer/decorators';
+import {GenericObject} from '../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -258,7 +259,7 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
   intervention: Intervention | null = null;
 
   @property({type: Object})
-  frsDetails: object | null = null;
+  frsDetails: GenericObject | null = null;
 
   @property({type: String})
   _frsTotalAmountWarning!: string;

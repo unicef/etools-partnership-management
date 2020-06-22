@@ -88,7 +88,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         }
 
         .generate-pca {
-          /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
+  /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
           border-right: 1px solid var(--dark-divider-color);
           margin-right: 24px;
           padding-right: 24px;
@@ -358,7 +358,8 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           </div>
           <div
             class="generate-pca col col-3"
-            hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]"
+            hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, 
+                        agreement.special_conditions_pca)]]"
           >
             <span class="type-warning">[[generatePCAMessage]]</span>
           </div>

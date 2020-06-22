@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {fireEvent} from '../utils/fire-custom-event.js';
 import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {Constructor} from '../../typings/globals.types.js';
+import {Constructor, GenericObject} from '../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 
@@ -17,7 +17,7 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
     serverErrors!: [];
 
     @property({type: Object})
-    options!: object;
+    options!: GenericObject;
 
     @property({type: Boolean})
     useToastEvent = true;

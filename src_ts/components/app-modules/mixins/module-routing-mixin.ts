@@ -25,7 +25,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     route!: Route;
 
     @property({type: Object})
-    routeData!: object;
+    routeData!: GenericObject;
 
     @property({type: String})
     rootPath!: string;
@@ -100,7 +100,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
      * @param {function} appendBasePathAdditionalFolder
      * @return {string}
      */
-    _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object | null) {
+    _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: GenericObject | null) {
       let baseUrl = currentModule + '/pages/' + page + '/';
       if (typeof appendBasePathAdditionalFolder === 'function') {
         // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
@@ -109,7 +109,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       return baseUrl;
     }
 
-    _handleSuccessfulImport(page: string, successCallback?: object) {
+    _handleSuccessfulImport(page: string, successCallback?: GenericObject) {
       // set active page
       this.set('activePage', page);
       if (typeof successCallback === 'function') {
@@ -133,9 +133,9 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       listActive: boolean,
       tab: string,
       fileImportDetails: GenericObject,
-      canAccessTab?: object,
-      appendBasePathAdditionalFolder?: object | null,
-      successfulImportCallback?: object
+      canAccessTab?: GenericObject,
+      appendBasePathAdditionalFolder?: GenericObject | null,
+      successfulImportCallback?: GenericObject
     ) {
       const page = listActive ? 'list' : tab;
 

@@ -282,7 +282,7 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
   prpClusterIndicators!: [];
 
   @property({type: Object, observer: '_responsePlanChanged'})
-  responsePlan!: object;
+  responsePlan!: GenericObject;
 
   @property({type: Array})
   responsePlans!: GenericObject[];

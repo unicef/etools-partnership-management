@@ -97,7 +97,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       if (typeof newEndpoint === 'undefined') {
         return;
       }
-      if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
+      if (newEndpoint && Object.prototype.hasOwnProperty.call(newEndpoint, 'exp') && newEndpoint.exp > 0) {
         this._removeAutomaticDataRefreshLoop();
         this._setAutomaticDataRefreshLoop(newEndpoint);
       }

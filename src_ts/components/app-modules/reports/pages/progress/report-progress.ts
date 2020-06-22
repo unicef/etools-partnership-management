@@ -155,9 +155,9 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                         <div class="layout-horizontal calculation-formula">
                           <span>
                             calculation method across locations:
-                            <strong
-                              >[[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]</strong
-                            >
+                            <strong>
+                              [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]
+                            </strong>
                           </span>
                           <span class="calculation-formula-delimiter">|</span>
                           <span>

@@ -9,6 +9,7 @@ import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
 import {Partner} from '../../../../models/partners.models.js';
+import {GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -151,7 +152,12 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     ]);
   }
 
-  _partnerStatusChanged(visionSynced: boolean, deletedFlag: boolean, blocked: boolean, possibleStatuses: object[]) {
+  _partnerStatusChanged(
+    visionSynced: boolean,
+    deletedFlag: boolean,
+    blocked: boolean,
+    possibleStatuses: GenericObject[]
+  ) {
     if (
       typeof visionSynced === 'undefined' &&
       typeof deletedFlag === 'undefined' &&

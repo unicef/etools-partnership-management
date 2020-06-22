@@ -230,7 +230,7 @@ class ReportsModule extends connect(store)(
   }
 
   @property({type: Array})
-  reportTabs: object[] = [
+  reportTabs: GenericObject[] = [
     {
       tab: 'progress',
       tabLabel: 'Results Reported',
@@ -250,7 +250,7 @@ class ReportsModule extends connect(store)(
   reportRejectDialog!: ReportRejectDialogEl;
 
   @property({type: Object})
-  permissions!: object;
+  permissions!: GenericObject;
 
   @property({type: String})
   rootPath!: string;

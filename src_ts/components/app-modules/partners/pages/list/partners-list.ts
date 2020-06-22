@@ -333,8 +333,8 @@ class PartnersList extends connect(store)(
       'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length,' +
         'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
       '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
-        'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, paginator.page_size, ' +
-        'sortOrder, showHidden, requiredDataLoaded, initComplete)',
+        'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, ' +
+        'paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }

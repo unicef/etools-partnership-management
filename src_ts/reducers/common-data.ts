@@ -65,7 +65,7 @@ export class CommonDataState {
   unicefUsersData: MinimalUser[] = [];
   locations: Location[] = [];
   offices: Office[] = [];
-  agreementsDropdownData: object[] = []; // TODO - is empty
+  agreementsDropdownData: GenericObject[] = []; // TODO - is empty
   agencyChoices: LabelAndValue[] = [];
   agreementAmendmentTypes: LabelAndValue[] = [];
   csoTypes: LabelAndValue[] = [];

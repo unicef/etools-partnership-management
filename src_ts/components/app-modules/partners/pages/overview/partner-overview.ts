@@ -220,11 +220,13 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                 </div>
                 <div class="col col-2 right-align">
                   <etools-info-tooltip
-                    class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
+                    class$="fr-nr-warn 
+                            [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
                     icon-first
                     custom-icon
                     hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent,
-                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]"
+                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 
+                                      'interventionsList')]]"
                   >
                     <span slot="field" class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">
                       <span class="amount-currency">[[partnership.fr_currency]]</span>

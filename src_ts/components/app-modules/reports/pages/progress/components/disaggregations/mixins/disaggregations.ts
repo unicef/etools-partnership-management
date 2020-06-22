@@ -1,4 +1,4 @@
-import {Constructor} from '../../../../../../../../typings/globals.types';
+import {Constructor, GenericObject} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
@@ -13,7 +13,7 @@ function DisaggregationsMixin<T extends Constructor<PolymerElement>>(baseClass: 
     // Used to display rows for two and three disaggregations.
     // It will NOT work for one and zero disaggregations.
     _determineRows(self: any, rows: any, columns: any) {
-      const rowsForDisplay: object[] = [];
+      const rowsForDisplay: GenericObject[] = [];
       rows.forEach(function (x: any) {
         let formatted = '';
 

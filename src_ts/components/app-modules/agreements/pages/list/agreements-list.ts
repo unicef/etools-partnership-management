@@ -303,7 +303,8 @@ class AgreementsList extends connect(store)(
 
   static get observers() {
     return [
-      'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' + 'selectedCPStructures.length)', // used for non removable filters
+      // used for non removable filters
+      'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' + 'selectedCPStructures.length)',
       '_initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes)',
       '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
         'selectedPartners, selectedCPStructures.length,' +

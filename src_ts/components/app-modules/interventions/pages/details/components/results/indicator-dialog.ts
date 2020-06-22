@@ -176,7 +176,7 @@ class IndicatorDialog extends connect(store)(
   indicator!: Indicator;
 
   @property({type: Object})
-  actionParams!: object;
+  actionParams!: GenericObject;
 
   @property({type: Array})
   disaggregations: [] = [];

@@ -32,10 +32,10 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected _getPrpCountryId() {
-      const currentCountry = this.currentUser.countries_available.find((country: object) => {
+      const currentCountry = this.currentUser.countries_available.find((country: GenericObject) => {
         return (country as any).id === this.currentUser.country.id;
       });
-      const prpCountry = this.prpCountries.find((prpCountry: object) => {
+      const prpCountry = this.prpCountries.find((prpCountry: GenericObject) => {
         return (prpCountry as any).business_area_code === currentCountry!.business_area_code;
       });
 
@@ -55,7 +55,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return template.indexOf('<%=countryId%>') > -1;
     }
 
-    public getEndpoint(endpointName: string, data?: object) {
+    public getEndpoint(endpointName: string, data?: GenericObject) {
       const endpoint = JSON.parse(JSON.stringify((pmpEndpoints as any)[endpointName]));
       const authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
       const baseSite = authorizationTokenMustBeAdded ? tokenEndpointsHost(endpoint.token) : window.location.origin;
@@ -75,7 +75,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return endpoint;
     }
 
-    protected _generateUrlFromTemplate(tmpl: string, data: object | undefined) {
+    protected _generateUrlFromTemplate(tmpl: string, data: GenericObject | undefined) {
       if (!tmpl) {
         throw new Error('To generate URL from endpoint url template you need valid template string');
       }
@@ -92,8 +92,10 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return tmpl;
     }
 
-    protected _hasUrlTemplate(endpoint: object) {
-      return endpoint && endpoint.hasOwnProperty('template') && (endpoint as any).template !== '';
+    protected _hasUrlTemplate(endpoint: GenericObject) {
+      return (
+        endpoint && Object.prototype.hasOwnProperty.call(endpoint, 'template') && (endpoint as any).template !== ''
+      );
     }
 
     protected _getDeferrer() {
@@ -106,7 +108,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return defer;
     }
 
-    public authorizationTokenMustBeAdded(endpoint: object): boolean {
+    public authorizationTokenMustBeAdded(endpoint: GenericObject): boolean {
       return endpoint && 'token' in endpoint;
     }
 
@@ -149,7 +151,7 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return (getTokenEndpoints as any)[tokenKey];
     }
 
-    public addTokenToRequestOptions(endpointName: string, data: object) {
+    public addTokenToRequestOptions(endpointName: string, data: GenericObject) {
       let options: any = {};
       try {
         options.endpoint = this.getEndpoint(endpointName, data);
@@ -209,8 +211,8 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     public fireRequest(
       endpoint: any,
-      endpointTemplateData: object,
-      requestAdditionalOptions?: object,
+      endpointTemplateData: GenericObject,
+      requestAdditionalOptions?: GenericObject,
       activeReqKey?: string
     ) {
       if (!endpoint) {

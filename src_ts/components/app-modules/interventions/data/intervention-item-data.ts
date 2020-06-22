@@ -60,7 +60,7 @@ class InterventionItemData extends connect(store)(
   interventionId!: number;
 
   @property({type: Object})
-  handleResponseAdditionalCallback!: object;
+  handleResponseAdditionalCallback!: GenericObject;
 
   @property({type: Array})
   offices!: Office[];
@@ -224,7 +224,7 @@ class InterventionItemData extends connect(store)(
     };
     let propName: string;
     for (propName in minimalAgrData) {
-      if (!detail.hasOwnProperty(propName)) {
+      if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
         logWarn('Mapping property not found');
       } else {
         minimalAgrData[propName] = detail[propName];

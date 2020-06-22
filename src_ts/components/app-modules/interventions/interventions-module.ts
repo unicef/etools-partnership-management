@@ -329,7 +329,7 @@ class InterventionsModule extends connect(store)(
   _forceReviewUiValidationOnAttach!: boolean;
 
   @property({type: Object})
-  reportsPrevParams!: object;
+  reportsPrevParams!: GenericObject;
 
   @property({type: String})
   moduleName = 'interventions';

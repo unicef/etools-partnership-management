@@ -20,7 +20,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     dataItems!: any[];
 
     @property({type: Object})
-    dataSetModel!: object | null;
+    dataSetModel!: GenericObject | null;
 
     @property({type: Boolean, reflectToAttribute: true})
     editMode!: boolean;
@@ -166,10 +166,10 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             endpoint: deleteEndpoint,
             body: {}
           })
-            .then(function (_resp: any) {
+            .then((_resp: any) => {
               self._handleDeleteResponse();
             })
-            .catch(function (error: any) {
+            .catch((error: any) => {
               self._handleDeleteError(error.response);
             });
         } else {

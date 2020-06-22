@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {prettyDate} from '../utils/date-utils';
-import {Constructor} from '../../typings/globals.types';
+import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 
 /**
@@ -39,7 +39,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     prepareEtoolsFileDataFromUrl(fileUrl: string) {
-      let files: object[] = [];
+      let files: GenericObject[] = [];
       if (typeof fileUrl === 'string' && fileUrl !== '') {
         const fileName = this.getFileNameFromURL(fileUrl);
         files = [

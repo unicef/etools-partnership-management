@@ -5,7 +5,7 @@ import {PolymerElement} from '@polymer/polymer';
 
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../../typings/globals.types.js';
+import {Constructor, GenericObject} from '../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
 
 /**
@@ -20,7 +20,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
       type: Object,
       observer: ModuleMainElCommonFunctionalityClass.prototype._handleQueryParams
     })
-    listPageQueryParams!: object;
+    listPageQueryParams!: GenericObject;
 
     /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
         otherwise preservedListQueryParams holds on to it's previous data.
@@ -31,7 +31,7 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
         still filtered by intervention status).
     */
     @property({type: Object})
-    preservedListQueryParams: object = {};
+    preservedListQueryParams: GenericObject = {};
 
     @property({type: Array})
     serverErrors: any[] = [];

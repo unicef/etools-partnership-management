@@ -559,7 +559,7 @@ class InterventionDetails extends connect(store)(
   years: [] = [];
 
   @property({type: Object})
-  agreement!: object;
+  agreement!: GenericObject;
 
   @property({type: Object})
   originalIntervention!: Intervention;

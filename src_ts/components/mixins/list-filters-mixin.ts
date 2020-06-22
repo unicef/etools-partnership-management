@@ -270,7 +270,10 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       idxInSelFilters: number,
       idxInFilterOptions: number
     ) {
-      if (filter.hasOwnProperty('disabled')) {
+      // if (filter.hasOwnProperty('disabled')) {
+      //   this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
+      // }
+      if (Object.prototype.hasOwnProperty.call(filter, 'disabled')) {
         this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
       }
 

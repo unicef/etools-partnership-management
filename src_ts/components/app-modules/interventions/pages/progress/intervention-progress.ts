@@ -188,7 +188,8 @@ class InterventionProgress extends connect(store)(
               <etools-form-element-wrapper
                 class="col-6"
                 label="UNICEF Cash"
-                value="[[progress.unicef_budget_cash_currency]] [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]"
+                value="[[progress.unicef_budget_cash_currency]] 
+                        [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]"
               >
               </etools-form-element-wrapper>
             </div>
@@ -280,7 +281,8 @@ class InterventionProgress extends connect(store)(
                         <div class="col-data col-3 progress-bar">
                           <etools-progress-bar
                             class="report-progress-bar"
-                            value="[[getProgressPercentage(indicatorReport.reportable.total_against_target, indicatorReport.reportable.blueprint.display_type)]]"
+                            value="[[getProgressPercentage(indicatorReport.reportable.total_against_target, 
+                                        indicatorReport.reportable.blueprint.display_type)]]"
                           >
                           </etools-progress-bar>
                         </div>

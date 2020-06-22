@@ -210,7 +210,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           <template is="dom-repeat" items="{{partner.core_values_assessments}}">
             <etools-data-table-row
               no-collapse
-              secondary-bg-on-hover$="[[_canEditCVA(item.attachment, item.archived, showCoreValuesAssessmentAttachment)]]"
+              secondary-bg-on-hover$="[[_canEditCVA(item.attachment, item.archived, 
+                                        showCoreValuesAssessmentAttachment)]]"
               hidden$="[[!_shouldShowCVA(item.archived, showArchivedAssessments)]]"
             >
               <div slot="row-data" class="p-relative">

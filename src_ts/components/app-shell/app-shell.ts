@@ -257,7 +257,7 @@ class AppShell extends connect(store)(
   routeData!: {module: string};
 
   @property({type: Object})
-  subroute!: object;
+  subroute!: GenericObject;
 
   // This shouldn't be neccessary, but the Analyzer isn't picking up
   // Polymer.Element#rootPath
@@ -292,7 +292,7 @@ class AppShell extends connect(store)(
   leavePageDialog!: EtoolsDialog;
 
   @property({type: Object})
-  appLocQueryParams!: object;
+  appLocQueryParams!: GenericObject;
 
   @property({type: String})
   appLocPath!: string;

@@ -1,6 +1,6 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import './etools-toast';
-import {Constructor} from '../../typings/globals.types';
+import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';
@@ -15,7 +15,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
     _toast: EtoolsToastEl | null = null;
 
     @property({type: Array})
-    _toastQueue: object[] = [];
+    _toastQueue: GenericObject[] = [];
 
     @property({type: String})
     currentToastMessage = '';

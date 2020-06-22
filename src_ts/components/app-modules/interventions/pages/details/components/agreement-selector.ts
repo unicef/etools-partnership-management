@@ -103,8 +103,9 @@ class AgreementSelector extends connect(store)(CommonMixin(PolymerElement)) {
   @property({type: Array})
   partnersDropdownData!: any[]; // 'setPartnersDropdown' Do we need to use only CSO type partners?
 
+  // Covers issues on refresh when agreements is populated after the rest of the observers run
   @property({type: Array, observer: '_agreementsChanged'})
-  agreements!: MinimalAgreement[]; // Covers issues on refresh when agreements is populated after the rest of the observers run
+  agreements!: MinimalAgreement[];
 
   @property({type: Number, notify: true, observer: '_partnerSelected'})
   partnerId!: number;

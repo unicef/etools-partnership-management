@@ -33,7 +33,7 @@ import {InterventionsListData} from '../../data/interventions-list-data.js';
 import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../../../utils/fire-custom-event.js';
-import {LabelAndValue, CpStructure, MinimalUser} from '../../../../../typings/globals.types.js';
+import {LabelAndValue, CpStructure, MinimalUser, GenericObject} from '../../../../../typings/globals.types.js';
 import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
 import {ListFilterOption} from '../../../../../typings/filter.types.js';
 import {partnersDropdownDataSelector} from '../../../../../reducers/partners.js';
@@ -271,11 +271,12 @@ class InterventionsList extends connect(store)(
               <div class="row-details-content col-2">
                 <span class="rdc-title">UNICEF Cash Contribution</span>
                 <etools-info-tooltip
-                  class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
+                  class$="fr-nr-warn 
+                            [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
                   icon-first
                   custom-icon
                   hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent,
-                                  intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]"
+                        intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]"
                 >
                   <span slot="field">
                     <span class="amount-currency">[[intervention.budget_currency]]</span>
@@ -372,7 +373,7 @@ class InterventionsList extends connect(store)(
   countryProgrammes!: CpStructure[];
 
   @property({type: Array})
-  sections!: object[];
+  sections!: GenericObject[];
 
   @property({type: Array})
   selectedSections: number[] = [];
@@ -387,13 +388,13 @@ class InterventionsList extends connect(store)(
   selectedUnicefFocalPoints: number[] = [];
 
   @property({type: Array})
-  offices!: object[];
+  offices!: GenericObject[];
 
   @property({type: Array})
   selectedOffices: number[] = [];
 
   @property({type: Array})
-  donors!: object[];
+  donors!: GenericObject[];
 
   @property({
     type: Array,
@@ -411,7 +412,7 @@ class InterventionsList extends connect(store)(
   selectedPartners: [] = [];
 
   @property({type: Array})
-  grants!: object[];
+  grants!: GenericObject[];
 
   @property({
     type: Array,
@@ -446,8 +447,9 @@ class InterventionsList extends connect(store)(
         'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
         'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-        'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
-        'contingency_pd, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+        'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, ' +
+        'selectedCPStructures.length, contingency_pd, paginator.page, paginator.page_size, sortOrder, ' +
+        'requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }

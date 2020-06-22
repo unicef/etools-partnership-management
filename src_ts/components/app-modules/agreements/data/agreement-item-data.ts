@@ -35,7 +35,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   agreement!: Agreement;
 
   @property({type: Object})
-  _partners!: {};
+  _partners!: GenericObject;
 
   @property({type: Number, notify: true, observer: '_agreementIdChanged'})
   agreementId: number | null = null;
@@ -125,7 +125,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
     };
     let propName: string;
     for (propName in minimalAgrData) {
-      if (!detail.hasOwnProperty(propName)) {
+      if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
         logWarn('Mapping property not found');
       } else {
         minimalAgrData[propName] = detail[propName];
