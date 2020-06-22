@@ -6,7 +6,7 @@
   "contributors": [
     "The eTools Team"
   ],
-  "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git@github.com:unicef/etools-partnership-management"
@@ -98,7 +98,6 @@
     "polymer-cli": "^1.9.11",
     "polyserve": "^0.27.0",
     "prpl-server": "^1.3.0",
-    "puppeteer": "^1.5.0",
     "typescript": "^3.9.5",
     "wct-mocha": "^1.1.0"
   }
