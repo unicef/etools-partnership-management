@@ -136,7 +136,6 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     if (!indicatorId) {
       return;
     }
-    const self = this;
     const endpoint = this.getEndpoint('getEditDeleteIndicator', {
       id: indicatorId
     });
@@ -147,11 +146,11 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
         is_active: false
       }
     })
-      .then(function (resp: any) {
-        self._handleDeactivateResponse(resp);
+      .then((resp: any) => {
+        this._handleDeactivateResponse(resp);
       })
-      .catch(function (error: any) {
-        self._handleDeactivateError(error);
+      .catch((error: any) => {
+        this._handleDeactivateError(error);
       });
   }
 

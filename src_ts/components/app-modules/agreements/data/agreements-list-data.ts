@@ -61,6 +61,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       this.currentQuery.abort();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     if (showQueryLoading) {

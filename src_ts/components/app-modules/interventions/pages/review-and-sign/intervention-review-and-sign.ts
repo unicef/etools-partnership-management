@@ -151,7 +151,8 @@ class InterventionReviewAndSign extends connect(store)(
                 upload-endpoint="[[uploadEndpoint]]"
                 on-upload-finished="_prcRevDocUploadFinished"
                 readonly$="[[!permissions.edit.prc_review_attachment]]"
-                show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, permissions.edit.prc_review_attachment)]]"
+                show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, 
+                                    permissions.edit.prc_review_attachment)]]"
                 on-delete-file="_prcRevDocDelete"
                 on-upload-started="_onUploadStarted"
                 on-change-unsaved-file="_onChangeUnsavedFile"

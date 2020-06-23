@@ -201,8 +201,6 @@ class DisaggregationList extends connect(store)(
   }
 
   _toggleActive(e: any) {
-    const self = this;
-
     const requestParams = {
       method: 'PATCH',
       endpoint: this.getEndpoint('patchDisaggregations', {
@@ -212,14 +210,14 @@ class DisaggregationList extends connect(store)(
     };
 
     return sendRequest(requestParams)
-      .then(function (response: any) {
+      .then((response: any) => {
         store.dispatch(patchDisaggregation(response));
-        self.broadcastPatchDisaggregToOtherTabs(response);
+        this.broadcastPatchDisaggregToOtherTabs(response);
       })
-      .catch(function (error: any) {
-        (self.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e
+      .catch((error: any) => {
+        (this.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e
           .model.item.active;
-        parseRequestErrorsAndShowAsToastMsgs(error, self);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
 

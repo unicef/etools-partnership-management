@@ -26,7 +26,6 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
     profileSaveLoadingMsgSource = 'profile-modal';
 
     protected _dispatchSaveProfileRequest(profile: any) {
-      const self = this;
       const config = {
         // @ts-ignore *defined in component
         endpoint: this.getEndpoint(this.endpointName),
@@ -35,12 +34,12 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
       };
 
       sendRequest(config)
-        .then(function (resp: any) {
-          self._handleResponse(resp);
+        .then((resp: any) => {
+          this._handleResponse(resp);
         })
-        .catch(function (error: any) {
-          parseRequestErrorsAndShowAsToastMsgs(error, self);
-          self._hideProfileSaveLoadingMsg();
+        .catch((error: any) => {
+          parseRequestErrorsAndShowAsToastMsgs(error, this);
+          this._hideProfileSaveLoadingMsg();
         });
     }
 

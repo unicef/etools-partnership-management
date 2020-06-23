@@ -146,16 +146,15 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
       const ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {
         id: cpOutputId
       });
-      const self = this;
       sendRequest({
         endpoint: ramIndicatorsEndpoint
       })
-        .then(function (response: any) {
-          self._handleRamIndicatorsReqResponse(response);
+        .then((response: any) => {
+          this._handleRamIndicatorsReqResponse(response);
         })
-        .catch(function (error: any) {
-          self._showRamIndicatorsLoadingSpinner(false);
-          parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+        .catch((error: any) => {
+          this._showRamIndicatorsLoadingSpinner(false);
+          parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
         });
     }
   }
@@ -259,7 +258,6 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   }
 
   _saveExpectedResult(endpoint: any, method: string, result: any, successCallback: any) {
-    const self = this;
     this._setRamIndicatorsSpinnerText(this.saveResultLoadingMsg);
     this._showRamIndicatorsLoadingSpinner(true);
     this.set('disableConfirmBtn', true);
@@ -268,17 +266,17 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
       endpoint: endpoint,
       body: result
     })
-      .then(function (response: any) {
-        self._showRamIndicatorsLoadingSpinner(false);
-        self.set('disableConfirmBtn', false);
+      .then((response: any) => {
+        this._showRamIndicatorsLoadingSpinner(false);
+        this.set('disableConfirmBtn', false);
         if (typeof successCallback === 'function') {
-          successCallback.bind(self, response)();
+          successCallback.bind(this, response)();
         }
       })
-      .catch(function (error: any) {
-        self._showRamIndicatorsLoadingSpinner(false);
-        self.set('disableConfirmBtn', false);
-        parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      .catch((error: any) => {
+        this._showRamIndicatorsLoadingSpinner(false);
+        this.set('disableConfirmBtn', false);
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
       });
   }
 

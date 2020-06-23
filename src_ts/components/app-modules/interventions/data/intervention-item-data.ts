@@ -86,6 +86,7 @@ class InterventionItemData extends connect(store)(
   }
 
   _triggerInterventionRequest(options: any) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const ajaxMethod = options.method || 'GET';
     return sendRequest(options)
@@ -100,6 +101,7 @@ class InterventionItemData extends connect(store)(
   }
 
   _reqInterventionDataWithoutRespHandling() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const options = {
       endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {
@@ -176,13 +178,14 @@ class InterventionItemData extends connect(store)(
       this.set('handleResponseAdditionalCallback', null);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     if (ajaxMethod !== 'GET') {
       // update the interventions list in dexieDB
       const mappedResponse = this._formatResponseDataForDexie(response);
       window.EtoolsPmpApp.DexieDb.table('interventions')
         .put(mappedResponse)
-        .then(function () {
+        .then(() => {
           fireEvent(self, 'reload-list');
         });
 
@@ -195,7 +198,7 @@ class InterventionItemData extends connect(store)(
           endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {
             id: response.agreement
           })
-        }).then(function (resp: any) {
+        }).then((resp: any) => {
           self.updateAgreeementStatus.bind(self, resp)();
         });
       }

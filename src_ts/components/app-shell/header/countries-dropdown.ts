@@ -137,7 +137,6 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
   }
 
   protected _triggerCountryChangeRequest(countryId: any) {
-    const self = this;
     fireEvent(this, 'global-loading', {
       message: 'Please wait while country data is changing...',
       active: true,
@@ -150,10 +149,10 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
       body: {country: countryId}
     })
       .then(() => {
-        self._handleResponse();
+        this._handleResponse();
       })
       .catch((error: any) => {
-        self._handleError(error);
+        this._handleError(error);
       });
   }
 

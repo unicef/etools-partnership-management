@@ -30,17 +30,16 @@ function StaffMembersDataMixin<T extends Constructor<PolymerElement>>(baseClass:
           loadingSource: this.staffLoadingMsgSource
         });
         const endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
-        const self = this;
 
         sendRequest({
           endpoint: endpoint
         })
-          .then(function (response: any) {
-            self._handleStaffMembersResponse(response);
+          .then((response: any) => {
+            this._handleStaffMembersResponse(response);
           })
-          .catch(function (error: any) {
+          .catch((error: any) => {
             logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-mixin', error);
-            fireEvent(self, 'toast', {
+            fireEvent(this, 'toast', {
               text: 'Can not get selected partner staff members data!',
               showCloseBtn: true
             });

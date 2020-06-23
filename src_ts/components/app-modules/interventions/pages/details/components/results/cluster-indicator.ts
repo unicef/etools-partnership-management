@@ -304,13 +304,12 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
   connectedCallback() {
     super.connectedCallback();
 
-    const self = this;
     this.fireRequest('getResponsePlans', {})
-      .then(function (response: any) {
-        self.responsePlans = response;
+      .then((response: any) => {
+        this.responsePlans = response;
       })
-      .catch(function (error: any) {
-        fireEvent(self, 'show-toast', {
+      .catch((error: any) => {
+        fireEvent(this, 'show-toast', {
           error: {response: error.message || error.response}
         });
       });
@@ -334,15 +333,14 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
 
   _getPrpClusterIndicator(clusterIndicId: string) {
     fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
-    const self = this;
     this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
-      .then(function (response: any) {
-        self.prpClusterIndicator = response;
-        fireEvent(self, 'stop-spinner');
+      .then((response: any) => {
+        this.prpClusterIndicator = response;
+        fireEvent(this, 'stop-spinner');
       })
-      .catch(function (error: any) {
-        fireEvent(self, 'stop-spinner');
-        fireEvent(self, 'show-toast', {
+      .catch((error: any) => {
+        fireEvent(this, 'stop-spinner');
+        fireEvent(this, 'show-toast', {
           error: {response: error.message || error.response}
         });
       });
@@ -384,15 +382,14 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
       return;
     }
     fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
-    const self = this;
     this.fireRequest('getPrpClusterIndicators', {id: clusterId})
-      .then(function (response: any) {
-        self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
-        fireEvent(self, 'stop-spinner');
+      .then((response: any) => {
+        this.prpClusterIndicators = this._unnestIndicatorTitle(response.results);
+        fireEvent(this, 'stop-spinner');
       })
-      .catch(function (error: any) {
-        fireEvent(self, 'stop-spinner');
-        fireEvent(self, 'show-toast', {
+      .catch((error: any) => {
+        fireEvent(this, 'stop-spinner');
+        fireEvent(this, 'show-toast', {
           error: {response: error.message || error.response}
         });
       });

@@ -204,16 +204,15 @@ class IndicatorDetails extends EndpointsMixin(UtilsMixin(PolymerElement)) {
 
     const params = this._computeParams(String(this.indicatorReportId));
     this._showLoading();
-    const self = this;
     this.fireRequest('reportIndicatorsDetails', {}, {params: params})
-      .then(function (response: any) {
-        self.set('indicatorReport', response && response[0] ? response[0] : {});
-        self._hideLoading();
+      .then((response: any) => {
+        this.set('indicatorReport', response && response[0] ? response[0] : {});
+        this._hideLoading();
       })
-      .catch(function (error: any) {
+      .catch((error: any) => {
         logError('Indicator details data request failed!', 'reports-indicator-details', error);
-        parseRequestErrorsAndShowAsToastMsgs(error, self);
-        self._hideLoading();
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+        this._hideLoading();
       });
   }
 

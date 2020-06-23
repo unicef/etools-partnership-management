@@ -172,15 +172,14 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           defer.resolve(options);
         } else {
           // request new token
-          const self = this;
           const tokenEndpointName = this.getTokenEndpointName(tokenKey);
           this.requestToken(this.getEndpoint(tokenEndpointName))
-            .then(function (response: any) {
-              self.storeToken(options.endpoint.token, response.token);
-              options = self._buildOptionsWithTokenHeader(options, response.token);
+            .then((response: any) => {
+              this.storeToken(options.endpoint.token, response.token);
+              options = this._buildOptionsWithTokenHeader(options, response.token);
               defer.resolve(options);
             })
-            .catch(function (error: any) {
+            .catch((error: any) => {
               // request for getting a new token failed
               defer.reject(error);
             });
@@ -220,16 +219,15 @@ function EndpointsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return;
       }
       const defer = this._getDeferrer();
-      const self = this;
       this.addTokenToRequestOptions(endpoint, endpointTemplateData)
-        .then(function (requestOptions: any) {
-          const options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
+        .then((requestOptions: any) => {
+          const options = this._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
           return sendRequest(options, activeReqKey);
         })
-        .then(function (endpointResponse: any) {
+        .then((endpointResponse: any) => {
           defer.resolve(endpointResponse);
         })
-        .catch(function (error: any) {
+        .catch((error: any) => {
           defer.reject(error);
         });
       return defer.promise;

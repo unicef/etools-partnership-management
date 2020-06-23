@@ -113,18 +113,17 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       });
       const method = this.indicator.id ? 'PATCH' : 'POST';
       const body = this._getIndicatorBody();
-      const self = this;
 
       sendRequest({
         endpoint: endpoint,
         method: method,
         body: body
       })
-        .then(function (resp: any) {
-          self._handleSaveIndicatorResponse(resp);
+        .then((resp: any) => {
+          this._handleSaveIndicatorResponse(resp);
         })
-        .catch(function (error: any) {
-          self._handleSaveIndicatorError(error);
+        .catch((error: any) => {
+          this._handleSaveIndicatorError(error);
         });
     }
 
@@ -180,7 +179,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
       this._prepareBaselineAndTarget(body);
 
-      if (body.hasOwnProperty('disaggregation')) {
+      if (Object.prototype.hasOwnProperty.call(body, 'disaggregation')) {
         body.disaggregation = this._prepareDisaggregationIds();
       }
       if (this.isCluster && !body.id) {

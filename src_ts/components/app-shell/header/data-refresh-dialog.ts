@@ -168,36 +168,35 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
     }
 
     // clear only data sets
-    const self = this;
     window.EtoolsPmpApp.DexieDb.transaction(
       'rw',
       'listsExpireMapTable',
       'partners',
       'agreements',
       'interventions',
-      function () {
-        if (self.partnersSelected) {
+      () => {
+        if (this.partnersSelected) {
           window.EtoolsPmpApp.DexieDb.partners.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
         }
-        if (self.agreementsSelected) {
+        if (this.agreementsSelected) {
           window.EtoolsPmpApp.DexieDb.agreements.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
         }
-        if (self.interventionsSelected) {
+        if (this.interventionsSelected) {
           window.EtoolsPmpApp.DexieDb.interventions.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
         }
       }
     )
-      .then(function () {
+      .then(() => {
         // transaction succeeded
-        self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+        this._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
       })
-      .catch(function (error: any) {
+      .catch((error: any) => {
         // transaction failed
         logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
-        self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+        this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
       });
   }
 

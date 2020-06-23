@@ -11,11 +11,10 @@ import {PolymerElement} from '@polymer/polymer';
 function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class MissingDropdownOptionsClass extends EndpointsMixin(baseClass) {
     public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
-      const self = this;
-      setTimeout(function () {
+      setTimeout(() => {
         try {
           if (dropdownEl) {
-            const endpointUrl = self.getMissingOptionsEndpointUrl(endpointName);
+            const endpointUrl = this.getMissingOptionsEndpointUrl(endpointName);
             params = params ? params : {};
 
             dropdownEl.set('ajaxParams', params);

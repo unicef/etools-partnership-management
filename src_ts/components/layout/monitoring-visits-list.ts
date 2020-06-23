@@ -188,17 +188,16 @@ class MonitoringVisitsList extends EndpointsMixin(CommonMixin(PolymerElement)) {
       id: interventionOrPartnerId,
       year: moment().year()
     });
-    const self = this;
     sendRequest({
       endpoint: monitoringVisitsEndpoint
     })
-      .then(function (resp: any) {
-        self.set('monitoringVisits', resp);
-        self.set('showLoading', false);
+      .then((resp: any) => {
+        this.set('monitoringVisits', resp);
+        this.set('showLoading', false);
       })
-      .catch(function (error: any) {
-        self.set('showLoading', false);
-        parseRequestErrorsAndShowAsToastMsgs(error, self);
+      .catch((error: any) => {
+        this.set('showLoading', false);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
       });
   }
 

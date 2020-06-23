@@ -137,7 +137,8 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
         <template is="dom-repeat" items="{{dataItems}}">
           <div
             class="layout-horizontal lower-result-row"
-            hidden$="[[allIndicatorsAreInactive(item.applied_indicators, showInactiveIndicators, forceVisibilityRecalc)]]"
+            hidden$="[[allIndicatorsAreInactive(item.applied_indicators, 
+                        showInactiveIndicators, forceVisibilityRecalc)]]"
           >
             <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
               <icons-actions

@@ -94,6 +94,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
       store.dispatch(addEditAgreement(this._getMinimalAgreementData(response)));
 
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
       // update the agreement list in dexieDB
       window.EtoolsPmpApp.DexieDb.table('agreements')

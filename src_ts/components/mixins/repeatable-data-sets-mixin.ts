@@ -151,7 +151,6 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             loadingSource: this.deleteLoadingSource
           });
 
-          const self = this;
           // @ts-ignore
           let endpointParams = {id: id};
           // @ts-ignore
@@ -167,10 +166,10 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             body: {}
           })
             .then((_resp: any) => {
-              self._handleDeleteResponse();
+              this._handleDeleteResponse();
             })
             .catch((error: any) => {
-              self._handleDeleteError(error.response);
+              this._handleDeleteError(error.response);
             });
         } else {
           this._deleteElement();

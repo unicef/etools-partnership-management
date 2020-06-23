@@ -364,26 +364,25 @@ class InterventionProgress extends connect(store)(
     if (!id || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
       return;
     }
-    const self = this;
 
-    fireEvent(self, 'global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'pd-progress'
     });
 
     this.fireRequest('interventionProgress', {pdId: id})
-      .then(function (response: any) {
-        self.set('progress', response);
-        fireEvent(self, 'global-loading', {
+      .then((response: any) => {
+        this.set('progress', response);
+        fireEvent(this, 'global-loading', {
           active: false,
           loadingSource: 'pd-progress'
         });
       })
-      .catch(function (error: any) {
+      .catch((error: any) => {
         logError('PD/SSFA progress request failed!', 'intervention-progress', error);
-        parseRequestErrorsAndShowAsToastMsgs(error, self);
-        fireEvent(self, 'global-loading', {
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+        fireEvent(this, 'global-loading', {
           active: false,
           loadingSource: 'pd-progress'
         });
@@ -403,12 +402,11 @@ class InterventionProgress extends connect(store)(
       this.set('indicatorReports', []);
       return;
     }
-    const self = this;
     if (!this._emptyList(progress.details.cp_outputs)) {
-      progress.details.cp_outputs.forEach(function (result: any) {
-        if (!self._emptyList(result.ll_outputs)) {
-          result.ll_outputs.forEach(function (lowerResult: any) {
-            self._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
+      progress.details.cp_outputs.forEach((result: any) => {
+        if (!this._emptyList(result.ll_outputs)) {
+          result.ll_outputs.forEach((lowerResult: any) => {
+            this._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
           });
         }
       });

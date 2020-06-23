@@ -179,23 +179,22 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
       return;
     }
     this.startSpinner();
-    const self = this;
     const requestParams = {
       method: 'POST',
       endpoint: this.getEndpoint('disaggregations'),
       body: this._getBody()
     };
     return sendRequest(requestParams)
-      .then(function (response: any) {
-        self.disaggregation = response;
+      .then((response: any) => {
+        this.disaggregation = response;
         store.dispatch(addDisaggregation(response));
-        self.broadcastAddDisaggregToOtherTabs(response);
-        self.stopSpinner();
-        self.close();
+        this.broadcastAddDisaggregToOtherTabs(response);
+        this.stopSpinner();
+        this.close();
       })
-      .catch(function (error: any) {
-        self.stopSpinner();
-        parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
+      .catch((error: any) => {
+        this.stopSpinner();
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
       });
   }
 

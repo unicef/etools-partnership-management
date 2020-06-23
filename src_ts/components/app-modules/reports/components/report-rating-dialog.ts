@@ -105,7 +105,6 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   }
 
   saveStatus() {
-    const self = this;
     const requestBody = {
       status: 'Acc',
       overall_status: this.selectedOverallStatus,
@@ -114,13 +113,13 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
     };
     this.startSpinner();
     this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
-      .then(function (response: any) {
-        fireEvent(self, 'report-accepted', {report: response});
-        self.stopSpinner();
-        self.close();
+      .then((response: any) => {
+        fireEvent(this, 'report-accepted', {report: response});
+        this.stopSpinner();
+        this.close();
       })
-      .catch(function (error: any) {
-        self._handleErrorResponse(error);
+      .catch((error: any) => {
+        this._handleErrorResponse(error);
       });
   }
 
