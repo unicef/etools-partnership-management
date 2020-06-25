@@ -35,17 +35,28 @@ import {
 } from '../actions/common-data';
 import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
 import {
-  LabelAndValue, CpStructure, Country, IdAndName, GenericObject,
-  MinimalUser, User, EnvFlags, Office
+  LabelAndValue,
+  CpStructure,
+  Country,
+  IdAndName,
+  GenericObject,
+  MinimalUser,
+  User,
+  EnvFlags,
+  Office
 } from '../typings/globals.types';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
 import {copy} from '../components/utils/utils';
 
-
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
-  signedByUnicefUsers: {id: number; name: string; email: string; username: string}[] = [];
+  signedByUnicefUsers: {
+    id: number;
+    name: string;
+    email: string;
+    username: string;
+  }[] = [];
   cpOutputs: CpOutput[] = [];
   countryProgrammes: CpStructure[] = [];
   interventionDocTypes: LabelAndValue[] = [];
@@ -54,7 +65,7 @@ export class CommonDataState {
   unicefUsersData: MinimalUser[] = [];
   locations: Location[] = [];
   offices: Office[] = [];
-  agreementsDropdownData: object[] = []; // TODO - is empty
+  agreementsDropdownData: GenericObject[] = []; // TODO - is empty
   agencyChoices: LabelAndValue[] = [];
   agreementAmendmentTypes: LabelAndValue[] = [];
   csoTypes: LabelAndValue[] = [];
@@ -233,7 +244,7 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
     case PATCH_DISAGGREGATION:
       disaggregsCopy = state.disaggregations.slice(0);
 
-      dIndex = disaggregsCopy.findIndex(disaggregsCopy => disaggregsCopy.id === action.disaggregation.id);
+      dIndex = disaggregsCopy.findIndex((disaggregsCopy) => disaggregsCopy.id === action.disaggregation.id);
       if (dIndex >= 0) {
         disaggregsCopy.splice(dIndex, 1, action.disaggregation);
       }
@@ -295,22 +306,21 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
   }
 };
 
-
 const disaggregationsSelector = (state: RootState) => state.commonData!.disaggregations;
 
-export const flaggedSortedDisaggregs = createSelector(
-  disaggregationsSelector,
-  (disagregs: Disaggregation[]) => {
-    if (!disagregs || !disagregs.length) {
-      return [];
-    }
+export const flaggedSortedDisaggregs = createSelector(disaggregationsSelector, (disagregs: Disaggregation[]) => {
+  if (!disagregs || !disagregs.length) {
+    return [];
+  }
 
-    return copy(disagregs).map((d: Disaggregation) => {
+  return copy(disagregs)
+    .map((d: Disaggregation) => {
       if (!d.active) {
         d.name = '(*Inactive) ' + d.name;
       }
       return d;
-    }).sort((d1: Disaggregation, d2: Disaggregation) => {
+    })
+    .sort((d1: Disaggregation, d2: Disaggregation) => {
       if (d1.active === d2.active) {
         return 0;
       }
@@ -319,7 +329,6 @@ export const flaggedSortedDisaggregs = createSelector(
       }
       return 1;
     });
-  }
-);
+});
 
 export default commonData;

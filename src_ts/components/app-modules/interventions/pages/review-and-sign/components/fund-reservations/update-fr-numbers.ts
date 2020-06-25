@@ -21,7 +21,7 @@ import {PaperDialogElement} from '@polymer/paper-dialog/paper-dialog';
  * @customElement
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
+class UpdateFrNumbers extends RepeatableDataSetsMixin(PolymerElement) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
@@ -39,7 +39,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
             padding: 0;
             margin-top: -20px;
             box-sizing: border-box;
-          };
+          }
           --etools-dialog-title: {
             margin-bottom: 0 !important;
           }
@@ -48,40 +48,46 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
         paper-input {
           width: 250px;
         }
-
       </style>
 
-      <etools-dialog id="frsDialog"
-                    size="md"
-                    dialog-title="Add/Update FR Numbers"
-                    ok-btn-text="Add/Update"
-                    disable-confirm-btn="[[disableConfirmBtn]]"
-                    on-confirm-btn-clicked="_checkFrNumbers"
-                    no-padding keep-dialog-open
-                    spinner-text="Checking FR Numbers updates...">
+      <etools-dialog
+        id="frsDialog"
+        size="md"
+        dialog-title="Add/Update FR Numbers"
+        ok-btn-text="Add/Update"
+        disable-confirm-btn="[[disableConfirmBtn]]"
+        on-confirm-btn-clicked="_checkFrNumbers"
+        no-padding
+        keep-dialog-open
+        spinner-text="Checking FR Numbers updates..."
+      >
         <template is="dom-repeat" items="{{dataItems}}">
           <div class="row-h item-container">
             <div class="item-actions-container">
               <div class="actions">
-                <paper-icon-button class="action delete"
-                                  on-tap="_openDeleteConfirmation"
-                                  data-args$="[[index]]"
-                                  icon="cancel"
-                                  disabled$="[[!_showDeleteFrBtn(interventionStatus, dataItems.length)]]">
+                <paper-icon-button
+                  class="action delete"
+                  on-tap="_openDeleteConfirmation"
+                  data-args$="[[index]]"
+                  icon="cancel"
+                  disabled$="[[!_showDeleteFrBtn(interventionStatus, dataItems.length)]]"
+                >
                 </paper-icon-button>
               </div>
             </div>
             <div class="item-content">
               <div class="row-h">
                 <!-- FR Number -->
-                <paper-input id$="fr-nr-[[index]]"
-                            label="FR Number"
-                            value="{{item.fr_number}}"
-                            placeholder="&#8212;"
-                            allowed-pattern="[0-9]"
-                            required
-                            error-message="Please fill FR Number or remove the field"
-                            on-value-changed="_frNrValueChanged">
+                <paper-input
+                  id$="fr-nr-[[index]]"
+                  label="FR Number"
+                  value="{{item.fr_number}}"
+                  placeholder="&#8212;"
+                  allowed-pattern="[0-9]"
+                  required
+                  error-message="Please fill FR Number or remove the field"
+                  on-value-changed="_frNrValueChanged"
+                >
                 </paper-input>
               </div>
             </div>
@@ -103,17 +109,17 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
   }
 
   @property({type: Boolean})
-  editMode: boolean = true;
+  editMode = true;
 
   // TODO: check if deleteDialog is still used
   // @property({type: Object, observer: '_delConfirmationDialogChange'})
   // deleteDialog!: object;
 
   @property({type: String})
-  deleteConfirmationMessage: string = 'Are you sure you want to delete this FR Number?';
+  deleteConfirmationMessage = 'Are you sure you want to delete this FR Number?';
 
   @property({type: Boolean})
-  disableConfirmBtn: boolean = true;
+  disableConfirmBtn = true;
 
   @property({type: String})
   interventionStatus!: string;
@@ -197,7 +203,7 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
   }
 
   _getPaperDialog() {
-    return (this.$.frsDialog.shadowRoot!.querySelector('paper-dialog') as PaperDialogElement);
+    return this.$.frsDialog.shadowRoot!.querySelector('paper-dialog') as PaperDialogElement;
   }
 
   _emptyList(length: number) {
@@ -224,7 +230,9 @@ class UpdateFrNumbers extends (RepeatableDataSetsMixin(PolymerElement)) {
       return;
     }
     // resend fr number changes back to main fund reservations element
-    fireEvent(this, 'update-frs-dialog-close', {frs: this._getUpdatedFrsNumbers()});
+    fireEvent(this, 'update-frs-dialog-close', {
+      frs: this._getUpdatedFrsNumbers()
+    });
   }
 
   // prepare the fr numbers list, used to verify them using API endpoint (/api/v2/funds/frs)

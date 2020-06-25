@@ -18,54 +18,55 @@ import CONSTANTS from '../../../../config/app-constants';
  * @appliesMixin EnvironmentFlagsMixin
  */
 export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) {
-
   static get template() {
     return html`
-    ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
-    <style>
-      :host {
-        /* host CSS */
-      }
+      ${SharedStyles} ${gridLayoutStyles} ${requiredFieldStarredStyles}
+      <style>
+        :host {
+          /* host CSS */
+        }
 
-      #agreementTermination {
-        --etools-dialog-default-btn-bg: var(--error-color);
-      }
+        #agreementTermination {
+          --etools-dialog-default-btn-bg: var(--error-color);
+        }
+      </style>
 
-    </style>
-
-    <etools-dialog no-padding
-                  keep-dialog-open
-                  id="agreementTermination"
-                  opened="{{opened}}"
-                  size="md"
-                  hidden$="[[warningOpened]]"
-                  ok-btn-text="Terminate"
-                  dialog-title="Terminate Agreement"
-                  on-close="_handleDialogClosed"
-                  on-confirm-btn-clicked="_triggerAgreementTermination"
-                  disable-confirm-btn="[[uploadInProgress]]"
-                  disable-dismiss-btn="[[uploadInProgress]]">
-
-      <div class="row-h flex-c">
-        <etools-upload id="terminationNotice"
-                      label="Termination Notice"
-                      accept=".doc,.docx,.pdf,.jpg,.png"
-                      file-url="[[termination.attachment_id]]"
-                      upload-endpoint="[[uploadEndpoint]]"
-                      on-upload-finished="_uploadFinished"
-                      required
-                      auto-validation
-                      upload-in-progress="{{uploadInProgress}}"
-                      error-message="Termination Notice file is required">
-        </etools-upload>
-      </div>
-      <div class="row-h">
-        <etools-warn-message
-                messages="Once you hit save, the Agreement will be Terminated and this action can not be reversed">
-        </etools-warn-message>
-      </div>
-
-    </etools-dialog>
+      <etools-dialog
+        no-padding
+        keep-dialog-open
+        id="agreementTermination"
+        opened="{{opened}}"
+        size="md"
+        hidden$="[[warningOpened]]"
+        ok-btn-text="Terminate"
+        dialog-title="Terminate Agreement"
+        on-close="_handleDialogClosed"
+        on-confirm-btn-clicked="_triggerAgreementTermination"
+        disable-confirm-btn="[[uploadInProgress]]"
+        disable-dismiss-btn="[[uploadInProgress]]"
+      >
+        <div class="row-h flex-c">
+          <etools-upload
+            id="terminationNotice"
+            label="Termination Notice"
+            accept=".doc,.docx,.pdf,.jpg,.png"
+            file-url="[[termination.attachment_id]]"
+            upload-endpoint="[[uploadEndpoint]]"
+            on-upload-finished="_uploadFinished"
+            required
+            auto-validation
+            upload-in-progress="{{uploadInProgress}}"
+            error-message="Termination Notice file is required"
+          >
+          </etools-upload>
+        </div>
+        <div class="row-h">
+          <etools-warn-message
+            messages="Once you hit save, the Agreement will be Terminated and this action can not be reversed"
+          >
+          </etools-warn-message>
+        </div>
+      </etools-dialog>
     `;
   }
 
@@ -88,11 +89,10 @@ export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) 
   termination!: {attachment_id: number};
 
   @property({type: Object})
-  terminationElSource!: PolymerElement
+  terminationElSource!: PolymerElement;
 
   @property({type: Boolean})
-  uploadInProgress: boolean = false;
-
+  uploadInProgress = false;
 
   private _validationSelectors: string[] = ['#terminationNotice'];
 
@@ -113,14 +113,13 @@ export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) 
   }
 
   _terminateAgreement() {
-    fireEvent(this.terminationElSource, 'terminate-agreement',
-      {
-        agreementId: this.agreementId,
-        terminationData: {
-          fileId: this.termination.attachment_id
-        },
-        status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
-      });
+    fireEvent(this.terminationElSource, 'terminate-agreement', {
+      agreementId: this.agreementId,
+      terminationData: {
+        fileId: this.termination.attachment_id
+      },
+      status: CONSTANTS.STATUSES.Terminated.toLowerCase() + ''
+    });
     this.set('opened', false);
   }
 
@@ -138,7 +137,9 @@ export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) 
   validate() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {
+        validate(): boolean;
+      };
       if (el && !el.validate()) {
         isValid = false;
       }
@@ -152,7 +153,6 @@ export class AgreementTermination extends EnvironmentFlagsMixin(PolymerElement) 
       this.set('termination.attachment_id', uploadResponse.id);
     }
   }
-
 }
 
 window.customElements.define('agreement-termination', AgreementTermination);

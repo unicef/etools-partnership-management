@@ -2,11 +2,11 @@ import {html} from '@polymer/polymer';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
 export const etoolsStatusStyles = html`
-    <style>
+  <style>
     :host {
       --ecp-content: {
         padding: 0;
-      };
+      }
       display: block;
       position: relative;
       -webkit-box-sizing: border-box;
@@ -41,7 +41,8 @@ export const etoolsStatusStyles = html`
       @apply --etools-status-container;
     }
 
-    .status-icon, .status {
+    .status-icon,
+    .status {
       @apply --layout-vertical;
       @apply --layout-center-justified;
       @apply --layout-wrap;
@@ -50,14 +51,14 @@ export const etoolsStatusStyles = html`
     .icon-wrapper {
       @apply --layout-vertical;
       @apply --layout-center-justified;
-      background-color: var(--etools-status-icon-inactive-color, #9D9D9D);
+      background-color: var(--etools-status-icon-inactive-color, #9d9d9d);
       width: 24px;
       height: 24px;
       line-height: 24px;
       -webkit-border-radius: 50%;
       -moz-border-radius: 50%;
       border-radius: 50%;
-      color: var(--etools-status-icon-text-color, #FFFFFF);
+      color: var(--etools-status-icon-text-color, #ffffff);
       font-size: 12px;
     }
 
@@ -83,16 +84,16 @@ export const etoolsStatusStyles = html`
       margin-top: auto;
       margin-bottom: auto;
       text-transform: capitalize;
-      color: var(--etools-status-text-color, #9D9D9D);
+      color: var(--etools-status-text-color, #9d9d9d);
     }
 
     .pending .status {
-      color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, .87));
+      color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
       font-weight: 500;
     }
 
     .pending .status-icon .icon-wrapper {
-      background-color: var(--etools-status-icon-pending-color, #0099FF);
+      background-color: var(--etools-status-icon-pending-color, #0099ff);
     }
 
     .custom .status-icon .icon-wrapper {
@@ -116,7 +117,7 @@ export const etoolsStatusStyles = html`
 
     .custom .status-icon .icon-wrapper .custom-icon {
       display: block;
-      color: var(--etools-status-icon-pending-color, #0099FF);
+      color: var(--etools-status-icon-pending-color, #0099ff);
     }
 
     .completed .status-icon .icon-wrapper {
@@ -127,7 +128,8 @@ export const etoolsStatusStyles = html`
       margin-left: 7px;
     }
 
-    .completed .status, .custom .status {
+    .completed .status,
+    .custom .status {
       font-weight: bold;
       color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
       @apply --etools-status-label-style;
@@ -142,17 +144,17 @@ export const etoolsStatusStyles = html`
       width: 18px;
     }
     /* The rest of the styling to make it horizontal/vertical is in page-layout-styles*/
-    @media only screen and (max-width: 1359px)  {
+    @media only screen and (max-width: 1359px) {
       .top-container {
         padding: 24px 24px 35px;
         display: inline-flex;
         width: calc(100% - 48px);
       }
       .bottom-container {
-        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding: 24px;
         flex-direction: row-reverse;
-          display: flex;
+        display: flex;
       }
       etools-action-button {
         min-width: 160px;
@@ -161,18 +163,18 @@ export const etoolsStatusStyles = html`
         border-left: none;
         margin-top: 32px;
         padding-top: 24px;
-        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
       }
     }
 
-    @media only screen and (min-width: 1360px)  {
+    @media only screen and (min-width: 1360px) {
       .top-container {
         padding: 24px 24px 35px;
         display: block;
         width: auto;
       }
       .bottom-container {
-        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding: 24px;
         flex-direction: row;
         display: block;
@@ -180,9 +182,9 @@ export const etoolsStatusStyles = html`
       .divider-line {
         margin: 8px 11px;
         border-top: none;
-        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, 0.78));
         padding-top: 40px;
       }
     }
-    </style>
+  </style>
 `;

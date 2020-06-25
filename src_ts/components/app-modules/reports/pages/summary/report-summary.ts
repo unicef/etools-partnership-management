@@ -24,20 +24,19 @@ import {GenericObject} from '../../../../../typings/globals.types.js';
  * @appliesMixin CommonMixin
  * @appliesMixin EtoolsCurrency
  */
-class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
-
+class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
   static get is() {
     return 'report-summary';
   }
 
   static get template() {
     return html`
-     ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
       <style include="paper-material-styles">
         .remove-padding {
           padding: 0 !important;
         }
-        iron-icon[icon="speaker-notes"] {
+        iron-icon[icon='speaker-notes'] {
           color: var(--primary-color);
           padding-top: 14px;
           padding-left: 8px;
@@ -60,55 +59,64 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
         .att {
           margin-bottom: 24px;
         }
-
       </style>
       <div class="content-section paper-material remove-padding" elevation="1">
         <div class="row-h b-border">
           <div class="col col-5">
-            <etools-form-element-wrapper label="Submitted By"
-                                        value="[[getDisplayValue(report.submitted_by)]]">
+            <etools-form-element-wrapper label="Submitted By" value="[[getDisplayValue(report.submitted_by)]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-2">
-            <etools-form-element-wrapper label="Submission Date"
-                                        value="[[_displayOrDefault(report.submission_date)]]">
+            <etools-form-element-wrapper label="Submission Date" value="[[_displayOrDefault(report.submission_date)]]">
             </etools-form-element-wrapper>
           </div>
           <div class="col col-3 report-status" hidden$="[[statusIs(report.status, 'Sub')]]">
-            <etools-form-element-wrapper label="Report Status" class="w-auto"
-                                          value="[[getReportStatus(report.status, report.reviewed_by_name)]]">
+            <etools-form-element-wrapper
+              label="Report Status"
+              class="w-auto"
+              value="[[getReportStatus(report.status, report.reviewed_by_name)]]"
+            >
             </etools-form-element-wrapper>
-            <iron-icon icon="speaker-notes" on-click="_seeSentBackComments" hidden$="[[!statusIs(report.status, 'Sen')]]"></iron-icon>
+            <iron-icon
+              icon="speaker-notes"
+              on-click="_seeSentBackComments"
+              hidden$="[[!statusIs(report.status, 'Sen')]]"
+            ></iron-icon>
           </div>
           <div class="col col-2" hidden$="[[statusIs(report.status, 'Sub')]]">
-            <etools-form-element-wrapper label="Date of Status"
-                                          value="[[_displayOrDefault(report.review_date)]]">
+            <etools-form-element-wrapper label="Date of Status" value="[[_displayOrDefault(report.review_date)]]">
             </etools-form-element-wrapper>
           </div>
         </div>
 
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper label="Partner Contribution to Date"
-                                        value="[[getDisplayValue(report.partner_contribution_to_date)]]">
+            <etools-form-element-wrapper
+              label="Partner Contribution to Date"
+              value="[[getDisplayValue(report.partner_contribution_to_date)]]"
+            >
             </etools-form-element-wrapper>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper label="Challenges/Bottlenecks in the Reporting Period (latest)"
-                                        value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]">
+            <etools-form-element-wrapper
+              label="Challenges/Bottlenecks in the Reporting Period (latest)"
+              value="[[getDisplayValue(report.challenges_in_the_reporting_period)]]"
+            >
             </etools-form-element-wrapper>
           </div>
         </div>
         <div class="row-h">
           <div class="col col-12">
-            <etools-form-element-wrapper label="Proposed Way Forward (latest)"
-                                        value="[[getDisplayValue(report.proposed_way_forward)]]">
+            <etools-form-element-wrapper
+              label="Proposed Way Forward (latest)"
+              value="[[getDisplayValue(report.proposed_way_forward)]]"
+            >
             </etools-form-element-wrapper>
           </div>
         </div>
-        <div class="row-padding"  hidden$="[[isPrpSRReport(report.report_type)]]">
+        <div class="row-padding" hidden$="[[isPrpSRReport(report.report_type)]]">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
               <iron-label for="file_[[index]]">
@@ -120,7 +128,6 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
               </a>
             </div>
           </template>
-
         </div>
       </div>
     `;
@@ -146,7 +153,10 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
      * Disable loading message for report summary tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'reports-page'
+    });
   }
 
   disconnectedCallback() {
@@ -203,7 +213,6 @@ class ReportSummary extends (CommonMixin(EtoolsCurrency(PolymerElement))) {
       this.sentBkCommentsDialog.opened = true;
     }
   }
-
 }
 
 window.customElements.define(ReportSummary.is, ReportSummary);

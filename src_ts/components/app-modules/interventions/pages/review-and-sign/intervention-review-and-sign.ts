@@ -28,12 +28,15 @@ import {requiredFieldStarredStyles} from '../../../../styles/required-field-styl
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
 import {isJsonStrMatch, copy} from '../../../../utils/utils.js';
-import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
+import {
+  DECREASE_UPLOADS_IN_PROGRESS,
+  INCREASE_UNSAVED_UPLOADS,
+  DECREASE_UNSAVED_UPLOADS
+} from '../../../../../actions/upload-status.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Permission, MinimalUser} from '../../../../../typings/globals.types.js';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite.js';
-
 
 /**
  * @polymer
@@ -43,10 +46,9 @@ import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite.js'
  * @appliesMixin MissingDropdownOptionsMixin
  * @appliesMixin UploadsMixin
  */
-class InterventionReviewAndSign extends connect(store)(CommonMixin(
-  UploadsMixin(
-    MissingDropdownOptionsMixin(PolymerElement)))) {
-
+class InterventionReviewAndSign extends connect(store)(
+  CommonMixin(UploadsMixin(MissingDropdownOptionsMixin(PolymerElement)))
+) {
   static get template() {
     return html`
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
@@ -56,7 +58,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           width: 100%;
         }
 
-        datepicker-lite[required]{
+        datepicker-lite[required] {
           --paper-input-container-label-floating_-_max-width: 133%;
         }
 
@@ -76,7 +78,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           --paper-checkbox-label: {
             color: var(--primary-text-color);
             opacity: 1;
-          };
+          }
         }
       </style>
 
@@ -84,24 +86,28 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
         <div class="row-h flex-c">
           <div class="col col-3">
             <!-- Document Submission Date -->
-            <datepicker-lite id="submissionDateField"
-                              label="Document Submission Date"
-                              value="{{intervention.submission_date}}"
-                              readonly$="[[!permissions.edit.submission_date]]"
-                              selected-date-display-format="D MMM YYYY"
-                              required$="[[permissions.required.submission_date]]"
-                              max-date="[[getCurrentDate()]]"
-                              max-date-error-msg="Date can not be in the future"
-                              error-message="Document Submission Date is required"
-                              auto-validate>
+            <datepicker-lite
+              id="submissionDateField"
+              label="Document Submission Date"
+              value="{{intervention.submission_date}}"
+              readonly$="[[!permissions.edit.submission_date]]"
+              selected-date-display-format="D MMM YYYY"
+              required$="[[permissions.required.submission_date]]"
+              max-date="[[getCurrentDate()]]"
+              max-date-error-msg="Date can not be in the future"
+              error-message="Document Submission Date is required"
+              auto-validate
+            >
             </datepicker-lite>
           </div>
           <div class="col col-3">
             <!-- Submitted to PRC? -->
             <etools-form-element-wrapper no-placeholder>
-              <paper-checkbox checked="{{intervention.submitted_to_prc}}"
-                              disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
-                              hidden$="[[!_isNotSSFA(intervention.document_type)]]">
+              <paper-checkbox
+                checked="{{intervention.submitted_to_prc}}"
+                disabled$="[[_isSubmittedToPrcCheckReadonly(permissions.edit.prc_review_attachment, _lockSubmitToPrc)]]"
+                hidden$="[[!_isNotSSFA(intervention.document_type)]]"
+              >
                 Submitted to PRC?
               </paper-checkbox>
             </etools-form-element-wrapper>
@@ -111,40 +117,46 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           <div class="row-h flex-c row-second-bg">
             <div class="col col-3">
               <!-- Submission Date to PRC -->
-              <datepicker-lite id="submissionDatePrcField"
-                                label="Submission Date to PRC"
-                                value="{{intervention.submission_date_prc}}"
-                                readonly$="[[!permissions.edit.submission_date_prc]]"
-                                required$="[[intervention.prc_review_attachment]]"
-                                selected-date-display-format="D MMM YYYY"
-                                auto-validate>
+              <datepicker-lite
+                id="submissionDatePrcField"
+                label="Submission Date to PRC"
+                value="{{intervention.submission_date_prc}}"
+                readonly$="[[!permissions.edit.submission_date_prc]]"
+                required$="[[intervention.prc_review_attachment]]"
+                selected-date-display-format="D MMM YYYY"
+                auto-validate
+              >
               </datepicker-lite>
             </div>
             <div class="col col-3">
               <!-- Review Date by PRC -->
-              <datepicker-lite id="reviewDatePrcField"
-                                label="Review Date by PRC"
-                                value="{{intervention.review_date_prc}}"
-                                readonly$="[[!permissions.edit.review_date_prc]]"
-                                required$="[[intervention.prc_review_attachment]]"
-                                selected-date-display-format="D MMM YYYY"
-                                auto-validate>
+              <datepicker-lite
+                id="reviewDatePrcField"
+                label="Review Date by PRC"
+                value="{{intervention.review_date_prc}}"
+                readonly$="[[!permissions.edit.review_date_prc]]"
+                required$="[[intervention.prc_review_attachment]]"
+                selected-date-display-format="D MMM YYYY"
+                auto-validate
+              >
               </datepicker-lite>
             </div>
             <div class="col col-6">
               <!-- PRC Review Document -->
               <etools-upload
-                  id="reviewDocUpload"
-                  label="PRC Review Document"
-                  accept=".doc,.docx,.pdf,.jpg,.png"
-                  file-url="[[intervention.prc_review_attachment]]"
-                  upload-endpoint="[[uploadEndpoint]]"
-                  on-upload-finished="_prcRevDocUploadFinished"
-                  readonly$="[[!permissions.edit.prc_review_attachment]]"
-                  show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, permissions.edit.prc_review_attachment)]]"
-                  on-delete-file="_prcRevDocDelete"
-                  on-upload-started="_onUploadStarted"
-                  on-change-unsaved-file="_onChangeUnsavedFile">
+                id="reviewDocUpload"
+                label="PRC Review Document"
+                accept=".doc,.docx,.pdf,.jpg,.png"
+                file-url="[[intervention.prc_review_attachment]]"
+                upload-endpoint="[[uploadEndpoint]]"
+                on-upload-finished="_prcRevDocUploadFinished"
+                readonly$="[[!permissions.edit.prc_review_attachment]]"
+                show-delete-btn="[[showPrcReviewDeleteBtn(intervention.status, 
+                                    permissions.edit.prc_review_attachment)]]"
+                on-delete-file="_prcRevDocDelete"
+                on-upload-started="_onUploadStarted"
+                on-change-unsaved-file="_onChangeUnsavedFile"
+              >
               </etools-upload>
             </div>
           </div>
@@ -152,29 +164,33 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By Partner Authorized Officer -->
-            <etools-dropdown id="signedByAuthorizedOfficer"
-                            label="Signed By Partner Authorized Officer"
-                            placeholder="&#8212;"
-                            options="[[agreementAuthorizedOfficers]]"
-                            selected="{{intervention.partner_authorized_officer_signatory}}"
-                            readonly$="[[!permissions.edit.partner_authorized_officer_signatory]]"
-                            required$="[[permissions.required.partner_authorized_officer_signatory]]"
-                            auto-validate
-                            error-message="Please select Partner Authorized Officer">
+            <etools-dropdown
+              id="signedByAuthorizedOfficer"
+              label="Signed By Partner Authorized Officer"
+              placeholder="&#8212;"
+              options="[[agreementAuthorizedOfficers]]"
+              selected="{{intervention.partner_authorized_officer_signatory}}"
+              readonly$="[[!permissions.edit.partner_authorized_officer_signatory]]"
+              required$="[[permissions.required.partner_authorized_officer_signatory]]"
+              auto-validate
+              error-message="Please select Partner Authorized Officer"
+            >
             </etools-dropdown>
           </div>
           <div class="col col-3">
             <!-- Signed by Partner Date -->
-            <datepicker-lite id="signedByPartnerDateField"
-                              label="Signed by Partner Date"
-                              value="{{intervention.signed_by_partner_date}}"
-                              readonly="[[!permissions.edit.signed_by_partner_date]]"
-                              required$="[[permissions.required.signed_by_partner_date]]"
-                              auto-validate
-                              error-message="Date is required"
-                              max-date-error-msg="Date can not be in the future"
-                              max-date="[[getCurrentDate()]]"
-                              selected-date-display-format="D MMM YYYY">
+            <datepicker-lite
+              id="signedByPartnerDateField"
+              label="Signed by Partner Date"
+              value="{{intervention.signed_by_partner_date}}"
+              readonly="[[!permissions.edit.signed_by_partner_date]]"
+              required$="[[permissions.required.signed_by_partner_date]]"
+              auto-validate
+              error-message="Date is required"
+              max-date-error-msg="Date can not be in the future"
+              max-date="[[getCurrentDate()]]"
+              selected-date-display-format="D MMM YYYY"
+            >
             </datepicker-lite>
           </div>
         </div>
@@ -187,85 +203,100 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           </div>
           <div class="col col-3">
             <!-- Signed by UNICEF Date -->
-            <datepicker-lite id="signedByUnicefDateField"
-                              label="Signed by UNICEF Date"
-                              value="{{intervention.signed_by_unicef_date}}"
-                              readonly="[[!permissions.edit.signed_by_unicef_date]]"
-                              required$="[[permissions.required.signed_by_unicef_date]]"
-                              auto-validate
-                              error-message="Date is required"
-                              max-date-error-msg="Date can not be in the future"
-                              max-date="[[getCurrentDate()]]"
-                              selected-date-display-format="D MMM YYYY">
+            <datepicker-lite
+              id="signedByUnicefDateField"
+              label="Signed by UNICEF Date"
+              value="{{intervention.signed_by_unicef_date}}"
+              readonly="[[!permissions.edit.signed_by_unicef_date]]"
+              required$="[[permissions.required.signed_by_unicef_date]]"
+              auto-validate
+              error-message="Date is required"
+              max-date-error-msg="Date can not be in the future"
+              max-date="[[getCurrentDate()]]"
+              selected-date-display-format="D MMM YYYY"
+            >
             </datepicker-lite>
           </div>
         </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed by UNICEF -->
-            <etools-dropdown id="signedByUnicef"
-                            label="Signed by UNICEF"
-                            placeholder="&#8212;"
-                            options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
-                            option-value="id"
-                            option-label="name"
-                            selected="{{intervention.unicef_signatory}}"
-                            readonly$="[[!permissions.edit.unicef_signatory]]"
-                            auto-validate
-                            error-message="Please select UNICEF user">
+            <etools-dropdown
+              id="signedByUnicef"
+              label="Signed by UNICEF"
+              placeholder="&#8212;"
+              options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
+              option-value="id"
+              option-label="name"
+              selected="{{intervention.unicef_signatory}}"
+              readonly$="[[!permissions.edit.unicef_signatory]]"
+              auto-validate
+              error-message="Please select UNICEF user"
+            >
             </etools-dropdown>
           </div>
         </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed PD/SSFA -->
-            <etools-upload id="signedIntervFile"
-                          label="Signed PD/SSFA"
-                          accept=".doc,.docx,.pdf,.jpg,.png"
-                          file-url="[[intervention.signed_pd_attachment]]"
-                          upload-endpoint="[[uploadEndpoint]]"
-                          on-upload-finished="_signedPDUploadFinished"
-                          show-delete-btn="[[showSignedPDDeleteBtn(intervention.status, permissions.edit.signed_pd_attachment)]]"
-                          on-delete-file="_signedPDDocDelete"
-                          auto-validate
-                          readonly$="[[!permissions.edit.signed_pd_attachment]]"
-                          required$="[[permissions.required.signed_pd_attachment]]"
-                          error-message="Please select Signed PD/SSFA document"
-                          on-upload-started="_onUploadStarted"
-                          on-change-unsaved-file="_onChangeUnsavedFile">
+            <etools-upload
+              id="signedIntervFile"
+              label="Signed PD/SSFA"
+              accept=".doc,.docx,.pdf,.jpg,.png"
+              file-url="[[intervention.signed_pd_attachment]]"
+              upload-endpoint="[[uploadEndpoint]]"
+              on-upload-finished="_signedPDUploadFinished"
+              show-delete-btn="[[showSignedPDDeleteBtn(intervention.status, permissions.edit.signed_pd_attachment)]]"
+              on-delete-file="_signedPDDocDelete"
+              auto-validate
+              readonly$="[[!permissions.edit.signed_pd_attachment]]"
+              required$="[[permissions.required.signed_pd_attachment]]"
+              error-message="Please select Signed PD/SSFA document"
+              on-upload-started="_onUploadStarted"
+              on-change-unsaved-file="_onChangeUnsavedFile"
+            >
             </etools-upload>
           </div>
           <template is="dom-if" if="[[_showDaysToSignedFields(intervention.status)]]">
             <div class="col col-3">
-              <paper-input label="Days from Submission to Signed"
-                          value="[[intervention.days_from_submission_to_signed]]"
-                          placeholder="&#8212;" readonly>
+              <paper-input
+                label="Days from Submission to Signed"
+                value="[[intervention.days_from_submission_to_signed]]"
+                placeholder="&#8212;"
+                readonly
+              >
               </paper-input>
             </div>
             <div class="col col-3">
-              <paper-input label="Days from Review to Signed"
-                          value="[[intervention.days_from_review_to_signed]]"
-                          placeholder="&#8212;" readonly>
+              <paper-input
+                label="Days from Review to Signed"
+                value="[[intervention.days_from_review_to_signed]]"
+                placeholder="&#8212;"
+                readonly
+              >
               </paper-input>
             </div>
           </template>
-
         </div>
       </etools-content-panel>
 
       <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
-        <pd-amendments class="content-section"
-                      intervention-document-type="[[intervention.document_type]]"
-                      intervention-id="[[intervention.id]]"
-                      amendments="{{intervention.amendments}}"
-                      edit-mode="[[permissions.edit.amendments]]">
+        <pd-amendments
+          class="content-section"
+          intervention-document-type="[[intervention.document_type]]"
+          intervention-id="[[intervention.id]]"
+          amendments="{{intervention.amendments}}"
+          edit-mode="[[permissions.edit.amendments]]"
+        >
         </pd-amendments>
       </template>
 
-      <fund-reservations class="content-section"
-                        intervention="[[intervention]]"
-                        edit-mode="[[permissions.edit.frs]]"
-                        on-frs-update="_handleFrsUpdate">
+      <fund-reservations
+        class="content-section"
+        intervention="[[intervention]]"
+        edit-mode="[[permissions.edit.frs]]"
+        on-frs-update="_handleFrsUpdate"
+      >
       </fund-reservations>
     `;
   }
@@ -289,7 +320,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   agreementAuthorizedOfficers!: [];
 
   @property({type: Boolean})
-  _lockSubmitToPrc: boolean = false;
+  _lockSubmitToPrc = false;
 
   @property({type: String})
   partnerDateValidatorErrorMessage!: string;
@@ -323,7 +354,10 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
      * Disable loading message for review and sign tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'interv-page'
+    });
     this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
     fireEvent(this, 'tab-content-attached');
   }
@@ -352,8 +386,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   }
 
   _isDraft(status: string) {
-    return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-      status === '';
+    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === '';
   }
 
   _interventionChanged(intervention: Intervention) {
@@ -387,8 +420,13 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
 
   validate() {
     let valid = true;
-    const fieldSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField',
-      '#signedByUnicefDateField', '#signedIntervFile', '#submissionDateField'];
+    const fieldSelectors = [
+      '#signedByAuthorizedOfficer',
+      '#signedByPartnerDateField',
+      '#signedByUnicefDateField',
+      '#signedIntervFile',
+      '#submissionDateField'
+    ];
     if (this.intervention.prc_review_attachment) {
       const dateFields = ['#submissionDatePrcField', '#reviewDatePrcField'];
       fieldSelectors.push(...dateFields);
@@ -401,7 +439,6 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
     });
     return valid;
   }
-
 
   /**
    * intervention.submitted_to_prc is set only on bk if submission_date_prc, review_date_prc are filled in
@@ -463,8 +500,7 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
       return;
     }
     // this functionality is available only after pd is saved and in draft status
-    if (this.intervention &&
-      this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase()) {
+    if (this.intervention && this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase()) {
       setTimeout(() => {
         // delay micro task execution; set to make sure _signedDocChangedForDraft will run on page load
         if (signedDocument) {
@@ -472,7 +508,9 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
           fireEvent(this, 'signed-doc-change-for-draft', {docSelected: true});
         } else {
           // there is no signedDocument
-          fireEvent(this, 'signed-doc-change-for-draft', {docSelected: false});
+          fireEvent(this, 'signed-doc-change-for-draft', {
+            docSelected: false
+          });
         }
       }, 0);
     }
@@ -518,7 +556,6 @@ class InterventionReviewAndSign extends connect(store)(CommonMixin(
   getCurrentDate() {
     return new Date();
   }
-
 }
 
 window.customElements.define('intervention-review-and-sign', InterventionReviewAndSign);

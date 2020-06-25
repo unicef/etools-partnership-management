@@ -9,9 +9,7 @@ import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
-
 class HactEditDialog extends EndpointsMixin(PolymerElement) {
-
   static get template() {
     return html`
       ${gridLayoutStyles}
@@ -21,11 +19,11 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
           --paper-input-container-label: {
             font-size: 12px;
             text-align: center;
-          };
+          }
           --paper-input-container-input-webkit-spinner: {
             -webkit-appearance: none;
             margin: 0;
-          };
+          }
         }
 
         .heading {
@@ -57,13 +55,15 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
         }
       </style>
 
-      <etools-dialog id="editPartnersDialog"
-                    size="lg"
-                    dialog-title="Edit HACT Assurance Plan"
-                    ok-btn-text="Save"
-                    keep-dialog-open
-                    spinner-text="Saving..."
-                    on-confirm-btn-clicked="_saveChanges">
+      <etools-dialog
+        id="editPartnersDialog"
+        size="lg"
+        dialog-title="Edit HACT Assurance Plan"
+        ok-btn-text="Save"
+        keep-dialog-open
+        spinner-text="Saving..."
+        on-confirm-btn-clicked="_saveChanges"
+      >
         <div class="layout-vertical">
           <div class="layout-horizontal">
             <div class="partner-name">
@@ -72,35 +72,42 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
           </div>
 
           <div class="avoid-scroll layout-horizontal space-between">
-
             <template is="dom-if" if="{{isGovPartner}}">
               <div class="layout-vertical col-3">
                 <div class="heading">Planned Programmatic Visits</div>
                 <div class="layout-horizontal space-around">
-                  <paper-input type="number"
-                                allowed-pattern="[0-9]"
-                                auto-validate
-                                error-message="Invalid"
-                                value="{{editableValues.planned_visits.programmatic_q1}}"
-                                label="Q1"></paper-input>
-                  <paper-input value="{{editableValues.planned_visits.programmatic_q2}}"
-                                type="number"
-                                allowed-pattern="[0-9]"
-                                auto-validate
-                                error-message="Invalid"
-                                label="Q2"></paper-input>
-                  <paper-input value="{{editableValues.planned_visits.programmatic_q3}}"
-                                type="number"
-                                allowed-pattern="[0-9]"
-                                auto-validate
-                                error-message="Invalid"
-                                label="Q3"></paper-input>
-                  <paper-input type="number"
-                                allowed-pattern="[0-9]"
-                                auto-validate
-                                error-message="Invalid"
-                                value="{{editableValues.planned_visits.programmatic_q4}}"
-                                label="Q4"></paper-input>
+                  <paper-input
+                    type="number"
+                    allowed-pattern="[0-9]"
+                    auto-validate
+                    error-message="Invalid"
+                    value="{{editableValues.planned_visits.programmatic_q1}}"
+                    label="Q1"
+                  ></paper-input>
+                  <paper-input
+                    value="{{editableValues.planned_visits.programmatic_q2}}"
+                    type="number"
+                    allowed-pattern="[0-9]"
+                    auto-validate
+                    error-message="Invalid"
+                    label="Q2"
+                  ></paper-input>
+                  <paper-input
+                    value="{{editableValues.planned_visits.programmatic_q3}}"
+                    type="number"
+                    allowed-pattern="[0-9]"
+                    auto-validate
+                    error-message="Invalid"
+                    label="Q3"
+                  ></paper-input>
+                  <paper-input
+                    type="number"
+                    allowed-pattern="[0-9]"
+                    auto-validate
+                    error-message="Invalid"
+                    value="{{editableValues.planned_visits.programmatic_q4}}"
+                    label="Q4"
+                  ></paper-input>
                 </div>
               </div>
             </template>
@@ -108,9 +115,11 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
             <div class="layout-vertical col-2">
               <div class="heading">Follow-up Spot Checks</div>
               <div class="layout-horizontal space-around">
-                <paper-input value="{{editableValues.planned_engagement.spot_check_follow_up}}"
-                              type="number"
-                              allowed-pattern="[0-9]">
+                <paper-input
+                  value="{{editableValues.planned_engagement.spot_check_follow_up}}"
+                  type="number"
+                  allowed-pattern="[0-9]"
+                >
                 </paper-input>
               </div>
             </div>
@@ -118,39 +127,46 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
             <div class="layout-vertical col-3">
               <div class="heading">Planned Spot Checks</div>
               <div class="layout-horizontal space-around">
-                <paper-input type="number"
-                            allowed-pattern="[0-9]"
-                            value="{{editableValues.planned_engagement.spot_check_planned_q1}}"
-                            label="Q1"></paper-input>
-                <paper-input type="number"
-                            allowed-pattern="[0-9]"
-                            value="{{editableValues.planned_engagement.spot_check_planned_q2}}"
-                            label="Q2"></paper-input>
-                <paper-input type="number"
-                            allowed-pattern="[0-9]"
-                            value="{{editableValues.planned_engagement.spot_check_planned_q3}}"
-                            label="Q3"></paper-input>
-                <paper-input type="number"
-                            allowed-pattern="[0-9]"
-                            value="{{editableValues.planned_engagement.spot_check_planned_q4}}"
-                            label="Q4"></paper-input>
+                <paper-input
+                  type="number"
+                  allowed-pattern="[0-9]"
+                  value="{{editableValues.planned_engagement.spot_check_planned_q1}}"
+                  label="Q1"
+                ></paper-input>
+                <paper-input
+                  type="number"
+                  allowed-pattern="[0-9]"
+                  value="{{editableValues.planned_engagement.spot_check_planned_q2}}"
+                  label="Q2"
+                ></paper-input>
+                <paper-input
+                  type="number"
+                  allowed-pattern="[0-9]"
+                  value="{{editableValues.planned_engagement.spot_check_planned_q3}}"
+                  label="Q3"
+                ></paper-input>
+                <paper-input
+                  type="number"
+                  allowed-pattern="[0-9]"
+                  value="{{editableValues.planned_engagement.spot_check_planned_q4}}"
+                  label="Q4"
+                ></paper-input>
               </div>
             </div>
 
             <div class="layout-veritcal col-4">
               <div class="heading">Required Audits</div>
-              <etools-dropdown-multi placeholder="&#8212;"
-                                    selected-values="{{selectedAudits}}"
-                                    options="[[auditOptions]]"
-                                    trigger-value-change-event
-                                    on-etools-selected-items-changed="_auditsChanged">
+              <etools-dropdown-multi
+                placeholder="&#8212;"
+                selected-values="{{selectedAudits}}"
+                options="[[auditOptions]]"
+                trigger-value-change-event
+                on-etools-selected-items-changed="_auditsChanged"
+              >
               </etools-dropdown-multi>
             </div>
-
           </div>
-
         </div>
-
       </etools-dialog>
     `;
   }
@@ -174,7 +190,8 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     {
       label: 'Scheduled Audit',
       value: 'Scheduled Audit'
-    }, {
+    },
+    {
       label: 'Special Audit',
       value: 'Special Audit'
     }
@@ -202,24 +219,24 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     if (!partner) {
       return;
     }
-    this.set('isGovPartner', this.partner.partner_type_slug === "Gov");
+    this.set('isGovPartner', this.partner.partner_type_slug === 'Gov');
 
-    let editableValues = {planned_engagement: {}, planned_visits: {}};
+    const editableValues = {planned_engagement: {}, planned_visits: {}};
     editableValues.planned_engagement = clone(partner.planned_engagement);
 
     if (this.isGovPartner) {
       const planned = clone(partner.hact_values.programmatic_visits.planned);
       const planned_visits = {
-        'programmatic_q1': planned.q1,
-        'programmatic_q2': planned.q2,
-        'programmatic_q3': planned.q3,
-        'programmatic_q4': planned.q4
+        programmatic_q1: planned.q1,
+        programmatic_q2: planned.q2,
+        programmatic_q3: planned.q3,
+        programmatic_q4: planned.q4
       };
       editableValues.planned_visits = planned_visits;
     }
 
     const hasAudit = (auditType: any) => partner.planned_engagement[auditType.prop];
-    //const selectedAudits = compose(map(prop('label')), filter(hasAudit))(this.auditMap);
+    // const selectedAudits = compose(map(prop('label')), filter(hasAudit))(this.auditMap);
     const selectedAudits = this.auditMap.filter(hasAudit).map((a: any) => a.label);
     this.setProperties({editableValues, selectedAudits});
   }
@@ -242,7 +259,11 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
   }
 
   _closeDialog() {
-    this.setProperties({editableValues: null, selectedAudits: null, partner: null});
+    this.setProperties({
+      editableValues: null,
+      selectedAudits: null,
+      partner: null
+    });
     (this.$.editPartnersDialog as EtoolsDialog).opened = false;
   }
 
@@ -254,8 +275,7 @@ class HactEditDialog extends EndpointsMixin(PolymerElement) {
     };
     sendRequest(params)
       .then((resp: any) => {
-        window.EtoolsPmpApp.DexieDb.partners.put(resp)
-          .then(() => this._handleSaveResponse(resp));
+        window.EtoolsPmpApp.DexieDb.partners.put(resp).then(() => this._handleSaveResponse(resp));
       })
       .catch((err: any) => {
         (this.$.editPartnersDialog as EtoolsDialog).stopSpinner();

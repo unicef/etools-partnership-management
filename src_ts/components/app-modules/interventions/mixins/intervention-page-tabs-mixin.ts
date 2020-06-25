@@ -11,7 +11,6 @@ import {property} from '@polymer/decorators';
  */
 function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class InterventionPageTabsClass extends EnvironmentFlagsMixin(baseClass as Constructor<PolymerElement>) {
-
     /**
      * Hidden tabs rules:
      *  - overview - on new intervention page
@@ -71,7 +70,6 @@ function InterventionPageTabsMixin<T extends Constructor<PolymerElement>>(baseCl
       });
       this.set('interventionTabs', tabs);
     }
-
   }
   return InterventionPageTabsClass;
 }

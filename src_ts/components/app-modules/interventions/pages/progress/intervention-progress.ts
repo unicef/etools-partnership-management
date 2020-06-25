@@ -26,14 +26,20 @@ import {fireEvent} from '../../../../utils/fire-custom-event.js';
 import {User, GenericObject} from '../../../../../typings/globals.types.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../store.js';
-import {dateDiff, dateIsBetween, isValidDate, dateIsAfter, EdgeAcceptableDateParse, datesAreEqual} from '../../../../utils/date-utils';
+import {
+  dateDiff,
+  dateIsBetween,
+  isValidDate,
+  dateIsAfter,
+  EdgeAcceptableDateParse,
+  datesAreEqual
+} from '../../../../utils/date-utils';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {frWarningsStyles} from '../../styles/fr-warnings-styles.js';
 declare const moment: any;
-
 
 /**
  * @polymer
@@ -45,17 +51,19 @@ declare const moment: any;
  * @appliesMixin UtilsMixin
  */
 class InterventionProgress extends connect(store)(
-  UtilsMixin(CommonMixin(EndpointsMixin(
-    // eslint-disable-next-line new-cap
-    EtoolsCurrency(PolymerElement))))) {
-
+  UtilsMixin(
+    CommonMixin(
+      EndpointsMixin(
+        // eslint-disable-next-line new-cap
+        EtoolsCurrency(PolymerElement)
+      )
+    )
+  )
+) {
   static get template() {
     return html`
-     ${pageCommonStyles} ${SharedStyles} ${gridLayoutStyles} ${listFilterStyles}
-     ${pmpCustomIcons} ${frWarningsStyles}
-      <style
-          include="data-table-styles paper-material-styles">
-
+      ${pageCommonStyles} ${SharedStyles} ${gridLayoutStyles} ${listFilterStyles} ${pmpCustomIcons} ${frWarningsStyles}
+      <style include="data-table-styles paper-material-styles">
         #progress-summary etools-progress-bar {
           margin-top: 16px;
         }
@@ -71,7 +79,7 @@ class InterventionProgress extends connect(store)(
         etools-data-table-row {
           --list-row-collapse-wrapper: {
             padding: 0;
-          };
+          }
         }
 
         .lower-result-status-date {
@@ -142,7 +150,6 @@ class InterventionProgress extends connect(store)(
           .progress-details {
             @apply --layout-start-justified;
           }
-
         }
 
         etools-info-tooltip etools-form-element-wrapper {
@@ -153,55 +160,66 @@ class InterventionProgress extends connect(store)(
       <div id="progress-summary" class="content-section paper-material" elevation="1">
         <div class="row-h">
           <div class="layout-vertical col-4">
-            <etools-form-element-wrapper label="PD Duration"
-                                          value="[[_getPdDuration(progress.start_date, progress.end_date)]]">
+            <etools-form-element-wrapper
+              label="PD Duration"
+              value="[[_getPdDuration(progress.start_date, progress.end_date)]]"
+            >
             </etools-form-element-wrapper>
             <etools-progress-bar value="[[pdProgress]]" no-decimals></etools-progress-bar>
           </div>
           <div class="layout-vertical col-5">
             <div class="layout-horizontal" id="cash-progress">
-
-              <etools-info-tooltip class="fr-nr-warn col-6"
+              <etools-info-tooltip
+                class="fr-nr-warn col-6"
                 custom-icon
                 icon-first
-                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement, progress)]]">
-
-                  <etools-form-element-wrapper slot="field"
-                     label="Cash Transfered"
-                    value="[[progress.disbursement_currency]] [[displayCurrencyAmount(progress.disbursement, '0', 0)]]">
-                  </etools-form-element-wrapper>
-                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                  <span slot="message">Disbursement amounts in multiple currencies.</span>
-
+                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement, progress)]]"
+              >
+                <etools-form-element-wrapper
+                  slot="field"
+                  label="Cash Transfered"
+                  value="[[progress.disbursement_currency]] [[displayCurrencyAmount(progress.disbursement, '0', 0)]]"
+                >
+                </etools-form-element-wrapper>
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                <span slot="message">Disbursement amounts in multiple currencies.</span>
               </etools-info-tooltip>
 
-              <etools-form-element-wrapper class="col-6" label="UNICEF Cash"
-                                            value="[[progress.unicef_budget_cash_currency]] [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]">
+              <etools-form-element-wrapper
+                class="col-6"
+                label="UNICEF Cash"
+                value="[[progress.unicef_budget_cash_currency]] 
+                        [[displayCurrencyAmount(progress.unicef_budget_cash, '0', 0)]]"
+              >
               </etools-form-element-wrapper>
             </div>
 
-            <etools-progress-bar value="[[progress.disbursement_percent]]" no-decimals
-              hidden$="[[multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]">
+            <etools-progress-bar
+              value="[[progress.disbursement_percent]]"
+              no-decimals
+              hidden$="[[multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]"
+            >
             </etools-progress-bar>
 
             <template is="dom-if" if="[[multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]">
-              <etools-info-tooltip class="currency-mismatch col-6"
+              <etools-info-tooltip
+                class="currency-mismatch col-6"
                 custom-icon
                 icon-first
-                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]">
-
-                  <span slot="field">N/A %</span>
-                  <iron-icon slot="custom-icon" icon="pmp-custom-icons:not-equal"></iron-icon>
-                  <span slot="message">FR currency does not match PD/SSFA currency.</span>
-
+                hide-tooltip="[[!multipleCurrenciesWereUsed(progress.disbursement_percent, progress)]]"
+              >
+                <span slot="field">N/A %</span>
+                <iron-icon slot="custom-icon" icon="pmp-custom-icons:not-equal"></iron-icon>
+                <span slot="message">FR currency does not match PD/SSFA currency.</span>
               </etools-info-tooltip>
             </template>
-
           </div>
           <div class="col col-3">
-            <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF"
-                                          value="[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]"
-                                          no-placeholder>
+            <etools-form-element-wrapper
+              label="Overall PD/SSFA Rating by UNICEF"
+              value="[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]"
+              no-placeholder
+            >
               <report-status status="[[latestAcceptedPr.review_overall_status]]" slot="prefix"></report-status>
             </etools-form-element-wrapper>
           </div>
@@ -218,15 +236,17 @@ class InterventionProgress extends connect(store)(
           </div>
 
           <!-- RAM indicators display -->
-          <etools-ram-indicators class="row-h" intervention-id="[[interventionId]]"
-                                  cp-id="[[item.external_cp_output_id]]"></etools-ram-indicators>
+          <etools-ram-indicators
+            class="row-h"
+            intervention-id="[[interventionId]]"
+            cp-id="[[item.external_cp_output_id]]"
+          ></etools-ram-indicators>
 
           <div class="row-h" hidden$="[[!_emptyList(item.ll_outputs)]]">
             <p>There are no PD Outputs or SSFA Expected Results.</p>
           </div>
 
           <div class="lower-results-table" hidden$="[[_emptyList(item.ll_outputs)]]">
-
             <etools-data-table-header id="listHeader" no-title>
               <etools-data-table-column class="col-9">
                 PD Outputs or SSFA Expected Results
@@ -259,21 +279,25 @@ class InterventionProgress extends connect(store)(
                           [[indicatorReport.reportable.blueprint.title]]
                         </div>
                         <div class="col-data col-3 progress-bar">
-                          <etools-progress-bar class="report-progress-bar"
-                                                value="[[getProgressPercentage(indicatorReport.reportable.total_against_target, indicatorReport.reportable.blueprint.display_type)]]">
+                          <etools-progress-bar
+                            class="report-progress-bar"
+                            value="[[getProgressPercentage(indicatorReport.reportable.total_against_target, 
+                                        indicatorReport.reportable.blueprint.display_type)]]"
+                          >
                           </etools-progress-bar>
                         </div>
                       </div>
                       <div class="row-h progress-details">
                         <div class="layout-vertical col-5 target-details">
                           <indicator-report-target
-                              class="print-inline"
-                              display-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                              target="[[indicatorReport.reportable.target]]"
-                              cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                            class="print-inline"
+                            display-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                            target="[[indicatorReport.reportable.target]]"
+                            cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                               indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
-                              achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
-                              indicatorReport.total.v, indicatorReport.total.c)]]"></indicator-report-target>
+                            achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.total.v, indicatorReport.total.c)]]"
+                          ></indicator-report-target>
                         </div>
                       </div>
                     </template>
@@ -281,9 +305,7 @@ class InterventionProgress extends connect(store)(
                 </div>
               </etools-data-table-row>
             </template>
-
           </div>
-
         </template>
       </etools-content-panel>
     `;
@@ -292,7 +314,10 @@ class InterventionProgress extends connect(store)(
   @property({type: Number})
   interventionId!: number;
 
-  @property({type: Number, computed: '_getTimeProgress(progress.start_date, progress.end_date)'})
+  @property({
+    type: Number,
+    computed: '_getTimeProgress(progress.start_date, progress.end_date)'
+  })
   pdProgress!: number;
 
   @property({type: Object, observer: '_progressDataObjChanged'})
@@ -303,7 +328,6 @@ class InterventionProgress extends connect(store)(
 
   @property({type: Array})
   indicatorReports: GenericObject[] = [];
-
 
   static get observers() {
     return [
@@ -322,7 +346,10 @@ class InterventionProgress extends connect(store)(
      * Disable loading message for progress tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'interv-page'
+    });
     fireEvent(this, 'tab-content-attached');
   }
 
@@ -330,29 +357,36 @@ class InterventionProgress extends connect(store)(
     if (!progress || disbursementOrPercent === undefined) {
       return false; // hide icon until request data is received
     }
-    return (Number(disbursementOrPercent) === -1 || disbursementOrPercent === 'N/A');
+    return Number(disbursementOrPercent) === -1 || disbursementOrPercent === 'N/A';
   }
 
   _requestProgressData(id: string, prpCountries: any, currentUser: User) {
     if (!id || isEmptyObject(prpCountries) || isEmptyObject(currentUser)) {
       return;
     }
-    const self = this;
 
-    fireEvent(self, 'global-loading', {
+    fireEvent(this, 'global-loading', {
       message: 'Loading...',
       active: true,
       loadingSource: 'pd-progress'
     });
 
-    this.fireRequest('interventionProgress', {pdId: id}).then(function(response: any) {
-      self.set('progress', response);
-      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
-    }).catch(function(error: any) {
-      logError('PD/SSFA progress request failed!', 'intervention-progress', error);
-      parseRequestErrorsAndShowAsToastMsgs(error, self);
-      fireEvent(self, 'global-loading', {active: false, loadingSource: 'pd-progress'});
-    });
+    this.fireRequest('interventionProgress', {pdId: id})
+      .then((response: any) => {
+        this.set('progress', response);
+        fireEvent(this, 'global-loading', {
+          active: false,
+          loadingSource: 'pd-progress'
+        });
+      })
+      .catch((error: any) => {
+        logError('PD/SSFA progress request failed!', 'intervention-progress', error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+        fireEvent(this, 'global-loading', {
+          active: false,
+          loadingSource: 'pd-progress'
+        });
+      });
   }
 
   _emptyList(dataSet: any) {
@@ -360,7 +394,7 @@ class InterventionProgress extends connect(store)(
   }
 
   _computeLatestAcceptedPr(progress: any) {
-    return (progress && progress.latest_accepted_pr) ? progress.latest_accepted_pr : null;
+    return progress && progress.latest_accepted_pr ? progress.latest_accepted_pr : null;
   }
 
   _progressDataObjChanged(progress: any) {
@@ -368,12 +402,11 @@ class InterventionProgress extends connect(store)(
       this.set('indicatorReports', []);
       return;
     }
-    const self = this;
     if (!this._emptyList(progress.details.cp_outputs)) {
-      progress.details.cp_outputs.forEach(function(result: any) {
-        if (!self._emptyList(result.ll_outputs)) {
-          result.ll_outputs.forEach(function(lowerResult: any) {
-            self._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
+      progress.details.cp_outputs.forEach((result: any) => {
+        if (!this._emptyList(result.ll_outputs)) {
+          result.ll_outputs.forEach((lowerResult: any) => {
+            this._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
           });
         }
       });
@@ -388,35 +421,37 @@ class InterventionProgress extends connect(store)(
     if (this._emptyList(progressIndicatorReports)) {
       return;
     }
-    indicatorReportData.reports = progressIndicatorReports.filter(function(report: any) {
+    indicatorReportData.reports = progressIndicatorReports.filter(function (report: any) {
       return report.reportable_object_id === lowerResultId;
     });
     this.push('indicatorReports', indicatorReportData);
   }
 
   _countIndicatorReports(lowerResultId: any) {
-    return !this._emptyList(this.indicatorReports) &&
-      !!this.indicatorReports.find(function(indReports: any) {
+    return (
+      !this._emptyList(this.indicatorReports) &&
+      !!this.indicatorReports.find(function (indReports: any) {
         return indReports.lowerResultId === lowerResultId;
-      });
+      })
+    );
   }
 
   _getIndicatorsReports(lowerResultId: any) {
     if (this._emptyList(this.indicatorReports)) {
       return [];
     }
-    const indicatorsReports = this.indicatorReports.filter(function(indReports: any) {
+    const indicatorsReports = this.indicatorReports.filter(function (indReports: any) {
       return indReports.lowerResultId === lowerResultId;
     });
     return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
   }
 
   /**
-    * Assuming all indicators reports are already sort by date desc
-    */
+   * Assuming all indicators reports are already sort by date desc
+   */
   _getLatestIndicatorReport(lowerResultId: any) {
     if (!this._emptyList(this.indicatorReports)) {
-      const indReports = this.indicatorReports.find(function(indReports: any) {
+      const indReports = this.indicatorReports.find(function (indReports: any) {
         return indReports.lowerResultId === lowerResultId;
       });
       if (indReports && indReports.reports[0]) {
@@ -466,22 +501,20 @@ class InterventionProgress extends connect(store)(
       if (dateIsBetween(startDt, endDt, today)) {
         const intervalTotalDays = dateDiff(startDt, endDt);
         const intervalDaysCompleted = dateDiff(startDt, today);
-        return intervalDaysCompleted * 100 / intervalTotalDays;
+        return (intervalDaysCompleted * 100) / intervalTotalDays;
       }
     } catch (err) {
       logWarn('Time progress compute error', 'intervention-progress', err);
     }
     // if end date is valid and is past date or today's date, progress should be 100%
-    if (isValidDate(endDt) &&
-      (dateIsAfter(today, endDt) || datesAreEqual(today, endDt))) {
+    if (isValidDate(endDt) && (dateIsAfter(today, endDt) || datesAreEqual(today, endDt))) {
       return 100;
     }
     return 0;
   }
 
-
   _getOverallPdStatusDate(date: string) {
-    return date ? ('(' + this._convertToDisplayFormat(date) + ')') : '';
+    return date ? '(' + this._convertToDisplayFormat(date) + ')' : '';
   }
 
   _convertToDisplayFormat(strDt: string) {
@@ -495,7 +528,6 @@ class InterventionProgress extends connect(store)(
     }
     return progress_percentage * 100;
   }
-
 }
 
 window.customElements.define('intervention-progress', InterventionProgress);

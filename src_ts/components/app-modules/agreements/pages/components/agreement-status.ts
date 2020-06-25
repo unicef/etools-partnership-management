@@ -14,22 +14,23 @@ import {AgreementTermination} from '../../data/agreement-termination';
  * @customElement
  * @appliesMixin EtoolsStatusCommonMixin
  */
-class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
-
+class AgreementStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   static get template() {
     return html`
-        <style>
-          :host {
-            width: 100%;
-          }
-        </style>
-        <etools-status statuses="[[possibleStatuses]]"
-                      actions="[[possibleActions]]"
-                      on-agreement-suspend-event="_setStatusSuspended"
-                      on-agreement-terminate-event="_openTerminationDialog"
-                      on-agreement-unsuspend-event="_unsuspendAgreement"
-                      on-agreement-delete-event="_openDeleteConfirmation">
-        </etools-status>
+      <style>
+        :host {
+          width: 100%;
+        }
+      </style>
+      <etools-status
+        statuses="[[possibleStatuses]]"
+        actions="[[possibleActions]]"
+        on-agreement-suspend-event="_setStatusSuspended"
+        on-agreement-terminate-event="_openTerminationDialog"
+        on-agreement-unsuspend-event="_unsuspendAgreement"
+        on-agreement-delete-event="_openDeleteConfirmation"
+      >
+      </etools-status>
     `;
   }
 
@@ -37,10 +38,10 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
   agreementId: number | null = null;
 
   @property({type: String})
-  agreementType: string = '';
+  agreementType = '';
 
   @property({type: Boolean})
-  newAgreement: boolean = false;
+  newAgreement = false;
 
   @property({type: Array})
   possibleStatuses: any = [];
@@ -73,18 +74,17 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
       label: 'Delete',
       hidden: true,
       event: 'agreement-delete-event'
-    }];
+    }
+  ];
 
   @property({type: String})
-  deleteWarningMessage: string = 'Are you sure you want to delete this agreement?';
+  deleteWarningMessage = 'Are you sure you want to delete this agreement?';
 
   @property({type: Object})
   _terminationDialog!: AgreementTermination;
 
   static get observers() {
-    return [
-      '_handleStatusChange(status, agreementId)'
-    ];
+    return ['_handleStatusChange(status, agreementId)'];
   }
 
   ready() {
@@ -199,20 +199,12 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
 
     switch (status) {
       case CONSTANTS.STATUSES.Draft.toLowerCase():
-        availableStatuses = [
-          CONSTANTS.STATUSES.Draft,
-          CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
-        ];
+        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
         activeStatus = CONSTANTS.STATUSES.Draft;
         break;
 
       case CONSTANTS.STATUSES.Signed.toLowerCase():
-        availableStatuses = [
-          CONSTANTS.STATUSES.Draft,
-          CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
-        ];
+        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
         activeStatus = CONSTANTS.STATUSES.Signed;
         break;
 
@@ -237,19 +229,11 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         break;
 
       case CONSTANTS.STATUSES.Ended.toLowerCase():
-        availableStatuses = [
-          CONSTANTS.STATUSES.Draft,
-          CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
-        ];
+        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
         activeStatus = CONSTANTS.STATUSES.Ended;
         break;
       default:
-        availableStatuses = [
-          CONSTANTS.STATUSES.Draft,
-          CONSTANTS.STATUSES.Signed,
-          CONSTANTS.STATUSES.Ended
-        ];
+        availableStatuses = [CONSTANTS.STATUSES.Draft, CONSTANTS.STATUSES.Signed, CONSTANTS.STATUSES.Ended];
         activeStatus = '';
         break;
     }
@@ -289,8 +273,9 @@ class AgreementStatus extends (EtoolsStatusCommonMixin(PolymerElement)) {
         return false;
       }
     }
-    if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-    CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
+    if (
+      [CONSTANTS.STATUSES.Suspended.toLowerCase(), CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1
+    ) {
       if (this.status !== CONSTANTS.STATUSES.Signed.toLowerCase()) {
         // prevent suspending or terminating anything other than signed agreement
         return false;

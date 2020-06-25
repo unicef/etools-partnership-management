@@ -19,15 +19,13 @@ import {property} from '@polymer/decorators';
  */
 function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
-
     @property({type: Boolean})
-    _saveActionInProgress: boolean = false;
+    _saveActionInProgress = false;
 
     @property({type: String})
-    profileSaveLoadingMsgSource: string = 'profile-modal';
+    profileSaveLoadingMsgSource = 'profile-modal';
 
     protected _dispatchSaveProfileRequest(profile: any) {
-      const self = this;
       const config = {
         // @ts-ignore *defined in component
         endpoint: this.getEndpoint(this.endpointName),
@@ -35,12 +33,14 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
         body: profile
       };
 
-      sendRequest(config).then(function(resp: any) {
-        self._handleResponse(resp);
-      }).catch(function(error: any) {
-        parseRequestErrorsAndShowAsToastMsgs(error, self);
-        self._hideProfileSaveLoadingMsg();
-      });
+      sendRequest(config)
+        .then((resp: any) => {
+          this._handleResponse(resp);
+        })
+        .catch((error: any) => {
+          parseRequestErrorsAndShowAsToastMsgs(error, this);
+          this._hideProfileSaveLoadingMsg();
+        });
     }
 
     public saveProfile(profile: any) {
@@ -76,7 +76,6 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
         this.set('_saveActionInProgress', false);
       }
     }
-
   }
 
   return ProfileOperationsClass;

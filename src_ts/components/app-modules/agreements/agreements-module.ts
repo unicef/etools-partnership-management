@@ -35,12 +35,9 @@ import {property} from '@polymer/decorators';
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin EndpointsMixin
  */
-const AgreementsModuleRequiredMixins =
-  ScrollControlMixin(
-    ModuleRoutingMixin(
-      ModuleMainElCommonFunctionalityMixin(
-        EndpointsMixin(
-          PolymerElement))));
+const AgreementsModuleRequiredMixins = ScrollControlMixin(
+  ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(EndpointsMixin(PolymerElement)))
+);
 
 /**
  * @polymer
@@ -48,7 +45,6 @@ const AgreementsModuleRequiredMixins =
  * @appliesMixin AgreementsModuleRequiredMixins
  */
 class AgreementsModule extends AgreementsModuleRequiredMixins {
-
   public static get template() {
     // language=HTML
     return html`
@@ -59,16 +55,13 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
         }
       </style>
       <app-route
-          route="{{route}}"
-          pattern="/list"
-          query-params="{{listPageQueryParams}}"
-          active="{{listActive}}"></app-route>
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"
+      ></app-route>
 
-      <app-route
-          route="{{route}}"
-          pattern="/:id/details"
-          active="{{tabsActive}}"
-          data="{{routeData}}"></app-route>
+      <app-route route="{{route}}" pattern="/:id/details" active="{{tabsActive}}" data="{{routeData}}"></app-route>
 
       <page-content-header with-tabs-visible="[[_showPageTabs(activePage)]]">
         <div slot="page-title">
@@ -98,80 +91,91 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
         </div>
 
         <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-          <etools-tabs slot="tabs"
-                      tabs="[[agreementsTabs]]"
-                      active-tab="details"
-                      on-iron-select="_handleTabSelectAction">
+          <etools-tabs
+            slot="tabs"
+            tabs="[[agreementsTabs]]"
+            active-tab="details"
+            on-iron-select="_handleTabSelectAction"
+          >
           </etools-tabs>
         </template>
       </page-content-header>
 
       <div id="main">
         <div id="pageContent">
-          <etools-error-messages-box id="errorsBox"
-                                    title="Errors Saving Agreement"
-                                    errors="{{serverErrors}}"></etools-error-messages-box>
-          <iron-pages id="agreementsPages"
-                      selected="{{activePage}}"
-                      attr-for-selected="name"
-                      role="main">
-
+          <etools-error-messages-box
+            id="errorsBox"
+            title="Errors Saving Agreement"
+            errors="{{serverErrors}}"
+          ></etools-error-messages-box>
+          <iron-pages id="agreementsPages" selected="{{activePage}}" attr-for-selected="name" role="main">
             <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-              <agreements-list id="list"
-                              name="list"
-                              active="[[listActive]]"
-                              csv-download-url="{{csvDownloadUrl}}"
-                              url-params="[[preservedListQueryParams]]">
+              <agreements-list
+                id="list"
+                name="list"
+                active="[[listActive]]"
+                csv-download-url="{{csvDownloadUrl}}"
+                url-params="[[preservedListQueryParams]]"
+              >
               </agreements-list>
             </template>
 
             <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
               <agreement-details
-                  id="agreementDetails"
-                  name="details"
-                  agreement="[[agreement]]"
-                  authorized-officers="{{authorizedOfficers}}"
-                  edit-mode="[[_hasEditPermissions(permissions)]]"
-                  is-new-agreement="[[newAgreementActive]]"
-                  on-save-agreement="_validateAndTriggerAgreementSave">
+                id="agreementDetails"
+                name="details"
+                agreement="[[agreement]]"
+                authorized-officers="{{authorizedOfficers}}"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                is-new-agreement="[[newAgreementActive]]"
+                on-save-agreement="_validateAndTriggerAgreementSave"
+              >
               </agreement-details>
             </template>
           </iron-pages>
-        </div> <!-- page content end -->
+        </div>
+        <!-- page content end -->
 
         <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, agreement)]]">
           <!-- sidebar content start -->
           <div id="sidebar">
-            <agreement-status status$="[[agreement.status]]"
-                              active="[[!listActive]]"
-                              new-agreement$="[[newAgreementActive]]"
-                              agreement-id$="[[agreement.id]]"
-                              agreement-type="[[agreement.agreement_type]]"
-                              on-save-agreement="_validateAndTriggerAgreementSave"
-                              edit-mode="[[_hasEditPermissions(permissions)]]"
-                              on-terminate-agreement="_terminateAgreementNow"
-                              on-update-agreement-status="_updateAgreementStatus"
-                              on-delete-agreement="_deleteAgreement">
+            <agreement-status
+              status$="[[agreement.status]]"
+              active="[[!listActive]]"
+              new-agreement$="[[newAgreementActive]]"
+              agreement-id$="[[agreement.id]]"
+              agreement-type="[[agreement.agreement_type]]"
+              on-save-agreement="_validateAndTriggerAgreementSave"
+              edit-mode="[[_hasEditPermissions(permissions)]]"
+              on-terminate-agreement="_terminateAgreementNow"
+              on-update-agreement-status="_updateAgreementStatus"
+              on-delete-agreement="_deleteAgreement"
+            >
             </agreement-status>
-          </div><!-- sidebar content end -->
+          </div>
+          <!-- sidebar content end -->
         </template>
+      </div>
+      <!-- main page content end -->
 
-      </div> <!-- main page content end -->
-
-      <agreement-item-data id="agreementData"
-                         agreement="{{agreement}}"
-                         agreement-id="[[selectedAgreementId]]"
-                         error-event-name="agreement-save-error">
-    </agreement-item-data>
+      <agreement-item-data
+        id="agreementData"
+        agreement="{{agreement}}"
+        agreement-id="[[selectedAgreementId]]"
+        error-event-name="agreement-save-error"
+      >
+      </agreement-item-data>
     `;
   }
 
   @property({type: Array})
-  agreementsTabs: EtoolsTab[] = [{
-    tab: 'details',
-    tabLabel: 'Agreement Details',
-    hidden: false
-  }];
+  agreementsTabs: EtoolsTab[] = [
+    {
+      tab: 'details',
+      tabLabel: 'Agreement Details',
+      hidden: false
+    }
+  ];
 
   @property({type: Object})
   permissions!: UserPermissions;
@@ -182,14 +186,17 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   @property({type: String})
   csvDownloadUrl!: string;
 
-  @property({type: Boolean, computed: `_updateNewItemPageFlag(routeData, listActive)`})
+  @property({
+    type: Boolean,
+    computed: `_updateNewItemPageFlag(routeData, listActive)`
+  })
   newAgreementActive!: boolean;
 
   @property({type: Object, observer: `_agreementChanged`})
   agreement!: Agreement;
 
   @property({type: String})
-  moduleName: string = 'agreements';
+  moduleName = 'agreements';
 
   @property({type: Array})
   authorizedOfficers!: [];
@@ -197,10 +204,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   originalAgreementData!: Agreement;
 
   static get observers() {
-    return [
-      '_pageChanged(listActive, tabsActive, newAgreementActive)',
-      '_observeRouteDataId(routeData.id)'
-    ];
+    return ['_pageChanged(listActive, tabsActive, newAgreementActive)', '_observeRouteDataId(routeData.id)'];
   }
 
   ready() {
@@ -215,7 +219,10 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
     // fire agreement page loading message
     this._showAgreementsPageLoadingMessage();
   }
@@ -266,7 +273,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (newAgreement) {
       return 'Add Agreement';
     }
-    return agreement.id ? (agreement.partner_name + ': ' + agreement.agreement_number) : '';
+    return agreement.id ? agreement.partner_name + ': ' + agreement.agreement_number : '';
   }
 
   _hasEditPermissions(permissions: UserPermissions) {
@@ -277,7 +284,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!agreementData.id) {
       agreementData.status = CONSTANTS.STATUSES.Draft.toLowerCase();
     }
-    (this.$.agreementData as AgreementItemData).saveAgreement(agreementData, this._newAgreementSaved.bind(this))
+    (this.$.agreementData as AgreementItemData)
+      .saveAgreement(agreementData, this._newAgreementSaved.bind(this))
       .then((successfull: boolean) => {
         if (successfull) {
           store.dispatch({type: RESET_UNSAVED_UPLOADS});
@@ -298,8 +306,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
 
   _agreementSaveErrors(e: CustomEvent) {
     e.stopImmediatePropagation();
-    if ((e.detail instanceof Array && e.detail.length > 0) ||
-      (typeof e.detail === 'string' && e.detail !== '')) {
+    if ((e.detail instanceof Array && e.detail.length > 0) || (typeof e.detail === 'string' && e.detail !== '')) {
       fireEvent(this, 'set-server-errors', e.detail as any);
       this.scrollToTop();
     }
@@ -355,14 +362,14 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this._hasEditPermissions(this.permissions)) {
       return false;
     }
-    const agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown as AgreementDetails);
+    const agreementDetailsEl = (this.shadowRoot!.querySelector('#agreementDetails') as unknown) as AgreementDetails;
     if (!agreementDetailsEl) {
       return false;
     }
     if (!agreementDetailsEl._validateAgreement()) {
       fireEvent(this, 'toast', {
-        text: 'Document can not be saved ' +
-          'because of missing data in Details tab', showCloseBtn: true
+        text: 'Document can not be saved ' + 'because of missing data in Details tab',
+        showCloseBtn: true
       });
       return false;
     }
@@ -431,8 +438,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       }
     }
     if (this.agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.SSFA) {
-      const signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date',
-        'attachment'];
+      const signedByFields = ['partner_manager', 'signed_by_partner_date', 'signed_by_unicef_date', 'attachment'];
       signedByFields.forEach((fieldName: string) => {
         if (this._primitiveFieldIsModified(fieldName)) {
           changes[fieldName] = this.agreement[fieldName];
@@ -456,7 +462,9 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
         // keep only new amendments
         if (this.agreement.amendments) {
           changes.amendments = this.agreement.amendments.filter(
-            (a: AgreementAmendment) => !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0);
+            (a: AgreementAmendment) =>
+              !a.id && typeof a.signed_amendment_attachment === 'number' && a.signed_amendment_attachment > 0
+          );
         }
       }
     }
@@ -481,7 +489,7 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     if (!this.originalAgreementData.authorized_officers) {
       return null;
     }
-    return this.originalAgreementData.authorized_officers.map(function(off: any) {
+    return this.originalAgreementData.authorized_officers.map(function (off: any) {
       return off.id.toString();
     });
   }

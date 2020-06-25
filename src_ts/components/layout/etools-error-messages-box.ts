@@ -46,7 +46,7 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
             color: var(--error-box-text-color);
             background-color: var(--error-box-bg-color);
             border-color: var(--error-box-border-color);
-          };
+          }
         }
 
         ul {
@@ -71,15 +71,16 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
 
       <etools-content-panel class="errors-box" panel-title="[[title]]">
         <ul>
-          <template is="dom-repeat" items=[[errors]]>
+          <template is="dom-repeat" items="[[errors]]">
             <li hidden$="[[_startsWithEmptySpace(item)]]">[[item]]</li>
-            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">[[item]]</li>
+            <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">
+              [[item]]
+            </li>
           </template>
         </ul>
 
         <div class="errors-box-actions">
-          <paper-button class="primary-btn danger-btn"
-                        on-tap="_resetErrors">
+          <paper-button class="primary-btn danger-btn" on-tap="_resetErrors">
             Ok
           </paper-button>
         </div>
@@ -93,7 +94,11 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   @property({type: Array, notify: true})
   errors = [];
 
-  @property({type: Boolean, computed: '_errorsLengthChanged(errors)', reflectToAttribute: true})
+  @property({
+    type: Boolean,
+    computed: '_errorsLengthChanged(errors)',
+    reflectToAttribute: true
+  })
   hidden!: boolean;
 
   _startsWithEmptySpace(val: string) {
@@ -107,7 +112,6 @@ class EtoolsErrorMessagesBox extends GestureEventListeners(PolymerElement) {
   _resetErrors() {
     this.set('errors', []);
   }
-
 }
 
 window.customElements.define('etools-error-messages-box', EtoolsErrorMessagesBox);

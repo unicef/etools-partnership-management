@@ -3,7 +3,7 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {SharedStyles} from '../styles/shared-styles.js';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles.js';
 import {property} from '@polymer/decorators';
-import {EtoolsDropdownEl} from "@unicef-polymer/etools-dropdown/etools-dropdown";
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 
 /**
  *
@@ -11,12 +11,10 @@ import {EtoolsDropdownEl} from "@unicef-polymer/etools-dropdown/etools-dropdown"
  * @customElement
  */
 class YearDropdown extends PolymerElement {
-
   static get template() {
     return html`
       ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
-
         :host {
           display: block;
           box-sizing: border-box;
@@ -30,23 +28,25 @@ class YearDropdown extends PolymerElement {
         etools-dropdown {
           max-width: 100%;
         }
-
       </style>
 
-      <etools-dropdown id="yearSelector"
-                      label="[[label]]"
-                      options="[[years]]"
-                      selected="{{selectedYear}}"
-                      allow-outside-scroll
-                      hide-search
-                      required auto-validate
-                      error-message="Year is required">
+      <etools-dropdown
+        id="yearSelector"
+        label="[[label]]"
+        options="[[years]]"
+        selected="{{selectedYear}}"
+        allow-outside-scroll
+        hide-search
+        required
+        auto-validate
+        error-message="Year is required"
+      >
       </etools-dropdown>
     `;
   }
 
   @property({type: String})
-  label: string = 'Year';
+  label = 'Year';
 
   @property({type: Number, notify: true})
   selectedYear!: number;
@@ -72,7 +72,6 @@ class YearDropdown extends PolymerElement {
   validate() {
     return (this.$.yearSelector as EtoolsDropdownEl).validate();
   }
-
 }
 
 window.customElements.define('year-dropdown', YearDropdown);

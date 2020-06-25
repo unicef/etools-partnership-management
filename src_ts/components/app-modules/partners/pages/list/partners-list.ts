@@ -51,17 +51,16 @@ let _partnersLastNavigated = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-class PartnersList extends
-  connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
-    EndpointsMixin(EtoolsCurrency(PolymerElement))))))) {
-
+class PartnersList extends connect(store)(
+  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsMixin(EtoolsCurrency(PolymerElement))))))
+) {
   static get template() {
     // language=HTML
     return html`
       ${SharedStyles} ${listFilterStyles} ${partnerStatusStyles}
       <style include="data-table-styles iron-flex iron-flex-factors paper-material-styles">
         .sm-status-wrapper {
-        padding-left: 10px;
+          padding-left: 10px;
         }
 
         .vendor-nr {
@@ -73,24 +72,20 @@ class PartnersList extends
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <template is="dom-if" if="[[stampListData]]">
-        <partners-list-data id="partners"
-                            filtered-partners="{{filteredPartners}}"
-                            total-results="{{paginator.count}}"
-                            on-partners-loaded="_requiredDataHasBeenLoaded"
-                            list-data-path="filteredPartners"
-                            fire-data-loaded>
+        <partners-list-data
+          id="partners"
+          filtered-partners="{{filteredPartners}}"
+          total-results="{{paginator.count}}"
+          on-partners-loaded="_requiredDataHasBeenLoaded"
+          list-data-path="filteredPartners"
+          fire-data-loaded
+        >
         </partners-list-data>
       </template>
 
       <div id="filters" class="paper-material" elevation="1">
         <div id="filters-fields">
-
-          <paper-input id="query"
-                       class="filter"
-                       type="search"
-                       autocomplete="off"
-                       value="{{q}}"
-                       placeholder="Search">
+          <paper-input id="query" class="filter" type="search" autocomplete="off" value="{{q}}" placeholder="Search">
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
@@ -98,44 +93,49 @@ class PartnersList extends
             <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
               <!-- esmm multi -->
               <etools-dropdown-multi
-                  class="filter"
-                  label="[[filter.filterName]]"
-                  placeholder="Select"
-                  disabled$="[[filter.disabled]]"
-                  options="[[filter.selectionOptions]]"
-                  selected-values="{{filter.selectedValue}}"
-                  data-filter-path$="[[filter.path]]"
-                  on-etools-selected-items-changed="esmmValueChanged"
-                  trigger-value-change-event
-                  hide-search="[[filter.hideSearch]]"
-                  min-width="[[filter.minWidth]]"
-                  horizontal-align="left"
-                  no-dynamic-align>
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="Select"
+                disabled$="[[filter.disabled]]"
+                options="[[filter.selectionOptions]]"
+                selected-values="{{filter.selectedValue}}"
+                data-filter-path$="[[filter.path]]"
+                on-etools-selected-items-changed="esmmValueChanged"
+                trigger-value-change-event
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
+                horizontal-align="left"
+                no-dynamic-align
+              >
               </etools-dropdown-multi>
             </template>
 
             <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-              <datepicker-lite id$="datepicker_[[filter.path]]"
-                                class="filter date"
-                                label="[[filter.filterName]]"
-                                placeholder="&#8212;"
-                                value="{{filter.selectedValue}}"
-                                on-date-has-changed="_filterDateHasChanged"
-                                data-filter-path$="[[filter.path]]"
-                                fire-date-has-changed
-                                selected-date-display-format="D MMM YYYY">
+              <datepicker-lite
+                id$="datepicker_[[filter.path]]"
+                class="filter date"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                value="{{filter.selectedValue}}"
+                on-date-has-changed="_filterDateHasChanged"
+                data-filter-path$="[[filter.path]]"
+                fire-date-has-changed
+                selected-date-display-format="D MMM YYYY"
+              >
               </datepicker-lite>
             </template>
 
             <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
               <div id="hiddenToggle" class="filter">
                 [[filter.filterName]]
-                <paper-toggle-button id="toggleFilter" checked="{{filter.selectedValue}}"
-                                     data-filter-path$="[[filter.path]]"
-                                     on-iron-change="toggleValueChanged"></paper-toggle-button>
+                <paper-toggle-button
+                  id="toggleFilter"
+                  checked="{{filter.selectedValue}}"
+                  data-filter-path$="[[filter.path]]"
+                  on-iron-change="toggleValueChanged"
+                ></paper-toggle-button>
               </div>
             </template>
-
           </template>
         </div>
 
@@ -146,14 +146,13 @@ class PartnersList extends
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-                <paper-button on-tap="clearAllFilterValues"
-                      class="secondary-btn">
-                        CLEAR ALL
-                </paper-button>
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
+                CLEAR ALL
+              </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
-                <paper-icon-item on-tap="selectFilter" disabled$="[[item.disabled]]"  selected$="[[item.selected]]">
+                <paper-icon-item on-tap="selectFilter" disabled$="[[item.disabled]]" selected$="[[item.selected]]">
                   <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
                   <paper-item-body>[[item.filterName]]</paper-item-body>
                 </paper-icon-item>
@@ -164,11 +163,11 @@ class PartnersList extends
       </div>
 
       <div id="list" elevation="1" class="paper-material hidden">
-
         <etools-data-table-header
-            low-resolution-layout="[[lowResolutionLayout]]"
-            id="listHeader"
-            label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
+          low-resolution-layout="[[lowResolutionLayout]]"
+          id="listHeader"
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
+        >
           <etools-data-table-column class="flex" field="vendor_number" sortable>
             Vendor No.
           </etools-data-table-column>
@@ -189,46 +188,52 @@ class PartnersList extends
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat"
-                  items="[[filteredPartners]]" as="partner"
-                  initial-count="10" on-dom-change="_listDataChanged">
+        <template
+          id="rows"
+          is="dom-repeat"
+          items="[[filteredPartners]]"
+          as="partner"
+          initial-count="10"
+          on-dom-change="_listDataChanged"
+        >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-                <span class="col-data flex" data-col-header-label="Vendor No.">
-                  <a class="vendor-nr truncate"
-                     href$="[[currentModule]]/[[partner.id]]/details"
-                     title$="[[getDisplayValue(partner.vendor_number)]]"
-                     on-click="_triggerPartnerLoadingMsg">
-                    [[getDisplayValue(partner.vendor_number)]]
-                  </a>
-                </span>
+              <span class="col-data flex" data-col-header-label="Vendor No.">
+                <a
+                  class="vendor-nr truncate"
+                  href$="[[currentModule]]/[[partner.id]]/details"
+                  title$="[[getDisplayValue(partner.vendor_number)]]"
+                  on-click="_triggerPartnerLoadingMsg"
+                >
+                  [[getDisplayValue(partner.vendor_number)]]
+                </a>
+              </span>
               <span class="col-data flex-3" data-col-header-label="Name (Short/Full)">
-                  <span>[[_computeName(partner.name, partner.short_name)]]</span>
+                <span>[[_computeName(partner.name, partner.short_name)]]</span>
 
-                  <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
-                    <span class="marked-for-deletion">
-                      <iron-icon icon="delete"></iron-icon>
-                    </span>
+                <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
+                  <span class="marked-for-deletion">
+                    <iron-icon icon="delete"></iron-icon>
                   </span>
-
-                  <span class="sm-status-wrapper" hidden$="[[!partner.blocked]]">
-                    <span class="blocked">
-                      <iron-icon icon="block"></iron-icon>
-                    </span>
-                  </span>
-
                 </span>
+
+                <span class="sm-status-wrapper" hidden$="[[!partner.blocked]]">
+                  <span class="blocked">
+                    <iron-icon icon="block"></iron-icon>
+                  </span>
+                </span>
+              </span>
               <span class="col-data flex-2" data-col-header-label="Partner Type">
-                  [[_computeType(partner.cso_type, partner.partner_type)]]
-                </span>
+                [[_computeType(partner.cso_type, partner.partner_type)]]
+              </span>
               <span class="col-data flex" data-col-header-label="HACT Risk Rating" style="text-transform: capitalize">
-                  [[getDisplayValue(partner.rating)]]
+                [[getDisplayValue(partner.rating)]]
               </span>
               <span class="col-data flex" data-col-header-label="SEA Risk Rating" style="text-transform: capitalize">
-                  [[getDisplayValue(partner.sea_risk_rating_name)]]
+                [[getDisplayValue(partner.sea_risk_rating_name)]]
               </span>
-              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date" >
-                  [[getDateDisplayValue(partner.psea_assessment_date)]]
+              <span class="col-data flex" data-col-header-label="Last PSEA Assess. Date">
+                [[getDateDisplayValue(partner.psea_assessment_date)]]
               </span>
             </div>
             <div slot="row-data-details">
@@ -257,14 +262,14 @@ class PartnersList extends
         </template>
 
         <etools-data-table-footer
-            low-resolution-layout="[[lowResolutionLayout]]"
-            page-size="{{paginator.page_size}}"
-            page-number="{{paginator.page}}"
-            total-results="[[paginator.count]]"
-            visible-range="{{paginator.visible_range}}">
+          low-resolution-layout="[[lowResolutionLayout]]"
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}"
+        >
         </etools-data-table-footer>
       </div>
-
     `;
   }
 
@@ -296,19 +301,19 @@ class PartnersList extends
   selectedSEARiskRatings: any[] = [];
 
   @property({type: String})
-  selectedPseaDateBefore: string = '';
+  selectedPseaDateBefore = '';
 
   @property({type: String})
-  selectedPseaDateAfter: string = '';
+  selectedPseaDateAfter = '';
 
   @property({type: Boolean})
-  showHidden: boolean = false;
+  showHidden = false;
 
   @property({type: Boolean, observer: '_showOnlyGovernmentTypeFlagChanged'})
-  showOnlyGovernmentType: boolean = false;
+  showOnlyGovernmentType = false;
 
   @property({type: String})
-  currentModule: string = '';
+  currentModule = '';
 
   @property({type: Array})
   _sortableFieldNames: string[] = ['vendor_number', 'name'];
@@ -317,7 +322,7 @@ class PartnersList extends
   _governmentLockedPartnerTypes: string[] = ['Government'];
 
   @property({type: Boolean})
-  lowResolutionLayout: boolean = false;
+  lowResolutionLayout = false;
 
   private _updateShownFilterDebouncer!: Debouncer;
   private _actionsChangedDebouncer!: Debouncer;
@@ -326,10 +331,10 @@ class PartnersList extends
     return [
       '_initFiltersMenuList(partnerTypes, csoTypes, riskRatings, seaRiskRatings, showOnlyGovernmentType)',
       'resetPageNumber(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length,' +
-      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
+        'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, showHidden)',
       '_updateUrlAndData(q, selectedPartnerTypes.length, selectedCsoTypes.length, selectedRiskRatings.length, ' +
-      'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, paginator.page_size, ' +
-      'sortOrder, showHidden, requiredDataLoaded, initComplete)',
+        'selectedSEARiskRatings.length, selectedPseaDateBefore, selectedPseaDateAfter, paginator.page, ' +
+        'paginator.page_size, sortOrder, showHidden, requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -445,50 +450,48 @@ class PartnersList extends
   }
 
   public _updateSelectedFiltersValues() {
-    this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer,
-      timeOut.after(20),
-      () => {
-        const filtersValues = [
-          {
-            filterName: 'Partner Type',
-            selectedValue: this.selectedPartnerTypes,
-            disabled: this.showOnlyGovernmentType,
-            allowEmpty: true,
-            disableMenuOption: this.showOnlyGovernmentType
-          },
-          {
-            filterName: 'CSO Type',
-            selectedValue: this.selectedCsoTypes,
-            allowEmpty: true
-          },
-          {
-            filterName: 'HACT Risk Rating',
-            selectedValue: this.selectedRiskRatings,
-            allowEmpty: true
-          },
-          {
-            filterName: 'SEA Risk Rating',
-            selectedValue: this.selectedSEARiskRatings,
-            allowEmpty: true
-          },
-          {
-            filterName: 'PSEA Assessment Date Before',
-            selectedValue: this.selectedPseaDateBefore,
-            allowEmpty: true
-          },
-          {
-            filterName: 'PSEA Assessment Date After',
-            selectedValue: this.selectedPseaDateAfter,
-            allowEmpty: true
-          },
-          {
-            filterName: 'Show hidden',
-            selectedValue: this.showHidden,
-            allowEmpty: true
-          }
-        ];
-        this.updateShownFilters(filtersValues);
-      });
+    this._updateShownFilterDebouncer = Debouncer.debounce(this._updateShownFilterDebouncer, timeOut.after(20), () => {
+      const filtersValues = [
+        {
+          filterName: 'Partner Type',
+          selectedValue: this.selectedPartnerTypes,
+          disabled: this.showOnlyGovernmentType,
+          allowEmpty: true,
+          disableMenuOption: this.showOnlyGovernmentType
+        },
+        {
+          filterName: 'CSO Type',
+          selectedValue: this.selectedCsoTypes,
+          allowEmpty: true
+        },
+        {
+          filterName: 'HACT Risk Rating',
+          selectedValue: this.selectedRiskRatings,
+          allowEmpty: true
+        },
+        {
+          filterName: 'SEA Risk Rating',
+          selectedValue: this.selectedSEARiskRatings,
+          allowEmpty: true
+        },
+        {
+          filterName: 'PSEA Assessment Date Before',
+          selectedValue: this.selectedPseaDateBefore,
+          allowEmpty: true
+        },
+        {
+          filterName: 'PSEA Assessment Date After',
+          selectedValue: this.selectedPseaDateAfter,
+          allowEmpty: true
+        },
+        {
+          filterName: 'Show hidden',
+          selectedValue: this.showHidden,
+          allowEmpty: true
+        }
+      ];
+      this.updateShownFilters(filtersValues);
+    });
   }
 
   public _getSelectedPartnerTypes(selectedPartnerTypes: any) {
@@ -512,7 +515,9 @@ class PartnersList extends
       selectedCsoTypes: this._getFilterUrlValuesAsArray(urlQueryParams.cso_types),
       selectedRiskRatings: this._getFilterUrlValuesAsArray(urlQueryParams.risk_ratings),
       selectedSEARiskRatings: this._getFilterUrlValuesAsArray(urlQueryParams.sea_risk_ratings),
-      selectedPseaDateBefore: urlQueryParams.psea_assessment_date_before ? urlQueryParams.psea_assessment_date_before : '',
+      selectedPseaDateBefore: urlQueryParams.psea_assessment_date_before
+        ? urlQueryParams.psea_assessment_date_before
+        : '',
       selectedPseaDateAfter: urlQueryParams.psea_assessment_date_after ? urlQueryParams.psea_assessment_date_after : '',
       showHidden: urlQueryParams.hidden ? true : false
     });
@@ -532,10 +537,12 @@ class PartnersList extends
       this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
       const qs = this._buildQueryString();
 
-      this._updateUrlAndDislayedData(this.currentModule + '/list',
+      this._updateUrlAndDislayedData(
+        this.currentModule + '/list',
         _partnersLastNavigated,
         qs,
-        this._filterListData.bind(this));
+        this._filterListData.bind(this)
+      );
 
       _partnersLastNavigated = qs || _partnersLastNavigated;
     }
@@ -544,11 +551,13 @@ class PartnersList extends
   public _filterListData(forceNoLoading?: any) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
-    this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer,
+    this._actionsChangedDebouncer = Debouncer.debounce(
+      this._actionsChangedDebouncer,
       timeOut.after(this.debounceTime),
       () => {
         this._handleFilterPartnersData(forceNoLoading);
-      });
+      }
+    );
   }
 
   public _handleFilterPartnersData(forceNoLoading: boolean) {
@@ -641,7 +650,6 @@ class PartnersList extends
   public _triggerPartnerLoadingMsg() {
     fireEvent(this, 'trigger-partner-loading-msg');
   }
-
 }
 
 window.customElements.define('partners-list', PartnersList);

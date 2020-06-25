@@ -1,4 +1,3 @@
-
 import './disaggregation-table-cell-number.js';
 import './disaggregation-table-cell-percentage.js';
 import './disaggregation-table-cell-ratio.js';
@@ -15,7 +14,6 @@ import {GenericObject} from '../../../../../../../typings/globals.types.js';
  * @appliesMixin UtilsMixin
  */
 class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
-
   static get is() {
     return 'disaggregation-table-row';
   }
@@ -29,55 +27,33 @@ class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
           <span class="cellValue">[[_capitalizeFirstLetter(data.title)]]</span>
         </td>
 
-        <template is="dom-repeat"
-                  items="[[data.data]]">
+        <template is="dom-repeat" items="[[data.data]]">
           <td>
-            <template
-                is="dom-if"
-                if="[[_equals(indicatorType, 'number')]]"
-                restamp="true">
+            <template is="dom-if" if="[[_equals(indicatorType, 'number')]]" restamp="true">
               <disaggregation-table-cell-number data="[[item.data]]"></disaggregation-table-cell-number>
             </template>
 
-            <template
-                is="dom-if"
-                if="[[_equals(indicatorType, 'percentage')]]"
-                restamp="true">
+            <template is="dom-if" if="[[_equals(indicatorType, 'percentage')]]" restamp="true">
               <disaggregation-table-cell-percentage data="[[item.data]]"></disaggregation-table-cell-percentage>
             </template>
 
-            <template
-                is="dom-if"
-                if="[[_equals(indicatorType, 'ratio')]]"
-                restamp="true">
+            <template is="dom-if" if="[[_equals(indicatorType, 'ratio')]]" restamp="true">
               <disaggregation-table-cell-ratio data="[[item.data]]"></disaggregation-table-cell-ratio>
             </template>
-
           </td>
         </template>
 
-        <template
-            is="dom-if"
-            if="[[data.total]]">
+        <template is="dom-if" if="[[data.total]]">
           <td class="cellTotal">
-            <template
-                is="dom-if"
-                if="[[_equals(indicatorType, 'number')]]"
-                restamp="true">
+            <template is="dom-if" if="[[_equals(indicatorType, 'number')]]" restamp="true">
               <disaggregation-table-cell-number data="[[data.total.data]]"></disaggregation-table-cell-number>
             </template>
 
-            <template
-                is="dom-if"
-                if="[[_equals(indicatorType, 'percentage')]]"
-                restamp="true">
+            <template is="dom-if" if="[[_equals(indicatorType, 'percentage')]]" restamp="true">
               <disaggregation-table-cell-percentage data="[[data.total.data]]"></disaggregation-table-cell-percentage>
             </template>
 
-            <template
-                is="dom-if"
-                if="[[_equals(indicatorType, 'ratio')]]"
-                restamp="true">
+            <template is="dom-if" if="[[_equals(indicatorType, 'ratio')]]" restamp="true">
               <disaggregation-table-cell-ratio data="[[data.total.data]]"></disaggregation-table-cell-ratio>
             </template>
           </td>
@@ -98,7 +74,6 @@ class DisaggregationTableRow extends UtilsMixin(PolymerElement) {
   _computeClass(rowType: string) {
     return rowType;
   }
-
 }
 
 window.customElements.define(DisaggregationTableRow.is, DisaggregationTableRow);

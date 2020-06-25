@@ -1,11 +1,11 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {ListQueryParams} from '../../../typings/route.types.js';// TODO - load using tsconfig
+import {ListQueryParams} from '../../../typings/route.types.js'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../../typings/globals.types.js';
+import {Constructor, GenericObject} from '../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
 
 /**
@@ -15,10 +15,12 @@ import {property} from '@polymer/decorators';
  */
 function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ModuleMainElCommonFunctionalityClass extends baseClass {
-
     /* Gets updated by app-route */
-    @property({type: Object, observer: ModuleMainElCommonFunctionalityClass.prototype._handleQueryParams})
-    listPageQueryParams!: object;
+    @property({
+      type: Object,
+      observer: ModuleMainElCommonFunctionalityClass.prototype._handleQueryParams
+    })
+    listPageQueryParams!: GenericObject;
 
     /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
         otherwise preservedListQueryParams holds on to it's previous data.
@@ -29,11 +31,10 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
         still filtered by intervention status).
     */
     @property({type: Object})
-    preservedListQueryParams: object = {};
+    preservedListQueryParams: GenericObject = {};
 
     @property({type: Array})
     serverErrors: any[] = [];
-
 
     ready() {
       super.ready();
@@ -62,9 +63,12 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
     }
 
     _handleQueryParams(params: ListQueryParams) {
-      if (params !== null && Object.keys(params).length &&
-      // @ts-ignore
-          this.routeData.tab !== 'reports') {
+      if (
+        params !== null &&
+        Object.keys(params).length &&
+        // @ts-ignore
+        this.routeData.tab !== 'reports'
+      ) {
         this.set('preservedListQueryParams', params);
       }
     }
@@ -101,22 +105,23 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
      */
     _showSidebarStatus(listPageActive: boolean, tabAttached: boolean, other?: boolean) {
       const showStatus = !listPageActive && !!tabAttached;
-      return !other ? showStatus : (showStatus && other);
+      return !other ? showStatus : showStatus && other;
     }
 
     _reloadListData(e: CustomEvent) {
       e.stopImmediatePropagation();
       try {
-        const listElem = (this.shadowRoot!.querySelector('#list') as PolymerElement & {_filterListData(forceNoLoading: boolean): void});
+        const listElem = this.shadowRoot!.querySelector('#list') as PolymerElement & {
+          _filterListData(forceNoLoading: boolean): void;
+        };
         if (listElem && listElem._filterListData) {
           listElem._filterListData(true);
         }
       } catch (err) {
         // @ts-ignore
-        logWarn('List refresh error occurred', '[' + this.moduleName +'-module]', err);
+        logWarn('List refresh error occurred', '[' + this.moduleName + '-module]', err);
       }
     }
-
   }
   return ModuleMainElCommonFunctionalityClass;
 }

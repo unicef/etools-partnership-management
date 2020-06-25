@@ -68,6 +68,5 @@ export const AppShellStyles = html`
         border: none;
       }
     }
-
   </style>
 `;

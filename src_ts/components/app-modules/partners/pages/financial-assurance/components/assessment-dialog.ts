@@ -28,7 +28,6 @@ import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
  * @appliesMixin EndpointsMixin
  */
 class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-
   static get template() {
     return html`
       ${gridLayoutStyles} ${requiredFieldStarredStyles}
@@ -42,7 +41,8 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         }
       </style>
 
-      <etools-dialog no-padding
+      <etools-dialog
+        no-padding
         keep-dialog-open
         id="assessmentDialog"
         opened="{{opened}}"
@@ -51,43 +51,49 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         dialog-title="Assessment"
         on-confirm-btn-clicked="_validateAndSaveAssessment"
         disable-confirm-btn="[[uploadInProgress]]"
-        disable-dismiss-btn="[[uploadInProgress]]">
-
+        disable-dismiss-btn="[[uploadInProgress]]"
+      >
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-dropdown id="assessmentType"
-                             label="Assessment Type"
-                             placeholder="&#8212;"
-                             options="[[assessmentTypes]]"
-                             selected="{{assessment.type}}"
-                             error-message="Please select Assessment Type"
-                             hide-search
-                             required
-                             auto-validate></etools-dropdown>
+            <etools-dropdown
+              id="assessmentType"
+              label="Assessment Type"
+              placeholder="&#8212;"
+              options="[[assessmentTypes]]"
+              selected="{{assessment.type}}"
+              error-message="Please select Assessment Type"
+              hide-search
+              required
+              auto-validate
+            ></etools-dropdown>
           </div>
           <div class="col col-5 padd-left">
-            <datepicker-lite id="dateSubmitted"
-                               label="Date of Assessment"
-                               value="{{assessment.completed_date}}"
-                               auto-validate
-                               max-date-error-msg="Date can not be in the future"
-                               max-date="[[getCurrentDate()]]"
-                               required
-                               selected-date-display-format="D MMM YYYY">
+            <datepicker-lite
+              id="dateSubmitted"
+              label="Date of Assessment"
+              value="{{assessment.completed_date}}"
+              auto-validate
+              max-date-error-msg="Date can not be in the future"
+              max-date="[[getCurrentDate()]]"
+              required
+              selected-date-display-format="D MMM YYYY"
+            >
             </datepicker-lite>
           </div>
         </div>
         <div class="row-h">
-          <etools-upload id="report"
-                         label="Report"
-                         accept=".doc,.docx,.pdf,.jpg,.png"
-                         file-url="[[assessment.report_attachment]]"
-                         upload-endpoint="[[uploadEndpoint]]"
-                         on-upload-finished="_uploadFinished"
-                         required
-                         readonly="[[_hasId(assessment.id)]]"
-                         show-change="[[!_hasId(assessment.id)]]"
-                         error-message="Please select the report file">
+          <etools-upload
+            id="report"
+            label="Report"
+            accept=".doc,.docx,.pdf,.jpg,.png"
+            file-url="[[assessment.report_attachment]]"
+            upload-endpoint="[[uploadEndpoint]]"
+            on-upload-finished="_uploadFinished"
+            required
+            readonly="[[_hasId(assessment.id)]]"
+            show-change="[[!_hasId(assessment.id)]]"
+            error-message="Please select the report file"
+          >
           </etools-upload>
         </div>
         <div class="row-h">
@@ -95,7 +101,6 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
             Archived
           </paper-checkbox>
         </div>
-
       </etools-dialog>
     `;
   }
@@ -107,10 +112,10 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
   @property({type: Boolean, notify: true})
-  opened: boolean = false;
+  opened = false;
 
   @property({type: Boolean})
-  uploadInProgress: boolean = false;
+  uploadInProgress = false;
 
   @property({type: Array})
   assessmentTypes!: LabelAndValue[];
@@ -175,11 +180,11 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
       .then((resp: any) => {
         this._handleResponse(resp, isNew);
         this.stopSpinner();
-      }).catch((error: any) => {
+      })
+      .catch((error: any) => {
         this._handleErrorResponse(error);
         this.stopSpinner();
       });
-
   }
 
   public _getBody(isNew: boolean) {
@@ -196,15 +201,13 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
 
   public _pickEndpoint(isNew: boolean, assessId: any) {
     const endpointName = isNew ? 'partnerAssessment' : 'patchPartnerAssessment';
-    const endpointParam = isNew ? undefined :
-      {assessmentId: assessId};
+    const endpointParam = isNew ? undefined : {assessmentId: assessId};
 
     // @ts-ignore
     return this.getEndpoint(endpointName, endpointParam);
   }
 
   public _handleResponse(response: any, isNew: boolean) {
-
     this.set('opened', false);
 
     if (isNew) {
@@ -215,7 +218,6 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
         after: response
       });
     }
-
   }
 
   public _handleErrorResponse(error: any) {
@@ -262,8 +264,6 @@ class AssessmentDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   getCurrentDate() {
     return new Date();
   }
-
-
 }
 
 window.customElements.define('assessment-dialog', AssessmentDialog);

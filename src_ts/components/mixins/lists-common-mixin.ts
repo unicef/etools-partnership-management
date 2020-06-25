@@ -5,10 +5,8 @@ import {PolymerElement} from '@polymer/polymer';
 import {updateAppState} from '../utils/navigation-helper';
 import {isEmptyObject} from '../utils/utils';
 
-
 function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ListsCommonClass extends baseClass {
-
     @property({type: Object})
     urlParams!: GenericObject;
 
@@ -19,32 +17,31 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     sortOrder!: {field: string; direction: string};
 
     @property({type: Number})
-    debounceTime: number = 50;
+    debounceTime = 50;
 
     @property({type: Boolean})
-    active: boolean = false;
+    active = false;
 
     @property({type: Boolean})
     detailsOpened!: boolean;
 
     @property({type: Boolean})
-    forceDataRefresh: boolean = false;
+    forceDataRefresh = false;
 
     @property({type: Boolean})
-    requiredDataLoaded: boolean = false;
+    requiredDataLoaded = false;
 
     @property({type: Boolean})
-    initComplete: boolean = false;
+    initComplete = false;
 
     @property({type: Boolean})
-    showQueryLoading: boolean = false;
+    showQueryLoading = false;
 
     @property({type: String, notify: true})
     csvDownloadUrl!: string;
 
     @property({type: Boolean})
     stampListData!: boolean;
-
 
     connectedCallback() {
       super.connectedCallback();
@@ -89,17 +86,16 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     /**
      * At page refresh Dexie DBs might be wiped out and the list
      *(filteredPartners,filteredAgreements etc) will be empty.
-    * Because of this we need to refilter after list data is saved locally.
-    * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
-    */
+     * Because of this we need to refilter after list data is saved locally.
+     * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
+     */
     _requiredDataHasBeenLoaded(event: CustomEvent) {
       event.stopImmediatePropagation();
 
       const listDataPath = (event.target as any).getAttribute('list-data-path');
       const list = this.get(listDataPath);
 
-      if (typeof list === 'undefined' ||
-          (Array.isArray(list) && list.length === 0)) {
+      if (typeof list === 'undefined' || (Array.isArray(list) && list.length === 0)) {
         this.set('forceDataRefresh', true);
       }
       // recheck params to trigger agreements filtering
@@ -121,7 +117,6 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this.set('showQueryLoading', true);
       }
     }
-
 
     /**
      * Make sure you define _sortableFieldNames on *-list element properties level.
@@ -172,7 +167,8 @@ function ListsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
               }
               break;
             default:
-              if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+              if (!(field === 'page' && filterValue === 1)) {
+                // do not include page if page=1
                 filterUrlValue = String(filterValue).trim();
               }
           }

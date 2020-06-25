@@ -12,7 +12,6 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
  * @customElement
  */
 class DisaggregationField extends PolymerElement {
-
   static get is() {
     return 'disaggregation-field';
   }
@@ -25,29 +24,30 @@ class DisaggregationField extends PolymerElement {
 
           --paper-input-container: {
             padding: 0;
-          };
+          }
 
           --paper-input-container-input: {
             font-size: 13px;
-          };
+          }
 
           --paper-input-container-input-webkit-spinner: {
             display: none;
-          };
+          }
         }
       </style>
 
       <paper-input
-          id="field"
-          value="[[value]]"
-          type="number"
-          allowed-pattern="[+\-\d]"
-          invalid="{{invalid}}"
-          validator="[[validator]]"
-          min="[[min]]"
-          no-label-float
-          required
-          auto-validate>
+        id="field"
+        value="[[value]]"
+        type="number"
+        allowed-pattern="[+-d]"
+        invalid="{{invalid}}"
+        validator="[[validator]]"
+        min="[[min]]"
+        no-label-float
+        required
+        auto-validate
+      >
       </paper-input>
     `;
   }
@@ -104,7 +104,6 @@ class DisaggregationField extends PolymerElement {
       value: toNumericValues(change)
     });
   }
-
 }
 
 window.customElements.define(DisaggregationField.is, DisaggregationField);

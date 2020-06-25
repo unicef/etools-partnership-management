@@ -43,7 +43,6 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
           padding-left: 24px;
           list-style: circle;
         }
-
       </style>
 
       <etools-loading active="[[loading]]">Loading...</etools-loading>
@@ -76,28 +75,27 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
   ramIndicators: any[] = [];
 
   @property({type: Boolean})
-  loading: boolean = false;
+  loading = false;
 
   private _debounceRamIndRequest!: Debouncer;
 
   static get observers() {
-    return [
-      '_getRamIndicatorsData(interventionId, cpId)'
-    ];
+    return ['_getRamIndicatorsData(interventionId, cpId)'];
   }
 
   _getRamIndicatorsData(interventionId: number, cpId: number) {
     // Debounce to make sure the request is called only after both params are updated
-    this._debounceRamIndRequest = Debouncer.debounce(this._debounceRamIndRequest,
-      timeOut.after(100),
-      () => {
-        const validIds = interventionId > 0 && cpId > 0;
-        if (!validIds) {
-          return;
-        }
+    this._debounceRamIndRequest = Debouncer.debounce(this._debounceRamIndRequest, timeOut.after(100), () => {
+      const validIds = interventionId > 0 && cpId > 0;
+      if (!validIds) {
+        return;
+      }
 
-        this._requestRamIndicatorsData({intervention_id: interventionId, cp_output_id: cpId});
+      this._requestRamIndicatorsData({
+        intervention_id: interventionId,
+        cp_output_id: cpId
       });
+    });
   }
 
   _requestRamIndicatorsData(reqPayload: any) {
@@ -105,28 +103,38 @@ class EtoolsRamIndicators extends EndpointsMixin(PolymerElement) {
     sendRequest({
       method: 'GET',
       endpoint: this.getEndpoint('cpOutputRamIndicators', reqPayload)
-    }).then((resp: any) => {
-      this.set('loading', false);
-      this.set('ramIndicators', resp.ram_indicators.map((ri: any) => ri.indicator_name));
-    }).catch((error: any) => {
-      if (error.status === 404) {
-        fireEvent(this, 'toast', {
-          text: 'PMP is not synced with PRP',
-          showCloseBtn: true
-        });
-      } else {
-        parseRequestErrorsAndShowAsToastMsgs(error, this);
-      }
-      logError('Error occurred on RAM Indicators request for PD ID: ' + reqPayload.intervention_id +
-        ' and CP Output ID: ' + reqPayload.cp_output_id, 'etools-ram-indicators', error);
-      this.set('loading', false);
-    });
+    })
+      .then((resp: any) => {
+        this.set('loading', false);
+        this.set(
+          'ramIndicators',
+          resp.ram_indicators.map((ri: any) => ri.indicator_name)
+        );
+      })
+      .catch((error: any) => {
+        if (error.status === 404) {
+          fireEvent(this, 'toast', {
+            text: 'PMP is not synced with PRP',
+            showCloseBtn: true
+          });
+        } else {
+          parseRequestErrorsAndShowAsToastMsgs(error, this);
+        }
+        logError(
+          'Error occurred on RAM Indicators request for PD ID: ' +
+            reqPayload.intervention_id +
+            ' and CP Output ID: ' +
+            reqPayload.cp_output_id,
+          'etools-ram-indicators',
+          error
+        );
+        this.set('loading', false);
+      });
   }
 
   _noRamIndicators(l: number) {
     return typeof l !== 'number' || l === 0;
   }
-
 }
 
 window.customElements.define(EtoolsRamIndicators.is, EtoolsRamIndicators);

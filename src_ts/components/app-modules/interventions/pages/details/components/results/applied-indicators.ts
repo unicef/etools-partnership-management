@@ -10,14 +10,12 @@ import {AppliedIndicatorEl} from './applied-indicator.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 
-
 /**
-  * @polymer
-  * @customElement
-  * @appliesMixin RepeatableDataSetsMixinMixin
-  */
+ * @polymer
+ * @customElement
+ * @appliesMixin RepeatableDataSetsMixinMixin
+ */
 class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
-
   static get template() {
     return html`
       <style>
@@ -29,24 +27,24 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
           margin-right: -24px;
         }
       </style>
-      <template is="dom-repeat"
-                items="{{dataItems}}"
-                as="indicator" index-as="indicatorIndex">
-        <applied-indicator hidden$="[[_hideIndicator(indicator, showInactiveIndicators)]]"
-                          data-args$="[[indicatorIndex]]"
-                          on-edit-indicator="_editIndicator"
-                          on-delete-indicator="_openDeleteConfirmation"
-                          on-deactivate-indicator="_openDeactivateConfirmation"
-                          indicator="[[indicator]]"
-                          intervention-status="[[interventionStatus]]"
-                          edit-mode="[[editMode]]">
+      <template is="dom-repeat" items="{{dataItems}}" as="indicator" index-as="indicatorIndex">
+        <applied-indicator
+          hidden$="[[_hideIndicator(indicator, showInactiveIndicators)]]"
+          data-args$="[[indicatorIndex]]"
+          on-edit-indicator="_editIndicator"
+          on-delete-indicator="_openDeleteConfirmation"
+          on-deactivate-indicator="_openDeactivateConfirmation"
+          indicator="[[indicator]]"
+          intervention-status="[[interventionStatus]]"
+          edit-mode="[[editMode]]"
+        >
         </applied-indicator>
       </template>
     `;
   }
 
   @property({type: String})
-  _deleteEpName: string = 'getEditDeleteIndicator';
+  _deleteEpName = 'getEditDeleteIndicator';
 
   @property({type: String})
   resultLinkIndex!: string;
@@ -67,16 +65,14 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
   indicToDeactivateIndex!: number;
 
   @property({type: Boolean})
-  showInactiveIndicators: boolean = false;
-
+  showInactiveIndicators = false;
 
   private _onDeactivateHandler!: (...args: any[]) => any;
 
   ready() {
     super.ready();
 
-    const deactivateDialog = document.querySelector('body')!
-      .querySelector('etools-dialog#deactivateIndicatorDialog');
+    const deactivateDialog = document.querySelector('body')!.querySelector('etools-dialog#deactivateIndicatorDialog');
     if (deactivateDialog) {
       this.deactivateConfirmDialog = deactivateDialog as EtoolsDialog;
     } else {
@@ -140,19 +136,22 @@ class AppliedIndicators extends RepeatableDataSetsMixin(PolymerElement) {
     if (!indicatorId) {
       return;
     }
-    const self = this;
-    const endpoint = this.getEndpoint('getEditDeleteIndicator', {id: indicatorId});
+    const endpoint = this.getEndpoint('getEditDeleteIndicator', {
+      id: indicatorId
+    });
     sendRequest({
       method: 'PATCH',
       endpoint: endpoint,
       body: {
         is_active: false
       }
-    }).then(function(resp: any) {
-      self._handleDeactivateResponse(resp);
-    }).catch(function(error: any) {
-      self._handleDeactivateError(error);
-    });
+    })
+      .then((resp: any) => {
+        this._handleDeactivateResponse(resp);
+      })
+      .catch((error: any) => {
+        this._handleDeactivateError(error);
+      });
   }
 
   _handleDeactivateResponse(resp: any) {

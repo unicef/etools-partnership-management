@@ -14,14 +14,12 @@ import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import {Indicator} from '../../../../../../../typings/intervention.types';
 import {property} from '@polymer/decorators';
 
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin IndicatorsCommonMixin
  */
 class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
-
   static get template() {
     return html`
       ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
@@ -69,7 +67,6 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
           @apply --layout-end;
           padding-bottom: 12px;
         }
-
       </style>
 
       <div class="row-h flex-c">
@@ -77,18 +74,19 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
           <label class="paper-label">Type </label>
           <div class="radioGroup">
             <paper-radio-group selected="{{indicator.indicator.unit}}">
-              <paper-radio-button disabled$="[[readonly]]" class="no-left-padding" name="number">Quantity / Scale
+              <paper-radio-button disabled$="[[readonly]]" class="no-left-padding" name="number"
+                >Quantity / Scale
               </paper-radio-button>
               <paper-radio-button disabled$="[[readonly]]" name="percentage">Percent/Ratio</paper-radio-button>
             </paper-radio-group>
-
           </div>
         </div>
         <div class="layout-vertical" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
           <label class="paper-label">Display Type </label>
           <div class="radioGroup">
             <paper-radio-group selected="{{indicator.indicator.display_type}}">
-              <paper-radio-button disabled="[[readonly]]" class="no-left-padding" name="percentage">Percentage
+              <paper-radio-button disabled="[[readonly]]" class="no-left-padding" name="percentage"
+                >Percentage
               </paper-radio-button>
               <paper-radio-button disabled="[[readonly]]" name="ratio">Ratio</paper-radio-button>
             </paper-radio-group>
@@ -96,23 +94,37 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
         </div>
       </div>
       <div class="row-h flex-c">
-        <paper-input id="titleEl" required label="Indicator"
-                    value="{{indicator.indicator.title}}" placeholder="&#8212;"
-                    error-message="Please add a title" auto-validate
-                    readonly$="[[readonly]]">
+        <paper-input
+          id="titleEl"
+          required
+          label="Indicator"
+          value="{{indicator.indicator.title}}"
+          placeholder="&#8212;"
+          error-message="Please add a title"
+          auto-validate
+          readonly$="[[readonly]]"
+        >
         </paper-input>
       </div>
 
       <!-- Baseline & Target -->
       <div class="row-h flex-c" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
         <div class="col col-3">
-          <paper-input id="numeratorLbl" label="Numerator Label"
-                      value="{{indicator.numerator_label}}" placeholder="&#8212;">
+          <paper-input
+            id="numeratorLbl"
+            label="Numerator Label"
+            value="{{indicator.numerator_label}}"
+            placeholder="&#8212;"
+          >
           </paper-input>
         </div>
         <div class="col col-3">
-          <paper-input id="denomitorLbl" label="Denominator Label"
-                      value="{{indicator.denominator_label}}" placeholder="&#8212;">
+          <paper-input
+            id="denomitorLbl"
+            label="Denominator Label"
+            value="{{indicator.denominator_label}}"
+            placeholder="&#8212;"
+          >
           </paper-input>
         </div>
       </div>
@@ -120,98 +132,116 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
         <template is="dom-if" if="[[!_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
           <div class="col col-3">
             <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
-              <paper-input id="baselineNumeric"
-                          label="Baseline"
-                          value="{{indicator.baseline.v}}"
-                          allowed-pattern="[0-9\.\,]"
-                          pattern="[[numberPattern]]"
-                          auto-validate
-                          error-message="Invalid number"
-                          placeholder="&#8212;"
-                          disabled="[[baselineIsUnknown]]">
+              <paper-input
+                id="baselineNumeric"
+                label="Baseline"
+                value="{{indicator.baseline.v}}"
+                allowed-pattern="[0-9.,]"
+                pattern="[[numberPattern]]"
+                auto-validate
+                error-message="Invalid number"
+                placeholder="&#8212;"
+                disabled="[[baselineIsUnknown]]"
+              >
               </paper-input>
             </template>
             <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
-              <paper-input id="baselineNonNumeric"
-                          label="Baseline"
-                          value="{{indicator.baseline.v}}"
-                          allowed-pattern="[0-9]"
-                          pattern="[[digitsPattern]]"
-                          auto-validate
-                          error-message="Invalid number"
-                          placeholder="&#8212;"
-                          disabled="[[baselineIsUnknown]]">
+              <paper-input
+                id="baselineNonNumeric"
+                label="Baseline"
+                value="{{indicator.baseline.v}}"
+                allowed-pattern="[0-9]"
+                pattern="[[digitsPattern]]"
+                auto-validate
+                error-message="Invalid number"
+                placeholder="&#8212;"
+                disabled="[[baselineIsUnknown]]"
+              >
               </paper-input>
             </template>
           </div>
           <div class="col col-3">
-            <paper-input label="Target" id="targetElForNumericUnit"
-                        value="{{indicator.target.v}}"
-                        placeholder="&#8212;"
-                        allowed-pattern="[0-9\.\,]"
-                        required
-                        pattern="[[numberPattern]]"
-                        auto-validate
-                        error-message="Please add a valid target"
-                        hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
+            <paper-input
+              label="Target"
+              id="targetElForNumericUnit"
+              value="{{indicator.target.v}}"
+              placeholder="&#8212;"
+              allowed-pattern="[0-9.,]"
+              required
+              pattern="[[numberPattern]]"
+              auto-validate
+              error-message="Please add a valid target"
+              hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]"
+            >
             </paper-input>
-            <paper-input label="Target" id="targetElForNonNumericUnit"
-                        value="{{indicator.target.v}}"
-                        placeholder="&#8212;"
-                        allowed-pattern="[0-9]"
-                        required
-                        pattern="[[digitsPattern]]"
-                        auto-validate
-                        error-message="Please add a valid target"
-                        hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
+            <paper-input
+              label="Target"
+              id="targetElForNonNumericUnit"
+              value="{{indicator.target.v}}"
+              placeholder="&#8212;"
+              allowed-pattern="[0-9]"
+              required
+              pattern="[[digitsPattern]]"
+              auto-validate
+              error-message="Please add a valid target"
+              hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]"
+            >
             </paper-input>
           </div>
         </template>
         <template is="dom-if" if="[[_isRatioType(indicator.indicator.unit, indicator.indicator.display_type)]]">
           <div class="col-3 layout-horizontal">
-            <paper-input id="baselineNumerator"
-                        label="Baseline"
-                        value="{{indicator.baseline.v}}"
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        auto-validate
-                        error-message="Invalid"
-                        placeholder="Numerator"
-                        disabled="[[baselineIsUnknown]]">
+            <paper-input
+              id="baselineNumerator"
+              label="Baseline"
+              value="{{indicator.baseline.v}}"
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              error-message="Invalid"
+              placeholder="Numerator"
+              disabled="[[baselineIsUnknown]]"
+            >
             </paper-input>
             <div class="layout-horizontal bottom-aligned dash-separator">/</div>
             <paper-input
-                id="baselineDenominator"
-                value="{{indicator.baseline.d}}"
-                allowed-pattern="[0-9]"
-                pattern="[[digitsNotStartingWith0Pattern]]"
-                auto-validate
-                error-message="Invalid"
-                placeholder="Denominator"
-                disabled="[[baselineIsUnknown]]">
+              id="baselineDenominator"
+              value="{{indicator.baseline.d}}"
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              error-message="Invalid"
+              placeholder="Denominator"
+              disabled="[[baselineIsUnknown]]"
+            >
             </paper-input>
           </div>
           <div class="col col-3">
-            <paper-input label="Target" id="targetNumerator"
-                        value="{{indicator.target.v}}"
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        auto-validate
-                        required
-                        auto-validate
-                        error-message="Invalid"
-                        placeholder="Numerator">
+            <paper-input
+              label="Target"
+              id="targetNumerator"
+              value="{{indicator.target.v}}"
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              required
+              auto-validate
+              error-message="Invalid"
+              placeholder="Numerator"
+            >
             </paper-input>
             <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input id="targetDenominator"
-                        value="{{indicator.target.d}}"
-                        required
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        auto-validate
-                        error-message="Empty or < 1"
-                        placeholder="Denominator"
-                        readonly$="[[isReadonlyDenominator(interventionStatus, indicator.id)]]">
+            <paper-input
+              id="targetDenominator"
+              value="{{indicator.target.d}}"
+              required
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              error-message="Empty or < 1"
+              placeholder="Denominator"
+              readonly$="[[isReadonlyDenominator(interventionStatus, indicator.id)]]"
+            >
             </paper-input>
           </div>
         </template>
@@ -226,29 +256,31 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
       </div>
       <!-- Baseline & Target -->
       <div class="row-h flex-c">
-        <paper-textarea label="Means of Verification"
-                        type="text"
-                        value="{{indicator.means_of_verification}}"
-                        placeholder="&#8212;">
+        <paper-textarea
+          label="Means of Verification"
+          type="text"
+          value="{{indicator.means_of_verification}}"
+          placeholder="&#8212;"
+        >
         </paper-textarea>
       </div>
       <div class="row-h flex-c">
-        <etools-dropdown-multi id="locationsDropdw"
-                              label="Locations"
-                              placeholder="&#8212;"
-                              selected-values="{{indicator.locations}}"
-                              options="[[locationOptions]]"
-                              option-label="name"
-                              option-value="id"
-                              required
-                              auto-validate
-                              error-message="Please select locations"
-                              disable-on-focus-handling
-                              fit-into="etools-dialog">
+        <etools-dropdown-multi
+          id="locationsDropdw"
+          label="Locations"
+          placeholder="&#8212;"
+          selected-values="{{indicator.locations}}"
+          options="[[locationOptions]]"
+          option-label="name"
+          option-value="id"
+          required
+          auto-validate
+          error-message="Please select locations"
+          disable-on-focus-handling
+          fit-into="etools-dialog"
+        >
         </etools-dropdown-multi>
-        <paper-button class="secondary-btn add-locations"
-                      on-click="_addAllLocations"
-                      title="Add all locations">
+        <paper-button class="secondary-btn add-locations" on-click="_addAllLocations" title="Add all locations">
           Add all
         </paper-button>
       </div>
@@ -259,7 +291,7 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
   indicator!: Indicator;
 
   @property({type: Boolean, observer: '_readonlyChanged'})
-  readonly: boolean = false;
+  readonly = false;
 
   @property({type: Array})
   locationOptions!: [];
@@ -291,14 +323,14 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
       this.baselineIsUnknown = false;
       this.readonly = false;
     } else {
-      this.baselineIsUnknown = !(indicator.baseline) || this._isEmptyExcept0(indicator.baseline.v as any);
+      this.baselineIsUnknown = !indicator.baseline || this._isEmptyExcept0(indicator.baseline.v as any);
       this.readonly = true;
     }
   }
 
   isReadonlyDenominator(interventionStatus: string, indicId: string) {
     if (interventionStatus && interventionStatus.toLowerCase() === 'active') {
-      return (indicId ? true : false);
+      return indicId ? true : false;
     }
     return false;
   }
@@ -347,16 +379,16 @@ class NonClusterIndicator extends IndicatorsCommonMixin(PolymerElement) {
     if (this._getIndUnit() === 'percentage' && this._getIndDisplayType() === 'ratio') {
       return ['baselineNumerator', 'baselineDenominator', 'targetNumerator', 'targetDenominator'];
     }
-    return (this._unitIsNumeric(this.indicator.indicator.unit))
-      ? ['targetElForNumericUnit', 'baselineNumeric'] : ['targetElForNonNumericUnit', 'baselineNonNumeric'];
+    return this._unitIsNumeric(this.indicator.indicator.unit)
+      ? ['targetElForNumericUnit', 'baselineNumeric']
+      : ['targetElForNonNumericUnit', 'baselineNonNumeric'];
   }
 
   _isRatioType() {
     if (!this.indicator) {
       return false;
     }
-    return (this._getIndDisplayType() === 'ratio' &&
-      this._getIndUnit() === 'percentage');
+    return this._getIndDisplayType() === 'ratio' && this._getIndUnit() === 'percentage';
   }
 
   _getIndDisplayType() {

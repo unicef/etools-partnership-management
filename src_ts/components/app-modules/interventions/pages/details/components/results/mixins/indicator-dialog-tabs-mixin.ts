@@ -9,7 +9,6 @@ import {property} from '@polymer/decorators';
  */
 function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class IndicatorDialogTabsClass extends baseClass {
-
     @property({type: Array})
     indicatorDataTabs: EtoolsTab[] = [
       {
@@ -25,7 +24,7 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
     ];
 
     @property({type: String})
-    activeTab: string = 'details';
+    activeTab = 'details';
 
     static get observers() {
       return [
@@ -62,7 +61,6 @@ function IndicatorDialogTabsMixin<T extends Constructor<PolymerElement>>(baseCla
     updateActiveTab(tab: string) {
       this.set('activeTab', tab);
     }
-
   }
   return IndicatorDialogTabsClass;
 }

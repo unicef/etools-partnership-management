@@ -12,7 +12,6 @@ import {GenericObject} from '../../../../../../typings/globals.types.js';
  * @customElement
  */
 class ReportOverall extends PolymerElement {
-
   static get is() {
     return 'report-overall';
   }
@@ -44,7 +43,6 @@ class ReportOverall extends PolymerElement {
 
   @property({type: Object})
   latestIndicator!: GenericObject;
-
 }
 
 window.customElements.define(ReportOverall.is, ReportOverall);

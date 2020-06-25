@@ -1,6 +1,6 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import './etools-toast';
-import {Constructor} from '../../typings/globals.types';
+import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';
@@ -11,15 +11,14 @@ import {EtoolsToastEl} from './etools-toast';
  */
 function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ToastNotifsClass extends baseClass {
-
     @property({type: Object})
     _toast: EtoolsToastEl | null = null;
 
     @property({type: Array})
-    _toastQueue: object[] = [];
+    _toastQueue: GenericObject[] = [];
 
     @property({type: String})
-    currentToastMessage: string = '';
+    currentToastMessage = '';
 
     public connectedCallback() {
       super.connectedCallback();
@@ -33,7 +32,6 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
 
       this.removeEventListener('toast', this.queueToast as any);
       if (this._toast) {
-
         this._toast.removeEventListener('toast-confirm', this._toggleToast);
         this._toast.removeEventListener('toast-closed', this.dequeueToast);
       }
@@ -51,7 +49,7 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
         const toastProperties = this._toast!.prepareToastAndGetShowProperties(detail);
         this._showToast(toastProperties);
       } else {
-        const alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
+        const alreadyInQueue = this._toastQueue.filter(function (toastDetail) {
           return JSON.stringify(toastDetail) === JSON.stringify(detail);
         });
         if (alreadyInQueue.length === 0) {

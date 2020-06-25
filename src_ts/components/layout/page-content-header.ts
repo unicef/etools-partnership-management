@@ -75,7 +75,6 @@ class PageContentHeader extends PolymerElement {
             padding: 0 5px 5px 5px;
           }
         }
-
       </style>
 
       <div class="content-header-row title-row">
@@ -92,8 +91,7 @@ class PageContentHeader extends PolymerElement {
   }
 
   @property({type: Boolean, reflectToAttribute: true})
-  withTabsVisible: boolean = false;
-
+  withTabsVisible = false;
 }
 
 window.customElements.define(PageContentHeader.is, PageContentHeader);

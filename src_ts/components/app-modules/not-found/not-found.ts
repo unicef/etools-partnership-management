@@ -21,7 +21,7 @@ class NotFound extends PolymerElement {
           box-sizing: border-box;
         }
 
-        div[elevation="1"] {
+        div[elevation='1'] {
           @apply --layout-vertical;
           @apply --layout-flex;
         }

@@ -21,17 +21,15 @@ import {property} from '@polymer/decorators';
 import {Agreement} from '../../../agreements/agreement.types.js';
 import {GenericObject} from '../../../../../typings/globals.types.js';
 
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
 class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
-
   static get template() {
     return html`
-     ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles}
       <style include="paper-material-styles">
         :host {
           @apply --layout-vertical;
@@ -67,7 +65,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
           background-color: var(--warning-color);
           text-transform: capitalize;
           font-weight: bold;
-          color: var(--light-primary-text-color, #FFFFFF);
+          color: var(--light-primary-text-color, #ffffff);
         }
 
         #top-container {
@@ -81,10 +79,10 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
             <iron-label for="cp_outputs_list">
               Cp Output(s)
             </iron-label>
-            <br/>
+            <br />
             <div class="content" id="cp_outputs_list">
               <template is="dom-repeat" items="[[interventionCpOutputs]]" as="cpOut">
-                <strong>[[ cpOut ]]</strong><br/>
+                <strong>[[ cpOut ]]</strong><br />
               </template>
             </div>
           </div>
@@ -95,13 +93,15 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
             <iron-label for="document_title">
               Document Title
             </iron-label>
-            <br/>
+            <br />
             <div class="content" id="document_title">
               [[ intervention.title ]]
             </div>
 
             <div class="secondary">
-              Under <strong class="blue">[[interventionAgreement.agreement_type]]</strong> with
+              Under
+              <strong class="blue">[[interventionAgreement.agreement_type]]</strong>
+              with
               <a href$="/pmp/partners/[[intervention.partner_id]]/details">
                 <strong class="blue">[[intervention.partner]]</strong>
               </a>
@@ -114,7 +114,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
             <iron-label for="interventions_timeline">
               Timeline
             </iron-label>
-            <br/>
+            <br />
             <div class="content" id="interventions_timeline">
               [[getDateDisplayValue(intervention.start)]] - [[getDateDisplayValue(intervention.end)]]
             </div>
@@ -123,7 +123,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
             <iron-label for="intervention-sections">
               Sections
             </iron-label>
-            <br/>
+            <br />
             <div class="content" id="intervention-sections">
               [[getDisplayValue(inteventionSections)]]
             </div>
@@ -132,18 +132,21 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
       </div>
 
       <etools-content-panel id="fund-reservation-display" class="content-section" panel-title="Implementation Status">
-        <fund-reservations-display intervention="[[intervention]]"
-                                    frs-details="[[intervention.frs_details]]"></fund-reservations-display>
+        <fund-reservations-display
+          intervention="[[intervention]]"
+          frs-details="[[intervention.frs_details]]"
+        ></fund-reservations-display>
       </etools-content-panel>
 
       <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Activities">
-        <monitoring-visits-list intervention-id="[[intervention.id]]"
-                                partner-id="[[intervention.partner_id]]"
-                                intervention-overview
-                                show-tpm-visits>
+        <monitoring-visits-list
+          intervention-id="[[intervention.id]]"
+          partner-id="[[intervention.partner_id]]"
+          intervention-overview
+          show-tpm-visits
+        >
         </monitoring-visits-list>
       </etools-content-panel>
-
     `;
   }
 
@@ -193,10 +196,12 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
      * Disable loading message for overview tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'interv-page'
+    });
     fireEvent(this, 'tab-content-attached');
   }
-
 
   _parseCpOutputs(cpOutputsLength: number, resultsLength: number) {
     if (!cpOutputsLength || !resultsLength) {
@@ -208,7 +213,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
     const uniqueIds: number[] = [];
     const interventionCpOutputs: string[] = [];
 
-    this.resultLinks.forEach(function(res: ExpectedResult) {
+    this.resultLinks.forEach(function (res: ExpectedResult) {
       ids[res.cp_output] = true;
     });
 
@@ -219,7 +224,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
       }
     }
     if (Array.isArray(this.cpOutputs) && this.cpOutputs.length > 0) {
-      this.cpOutputs.forEach(function(cpo) {
+      this.cpOutputs.forEach(function (cpo) {
         if (uniqueIds.indexOf(cpo.id) > -1) {
           interventionCpOutputs.push(cpo.name);
         }
@@ -242,8 +247,7 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
     const interventionSections = this.intervention.sections.map((sectionId: string) => parseInt(sectionId, 10));
     const sectionNames: string[] = [];
 
-
-    this.sections.forEach(function(section: GenericObject) {
+    this.sections.forEach(function (section: GenericObject) {
       if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
         sectionNames.push(section.name);
       }
@@ -251,7 +255,6 @@ class InterventionOverview extends connect(store)(CommonMixin(PolymerElement)) {
 
     return sectionNames;
   }
-
 }
 
 window.customElements.define('intervention-overview', InterventionOverview);

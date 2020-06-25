@@ -12,7 +12,7 @@ import {property} from '@polymer/decorators';
 function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class AmendmentModeUIClass extends baseClass {
     @property({type: Boolean})
-    amendmentModeActive: boolean = false;
+    amendmentModeActive = false;
 
     public amdStateChanged(state: RootState) {
       if (state.pageData!.in_amendment !== this.amendmentModeActive) {
@@ -28,7 +28,7 @@ function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: 
       /**
        * For now amendment mode is PD specific, but if needed can be used on any page with this method code updated
        */
-      const intervElem = this.shadowRoot!.querySelector('#interventions') as unknown as InterventionsModule;
+      const intervElem = (this.shadowRoot!.querySelector('#interventions') as unknown) as InterventionsModule;
       if (intervElem) {
         intervElem._showFinalizeAmendmentDialog();
       }

@@ -25,7 +25,6 @@ import CONSTANTS from '../../../../config/app-constants.js';
  * @appliesMixin EndpointsMixin
  */
 class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-
   static get template() {
     return html`
       ${SharedStyles}
@@ -35,17 +34,20 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
         }
       </style>
       <etools-dialog
-          id="reportRatingDialog"
-          size="md"
-          keep-dialog-open
-          spinner-text="Sending rating..."
-          disable-confirm-btn="[[!selectedOverallStatus.length]]"
-          ok-btn-text="[[okBtnText]]"
-          cancel-btn-text="Cancel"
-          dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
-          on-confirm-btn-clicked="saveStatus">
+        id="reportRatingDialog"
+        size="md"
+        keep-dialog-open
+        spinner-text="Sending rating..."
+        disable-confirm-btn="[[!selectedOverallStatus.length]]"
+        ok-btn-text="[[okBtnText]]"
+        cancel-btn-text="Cancel"
+        dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
+        on-confirm-btn-clicked="saveStatus"
+      >
         <div id="content-box" hidden$="[[isSRReport]]">
-          <p>Rate the overall progress of this PD/SSFA in light of this report and monitoring visits.</p>
+          <p>
+            Rate the overall progress of this PD/SSFA in light of this report and monitoring visits.
+          </p>
           <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
             <paper-radio-button name="Met"> Met</paper-radio-button>
             <paper-radio-button name="OnT"> On track</paper-radio-button>
@@ -67,10 +69,10 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   toastEventSource!: HTMLElement;
 
   @property({type: String})
-  selectedOverallStatus: string = '';
+  selectedOverallStatus = '';
 
   @property({type: String})
-  okBtnText: string = '';
+  okBtnText = '';
 
   @property({type: Boolean})
   isSRReport!: boolean;
@@ -103,7 +105,6 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
   }
 
   saveStatus() {
-    const self = this;
     const requestBody = {
       status: 'Acc',
       overall_status: this.selectedOverallStatus,
@@ -112,12 +113,13 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
     };
     this.startSpinner();
     this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
-      .then(function(response: any) {
-        fireEvent(self, 'report-accepted', {report: response});
-        self.stopSpinner();
-        self.close();
-      }).catch(function(error: any) {
-        self._handleErrorResponse(error);
+      .then((response: any) => {
+        fireEvent(this, 'report-accepted', {report: response});
+        this.stopSpinner();
+        this.close();
+      })
+      .catch((error: any) => {
+        this._handleErrorResponse(error);
       });
   }
 

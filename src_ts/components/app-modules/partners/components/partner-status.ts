@@ -9,6 +9,7 @@ import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
 import {Partner} from '../../../../models/partners.models.js';
+import {GenericObject} from '../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -16,7 +17,6 @@ import {Partner} from '../../../../models/partners.models.js';
  * @appliesMixin EtoolsStatusCommonMixin
  */
 class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
-
   static get template() {
     // language=HTML
     return html`
@@ -26,11 +26,11 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
           --etools-status-container: {
             height: auto;
             min-height: 40px;
-          };
+          }
           --etools-status-label-style: {
             font-weight: normal;
             width: 120px;
-          };
+          }
         }
         /* HD res: 1360/1366 x 768 */
         @media only screen and (max-width: 1359px) {
@@ -38,15 +38,16 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
             --etools-status-label-style: {
               font-weight: normal;
               width: 100%;
-            };
+            }
           }
         }
-
       </style>
 
-      <etools-status statuses="[[possibleStatuses]]"
-                     actions="[[possibleActions]]"
-                     on-partner-delete="_showDeleteConfirmationDialog">
+      <etools-status
+        statuses="[[possibleStatuses]]"
+        actions="[[possibleActions]]"
+        on-partner-delete="_showDeleteConfirmationDialog"
+      >
       </etools-status>
     `;
   }
@@ -55,7 +56,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   partner!: Partner;
 
   @property({type: Boolean})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Object})
   deleteWarningDialogContent: any = null;
@@ -101,7 +102,9 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       content: this.deleteWarningDialogContent
     });
 
-    this.warningDialog.updateStyles({'--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'});
+    this.warningDialog.updateStyles({
+      '--paper-dialog-scrollable': 'var(--pmp-paper-dialog-content)'
+    });
 
     this._handleStickyScroll();
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -117,18 +120,15 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       {
         label: CONSTANTS.PARTNER_STATUSES.NotSynced,
         icon: 'info',
-        iconStyles: 'width: 19px; height: 19px; color: ' +
-            this.getComputedStyleValue('--primary-background-color'),
-        iconContainerStyles: 'background-color: ' +
-            this.getComputedStyleValue('--status-not-synced-color'),
+        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
+        iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-not-synced-color'),
         hidden: true,
         completed: false
       },
       {
         label: CONSTANTS.PARTNER_STATUSES.SyncedFromVISION,
         icon: 'autorenew',
-        iconStyles: 'width: 19px; height: 19px; color: ' +
-            this.getComputedStyleValue('--primary-background-color'),
+        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
         hidden: true,
         completed: false
@@ -136,8 +136,7 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       {
         label: CONSTANTS.PARTNER_STATUSES.BlockedInVISION,
         icon: 'block',
-        iconStyles: 'width: 19px; height: 19px; color: ' +
-            this.getComputedStyleValue('--primary-background-color'),
+        iconStyles: 'width: 19px; height: 19px; color: ' + this.getComputedStyleValue('--primary-background-color'),
         iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
         hidden: true,
         completed: false
@@ -146,17 +145,25 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         label: CONSTANTS.PARTNER_STATUSES.MarkedForDeletionInVISION,
         icon: 'delete-forever',
         iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
-        iconContainerStyles: 'background-color: ' +
-            this.getComputedStyleValue('--primary-background-color'),
+        iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--primary-background-color'),
         hidden: true,
         completed: false
       }
     ]);
   }
 
-  _partnerStatusChanged(visionSynced: boolean, deletedFlag: boolean, blocked: boolean, possibleStatuses: object[]) {
-    if (typeof visionSynced === 'undefined' && typeof deletedFlag === 'undefined'
-        && typeof blocked === 'undefined' && isEmptyObject(possibleStatuses)) {
+  _partnerStatusChanged(
+    visionSynced: boolean,
+    deletedFlag: boolean,
+    blocked: boolean,
+    possibleStatuses: GenericObject[]
+  ) {
+    if (
+      typeof visionSynced === 'undefined' &&
+      typeof deletedFlag === 'undefined' &&
+      typeof blocked === 'undefined' &&
+      isEmptyObject(possibleStatuses)
+    ) {
       return;
     }
     this._computeAvailableStatuses();
@@ -240,13 +247,19 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     }
   }
   _showSyncedStatus() {
-    return this.partner.vision_synced === true && this.partner.deleted_flag === false &&
-        (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false);
+    return (
+      this.partner.vision_synced === true &&
+      this.partner.deleted_flag === false &&
+      (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false)
+    );
   }
 
   _showBlockedStatus() {
-    return this.partner.deleted_flag === false &&
-        (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true);
+    return (
+      this.partner.deleted_flag === false &&
+      typeof this.partner.blocked !== 'undefined' &&
+      this.partner.blocked === true
+    );
   }
 
   _showMakedForDeletionStatus() {
@@ -256,7 +269,6 @@ class PartnerStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   _showNotSyncedStatus() {
     return this.partner.vision_synced === false;
   }
-
 }
 
 window.customElements.define('partner-status', PartnerStatus);

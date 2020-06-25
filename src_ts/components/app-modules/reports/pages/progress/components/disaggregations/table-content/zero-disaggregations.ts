@@ -9,7 +9,6 @@ import {property} from '@polymer/decorators';
  * @customElement
  */
 class ZeroDisaggregations extends PolymerElement {
-
   static get is() {
     return 'zero-disaggregations';
   }
@@ -18,10 +17,7 @@ class ZeroDisaggregations extends PolymerElement {
     return html`
       ${disaggregationTableStyles}
 
-      <disaggregation-table-row
-          data="[[totalRow]]"
-          indicator-type="[[data.display_type]]"
-          row-type="totalsRow">
+      <disaggregation-table-row data="[[totalRow]]" indicator-type="[[data.display_type]]" row-type="totalsRow">
       </disaggregation-table-row>
     `;
   }
@@ -47,7 +43,6 @@ class ZeroDisaggregations extends PolymerElement {
       }
     };
   }
-
 }
 
 window.customElements.define(ZeroDisaggregations.is, ZeroDisaggregations);

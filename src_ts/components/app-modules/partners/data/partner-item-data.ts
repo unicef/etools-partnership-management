@@ -11,7 +11,6 @@ import {Partner} from '../../../../models/partners.models';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {tryGetResponseError, formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 
-
 /**
  * @polymer
  * @customElement
@@ -19,14 +18,13 @@ import {tryGetResponseError, formatServerErrorAsText} from '@unicef-polymer/etoo
  * @appliesMixin EndpointsMixin
  * @appliesMixin AjaxServerErrorsMixin
  */
-export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(PolymerElement))) {
-
+export class PartnerItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)) {
   @property({type: Object})
   partnerEndpoints = {
     DETAILS: 'partnerDetails',
     CREATE: 'createPartner',
     DELETE: 'deletePartner'
-  }
+  };
 
   @property({type: Object, readOnly: true, notify: true})
   partner!: Partner;
@@ -35,7 +33,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   partnerId: number | null = null;
 
   @property({type: Number})
-  deletedPartnerId: number = -1;
+  deletedPartnerId = -1;
 
   @property({type: Object})
   handleSuccResponseAdditionalCallback!: ((...args: any) => void) | null;
@@ -43,10 +41,10 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   @property({type: Object})
   handleErrResponseAdditionalCallback!: ((...args: any) => void) | null;
 
-  private _skipDefaultErrorHandler: boolean = false;
+  private _skipDefaultErrorHandler = false;
 
   @property({type: String})
-  ajaxLoadingMsgSource: string = 'partner-data';
+  ajaxLoadingMsgSource = 'partner-data';
 
   _partnerIdChanged(newId: any) {
     if (newId) {
@@ -59,19 +57,25 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
         active: true,
         loadingSource: this.ajaxLoadingMsgSource
       });
-      this._triggerPartnerRequest({endpoint: this.getEndpoint(this.partnerEndpoints.DETAILS, {id: newId})});
+      this._triggerPartnerRequest({
+        endpoint: this.getEndpoint(this.partnerEndpoints.DETAILS, {
+          id: newId
+        })
+      });
     }
   }
 
   _triggerPartnerRequest(options: any) {
     const ajaxMethod = options.method || 'GET';
-    return sendRequest(options).then((resp: any) => {
-      this._handleSuccResponse(resp, ajaxMethod);
-      return true;
-    }).catch((error: any) => {
-      this._handleErrorResponse(error, ajaxMethod);
-      return false;
-    });
+    return sendRequest(options)
+      .then((resp: any) => {
+        this._handleSuccResponse(resp, ajaxMethod);
+        return true;
+      })
+      .catch((error: any) => {
+        this._handleErrorResponse(error, ajaxMethod);
+        return false;
+      });
   }
 
   public _handleSuccResponse(response: any, ajaxMethod: any) {
@@ -88,9 +92,11 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
 
     if (['GET', 'DELETE'].indexOf(ajaxMethod) === -1) {
       // update the partners list in dexieDB
-      window.EtoolsPmpApp.DexieDb.table('partners').put(partner).then(() => {
-        fireEvent(this, 'reload-list');
-      });
+      window.EtoolsPmpApp.DexieDb.table('partners')
+        .put(partner)
+        .then(() => {
+          fireEvent(this, 'reload-list');
+        });
     }
     if (ajaxMethod === 'DELETE') {
       store.dispatch(deletePartner(this.deletedPartnerId));
@@ -99,7 +105,8 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
   }
 
   public _deletePartnerFromDexie(id: any) {
-    window.EtoolsPmpApp.DexieDb.partners.where('id')
+    window.EtoolsPmpApp.DexieDb.partners
+      .where('id')
       .equals(parseInt(id, 10))
       .delete()
       .then((deleteCount: number) => this._handlePartnerDeleteFromDexieSuccess(deleteCount))
@@ -131,7 +138,8 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
     // Partner dexie deleted issue
     logError('Partner delete from local dexie db failed!', 'partner-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
-      text: 'The partner was deleted from server database, but there was an issue on cleaning ' +
+      text:
+        'The partner was deleted from server database, but there was an issue on cleaning ' +
         'partner data from browser cache. Use refresh data functionality to update cached partners data.',
       showCloseBtn: true
     });
@@ -152,8 +160,7 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
     this.set('_skipDefaultErrorHandler', false);
 
     if (typeof this.handleErrResponseAdditionalCallback === 'function') {
-      this.handleErrResponseAdditionalCallback.bind(this,
-        formatServerErrorAsText(tryGetResponseError(response)))();
+      this.handleErrResponseAdditionalCallback.bind(this, formatServerErrorAsText(tryGetResponseError(response)))();
     }
     this.handleErrResponseAdditionalCallback = null;
     this.handleSuccResponseAdditionalCallback = null;
@@ -178,7 +185,11 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
 
     this.set('_skipDefaultErrorHandler', true);
     const endpoint = this.getEndpoint(this.partnerEndpoints.CREATE, vendorNoObj);
-    this._triggerPartnerRequest({method: 'POST', endpoint: endpoint, body: {}});
+    this._triggerPartnerRequest({
+      method: 'POST',
+      endpoint: endpoint,
+      body: {}
+    });
   }
 
   public deletePartner(partner: any) {
@@ -186,13 +197,22 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
       return;
     }
     this.deletedPartnerId = partner.id;
-    const endpoint = this.getEndpoint(this.partnerEndpoints.DELETE, {id: partner.id});
-    this._triggerPartnerRequest({method: 'DELETE', endpoint: endpoint, body: {}});
+    const endpoint = this.getEndpoint(this.partnerEndpoints.DELETE, {
+      id: partner.id
+    });
+    this._triggerPartnerRequest({
+      method: 'DELETE',
+      endpoint: endpoint,
+      body: {}
+    });
   }
 
   public savePartner(partner: any, callback?: any) {
     if (typeof partner === 'object' && Object.keys(partner).length === 0) {
-      fireEvent(this, 'toast', {text: 'Invalid partner data!', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'Invalid partner data!',
+        showCloseBtn: true
+      });
       return Promise.resolve(false);
     } else {
       let endpoint = null;
@@ -204,7 +224,9 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
       if (Object.keys(partner).length > 0) {
         if (partnerId) {
           // prepare PATCH endpoint
-          endpoint = this.getEndpoint(this.partnerEndpoints.DETAILS, {id: partnerId});
+          endpoint = this.getEndpoint(this.partnerEndpoints.DETAILS, {
+            id: partnerId
+          });
         } else {
           // no valid partner id, cannot update
           fireEvent(this, 'toast', {
@@ -225,7 +247,9 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
         });
         // fire in the hole
         return this._triggerPartnerRequest({
-          method: 'PATCH', endpoint: endpoint, body: partner
+          method: 'PATCH',
+          endpoint: endpoint,
+          body: partner
         });
       } else {
         fireEvent(this, 'toast', {
@@ -236,7 +260,6 @@ export class PartnerItemData extends (AjaxServerErrorsMixin(EndpointsMixin(Polym
       }
     }
   }
-
 }
 
 window.customElements.define('partner-item-data', PartnerItemData);

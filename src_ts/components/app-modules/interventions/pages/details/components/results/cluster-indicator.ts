@@ -21,10 +21,9 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input';
  * @appliesMixin EndpointsMixin
  */
 class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMixin(PolymerElement))) {
-
   static get template() {
     return html`
-     ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         :host {
           display: block;
@@ -44,8 +43,9 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
           <div class="col col-6">
             <div class="layout-vertical">
               <label class="paper-label">Response Plan</label>
-              <label class="input-label"
-                    empty$="[[!indicator.response_plan_name]]">[[indicator.response_plan_name]]</label>
+              <label class="input-label" empty$="[[!indicator.response_plan_name]]"
+                >[[indicator.response_plan_name]]</label
+              >
             </div>
           </div>
           <div class="col col-6">
@@ -58,7 +58,9 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
         <div class="row-h flex-c">
           <div class="layout-vertical">
             <label class="paper-label">Indicator</label>
-            <label class="input-label" empty$="[[!indicator.cluster_indicator_title]]">[[indicator.cluster_indicator_title]]</label>
+            <label class="input-label" empty$="[[!indicator.cluster_indicator_title]]"
+              >[[indicator.cluster_indicator_title]]</label
+            >
           </div>
         </div>
       </template>
@@ -66,61 +68,75 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
       <template is="dom-if" if="[[isNewIndicator]]">
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown id$="responsePlanDropdw"
-                            label="Response Plan"
-                            placeholder="&#8212;"
-                            selected-item="{{responsePlan}}"
-                            selected="{{responsePlanId}}"
-                            options="[[responsePlans]]"
-                            option-label="title"
-                            option-value="id"
-                            error-message="Please select Response Plan"
-                            disable-on-focus-handling
-                            fit-into="etools-dialog">
+            <etools-dropdown
+              id$="responsePlanDropdw"
+              label="Response Plan"
+              placeholder="&#8212;"
+              selected-item="{{responsePlan}}"
+              selected="{{responsePlanId}}"
+              options="[[responsePlans]]"
+              option-label="title"
+              option-value="id"
+              error-message="Please select Response Plan"
+              disable-on-focus-handling
+              fit-into="etools-dialog"
+            >
             </etools-dropdown>
           </div>
           <div class="col col-6">
-            <etools-dropdown id$="clusterDropdw"
-                            label="Cluster"
-                            placeholder="&#8212;"
-                            selected="{{clusterId}}"
-                            selected-item="{{cluster}}"
-                            options="[[clusters]]"
-                            option-label="title"
-                            option-value="id"
-                            error-message="Please select Cluster"
-                            disable-on-focus-handling
-                            fit-into="etools-dialog">
+            <etools-dropdown
+              id$="clusterDropdw"
+              label="Cluster"
+              placeholder="&#8212;"
+              selected="{{clusterId}}"
+              selected-item="{{cluster}}"
+              options="[[clusters]]"
+              option-label="title"
+              option-value="id"
+              error-message="Please select Cluster"
+              disable-on-focus-handling
+              fit-into="etools-dialog"
+            >
             </etools-dropdown>
           </div>
         </div>
         <div class="row-h flex-c">
-          <etools-dropdown id="clusterIndicatorDropdw"
-                          label="Indicator"
-                          placeholder="&#8212;"
-                          selected="{{indicator.cluster_indicator_id}}"
-                          selected-item="{{prpClusterIndicator}}"
-                          options="[[prpClusterIndicators]]"
-                          option-label="title"
-                          option-value="id"
-                          required
-                          auto-validate
-                          error-message="Please select Indicator"
-                          disable-on-focus-handling
-                          fit-into="etools-dialog">
+          <etools-dropdown
+            id="clusterIndicatorDropdw"
+            label="Indicator"
+            placeholder="&#8212;"
+            selected="{{indicator.cluster_indicator_id}}"
+            selected-item="{{prpClusterIndicator}}"
+            options="[[prpClusterIndicators]]"
+            option-label="title"
+            option-value="id"
+            required
+            auto-validate
+            error-message="Please select Indicator"
+            disable-on-focus-handling
+            fit-into="etools-dialog"
+          >
           </etools-dropdown>
         </div>
       </template>
 
       <div class="row-h flex-c" hidden$="[[_typeMatches(prpClusterIndicator, 'number')]]">
         <div class="col col-4">
-          <paper-input id="numeratorLbl" label="Numerator Label"
-                      value="{{indicator.numerator_label}}" placeholder="&#8212;">
+          <paper-input
+            id="numeratorLbl"
+            label="Numerator Label"
+            value="{{indicator.numerator_label}}"
+            placeholder="&#8212;"
+          >
           </paper-input>
         </div>
         <div class="col col-4">
-          <paper-input id="denomitorLbl" label="Denominator Label"
-                      value="{{indicator.denominator_label}}" placeholder="&#8212;">
+          <paper-input
+            id="denomitorLbl"
+            label="Denominator Label"
+            value="{{indicator.denominator_label}}"
+            placeholder="&#8212;"
+          >
           </paper-input>
         </div>
       </div>
@@ -128,47 +144,55 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
       <template is="dom-if" if="[[_typeMatches(prpClusterIndicator, 'ratio')]]">
         <div class="row-h flex-c">
           <div class="col-4 layout-horizontal">
-            <paper-input id="baselineNumerator"
-                        label="Baseline"
-                        value="{{indicator.baseline.v}}"
-                        placeholder="Numerator"
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        auto-validate
-                        error-message="Invalid">
+            <paper-input
+              id="baselineNumerator"
+              label="Baseline"
+              value="{{indicator.baseline.v}}"
+              placeholder="Numerator"
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              error-message="Invalid"
+            >
             </paper-input>
             <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input id="baselineDenominator"
-                        value="{{indicator.baseline.d}}"
-                        placeholder="Denominator"
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        auto-validate
-                        error-message="Invalid">
+            <paper-input
+              id="baselineDenominator"
+              value="{{indicator.baseline.d}}"
+              placeholder="Denominator"
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              error-message="Invalid"
+            >
             </paper-input>
           </div>
           <div class="col col-4">
-            <paper-input id="targetNumerator"
-                        label="Target"
-                        value="{{indicator.target.v}}"
-                        placeholder="Numerator"
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        auto-validate
-                        required
-                        auto-validate
-                        error-message="Invalid">
+            <paper-input
+              id="targetNumerator"
+              label="Target"
+              value="{{indicator.target.v}}"
+              placeholder="Numerator"
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              auto-validate
+              required
+              auto-validate
+              error-message="Invalid"
+            >
             </paper-input>
             <div class="layout-horizontal bottom-aligned dash-separator">/</div>
-            <paper-input id="targetDenominator"
-                        placeholder="Denominator"
-                        value="{{indicator.target.d}}"
-                        readonly
-                        allowed-pattern="[0-9]"
-                        pattern="[[digitsNotStartingWith0Pattern]]"
-                        required
-                        auto-validate
-                        error-message="Invalid">
+            <paper-input
+              id="targetDenominator"
+              placeholder="Denominator"
+              value="{{indicator.target.d}}"
+              readonly
+              allowed-pattern="[0-9]"
+              pattern="[[digitsNotStartingWith0Pattern]]"
+              required
+              auto-validate
+              error-message="Invalid"
+            >
             </paper-input>
           </div>
         </div>
@@ -177,26 +201,30 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
       <template is="dom-if" if="[[!_typeMatches(prpClusterIndicator, 'ratio')]]">
         <div class="row-h flex-c">
           <div class="col col-4">
-            <paper-input id="baselineEl"
-                        label="Baseline"
-                        placeholder="&#8212;"
-                        value="{{indicator.baseline.v}}"
-                        allowed-pattern="[0-9\.\,]"
-                        pattern="[[numberPattern]]"
-                        auto-validate
-                        error-message="Invalid number">
+            <paper-input
+              id="baselineEl"
+              label="Baseline"
+              placeholder="&#8212;"
+              value="{{indicator.baseline.v}}"
+              allowed-pattern="[0-9.,]"
+              pattern="[[numberPattern]]"
+              auto-validate
+              error-message="Invalid number"
+            >
             </paper-input>
           </div>
           <div class="col col-4">
-            <paper-input id="targetEl"
-                        label="Target"
-                        placeholder="&#8212;"
-                        value="{{indicator.target.v}}"
-                        required
-                        allowed-pattern="[0-9\.\,]"
-                        pattern="[[numberPattern]]"
-                        auto-validate
-                        error-message="Please add a valid target">
+            <paper-input
+              id="targetEl"
+              label="Target"
+              placeholder="&#8212;"
+              value="{{indicator.target.v}}"
+              required
+              allowed-pattern="[0-9.,]"
+              pattern="[[numberPattern]]"
+              auto-validate
+              error-message="Please add a valid target"
+            >
             </paper-input>
           </div>
         </div>
@@ -210,21 +238,22 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-dropdown-multi id="locationsDropdw"
-                              label="Locations"
-                              placeholder="&#8212;"
-                              selected-values="{{indicator.locations}}"
-                              options="[[locationOptions]]"
-                              option-label="name"
-                              option-value="id"
-                              required
-                              auto-validate
-                              error-message="Please select locations"
-                              disable-on-focus-handling
-                              fit-into="etools-dialog">
+        <etools-dropdown-multi
+          id="locationsDropdw"
+          label="Locations"
+          placeholder="&#8212;"
+          selected-values="{{indicator.locations}}"
+          options="[[locationOptions]]"
+          option-label="name"
+          option-value="id"
+          required
+          auto-validate
+          error-message="Please select locations"
+          disable-on-focus-handling
+          fit-into="etools-dialog"
+        >
         </etools-dropdown-multi>
       </div>
-
     `;
   }
 
@@ -253,7 +282,7 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
   prpClusterIndicators!: [];
 
   @property({type: Object, observer: '_responsePlanChanged'})
-  responsePlan!: object;
+  responsePlan!: GenericObject;
 
   @property({type: Array})
   responsePlans!: GenericObject[];
@@ -264,12 +293,8 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
   @property({type: Array, notify: true})
   prpDisaggregations!: [];
 
-
   static get observers() {
-    return [
-      '_baselineChanged(indicator.baseline.v)',
-      '_targetChanged(indicator.target.v)'
-    ];
+    return ['_baselineChanged(indicator.baseline.v)', '_targetChanged(indicator.target.v)'];
   }
 
   stateChanged(state: RootState) {
@@ -279,13 +304,14 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
   connectedCallback() {
     super.connectedCallback();
 
-    const self = this;
     this.fireRequest('getResponsePlans', {})
-      .then(function(response: any) {
-        self.responsePlans = response;
+      .then((response: any) => {
+        this.responsePlans = response;
       })
-      .catch(function(error: any) {
-        fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
+      .catch((error: any) => {
+        fireEvent(this, 'show-toast', {
+          error: {response: error.message || error.response}
+        });
       });
 
     this.resetValidations();
@@ -307,15 +333,16 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
 
   _getPrpClusterIndicator(clusterIndicId: string) {
     fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
-    const self = this;
     this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
-      .then(function(response: any) {
-        self.prpClusterIndicator = response;
-        fireEvent(self, 'stop-spinner');
+      .then((response: any) => {
+        this.prpClusterIndicator = response;
+        fireEvent(this, 'stop-spinner');
       })
-      .catch(function(error: any) {
-        fireEvent(self, 'stop-spinner');
-        fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
+      .catch((error: any) => {
+        fireEvent(this, 'stop-spinner');
+        fireEvent(this, 'show-toast', {
+          error: {response: error.message || error.response}
+        });
       });
   }
 
@@ -334,7 +361,7 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
       this.clusters = [];
       return;
     }
-    this.clusters = this.responsePlans.filter(function(r: any) {
+    this.clusters = this.responsePlans.filter(function (r: any) {
       return parseInt(r.id) === parseInt(selectedRespPlanId);
     })[0].clusters;
   }
@@ -355,21 +382,23 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
       return;
     }
     fireEvent(this, 'start-spinner', {spinnerText: 'Loading...'});
-    const self = this;
     this.fireRequest('getPrpClusterIndicators', {id: clusterId})
-      .then(function(response: any) {
-        self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
-        fireEvent(self, 'stop-spinner');
-      }).catch(function(error: any) {
-        fireEvent(self, 'stop-spinner');
-        fireEvent(self, 'show-toast', {error: {response: error.message || error.response}});
+      .then((response: any) => {
+        this.prpClusterIndicators = this._unnestIndicatorTitle(response.results);
+        fireEvent(this, 'stop-spinner');
+      })
+      .catch((error: any) => {
+        fireEvent(this, 'stop-spinner');
+        fireEvent(this, 'show-toast', {
+          error: {response: error.message || error.response}
+        });
       });
   }
 
   /* ESM dropdown can't process a nested property as option-label
     and it was decided to not add that functionality to the dopdown yet */
   _unnestIndicatorTitle(indicators: []) {
-    indicators.forEach(function(indic: any) {
+    indicators.forEach(function (indic: any) {
       indic.title = indic.blueprint.title;
     });
     return indicators;
@@ -441,7 +470,6 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
         this._resetInvalid('#baselineNumerator');
         this._resetInvalid('#baselineDenominator');
       }
-
     }, 10);
   }
 
@@ -464,7 +492,6 @@ class ClusterIndicator extends connect(store)(IndicatorsCommonMixin(EndpointsMix
     }
     return prpIndic.blueprint.display_type === type;
   }
-
 }
 
 window.customElements.define('cluster-indicator', ClusterIndicator);

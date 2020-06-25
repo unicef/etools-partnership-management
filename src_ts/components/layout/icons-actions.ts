@@ -12,7 +12,6 @@ import {GenericObject} from '../../typings/globals.types';
  * @customElement
  */
 class IconsActions extends PolymerElement {
-
   static get template() {
     return html`
       <style>
@@ -40,20 +39,20 @@ class IconsActions extends PolymerElement {
       <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
       <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
       <paper-icon-button hidden$="[[!showDeactivate]]" icon="block" on-tap="_onDeactivate"></paper-icon-button>
-      `;
+    `;
   }
 
   @property({type: Object})
   itemDetails!: GenericObject;
 
   @property({type: Boolean})
-  showEdit: boolean = true;
+  showEdit = true;
 
   @property({type: Boolean})
-  showDelete: boolean = true;
+  showDelete = true;
 
   @property({type: Boolean})
-  showDeactivate: boolean = false;
+  showDeactivate = false;
 
   _onEdit() {
     fireEvent(this, 'edit');
@@ -66,7 +65,6 @@ class IconsActions extends PolymerElement {
   _onDeactivate() {
     fireEvent(this, 'deactivate');
   }
-
 }
 
 window.customElements.define('icons-actions', IconsActions);

@@ -10,14 +10,12 @@ import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
 class PdLowerResultName extends EndpointsMixin(PolymerElement) {
-
   static get template() {
     return html`
       <style>
@@ -26,26 +24,28 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
         }
       </style>
 
-      <etools-dialog id="pdLowerResultNameDialog"
-                    size="md"
-                    dialog-title="Add/Update PD Output or SSFA Expected Result"
-                    ok-btn-text="Add/Update"
-                    disable-confirm-btn="[[disableConfirmBtn]]"
-                    keep-dialog-open
-                    spinner-text="Saving..."
-                    on-confirm-btn-clicked="_saveChanges">
-
+      <etools-dialog
+        id="pdLowerResultNameDialog"
+        size="md"
+        dialog-title="Add/Update PD Output or SSFA Expected Result"
+        ok-btn-text="Add/Update"
+        disable-confirm-btn="[[disableConfirmBtn]]"
+        keep-dialog-open
+        spinner-text="Saving..."
+        on-confirm-btn-clicked="_saveChanges"
+      >
         <div class="pd-output-name">
-          <paper-input id="pdLowerResultNameField"
-                      label="PD Output or SSFA expected result"
-                      placeholder="&#8212;"
-                      value="{{lowerResultName}}"
-                      required
-                      auto-validate
-                      error-message="PD Output or SSFA expected result must be specified">
+          <paper-input
+            id="pdLowerResultNameField"
+            label="PD Output or SSFA expected result"
+            placeholder="&#8212;"
+            value="{{lowerResultName}}"
+            required
+            auto-validate
+            error-message="PD Output or SSFA expected result must be specified"
+          >
           </paper-input>
         </div>
-
       </etools-dialog>
     `;
   }
@@ -60,14 +60,13 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
   lowerResultName!: string;
 
   @property({type: Boolean})
-  opened: boolean = false;
+  opened = false;
 
   @property({type: Boolean})
-  disableConfirmBtn: boolean = false;
+  disableConfirmBtn = false;
 
   @property({type: Object})
   toastEventSource!: PolymerElement;
-
 
   openDialog() {
     (this.$.pdLowerResultNameDialog as EtoolsDialog).set('opened', true);
@@ -101,10 +100,14 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
     let endpoint;
     let method;
     if (!this.lowerResultId) {
-      endpoint = this.getEndpoint('pdLowerResults', {resultId: lowerResult.result_link});
+      endpoint = this.getEndpoint('pdLowerResults', {
+        resultId: lowerResult.result_link
+      });
       method = 'POST';
     } else {
-      endpoint = this.getEndpoint('pdLowerResultDetails', {llResultId: this.lowerResultId});
+      endpoint = this.getEndpoint('pdLowerResultDetails', {
+        llResultId: this.lowerResultId
+      });
       method = 'PATCH';
     }
     return this._saveLowerResult(endpoint, method, lowerResult, this._lowerResultSuccessfullySaved);
@@ -118,19 +121,21 @@ class PdLowerResultName extends EndpointsMixin(PolymerElement) {
       method: method,
       endpoint: endpoint,
       body: lowerResultData
-    }).then((response: any) => {
-      dialog.stopSpinner();
-      this.set('disableConfirmBtn', false);
-      if (typeof successCallback === 'function') {
-        successCallback.bind(this, response)();
-      }
-      return true;
-    }).catch((error: any) => {
-      dialog.stopSpinner();
-      this.set('disableConfirmBtn', false);
-      parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
-      return false;
-    });
+    })
+      .then((response: any) => {
+        dialog.stopSpinner();
+        this.set('disableConfirmBtn', false);
+        if (typeof successCallback === 'function') {
+          successCallback.bind(this, response)();
+        }
+        return true;
+      })
+      .catch((error: any) => {
+        dialog.stopSpinner();
+        this.set('disableConfirmBtn', false);
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        return false;
+      });
   }
 
   _lowerResultSuccessfullySaved(response: any) {

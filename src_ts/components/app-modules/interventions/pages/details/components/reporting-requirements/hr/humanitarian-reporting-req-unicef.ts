@@ -15,7 +15,6 @@ import {property} from '@polymer/decorators';
 import {EditHruDialog} from './edit-hru-dialog.js';
 import {HruListEl} from './hru-list.js';
 
-
 /**
  * @customElement
  * @polymer
@@ -23,51 +22,44 @@ import {HruListEl} from './hru-list.js';
  * @appliesMixin ReportingRequirementsCommonMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class HumanitarianReportingReqUnicef extends
-  FrontendPaginationMixin(
-    ReportingRequirementsCommonMixin(PolymerElement)) {
-
+class HumanitarianReportingReqUnicef extends FrontendPaginationMixin(ReportingRequirementsCommonMixin(PolymerElement)) {
   static get template() {
     return html`
-    ${buttonsStyles} ${gridLayoutStyles}
-    <style>
-    :host {
-      display: block;
-    }
-    *[hidden] {
-      display: none !important;
-    }
-  </style>
+      ${buttonsStyles} ${gridLayoutStyles}
+      <style>
+        :host {
+          display: block;
+        }
+        *[hidden] {
+          display: none !important;
+        }
+      </style>
 
-  <div hidden$="[[!_empty(reportingRequirements)]]">
-    <div class="row-h">
-      There are no humanitarian report requirements set.
-    </div>
-    <div class="row-h" hidden$="[[!_showAdd(expectedResults, editMode)]]">
-      <paper-button class="secondary-btn" on-click="openUnicefHumanitarianRepReqDialog">
-        ADD REQUIREMENTS
-      </paper-button>
-    </div>
-    <div class="row-h" hidden$="[[_thereAreHFIndicators(expectedResults)]]">
-      Can be modified only if there are High Frequency Humanitarian Indicators defined.
-    </div>
-  </div>
+      <div hidden$="[[!_empty(reportingRequirements)]]">
+        <div class="row-h">
+          There are no humanitarian report requirements set.
+        </div>
+        <div class="row-h" hidden$="[[!_showAdd(expectedResults, editMode)]]">
+          <paper-button class="secondary-btn" on-click="openUnicefHumanitarianRepReqDialog">
+            ADD REQUIREMENTS
+          </paper-button>
+        </div>
+        <div class="row-h" hidden$="[[_thereAreHFIndicators(expectedResults)]]">
+          Can be modified only if there are High Frequency Humanitarian Indicators defined.
+        </div>
+      </div>
 
-  <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
-    <hru-list id="hruList"
-              class="flex-c"
-              hru-data="[[dataItems]]"
-              disable-sorting
-              use-pagination-index>
-    </hru-list>
-    <etools-data-table-footer
-        page-size="[[pagination.pageSize]]"
-        page-number="[[pagination.pageNumber]]"
-        total-results="[[pagination.totalResults]]"
-        on-page-size-changed="_pageSizeChanged"
-        on-page-number-changed="_pageNumberChanged">
-    </etools-data-table-footer>
-  </div>
+      <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
+        <hru-list id="hruList" class="flex-c" hru-data="[[dataItems]]" disable-sorting use-pagination-index> </hru-list>
+        <etools-data-table-footer
+          page-size="[[pagination.pageSize]]"
+          page-number="[[pagination.pageNumber]]"
+          total-results="[[pagination.totalResults]]"
+          on-page-size-changed="_pageSizeChanged"
+          on-page-number-changed="_pageNumberChanged"
+        >
+        </etools-data-table-footer>
+      </div>
     `;
   }
 
@@ -82,7 +74,6 @@ class HumanitarianReportingReqUnicef extends
 
   @property({type: Boolean})
   editMode!: boolean;
-
 
   static get observers() {
     return [
@@ -136,7 +127,10 @@ class HumanitarianReportingReqUnicef extends
 
   openUnicefHumanitarianRepReqDialog() {
     if (!this.interventionStart) {
-      fireEvent(this, 'toast', {text: 'You have to fill PD Start Date first!', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'You have to fill PD Start Date first!',
+        showCloseBtn: true
+      });
       return;
     }
     let hruData = [];
@@ -151,15 +145,14 @@ class HumanitarianReportingReqUnicef extends
   }
 
   setTotalResults(interventionId: string, reportingRequirements: any) {
-    if (typeof interventionId === 'undefined' ||
-        typeof reportingRequirements === 'undefined') {
+    if (typeof interventionId === 'undefined' || typeof reportingRequirements === 'undefined') {
       return;
     }
     this.set('pagination.totalResults', reportingRequirements.length);
   }
 
   _getIndex(index: number) {
-    return ((index + 1) + (this.pagination.pageSize * (this.pagination.pageNumber - 1)));
+    return index + 1 + this.pagination.pageSize * (this.pagination.pageNumber - 1);
   }
 
   _thereAreHFIndicators(expectedResults: ExpectedResult[]) {
@@ -182,7 +175,6 @@ class HumanitarianReportingReqUnicef extends
     }
     return this._thereAreHFIndicators(expectedResults);
   }
-
 }
 
 window.customElements.define('humanitarian-reporting-req-unicef', HumanitarianReportingReqUnicef);

@@ -117,136 +117,137 @@ class AppShell extends connect(store)(
       AppMenuMixin(
         ToastNotificationsMixin(
           ScrollControlMixin(
-            AmendmentModeUIMixin(
-              UtilsMixin(
-                LoadingMixin(
-                  UserDataMixin(
-                    CommonDataMixin(
-                      PolymerElement))))))))))) {
-
+            AmendmentModeUIMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
+          )
+        )
+      )
+    )
+  )
+) {
   public static get template() {
     // main template
     // language=HTML
     return html`
-    ${AppShellStyles}
+      ${AppShellStyles}
 
-    <environment-flags></environment-flags>
+      <environment-flags></environment-flags>
 
-    <etools-piwik-analytics
-        page="[[subroute.prefix]]"
-        user="[[user]]"
-        toast="[[currentToastMessage]]">
-    </etools-piwik-analytics>
+      <etools-piwik-analytics page="[[subroute.prefix]]" user="[[user]]" toast="[[currentToastMessage]]">
+      </etools-piwik-analytics>
 
-    <app-location
+      <app-location
         route="{{appLocRoute}}"
         path="{{appLocPath}}"
         query-params="{{appLocQueryParams}}"
-        url-space-regex="^[[rootPath]]">
-    </app-location>
+        url-space-regex="^[[rootPath]]"
+      >
+      </app-location>
 
-    <app-route
+      <app-route
         route="{{route}}"
         pattern="[[rootPath]]:module"
         data="{{routeData}}"
         tail="{{subroute}}"
-        on-route-changed="routeChanged">
-    </app-route>
+        on-route-changed="routeChanged"
+      >
+      </app-route>
 
-    <app-drawer-layout id="layout" responsive-width="850px"
-                       fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
-      <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" transition-duration="350"
-                  opened="[[_drawerOpened]]"
-                  swipe-open="[[narrow]]" small-menu$="[[smallMenu]]">
-        <!-- App main menu(left sidebar) -->
-        <app-menu root-path="[[rootPath]]"
-                  selected-option="[[module]]"
-                  small-menu$="[[smallMenu]]"></app-menu>
-      </app-drawer>
-
-      <!-- Main content -->
-      <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
-
-        <app-header slot="header" fixed shadow>
-          <page-header id="pageheader" title="eTools"></page-header>
-        </app-header>
+      <app-drawer-layout id="layout" responsive-width="850px" fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
+        <!-- Drawer content -->
+        <app-drawer
+          id="drawer"
+          slot="drawer"
+          transition-duration="350"
+          opened="[[_drawerOpened]]"
+          swipe-open="[[narrow]]"
+          small-menu$="[[smallMenu]]"
+        >
+          <!-- App main menu(left sidebar) -->
+          <app-menu root-path="[[rootPath]]" selected-option="[[module]]" small-menu$="[[smallMenu]]"></app-menu>
+        </app-drawer>
 
         <!-- Main content -->
-        <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
+        <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
+          <app-header slot="header" fixed shadow>
+            <page-header id="pageheader" title="eTools"></page-header>
+          </app-header>
 
-          <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
-            <partners-module id="partners" class="main-page"
-                             show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
-                             current-module="[[_lastActivePartnersModule]]"
-                             route="{{subroute}}"
-                             permissions="[[permissions]]">
-            </partners-module>
-          </template>
+          <!-- Main content -->
+          <main role="main" id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
+            <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
+              <partners-module
+                id="partners"
+                class="main-page"
+                show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+                current-module="[[_lastActivePartnersModule]]"
+                route="{{subroute}}"
+                permissions="[[permissions]]"
+              >
+              </partners-module>
+            </template>
 
-          <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
-            <agreements-module id="agreements" class="main-page"
-                               route="{{subroute}}"
-                               permissions="[[permissions]]">
-            </agreements-module>
-          </template>
+            <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
+              <agreements-module id="agreements" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
+              </agreements-module>
+            </template>
 
-          <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
-            <interventions-module id="interventions" class="main-page"
-                                  route="{{subroute}}"
-                                  permissions="[[permissions]]">
-            </interventions-module>
-          </template>
+            <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
+              <interventions-module
+                id="interventions"
+                class="main-page"
+                route="{{subroute}}"
+                permissions="[[permissions]]"
+              >
+              </interventions-module>
+            </template>
 
-          <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
-            <reports-module id="reports" class="main-page"
-                            route="{{subroute}}"
-                            permissions="[[permissions]]">
-            </reports-module>
-          </template>
+            <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
+              <reports-module id="reports" class="main-page" route="{{subroute}}" permissions="[[permissions]]">
+              </reports-module>
+            </template>
 
-          <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
-            <not-found class="main-page"></not-found>
-          </template>
+            <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
+              <not-found class="main-page"></not-found>
+            </template>
 
-          <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
-            <settings-module id="settings" class="main-page"></settings-module>
-          </template>
+            <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
+              <settings-module id="settings" class="main-page"></settings-module>
+            </template>
+          </main>
 
-        </main>
+          <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
 
-        <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
+          <div id="floating-footer" hidden$="[[!amendmentModeActive]]">
+            <strong> AMENDMENT MODE </strong>
+            | All fields in the details tab are now open for editing. Please save before clicking "I am done".
+            <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
+          </div>
+        </app-header-layout>
+      </app-drawer-layout>
 
-        <div id="floating-footer"
-             hidden$="[[!amendmentModeActive]]">
-          <strong> AMENDMENT MODE </strong>
-          | All fields in the details tab are now open for editing.
-          Please save before clicking "I am done".
-          <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
-        </div>
+      <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
-      </app-header-layout>
-    </app-drawer-layout>
-
-    <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
-
-    <partners-list-data></partners-list-data>
-    <agreements-list-data></agreements-list-data>
+      <partners-list-data></partners-list-data>
+      <agreements-list-data></agreements-list-data>
     `;
   }
 
   @property({type: Boolean})
-  _drawerOpened: boolean = false;
+  _drawerOpened = false;
 
   @property({type: String})
-  _page: string = '';
+  _page = '';
 
   /**
    * `module` property represents the current displayed module of the PMP app.
    * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
    * Main modules will have other pages and routing (prefixed by app-shell route).
    */
-  @property({type: String, reflectToAttribute: true, observer: AppShell.prototype._moduleChanged})
+  @property({
+    type: String,
+    reflectToAttribute: true,
+    observer: AppShell.prototype._moduleChanged
+  })
   module!: string;
 
   @property({type: Object})
@@ -256,7 +257,7 @@ class AppShell extends connect(store)(
   routeData!: {module: string};
 
   @property({type: Object})
-  subroute!: object;
+  subroute!: GenericObject;
 
   // This shouldn't be neccessary, but the Analyzer isn't picking up
   // Polymer.Element#rootPath
@@ -279,7 +280,7 @@ class AppShell extends connect(store)(
   _prpModules: string[] = ['reports', 'settings'];
 
   @property({type: String})
-  _appModuleMainElUrlTmpl: string = '../app-modules/##module##/##main-el-name##-module.js';
+  _appModuleMainElUrlTmpl = '../app-modules/##module##/##main-el-name##-module.js';
 
   @property({type: Object, observer: AppShell.prototype.appLocRouteChanged})
   appLocRoute!: {
@@ -291,17 +292,13 @@ class AppShell extends connect(store)(
   leavePageDialog!: EtoolsDialog;
 
   @property({type: Object})
-  appLocQueryParams!: object;
+  appLocQueryParams!: GenericObject;
 
   @property({type: String})
   appLocPath!: string;
 
-
   public static get observers() {
-    return [
-      '_routePageChanged(routeData.module)',
-      '_scrollToTopOnPageChange(module)'
-    ];
+    return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
 
   ready() {
@@ -334,8 +331,7 @@ class AppShell extends connect(store)(
     this.loadCommonData();
 
     // installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
-    installMediaQueryWatcher(`(min-width: 460px)`,
-      () => store.dispatch(updateDrawerState(false)));
+    installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
     this.createToastNotificationElement();
   }
@@ -380,12 +376,13 @@ class AppShell extends connect(store)(
     } else {
       this.route = JSON.parse(JSON.stringify(appLocRoute));
     }
-
   }
 
   public routeChanged() {
-    if (this.appLocRoute.path === this.route.path &&
-      objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)) {
+    if (
+      this.appLocRoute.path === this.route.path &&
+      objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)
+    ) {
       return;
     }
 
@@ -394,8 +391,8 @@ class AppShell extends connect(store)(
      * first with changes to the path , without the changes to the query string, which ruins everything
      */
     this.setProperties({
-      'appLocQueryParams': this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
-      'appLocPath': this.route.path
+      appLocQueryParams: this.route.__queryParams ? JSON.parse(JSON.stringify(this.route.__queryParams)) : {},
+      appLocPath: this.route.path
     });
   }
 
@@ -474,18 +471,21 @@ class AppShell extends connect(store)(
   private _pageNotFound() {
     this._updatePath('not-found');
     // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-    fireEvent(this, 'toast', {text: 'An error occurred.', showCloseBtn: true});
+    fireEvent(this, 'toast', {
+      text: 'An error occurred.',
+      showCloseBtn: true
+    });
   }
 
   private _openDataRefreshDialog() {
-    (this.$.dataRefreshDialog! as unknown as DataRefreshDialog).open();
+    ((this.$.dataRefreshDialog! as unknown) as DataRefreshDialog).open();
   }
 
   private _canAccessPage(module: string) {
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
     const defer: any = {};
-    defer.promise = new Promise(function(resolve, reject) {
+    defer.promise = new Promise(function (resolve, reject) {
       defer.resolve = resolve;
       defer.reject = reject;
     });
@@ -540,7 +540,10 @@ class AppShell extends connect(store)(
     // set last partners active page... needed to make a difference between partners and government-partners
     this._updateLastPartnersModuleActivePage(module);
     // clear loading messages queue
-    fireEvent(this, 'clear-loading-messages', {bubbles: true, composed: true});
+    fireEvent(this, 'clear-loading-messages', {
+      bubbles: true,
+      composed: true
+    });
     store.dispatch(setInAmendment(false));
   }
 
@@ -572,12 +575,14 @@ class AppShell extends connect(store)(
     const isPolymerElement = moduleMainEl instanceof PolymerElement;
     if (!isPolymerElement) {
       // moduleMainEl is null => make the import
-      import(pageUrl).then(() => {
-        this._successfulImportCallback(appModuleMainElId);
-      }).catch((err: any) => {
-        logError('Error importing component.', 'app-shell', err);
-        this._pageNotFound();
-      });
+      import(pageUrl)
+        .then(() => {
+          this._successfulImportCallback(appModuleMainElId);
+        })
+        .catch((err: any) => {
+          logError('Error importing component.', 'app-shell', err);
+          this._pageNotFound();
+        });
     }
   }
 
@@ -664,17 +669,23 @@ class AppShell extends connect(store)(
 
   // @ts-ignore
   private _onLeavePageConfirmation(e: CustomEvent) {
-    if (e.detail.confirmed) { // leave
+    if (e.detail.confirmed) {
+      // leave
       store.dispatch({type: RESET_UNSAVED_UPLOADS});
       store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
       this.route = JSON.parse(JSON.stringify(this.appLocRoute));
-    } else { // stay
+    } else {
+      // stay
       // revert url
       this.appLocRoute = JSON.parse(JSON.stringify(this.route));
 
-      fireEvent(this, 'clear-loading-messages', {bubbles: true, composed: true});
+      fireEvent(this, 'clear-loading-messages', {
+        bubbles: true,
+        composed: true
+      });
       this.shadowRoot!.querySelector('app-menu')!
-        .shadowRoot!.querySelector('iron-selector')!.select(this.routeData.module);
+        .shadowRoot!.querySelector('iron-selector')!
+        .select(this.routeData.module);
     }
   }
 }

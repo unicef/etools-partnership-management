@@ -10,9 +10,8 @@ import {property} from '@polymer/decorators';
  */
 export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class AppMenuClass extends baseClass {
-
     @property({type: Boolean})
-    smallMenu: boolean = false;
+    smallMenu = false;
 
     public connectedCallback() {
       super.connectedCallback();
@@ -89,7 +88,9 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
       if (layout) {
         layout.notifyResize();
       }
-      const headerLayout = this.$.appHeadLayout as PolymerElement & {notifyResize(): void};
+      const headerLayout = this.$.appHeadLayout as PolymerElement & {
+        notifyResize(): void;
+      };
       if (headerLayout) {
         headerLayout.notifyResize();
       }
@@ -102,5 +103,3 @@ export function AppMenuMixin<T extends Constructor<PolymerElement>>(baseClass: T
   }
   return AppMenuClass;
 }
-
-

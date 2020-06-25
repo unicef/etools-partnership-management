@@ -10,7 +10,6 @@ import {copy} from '../utils/utils';
  */
 function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class EnvironFlagsClass extends baseClass {
-
     @property({type: Object})
     environmentFlags: EnvFlags | null = null;
 
@@ -45,7 +44,6 @@ function EnvironmentFlagsMixin<T extends Constructor<PolymerElement>>(baseClass:
         }, 50);
       });
     }
-
   }
   return EnvironFlagsClass;
 }

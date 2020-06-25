@@ -9,14 +9,12 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {EnvFlags} from '../../typings/globals.types';
 import {property} from '@polymer/decorators';
 
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin EndpointsMixin
  */
 class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement)) {
-
   @property({type: Object})
   envFlagsDefaultValue: EnvFlags = {
     prp_mode_off: true,
@@ -36,7 +34,6 @@ class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement
       });
     }
 
-
     return flagObject;
   }
 
@@ -45,23 +42,24 @@ class EnvironmentFlagsMixin extends connect(store)(EndpointsMixin(PolymerElement
       endpoint: pmpEdpoints.environmentFlags
     };
 
-    sendRequest(requestConfig).then((response: any) => {
-      if (response) {
-        store.dispatch(updateEnvFlags(this._processAndSetEnvFlags(response)));
-      } else {
+    sendRequest(requestConfig)
+      .then((response: any) => {
+        if (response) {
+          store.dispatch(updateEnvFlags(this._processAndSetEnvFlags(response)));
+        } else {
+          store.dispatch(updateEnvFlags(this.envFlagsDefaultValue));
+        }
+      })
+      .catch((error: any) => {
+        logError('Env flags request failed', null, error);
         store.dispatch(updateEnvFlags(this.envFlagsDefaultValue));
-      }
-    }).catch((error: any) => {
-      logError('Env flags request failed', null, error);
-      store.dispatch(updateEnvFlags(this.envFlagsDefaultValue));
-    });
+      });
   }
 
   connectedCallback() {
     super.connectedCallback();
     this._loadEnvFlagsData();
   }
-
 }
 
 window.customElements.define('environment-flags', EnvironmentFlagsMixin);
