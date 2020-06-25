@@ -13,7 +13,6 @@ import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
 import {IconsActionsEl} from '../../../../../../../layout/icons-actions.js';
 
-
 /**
  * @polymer
  * @customElement
@@ -21,40 +20,41 @@ import {IconsActionsEl} from '../../../../../../../layout/icons-actions.js';
  * @appliesMixin ReportingReqPastDatesCheckMixin
  */
 class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement)) {
-
   static get template() {
     return html`
-    ${gridLayoutStyles} ${reportingRequirementsListStyles}
-    <style include="data-table-styles">
-    </style>
+      ${gridLayoutStyles} ${reportingRequirementsListStyles}
+      <style include="data-table-styles"></style>
 
-    <etools-data-table-header no-collapse
-                              no-title>
-      <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
-      <etools-data-table-column class="col-3">Start Date</etools-data-table-column>
-      <etools-data-table-column class="col-3">End Date</etools-data-table-column>
-      <etools-data-table-column class="col-3">Due Date</etools-data-table-column>
-      <etools-data-table-column class="flex-c"></etools-data-table-column>
-    </etools-data-table-header>
+      <etools-data-table-header no-collapse no-title>
+        <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
+        <etools-data-table-column class="col-3">Start Date</etools-data-table-column>
+        <etools-data-table-column class="col-3">End Date</etools-data-table-column>
+        <etools-data-table-column class="col-3">Due Date</etools-data-table-column>
+        <etools-data-table-column class="flex-c"></etools-data-table-column>
+      </etools-data-table-header>
 
-    <template is="dom-repeat" items="[[qprData]]">
-      <etools-data-table-row no-collapse
-                             secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date, item.id)]]">
-        <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
-          <span class="col-data col-1 right-align index-col">[[getIndex(index, qprData.length)]]</span>
-          <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
-          <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
-          <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
-          <span class="col-data flex-c actions">
-            <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
-                           data-args$="[[index]]"
-                           on-edit="_editQprReq"
-                           on-delete="_deleteQprReq">
-            </icons-actions>
-          </span>
-        </div>
-      </etools-data-table-row>
-    </template>
+      <template is="dom-repeat" items="[[qprData]]">
+        <etools-data-table-row
+          no-collapse
+          secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
+        >
+          <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
+            <span class="col-data col-1 right-align index-col">[[getIndex(index, qprData.length)]]</span>
+            <span class="col-data col-3">[[getDateDisplayValue(item.start_date)]]</span>
+            <span class="col-data col-3">[[getDateDisplayValue(item.end_date)]]</span>
+            <span class="col-data col-3">[[getDateDisplayValue(item.due_date)]]</span>
+            <span class="col-data flex-c actions">
+              <icons-actions
+                hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
+                data-args$="[[index]]"
+                on-edit="_editQprReq"
+                on-delete="_deleteQprReq"
+              >
+              </icons-actions>
+            </span>
+          </div>
+        </etools-data-table-row>
+      </template>
     `;
   }
 
@@ -62,13 +62,10 @@ class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
   qprData: [] = [];
 
   @property({type: Boolean})
-  preventPastDateEdit: boolean = false;
-
+  preventPastDateEdit = false;
 
   static get observers() {
-    return [
-      '_sortReportingReq(qprData, qprData.length)'
-    ];
+    return ['_sortReportingReq(qprData, qprData.length)'];
   }
 
   getIndex(index: number, dataItemsLength: number) {
@@ -92,13 +89,16 @@ class QprList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
   }
 
   _editQprReq(e: CustomEvent) {
-    fireEvent(this, 'edit-qpr', {index: (e.target as IconsActionsEl).getAttribute('data-args')});
+    fireEvent(this, 'edit-qpr', {
+      index: (e.target as IconsActionsEl).getAttribute('data-args')
+    });
   }
 
   _deleteQprReq(e: CustomEvent) {
-    fireEvent(this, 'delete-qpr', {index: (e.target as IconsActionsEl).getAttribute('data-args')});
+    fireEvent(this, 'delete-qpr', {
+      index: (e.target as IconsActionsEl).getAttribute('data-args')
+    });
   }
-
 }
 
 window.customElements.define('qpr-list', QprList);

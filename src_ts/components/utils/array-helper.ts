@@ -23,7 +23,7 @@ export function getArraysDiff(base: any[], valuesToVerify: any[], basePropertyTo
 
     let diffVals: any[] = [];
     const valuesToCheck = JSON.parse(JSON.stringify(valuesToVerify));
-    base.forEach(function(arrayVal) {
+    base.forEach(function (arrayVal) {
       const valToSearch = basePropertyToVerify ? arrayVal[basePropertyToVerify] : arrayVal;
       const searchedIdx = valuesToCheck.indexOf(valToSearch);
       if (searchedIdx === -1) {
@@ -51,7 +51,7 @@ function getArrayFromObjsProp(arr: any[], prop: string) {
   if (arr.length === 0) {
     return [];
   }
-  return arr.map(function(a) {
+  return arr.map(function (a) {
     return a[prop];
   });
 }

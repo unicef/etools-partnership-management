@@ -9,12 +9,13 @@ import {arraysAreEqual} from '../../../utils/utils';
  */
 function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ModifiedInterventionFieldsClass extends baseClass {
-  /* eslint-enable arrow-parens */
+    /* eslint-enable arrow-parens */
     _objectFieldIsModified(fieldName: string) {
-      // @ts-ignore
-      let isModified = JSON.stringify(this.originalIntervention[fieldName], this.numbersToString) !==
-      // @ts-ignore
-          JSON.stringify(this.intervention[fieldName], this.numbersToString);
+      let isModified =
+        // @ts-ignore
+        JSON.stringify(this.originalIntervention[fieldName], this.numbersToString) !==
+        // @ts-ignore
+        JSON.stringify(this.intervention[fieldName], this.numbersToString);
 
       const dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
       if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
@@ -48,24 +49,46 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
     }
 
     _getModifiedReviewAndSign() {
-      const updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
-        'prc_review_attachment', 'partner_authorized_officer_signatory',
-        'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment',
-        'in_amendment'];
+      const updatableFields = [
+        'submission_date',
+        'submission_date_prc',
+        'review_date_prc',
+        'prc_review_attachment',
+        'partner_authorized_officer_signatory',
+        'signed_by_partner_date',
+        'unicef_signatory',
+        'signed_by_unicef_date',
+        'signed_pd_attachment',
+        'in_amendment'
+      ];
 
       return this._buildModifiedInterventionObject(updatableFields, []);
     }
 
     _getModifiedInterventionDetails(docType?: string) {
-      const updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
-        'start', 'end', 'activation_letter_attachment'];
-        // @ts-ignore
+      const updatableFields = [
+        'agreement',
+        'document_type',
+        'title',
+        'country_programme',
+        'start',
+        'end',
+        'activation_letter_attachment'
+      ];
+      // @ts-ignore
       if ((docType ? docType : this.intervention.docType) !== 'SSFA') {
         updatableFields.push('reference_number_year');
         updatableFields.push('contingency_pd');
       }
-      const updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-        'sections', 'flat_locations', 'planned_budget', 'planned_visits'];
+      const updatableObjectFields = [
+        'offices',
+        'unicef_focal_points',
+        'partner_focal_points',
+        'sections',
+        'flat_locations',
+        'planned_budget',
+        'planned_visits'
+      ];
       const modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
 
       return Object.assign({}, modifiedDetails);
@@ -90,7 +113,6 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
 
       return modifiedObject;
     }
-
   }
   return ModifiedInterventionFieldsClass;
 }

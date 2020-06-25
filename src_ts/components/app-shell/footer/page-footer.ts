@@ -8,7 +8,6 @@ import {property} from '@polymer/decorators';
  * @customElement
  */
 class PageFooter extends PolymerElement {
-
   public static get template() {
     // main template
     // language=HTML
@@ -54,13 +53,12 @@ class PageFooter extends PolymerElement {
             display: none;
           }
         }
-
       </style>
       <footer>
         <div id="footer-content">
-        <span id="unicef-logo">
-          <img src$="[[rootPath]]images/UNICEF_logo.png" alt="UNICEF logo">
-        </span>
+          <span id="unicef-logo">
+            <img src$="[[rootPath]]images/UNICEF_logo.png" alt="UNICEF logo" />
+          </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>
             <span class="footer-link">Disclaimers</span>
@@ -72,7 +70,6 @@ class PageFooter extends PolymerElement {
 
   @property({type: String})
   rootPath!: string;
-
 }
 
 window.customElements.define('page-footer', PageFooter);

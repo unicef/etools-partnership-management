@@ -4,13 +4,13 @@ import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/paper-button/paper-button.js';
 import {PaperToastElement} from '@polymer/paper-toast/paper-toast.js';
 import {PaperButtonElement} from '@polymer/paper-button/paper-button.js';
+import {GenericObject} from '../../typings/globals.types';
 
 /**
  * @polymer
  * @customElement
  */
 class EtoolsToast extends PolymerElement {
-
   public static get template() {
     // main template
     // language=HTML
@@ -21,7 +21,7 @@ class EtoolsToast extends PolymerElement {
             padding: 8px;
             min-width: 16px;
             margin: 0 -8px 0 24px;
-          };
+          }
         }
         .toast-dismiss-btn-general-style {
           text-transform: uppercase;
@@ -33,7 +33,7 @@ class EtoolsToast extends PolymerElement {
             min-width: 16px;
             margin: 16px -8px -8px 0;
             @apply --layout-self-end;
-          };
+          }
         }
         .toast-general-style {
           max-width: 568px !important;
@@ -50,21 +50,17 @@ class EtoolsToast extends PolymerElement {
           text-align: justify;
         }
       </style>
-      <paper-toast id="toast"
-                   class="toast-general-style"
-                   on-iron-overlay-closed="toastClosed">
-        <paper-button id="confirmBtn"
-                      on-tap="confirmToast"
-                      class="toast-dismiss-btn-general-style">
+      <paper-toast id="toast" class="toast-general-style" on-iron-overlay-closed="toastClosed">
+        <paper-button id="confirmBtn" on-tap="confirmToast" class="toast-dismiss-btn-general-style">
           Ok
         </paper-button>
       </paper-toast>
     `;
   }
 
-  public fitInto: object | null = null;
+  public fitInto: GenericObject | null = null;
 
-  public show(details: object) {
+  public show(details: GenericObject) {
     return (this.$.toast as PaperToastElement).show(details);
   }
 
@@ -73,17 +69,21 @@ class EtoolsToast extends PolymerElement {
   }
 
   public confirmToast() {
-    this.dispatchEvent(new CustomEvent('toast-confirm', {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('toast-confirm', {
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   public toastClosed() {
-    this.dispatchEvent(new CustomEvent('toast-closed', {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('toast-closed', {
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   public getMessageWrapper() {
@@ -137,7 +137,6 @@ class EtoolsToast extends PolymerElement {
 
     return toastProperties;
   }
-
 }
 
 window.customElements.define('etools-toast', EtoolsToast);

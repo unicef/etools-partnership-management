@@ -17,7 +17,6 @@ import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
 
-
 /**
  * @polymer
  * @customElement
@@ -28,9 +27,8 @@ import {property} from '@polymer/decorators';
 
 class PageHeader extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(
-    ProfileOperationsMixin(PolymerElement))) {
-
+  GestureEventListeners(ProfileOperationsMixin(PolymerElement))
+) {
   public static get template() {
     // main template
     // language=HTML
@@ -201,10 +199,18 @@ class PageHeader extends connect(store)(
   @property({type: Array})
   users: MinimalUser[] = [];
 
-  @property({type: Array, notify: true, computed: '_convertCollection(sections)'})
+  @property({
+    type: Array,
+    notify: true,
+    computed: '_convertCollection(sections)'
+  })
   allSections: LabelAndValue[] = [];
 
-  @property({type: Array, notify: true, computed: '_convertCollection(offices)'})
+  @property({
+    type: Array,
+    notify: true,
+    computed: '_convertCollection(offices)'
+  })
   allOffices: LabelAndValue[] = [];
 
   @property({type: Array, notify: true, computed: '_convertUsers(users)'})
@@ -223,10 +229,7 @@ class PageHeader extends connect(store)(
   userProfileDialog!: GenericObject;
 
   public static get observers() {
-    return [
-      '_updateCountriesList(profile.countries_available)',
-      '_profileChanged(profile)'
-    ];
+    return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
   }
 
   public connectedCallback() {
@@ -247,8 +250,7 @@ class PageHeader extends connect(store)(
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
     }
-    if (state.commonData.currentUser !== null &&
-      !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
+    if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
 
       if (this.profile && this.profile.countries_available) {
@@ -281,8 +283,12 @@ class PageHeader extends connect(store)(
     });
 
     countriesList.sort((a: string, b: string) => {
-      if ((a as any).name < (b as any).name) {return -1;}
-      if ((a as any).name > (b as any).name) {return 1;}
+      if ((a as any).name < (b as any).name) {
+        return -1;
+      }
+      if ((a as any).name > (b as any).name) {
+        return 1;
+      }
       return 0;
     });
 

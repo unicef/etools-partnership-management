@@ -34,11 +34,7 @@ import {IconsActionsEl} from '../../../../../../layout/icons-actions.js';
  * @appliesMixin ResultsMixin
  * @appliesMixin LowerResultsMixin
  */
-class ExpectedResults extends connect(store)(
-  ResultsMixin(
-    LowerResultsMixin(
-      RepeatableDataSetsMixin(PolymerElement)))) {
-
+class ExpectedResults extends connect(store)(ResultsMixin(LowerResultsMixin(RepeatableDataSetsMixin(PolymerElement)))) {
   static get template() {
     return html`
       ${gridLayoutStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
@@ -52,7 +48,7 @@ class ExpectedResults extends connect(store)(
           width: 100%;
           --list-row-collapse-wrapper: {
             padding: 0;
-          };
+          }
         }
 
         .ram-indicators-col {
@@ -69,10 +65,9 @@ class ExpectedResults extends connect(store)(
           visibility: hidden;
         }
 
-        etools-data-table-row div[slot="row-data"]:hover icons-actions {
+        etools-data-table-row div[slot='row-data']:hover icons-actions {
           visibility: visible;
         }
-
       </style>
 
       <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -90,22 +85,26 @@ class ExpectedResults extends connect(store)(
                 <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
                   <span class="ram-indicator-name">[[ramIndicatorName]]</span>
                 </template>
-                <icons-actions hidden$="[[!editableCpoRamIndicators]]"
-                              data-args$="[[index]]"
-                              on-edit="_editCpOutputAndRamIndicators"
-                              show-delete="[[editMode]]"
-                              on-delete="_openDeleteConfirmation">
+                <icons-actions
+                  hidden$="[[!editableCpoRamIndicators]]"
+                  data-args$="[[index]]"
+                  on-edit="_editCpOutputAndRamIndicators"
+                  show-delete="[[editMode]]"
+                  on-delete="_openDeleteConfirmation"
+                >
                 </icons-actions>
               </div>
             </div>
             <div slot="row-data-details">
-              <result-link-lower-results data-items="{{item.ll_results}}"
-                                        edit-mode$="[[editMode]]"
-                                        expected-result-id="[[item.id]]"
-                                        cp-output-id="[[item.cp_output]]"
-                                        intervention-status="[[interventionStatus]]"
-                                        show-inactive-indicators="[[showInactiveIndicators]]"
-                                        on-open-indicator-dialog="_openIndicatorDialog">
+              <result-link-lower-results
+                data-items="{{item.ll_results}}"
+                edit-mode$="[[editMode]]"
+                expected-result-id="[[item.id]]"
+                cp-output-id="[[item.cp_output]]"
+                intervention-status="[[interventionStatus]]"
+                show-inactive-indicators="[[showInactiveIndicators]]"
+                on-open-indicator-dialog="_openIndicatorDialog"
+              >
               </result-link-lower-results>
             </div>
           </etools-data-table-row>
@@ -119,7 +118,7 @@ class ExpectedResults extends connect(store)(
   }
 
   @property({type: String})
-  _deleteEpName: string = 'interventionResultLinkDelete';
+  _deleteEpName = 'interventionResultLinkDelete';
 
   @property({type: String})
   interventionStatus!: string;
@@ -140,10 +139,10 @@ class ExpectedResults extends connect(store)(
   indicatorSectionOptions!: [];
 
   @property({type: Boolean})
-  detailsOpened: boolean = true;
+  detailsOpened = true;
 
   @property({type: Boolean})
-  showInactiveIndicators: boolean = false;
+  showInactiveIndicators = false;
 
   static get observers() {
     return [
@@ -153,7 +152,7 @@ class ExpectedResults extends connect(store)(
     ];
   }
 
-  stateChanged(state: RootState ) {
+  stateChanged(state: RootState) {
     this.resultsStateChanged(state);
   }
 
@@ -196,7 +195,7 @@ class ExpectedResults extends connect(store)(
   removeDeactivateIndicatorDialog() {
     const body = document.querySelector('body');
     const dialogs = body!.querySelectorAll('etools-dialog#deactivateIndicatorDialog');
-    dialogs.forEach(d => body!.removeChild(d));
+    dialogs.forEach((d) => body!.removeChild(d));
   }
 
   _dataItemsChanged(dataItemsLength: number) {
@@ -239,23 +238,29 @@ class ExpectedResults extends connect(store)(
       for (i = 0; i < this.dataItems.length; i++) {
         // search expected result item by output id
         if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
-
           if (actionParams.appliedIndicatorsIndex !== null) {
             // we just edited an indicator, replace data in indicators list
-            this.set(['dataItems', i, 'll_results', actionParams.llResultIndex,
-              'applied_indicators', actionParams.appliedIndicatorsIndex], JSON.parse(JSON.stringify(indicator)));
+            this.set(
+              [
+                'dataItems',
+                i,
+                'll_results',
+                actionParams.llResultIndex,
+                'applied_indicators',
+                actionParams.appliedIndicatorsIndex
+              ],
+              JSON.parse(JSON.stringify(indicator))
+            );
           } else {
             // new indicator added
-            this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'],
-              indicator);
+            this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'], indicator);
           }
           break;
         }
       }
       this._updateInterventionLocAndClusters();
     } catch (err) {
-      logError('Updating/adding new indicator data in displayed list has failed!',
-        'lower-results-behavior', err);
+      logError('Updating/adding new indicator data in displayed list has failed!', 'lower-results-behavior', err);
     }
   }
 
@@ -299,7 +304,6 @@ class ExpectedResults extends connect(store)(
       this.indicatorDialog.set(property, data);
     }
   }
-
 }
 
 window.customElements.define('expected-results', ExpectedResults);

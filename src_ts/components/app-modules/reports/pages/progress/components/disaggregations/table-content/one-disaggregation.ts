@@ -11,7 +11,6 @@ import {GenericObject} from '../../../../../../../../typings/globals.types';
  * @appliesMixin DisaggregationsMixin
  */
 class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
-
   static get is() {
     return 'one-disaggregation';
   }
@@ -20,28 +19,21 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
     return html`
       ${disaggregationTableStyles}
       <style>
-        :host {}
+        :host {
+        }
       </style>
 
-      <tr class='horizontal layout headerRow'>
+      <tr class="horizontal layout headerRow">
         <th></th>
         <th>Total</th>
       </tr>
 
-      <template is="dom-repeat"
-                items="[[rows]]"
-                as="row">
-        <disaggregation-table-row
-            data="[[row]]"
-            indicator-type="[[data.display_type]]"
-            row-type="middleRow">
+      <template is="dom-repeat" items="[[rows]]" as="row">
+        <disaggregation-table-row data="[[row]]" indicator-type="[[data.display_type]]" row-type="middleRow">
         </disaggregation-table-row>
       </template>
 
-      <disaggregation-table-row
-          data="[[totalRow]]"
-          indicator-type="[[data.display_type]]"
-          row-type="totalsRow">
+      <disaggregation-table-row data="[[totalRow]]" indicator-type="[[data.display_type]]" row-type="totalsRow">
       </disaggregation-table-row>
     `;
   }
@@ -90,14 +82,15 @@ class OneDisaggregation extends DisaggregationsMixin(PolymerElement) {
 
       return {
         title: z.value,
-        data: [{
-          key: formatted,
-          data: data.disaggregation[formatted]
-        }]
+        data: [
+          {
+            key: formatted,
+            data: data.disaggregation[formatted]
+          }
+        ]
       };
     });
   }
-
 }
 
 window.customElements.define(OneDisaggregation.is, OneDisaggregation);

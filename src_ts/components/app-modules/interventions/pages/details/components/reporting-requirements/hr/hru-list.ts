@@ -19,11 +19,10 @@ import {IconsActionsEl} from '../../../../../../../layout/icons-actions.js';
  * @appliesMixin ReportingReqPastDatesCheckMixin
  */
 class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement)) {
-
   static get template() {
     // language=HTML
     return html`
-     ${gridLayoutStyles} ${reportingRequirementsListStyles}
+      ${gridLayoutStyles} ${reportingRequirementsListStyles}
       <style include="data-table-styles">
         :host([with-scroll]) {
           max-height: 400px;
@@ -31,23 +30,26 @@ class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
         }
       </style>
 
-      <etools-data-table-header no-collapse
-                                no-title>
+      <etools-data-table-header no-collapse no-title>
         <etools-data-table-column class="col-1 right-align index-col">ID</etools-data-table-column>
         <etools-data-table-column class="flex-c">Report End Date</etools-data-table-column>
         <etools-data-table-column class="col-1"></etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="[[hruData]]">
-        <etools-data-table-row no-collapse
-                              secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date, item.id)]]">
+        <etools-data-table-row
+          no-collapse
+          secondary-bg-on-hover$="[[_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
+        >
           <div slot="row-data" style$="[[_uneditableStyles(inAmendment, item.due_date, item.id)]]">
             <span class="col-data col-1 right-align index-col">[[_getIndex(index, hruData)]]</span>
             <span class="col-data flex-c">[[getDateDisplayValue(item.end_date)]]</span>
             <span class="col-data col-1 actions">
-              <icons-actions hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
-                            data-args$="[[index]]"
-                            on-delete="_deleteHruReq"
-                            show-edit="[[_listItemEditable]]">
+              <icons-actions
+                hidden$="[[!_canEdit(editMode, inAmendment, item.due_date, item.id)]]"
+                data-args$="[[index]]"
+                on-delete="_deleteHruReq"
+                show-edit="[[_listItemEditable]]"
+              >
               </icons-actions>
             </span>
           </div>
@@ -60,21 +62,19 @@ class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
   hruData: GenericObject[] = [];
 
   @property({type: Boolean})
-  _listItemEditable: boolean = false;
+  _listItemEditable = false;
 
   @property({type: Object})
   hruMainEl!: PolymerElement & {_getIndex(idx: any): number | string};
 
   @property({type: Boolean})
-  usePaginationIndex: boolean = false;
+  usePaginationIndex = false;
 
   @property({type: Boolean})
-  disableSorting: boolean = false;
+  disableSorting = false;
 
   static get observers() {
-    return [
-      '_sortReportingReq(hruData, hruData.length)'
-    ];
+    return ['_sortReportingReq(hruData, hruData.length)'];
   }
 
   _sortReportingReq(data: any) {
@@ -102,11 +102,12 @@ class HruList extends CommonMixin(ReportingReqPastDatesCheckMixin(PolymerElement
   }
 
   _deleteHruReq(e: CustomEvent) {
-    fireEvent(this, 'delete-hru', {index: (e.target as IconsActionsEl).getAttribute('data-args')});
+    fireEvent(this, 'delete-hru', {
+      index: (e.target as IconsActionsEl).getAttribute('data-args')
+    });
   }
 }
 
 window.customElements.define('hru-list', HruList);
 
 export {HruList as HruListEl};
-

@@ -9,43 +9,39 @@ import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {copy} from '../utils/utils.js';
 
-
 /**
  * @polymer
  * @mixinFunction
  * @appliesMixin EndpointsMixin
  */
 function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
   class RepeatableDataSetsClass extends EndpointsMixin(baseClass) {
-
     @property({type: Array, notify: true})
     dataItems!: any[];
 
     @property({type: Object})
-    dataSetModel!: object | null;
+    dataSetModel!: GenericObject | null;
 
     @property({type: Boolean, reflectToAttribute: true})
     editMode!: boolean;
 
     @property({type: String})
-    deleteConfirmationTitle: string = 'Delete confirmation';
+    deleteConfirmationTitle = 'Delete confirmation';
 
     @property({type: String})
-    deleteConfirmationMessage: string = 'Are you sure you want to delete this item?';
+    deleteConfirmationMessage = 'Are you sure you want to delete this item?';
 
     @property({type: String})
-    deleteLoadingSource: string = 'delete-data-set';
+    deleteLoadingSource = 'delete-data-set';
 
     @property({type: String})
-    deleteActionLoadingMsg: string = 'Deleting items from server...';
+    deleteActionLoadingMsg = 'Deleting items from server...';
 
     @property({type: String})
-    deleteActionDefaultErrMsg: string = 'Deleting items from server action has failed!';
+    deleteActionDefaultErrMsg = 'Deleting items from server action has failed!';
 
     private _deleteDialog!: EtoolsDialog;
     private elToDeleteIndex!: number;
-
 
     public connectedCallback() {
       super.connectedCallback();
@@ -66,11 +62,10 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
      * itemValueName - the name of property to compare selValue against
      */
     public isAlreadySelected(selValue: any, selIndex: any, itemValueName: any) {
-      const duplicateItems = this.dataItems.filter(function(item, index) {
-        return parseInt(item[itemValueName]) === parseInt(selValue)
-            && parseInt(String(index)) !== parseInt(selIndex);
+      const duplicateItems = this.dataItems.filter(function (item, index) {
+        return parseInt(item[itemValueName]) === parseInt(selValue) && parseInt(String(index)) !== parseInt(selIndex);
       });
-      return (duplicateItems && duplicateItems.length);
+      return duplicateItems && duplicateItems.length;
     }
 
     public _emptyList(listLength: number) {
@@ -84,7 +79,7 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
       if (this.dataSetModel === null) {
         const newObj: GenericObject = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
-          Object.keys(this.dataItems[0]).forEach(function(property) {
+          Object.keys(this.dataItems[0]).forEach(function (property) {
             newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
           });
         }
@@ -117,11 +112,17 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
     public _handleDeleteResponse() {
       this._deleteElement();
       this.elToDeleteIndex = -1;
-      fireEvent(this, 'global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: this.deleteLoadingSource
+      });
     }
 
     public _handleDeleteError(responseErr: any) {
-      fireEvent(this, 'global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: this.deleteLoadingSource
+      });
 
       let msg = this.deleteActionDefaultErrMsg;
       if (responseErr instanceof Array && responseErr.length > 0) {
@@ -150,7 +151,6 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             loadingSource: this.deleteLoadingSource
           });
 
-          const self = this;
           // @ts-ignore
           let endpointParams = {id: id};
           // @ts-ignore
@@ -164,11 +164,13 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
             method: 'DELETE',
             endpoint: deleteEndpoint,
             body: {}
-          }).then(function(_resp: any) {
-            self._handleDeleteResponse();
-          }).catch(function(error: any) {
-            self._handleDeleteError(error.response);
-          });
+          })
+            .then((_resp: any) => {
+              this._handleDeleteResponse();
+            })
+            .catch((error: any) => {
+              this._handleDeleteError(error.response);
+            });
         } else {
           this._deleteElement();
           this.elToDeleteIndex = -1;
@@ -204,7 +206,8 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         okBtnText: 'Yes',
         cancelBtnText: 'No',
         closeCallback: this._onDeleteConfirmation,
-        content: deleteConfirmationContent});
+        content: deleteConfirmationContent
+      });
     }
 
     /**
@@ -228,10 +231,8 @@ function RepeatableDataSetsMixin<T extends Constructor<PolymerElement>>(baseClas
         this.set('dataItems', []);
       }
     }
-
   }
   return RepeatableDataSetsClass;
 }
 
 export default RepeatableDataSetsMixin;
-

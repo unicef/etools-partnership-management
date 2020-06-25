@@ -7,8 +7,7 @@ export function getAllPermissions() {
       'viewAgreementDetails',
       'viewInterventionDetails'
     ],
-    unicefUserPermissions: [
-    ],
+    unicefUserPermissions: [],
     superPermissions: [
       'loggedInDefault',
       'userInfoMenu',
@@ -27,12 +26,8 @@ export function getAllPermissions() {
       'editAgreementDetails',
       'editInterventionDetails'
     ],
-    PMEPermissions: [
-      'PME'
-    ],
-    ICTPermissions: [
-      'ICT'
-    ]
+    PMEPermissions: ['PME'],
+    ICTPermissions: ['ICT']
   };
 }
 
@@ -40,7 +35,7 @@ export function userIsPme(user: any) {
   if (!user || !Array.isArray(user.groups)) {
     return false;
   }
-  return !! user.groups.find((grp: any) => {
+  return !!user.groups.find((grp: any) => {
     return grp.name === 'PME';
   });
 }

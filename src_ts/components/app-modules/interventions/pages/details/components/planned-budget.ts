@@ -16,7 +16,12 @@ import {SharedStyles} from '../../../../../styles/shared-styles';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {frWarningsStyles} from '../../../styles/fr-warnings-styles';
 import {Country, Permission, LabelAndValue} from '../../../../../../typings/globals.types';
-import {Fr, FrsDetails, InterventionPermissionsFields, Intervention} from '../../../../../../typings/intervention.types';
+import {
+  Fr,
+  FrsDetails,
+  InterventionPermissionsFields,
+  Intervention
+} from '../../../../../../typings/intervention.types';
 import {pmpCustomIcons} from '../../../../../styles/custom-iconsets/pmp-icons';
 import {property, computed} from '@polymer/decorators';
 
@@ -25,14 +30,10 @@ import {property, computed} from '@polymer/decorators';
  * @customElement
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class PlannedBudget extends connect(store)(
-  FrNumbersConsistencyMixin(
-    PolymerElement)) {
-
+class PlannedBudget extends connect(store)(FrNumbersConsistencyMixin(PolymerElement)) {
   static get template() {
     return html`
-      ${pmpCustomIcons}
-      ${SharedStyles} ${gridLayoutStyles} ${frWarningsStyles}
+      ${pmpCustomIcons} ${SharedStyles} ${gridLayoutStyles} ${frWarningsStyles}
       <style include="data-table-styles">
         [hidden] {
           display: none !important;
@@ -41,7 +42,7 @@ class PlannedBudget extends connect(store)(
         :host {
           --list-column-label: {
             margin-right: 0;
-          };
+          }
           display: block;
           width: 100%;
           -webkit-box-sizing: border-box;
@@ -80,7 +81,7 @@ class PlannedBudget extends connect(store)(
         }
 
         /* Fixes alignment issues on IE */
-        *[slot="row-data"] .col-data {
+        *[slot='row-data'] .col-data {
           line-height: 1.5;
         }
 
@@ -90,22 +91,19 @@ class PlannedBudget extends connect(store)(
       </style>
       <etools-content-panel panel-title="Planned Budget">
         <div slot="panel-btns" id="edit-btns">
-          <paper-icon-button icon="cancel"
-                              hidden$="[[!_showCancelBtn(_showCancelButton)]]"
-                              title="Cancel"
-                              on-click="_cancelEdit">
+          <paper-icon-button
+            icon="cancel"
+            hidden$="[[!_showCancelBtn(_showCancelButton)]]"
+            title="Cancel"
+            on-click="_cancelEdit"
+          >
           </paper-icon-button>
-          <paper-icon-button icon="create"
-                              hidden$="[[!_visibleEditBtn]]"
-                              title="Edit"
-                              on-click="_editPlannedBudget">
+          <paper-icon-button icon="create" hidden$="[[!_visibleEditBtn]]" title="Edit" on-click="_editPlannedBudget">
           </paper-icon-button>
         </div>
 
         <div class="list-container form-fields">
-          <etools-data-table-header id="listHeader"
-                                    no-collapse
-                                    no-title>
+          <etools-data-table-header id="listHeader" no-collapse no-title>
             <etools-data-table-column class="col-3 currency"> Currency</etools-data-table-column>
             <etools-data-table-column class="col-3 right-align"> CSO Contribution</etools-data-table-column>
             <etools-data-table-column class="col-2 right-align"> UNICEF Cash</etools-data-table-column>
@@ -116,19 +114,23 @@ class PlannedBudget extends connect(store)(
           <etools-data-table-row no-collapse>
             <div slot="row-data">
               <span class="col-data col-3 currency">
-                <etools-info-tooltip class="fr-nr-warn currency-mismatch"
-                                      icon-first
-                                      custom-icon
-                                      hide-tooltip="[[_hideBudgetCurrencyMismatchTooltip(intervention.frs_details.currencies_match,
-                                                      intervention.frs_details.frs, plannedBudget.currency)]]">
-                  <etools-dropdown id="currencyDd"
-                                    slot="field"
-                                    placeholder="&#8212;"
-                                    options="[[currencies]]"
-                                    selected="{{plannedBudget.currency}}"
-                                    readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget,
+                <etools-info-tooltip
+                  class="fr-nr-warn currency-mismatch"
+                  icon-first
+                  custom-icon
+                  hide-tooltip="[[_hideBudgetCurrencyMismatchTooltip(intervention.frs_details.currencies_match,
+                                                      intervention.frs_details.frs, plannedBudget.currency)]]"
+                >
+                  <etools-dropdown
+                    id="currencyDd"
+                    slot="field"
+                    placeholder="&#8212;"
+                    options="[[currencies]]"
+                    selected="{{plannedBudget.currency}}"
+                    readonly$="[[_isCurrencyReadonly(intervention.in_amendment, editMode, editablePlannedBudget,
                                                 interventionId)]]"
-                                    no-label-float>
+                    no-label-float
+                  >
                   </etools-dropdown>
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">[[frsConsistencyWarnings.currencyMismatch]]</span>
@@ -137,47 +139,61 @@ class PlannedBudget extends connect(store)(
 
               <span class="col-data col-3 right-align">
                 <template is="dom-if" if="[[!_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
-                  <etools-currency-amount-input id="csoCont"
-                                                value="{{plannedBudget.partner_contribution_local}}"
-                                                type="number"
-                                                placeholder="&#8212;"
-                                                no-label-float>
+                  <etools-currency-amount-input
+                    id="csoCont"
+                    value="{{plannedBudget.partner_contribution_local}}"
+                    type="number"
+                    placeholder="&#8212;"
+                    no-label-float
+                  >
                   </etools-currency-amount-input>
                 </template>
 
                 <template is="dom-if" if="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
-                  <etools-form-element-wrapper no-label-float
-                                                id="cso-cont"
-                                                value="[[displayCurrencyAmount(plannedBudget.partner_contribution_local, '0.00')]]">
+                  <etools-form-element-wrapper
+                    no-label-float
+                    id="cso-cont"
+                    value="[[displayCurrencyAmount(plannedBudget.partner_contribution_local, '0.00')]]"
+                  >
                   </etools-form-element-wrapper>
                 </template>
-
               </span>
 
               <span class="col-data col-2 right-align">
-                <etools-info-tooltip class="fr-nr-warn"
-                                      custom-icon
-                                      icon-first
-                                      form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
-                                      hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
+                <etools-info-tooltip
+                  class="fr-nr-warn"
+                  custom-icon
+                  icon-first
+                  form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
+                  hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                >
                   <div slot="field" id="unicef-cash-val" class="right-align">
-                    <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
+                    <template
+                      is="dom-if"
+                      if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
+                    >
                       <!-- readonly unicef cash -->
-                      <etools-form-element-wrapper no-label-float
-                                                    id="unicef-cash"
-                                                    value="[[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]">
+                      <etools-form-element-wrapper
+                        no-label-float
+                        id="unicef-cash"
+                        value="[[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]"
+                      >
                       </etools-form-element-wrapper>
                     </template>
-                    <template is="dom-if"
-                              if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
+                    <template
+                      is="dom-if"
+                      if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
+                    >
                       <!-- editable unicef cash -->
-                      <etools-currency-amount-input id="unicefCash"
-                                                    value="{{plannedBudget.unicef_cash_local}}"
-                                                    placeholder="&#8212;"
-                                                    required$="[[required]]"
-                                                    auto-validate
-                                                    error-message="UNICEF Cash required"
-                                                    no-label-float>
+                      <etools-currency-amount-input
+                        id="unicefCash"
+                        value="{{plannedBudget.unicef_cash_local}}"
+                        placeholder="&#8212;"
+                        required$="[[required]]"
+                        auto-validate
+                        error-message="UNICEF Cash required"
+                        no-label-float
+                      >
                       </etools-currency-amount-input>
                     </template>
                   </div>
@@ -188,27 +204,33 @@ class PlannedBudget extends connect(store)(
 
               <span class="col-data col-2 right-align">
                 <template is="dom-if" if="[[!_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
-                  <etools-currency-amount-input id="inKindAmount"
-                                                value="{{plannedBudget.in_kind_amount_local}}"
-                                                type="number"
-                                                placeholder="&#8212;"
-                                                no-label-float>
+                  <etools-currency-amount-input
+                    id="inKindAmount"
+                    value="{{plannedBudget.in_kind_amount_local}}"
+                    type="number"
+                    placeholder="&#8212;"
+                    no-label-float
+                  >
                   </etools-currency-amount-input>
                 </template>
 
                 <template is="dom-if" if="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
-                  <etools-form-element-wrapper no-label-float
-                                                id="in-kind-amount"
-                                                value="[[displayCurrencyAmount(plannedBudget.in_kind_amount_local, '0.00')]]">
+                  <etools-form-element-wrapper
+                    no-label-float
+                    id="in-kind-amount"
+                    value="[[displayCurrencyAmount(plannedBudget.in_kind_amount_local, '0.00')]]"
+                  >
                   </etools-form-element-wrapper>
                 </template>
-
               </span>
 
               <span class="col-data col-2">
-                <etools-form-element-wrapper class="right-align" no-label-float
-                    value="[[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
-                    plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]">
+                <etools-form-element-wrapper
+                  class="right-align"
+                  no-label-float
+                  value="[[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
+                    plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]"
+                >
                 </etools-form-element-wrapper>
               </span>
             </div>
@@ -221,26 +243,44 @@ class PlannedBudget extends connect(store)(
   @property({type: Object})
   intervention!: Intervention;
 
-  @property({type: Object, notify: true, observer: PlannedBudget.prototype._plannedBudgetChanged})
+  @property({
+    type: Object,
+    notify: true,
+    observer: PlannedBudget.prototype._plannedBudgetChanged
+  })
   plannedBudget!: PlannedBudget;
 
   @property({type: Array})
   currencies!: LabelAndValue[];
 
-  @property({type: Boolean, computed: '_getValue(permissions.required.planned_budget)', observer: PlannedBudget.prototype._editModeChanged})
+  @property({
+    type: Boolean,
+    computed: '_getValue(permissions.required.planned_budget)',
+    observer: PlannedBudget.prototype._editModeChanged
+  })
   required!: boolean;
 
-  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget)', observer: PlannedBudget.prototype._editModeChanged})
+  @property({
+    type: Boolean,
+    computed: '_getValue(permissions.edit.planned_budget)',
+    observer: PlannedBudget.prototype._editModeChanged
+  })
   editMode!: boolean;
 
-  @property({type: Boolean, computed: '_getValue(permissions.edit.planned_budget_unicef_cash)',
-    observer: PlannedBudget.prototype._editModeChanged})
+  @property({
+    type: Boolean,
+    computed: '_getValue(permissions.edit.planned_budget_unicef_cash)',
+    observer: PlannedBudget.prototype._editModeChanged
+  })
   unicefCashEditMode!: boolean;
 
   @property({type: Boolean})
-  editablePlannedBudget: boolean = false;
+  editablePlannedBudget = false;
 
-  @property({type: Number, observer: PlannedBudget.prototype._interventionIdChanged})
+  @property({
+    type: Number,
+    observer: PlannedBudget.prototype._interventionIdChanged
+  })
   interventionId!: number;
 
   @property({type: Object})
@@ -266,7 +306,7 @@ class PlannedBudget extends connect(store)(
   static get observers() {
     return [
       '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, ' +
-      'plannedBudget.unicef_cash_local, plannedBudget.currency, intervention.frs_details, intervention.status)',
+        'plannedBudget.unicef_cash_local, plannedBudget.currency, intervention.frs_details, intervention.status)',
       '_initLocalCurrency(plannedBudget, countryData)'
     ];
   }
@@ -315,8 +355,12 @@ class PlannedBudget extends connect(store)(
     return showCancelButton && this.interventionId;
   }
 
-  _showEditBtn(_editMode?: boolean, _unicefCashEditMode?: boolean,
-    _showCancelButton?: boolean, _interventionId?: number) {
+  _showEditBtn(
+    _editMode?: boolean,
+    _unicefCashEditMode?: boolean,
+    _showCancelButton?: boolean,
+    _interventionId?: number
+  ) {
     return (this.editMode || this.unicefCashEditMode) && !this._showCancelButton && this.interventionId > 0;
   }
 
@@ -330,8 +374,12 @@ class PlannedBudget extends connect(store)(
     return !editablePlannedBudget;
   }
 
-  _isCurrencyReadonly(inAmendmentMode: boolean, editMode: boolean,
-    editablePlannedBudget: boolean, interventionId: number) {
+  _isCurrencyReadonly(
+    inAmendmentMode: boolean,
+    editMode: boolean,
+    editablePlannedBudget: boolean,
+    interventionId: number
+  ) {
     return inAmendmentMode ? true : this._isReadonly(editMode, editablePlannedBudget, interventionId);
   }
 
@@ -378,13 +426,11 @@ class PlannedBudget extends connect(store)(
   // validate fields
   validate() {
     let valid = true;
-    const elementsSelectorsToValidate = [
-      '#csoCont',
-      '#unicefCash',
-      '#inKindAmount'
-    ];
+    const elementsSelectorsToValidate = ['#csoCont', '#unicefCash', '#inKindAmount'];
     elementsSelectorsToValidate.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & { validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {
+        validate(): boolean;
+      };
       if (el && !el.validate()) {
         valid = false;
       }
@@ -394,11 +440,7 @@ class PlannedBudget extends connect(store)(
 
   // reset validation errors
   resetValidations() {
-    const elementsSelectorsToValidate = [
-      '#csoCont',
-      '#unicefCash',
-      '#inKindAmount'
-    ];
+    const elementsSelectorsToValidate = ['#csoCont', '#unicefCash', '#inKindAmount'];
     elementsSelectorsToValidate.forEach((selector: string) => {
       const el = this.shadowRoot!.querySelector(selector) as PolymerElement;
       if (el) {
@@ -413,24 +455,43 @@ class PlannedBudget extends connect(store)(
     }
   }
 
-  _checkFrsAmountConsistency(frsTotalAmt: string, unicefCash: string, plannedBudgetCurrency: string,
-    frsDetails: FrsDetails, interventionStatus: string) {
-    if (typeof frsTotalAmt === 'undefined' || typeof unicefCash === 'undefined' ||
-        typeof plannedBudgetCurrency === 'undefined' || typeof frsDetails === 'undefined' ||
-        typeof interventionStatus === 'undefined') {
+  _checkFrsAmountConsistency(
+    frsTotalAmt: string,
+    unicefCash: string,
+    plannedBudgetCurrency: string,
+    frsDetails: FrsDetails,
+    interventionStatus: string
+  ) {
+    if (
+      typeof frsTotalAmt === 'undefined' ||
+      typeof unicefCash === 'undefined' ||
+      typeof plannedBudgetCurrency === 'undefined' ||
+      typeof frsDetails === 'undefined' ||
+      typeof interventionStatus === 'undefined'
+    ) {
       return;
     }
     // no frs added || status is closed ||
     // the currency of planned budget is different that frs currency => no warning
-    if (this.emptyFrsList(this.intervention, 'interventionDetails') || interventionStatus === 'closed' ||
-        !this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, plannedBudgetCurrency)) {
+    if (
+      this.emptyFrsList(this.intervention, 'interventionDetails') ||
+      interventionStatus === 'closed' ||
+      !this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, plannedBudgetCurrency)
+    ) {
       this.set('_frsConsistencyWarning', '');
       return;
     }
 
-    this.set('_frsConsistencyWarning',
-      this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
-        'interventionDetails', true));
+    this.set(
+      '_frsConsistencyWarning',
+      this.checkFrsAndUnicefCashAmountsConsistency(
+        unicefCash,
+        frsTotalAmt,
+        this.intervention,
+        'interventionDetails',
+        true
+      )
+    );
   }
 
   _hideBudgetCurrencyMismatchTooltip(frsCurrencyMatch: boolean, frs: Fr[], plannedBudgetCurrency: string) {
@@ -439,7 +500,6 @@ class PlannedBudget extends connect(store)(
     }
     return true;
   }
-
 }
 
 window.customElements.define('planned-budget', PlannedBudget);

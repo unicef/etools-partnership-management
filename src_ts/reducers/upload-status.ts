@@ -2,8 +2,8 @@ import * as a from '../actions/upload-status.js';
 import {Reducer, Action} from 'redux';
 
 export class UploadStatusState {
-  uploadsInProgress: number = 0;
-  unsavedUploads: number = 0;
+  uploadsInProgress = 0;
+  unsavedUploads = 0;
 }
 
 const INITIAL_STATE = new UploadStatusState();
@@ -46,7 +46,6 @@ const uploadStatus: Reducer<UploadStatusState, Action<string>> = (state = INITIA
     }
     default:
       return state;
-
   }
 };
 

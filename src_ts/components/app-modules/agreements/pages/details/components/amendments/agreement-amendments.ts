@@ -21,19 +21,16 @@ import {property} from '@polymer/decorators';
 import {LabelAndValue} from '../../../../../../../typings/globals.types';
 import {AddAgAmendmentDialog} from './add-ag-amendment-dialog.js';
 
-
 /**
  * @polymer
  * @customElement
  * @appliesMixin CommonMixin
  */
 class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
-
   static get template() {
     return html`
       ${gridLayoutStyles} ${SharedStyles} ${buttonsStyles}
-      <style
-          include="data-table-styles">
+      <style include="data-table-styles">
         [hidden] {
           display: none !important;
         }
@@ -86,13 +83,14 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
       </style>
 
       <etools-content-panel panel-title="Amendments ([[dataItems.length]])">
-
         <div slot="panel-btns">
-          <paper-icon-button icon="add-box"
-                            hidden$="[[!editMode]]"
-                            disabled$="[[!editMode]]"
-                            title="Add"
-                            on-click="_openAddAgAmendmentDialog">
+          <paper-icon-button
+            icon="add-box"
+            hidden$="[[!editMode]]"
+            disabled$="[[!editMode]]"
+            title="Add"
+            on-click="_openAddAgAmendmentDialog"
+          >
           </paper-icon-button>
         </div>
 
@@ -111,10 +109,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         </div>
 
         <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
-
-          <etools-data-table-header id="listHeader"
-                                    no-collapse
-                                    no-title>
+          <etools-data-table-header id="listHeader" no-collapse no-title>
             <etools-data-table-column class="col-1">
               Reference No. #
             </etools-data-table-column>
@@ -130,7 +125,6 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
-
             <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-1">
@@ -155,8 +149,9 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
                   <span class="break-word">
                     <!-- target="_blank" is there for IE -->
                     <template is="dom-if" if="[[item.id]]" restamp>
-                      <a href$="[[item.signed_amendment_attachment]]"
-                        target="_blank" download>[[getFileNameFromURL(item.signed_amendment_attachment)]]</a>
+                      <a href$="[[item.signed_amendment_attachment]]" target="_blank" download
+                        >[[getFileNameFromURL(item.signed_amendment_attachment)]]</a
+                      >
                     </template>
                     <template is="dom-if" if="[[!item.id]]" restamp>
                       <span>[[item.signed_amendment.name]]</span>
@@ -171,22 +166,23 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
           <p>There are no amendments added.</p>
         </div>
-
       </etools-content-panel>
     `;
   }
 
   @property({type: String}) // TODO: check/implement delete option
-  _deleteEpName: string = 'agreementAmendmentsDelete';
+  _deleteEpName = 'agreementAmendmentsDelete';
 
   @property({type: String})
-  agreementType: string = '';
+  agreementType = '';
 
   @property({type: Array})
   _amendmentTypes: LabelAndValue[] = [];
 
   @property({type: Object})
-  legacyAmendmentTypes: { [key: string]: string } = {'CP extension': 'Extension of Country Programme Cycle'};
+  legacyAmendmentTypes: {[key: string]: string} = {
+    'CP extension': 'Extension of Country Programme Cycle'
+  };
 
   @property({type: Object})
   _addAgAmendmentDialog!: AddAgAmendmentDialog;
@@ -195,13 +191,13 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   authorizedOfficers: [] = [];
 
   @property({type: Boolean})
-  showAuthorizedOfficers: boolean = false;
+  showAuthorizedOfficers = false;
 
   @property({type: Array, notify: true})
   selectedAo: [] = [];
 
   @property({type: Boolean})
-  editMode: boolean = false;
+  editMode = false;
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this._amendmentTypes, state.commonData!.agreementAmendmentTypes)) {
@@ -212,7 +208,6 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   ready() {
     super.ready();
     this._createAddAgAmendmentDialog();
-
   }
 
   _createAddAgAmendmentDialog() {
@@ -245,14 +240,15 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   }
 
   _getAmendmentTypes(agreementType: any, _amendmentTypes: any) {
-    if ([CONSTANTS.AGREEMENT_TYPES.PCA,
-      CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
-        !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
+    if (
+      [CONSTANTS.AGREEMENT_TYPES.PCA, CONSTANTS.AGREEMENT_TYPES.SSFA].indexOf(agreementType) === -1 ||
+      !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)
+    ) {
       return [];
     }
 
     if (agreementType === CONSTANTS.AGREEMENT_TYPES.SSFA) {
-      return _amendmentTypes.filter(type => type.value === 'Change authorized officer');
+      return _amendmentTypes.filter((type) => type.value === 'Change authorized officer');
     }
     return _amendmentTypes;
   }

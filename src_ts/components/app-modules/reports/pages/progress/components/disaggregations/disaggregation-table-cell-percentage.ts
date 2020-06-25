@@ -13,7 +13,6 @@ import {GenericObject} from '../../../../../../../typings/globals.types.js';
  * @appliesMixin UtilsMixin
  */
 class DisaggregationTableCellPercentage extends UtilsMixin(PolymerElement) {
-
   static get is() {
     return 'disaggregation-table-cell-percentage';
   }
@@ -54,10 +53,10 @@ class DisaggregationTableCellPercentage extends UtilsMixin(PolymerElement) {
       </style>
       <div class="app-grid">
         <div class="item">
-          <span>[[_formatNumber(data.v, '-', 0, '\,')]]</span>
+          <span>[[_formatNumber(data.v, '-', 0, ',')]]</span>
         </div>
         <div class="item">
-          <span>[[_formatNumber(data.d, '-', 0, '\,')]]</span>
+          <span>[[_formatNumber(data.d, '-', 0, ',')]]</span>
         </div>
         <div class="computed-value">[[_toPercentage(data.c)]]</div>
       </div>
@@ -66,8 +65,6 @@ class DisaggregationTableCellPercentage extends UtilsMixin(PolymerElement) {
 
   @property({type: Object})
   data!: GenericObject;
-
 }
 
 window.customElements.define(DisaggregationTableCellPercentage.is, DisaggregationTableCellPercentage);
-

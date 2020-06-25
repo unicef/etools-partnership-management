@@ -14,18 +14,17 @@ import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../typings/globals.types';
 
 /**
-* @polymer
-* @customElement
-* @mixinFunction
-* @appliesMixin ListDataMixin
-*/
+ * @polymer
+ * @customElement
+ * @mixinFunction
+ * @appliesMixin ListDataMixin
+ */
 class AgreementsListData extends ListDataMixin(PolymerElement) {
+  @property({type: String})
+  endpointName = 'agreements';
 
   @property({type: String})
-  endpointName: string = 'agreements';
-
-  @property({type: String})
-  dataLoadedEventName: string = 'agreements-loaded';
+  dataLoadedEventName = 'agreements-loaded';
 
   @property({type: Array, notify: true, readOnly: true})
   filteredAgreements: [] = [];
@@ -41,16 +40,28 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
     store.dispatch(setAgreements(res));
   }
 
-  query(field: string, order: string, searchString: string, agreementTypes: string[],
-    agreementStatuses: string[], selectedPartnerNames: string[], startDate: string,
-    endDate: string, cpStructures: string[], isSpecialConditionsPca: string,
-    pageNumber: number, pageSize: number, showQueryLoading: boolean) {
+  query(
+    field: string,
+    order: string,
+    searchString: string,
+    agreementTypes: string[],
+    agreementStatuses: string[],
+    selectedPartnerNames: string[],
+    startDate: string,
+    endDate: string,
+    cpStructures: string[],
+    isSpecialConditionsPca: string,
+    pageNumber: number,
+    pageSize: number,
+    showQueryLoading: boolean
+  ) {
     // If an active query transaction exists, abort it and start
     // a new one
     if (this.currentQuery) {
       this.currentQuery.abort();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     if (showQueryLoading) {
@@ -61,7 +72,7 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       });
     }
     const agreementsDexieTable = window.EtoolsPmpApp.DexieDb.agreements;
-    window.EtoolsPmpApp.DexieDb.transaction('r', agreementsDexieTable, function() {
+    window.EtoolsPmpApp.DexieDb.transaction('r', agreementsDexieTable, function () {
       self.currentQuery = Dexie.currentTransaction;
 
       let queryResult = agreementsDexieTable;
@@ -73,10 +84,12 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
         queryResult = queryResult.reverse();
       }
 
-      queryResult = queryResult.filter(function(agreement: MinimalAgreement) {
-        if (selectedPartnerNames &&
-            selectedPartnerNames.length &&
-            !selectedPartnerNames.includes(agreement.partner_name!)) {
+      queryResult = queryResult.filter(function (agreement: MinimalAgreement) {
+        if (
+          selectedPartnerNames &&
+          selectedPartnerNames.length &&
+          !selectedPartnerNames.includes(agreement.partner_name!)
+        ) {
           return false;
         }
 
@@ -88,13 +101,15 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (startDate && startDate.length &&
-            (!agreement.start || !moment.utc(agreement.start).isAfter(moment.utc(startDate)))) {
+        if (
+          startDate &&
+          startDate.length &&
+          (!agreement.start || !moment.utc(agreement.start).isAfter(moment.utc(startDate)))
+        ) {
           return false;
         }
 
-        if (endDate && endDate.length &&
-            (!agreement.end || !moment.utc(agreement.end).isBefore(moment.utc(endDate)))) {
+        if (endDate && endDate.length && (!agreement.end || !moment.utc(agreement.end).isBefore(moment.utc(endDate)))) {
           return false;
         }
 
@@ -108,9 +123,12 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
           }
         }
 
-        if (searchString && searchString.length &&
-            agreement.agreement_number!.toLowerCase().indexOf(searchString) < 0 &&
-            agreement.partner_name!.toLowerCase().indexOf(searchString) < 0) {
+        if (
+          searchString &&
+          searchString.length &&
+          agreement.agreement_number!.toLowerCase().indexOf(searchString) < 0 &&
+          agreement.partner_name!.toLowerCase().indexOf(searchString) < 0
+        ) {
           return false;
         }
 
@@ -120,8 +138,8 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      Dexie.ignoreTransaction(function() {
-        queryResult.count(function(count: number) {
+      Dexie.ignoreTransaction(function () {
+        queryResult.count(function (count: number) {
           // @ts-ignore
           self._setTotalResults(count);
         });
@@ -131,14 +149,22 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
         .offset((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .toArray();
-    }).then(function(result: any) {
-      // @ts-ignore
-      self._setFilteredAgreements(result);
-      fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
-    }).catch(function(error: any) {
-      logError('Error querying agreements: ', 'agreements-list-data', error);
-      fireEvent(self, 'global-loading', {active: false, loadingSource: 'ag-list'});
-    });
+    })
+      .then(function (result: any) {
+        // @ts-ignore
+        self._setFilteredAgreements(result);
+        fireEvent(self, 'global-loading', {
+          active: false,
+          loadingSource: 'ag-list'
+        });
+      })
+      .catch(function (error: any) {
+        logError('Error querying agreements: ', 'agreements-list-data', error);
+        fireEvent(self, 'global-loading', {
+          active: false,
+          loadingSource: 'ag-list'
+        });
+      });
   }
 }
 

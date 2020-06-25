@@ -20,63 +20,66 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.
  * @appliesMixins MissingDropdownOptionsMixin
  */
 class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(PolymerElement) {
-
   static get template() {
     return html`
-    ${requiredFieldStarredStyles}
-    <style>
-      :host {
-      }
+      ${requiredFieldStarredStyles}
+      <style>
+        :host {
+        }
 
-      .cp-output-row {
-        padding: 0 0 16px;
-      }
+        .cp-output-row {
+          padding: 0 0 16px;
+        }
 
-      .ram-indicators-row {
-        padding: 16px 0 30px;
-      }
-    </style>
+        .ram-indicators-row {
+          padding: 16px 0 30px;
+        }
+      </style>
 
-    <etools-dialog id="cpOutputRamIndicatorsDialog"
-                  size="md"
-                  dialog-title="Add/Update CP Output/CP Indicators"
-                  ok-btn-text="Add/Update"
-                  disable-confirm-btn="[[disableConfirmBtn]]"
-                  on-confirm-btn-clicked="_saveChanges"
-                  keep-dialog-open>
+      <etools-dialog
+        id="cpOutputRamIndicatorsDialog"
+        size="md"
+        dialog-title="Add/Update CP Output/CP Indicators"
+        ok-btn-text="Add/Update"
+        disable-confirm-btn="[[disableConfirmBtn]]"
+        on-confirm-btn-clicked="_saveChanges"
+        keep-dialog-open
+      >
+        <div class="cp-output-row">
+          <etools-dropdown
+            id="cpOutput"
+            label="CP Output"
+            placeholder="&#8212;"
+            options="[[availableCpOutputs]]"
+            option-value="id"
+            option-label="name"
+            selected="{{selectedCpOutputId}}"
+            required
+            auto-validate
+            error-message="Please select CP Output"
+            disable-on-focus-handling
+            disabled="[[disableCpoField]]"
+          >
+          </etools-dropdown>
+        </div>
 
-      <div class="cp-output-row">
-        <etools-dropdown id="cpOutput"
-                        label="CP Output"
-                        placeholder="&#8212;"
-                        options="[[availableCpOutputs]]"
-                        option-value="id"
-                        option-label="name"
-                        selected="{{selectedCpOutputId}}"
-                        required
-                        auto-validate
-                        error-message="Please select CP Output"
-                        disable-on-focus-handling
-                        disabled="[[disableCpoField]]">
-        </etools-dropdown>
-      </div>
-
-      <div class="ram-indicators-row">
-        <etools-dropdown-multi id="indicators"
-                              label="CP Indicators"
-                              placeholder="&#8212;"
-                              options="[[cpOutputRamIndicators]]"
-                              option-value="id"
-                              option-label="name"
-                              selected-values="{{selectedRamIndicatorsIds}}"
-                              required
-                              auto-validate
-                              error-message="Please select CP Indicators"
-                              disable-on-focus-handling>
-        </etools-dropdown-multi>
-      </div>
-
-    </etools-dialog>
+        <div class="ram-indicators-row">
+          <etools-dropdown-multi
+            id="indicators"
+            label="CP Indicators"
+            placeholder="&#8212;"
+            options="[[cpOutputRamIndicators]]"
+            option-value="id"
+            option-label="name"
+            selected-values="{{selectedRamIndicatorsIds}}"
+            required
+            auto-validate
+            error-message="Please select CP Indicators"
+            disable-on-focus-handling
+          >
+          </etools-dropdown-multi>
+        </div>
+      </etools-dialog>
     `;
   }
 
@@ -99,16 +102,16 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   selectedRamIndicatorsIds: [] = [];
 
   @property({type: Boolean})
-  autovalidateActive: boolean = false;
+  autovalidateActive = false;
 
   @property({type: String})
-  ramIndicatorsLoadingMsg: string = 'Loading...';
+  ramIndicatorsLoadingMsg = 'Loading...';
 
   @property({type: String})
-  saveResultLoadingMsg: string = 'Saving...';
+  saveResultLoadingMsg = 'Saving...';
 
   @property({type: Boolean})
-  opened: boolean = false;
+  opened = false;
 
   @property({type: Boolean})
   preventRamIndicatorReset!: boolean;
@@ -117,14 +120,13 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   editIndex: string | null = null;
 
   @property({type: Boolean})
-  disableConfirmBtn: boolean = false;
+  disableConfirmBtn = false;
 
   @property({type: Object})
   toastEventSource!: PolymerElement;
 
   @property({type: Boolean})
   disableCpoField!: boolean;
-
 
   ready() {
     super.ready();
@@ -141,22 +143,27 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
       this._setRamIndicatorsSpinnerText(this.ramIndicatorsLoadingMsg);
       this._showRamIndicatorsLoadingSpinner(true);
 
-      const ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: cpOutputId});
-      const self = this;
+      const ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {
+        id: cpOutputId
+      });
       sendRequest({
         endpoint: ramIndicatorsEndpoint
-      }).then(function(response: any) {
-        self._handleRamIndicatorsReqResponse(response);
-      }).catch(function(error: any) {
-        self._showRamIndicatorsLoadingSpinner(false);
-        parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
-      });
+      })
+        .then((response: any) => {
+          this._handleRamIndicatorsReqResponse(response);
+        })
+        .catch((error: any) => {
+          this._showRamIndicatorsLoadingSpinner(false);
+          parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        });
     }
   }
 
   _handleRamIndicatorsReqResponse(response: any) {
-    if (this._thereAreSelectedIndicators() && // to prevent triggering validation
-      !this.preventRamIndicatorReset) {
+    if (
+      this._thereAreSelectedIndicators() && // to prevent triggering validation
+      !this.preventRamIndicatorReset
+    ) {
       this.set('selectedRamIndicatorsIds', []);
     }
     this.set('preventRamIndicatorReset', false);
@@ -209,7 +216,7 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
     const result = {
       intervention: this.interventionId,
       cp_output: this.selectedCpOutputId,
-      ram_indicators: (this.selectedRamIndicatorsIds instanceof Array) ? this.selectedRamIndicatorsIds : []
+      ram_indicators: this.selectedRamIndicatorsIds instanceof Array ? this.selectedRamIndicatorsIds : []
     };
 
     if (!this._isValidResult(result)) {
@@ -251,7 +258,6 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   }
 
   _saveExpectedResult(endpoint: any, method: string, result: any, successCallback: any) {
-    const self = this;
     this._setRamIndicatorsSpinnerText(this.saveResultLoadingMsg);
     this._showRamIndicatorsLoadingSpinner(true);
     this.set('disableConfirmBtn', true);
@@ -259,17 +265,19 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
       method: method,
       endpoint: endpoint,
       body: result
-    }).then(function(response: any) {
-      self._showRamIndicatorsLoadingSpinner(false);
-      self.set('disableConfirmBtn', false);
-      if (typeof successCallback === 'function') {
-        successCallback.bind(self, response)();
-      }
-    }).catch(function(error: any) {
-      self._showRamIndicatorsLoadingSpinner(false);
-      self.set('disableConfirmBtn', false);
-      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
-    });
+    })
+      .then((response: any) => {
+        this._showRamIndicatorsLoadingSpinner(false);
+        this.set('disableConfirmBtn', false);
+        if (typeof successCallback === 'function') {
+          successCallback.bind(this, response)();
+        }
+      })
+      .catch((error: any) => {
+        this._showRamIndicatorsLoadingSpinner(false);
+        this.set('disableConfirmBtn', false);
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+      });
   }
 
   _newResultSuccessfullyAdded(response: any) {
@@ -278,10 +286,12 @@ class ResultCpOutputAndRamIndicators extends MissingDropdownOptionsMixin(Polymer
   }
 
   _resultSuccessfullyUpdated(response: any) {
-    fireEvent(this, 'expected-result-updated', {index: this.editIndex, result: response});
+    fireEvent(this, 'expected-result-updated', {
+      index: this.editIndex,
+      result: response
+    });
     this.closeDialog();
   }
-
 }
 
 window.customElements.define('result-cp-output-and-ram-indicators', ResultCpOutputAndRamIndicators);

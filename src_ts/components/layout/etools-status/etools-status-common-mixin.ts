@@ -18,26 +18,24 @@ declare const ShadyCSS: any;
  * @appliesMixin ScrollControlMixin
  **/
 function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
   class EtoolsStatusCommonClass extends ScrollControlMixin(baseClass as Constructor<PolymerElement>) {
+    @property({type: String})
+    status = '';
 
     @property({type: String})
-    status: string = '';
+    newStatus = '';
 
     @property({type: String})
-    newStatus: string = '';
-
-    @property({type: String})
-    warningMessage: string = '';
+    warningMessage = '';
 
     @property({type: Boolean})
-    editMode: boolean = true;
+    editMode = true;
 
     @property({type: Boolean})
     active!: boolean;
 
     @property({type: Number})
-    minimumDistanceFromWindowTop: number = 76;
+    minimumDistanceFromWindowTop = 76;
 
     @property({type: String})
     sectionName!: string; // PD/SSFA, Partners, Agreements
@@ -55,17 +53,14 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     deleteConfirmDialog!: EtoolsDialog;
 
     @property({type: String})
-    deleteWarningMessage!: string
+    deleteWarningMessage!: string;
 
     private _resetStatusActionsDebouncer!: Debouncer;
     private _statusActiveChangeDebouncer!: Debouncer;
     private statusChangeWarningDialogContent!: HTMLElement;
 
     static get observers() {
-      return [
-        '_handleStatusChange(status)',
-        '_activeFlagChanged(active)'
-      ];
+      return ['_handleStatusChange(status)', '_activeFlagChanged(active)'];
     }
 
     disconnectedCallback() {
@@ -83,11 +78,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
 
     _activeFlagChanged(active: boolean) {
       if (active) {
-        this._statusActiveChangeDebouncer = Debouncer.debounce(this._statusActiveChangeDebouncer,
+        this._statusActiveChangeDebouncer = Debouncer.debounce(
+          this._statusActiveChangeDebouncer,
           timeOut.after(20),
           () => {
             this._forceScollPositionRecalculation.bind(this);
-          });
+          }
+        );
       }
     }
 
@@ -147,15 +144,14 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _scrollChangedHandler() {
-      this._waitForBoundingClientRectToBeSet()
-        .then((containerDistanceFromViewportTop) => {
-          const statusElem = this.shadowRoot!.querySelector('etools-status');
-          if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
-            statusElem!.classList.add('sticky-status');
-          } else {
-            statusElem!.classList.remove('sticky-status');
-          }
-        });
+      this._waitForBoundingClientRectToBeSet().then((containerDistanceFromViewportTop) => {
+        const statusElem = this.shadowRoot!.querySelector('etools-status');
+        if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+          statusElem!.classList.add('sticky-status');
+        } else {
+          statusElem!.classList.remove('sticky-status');
+        }
+      });
     }
 
     _waitForBoundingClientRectToBeSet() {
@@ -197,8 +193,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
           this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
           this.warningDialog.opened = true;
         } else {
-          logWarn('#statusChangeWarningContent element not found!', 'pmp ' +
-              this.sectionName + ' status change');
+          logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
         }
       } else {
         logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
@@ -233,12 +228,14 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
       if (typeof status === 'undefined') {
         return;
       }
-      this._resetStatusActionsDebouncer = Debouncer.debounce(this._resetStatusActionsDebouncer,
+      this._resetStatusActionsDebouncer = Debouncer.debounce(
+        this._resetStatusActionsDebouncer,
         timeOut.after(50),
         () => {
           this._computeAvailableStatuses(status);
           this._computeAvailableActions(status);
-        });
+        }
+      );
     }
 
     _statusChangeConfirmationCallback(_event: CustomEvent) {
@@ -264,8 +261,13 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     _getDefaultWarningMessage() {
-      return 'You are changing the status from <strong>\''
-          + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+      return (
+        "You are changing the status from <strong>'" +
+        this.status +
+        "'</strong> to <strong>'" +
+        this.newStatus +
+        "'</strong>. Do you want to continue?"
+      );
     }
 
     getComputedStyleValue(varName: string) {

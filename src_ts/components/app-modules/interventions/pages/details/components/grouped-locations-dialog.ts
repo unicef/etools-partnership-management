@@ -19,7 +19,6 @@ class GroupedLocations {
  * @customElement
  */
 class GroupedLocationsDialog extends connect(store)(PolymerElement) {
-
   static get template() {
     return html`
       ${gridLayoutStyles}
@@ -32,7 +31,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
           --etools-dialog-scrollable: {
             min-height: 300px;
             font-size: 16px;
-          };
+          }
         }
 
         .adminLevelLoc {
@@ -69,14 +68,16 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
         }
       </style>
       <etools-dialog id="groupedLocDialog" size="md" dialog-title="Locations PD/SSFA Covers" hide-confirm-btn>
-        <etools-dropdown id="adminLevelsDropdw"
-                        label="Group Locations By"
-                        selected="{{adminLevel}}"
-                        placeholder="&#8212;"
-                        options="[[adminLevels]]"
-                        option-label="name"
-                        option-value="name"
-                        disable-on-focus-handling>
+        <etools-dropdown
+          id="adminLevelsDropdw"
+          label="Group Locations By"
+          selected="{{adminLevel}}"
+          placeholder="&#8212;"
+          options="[[adminLevels]]"
+          option-label="name"
+          option-value="name"
+          disable-on-focus-handling
+        >
         </etools-dropdown>
 
         <div class="bordered-div" hidden$="[[!message]]">
@@ -94,7 +95,9 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
               <div class="adminLevelLoc">[[item.adminLevelLocation.name]]</div>
               <div class="left-padding">
                 <template is="dom-repeat" items="[[item.subordinateLocations]]" as="subordinateLoc">
-                  <div class="child-bottom-padding"> - [[subordinateLoc.name]]</div>
+                  <div class="child-bottom-padding">
+                    - [[subordinateLoc.name]]
+                  </div>
                 </template>
               </div>
             </div>
@@ -104,10 +107,16 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     `;
   }
 
-  @property({type: Array, observer: GroupedLocationsDialog.prototype.adminLevelsChanged})
+  @property({
+    type: Array,
+    observer: GroupedLocationsDialog.prototype.adminLevelsChanged
+  })
   adminLevels!: {id: number; name: string; admin_level: any}[];
 
-  @property({type: String, observer: GroupedLocationsDialog.prototype.adminLevelChanged})
+  @property({
+    type: String,
+    observer: GroupedLocationsDialog.prototype.adminLevelChanged
+  })
   adminLevel!: string | null;
 
   @property({type: Array})
@@ -116,22 +125,25 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   @property({type: Array})
   interventionLocations!: Location[];
 
-  // @ts-ignore
-  @property({type: Array, notify: true, observer: GroupedLocationsDialog.prototype.interventionLocationIdsChanged})
+  @property({
+    type: Array,
+    notify: true,
+    // @ts-ignore
+    observer: GroupedLocationsDialog.prototype.interventionLocationIdsChanged
+  })
   interventionLocationIds!: [];
 
   @property({type: Array})
   groupedLocations!: GroupedLocations[] | null;
 
   @property({type: String})
-  message: string = '';
-
+  message = '';
 
   stateChanged(state: RootState) {
-    if (!isJsonStrMatch(this.locations, state.commonData!.locations )) {
+    if (!isJsonStrMatch(this.locations, state.commonData!.locations)) {
       this.locations = [...state.commonData!.locations];
     }
-    if (!isJsonStrMatch(this.adminLevels, state.commonData!.locationTypes )) {
+    if (!isJsonStrMatch(this.adminLevels, state.commonData!.locationTypes)) {
       this.adminLevels = [...state.commonData!.locationTypes];
     }
   }
@@ -144,7 +156,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 
   _removeCountry(adminLevels: any) {
-    const index = adminLevels.findIndex(function(al: any) {
+    const index = adminLevels.findIndex(function (al: any) {
       return al.name === 'Country';
     });
     if (index > -1) {
@@ -164,10 +176,10 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   }
 
   _setInterventionLocationsDetails(locationIds: any[]) {
-    locationIds = locationIds.map(function(loc) {
+    locationIds = locationIds.map(function (loc) {
       return parseInt(loc);
     });
-    const interventionLocations: Location[] = this.locations.filter(function(loc: any) {
+    const interventionLocations: Location[] = this.locations.filter(function (loc: any) {
       return locationIds.indexOf(parseInt(loc.id)) > -1;
     });
 
@@ -189,7 +201,8 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     for (i = 0; i < this.interventionLocations.length; i++) {
       const grouping = new GroupedLocations();
 
-      if (this.interventionLocations[i].gateway.name === selectedAdminLevel) { // gateway.name is location_type
+      if (this.interventionLocations[i].gateway.name === selectedAdminLevel) {
+        // gateway.name is location_type
         grouping.adminLevelLocation = this.interventionLocations[i];
         groupedLocations.push(grouping);
         continue;
@@ -226,8 +239,8 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     if (!groupedLocations || !groupedLocations.length) {
       return null;
     }
-    const existingGroup = groupedLocations.find(function(g) {
-      return parseInt(g.adminLevelLocation!.id as unknown as string) === parseInt(adminLevelLocation.id);
+    const existingGroup = groupedLocations.find(function (g) {
+      return parseInt((g.adminLevelLocation!.id as unknown) as string) === parseInt(adminLevelLocation.id);
     });
 
     if (!existingGroup) {
@@ -240,7 +253,7 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
     if (!location.parent) {
       return null;
     }
-    const parentLoc: Location | undefined = this.locations.find(function(loc: any) {
+    const parentLoc: Location | undefined = this.locations.find(function (loc: any) {
       return parseInt(loc.id) === parseInt(location.parent as string);
     });
     if (!parentLoc) {
@@ -255,7 +268,6 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   open() {
     (this.$.groupedLocDialog as EtoolsDialog).opened = true;
   }
-
 }
 
 window.customElements.define('grouped-locations-dialog', GroupedLocationsDialog);

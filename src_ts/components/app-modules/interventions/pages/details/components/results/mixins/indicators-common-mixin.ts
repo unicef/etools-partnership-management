@@ -9,15 +9,14 @@ import {property} from '@polymer/decorators';
  */
 function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class IndicatorsCommonClass extends baseClass {
-
     @property({type: String}) // allow only decimals separator `.` or `,`. ex: 1000,00 or 1000.00
-    numberPattern: string = '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)'
+    numberPattern = '(^\\d+(\\.?\\d+)?$)|(^\\d+(,?\\d+)?$)';
 
     @property({type: String}) // any number starting from 1
-    digitsNotStartingWith0Pattern: string = '^[1-9]{1}(\\d+)?$';
+    digitsNotStartingWith0Pattern = '^[1-9]{1}(\\d+)?$';
 
     @property({type: String})
-    digitsPattern: string = '^\\d+';
+    digitsPattern = '^\\d+';
 
     _baselineChanged(baselineV: string) {
       // @ts-ignore
@@ -48,8 +47,9 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
     }
 
     _displayTypeIsPercentage(indicator: any) {
-      return (indicator.indicator && indicator.indicator.unit === 'percentage' &&
-          indicator.indicator.display_type !== 'ratio');
+      return (
+        indicator.indicator && indicator.indicator.unit === 'percentage' && indicator.indicator.display_type !== 'ratio'
+      );
     }
 
     _getValidPercentageValue(val: any) {
@@ -75,7 +75,6 @@ function IndicatorsCommonMixin<T extends Constructor<PolymerElement>>(baseClass:
       });
       return valid;
     }
-
   }
 
   return IndicatorsCommonClass;

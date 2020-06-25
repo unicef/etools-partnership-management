@@ -18,7 +18,6 @@ import {LabelAndValue} from '../../../../../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
 import {AddAmendmentDialog} from './add-amendment-dialog';
 
-
 /**
  * @polymer
  * @customElement
@@ -28,116 +27,112 @@ import {AddAmendmentDialog} from './add-amendment-dialog';
 class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   static get template() {
     return html`
-    ${SharedStyles} ${gridLayoutStyles}
-    <style include="data-table-styles">
-      [hidden] {
-        display: none !important;
-      }
-      :host {
-        display: block;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-      }
-      .attachment {
-        color: var(--dark-icon-color);
-        margin-right: 8px;
-      }
-      .file-label {
-        width: calc(100% - 32px);
-      }
-      /* for IE */
-      .other-description {
-        display: block;
-        width: 100%;
-      }
-    </style>
+      ${SharedStyles} ${gridLayoutStyles}
+      <style include="data-table-styles">
+        [hidden] {
+          display: none !important;
+        }
+        :host {
+          display: block;
+          width: 100%;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+        .attachment {
+          color: var(--dark-icon-color);
+          margin-right: 8px;
+        }
+        .file-label {
+          width: calc(100% - 32px);
+        }
+        /* for IE */
+        .other-description {
+          display: block;
+          width: 100%;
+        }
+      </style>
 
-    <etools-content-panel panel-title="Amendments">
-      <template is="dom-if" if="[[editMode]]">
-        <div slot="panel-btns">
-          <paper-icon-button icon="add-box"
-                            title="Add Amendment"
-                            on-tap="_showAddAmendmentDialog">
-          </paper-icon-button>
-        </div>
-      </template>
-      <div class="p-relative" id="amendments-wrapper">
-        <etools-data-table-header id="listHeader"
-                                  no-collapse
-                                  no-title
-                                  hidden$="[[_emptyList(amendments.length)]]">
-          <etools-data-table-column class="col-1">
-            Ref #
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Signed Date
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Amendment Types
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Signed Amendment
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
-            Internal / PRC Reviews
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c">
-            Other Info
-          </etools-data-table-column>
-        </etools-data-table-header>
-
-        <template is="dom-repeat" items="[[amendments]]">
-          <etools-data-table-row no-collapse>
-            <div slot="row-data">
-              <span class="col-data col-1">
-                [[item.amendment_number]]
-              </span>
-              <span class="col-data col-2">
-                [[getDateDisplayValue(item.signed_date)]]
-              </span>
-              <span class="col-data col-2">
-                [[_getReadonlyAmendmentTypes(item.types)]]
-              </span>
-              <span class="col-data col-2">
-                <iron-icon icon="attachment" class="attachment"></iron-icon>
-                <span class="break-word file-label">
-                  <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.signed_amendment_attachment]]" target="_blank" download>
-                    [[getFileNameFromURL(item.signed_amendment_attachment)]]
-                  </a>
-                </span>
-              </span>
-              <span class="col-data flex-c">
-                <span hidden$="[[item.internal_prc_review]]" class="placeholder-style">&#8212;</span>
-                <iron-icon icon="attachment" class="attachment" hidden$="[[!item.internal_prc_review]]"></iron-icon>
-                <span class="break-word file-label">
-                  <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.internal_prc_review]]" target="_blank" download>
-                    [[getFileNameFromURL(item.internal_prc_review)]]
-                  </a>
-                </span>
-              </span>
-              <div class="col-data flex-c break-word">
-                <span hidden$="[[_showOtherInput(item.types, item.types.length, index)]]"
-                      class="placeholder-style">&#8212;</span>
-                <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
-                  <div class="other-description">
-                    [[item.other_description]]
-                  </div>
-                </template>
-              </div>
-            </div>
-          </etools-data-table-row>
-        </template>
-        <template is="dom-if" if="[[_emptyList(amendments.length)]]">
-          <div class="row-h">
-            <p>There are no amendments added.</p>
+      <etools-content-panel panel-title="Amendments">
+        <template is="dom-if" if="[[editMode]]">
+          <div slot="panel-btns">
+            <paper-icon-button icon="add-box" title="Add Amendment" on-tap="_showAddAmendmentDialog">
+            </paper-icon-button>
           </div>
         </template>
-      </div>
-    </etools-content-panel>
+        <div class="p-relative" id="amendments-wrapper">
+          <etools-data-table-header id="listHeader" no-collapse no-title hidden$="[[_emptyList(amendments.length)]]">
+            <etools-data-table-column class="col-1">
+              Ref #
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2">
+              Signed Date
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2">
+              Amendment Types
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2">
+              Signed Amendment
+            </etools-data-table-column>
+            <etools-data-table-column class="flex-c">
+              Internal / PRC Reviews
+            </etools-data-table-column>
+            <etools-data-table-column class="flex-c">
+              Other Info
+            </etools-data-table-column>
+          </etools-data-table-header>
+
+          <template is="dom-repeat" items="[[amendments]]">
+            <etools-data-table-row no-collapse>
+              <div slot="row-data">
+                <span class="col-data col-1">
+                  [[item.amendment_number]]
+                </span>
+                <span class="col-data col-2">
+                  [[getDateDisplayValue(item.signed_date)]]
+                </span>
+                <span class="col-data col-2">
+                  [[_getReadonlyAmendmentTypes(item.types)]]
+                </span>
+                <span class="col-data col-2">
+                  <iron-icon icon="attachment" class="attachment"></iron-icon>
+                  <span class="break-word file-label">
+                    <!-- target="_blank" is there for IE -->
+                    <a href$="[[item.signed_amendment_attachment]]" target="_blank" download>
+                      [[getFileNameFromURL(item.signed_amendment_attachment)]]
+                    </a>
+                  </span>
+                </span>
+                <span class="col-data flex-c">
+                  <span hidden$="[[item.internal_prc_review]]" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="attachment" class="attachment" hidden$="[[!item.internal_prc_review]]"></iron-icon>
+                  <span class="break-word file-label">
+                    <!-- target="_blank" is there for IE -->
+                    <a href$="[[item.internal_prc_review]]" target="_blank" download>
+                      [[getFileNameFromURL(item.internal_prc_review)]]
+                    </a>
+                  </span>
+                </span>
+                <div class="col-data flex-c break-word">
+                  <span hidden$="[[_showOtherInput(item.types, item.types.length, index)]]" class="placeholder-style"
+                    >&#8212;</span
+                  >
+                  <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
+                    <div class="other-description">
+                      [[item.other_description]]
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </etools-data-table-row>
+          </template>
+          <template is="dom-if" if="[[_emptyList(amendments.length)]]">
+            <div class="row-h">
+              <p>There are no amendments added.</p>
+            </div>
+          </template>
+        </div>
+      </etools-content-panel>
     `;
   }
 
@@ -151,24 +146,22 @@ class PdAmendments extends connect(store)(CommonMixin(PolymerElement)) {
   amendmentTypes!: LabelAndValue[];
 
   @property({type: String})
-  interventionDocumentType: string = '';
+  interventionDocumentType = '';
 
   @property({type: Boolean})
-  inAmendment: boolean = false;
+  inAmendment = false;
 
   @property({type: Object})
   addAmendmentDialog!: AddAmendmentDialog;
 
   @property({type: Boolean, reflectToAttribute: true})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Number})
   interventionId: number | null = null;
 
   static get observers() {
-    return [
-      '_dataHasChanged(amendments)'
-    ];
+    return ['_dataHasChanged(amendments)'];
   }
 
   stateChanged(state: RootState) {

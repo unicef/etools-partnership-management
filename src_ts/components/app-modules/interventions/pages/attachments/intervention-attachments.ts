@@ -31,7 +31,6 @@ import {IconsActionsEl} from '../../../../layout/icons-actions.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 
-
 /**
  * @polymer
  * @customElement
@@ -40,7 +39,6 @@ import {timeOut} from '@polymer/polymer/lib/utils/async';
  * @appliesMixin CommonMixin
  */
 class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(PolymerElement))) {
-
   static get template() {
     return html`
       ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${etoolsCpHeaderActionsBarStyles}
@@ -51,7 +49,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
           --ecp-content: {
             padding: 0;
             overflow: hidden;
-          };
+          }
         }
 
         .attachment {
@@ -73,17 +71,17 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
 
       <etools-content-panel class="content-section" panel-title$="Attachments ([[attachments.length]])">
         <div slot="panel-btns" class="cp-header-actions-bar" hidden$="[[newIntervention]]">
-          <paper-toggle-button id="showInvalid"
-                              checked="{{showInvalid}}">
+          <paper-toggle-button id="showInvalid" checked="{{showInvalid}}">
             Show invalid
           </paper-toggle-button>
-          <div class="separator" hidden$="[[!permissions.edit.attachments]]">
-          </div>
-          <paper-icon-button icon="add-box"
-                            disabled="[[!permissions.edit.attachments]]"
-                            hidden$="[[!permissions.edit.attachments]]"
-                            title="Add"
-                            on-tap="_addAttachment">
+          <div class="separator" hidden$="[[!permissions.edit.attachments]]"></div>
+          <paper-icon-button
+            icon="add-box"
+            disabled="[[!permissions.edit.attachments]]"
+            hidden$="[[!permissions.edit.attachments]]"
+            title="Add"
+            on-tap="_addAttachment"
+          >
           </paper-icon-button>
         </div>
 
@@ -104,7 +102,11 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
           </etools-data-table-header>
 
           <template is="dom-repeat" items="[[attachments]]">
-            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInvalid)]]">
+            <etools-data-table-row
+              secondary-bg-on-hover
+              no-collapse
+              hidden$="[[!_isVisible(item.active, showInvalid)]]"
+            >
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-2">
                   [[getDateDisplayValue(item.created)]]
@@ -125,12 +127,14 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
                   <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
                 </span>
-                <icons-actions item-id$="[[item.id]]"
-                                hidden$="[[!permissions.edit.attachments]]"
-                                show-delete="[[_canDeleteAttachments(interventionStatus)]]"
-                                show-edit="[[_canEditAttachments(interventionStatus)]]"
-                                on-edit="_editAttachment"
-                                on-delete="_confirmAttachmentDelete">
+                <icons-actions
+                  item-id$="[[item.id]]"
+                  hidden$="[[!permissions.edit.attachments]]"
+                  show-delete="[[_canDeleteAttachments(interventionStatus)]]"
+                  show-edit="[[_canEditAttachments(interventionStatus)]]"
+                  on-edit="_editAttachment"
+                  on-delete="_confirmAttachmentDelete"
+                >
                 </icons-actions>
               </div>
             </etools-data-table-row>
@@ -140,11 +144,12 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
         <template is="dom-if" if="[[!_showAttachmentsList(attachments.length)]]">
           <div class="row-h">
             <p hidden$="[[newIntervention]]">There are no attachments added.</p>
-            <p hidden$="[[!newIntervention]]">You must save this PD/SSFA before you can add attachments.</p>
+            <p hidden$="[[!newIntervention]]">
+              You must save this PD/SSFA before you can add attachments.
+            </p>
           </div>
         </template>
-
-    </etools-content-panel>
+      </etools-content-panel>
     `;
   }
 
@@ -154,7 +159,10 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   @property({type: Object})
   permissions!: Permission<InterventionPermissionsFields>;
 
-  @property({type: Number, observer: InterventionAttachments.prototype._interventionIdChanged})
+  @property({
+    type: Number,
+    observer: InterventionAttachments.prototype._interventionIdChanged
+  })
   interventionId!: number;
 
   @property({type: String})
@@ -167,10 +175,10 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   fileTypes!: IdAndName[];
 
   @property({type: Boolean})
-  showInvalid: boolean = false;
+  showInvalid = false;
 
   @property({type: Boolean})
-  newIntervention: boolean = false;
+  newIntervention = false;
 
   @property({type: Object})
   attachmentDialog!: any;
@@ -184,9 +192,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   private _debouncer!: Debouncer;
 
   static get observers() {
-    return [
-      '_checkEmptyFileTypesData(fileTypes, active)'
-    ];
+    return ['_checkEmptyFileTypesData(fileTypes, active)'];
   }
 
   stateChanged(state: RootState) {
@@ -196,7 +202,6 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     if (!isJsonStrMatch(this.permissions, state.pageData!.permissions)) {
       this.permissions = copy(state.pageData!.permissions);
     }
-
   }
 
   connectedCallback() {
@@ -207,7 +212,10 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
      * Disable loading message for attachments tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'interv-page'
+    });
     fireEvent(this, 'tab-content-attached');
   }
 
@@ -286,17 +294,15 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     if (typeof fileTypes === 'undefined') {
       return;
     }
-    this._debouncer = Debouncer.debounce(this._debouncer,
-      timeOut.after(200), () => {
-
-        if (active && !fileTypes.length) {
-          // there are no file types in the current workspace
-          fireEvent(this, 'toast', {
-            text: 'File Type data required to save attachments is missing from current workspace!',
-            showCloseBtn: true
-          });
-        }
-      });
+    this._debouncer = Debouncer.debounce(this._debouncer, timeOut.after(200), () => {
+      if (active && !fileTypes.length) {
+        // there are no file types in the current workspace
+        fireEvent(this, 'toast', {
+          text: 'File Type data required to save attachments is missing from current workspace!',
+          showCloseBtn: true
+        });
+      }
+    });
   }
 
   _interventionIdChanged(id: any, _oldId: any) {
@@ -312,17 +318,20 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
     });
     sendRequest({
       endpoint: this.getEndpoint('pdAttachments', {pdId: id})
-    }).then((response: any) => {
-      this.set('attachments', response);
-    }).catch((error: any) => {
-      logError('Error during pd attachments fetch.', 'pd-attachments', error);
-      parseRequestErrorsAndShowAsToastMsgs(error, this);
-    }).then(() => {
-      fireEvent(this, 'global-loading', {
-        active: false,
-        loadingSource: 'pd-attachments'
+    })
+      .then((response: any) => {
+        this.set('attachments', response);
+      })
+      .catch((error: any) => {
+        logError('Error during pd attachments fetch.', 'pd-attachments', error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+      })
+      .then(() => {
+        fireEvent(this, 'global-loading', {
+          active: false,
+          loadingSource: 'pd-attachments'
+        });
       });
-    });
   }
 
   _addAttachment() {
@@ -339,8 +348,9 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
       this.attachmentDialog.interventionId = this.interventionId;
       this.attachmentDialog.fileTypes = this.fileTypes;
 
-      const editedAttachment = this.attachments.find((a: InterventionAttachment) =>
-        a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+      const editedAttachment = this.attachments.find(
+        (a: InterventionAttachment) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id'))
+      );
 
       this.attachmentDialog.initAttachment(editedAttachment);
       this.attachmentDialog.opened = true;
@@ -349,9 +359,9 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
 
   _confirmAttachmentDelete(e: CustomEvent) {
     if (e.target !== null) {
-      this.attMarkedToBeDeleted = this.attachments
-        .find((a: InterventionAttachment) =>
-          a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+      this.attMarkedToBeDeleted = this.attachments.find(
+        (a: InterventionAttachment) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id'))
+      );
       if (this.attMarkedToBeDeleted) {
         this.attDeleteConfirmDialog.opened = true;
       }
@@ -368,19 +378,24 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
       });
       sendRequest({
         method: 'DELETE',
-        endpoint: this.getEndpoint('updatePdAttachment', {attId: this.attMarkedToBeDeleted.id})
-      }).then((_response: any) => {
-        this._updateAttachments(this.attMarkedToBeDeleted, true);
-      }).catch((error: any) => {
-        logError('Error during pd attachment delete.', 'pd-attachments', error);
-        parseRequestErrorsAndShowAsToastMsgs(error, this);
-      }).then(() => {
-        fireEvent(this, 'global-loading', {
-          active: false,
-          loadingSource: 'pd-attachments-delete'
+        endpoint: this.getEndpoint('updatePdAttachment', {
+          attId: this.attMarkedToBeDeleted.id
+        })
+      })
+        .then((_response: any) => {
+          this._updateAttachments(this.attMarkedToBeDeleted, true);
+        })
+        .catch((error: any) => {
+          logError('Error during pd attachment delete.', 'pd-attachments', error);
+          parseRequestErrorsAndShowAsToastMsgs(error, this);
+        })
+        .then(() => {
+          fireEvent(this, 'global-loading', {
+            active: false,
+            loadingSource: 'pd-attachments-delete'
+          });
+          this.attMarkedToBeDeleted = null;
         });
-        this.attMarkedToBeDeleted = null;
-      });
     }
   }
 
@@ -399,8 +414,7 @@ class InterventionAttachments extends connect(store)(EndpointsMixin(CommonMixin(
   }
 
   _canEditAttachments(status: string) {
-    return status !== CONSTANTS.STATUSES.Closed.toLowerCase() &&
-      status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
+    return status !== CONSTANTS.STATUSES.Closed.toLowerCase() && status !== CONSTANTS.STATUSES.Terminated.toLowerCase();
   }
 }
 

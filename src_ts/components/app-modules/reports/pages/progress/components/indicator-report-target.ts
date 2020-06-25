@@ -10,7 +10,6 @@ import {GenericObject} from '../../../../../../typings/globals.types.js';
  * @appliesMixin UtilsMixin
  */
 class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
-
   static get is() {
     return 'indicator-report-target';
   }
@@ -84,7 +83,9 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
       </div>
       <div class="target-row">
         <span>Achievement in reporting period:</span>
-        <span title$="[[_getAchievement(displayType, achievement)]]">[[_getAchievement(displayType, achievement)]]</span>
+        <span title$="[[_getAchievement(displayType, achievement)]]"
+          >[[_getAchievement(displayType, achievement)]]</span
+        >
       </div>
     `;
   }
@@ -93,16 +94,16 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   target!: GenericObject;
 
   @property({type: String})
-  cumulativeProgress: string = '-';
+  cumulativeProgress = '-';
 
   @property({type: String})
-  achievement: string = '-';
+  achievement = '-';
 
   @property({type: Boolean, reflectToAttribute: true})
-  bold: boolean = false;
+  bold = false;
 
   @property({type: String})
-  displayType: string = 'number';
+  displayType = 'number';
 
   _getTargetValue(displayType: string, target: any) {
     switch (displayType) {
@@ -123,7 +124,6 @@ class IndicatorReportTarget extends UtilsMixin(PolymerElement) {
   _getAchievement(displayType: string, achievedVal: string) {
     return this._formatIndicatorValue(displayType, achievedVal, false);
   }
-
 }
 
 window.customElements.define(IndicatorReportTarget.is, IndicatorReportTarget);

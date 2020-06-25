@@ -10,13 +10,11 @@ import {property} from '@polymer/decorators';
  */
 function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class GenerateQuarterlyRepReqClass extends baseClass {
-
     @property({type: Number})
-    DUE_DATE_DAYS_TO_ADD: number = 30;
+    DUE_DATE_DAYS_TO_ADD = 30;
 
     @property({type: String})
-    datesFormat: string = 'YYYY-MM-DD';
-
+    datesFormat = 'YYYY-MM-DD';
 
     /**
      * Used to generate (one time) QPR first dates set.
@@ -84,10 +82,8 @@ function GenerateQuarterlyReportingRequirementsMixin<T extends Constructor<Polym
     _getNextStartDateStr(momentEndDate: any) {
       return moment(momentEndDate).add(1, 'd').format(this.datesFormat);
     }
-
   }
   return GenerateQuarterlyRepReqClass;
 }
 
 export default GenerateQuarterlyReportingRequirementsMixin;
-

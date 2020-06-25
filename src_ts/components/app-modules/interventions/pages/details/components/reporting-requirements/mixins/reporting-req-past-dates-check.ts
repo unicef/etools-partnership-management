@@ -11,19 +11,15 @@ declare const moment: any;
  * @mixinFunction
  */
 function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
   class ReportingReqPastDatesCheckClass extends baseClass {
-
     @property({type: Boolean})
     inAmendment!: boolean;
 
     @property({type: Boolean})
-    editMode: boolean = false;
+    editMode = false;
 
     _uneditableStyles(inAmendment: boolean, dueDate: any, id: number) {
-      return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id)
-        ? this._getUneditableStyles()
-        : '';
+      return this._noInAmendmentPastDatesEdit(inAmendment, dueDate, id) ? this._getUneditableStyles() : '';
     }
 
     _getUneditableStyles() {
@@ -43,7 +39,6 @@ function ReportingReqPastDatesCheckMixin<T extends Constructor<PolymerElement>>(
     _noInAmendmentPastDatesEdit(inAmendment: boolean, dueDate: string, id: number) {
       return inAmendment && this._pastDueDate(dueDate) && id > 0;
     }
-
   }
   return ReportingReqPastDatesCheckClass;
 }

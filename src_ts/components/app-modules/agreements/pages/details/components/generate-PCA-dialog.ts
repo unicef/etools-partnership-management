@@ -15,16 +15,20 @@ class GeneratePcaDialog extends PolymerElement {
   static get template() {
     return html`
       <style>
-        paper-dropdown-menu, paper-listbox {
+        paper-dropdown-menu,
+        paper-listbox {
           width: 250px;
         }
       </style>
-      <etools-dialog id="etoolsDialog" size="md" ok-btn-text="Download" dialog-title="Generate PCA"
-                    on-close="_handleDialogClosed">
+      <etools-dialog
+        id="etoolsDialog"
+        size="md"
+        ok-btn-text="Download"
+        dialog-title="Generate PCA"
+        on-close="_handleDialogClosed"
+      >
         <paper-dropdown-menu label="Choose Template">
-          <paper-listbox slot="dropdown-content"
-                        attr-for-selected="item-value"
-                        selected="{{selectedTemplate}}">
+          <paper-listbox slot="dropdown-content" attr-for-selected="item-value" selected="{{selectedTemplate}}">
             <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
               <paper-item item-value$="[[item.value]]">[[item.label]]</paper-item>
             </template>
@@ -38,10 +42,15 @@ class GeneratePcaDialog extends PolymerElement {
   agreementId: string | null = null;
 
   @property({type: Array})
-  templateOptions: LabelAndValue[] = [{value: 'english', label: 'English'},
-    {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
-    {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
-    {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
+  templateOptions: LabelAndValue[] = [
+    {value: 'english', label: 'English'},
+    {value: 'french', label: 'French'},
+    {value: 'portuguese', label: 'Portuguese'},
+    {value: 'russian', label: 'Russian'},
+    {value: 'spanish', label: 'Spanish'},
+    {value: 'ifrc_english', label: 'IFRC English'},
+    {value: 'ifrc_french', label: 'IFRC French'}
+  ];
 
   @property({type: String})
   selectedTemplate: string | null = null;
@@ -56,8 +65,13 @@ class GeneratePcaDialog extends PolymerElement {
       return;
     }
     if (closingReason.detail.confirmed) {
-      window.open('/api/v2/agreements/' + this.agreementId + '/generate_doc/?lang=' +
-          encodeURIComponent(this.selectedTemplate as string), '_blank');
+      window.open(
+        '/api/v2/agreements/' +
+          this.agreementId +
+          '/generate_doc/?lang=' +
+          encodeURIComponent(this.selectedTemplate as string),
+        '_blank'
+      );
     }
     this.selectedTemplate = null;
   }

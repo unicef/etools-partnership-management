@@ -17,7 +17,6 @@ import {property} from '@polymer/decorators';
  * @customElement
  */
 class EtoolsStatus extends connect(store)(PolymerElement) {
-
   static get template() {
     return html`
       ${etoolsStatusStyles}
@@ -27,24 +26,26 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
             <div class="divider-line"></div>
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
-                  <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
-                    <span>[[_getTrueIndex(index)]]</span>
-                    <iron-icon class="done-icon" icon="done"></iron-icon>
-                    <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
-                  </span>
+                <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
+                  <span>[[_getTrueIndex(index)]]</span>
+                  <iron-icon class="done-icon" icon="done"></iron-icon>
+                  <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
+                </span>
               </div>
 
               <div class="status">
                 <span>[[status.label]]</span>
               </div>
-
             </div>
           </template>
         </div>
         <div class="bottom-container" hidden$="[[hideActions]]">
-          <etools-action-button disabled$="[[!allowSave(uploadsInProgress)]]" actions="[[actions]]"
-                              title="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, unsavedUploads)]]"
-                                show-info-icon="[[showInfoIcon]]">
+          <etools-action-button
+            disabled$="[[!allowSave(uploadsInProgress)]]"
+            actions="[[actions]]"
+            title="[[getUploadInProgressOrUnsavedTooltip(uploadsInProgress, unsavedUploads)]]"
+            show-info-icon="[[showInfoIcon]]"
+          >
           </etools-action-button>
         </div>
       </etools-content-panel>
@@ -61,7 +62,7 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
   actions: StatusAction[] = [];
 
   @property({type: Boolean})
-  hideActions: boolean = true;
+  hideActions = true;
 
   @property({type: Number})
   uploadsInProgress!: number;
@@ -70,16 +71,13 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
   unsavedUploads!: number;
 
   @property({type: Boolean})
-  showInfoIcon: boolean = false;
+  showInfoIcon = false;
 
   private _statusChangedDebouncer!: Debouncer;
   private _actionsOptionsChangedDebouncer!: Debouncer;
 
   static get observers() {
-    return [
-      '_handleStatusChanged(statuses, statuses.*)',
-      '_handleActionsChanged(actions, actions.*)'
-    ];
+    return ['_handleStatusChanged(statuses, statuses.*)', '_handleActionsChanged(actions, actions.*)'];
   }
 
   stateChanged(state: RootState) {
@@ -109,21 +107,19 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
     return '';
   }
 
-
   _showInfoIcon(actionsBtnTooltip: string) {
     return !!actionsBtnTooltip;
   }
 
   _handleStatusChanged(statuses: Status[]) {
-    this._statusChangedDebouncer = Debouncer.debounce(this._statusChangedDebouncer,
-      timeOut.after(10),
-      () => {
-        this._computeAvailableStatuses(statuses);
-      });
+    this._statusChangedDebouncer = Debouncer.debounce(this._statusChangedDebouncer, timeOut.after(10), () => {
+      this._computeAvailableStatuses(statuses);
+    });
   }
 
   _handleActionsChanged() {
-    this._actionsOptionsChangedDebouncer = Debouncer.debounce(this._actionsOptionsChangedDebouncer,
+    this._actionsOptionsChangedDebouncer = Debouncer.debounce(
+      this._actionsOptionsChangedDebouncer,
       timeOut.after(10),
       () => {
         let hidden = true;
@@ -131,7 +127,8 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
           hidden = elem.hidden && hidden;
         });
         this.set('hideActions', hidden);
-      });
+      }
+    );
   }
 
   _getStatusIcon(icon: string) {
@@ -170,7 +167,6 @@ class EtoolsStatus extends connect(store)(PolymerElement) {
       this.set('availableStatuses', filteredStatuses);
     }, 0);
   }
-
 }
 
 window.customElements.define('etools-status', EtoolsStatus);

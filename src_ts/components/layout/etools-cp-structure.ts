@@ -18,38 +18,39 @@ import {property} from '@polymer/decorators';
  * @customElement
  */
 export class EtoolsCpStructure extends connect(store)(PolymerElement) {
-
   static get template() {
     return html`
-          ${SharedStyles} ${requiredFieldStarredStyles}
-          <style>
-            :host {
-              @apply --layout-horizontal;
-            }
+      ${SharedStyles} ${requiredFieldStarredStyles}
+      <style>
+        :host {
+          @apply --layout-horizontal;
+        }
 
-            *[hidden] {
-              display: none !important;
-            }
+        *[hidden] {
+          display: none !important;
+        }
 
-            #cpStructure {
-              width: 100%;
-            }
-          </style>
+        #cpStructure {
+          width: 100%;
+        }
+      </style>
 
-          <etools-dropdown id="cpStructure"
-                            label="CP Structure"
-                            placeholder="&#8212;"
-                            options="[[sortedCountryProgrammes]]"
-                            option-value="id"
-                            option-label="name"
-                            selected="{{selectedCp}}"
-                            hide-search
-                            readonly$="[[!editMode]]"
-                            required$="[[required]]"
-                            auto-validate
-                            error-message="Please select CP Structure">
-          </etools-dropdown>
-        `;
+      <etools-dropdown
+        id="cpStructure"
+        label="CP Structure"
+        placeholder="&#8212;"
+        options="[[sortedCountryProgrammes]]"
+        option-value="id"
+        option-label="name"
+        selected="{{selectedCp}}"
+        hide-search
+        readonly$="[[!editMode]]"
+        required$="[[required]]"
+        auto-validate
+        error-message="Please select CP Structure"
+      >
+      </etools-dropdown>
+    `;
   }
 
   @property({type: Array})
@@ -68,17 +69,15 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
   module!: string;
 
   @property({type: Boolean})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Boolean})
-  required: boolean = false;
+  required = false;
 
   private cpInitDebouncer!: Debouncer;
 
   static get observers() {
-    return [
-      '_countryProgrammesChanged(countryProgrammes, appModuleItem)'
-    ];
+    return ['_countryProgrammesChanged(countryProgrammes, appModuleItem)'];
   }
 
   stateChanged(state: RootState) {
@@ -112,27 +111,23 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
   }
 
   _countryProgrammesChanged(_countryProgrammes: CpStructure[], appModuleItem: any) {
-    this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer,
-      timeOut.after(10),
-      () => {
-        if (appModuleItem) {
-          this._prepareCpsForDisplay();
+    this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer, timeOut.after(10), () => {
+      if (appModuleItem) {
+        this._prepareCpsForDisplay();
 
-          if (!this.selectedCp) {
-            this.setDefaultSelectedCpStructure();
-          } else {
-            if (this._hasExpiredCpAssigned(this.selectedCp)) {
-              logWarn(this._getExpiredCPWarning());
-            }
+        if (!this.selectedCp) {
+          this.setDefaultSelectedCpStructure();
+        } else {
+          if (this._hasExpiredCpAssigned(this.selectedCp)) {
+            logWarn(this._getExpiredCPWarning());
           }
         }
-      });
+      }
+    });
   }
 
   _prepareCpsForDisplay() {
-    const displayableCps = orderBy(this.countryProgrammes,
-      ['future', 'active', 'special'],
-      ['desc', 'desc', 'asc']);
+    const displayableCps = orderBy(this.countryProgrammes, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
 
     // NOTE: Do not remove this code yet, it might be restored in the future
     // if (!this.appModuleItem || !this.appModuleItem.id) {
@@ -169,7 +164,6 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
     return this.countryProgrammes.some((cp: CpStructure) => {
       return parseInt(cp.id, 10) === parseInt(cpId, 10) && cp.expired;
     });
-
   }
 
   _getExpiredCPWarning() {
@@ -198,13 +192,11 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
   }
 
   _getCpStructureDropdown() {
-    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement &
-    {
+    return this.shadowRoot!.querySelector('#cpStructure') as PolymerElement & {
       resetInvalidState(): void;
       validate(): boolean;
     };
   }
-
 }
 
 window.customElements.define('etools-cp-structure', EtoolsCpStructure);

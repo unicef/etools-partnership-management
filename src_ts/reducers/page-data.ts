@@ -5,7 +5,7 @@ import {Reducer, Action} from 'redux';
 
 export class PageDataState {
   permissions: Permission<InterventionPermissionsFields> | null = null;
-  in_amendment: boolean = false;
+  in_amendment = false;
 }
 
 const INITIAL_STATE = new PageDataState();

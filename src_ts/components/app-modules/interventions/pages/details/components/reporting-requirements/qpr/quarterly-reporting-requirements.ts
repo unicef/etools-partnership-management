@@ -13,7 +13,6 @@ import './qpr-list.js';
 import {property} from '@polymer/decorators';
 import {EditQprDialogEl} from './edit-qpr-dialog.js';
 
-
 /**
  * @polymer
  * @customElement
@@ -21,33 +20,32 @@ import {EditQprDialogEl} from './edit-qpr-dialog.js';
  * @appliesMixin ReportingRequirementsCommonMixin
  * @appliesMixin GenerateQuarterlyReportingRequirementsMixin
  */
-class QuarterlyReportingRequirements extends
-  GenerateQuarterlyReportingRequirementsMixin(
-    ReportingRequirementsCommonMixin(PolymerElement)) {
-
+class QuarterlyReportingRequirements extends GenerateQuarterlyReportingRequirementsMixin(
+  ReportingRequirementsCommonMixin(PolymerElement)
+) {
   static get template() {
     return html`
-    ${buttonsStyles} ${gridLayoutStyles}
-    <style>
-      *[hidden] {
-        display: none !important;
-      }
-    </style>
+      ${buttonsStyles} ${gridLayoutStyles}
+      <style>
+        *[hidden] {
+          display: none !important;
+        }
+      </style>
 
-    <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
-      <qpr-list qpr-data="[[reportingRequirements]]"></qpr-list>
-    </div>
+      <div class="flex-c" hidden$="[[_empty(reportingRequirements)]]">
+        <qpr-list qpr-data="[[reportingRequirements]]"></qpr-list>
+      </div>
 
-    <div hidden$="[[!_empty(reportingRequirements)]]">
-      <div class="row-h">
-        There are no quarterly reporting requirements set.
+      <div hidden$="[[!_empty(reportingRequirements)]]">
+        <div class="row-h">
+          There are no quarterly reporting requirements set.
+        </div>
+        <div class="row-h" hidden$="[[!editMode]]">
+          <paper-button class="secondary-btn" on-click="openQuarterlyRepRequirementsDialog">
+            Add Requirements
+          </paper-button>
+        </div>
       </div>
-      <div class="row-h" hidden$="[[!editMode]]">
-        <paper-button class="secondary-btn" on-click="openQuarterlyRepRequirementsDialog">
-          Add Requirements
-        </paper-button>
-      </div>
-    </div>
     `;
   }
 
@@ -62,7 +60,6 @@ class QuarterlyReportingRequirements extends
 
   @property({type: Boolean})
   editMode!: boolean;
-
 
   ready() {
     super.ready();
@@ -91,7 +88,10 @@ class QuarterlyReportingRequirements extends
 
   openQuarterlyRepRequirementsDialog() {
     if (!this.interventionStart || !this.interventionEnd) {
-      fireEvent(this, 'toast', {text: 'You have to fill PD Start Date and End Date first!', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'You have to fill PD Start Date and End Date first!',
+        showCloseBtn: true
+      });
       return;
     }
     let qprData = [];
@@ -108,7 +108,6 @@ class QuarterlyReportingRequirements extends
   _getReportType() {
     return CONSTANTS.REQUIREMENTS_REPORT_TYPE.QPR;
   }
-
 }
 
 window.customElements.define('quarterly-reporting-requirements', QuarterlyReportingRequirements);

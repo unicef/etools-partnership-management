@@ -14,7 +14,7 @@ export const frWarningsStyles = html`
       --etools-tooltip-trigger-icon: {
         color: var(--error-color);
         margin-left: 24px !important;
-      };
+      }
     }
 
     .fr-val-not-available {

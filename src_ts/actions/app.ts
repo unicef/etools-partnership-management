@@ -11,9 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import {Action, ActionCreator} from 'redux';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
-export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {opened: boolean}
+export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
+  opened: boolean;
+}
 export type AppAction = AppActionUpdateDrawerState;
-
 
 export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
   return {

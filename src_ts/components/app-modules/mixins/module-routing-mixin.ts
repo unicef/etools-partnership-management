@@ -15,7 +15,6 @@ import {Route} from '../../../typings/route.types';
  */
 function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ModuleRoutingClass extends baseClass {
-
     @property({type: Boolean})
     listActive!: boolean;
 
@@ -26,7 +25,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     route!: Route;
 
     @property({type: Object})
-    routeData!: object;
+    routeData!: GenericObject;
 
     @property({type: String})
     rootPath!: string;
@@ -46,7 +45,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
      *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
      */
     @property({type: Boolean})
-    tabAttached: boolean = false;
+    tabAttached = false;
 
     ready() {
       super.ready();
@@ -76,8 +75,8 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     /*
-      * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
-      */
+     * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
+     */
     _resetTabAttachedFlagIfNeeded(currentModule: string, previousPage: string) {
       const selectedTab = this.shadowRoot!.querySelector('[name="' + currentModule + '"]');
       if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
@@ -91,7 +90,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     _getFilenamePrefix(listActive: boolean, fileImportDetails: GenericObject) {
       // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
-      return (listActive ? (fileImportDetails.filenamePrefix + 's') : fileImportDetails.filenamePrefix) + '-';
+      return (listActive ? fileImportDetails.filenamePrefix + 's' : fileImportDetails.filenamePrefix) + '-';
     }
 
     /**
@@ -101,7 +100,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
      * @param {function} appendBasePathAdditionalFolder
      * @return {string}
      */
-    _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: object | null) {
+    _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: GenericObject | null) {
       let baseUrl = currentModule + '/pages/' + page + '/';
       if (typeof appendBasePathAdditionalFolder === 'function') {
         // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
@@ -110,7 +109,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       return baseUrl;
     }
 
-    _handleSuccessfulImport(page: string, successCallback?: object) {
+    _handleSuccessfulImport(page: string, successCallback?: GenericObject) {
       // set active page
       this.set('activePage', page);
       if (typeof successCallback === 'function') {
@@ -123,12 +122,21 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       const importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
       logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
 
-      fireEvent(this, 'global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
+      fireEvent(this, 'global-loading', {
+        active: false,
+        loadingSource: fileImportDetails.loadingMsgSource
+      });
       fireEvent(this, '404');
     }
 
-    setActivePage(listActive: boolean, tab: string, fileImportDetails: GenericObject, canAccessTab?: object,
-      appendBasePathAdditionalFolder?: object | null, successfulImportCallback?: object) {
+    setActivePage(
+      listActive: boolean,
+      tab: string,
+      fileImportDetails: GenericObject,
+      canAccessTab?: GenericObject,
+      appendBasePathAdditionalFolder?: GenericObject | null,
+      successfulImportCallback?: GenericObject
+    ) {
       const page = listActive ? 'list' : tab;
 
       if (listActive) {
@@ -146,16 +154,21 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         // import main page element
         const importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
 
-        const baseUrl = this._getFileBaseUrl(fileImportDetails.filenamePrefix + 's',
-          page, appendBasePathAdditionalFolder);
+        const baseUrl = this._getFileBaseUrl(
+          fileImportDetails.filenamePrefix + 's',
+          page,
+          appendBasePathAdditionalFolder
+        );
 
         const fileName = importFilenamePrefix + page;
 
-        this.importPageElement(fileName, baseUrl).then(() => {
-          this._handleSuccessfulImport(page, successfulImportCallback);
-        }).catch((err) => {
-          this._handleFailedImport(err, page, fileImportDetails);
-        });
+        this.importPageElement(fileName, baseUrl)
+          .then(() => {
+            this._handleSuccessfulImport(page, successfulImportCallback);
+          })
+          .catch((err) => {
+            this._handleFailedImport(err, page, fileImportDetails);
+          });
       }
     }
 
@@ -167,18 +180,19 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       return new Promise((resolve, reject) => {
         const customElement = this.shadowRoot!.querySelector(fileName);
         if (customElement instanceof PolymerElement === false) {
-
           /* Imports are resolved relative to the current module, in this case module-routing-mixin,
-            * So non-absolute paths will be relative to
-            * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
-            */
+           * So non-absolute paths will be relative to
+           * `http://localhost:8082/pmp/src/components/app-modules/mixins/`
+           */
           const pageUrl = getDomainByEnv() + '/src/components/app-modules/' + baseUrl + fileName + '.js';
-          import(pageUrl).then(() => {
-            resolve();
-          }).catch((err) => {
-            logError('Error importing component', 'module-routing-mixin', err);
-            reject(err);
-          });
+          import(pageUrl)
+            .then(() => {
+              resolve();
+            })
+            .catch((err) => {
+              logError('Error importing component', 'module-routing-mixin', err);
+              reject(err);
+            });
         } else {
           resolve();
         }
@@ -189,7 +203,6 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       const mName = !moduleName ? this.moduleName : moduleName;
       return this.rootPath + mName === this.route.prefix;
     }
-
   }
   return ModuleRoutingClass;
 }

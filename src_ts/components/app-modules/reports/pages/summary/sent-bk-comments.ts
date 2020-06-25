@@ -4,10 +4,10 @@ import '../../../../layout/etools-form-element-wrapper.js';
 import {property} from '@polymer/decorators';
 
 /*
-  * @customElement
-  * @polymer
-  * @extends {Polymer.Element}
-  */
+ * @customElement
+ * @polymer
+ * @extends {Polymer.Element}
+ */
 class SentBkComments extends PolymerElement {
   static get is() {
     return 'sent-bk-comments';
@@ -17,27 +17,25 @@ class SentBkComments extends PolymerElement {
     return html`
       <style>
         :host {
-          display: block
+          display: block;
         }
       </style>
 
-      <etools-dialog opened="{{opened}}"
-        dialog-title="Sent Back Comments"
-        size="md"
-        hide-confirm-btn>
-        <etools-form-element-wrapper label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
-              value="[[report.sent_back_feedback]]">
+      <etools-dialog opened="{{opened}}" dialog-title="Sent Back Comments" size="md" hide-confirm-btn>
+        <etools-form-element-wrapper
+          label="[[_getHeading(report.review_date, report.reviewed_by_name)]]"
+          value="[[report.sent_back_feedback]]"
+        >
         </etools-form-element-wrapper>
-
       </etools-dialog>
     `;
   }
 
   @property({type: String})
-  report: string = '';
+  report = '';
 
   @property({type: Boolean})
-  opened: boolean = false;
+  opened = false;
 
   _getHeading(reviewDt: string, reviewedBy: string) {
     if (!reviewDt && !reviewedBy) {
@@ -45,8 +43,6 @@ class SentBkComments extends PolymerElement {
     }
     return (reviewDt ? reviewDt : 'N/A') + ' ' + (reviewedBy ? reviewedBy : 'N/A');
   }
-
 }
 
 window.customElements.define(SentBkComments.is, SentBkComments);
-

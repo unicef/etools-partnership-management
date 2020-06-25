@@ -1,7 +1,7 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {fireEvent} from '../utils/fire-custom-event.js';
 import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
-import {Constructor} from '../../typings/globals.types.js';
+import {Constructor, GenericObject} from '../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 
@@ -13,22 +13,23 @@ const globalMessage = 'An error occurred. Please try again later.';
  */
 function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class AjaxServerErrorsClass extends baseClass {
-
     @property({type: Array, notify: true})
     serverErrors!: [];
 
     @property({type: Object})
-    options!: object
+    options!: GenericObject;
 
     @property({type: Boolean})
-    useToastEvent: boolean = true;
+    useToastEvent = true;
 
-    @property({type: String, observer: AjaxServerErrorsClass.prototype._errorEventNameChange})
+    @property({
+      type: String,
+      observer: AjaxServerErrorsClass.prototype._errorEventNameChange
+    })
     errorEventName: string | null = null;
 
     @property({type: String})
-    ajaxLoadingMsgSource: string = '';
-
+    ajaxLoadingMsgSource = '';
 
     handleErrorResponse(response: any, ajaxMethod: string, redirectOn404: boolean) {
       if (redirectOn404 && response.status === 404) {
@@ -78,7 +79,6 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
         this.set('useToastEvent', false);
       }
     }
-
   }
   return AjaxServerErrorsClass;
 }

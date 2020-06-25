@@ -30,14 +30,13 @@ import {GenericObject} from '../../../../../typings/globals.types';
  * @appliesMixin UtilsMixin
  */
 class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
-
   static get is() {
     return 'report-progress';
   }
 
   static get template() {
     return html`
-     ${pageCommonStyles} ${gridLayoutStyles}
+      ${pageCommonStyles} ${gridLayoutStyles}
       <style include="paper-material-styles">
         *[hidden] {
           display: none !important;
@@ -104,45 +103,46 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
       </template>
 
       <template is="dom-if" if="[[!_equals(report.report_type, 'SR')]]">
-        <div id="no-report-data"
-            class="paper-material"
-            elevation="1"
-            hidden$="[[!_noReportDataToShow(report.programme_document.cp_outputs)]]">
+        <div
+          id="no-report-data"
+          class="paper-material"
+          elevation="1"
+          hidden$="[[!_noReportDataToShow(report.programme_document.cp_outputs)]]"
+        >
           <div class="row-h">
             <p>There is no report data to display.</p>
           </div>
         </div>
 
-        <template is="dom-repeat"
-                  items="[[report.programme_document.cp_outputs]]"
-                  as="result"
-                  index-as="resultIndex">
+        <template is="dom-repeat" items="[[report.programme_document.cp_outputs]]" as="result" index-as="resultIndex">
           <etools-content-panel class="content-section" panel-title="CP Output: [[result.title]]">
-
             <!-- RAM indicators display -->
-            <etools-ram-indicators class="row-h"
-                                  intervention-id="[[report.programme_document.external_id]]"
-                                  cp-id="[[result.external_cp_output_id]]"></etools-ram-indicators>
+            <etools-ram-indicators
+              class="row-h"
+              intervention-id="[[report.programme_document.external_id]]"
+              cp-id="[[result.external_cp_output_id]]"
+            ></etools-ram-indicators>
 
-            <template is="dom-repeat"
-                      items="[[result.ll_outputs]]"
-                      as="lowerResult"
-                      index-as="lowerResultIndex">
+            <template is="dom-repeat" items="[[result.ll_outputs]]" as="lowerResult" index-as="lowerResultIndex">
+              <report-overall
+                lower-result-title="[[lowerResult.title]]"
+                latest-indicator="[[_getLowerResultLatestIndicator(lowerResult.id)]]"
+              ></report-overall>
 
-              <report-overall lower-result-title="[[lowerResult.title]]"
-                              latest-indicator="[[_getLowerResultLatestIndicator(lowerResult.id)]]"></report-overall>
-
-              <template is="dom-repeat"
-                        items="[[_getLowerResultIndicatorReports(lowerResult.id)]]"
-                        as="indicatorReport"
-                        index-as="indicatorReportIndex">
-
+              <template
+                is="dom-repeat"
+                items="[[_getLowerResultIndicatorReports(lowerResult.id)]]"
+                as="indicatorReport"
+                index-as="indicatorReportIndex"
+              >
                 <div class="indicator">
                   <div class="layout-horizontal">
                     <div class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]">
-                      <paper-icon-button on-click="_toggle"
-                                        toggles-ind-details$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                                        icon$="[[_computeIcon(indicatorReport.expanded)]]">
+                      <paper-icon-button
+                        on-click="_toggle"
+                        toggles-ind-details$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                        icon$="[[_computeIcon(indicatorReport.expanded)]]"
+                      >
                       </paper-icon-button>
                     </div>
 
@@ -155,44 +155,48 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
                         <div class="layout-horizontal calculation-formula">
                           <span>
                             calculation method across locations:
-                            <strong>[[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]</strong>
+                            <strong>
+                              [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]
+                            </strong>
                           </span>
-                            <span class="calculation-formula-delimiter">|</span>
-                            <span>
+                          <span class="calculation-formula-delimiter">|</span>
+                          <span>
                             calculation across reporting periods:
-                              <strong>[[_calculationFormulaAcrossPeriods(indicatorReport)]]</strong>
+                            <strong>[[_calculationFormulaAcrossPeriods(indicatorReport)]]</strong>
                           </span>
                         </div>
                       </div>
                       <div class="col col-4 indicator-header-target">
                         <indicator-report-target
-                            display-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                            target="[[indicatorReport.reportable.target]]"
-                            cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                          display-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                          target="[[indicatorReport.reportable.target]]"
+                          cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                                 indicatorReport.reportable.achieved.v, indicatorReport.reportable.achieved.c)]]"
-                            achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                          achievement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
                                 indicatorReport.total.v, indicatorReport.total.c)]]"
-                            bold></indicator-report-target>
+                          bold
+                        ></indicator-report-target>
                       </div>
                     </div>
                   </div>
 
-                  <iron-collapse id="collapse-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                                opened="{{indicatorReport.expanded}}"
-                                on-transitioning-changed="_indicatorDetailsTransitioningComplete">
+                  <iron-collapse
+                    id="collapse-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                    opened="{{indicatorReport.expanded}}"
+                    on-transitioning-changed="_indicatorDetailsTransitioningComplete"
+                  >
                     <indicator-details
-                        id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                        indicator-report-id="[[indicatorReport.id]]"
-                        is-cluster-indicator$="[[indicatorReport.is_cluster_indicator]]">
+                      id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                      indicator-report-id="[[indicatorReport.id]]"
+                      is-cluster-indicator$="[[indicatorReport.is_cluster_indicator]]"
+                    >
                     </indicator-details>
                   </iron-collapse>
                 </div>
               </template>
-
             </template>
           </etools-content-panel>
         </template>
-
       </template>
     `;
   }
@@ -209,7 +213,10 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
      * Disable loading message for report progress tab elements load,
      * triggered by parent element on stamp or by tap event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'reports-page'
+    });
   }
 
   _computeIcon(opened: boolean) {
@@ -218,7 +225,9 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
   _toggle(e: CustomEvent) {
     const toggles = (e.target as PaperIconButtonElement).getAttribute('toggles-ind-details');
-    const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {toggle(): void};
+    const indicatorCollapsibleContent = this.shadowRoot!.querySelector('#collapse-' + toggles) as PolymerElement & {
+      toggle(): void;
+    };
     if (indicatorCollapsibleContent) {
       indicatorCollapsibleContent.toggle();
     }
@@ -235,7 +244,7 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
   }
 
   _getClusterIndicatorClass(indicatorReport: any) {
-    return ((indicatorReport && indicatorReport.is_cluster_indicator) ? 'cluster-indicator' : '') + ' report-progress';
+    return (indicatorReport && indicatorReport.is_cluster_indicator ? 'cluster-indicator' : '') + ' report-progress';
   }
 
   _noReportDataToShow(cpOutputs: CpOutput[]) {
@@ -263,9 +272,9 @@ class ReportProgress extends CommonMixin(UtilsMixin(PolymerElement)) {
 
   _calculationFormulaAcrossPeriods(indicator: any) {
     return indicator.reportable.blueprint.display_type === 'ratio'
-      ? 'latest' : indicator.reportable.blueprint.calculation_formula_across_periods;
+      ? 'latest'
+      : indicator.reportable.blueprint.calculation_formula_across_periods;
   }
-
 }
 
 window.customElements.define(ReportProgress.is, ReportProgress);

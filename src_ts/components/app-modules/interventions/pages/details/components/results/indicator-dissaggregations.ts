@@ -20,17 +20,15 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {flaggedSortedDisaggregs} from '../../../../../../../reducers/common-data';
 
-
 /**
  * @polymer
  * @customElement
  * @applies MixinRepeatableDataSets
  */
 class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(PolymerElement)) {
-
   static get template() {
     return html`
-     ${gridLayoutStyles} ${SharedStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${repeatableDataSetsStyles} ${buttonsStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -47,36 +45,44 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
         paper-input {
           width: 100%;
         }
-
       </style>
       <div hidden$="[[_isEmptyList(dataItems, dataItems.length)]]">
         <template is="dom-repeat" items="{{dataItems}}">
           <div class="row-h item-container no-h-margin">
             <div class="item-actions-container">
               <div class="actions">
-                <paper-icon-button class="action delete"
-                                  on-tap="_openDeleteConfirmation"
-                                  data-args$="[[index]]"
-                                  icon="cancel"></paper-icon-button>
+                <paper-icon-button
+                  class="action delete"
+                  on-tap="_openDeleteConfirmation"
+                  data-args$="[[index]]"
+                  icon="cancel"
+                ></paper-icon-button>
               </div>
             </div>
             <div class="item-content">
               <div class="row-h">
                 <div class="col col-4">
-                  <etools-dropdown id="disaggregate_by_[[index]]" label="Disaggregate By"
-                                  options="{{preDefinedDisaggregtions}}"
-                                  selected="{{item.disaggregId}}"
-                                  option-value="id"
-                                  option-label="name"
-                                  trigger-value-change-event
-                                  on-etools-selected-item-changed="_onDisaggregationSelected"
-                                  disable-on-focus-handling
-                                  fit-into="etools-dialog">
+                  <etools-dropdown
+                    id="disaggregate_by_[[index]]"
+                    label="Disaggregate By"
+                    options="{{preDefinedDisaggregtions}}"
+                    selected="{{item.disaggregId}}"
+                    option-value="id"
+                    option-label="name"
+                    trigger-value-change-event
+                    on-etools-selected-item-changed="_onDisaggregationSelected"
+                    disable-on-focus-handling
+                    fit-into="etools-dialog"
+                  >
                   </etools-dropdown>
                 </div>
                 <div class="col col-8">
-                  <paper-input id="disaggregationGroups_[[index]]" readonly label="Disaggregation Groups"
-                              placeholder="&#8212;"></paper-input>
+                  <paper-input
+                    id="disaggregationGroups_[[index]]"
+                    readonly
+                    label="Disaggregation Groups"
+                    placeholder="&#8212;"
+                  ></paper-input>
                 </div>
               </div>
             </div>
@@ -84,18 +90,19 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
         </template>
       </div>
 
-
       <div class="row-padding-v" hidden$="[[!_isEmptyList(dataItems, dataItems.length)]]">
         <p>There are no disaggregations added.</p>
       </div>
 
       <div class="row-padding-v">
-        <paper-button class="secondary-btn" on-tap="_addNewDisaggregation" 
-                      hidden$="[[_maxDisaggregations(dataItems.length)]]"
-                      title="Add Disaggregation">ADD DISAGGREGATION
+        <paper-button
+          class="secondary-btn"
+          on-tap="_addNewDisaggregation"
+          hidden$="[[_maxDisaggregations(dataItems.length)]]"
+          title="Add Disaggregation"
+          >ADD DISAGGREGATION
         </paper-button>
       </div>
-
     `;
   }
 
@@ -114,9 +121,8 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
     this.editMode = true;
   }
 
-
   _isEmptyList(disaggregations: Disaggregation[], disaggregLength: number) {
-    return (!disaggregations || !disaggregLength);
+    return !disaggregations || !disaggregLength;
   }
 
   _maxDisaggregations(disaggregLength: number) {
@@ -144,16 +150,16 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
       }
       event.model.set('item.disaggregId', null);
       this._clearDisagregGroups(index);
-      fireEvent(this, 'show-toast', {error: {response: 'Disaggregation already selected'}});
+      fireEvent(this, 'show-toast', {
+        error: {response: 'Disaggregation already selected'}
+      });
       return;
     }
     this._displayDisaggregationGroups(selectedDisagreg, index);
-
   }
 
   _displayDisaggregationGroups(selectedDisagreg: Disaggregation, index: number) {
-    this._getDisagregGroupElem(index).value =
-        selectedDisagreg.disaggregation_values.map(d => d.value).join('; ');
+    this._getDisagregGroupElem(index).value = selectedDisagreg.disaggregation_values.map((d) => d.value).join('; ');
   }
 
   _clearDisagregGroups(index: number) {
@@ -163,7 +169,6 @@ class IndicatorDisaggregations extends connect(store)(RepeatableDataSetsMixin(Po
   _getDisagregGroupElem(index: number) {
     return this.shadowRoot!.querySelector('#disaggregationGroups_' + index) as PaperInputElement;
   }
-
 }
 
 window.customElements.define('indicator-dissaggregations', IndicatorDisaggregations);

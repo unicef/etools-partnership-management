@@ -13,7 +13,6 @@ import {property} from '@polymer/decorators';
  * @customElement
  */
 class EtoolsTabs extends PolymerElement {
-
   public static get template() {
     // main template
     // language=HTML
@@ -58,23 +57,23 @@ class EtoolsTabs extends PolymerElement {
         }
       </style>
 
-      <paper-tabs id="tabs"
-                  selected="{{activeTab}}"
-                  attr-for-selected="name"
-                  noink
-                  on-iron-select="_handleTabSelection">
-
+      <paper-tabs
+        id="tabs"
+        selected="{{activeTab}}"
+        attr-for-selected="name"
+        noink
+        on-iron-select="_handleTabSelection"
+      >
         <template is="dom-repeat" items="[[tabs]]">
           <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
-          <span class="tab-content">
-            [[item.tabLabel]]
-            <template is="dom-if" if="[[item.showTabCounter]]" restamp>
-              ([[item.counter]])
-            </template>
-          </span>
+            <span class="tab-content">
+              [[item.tabLabel]]
+              <template is="dom-if" if="[[item.showTabCounter]]" restamp>
+                ([[item.counter]])
+              </template>
+            </span>
           </paper-tab>
         </template>
-
       </paper-tabs>
     `;
   }
@@ -88,9 +87,7 @@ class EtoolsTabs extends PolymerElement {
   private _debouncer: Debouncer | null = null;
 
   static get observers() {
-    return [
-      'notifyTabsResize(tabs.*)'
-    ];
+    return ['notifyTabsResize(tabs.*)'];
   }
 
   _handleTabSelection() {
@@ -102,10 +99,8 @@ class EtoolsTabs extends PolymerElement {
       return;
     }
 
-    this._debouncer = Debouncer.debounce(this._debouncer,
-      timeOut.after(50), () => (this.$.tabs as any).notifyResize());
+    this._debouncer = Debouncer.debounce(this._debouncer, timeOut.after(50), () => (this.$.tabs as any).notifyResize());
   }
-
 }
 
 window.customElements.define('etools-tabs', EtoolsTabs);

@@ -19,7 +19,6 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
  * @appliesMixin EtoolsPageRefreshMixin
  */
 class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
-
   static get is() {
     return 'data-refresh-dialog';
   }
@@ -50,63 +49,62 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
             font-size: 16px;
           }
         }
-
       </style>
       <etools-dialog
-          id="refreshDialog"
-          size="sm"
-          no-padding
-          ok-btn-text="Refresh data"
-          cancel-btn-text="Cancel"
-          dialog-title="Refresh data"
-          disable-confirm-btn="[[!anySelected]]"
-          on-close="_handleDialogClosed">
+        id="refreshDialog"
+        size="sm"
+        no-padding
+        ok-btn-text="Refresh data"
+        cancel-btn-text="Cancel"
+        dialog-title="Refresh data"
+        disable-confirm-btn="[[!anySelected]]"
+        on-close="_handleDialogClosed"
+      >
         <div id="content-box">
-            <div class="title-indent">Select the data you want to refresh:</div>
-            <div class="row-h row-indent">
-              <div class="col col-6">
-                <paper-checkbox checked="{{partnersSelected}}">
-                  Partners/Government
-                </paper-checkbox>
-              </div>
-              <div class="col col-6">
-                <paper-checkbox checked="{{interventionsSelected}}">
-                  PD/SSFA
-                </paper-checkbox>
-              </div>
+          <div class="title-indent">Select the data you want to refresh:</div>
+          <div class="row-h row-indent">
+            <div class="col col-6">
+              <paper-checkbox checked="{{partnersSelected}}">
+                Partners/Government
+              </paper-checkbox>
             </div>
-            <div class="row-h row-indent">
-              <div class="col col-6">
-                <paper-checkbox checked="{{agreementsSelected}}">
-                  Agreements
-                </paper-checkbox>
-              </div>
-              <div class="col col-6">
-                <paper-checkbox checked="{{allSelected}}">
-                  All
-                </paper-checkbox>
-              </div>
+            <div class="col col-6">
+              <paper-checkbox checked="{{interventionsSelected}}">
+                PD/SSFA
+              </paper-checkbox>
             </div>
-
+          </div>
+          <div class="row-h row-indent">
+            <div class="col col-6">
+              <paper-checkbox checked="{{agreementsSelected}}">
+                Agreements
+              </paper-checkbox>
+            </div>
+            <div class="col col-6">
+              <paper-checkbox checked="{{allSelected}}">
+                All
+              </paper-checkbox>
+            </div>
+          </div>
         </div>
       </etools-dialog>
     `;
   }
 
   @property({type: Boolean})
-  interventionsSelected: boolean = false;
+  interventionsSelected = false;
 
   @property({type: Boolean})
-  partnersSelected: boolean = false;
+  partnersSelected = false;
 
   @property({type: Boolean})
-  agreementsSelected: boolean = false;
+  agreementsSelected = false;
 
   @property({type: Boolean})
-  allSelected: boolean = false;
+  allSelected = false;
 
   @property({type: Boolean})
-  anySelected: boolean = false;
+  anySelected = false;
 
   @property({type: String, notify: true})
   page!: string;
@@ -151,52 +149,71 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
     store.dispatch({type: RESET_UPLOADS_IN_PROGRESS});
     store.dispatch({type: RESET_UNSAVED_UPLOADS});
 
-    fireEvent(this, 'global-loading', {message: 'Refreshing data...', active: true});
+    fireEvent(this, 'global-loading', {
+      message: 'Refreshing data...',
+      active: true
+    });
 
     const afterDataRefreshLandingPage: string = this._getAfterRefreshLandingPage();
-    const restampLandingPage: boolean = this.page === afterDataRefreshLandingPage ||
-        (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
+    const restampLandingPage: boolean =
+      this.page === afterDataRefreshLandingPage ||
+      (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
     if (this.allSelected) {
-      fireEvent(this, 'update-main-path', {path: afterDataRefreshLandingPage});
+      fireEvent(this, 'update-main-path', {
+        path: afterDataRefreshLandingPage
+      });
       this.refresh();
       return;
     }
 
     // clear only data sets
-    const self = this;
-    window.EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
-      function() {
-        if (self.partnersSelected) {
+    window.EtoolsPmpApp.DexieDb.transaction(
+      'rw',
+      'listsExpireMapTable',
+      'partners',
+      'agreements',
+      'interventions',
+      () => {
+        if (this.partnersSelected) {
           window.EtoolsPmpApp.DexieDb.partners.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
         }
-        if (self.agreementsSelected) {
+        if (this.agreementsSelected) {
           window.EtoolsPmpApp.DexieDb.agreements.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
         }
-        if (self.interventionsSelected) {
+        if (this.interventionsSelected) {
           window.EtoolsPmpApp.DexieDb.interventions.clear();
           window.EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
         }
-      }).then(function() {
-      // transaction succeeded
-      self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
-    }).catch(function(error: any) {
-      // transaction failed
-      logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
-      self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
-    });
+      }
+    )
+      .then(() => {
+        // transaction succeeded
+        this._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+      })
+      .catch((error: any) => {
+        // transaction failed
+        logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
+        this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+      });
   }
 
   _handleSuccess(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-    fireEvent(this, 'toast', {text: 'Data successfully refreshed', showCloseBtn: true});
+    fireEvent(this, 'toast', {
+      text: 'Data successfully refreshed',
+      showCloseBtn: true
+    });
   }
 
   _handleFailure(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {
     this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-    fireEvent(this, 'toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
+    fireEvent(this, 'toast', {
+      text: 'There was an error while refreshing the data',
+      showCloseBtn: true
+    });
   }
 
   _triggerMainRoutePathUpdate(afterDataRefreshLandingPage: string, restampLandingPage: boolean) {

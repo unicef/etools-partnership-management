@@ -20,7 +20,6 @@ import {AddEditStaffMembersEl} from './add-edit-staff-members';
  * @customElement
  */
 class StaffMembers extends PolymerElement {
-
   static get template() {
     // language=HTML
     return html`
@@ -54,23 +53,25 @@ class StaffMembers extends PolymerElement {
           word-break: break-all;
           word-wrap: break-word;
         }
-
       </style>
 
-      <etools-content-panel class="content-section" panel-title="Partner Contacts ([[dataItems.length]])"
-                            show-expand-btn>
+      <etools-content-panel
+        class="content-section"
+        panel-title="Partner Contacts ([[dataItems.length]])"
+        show-expand-btn
+      >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showInactive"
-                               checked="{{showInactive}}">
+          <paper-toggle-button id="showInactive" checked="{{showInactive}}">
             Show Inactive
           </paper-toggle-button>
-          <div class="separator" hidden$="[[!editMode]]">
-          </div>
-          <paper-icon-button icon="add-box"
-                             disabled="[[!editMode]]"
-                             hidden$="[[!editMode]]"
-                             title="Add"
-                             on-click="_addPartnerContact">
+          <div class="separator" hidden$="[[!editMode]]"></div>
+          <paper-icon-button
+            icon="add-box"
+            disabled="[[!editMode]]"
+            hidden$="[[!editMode]]"
+            title="Add"
+            on-click="_addPartnerContact"
+          >
           </paper-icon-button>
         </div>
 
@@ -97,31 +98,37 @@ class StaffMembers extends PolymerElement {
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showInactive)]]">
+            <etools-data-table-row
+              secondary-bg-on-hover
+              no-collapse
+              hidden$="[[!_isVisible(item.active, showInactive)]]"
+            >
               <div slot="row-data" class="p-relative">
-              <span class="col-data col-2">
-                [[_displayValue(item.title)]]
-              </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.first_name)]]
-              </span>
+                  [[_displayValue(item.title)]]
+                </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.last_name)]]
-              </span>
+                  [[_displayValue(item.first_name)]]
+                </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.phone)]]
-              </span>
+                  [[_displayValue(item.last_name)]]
+                </span>
                 <span class="col-data col-2">
-                [[_displayValue(item.email)]]
-              </span>
+                  [[_displayValue(item.phone)]]
+                </span>
+                <span class="col-data col-2">
+                  [[_displayValue(item.email)]]
+                </span>
                 <span class="col-data col-2 center-align">
-                <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
-                <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
-              </span>
-                <icons-actions item$="[[item]]"
-                               hidden$="[[!editMode]]"
-                               show-delete="[[showDelete]]"
-                               on-edit="_editPartnerContact">
+                  <span hidden$="[[item.active]]" class="placeholder-style">&#8212;</span>
+                  <iron-icon icon="check" hidden$="[[!item.active]]"></iron-icon>
+                </span>
+                <icons-actions
+                  item$="[[item]]"
+                  hidden$="[[!editMode]]"
+                  show-delete="[[showDelete]]"
+                  on-edit="_editPartnerContact"
+                >
                 </icons-actions>
               </div>
             </etools-data-table-row>
@@ -131,22 +138,21 @@ class StaffMembers extends PolymerElement {
         <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
           <p>There are no staff members added.</p>
         </div>
-
       </etools-content-panel>
     `;
   }
 
   @property({type: Boolean})
-  showInactive: boolean = false;
+  showInactive = false;
 
   @property({type: Object})
   addEditDialog!: AddEditStaffMembersEl;
 
   @property({type: Boolean})
-  showDelete: boolean = false;
+  showDelete = false;
 
   @property({type: Boolean})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Array})
   dataItems: StaffMember[] = [];
@@ -155,9 +161,7 @@ class StaffMembers extends PolymerElement {
   partnerId: number | null = null;
 
   static get observers() {
-    return [
-      'dataItemsChanged(dataItems, dataItems.*)'
-    ];
+    return ['dataItemsChanged(dataItems, dataItems.*)'];
   }
 
   ready() {
@@ -222,7 +226,6 @@ class StaffMembers extends PolymerElement {
   _displayValue(value: any) {
     return value ? value : '—';
   }
-
 }
 
 window.customElements.define('staff-members', StaffMembers);

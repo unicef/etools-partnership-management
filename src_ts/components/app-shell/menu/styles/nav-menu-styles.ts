@@ -109,7 +109,8 @@ export const navMenuStyles = html`
       padding: 8px 0 0;
     }
 
-    .nav-menu, .nav-menu iron-selector[role="navigation"] {
+    .nav-menu,
+    .nav-menu iron-selector[role='navigation'] {
       @apply --layout-flex;
     }
 

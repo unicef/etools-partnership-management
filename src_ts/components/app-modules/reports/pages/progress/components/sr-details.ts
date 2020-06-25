@@ -8,16 +8,14 @@ import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../../../../typings/globals.types.js';
 import {SharedStyles} from '../../../../../styles/shared-styles.js';
 
-
 class SrDetails extends PolymerElement {
-
   static get is() {
     return 'sr-details';
   }
 
   static get template() {
     return html`
-     ${gridLayoutStyles}
+      ${gridLayoutStyles}
       <style include="paper-material-styles">
         :host {
           display: block;
@@ -36,8 +34,7 @@ class SrDetails extends PolymerElement {
       ${SharedStyles}
       <div class="paper-material" elevation="1">
         <div class="row-h">
-          <etools-form-element-wrapper label="Narrative" value="[[report.narrative]]">
-          </etools-form-element-wrapper>
+          <etools-form-element-wrapper label="Narrative" value="[[report.narrative]]"> </etools-form-element-wrapper>
         </div>
         <div class="row-padding">
           <template is="dom-repeat" items="[[reportAttachments]]">
@@ -50,7 +47,7 @@ class SrDetails extends PolymerElement {
                 [[item.file_name]]
               </a>
             </div>
-        </template>
+          </template>
         </div>
       </div>
     `;
@@ -61,7 +58,6 @@ class SrDetails extends PolymerElement {
 
   @property({type: Array})
   reportAttachments!: any[];
-
 }
 
 window.customElements.define(SrDetails.is, SrDetails);

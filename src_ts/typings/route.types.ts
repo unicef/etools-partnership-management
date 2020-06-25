@@ -10,5 +10,3 @@ export interface Route {
   path: string;
   __queryParams: ListQueryParams;
 }
-
-

@@ -61,14 +61,14 @@ class ClusterIndicatorDisaggregations extends PolymerElement {
   disaggregations!: [];
 
   _noDisaggregations(disaggregations: any, disaggregLength: number) {
-    return (!disaggregations || !disaggregLength);
+    return !disaggregations || !disaggregLength;
   }
   _getGroupNames(groups: GenericObject[]) {
     if (!groups) {
       return '';
     }
     let groupNames = '';
-    groups.forEach(function(g) {
+    groups.forEach(function (g) {
       groupNames += g.value + '; ';
     });
     return groupNames;
