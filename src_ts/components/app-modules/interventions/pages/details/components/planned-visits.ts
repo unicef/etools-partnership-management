@@ -221,9 +221,9 @@ class PlannedVisits extends RepeatableDataSetsMixin(PolymerElement) {
   @property({type: Array})
   years: [] = [];
 
-  // @ts-ignore
   @property({
     type: Boolean,
+    // @ts-ignore
     observer: PlannedVisits.prototype._editModeChanged
   })
   editMode!: boolean;

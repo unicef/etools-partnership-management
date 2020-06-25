@@ -11,8 +11,8 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
   class ModifiedInterventionFieldsClass extends baseClass {
     /* eslint-enable arrow-parens */
     _objectFieldIsModified(fieldName: string) {
-      // @ts-ignore
       let isModified =
+        // @ts-ignore
         JSON.stringify(this.originalIntervention[fieldName], this.numbersToString) !==
         // @ts-ignore
         JSON.stringify(this.intervention[fieldName], this.numbersToString);

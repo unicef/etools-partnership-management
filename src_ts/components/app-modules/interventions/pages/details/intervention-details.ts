@@ -516,10 +516,10 @@ class InterventionDetails extends connect(store)(
     `;
   }
 
-  // @ts-ignore
   @property({
     type: Object,
     notify: true,
+    // @ts-ignore
     observer: InterventionDetails.prototype._interventionChanged
   })
   intervention!: Intervention;

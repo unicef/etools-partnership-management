@@ -58,9 +58,9 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
   })
   reportingRequirements!: [];
 
-  // @ts-ignore
   @property({
     type: String,
+    // @ts-ignore
     observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged
   })
   interventionId!: string;

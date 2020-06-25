@@ -54,17 +54,19 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
       let interventionData = this._getModifiedFields();
       interventionData = this._prepareDataForSave(interventionData);
-      // @ts-ignore
-      return (this.$.interventionData as InterventionItemData)
-        .saveIntervention(interventionData, this._newInterventionSaved.bind(this))
-        .then((successfull: boolean) => {
-          if (successfull) {
-            store.dispatch({type: RESET_UNSAVED_UPLOADS});
-            return true;
-          } else {
-            return false;
-          }
-        });
+      return (
+        (this.$.interventionData as InterventionItemData)
+          // @ts-ignore
+          .saveIntervention(interventionData, this._newInterventionSaved.bind(this))
+          .then((successfull: boolean) => {
+            if (successfull) {
+              store.dispatch({type: RESET_UNSAVED_UPLOADS});
+              return true;
+            } else {
+              return false;
+            }
+          })
+      );
     }
 
     _getModifiedFields() {

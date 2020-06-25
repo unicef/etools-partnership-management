@@ -125,10 +125,10 @@ class GroupedLocationsDialog extends connect(store)(PolymerElement) {
   @property({type: Array})
   interventionLocations!: Location[];
 
-  // @ts-ignore
   @property({
     type: Array,
     notify: true,
+    // @ts-ignore
     observer: GroupedLocationsDialog.prototype.interventionLocationIdsChanged
   })
   interventionLocationIds!: [];
