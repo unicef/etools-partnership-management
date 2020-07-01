@@ -390,7 +390,11 @@ class InterventionItemData extends connect(store)(
     this._updateSections(dexieObject, responseDetail);
     this._updatePlannedBudgetInfo(dexieObject, responseDetail);
     this._updateOffices(dexieObject, responseDetail);
-    this._updateFrInfo(dexieObject, responseDetail.frs_details, responseDetail.planned_budget!.currency as string);
+    this._updateFrInfo(
+      dexieObject,
+      responseDetail.frs_details,
+      responseDetail.planned_budget && (responseDetail.planned_budget!.currency as string)
+    );
 
     responseDetail.result_links.forEach(function (elem: ExpectedResult) {
       dexieObject.cp_outputs.push(elem.cp_output);
@@ -406,6 +410,9 @@ class InterventionItemData extends connect(store)(
   }
 
   _updatePlannedBudgetInfo(dexieObject: ListItemIntervention, intervention: Intervention) {
+    if (!intervention.planned_budget) {
+      return;
+    }
     dexieObject.unicef_budget =
       parseFloat(intervention.planned_budget!.unicef_cash_local as string) +
       parseFloat(intervention.planned_budget!.in_kind_amount_local as string);
