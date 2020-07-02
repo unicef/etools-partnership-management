@@ -156,7 +156,7 @@ class ReportsModule extends connect(store)(
 
           <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
             <report-status
-              status="[[report.review_overall_status]]"
+              status="[[report.status]]"
               hidden$="[[statusIs(report.status, 'Sub')]]"
             ></report-status>
 
