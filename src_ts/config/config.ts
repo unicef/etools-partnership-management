@@ -85,7 +85,7 @@ export const tokenEndpointsHost = (host: string) => {
       case 'DEMO':
         return 'https://demo.partnerreportingportal.org';
       case 'STAGING':
-        return 'https://demo.partnerreportingportal.org';
+        return 'https://staging.partnerreportingportal.org';
       case null:
         return 'https://www.partnerreportingportal.org';
       default:
