@@ -396,7 +396,7 @@ class ReportsModule extends connect(store)(
     }
 
     if (reportsList.queryParams.status.length > 0) {
-      params.report_status = reportsList.queryParams.status;
+      params.status = reportsList.queryParams.status;
     }
 
     if (reportsList.queryParams.report_type) {
