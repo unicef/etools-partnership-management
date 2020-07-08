@@ -26,7 +26,7 @@ import './cluster-indicator-disaggregations.js';
 import './cluster-indicator.js';
 import './non-cluster-indicator.js';
 import {Indicator, Location} from '../../../../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {userIsPme} from '../../../../../../user/user-permissions';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
@@ -41,13 +41,12 @@ import {NonClusterIndicatorEl} from './non-cluster-indicator.js';
  * @appliesMixin SaveIndicatorMixin
  * @appliesMixin EnvironmentFlagsMixin
  */
-class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
-  SaveIndicatorMixin(
-    EnvironmentFlagsMixin(PolymerElement)))) {
-
+class IndicatorDialog extends connect(store)(
+  IndicatorDialogTabsMixin(SaveIndicatorMixin(EnvironmentFlagsMixin(PolymerElement)))
+) {
   static get template() {
     return html`
-     ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -83,72 +82,84 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
           --etools-dialog-scrollable: {
             min-height: 400px;
             font-size: 16px;
-          };
+          }
         }
       </style>
 
-      <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
-                    on-close="_cleanUp" no-padding
-                    on-confirm-btn-clicked="_validateAndSaveIndicator"
-                    ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
-                    spinner-text="[[spinnerText]]">
+      <etools-dialog
+        id="indicatorDialog"
+        size="lg"
+        dialog-title="Indicator"
+        on-close="_cleanUp"
+        no-padding
+        on-confirm-btn-clicked="_validateAndSaveIndicator"
+        ok-btn-text="Save"
+        keep-dialog-open
+        disable-confirm-btn="[[disableConfirmBtn]]"
+        spinner-text="[[spinnerText]]"
+      >
+        <etools-tabs
+          id="indicatorTabs"
+          tabs="[[indicatorDataTabs]]"
+          active-tab="{{activeTab}}"
+          border-bottom
+          on-iron-select="_centerDialog"
+        ></etools-tabs>
 
-        <etools-tabs id="indicatorTabs"
-                    tabs="[[indicatorDataTabs]]"
-                    active-tab="{{activeTab}}"
-                    border-bottom
-                    on-iron-select="_centerDialog"></etools-tabs>
-
-        <iron-pages id="indicatorPages"
-                    selected="{{activeTab}}"
-                    attr-for-selected="name"
-                    fallback-selection="details">
+        <iron-pages id="indicatorPages" selected="{{activeTab}}" attr-for-selected="name" fallback-selection="details">
           <div name="details">
             <div class="row-h flex-c">
               <div class="col col-4">
-                <etools-dropdown id="sectionDropdw"
-                                label="Section"
-                                selected="{{indicator.section}}"
-                                placeholder="&#8212;"
-                                options="[[sectionOptions]]"
-                                option-label="name"
-                                option-value="id"
-                                required
-                                auto-validate
-                                error-message="Please select section(s)"
-                                disable-on-focus-handling
-                                fit-into="etools-dialog">
+                <etools-dropdown
+                  id="sectionDropdw"
+                  label="Section"
+                  selected="{{indicator.section}}"
+                  placeholder="&#8212;"
+                  options="[[sectionOptions]]"
+                  option-label="name"
+                  option-value="id"
+                  required
+                  auto-validate
+                  error-message="Please select section(s)"
+                  disable-on-focus-handling
+                  fit-into="etools-dialog"
+                >
                 </etools-dropdown>
               </div>
             </div>
             <div class="row-h">
-              <paper-toggle-button disabled$="[[_clusterToggleIsDisabled(indicator)]]"
-                                  checked="{{isCluster}}"></paper-toggle-button>
+              <paper-toggle-button
+                disabled$="[[_clusterToggleIsDisabled(indicator)]]"
+                checked="{{isCluster}}"
+              ></paper-toggle-button>
               Cluster Indicator
             </div>
             <div class="indicator-content">
               <template is="dom-if" if="[[!isCluster]]">
-                <non-cluster-indicator id="nonClusterIndicatorEl"
-                                      indicator="{{indicator}}"
-                                      location-options="[[locationOptions]]"
-                                      intervention-status="[[interventionStatus]]"></non-cluster-indicator>
+                <non-cluster-indicator
+                  id="nonClusterIndicatorEl"
+                  indicator="{{indicator}}"
+                  location-options="[[locationOptions]]"
+                  intervention-status="[[interventionStatus]]"
+                ></non-cluster-indicator>
               </template>
               <template is="dom-if" if="[[isCluster]]">
-                <cluster-indicator id="clusterIndicatorEl"
-                                  indicator="{{indicator}}"
-                                  prp-disaggregations="{{prpDisaggregations}}"
-                                  location-options="[[locationOptions]]"></cluster-indicator>
+                <cluster-indicator
+                  id="clusterIndicatorEl"
+                  indicator="{{indicator}}"
+                  prp-disaggregations="{{prpDisaggregations}}"
+                  location-options="[[locationOptions]]"
+                ></cluster-indicator>
               </template>
             </div>
           </div>
           <div class="row-padding" name="disaggregations">
-            <div hidden$="[[_hideAddDisaggreations(isCluster, currentUser)]]" class="createDisaggreg">If disaggregation
-              groups that you need are not
-              pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
+            <div hidden$="[[_hideAddDisaggreations(isCluster, currentUser)]]" class="createDisaggreg">
+              If disaggregation groups that you need are not pre-defined yet, you can create them
+              <a href="/pmp/settings" target="_blank">here</a>.
             </div>
             <template is="dom-if" if="[[!isCluster]]" restamp>
-              <indicator-dissaggregations data-items="{{disaggregations}}"
-                                          on-add-new-disaggreg="_updateScroll">
+              <indicator-dissaggregations data-items="{{disaggregations}}" on-add-new-disaggreg="_updateScroll">
               </indicator-dissaggregations>
             </template>
             <template is="dom-if" if="[[isCluster]]" restamp>
@@ -157,9 +168,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
             </template>
           </div>
         </iron-pages>
-
       </etools-dialog>
-
     `;
   }
 
@@ -167,7 +176,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   indicator!: Indicator;
 
   @property({type: Object})
-  actionParams!: object;
+  actionParams!: GenericObject;
 
   @property({type: Array})
   disaggregations: [] = [];
@@ -181,7 +190,10 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   @property({type: Array})
   sectionOptionsIds!: [];
 
-  @property({type: Array, computed: '_computeOptions(sectionOptionsIds, sections)'})
+  @property({
+    type: Array,
+    computed: '_computeOptions(sectionOptionsIds, sections)'
+  })
   sectionOptions!: GenericObject[];
 
   @property({type: Array})
@@ -190,26 +202,29 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   @property({type: Array})
   locationOptionsIds!: [];
 
-  @property({type: Array, computed: '_computeOptions(locationOptionsIds, locations)'})
+  @property({
+    type: Array,
+    computed: '_computeOptions(locationOptionsIds, locations)'
+  })
   locationOptions!: Location[];
 
   @property({type: Boolean})
-  isCluster: boolean = false;
+  isCluster = false;
 
   @property({type: Object})
   toastEventSource!: PolymerElement;
 
   @property({type: Boolean})
-  disableConfirmBtn: boolean = false;
+  disableConfirmBtn = false;
 
   @property({type: String})
-  spinnerText: string = 'Saving...';
+  spinnerText = 'Saving...';
 
   @property({type: String})
   interventionStatus!: string;
 
   @property({type: Object})
-  currentUser!: User;// What???
+  currentUser!: User; // What???
 
   static get observers() {
     return ['resetValidationsAndStyle(isCluster)'];
@@ -281,7 +296,8 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     this.set('actionParams', actionParams);
     this.set('interventionStatus', interventionStatus);
 
-    if (!data) { // new indicator
+    if (!data) {
+      // new indicator
       this.isCluster = false;
       this.set('indicator', new Indicator());
       this.set('disaggregations', []);
@@ -310,7 +326,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     if (!disaggregations) {
       return [];
     }
-    return disaggregations.map(function(id: number) {
+    return disaggregations.map(function (id: number) {
       /**
        * disaggregId and not simply id to avoid repeatable-behavior
        * from trying to make an endpoint request on Delete
@@ -354,7 +370,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
       indicatorEl = this.shadowRoot!.querySelector('#clusterIndicatorEl') as ClusterIndicatorEl;
       this.updateStyles({'--border-color': 'var(--ternary-color)'});
     } else {
-      indicatorEl = this.shadowRoot!.querySelector('#nonClusterIndicatorEl') as unknown as NonClusterIndicatorEl;
+      indicatorEl = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl') as unknown) as NonClusterIndicatorEl;
       this.updateStyles({'--border-color': 'var(--dark-divider-color)'});
     }
     if (indicatorEl) {
@@ -384,7 +400,7 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
     let options: GenericObject[] = [];
     if (!isEmptyObject(optionsIds) && !isEmptyObject(allOptions)) {
       // filter options
-      const ids = optionsIds.map(id => parseInt(id, 10));
+      const ids = optionsIds.map((id) => parseInt(id, 10));
 
       options = allOptions.filter((opt: any) => {
         return ids.indexOf(parseInt(opt.id, 10)) > -1;
@@ -396,7 +412,6 @@ class IndicatorDialog extends connect(store)(IndicatorDialogTabsMixin(
   _hideAddDisaggreations(isCluster: boolean, currentUser: User) {
     return isCluster || !userIsPme(currentUser);
   }
-
 }
 
 window.customElements.define('indicator-dialog', IndicatorDialog);

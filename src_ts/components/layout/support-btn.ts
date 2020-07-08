@@ -30,9 +30,9 @@ class SupportBtn extends PolymerElement {
         }
 
         @media (max-width: 980px) {
-         #supportTxt {
-           display: none;
-         }
+          #supportTxt {
+            display: none;
+          }
         }
 
         @media (max-width: 576px) {
@@ -42,8 +42,10 @@ class SupportBtn extends PolymerElement {
         }
       </style>
 
-      <a href="https://unicef.service-now.com/cc/?id=sc_cat_item&sys_id=35b00b1bdb255f00085184735b9619e6&sysparm_category=c6ab1444db5b5700085184735b961920"
-        target="_blank">
+      <a
+        href="https://unicef.service-now.com/cc/?id=sc_cat_item&sys_id=35b00b1bdb255f00085184735b9619e6&sysparm_category=c6ab1444db5b5700085184735b961920"
+        target="_blank"
+      >
         <iron-icon icon="communication:textsms"></iron-icon>
         <span id="supportTxt">Support</span>
       </a>

@@ -1,7 +1,7 @@
 import {logWarn, logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor, GenericObject, User} from '../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
@@ -12,9 +12,7 @@ import {property} from '@polymer/decorators';
  * @appliesMixin EndpointsMixin
  */
 function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
   class ReportDetailsClass extends EndpointsMixin(baseClass) {
-
     @property({type: Object})
     report!: GenericObject;
 
@@ -61,17 +59,25 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         loadingSource: this._loadingMsgSource
       });
 
-      this.fireRequest('reportDetails', {reportId: id}).then((response: any) => {
-        this.set('report', response);
-        fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
-        // get report attachment
-        this._getReportAttachment(response.id);
-      }).catch((error: any) => {
-        const errMsg = 'Reports details data request failed!';
-        logError(errMsg, this._logMsgPrefix, error);
-        parseRequestErrorsAndShowAsToastMsgs(error, this, true);
-        fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
-      });
+      this.fireRequest('reportDetails', {reportId: id})
+        .then((response: any) => {
+          this.set('report', response);
+          fireEvent(this, 'global-loading', {
+            active: false,
+            loadingSource: this._loadingMsgSource
+          });
+          // get report attachment
+          this._getReportAttachment(response.id);
+        })
+        .catch((error: any) => {
+          const errMsg = 'Reports details data request failed!';
+          logError(errMsg, this._logMsgPrefix, error);
+          parseRequestErrorsAndShowAsToastMsgs(error, this, true);
+          fireEvent(this, 'global-loading', {
+            active: false,
+            loadingSource: this._loadingMsgSource
+          });
+        });
     }
 
     _getReportAttachment(reportId: string) {
@@ -81,23 +87,29 @@ function ReportDetailsMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         loadingSource: this._loadingMsgSource
       });
       this.set('reportAttachments', []);
-      this.fireRequest('reportAttachments', {reportId: reportId}).then((response: any) => {
-        fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
+      this.fireRequest('reportAttachments', {reportId: reportId})
+        .then((response: any) => {
+          fireEvent(this, 'global-loading', {
+            active: false,
+            loadingSource: this._loadingMsgSource
+          });
 
-        this.set('reportAttachments', response);
-
-      }).catch((error: any) => {
-        const errMsg = 'Report attachment request failed!';
-        logError(errMsg, this._logMsgPrefix, error);
-        if (error.status === 404) {
-          // it means there is no attachment, which seems like a weird approach
-        } else {
-          parseRequestErrorsAndShowAsToastMsgs(error, this);
-        }
-        fireEvent(this, 'global-loading', {active: false, loadingSource: this._loadingMsgSource});
-      });
+          this.set('reportAttachments', response);
+        })
+        .catch((error: any) => {
+          const errMsg = 'Report attachment request failed!';
+          logError(errMsg, this._logMsgPrefix, error);
+          if (error.status === 404) {
+            // it means there is no attachment, which seems like a weird approach
+          } else {
+            parseRequestErrorsAndShowAsToastMsgs(error, this);
+          }
+          fireEvent(this, 'global-loading', {
+            active: false,
+            loadingSource: this._loadingMsgSource
+          });
+        });
     }
-
   }
   return ReportDetailsClass;
 }

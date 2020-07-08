@@ -17,15 +17,21 @@ import {property} from '@polymer/decorators';
  */
 function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class CommonDataClass extends EnvironmentFlagsMixin(EndpointsMixin(baseClass)) {
-
     @property({type: Object})
     commonDataEndpoints = {
-      pmp: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-        'sections', 'unicefUsers', 'userCountryDetails'],
+      pmp: [
+        'countryProgrammes',
+        'dropdownsPmp',
+        'dropdownsStatic',
+        'locations',
+        'offices',
+        'sections',
+        'unicefUsers',
+        'userCountryDetails'
+      ],
       pmpPrpSections: ['disaggregations'],
       prp: ['getPRPCountries']
     };
-
 
     public loadCommonData() {
       // get PMP static data
@@ -51,11 +57,13 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     protected _makeRequest(endpointName: string, successHandler: any, errorHandler: any) {
-      this.fireRequest(endpointName, {}).then((resp: any) => {
-        successHandler.bind(this, resp)();
-      }).catch((error: any) => {
-        errorHandler.bind(this, error)();
-      });
+      this.fireRequest(endpointName, {})
+        .then((resp: any) => {
+          successHandler.bind(this, resp)();
+        })
+        .catch((error: any) => {
+          errorHandler.bind(this, error)();
+        });
     }
 
     protected _errorHandler(err: any) {
@@ -163,8 +171,7 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         }
         // set agreement amendment data
         if (this._validReqResponseData(response.agreement_amendment_types)) {
-          store.dispatch(
-            commonDataActions.updateAgreementAmendmentTypes((response as any).agreement_amendment_types));
+          store.dispatch(commonDataActions.updateAgreementAmendmentTypes((response as any).agreement_amendment_types));
         }
         // set cso types data
         if (this._validReqResponseData(response.cso_types)) {
@@ -186,7 +193,8 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         // set intervention ammendment data
         if (this._validReqResponseData(response.intervention_amendment_types)) {
           store.dispatch(
-            commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types));
+            commonDataActions.updateInterventionAmendmentTypes((response as any).intervention_amendment_types)
+          );
         }
         // set admin level/location types
         if (this._validReqResponseData(response.location_types)) {
@@ -240,7 +248,6 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         store.dispatch(commonDataActions.updateUserCountryData(response[0]));
       }
     }
-
   }
 
   return CommonDataClass;

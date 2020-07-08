@@ -3,7 +3,7 @@ import '@polymer/polymer/lib/elements/dom-repeat';
 import {property} from '@polymer/decorators';
 
 export class WarnMessage {
-  public msg: string = '';
+  public msg = '';
   constructor(m: string) {
     this.msg = m;
   }
@@ -14,7 +14,6 @@ export class WarnMessage {
  * @customElement
  */
 class EtoolsWarnMessage extends PolymerElement {
-
   static get template() {
     // language=HTML
     return html`
@@ -37,7 +36,6 @@ class EtoolsWarnMessage extends PolymerElement {
         .warning p + p {
           margin-top: 12px;
         }
-        
       </style>
 
       <div class="warning">
@@ -45,7 +43,6 @@ class EtoolsWarnMessage extends PolymerElement {
           <p>[[item.msg]]</p>
         </template>
       </div>
-
     `;
   }
 
@@ -55,16 +52,15 @@ class EtoolsWarnMessage extends PolymerElement {
   @property({type: Array})
   _internalMsgs: WarnMessage[] = [];
 
-  // @ts-ignore
-  private _messagesChanged(msgs: string | string[]) {
+  _messagesChanged(msgs: string | string[]) {
     if (!msgs || msgs.length === 0) {
       return;
     }
-    this._internalMsgs = (msgs instanceof Array && msgs.length > 0)
-      ? msgs.map((msg: string) => new WarnMessage(msg))
-      : [new WarnMessage(msgs as string)];
+    this._internalMsgs =
+      msgs instanceof Array && msgs.length > 0
+        ? msgs.map((msg: string) => new WarnMessage(msg))
+        : [new WarnMessage(msgs as string)];
   }
-
 }
 
 window.customElements.define('etools-warn-message', EtoolsWarnMessage);

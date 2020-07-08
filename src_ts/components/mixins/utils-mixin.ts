@@ -4,7 +4,6 @@ import {PolymerElement} from '@polymer/polymer';
 
 function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class UtilsClass extends baseClass {
-
     _equals(a: any, b: any) {
       return a === b;
     }
@@ -49,7 +48,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     _deferred() {
       const defer: any = {};
 
-      defer.promise = new Promise(function(resolve, reject) {
+      defer.promise = new Promise(function (resolve, reject) {
         defer.resolve = resolve;
         defer.reject = reject;
       });
@@ -58,8 +57,9 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _toPercentage(value: any) {
-      return value == null /* undefinded & null */ ? // jshint ignore:line
-        value : Math.floor(value * 100) + '%';
+      return value == null /* undefinded & null */ // jshint ignore:line
+        ? value
+        : Math.floor(value * 100) + '%';
     }
 
     _fieldsAreValid() {
@@ -70,7 +70,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       );
       // NOTE: NodeList.forEach is not supported by older browsers(min IE11),
       // using Array.prototype.forEach.call instead
-      Array.prototype.forEach.call(fields, function(field: any) {
+      Array.prototype.forEach.call(fields, function (field: any) {
         if (!field.validate()) {
           valid = false;
         }
@@ -80,7 +80,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _ternary(value: any, expected: any, value1: any, value2: any) {
-      return (value === expected) ? value1 : value2;
+      return value === expected ? value1 : value2;
     }
 
     _withDefault(value: any, defaultValue: any) {
@@ -96,8 +96,7 @@ function UtilsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
 
       switch (displayType) {
-        case 'percentage':
-        {
+        case 'percentage': {
           const val = percentize ? Math.floor(value * 100) : value;
           return this._formatNumber(val, '-', 2, ',') + '%';
         }

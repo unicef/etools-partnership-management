@@ -3,6 +3,7 @@ import {store} from '../../../../store';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../store';
 import {isJsonStrMatch} from '../../../utils/utils';
@@ -13,7 +14,8 @@ import {
   FrsDetails,
   Intervention,
   InterventionAttachment,
-  PlannedVisit, ExpectedResult
+  PlannedVisit,
+  ExpectedResult
 } from '../../../../typings/intervention.types';
 import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
@@ -28,9 +30,9 @@ import {Office, GenericObject} from '../../../../typings/globals.types';
  * @appliesMixin AjaxServerErrorsMixin
  * @appliesMixin EnvironmentFlagsMixin
  */
-// @ts-ignore
-class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(EndpointsMixin(AjaxServerErrorsMixin(PolymerElement)))) {
-
+class InterventionItemData extends connect(store)(
+  EnvironmentFlagsMixin(AjaxServerErrorsMixin(EndpointsMixin(PolymerElement)))
+) {
   @property({type: Object})
   pdEndpoints: {
     DETAILS: string;
@@ -50,11 +52,15 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   @property({type: Object})
   originalIntervention!: Intervention;
 
-  @property({type: Number, notify: true, observer: InterventionItemData.prototype._interventionIdChanged})
+  @property({
+    type: Number,
+    notify: true,
+    observer: InterventionItemData.prototype._interventionIdChanged
+  })
   interventionId!: number;
 
   @property({type: Object})
-  handleResponseAdditionalCallback!: object;
+  handleResponseAdditionalCallback!: GenericObject;
 
   @property({type: Array})
   offices!: Office[];
@@ -66,10 +72,9 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
    * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
    */
   @property({type: String})
-  ajaxLoadingMsgSource: string = 'pd-ssfa-data';
+  ajaxLoadingMsgSource = 'pd-ssfa-data';
 
   // Defined
-
 
   stateChanged(state: RootState) {
     if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
@@ -81,23 +86,29 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _triggerInterventionRequest(options: any) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then(function(resp: any) {
-      self._handleResponse(resp, ajaxMethod);
-      return true;
-    }).catch(function(error: any) {
-      self._handleErrorResponse(error, ajaxMethod);
-      return false;
-    });
+    return sendRequest(options)
+      .then(function (resp: any) {
+        self._handleResponse(resp, ajaxMethod);
+        return true;
+      })
+      .catch(function (error: any) {
+        self._handleErrorResponse(error, ajaxMethod);
+        return false;
+      });
   }
 
   _reqInterventionDataWithoutRespHandling() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const options = {
-      endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: this.interventionId})
+      endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {
+        id: this.interventionId
+      })
     };
-    return this.sendRequest(options).catch(function(error: any) {
+    return sendRequest(options).catch(function (error: any) {
       self._handleErrorResponse(error, 'GET');
     });
   }
@@ -112,11 +123,12 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       active: true,
       loadingSource: this.ajaxLoadingMsgSource
     });
-    this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
+    this._triggerInterventionRequest({
+      endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})
+    });
   }
 
   _handleErrorResponse(response: any, ajaxMethod: string) {
-    // @ts-ignore
     this.handleErrorResponse(response, ajaxMethod, true);
     if (this.intervention && this.originalIntervention) {
       this._restoreUnsuccessfullyDeletedFrs();
@@ -134,19 +146,13 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _convertIdsToStrings(dataArray: []) {
-    return dataArray.map(function(elem: any) {
+    return dataArray.map(function (elem: any) {
       return typeof elem === 'number' ? String(elem) : elem;
     });
   }
 
   _handleDataConversions(intervention: any) {
-    const fieldsToConvert = [
-      'flat_locations',
-      'offices',
-      'partner_focal_points',
-      'sections',
-      'unicef_focal_points'
-    ];
+    const fieldsToConvert = ['flat_locations', 'offices', 'partner_focal_points', 'sections', 'unicef_focal_points'];
 
     fieldsToConvert.forEach((propName: string) => {
       if (!intervention[propName] || !intervention[propName].length) {
@@ -172,20 +178,27 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       this.set('handleResponseAdditionalCallback', null);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     if (ajaxMethod !== 'GET') {
       // update the interventions list in dexieDB
       const mappedResponse = this._formatResponseDataForDexie(response);
-      window.EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
-        fireEvent(self, 'reload-list');
-      });
+      window.EtoolsPmpApp.DexieDb.table('interventions')
+        .put(mappedResponse)
+        .then(() => {
+          fireEvent(self, 'reload-list');
+        });
 
-      if (response.document_type &&
-          response.document_type === CONSTANTS.DOCUMENT_TYPES.SSFA &&
-          response.status !== CONSTANTS.STATUSES.Draft.toLowerCase()) {
-        this.sendRequest({
-          endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {id: response.agreement})
-        }).then(function(resp: any) {
+      if (
+        response.document_type &&
+        response.document_type === CONSTANTS.DOCUMENT_TYPES.SSFA &&
+        response.status !== CONSTANTS.STATUSES.Draft.toLowerCase()
+      ) {
+        sendRequest({
+          endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {
+            id: response.agreement
+          })
+        }).then((resp: any) => {
           self.updateAgreeementStatus.bind(self, resp)();
         });
       }
@@ -214,7 +227,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     };
     let propName: string;
     for (propName in minimalAgrData) {
-      if (!detail.hasOwnProperty(propName)) {
+      if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
         logWarn('Mapping property not found');
       } else {
         minimalAgrData[propName] = detail[propName];
@@ -239,7 +252,8 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     return hasF;
   }
 
-  _fileField(intervention: Intervention, property: string) { // TODO
+  _fileField(intervention: Intervention, property: string) {
+    // TODO
     return intervention[property] instanceof File;
   }
 
@@ -248,11 +262,18 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
    */
   updateInterventionStatus(data: any, callback?: any) {
     if (!data.interventionId) {
-      fireEvent(this, 'toast', {text: 'Invalid intervention ID', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'Invalid intervention ID',
+        showCloseBtn: true
+      });
     } else {
-      if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-        CONSTANTS.STATUSES.Suspended.toLowerCase(),
-        CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
+      if (
+        [
+          CONSTANTS.STATUSES.Signed.toLowerCase(),
+          CONSTANTS.STATUSES.Suspended.toLowerCase(),
+          CONSTANTS.STATUSES.Terminated.toLowerCase()
+        ].indexOf(data.status) > -1
+      ) {
         // status change is allowed
         // set additional callback if any
         if (callback) {
@@ -266,14 +287,16 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
         // fire in the hole
         this._triggerInterventionRequest({
           method: 'PATCH',
-          endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: data.interventionId}),
+          endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {
+            id: data.interventionId
+          }),
           body: {
             status: data.status
           }
         });
       } else {
         fireEvent(this, 'toast', {
-          text: 'Changing status to \'' + data.status + '\' is not allowed!',
+          text: "Changing status to '" + data.status + "' is not allowed!",
           showCloseBtn: true
         });
       }
@@ -286,7 +309,10 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   // TODO Intervention | any
   saveIntervention(intervention: Intervention | any, callback?: any) {
     if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
-      fireEvent(this, 'toast', {text: 'Invalid intervention data!', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'Invalid intervention data!',
+        showCloseBtn: true
+      });
       return Promise.resolve(false);
     } else {
       let endpoint = null;
@@ -295,7 +321,9 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
 
       if (intervention.id) {
         // prepare PATCH endpoint
-        endpoint = this.getEndpoint(this.pdEndpoints.DETAILS, {id: intervention.id});
+        endpoint = this.getEndpoint(this.pdEndpoints.DETAILS, {
+          id: intervention.id
+        });
       } else {
         // new intervention, use POST method for the same endpoint
         endpoint = this.getEndpoint(this.pdEndpoints.CREATE);
@@ -315,12 +343,12 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       }
 
       if (Array.isArray(intervention.result_links)) {
-        intervention.result_links = intervention.result_links.filter(function(elem: ExpectedResult) {
+        intervention.result_links = intervention.result_links.filter(function (elem: ExpectedResult) {
           return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
         });
       }
       if (Array.isArray(intervention.planned_visits)) {
-        intervention.planned_visits = intervention.planned_visits.filter(function(elem: PlannedVisit) {
+        intervention.planned_visits = intervention.planned_visits.filter(function (elem: PlannedVisit) {
           return elem.year || elem.programmatic;
         });
       }
@@ -330,10 +358,13 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
         loadingSource: this.ajaxLoadingMsgSource
       });
 
-      const method = (isNew) ? 'POST' : 'PATCH';
+      const method = isNew ? 'POST' : 'PATCH';
       return this._triggerInterventionRequest({
-        method: method, endpoint: endpoint, body: intervention,
-        multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
+        method: method,
+        endpoint: endpoint,
+        body: intervention,
+        multiPart: prepareMultipartData,
+        prepareMultipartData: prepareMultipartData
       });
     }
   }
@@ -361,7 +392,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     this._updateOffices(dexieObject, responseDetail);
     this._updateFrInfo(dexieObject, responseDetail.frs_details, responseDetail.planned_budget!.currency as string);
 
-    responseDetail.result_links.forEach(function(elem: ExpectedResult) {
+    responseDetail.result_links.forEach(function (elem: ExpectedResult) {
       dexieObject.cp_outputs.push(elem.cp_output);
     });
 
@@ -375,8 +406,9 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _updatePlannedBudgetInfo(dexieObject: ListItemIntervention, intervention: Intervention) {
-    dexieObject.unicef_budget = parseFloat(intervention.planned_budget!.unicef_cash_local as string) +
-        parseFloat(intervention.planned_budget!.in_kind_amount_local as string);
+    dexieObject.unicef_budget =
+      parseFloat(intervention.planned_budget!.unicef_cash_local as string) +
+      parseFloat(intervention.planned_budget!.in_kind_amount_local as string);
     dexieObject.cso_contribution = parseFloat(intervention.planned_budget!.partner_contribution_local as string);
     dexieObject.total_budget = dexieObject.unicef_budget + dexieObject.cso_contribution;
     dexieObject.unicef_cash = parseFloat(intervention.planned_budget!.unicef_cash_local as string);
@@ -393,9 +425,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
     dexieObject.frs_total_frs_amt = intervFrDetails.total_frs_amt;
     dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
     dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
-    dexieObject.fr_currency = intervFrDetails.currencies_match
-      ? intervFrDetails.frs[0].currency
-      : null;
+    dexieObject.fr_currency = intervFrDetails.currencies_match ? intervFrDetails.frs[0].currency : null;
     dexieObject.fr_currencies_are_consistent = intervFrDetails.currencies_match;
     dexieObject.all_currencies_are_consistent = intervFrDetails.currencies_match
       ? intervFrDetails.frs[0].currency === plannedBudgetCurrency
@@ -403,7 +433,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _noFrOnIntervention(intervFrDetails: FrsDetails) {
-    return (!intervFrDetails || !intervFrDetails.earliest_start_date);
+    return !intervFrDetails || !intervFrDetails.earliest_start_date;
   }
 
   _updateOffices(dexieObject: ListItemIntervention, responseDetail: any) {
@@ -416,13 +446,13 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
   }
 
   _getSelectedOfficesNames(responseDetail: any) {
-    const selectedOffices = this.offices.filter(function(office: any) {
+    const selectedOffices = this.offices.filter(function (office: any) {
       return responseDetail.offices.indexOf(office.id.toString()) > -1;
     });
     if (!selectedOffices) {
       return [];
     }
-    return selectedOffices.map(function(office: any) {
+    return selectedOffices.map(function (office: any) {
       return office.name;
     });
   }
@@ -436,8 +466,7 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       const sectionNames: string[] = [];
       const interventionSectionIds = sections.map((sectionId: string) => parseInt(sectionId, 10));
 
-
-      this.sections.forEach(function(section: any) {
+      this.sections.forEach(function (section: any) {
         if (interventionSectionIds.indexOf(parseInt(section.id, 10)) > -1) {
           sectionNames.push(section.name);
         }
@@ -452,16 +481,18 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
       return;
     }
     const reqMethod = 'DELETE';
-    this.fireRequest(this.pdEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
-      this._handleInterventionDeleteSuccess(id);
-    }).catch((reqError: any) => {
-      // @ts-ignore
-      this.handleErrorResponse(reqError, reqMethod);
-    });
+    this.fireRequest(this.pdEndpoints.DELETE, {id: id}, {method: reqMethod})
+      .then(() => {
+        this._handleInterventionDeleteSuccess(id);
+      })
+      .catch((reqError: any) => {
+        this.handleErrorResponse(reqError, reqMethod, false);
+      });
   }
 
   _handleInterventionDeleteSuccess(id: string) {
-    window.EtoolsPmpApp.DexieDb.interventions.where('id')
+    window.EtoolsPmpApp.DexieDb.interventions
+      .where('id')
       .equals(parseInt(id, 10))
       .delete()
       .then((deleteCount: any) => this._handleInterventionDeleteFromDexieSuccess(deleteCount))
@@ -486,18 +517,16 @@ class InterventionItemData extends connect(store)(EnvironmentFlagsMixin(Endpoint
 
   _handleInterventionDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
-    logError('Agreement delete from local dexie db failed!', 'agreement-item-data',
-      dexieDeleteErr);
+    logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
-      text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
-      'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
+      text:
+        'The agreement was deleted from server database, but there was an issue on cleaning ' +
+        'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
       showCloseBtn: true
     });
   }
-
 }
 
 window.customElements.define('intervention-item-data', InterventionItemData);
-
 
 export default InterventionItemData;

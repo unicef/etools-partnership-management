@@ -4,7 +4,6 @@ import {property} from '@polymer/decorators';
 
 function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class FrontendPaginationClass extends baseClass {
-
     @property({type: Object})
     pagination = {
       pageSize: 10,
@@ -25,7 +24,6 @@ function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     public _paginationChanged(pageNumber: number, pageSize: number, listData: any) {
-
       if (this._anyUndefined([pageNumber, pageSize, listData])) {
         return;
       }
@@ -42,7 +40,6 @@ function FrontendPaginationMixin<T extends Constructor<PolymerElement>>(baseClas
     public _isUndefined(item: any) {
       return typeof item === 'undefined';
     }
-
   }
   return FrontendPaginationClass;
 }

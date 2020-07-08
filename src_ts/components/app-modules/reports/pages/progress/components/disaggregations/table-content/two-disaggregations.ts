@@ -14,42 +14,30 @@ import {GenericObject} from '../../../../../../../../typings/globals.types';
  * @appliesMixin DisaggregationsMixin
  */
 class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)) {
-
   static get is() {
     return 'two-disaggregations';
   }
 
   static get template() {
     return html`
-     ${disaggregationTableStyles}
+      ${disaggregationTableStyles}
 
-      <tr class='horizontal layout headerRow'>
+      <tr class="horizontal layout headerRow">
         <th></th>
 
-        <template is="dom-repeat"
-                  items="[[columns]]"
-                  as="column">
+        <template is="dom-repeat" items="[[columns]]" as="column">
           <th>[[_capitalizeFirstLetter(column.value)]]</th>
         </template>
 
         <th>Total</th>
       </tr>
 
-      <template
-          is="dom-repeat"
-          items="[[rowsForDisplay]]"
-          as="row">
-        <disaggregation-table-row
-            data="[[row]]"
-            indicator-type="[[data.display_type]]"
-            row-type="middleRow">
+      <template is="dom-repeat" items="[[rowsForDisplay]]" as="row">
+        <disaggregation-table-row data="[[row]]" indicator-type="[[data.display_type]]" row-type="middleRow">
         </disaggregation-table-row>
       </template>
 
-      <disaggregation-table-row
-          data="[[totalsForDisplay]]"
-          indicator-type="[[data.display_type]]"
-          row-type="totalsRow">
+      <disaggregation-table-row data="[[totalsForDisplay]]" indicator-type="[[data.display_type]]" row-type="totalsRow">
       </disaggregation-table-row>
     `;
   }
@@ -69,7 +57,10 @@ class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)
   @property({type: Object, computed: '_determineTotals(columns, data)'})
   totalsForDisplay!: GenericObject;
 
-  @property({type: Object, computed: '_determineRowsForDisplay(columns, rows, data)'})
+  @property({
+    type: Object,
+    computed: '_determineRowsForDisplay(columns, rows, data)'
+  })
   rowsForDisplay!: GenericObject;
 
   _getColumns(mapping: any) {
@@ -115,7 +106,6 @@ class TwoDisaggregations extends UtilsMixin(DisaggregationsMixin(PolymerElement)
       }
     };
   }
-
 }
 
 window.customElements.define(TwoDisaggregations.is, TwoDisaggregations);

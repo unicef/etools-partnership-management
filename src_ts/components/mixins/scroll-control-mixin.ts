@@ -9,7 +9,6 @@ import {property} from '@polymer/decorators';
  */
 function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ScrollControlClass extends baseClass {
-
     @property({type: Object})
     contentContainer: PolymerElement | null = window.EtoolsPmpApp.ContentContainer;
 
@@ -40,8 +39,7 @@ function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
     public scrollToTop() {
       if (!this.contentContainer) {
-        logWarn('Can not scroll! `contentContainer` object is null or undefined',
-          'scroll-control-mixin');
+        logWarn('Can not scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
         return;
       }
       // @ts-ignore
@@ -53,7 +51,6 @@ function ScrollControlMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         this.scrollToTop();
       }
     }
-
   }
   return ScrollControlClass;
 }

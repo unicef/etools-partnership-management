@@ -13,7 +13,11 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
 
-import {DECREASE_UPLOADS_IN_PROGRESS, DECREASE_UNSAVED_UPLOADS, INCREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status';
+import {
+  DECREASE_UPLOADS_IN_PROGRESS,
+  DECREASE_UNSAVED_UPLOADS,
+  INCREASE_UNSAVED_UPLOADS
+} from '../../../../../actions/upload-status';
 import {store, RootState} from '../../../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import '../../../../layout/etools-form-element-wrapper.js';
@@ -48,7 +52,7 @@ import {LabelAndValue} from '../../../../../typings/globals.types';
 import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure';
 import {MinimalStaffMember, StaffMember} from '../../../../../models/partners.models';
 import {GeneratePcaDialogEl} from './components/generate-PCA-dialog.js';
-
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 
 /**
  * @polymer
@@ -59,17 +63,16 @@ import {GeneratePcaDialogEl} from './components/generate-PCA-dialog.js';
  * @appliesMixin UploadsMixin
  */
 class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMembersDataMixin(PolymerElement)))) {
-
   static get template() {
     return html`
-      ${pageCommonStyles}  ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
+      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${buttonsStyles}
       <style>
         :host {
           @apply --layout-vertical;
           width: 100%;
           --esmm-list-wrapper: {
             max-height: 400px;
-          };
+          }
         }
 
         .type-warning {
@@ -85,7 +88,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         }
 
         .generate-pca {
-          /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
+  /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
           border-right: 1px solid var(--dark-divider-color);
           margin-right: 24px;
           padding-right: 24px;
@@ -112,49 +115,51 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
         .year-coll {
           width: 105px;
         }
-
       </style>
 
       <etools-content-panel class="content-section" panel-title="Agreement Details">
-
         <div class="row-h flex-c b-border row-second-bg">
           <div class="col col-6">
             <div class="flex-c padd-right">
               <!-- Agreement Type -->
               <etools-dropdown
-                  id="agreementType"
-                  label="Agreement Type"
-                  placeholder="&#8212;"
-                  options="[[agreementTypes]]"
-                  selected="{{agreement.agreement_type}}"
-                  hide-search
-                  readonly$="[[_isAgreementTypeReadonly(agreement)]]"
-                  auto-validate
-                  error-message="Please select agreement type"
-                  required>
+                id="agreementType"
+                label="Agreement Type"
+                placeholder="&#8212;"
+                options="[[agreementTypes]]"
+                selected="{{agreement.agreement_type}}"
+                hide-search
+                readonly$="[[_isAgreementTypeReadonly(agreement)]]"
+                auto-validate
+                error-message="Please select agreement type"
+                required
+              >
               </etools-dropdown>
             </div>
             <div class="year-col" hidden$="[[!_showYearDropdown(agreement.status)]]">
-                <year-dropdown label="Ref. Year"
-                            selected-year="{{agreement.reference_number_year}}">
-                </year-dropdown>
+              <year-dropdown label="Ref. Year" selected-year="{{agreement.reference_number_year}}"> </year-dropdown>
             </div>
-        </div>
+          </div>
 
           <div class="col col-3">
             <!-- Reference Number -->
-            <paper-input label="Reference Number"
-                        value="[[agreement.agreement_number]]"
-                        title$="[[agreement.agreement_number]]"
-                        hidden$="[[!agreement.id]]"
-                        placeholder="&#8212;"
-                        readonly>
+            <paper-input
+              label="Reference Number"
+              value="[[agreement.agreement_number]]"
+              title$="[[agreement.agreement_number]]"
+              hidden$="[[!agreement.id]]"
+              placeholder="&#8212;"
+              readonly
+            >
             </paper-input>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
             <div class="col col-3">
-              <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]"
-                                          value="[[getDateDisplayValue(agreement.start)]] &#8212; [[getDateDisplayValue(agreement.end)]]">
+              <etools-form-element-wrapper
+                label="Duration (Signed Date - CP End Date)"
+                hidden$="[[!agreement.id]]"
+                value="[[getDateDisplayValue(agreement.start)]] &#8212; [[getDateDisplayValue(agreement.end)]]"
+              >
               </etools-form-element-wrapper>
             </div>
           </template>
@@ -164,50 +169,59 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
           <div class="col col-6">
             <!-- Partner name -->
             <etools-dropdown
-                id="partner"
-                label="Partner Name"
-                placeholder="&#8212;"
-                options="[[partnersDropdownData]]"
-                selected="{{agreement.partner}}"
-                hidden$="[[!agreement.permissions.edit.partner]]"
-                auto-validate
-                error-message="Please select a partner"
-                required>
+              id="partner"
+              label="Partner Name"
+              placeholder="&#8212;"
+              options="[[partnersDropdownData]]"
+              selected="{{agreement.partner}}"
+              hidden$="[[!agreement.permissions.edit.partner]]"
+              auto-validate
+              error-message="Please select a partner"
+              required
+            >
             </etools-dropdown>
-            <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
-                                        hidden$="[[agreement.permissions.edit.partner]]"
-                                        value="[[agreement.partner_name]]">
+            <etools-form-element-wrapper
+              label="Partner Name"
+              required$="[[agreement.permissions.required.partner]]"
+              hidden$="[[agreement.permissions.edit.partner]]"
+              value="[[agreement.partner_name]]"
+            >
             </etools-form-element-wrapper>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
             <div class="col col-3">
-              <datepicker-lite id="startDateField"
-                                label="Start date"
-                                value="{{agreement.start}}"
-                                readonly$="[[!agreement.permissions.edit.start]]"
-                                required$="[[agreement.permissions.required.start]]"
-                                selected-date-display-format="D MMM YYYY">
+              <datepicker-lite
+                id="startDateField"
+                label="Start date"
+                value="{{agreement.start}}"
+                readonly$="[[!agreement.permissions.edit.start]]"
+                required$="[[agreement.permissions.required.start]]"
+                selected-date-display-format="D MMM YYYY"
+              >
               </datepicker-lite>
             </div>
             <div class="col col-3">
-              <datepicker-lite id="endDateField"
-                                label="End date"
-                                value="{{agreement.end}}"
-                                readonly$="[[!agreement.permissions.edit.end]]"
-                                required$="[[agreement.permissions.required.end]]"
-                                selected-date-display-format="D MMM YYYY">
+              <datepicker-lite
+                id="endDateField"
+                label="End date"
+                value="{{agreement.end}}"
+                readonly$="[[!agreement.permissions.edit.end]]"
+                required$="[[agreement.permissions.required.end]]"
+                selected-date-display-format="D MMM YYYY"
+              >
               </datepicker-lite>
             </div>
           </template>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
             <div class="col col-6">
               <etools-cp-structure
-                  id="cpStructure"
-                  module="agreements"
-                  app-module-item="[[agreement]]"
-                  selected-cp="{{agreement.country_programme}}"
-                  edit-mode="[[agreement.permissions.edit.country_programme]]"
-                  required$="[[agreement.permissions.required.country_programme]]">
+                id="cpStructure"
+                module="agreements"
+                app-module-item="[[agreement]]"
+                selected-cp="{{agreement.country_programme}}"
+                edit-mode="[[agreement.permissions.edit.country_programme]]"
+                required$="[[agreement.permissions.required.country_programme]]"
+              >
               </etools-cp-structure>
             </div>
           </template>
@@ -218,28 +232,33 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
             <div class="col col-6">
               <!-- Signed By Partner -->
               <etools-dropdown
-                  id="signedByPartner"
-                  label="Signed By Partner"
-                  placeholder="&#8212;"
-                  options="[[staffMembers]]"
-                  option-value="id"
-                  option-label="name"
-                  selected="{{agreement.partner_manager}}"
-                  hidden$="[[!agreement.permissions.edit.partner_manager]]">
+                id="signedByPartner"
+                label="Signed By Partner"
+                placeholder="&#8212;"
+                options="[[staffMembers]]"
+                option-value="id"
+                option-label="name"
+                selected="{{agreement.partner_manager}}"
+                hidden$="[[!agreement.permissions.edit.partner_manager]]"
+              >
               </etools-dropdown>
-              <etools-form-element-wrapper label="Signed By Partner"
-                                          hidden$="[[agreement.permissions.edit.partner_manager]]"
-                                          value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]">
+              <etools-form-element-wrapper
+                label="Signed By Partner"
+                hidden$="[[agreement.permissions.edit.partner_manager]]"
+                value="[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]"
+              >
               </etools-form-element-wrapper>
             </div>
             <div class="col col-3">
               <!-- Signed By Partner Date -->
-              <datepicker-lite id="signedByPartnerDateField"
-                                label="Signed By Partner Date"
-                                value="{{agreement.signed_by_partner_date}}"
-                                readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                                max-date="[[getCurrentDate()]]"
-                                selected-date-display-format="D MMM YYYY">
+              <datepicker-lite
+                id="signedByPartnerDateField"
+                label="Signed By Partner Date"
+                value="{{agreement.signed_by_partner_date}}"
+                readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
+                max-date="[[getCurrentDate()]]"
+                selected-date-display-format="D MMM YYYY"
+              >
               </datepicker-lite>
             </div>
           </div>
@@ -251,12 +270,14 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
-              <datepicker-lite id="signedByUnicefDateField"
-                                label="Signed By UNICEF Date"
-                                value="{{agreement.signed_by_unicef_date}}"
-                                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                                max-date="[[getCurrentDate()]]"
-                                selected-date-display-format="D MMM YYYY">
+              <datepicker-lite
+                id="signedByUnicefDateField"
+                label="Signed By UNICEF Date"
+                value="{{agreement.signed_by_unicef_date}}"
+                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
+                max-date="[[getCurrentDate()]]"
+                selected-date-display-format="D MMM YYYY"
+              >
               </datepicker-lite>
             </div>
           </div>
@@ -264,105 +285,119 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
         <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
           <!-- Partner Authorized Officers (partner staff members) -->
-          <etools-dropdown-multi id="officers"
-                                label="Partner Authorized Officers"
-                                placeholder="&#8212;"
-                                options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-                                option-value="id"
-                                option-label="name"
-                                selected-values="{{authorizedOfficers}}"
-                                hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
-                                error-message="Please enter Partner Authorized Officer(s)"
-                                required$="[[agreement.permissions.required.authorized_officers]]"
-                                auto-validate$="[[enableEditForAuthorizedOfficers]]">
+          <etools-dropdown-multi
+            id="officers"
+            label="Partner Authorized Officers"
+            placeholder="&#8212;"
+            options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+            option-value="id"
+            option-label="name"
+            selected-values="{{authorizedOfficers}}"
+            hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
+            error-message="Please enter Partner Authorized Officer(s)"
+            required$="[[agreement.permissions.required.authorized_officers]]"
+            auto-validate$="[[enableEditForAuthorizedOfficers]]"
+          >
           </etools-dropdown-multi>
-          <etools-form-element-wrapper label="Partner Authorized Officers"
-                                      required$="[[agreement.permissions.required.authorized_officers]]"
-                                      hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
-                                      value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]">
+          <etools-form-element-wrapper
+            label="Partner Authorized Officers"
+            required$="[[agreement.permissions.required.authorized_officers]]"
+            hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, allowAoEditForSSFA)]]"
+            value="[[_getReadonlyAuthorizedOfficers(agreement, authorizedOfficers, staffMembers)]]"
+          >
           </etools-form-element-wrapper>
         </div>
 
-        <div class="layout-horizontal row-padding-h"
-            hidden$="[[!_showAoEditBtn(agreement.status, editMode, agreement.permissions.edit.authorized_officers)]]">
-          <paper-button id="editAo"
-                        class="secondary-btn"
-                        on-tap="_enableAoEdit"
-                        hidden$="[[allowAoEditForSSFA]]">
+        <div
+          class="layout-horizontal row-padding-h"
+          hidden$="[[!_showAoEditBtn(agreement.status, editMode, agreement.permissions.edit.authorized_officers)]]"
+        >
+          <paper-button id="editAo" class="secondary-btn" on-tap="_enableAoEdit" hidden$="[[allowAoEditForSSFA]]">
             <iron-icon icon="create"></iron-icon>
             <span>Amend Partner Authorized Officers</span>
           </paper-button>
-          <paper-button id="cancelAoEdit"
-                        class="secondary-btn"
-                        on-tap="_cancelAoEdit"
-                        hidden$="[[!allowAoEditForSSFA]]">
+          <paper-button
+            id="cancelAoEdit"
+            class="secondary-btn"
+            on-tap="_cancelAoEdit"
+            hidden$="[[!allowAoEditForSSFA]]"
+          >
             <iron-icon icon="cancel"></iron-icon>
             <span>Cancel Partner Authorized Officers amendment</span>
           </paper-button>
         </div>
 
         <div class="row-h flex-c">
-          <paper-toggle-button checked="{{agreement.special_conditions_pca}}"
-                              hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
-                              disabled$="[[!agreement.permissions.edit.special_conditions_pca]]">
+          <paper-toggle-button
+            checked="{{agreement.special_conditions_pca}}"
+            hidden$="[[!_typeMatches(agreement.agreement_type, 'PCA')]]"
+            disabled$="[[!agreement.permissions.edit.special_conditions_pca]]"
+          >
             Special Conditions PCA
           </paper-toggle-button>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
-          <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement,
-                                agreement.special_conditions_pca, agreement.status)]]">
-            <paper-input-container
-                class="form-field-wrapper secondary-btn-wrapper"
-                always-float-label>
+          <div
+            class="generate-pca col col-3"
+            hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement,
+                                agreement.special_conditions_pca, agreement.status)]]"
+          >
+            <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
               <!-- Generate PCA -->
               <label slot="label" aria-hidden="true">PCA Agreement to Sign</label>
-              <paper-button slot="input" class="paper-input-input secondary-btn" id="generateMyPca"
-                            on-tap="_openGeneratePCADialog">
+              <paper-button
+                slot="input"
+                class="paper-input-input secondary-btn"
+                id="generateMyPca"
+                on-tap="_openGeneratePCADialog"
+              >
                 <iron-icon icon="refresh"></iron-icon>
                 GENERATE
               </paper-button>
             </paper-input-container>
           </div>
-          <div class="generate-pca col col-3"
-              hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, agreement.special_conditions_pca)]]">
+          <div
+            class="generate-pca col col-3"
+            hidden$="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement, 
+                        agreement.special_conditions_pca)]]"
+          >
             <span class="type-warning">[[generatePCAMessage]]</span>
           </div>
           <div class="col col-6" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-upload
-                label="Signed Agreement"
-                file-url="{{agreement.attachment}}"
-                upload-endpoint="[[uploadEndpoint]]"
-                on-upload-finished="_signedAgreementUploadFinished"
-                show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment,
+              label="Signed Agreement"
+              file-url="{{agreement.attachment}}"
+              upload-endpoint="[[uploadEndpoint]]"
+              on-upload-finished="_signedAgreementUploadFinished"
+              show-delete-btn="[[showSignedAgDeleteBtn(agreement.status, agreement.permissions.edit.attachment,
                                    originalAgreementData.attachment, isNewAgreement)]]"
-                on-delete-file="_signedAgFileDelete"
-                accept=".doc,.docx,.pdf,.jpg,.png"
-                readonly$="[[!agreement.permissions.edit.attachment]]"
-                required$="[[agreement.permissions.required.attachment]]"
-                on-upload-started="_onUploadStarted"
-                on-change-unsaved-file="_onChangeUnsavedFile">
+              on-delete-file="_signedAgFileDelete"
+              accept=".doc,.docx,.pdf,.jpg,.png"
+              readonly$="[[!agreement.permissions.edit.attachment]]"
+              required$="[[agreement.permissions.required.attachment]]"
+              on-upload-started="_onUploadStarted"
+              on-change-unsaved-file="_onChangeUnsavedFile"
+            >
             </etools-upload>
           </div>
           <div class="col col-6" hidden$="[[_hideTerminationDoc(agreement.termination_doc, agreement.status)]]">
-            <etools-upload
-                label="Termination Notice"
-                file-url="[[agreement.termination_doc]]"
-                readonly="true">
+            <etools-upload label="Termination Notice" file-url="[[agreement.termination_doc]]" readonly="true">
             </etools-upload>
           </div>
         </div>
       </etools-content-panel>
 
       <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-        <agreement-amendments id="agreementAmendments"
-                              class="content-section"
-                              data-items="{{agreement.amendments}}"
-                              agreement-type="[[agreement.agreement_type]]"
-                              edit-mode="[[agreement.permissions.edit.amendments]]"
-                              show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
-                              authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-                              selected-ao="{{authorizedOfficers}}">
+        <agreement-amendments
+          id="agreementAmendments"
+          class="content-section"
+          data-items="{{agreement.amendments}}"
+          agreement-type="[[agreement.agreement_type]]"
+          edit-mode="[[agreement.permissions.edit.amendments]]"
+          show-authorized-officers="[[!_typeMatches(agreement.agreement_type, 'MOU')]]"
+          authorized-officers="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+          selected-ao="{{authorizedOfficers}}"
+        >
         </agreement-amendments>
       </template>
     `;
@@ -372,10 +407,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   agreement!: Agreement;
 
   @property({type: Boolean, observer: '_editModeChanged'})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Boolean, observer: '_isNewAgreementChanged'})
-  isNewAgreement: boolean = false;
+  isNewAgreement = false;
 
   @property({type: Array})
   partnersDropdownData!: any[];
@@ -399,13 +434,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   oldSelectedPartnerId: number | null = null;
 
   @property({type: Boolean})
-  enableEditForAuthorizedOfficers: boolean = false;
+  enableEditForAuthorizedOfficers = false;
 
   @property({type: String})
-  generatePCAMessage: string = 'Save before generating the PCA template';
+  generatePCAMessage = 'Save before generating the PCA template';
 
   @property({type: Boolean})
-  allowAoEditForSSFA: boolean = false;
+  allowAoEditForSSFA = false;
 
   @property({type: String})
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
@@ -448,7 +483,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
     // Disable loading message for details tab elements load,
     // triggered by parent element on stamp
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'ag-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'ag-page'
+    });
     fireEvent(this, 'tab-content-attached');
   }
 
@@ -478,7 +516,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   // Editing Agreement Type is allowed only if Agreement is new/unsaved
   _isAgreementTypeReadonly() {
-    return (this.agreement && this.agreement.id);
+    return this.agreement && this.agreement.id;
   }
 
   _isNewAgreementChanged(isNew: boolean) {
@@ -534,7 +572,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       this._resetDropdown('#partner');
       this._resetDropdown('#agreementType');
     }
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'ag-data'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'ag-data'
+    });
   }
 
   resetAttachedAgreementElem(agreement: Agreement) {
@@ -557,8 +598,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _showYearDropdown(status: string) {
-    return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-      status === '' || status === undefined;
+    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === '' || status === undefined;
   }
 
   _allowEdit(agreementStatus: string, editMode?: boolean) {
@@ -635,7 +675,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       return staffMembers;
     }
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
-      return agreementAuthorizedOfficers.map(function(s: StaffMember) {
+      return agreementAuthorizedOfficers.map(function (s: StaffMember) {
         return new MinimalStaffMember(s);
       });
     }
@@ -649,7 +689,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (this.agreement.partner_signatory) {
       return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
     } else if (staffMembers && staffMembers.length) {
-      const selectedPartner = staffMembers.filter(function(s: any) {
+      const selectedPartner = staffMembers.filter(function (s: any) {
         return parseInt(s.id) === parseInt(selectedId);
       });
       if (selectedPartner && selectedPartner.length) {
@@ -663,18 +703,17 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     let ao = [];
     const aoSelected = selection instanceof Array && selection.length > 0;
     if (aoSelected) {
-      const selectedIds = selection.map(s => parseInt(s, 10));
-      ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers!)
-        .filter((a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1);
+      const selectedIds = selection.map((s) => parseInt(s, 10));
+      ao = this._getAvailableAuthOfficers(staffMembers, agreement.authorized_officers!).filter(
+        (a: any) => selectedIds.indexOf(parseInt(a.id, 10)) > -1
+      );
     } else {
-      ao = (agreement && agreement.authorized_officers instanceof Array)
-        ? agreement.authorized_officers
-        : [];
+      ao = agreement && agreement.authorized_officers instanceof Array ? agreement.authorized_officers : [];
     }
     if (!ao || !ao.length) {
       return '';
     }
-    const names = ao.map(officer => aoSelected ? officer.name : (officer.first_name + ' ' + officer.last_name));
+    const names = ao.map((officer) => (aoSelected ? officer.name : officer.first_name + ' ' + officer.last_name));
     return names.join(' | ');
   }
 
@@ -692,9 +731,12 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
 
   _initAuthorizedOfficers(authOfficers: StaffMember[]) {
     if (authOfficers instanceof Array && authOfficers.length) {
-      this.set('authorizedOfficers', authOfficers.map(function(authOfficer) {
-        return authOfficer.id + '';
-      }));
+      this.set(
+        'authorizedOfficers',
+        authOfficers.map(function (authOfficer) {
+          return authOfficer.id + '';
+        })
+      );
       return;
     }
     this.set('authorizedOfficers', []);
@@ -705,8 +747,10 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (!this.agreement || !editMode) {
       return false;
     }
-    if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA &&
-      agreementStatus === CONSTANTS.STATUSES.Signed.toLowerCase()) {
+    if (
+      this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA &&
+      agreementStatus === CONSTANTS.STATUSES.Signed.toLowerCase()
+    ) {
       return !this.agreement.permissions!.edit.authorized_officers ? false : allowAoEditForSSFA;
     } else {
       return this.agreement.permissions!.edit.authorized_officers;
@@ -714,8 +758,13 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _showAoEditBtn(status: string, editMode: boolean, permissionsEditAO: boolean) {
-    return this.agreement && this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA && editMode &&
-      permissionsEditAO && status === CONSTANTS.STATUSES.Signed.toLowerCase();
+    return (
+      this.agreement &&
+      this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.SSFA &&
+      editMode &&
+      permissionsEditAO &&
+      status === CONSTANTS.STATUSES.Signed.toLowerCase()
+    );
   }
 
   _enableAoEdit() {
@@ -735,20 +784,19 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (this.agreement.agreement_type === CONSTANTS.AGREEMENT_TYPES.PCA) {
       reqFieldsSelectors.push('#cpStructure');
     }
-    reqFieldsSelectors.forEach(function(fSelector: string) {
-      // @ts-ignore
-      const field = this.shadowRoot.querySelector(fSelector);
+    reqFieldsSelectors.forEach((fSelector: string) => {
+      const field = this.shadowRoot!.querySelector(fSelector) as EtoolsDropdownEl;
       if (field && !field.validate()) {
         valid = false;
       }
-    }.bind(this));
+    });
     return valid;
   }
 
   _signedAgreementUploadFinished(e: CustomEvent) {
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
-      const response = JSON.parse(e.detail.success);
+      const response = e.detail.success;
       this.set('agreement.attachment', response.id);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
@@ -759,8 +807,9 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
    * For Draft Status, only Change option is available. No delete option is available in Draft.
    */
   showSignedAgDeleteBtn(_status: string, _editAttPermission: boolean, _originalAtt: string, _isNewAgreement: boolean) {
-    return _isNewAgreement ? true : (this._isDraft() && !!this.originalAgreementData
-      && !this.originalAgreementData.attachment);
+    return _isNewAgreement
+      ? true
+      : this._isDraft() && !!this.originalAgreementData && !this.originalAgreementData.attachment;
   }
 
   _signedAgFileDelete() {

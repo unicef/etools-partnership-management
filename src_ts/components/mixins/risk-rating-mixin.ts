@@ -8,11 +8,11 @@ import {PolymerElement} from '@polymer/polymer';
  */
 function RiskRatingMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class RiskRatingClass extends baseClass {
-    public getRiskRatingValue(riskRating: string) {
+    public getRiskRatingValue(riskRating: string, shortVersion?: 1 | 0) {
       if (typeof riskRating === 'string' && riskRating !== '') {
         return riskRating;
       } else {
-        return 'Not Available';
+        return shortVersion ? 'N/A' : 'Not Available';
       }
     }
 

@@ -1,13 +1,13 @@
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
-// @ts-ignore
 import pick from 'lodash-es/pick';
-// @ts-ignore
 import keys from 'lodash-es/keys';
 import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
+import {IndicatorDialogEl} from '../indicator-dialog';
 
 /**
  * @polymer
@@ -15,7 +15,6 @@ import {PolymerElement} from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  */
 function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-  // @ts-ignore
   class SaveIndicatorClass extends EndpointsMixin(baseClass) {
     [x: string]: any;
 
@@ -109,31 +108,40 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       // @ts-ignore *Defined in component
       this.disableConfirmBtn = true;
 
-      const endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
+      const endpoint = this.getEndpoint(this._getEndpointName(), {
+        id: this._getIdForEndpoint()
+      });
       const method = this.indicator.id ? 'PATCH' : 'POST';
       const body = this._getIndicatorBody();
-      const self = this;
 
-      this.sendRequest({
+      sendRequest({
         endpoint: endpoint,
         method: method,
         body: body
-      }).then(function(resp: any) {
-        self._handleSaveIndicatorResponse(resp);
-      }).catch(function(error: any) {
-        self._handleSaveIndicatorError(error);
-      });
+      })
+        .then((resp: any) => {
+          this._handleSaveIndicatorResponse(resp);
+        })
+        .catch((error: any) => {
+          this._handleSaveIndicatorError(error);
+        });
     }
 
     validate() {
       let valid = true;
-      const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {validate(): boolean}).validate();
+      const sectionSelected = (this.shadowRoot!.querySelector('#sectionDropdw')! as PolymerElement & {
+        validate(): boolean;
+      }).validate();
       if (this.isCluster) {
-        valid = (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
-                && sectionSelected;
+        valid =
+          (this.shadowRoot!.querySelector('#clusterIndicatorEl')! as PolymerElement & {
+            validate(): boolean;
+          }).validate() && sectionSelected;
       } else {
-        valid = (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {validate(): boolean}).validate()
-                && sectionSelected;
+        valid =
+          (this.shadowRoot!.querySelector('#nonClusterIndicatorEl')! as PolymerElement & {
+            validate(): boolean;
+          }).validate() && sectionSelected;
       }
       return valid;
     }
@@ -153,8 +161,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
         indicatorData: response,
         actionParams: this.actionParams
       });
-      // @ts-ignore
-      this.$.indicatorDialog.opened = false;
+      (this.$.indicatorDialog as IndicatorDialogEl).opened = false;
     }
 
     _handleSaveIndicatorError(error: any) {
@@ -172,7 +179,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
       this._prepareBaselineAndTarget(body);
 
-      if (body.hasOwnProperty('disaggregation')) {
+      if (Object.prototype.hasOwnProperty.call(body, 'disaggregation')) {
         body.disaggregation = this._prepareDisaggregationIds();
       }
       if (this.isCluster && !body.id) {
@@ -186,15 +193,14 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     _prepareBaselineAndTarget(indicator: any) {
-      if (!indicator.target || indicator.target.v === undefined
-          || indicator.target.v === '') {
+      if (!indicator.target || indicator.target.v === undefined || indicator.target.v === '') {
         indicator.target = {v: 0, d: 1};
       }
-      if (!indicator.baseline || indicator.baseline.v === ''
-          || indicator.baseline.v === undefined) {
+      if (!indicator.baseline || indicator.baseline.v === '' || indicator.baseline.v === undefined) {
         indicator.baseline = {v: null, d: 1};
       }
-      if (indicator.indicator) { // is new non-cluster indic
+      if (indicator.indicator) {
+        // is new non-cluster indic
         if (indicator.indicator.unit === 'number') {
           this._updateBaselineTargetD(indicator, 1);
           this._resetRatioLabels(indicator);
@@ -224,7 +230,7 @@ function SaveIndicatorMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       // @ts-ignore *Defined in component
       this.disaggregations = this.disaggregations.filter(this._notEmptyDisaggregs);
 
-      return this.disaggregations.map(function(item: {disaggregId: number}) {
+      return this.disaggregations.map(function (item: {disaggregId: number}) {
         return item.disaggregId;
       });
     }

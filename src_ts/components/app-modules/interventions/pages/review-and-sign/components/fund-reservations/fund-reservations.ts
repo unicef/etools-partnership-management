@@ -8,6 +8,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import './update-fr-numbers.js';
 import EndpointsMixin from '../../../../../../endpoints/endpoints-mixin.js';
@@ -23,7 +24,6 @@ import {UpdateFrNumbersEl} from './update-fr-numbers';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {GenericObject} from '../../../../../../../typings/globals.types';
 
-
 /**
  * @polymer
  * @customElement
@@ -31,11 +31,10 @@ import {GenericObject} from '../../../../../../../typings/globals.types';
  * @appliesMixin EndpointsMixin
  * @appliesMixin FrNumbersConsistencyMixin
  */
-class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(PolymerElement))) {
+class FundReservations extends FrNumbersConsistencyMixin(EndpointsMixin(PolymerElement)) {
   static get template() {
     return html`
-      ${pmpCustomIcons}
-      ${frWarningsStyles}
+      ${pmpCustomIcons} ${frWarningsStyles}
       <style>
         [hidden] {
           display: none !important;
@@ -70,16 +69,20 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
       </style>
 
       <etools-content-panel panel-title="Fund Reservations">
-        <paper-icon-button slot="panel-btns"
-                          icon="add-box"
-                          on-click="_openFrsDialog"
-                          hidden$="[[!editMode]]"
-                          disabled$="[[!editMode]]"></paper-icon-button>
+        <paper-icon-button
+          slot="panel-btns"
+          icon="add-box"
+          on-click="_openFrsDialog"
+          hidden$="[[!editMode]]"
+          disabled$="[[!editMode]]"
+        ></paper-icon-button>
         <div id="frs-container" hidden$="[[!thereAreFrs(intervention.frs_details)]]">
-          <etools-info-tooltip class="frs-inline-list"
-                              icon-first
-                              custom-icon
-                              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
+          <etools-info-tooltip
+            class="frs-inline-list"
+            icon-first
+            custom-icon
+            hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+          >
             <div slot="field">
               <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
                 <span class="fr-number">[[item.fr_number]]</span>
@@ -93,7 +96,6 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
         <div class="warning" hidden$="[[thereAreFrs(intervention.frs_details)]]">
           [[_getNoFrsWarningText(intervention.id)]]
         </div>
-
       </etools-content-panel>
     `;
   }
@@ -102,7 +104,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   intervention!: Intervention;
 
   @property({type: Boolean})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Object})
   frsDialogEl!: UpdateFrNumbersEl;
@@ -120,7 +122,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   _frsConsistencyWarning!: string;
 
   @property({type: String})
-  _frsNrsLoadingMsgSource: string = 'fr-nrs-check';
+  _frsNrsLoadingMsgSource = 'fr-nrs-check';
 
   private _frsConfirmationsDialogMessage!: HTMLSpanElement;
 
@@ -129,7 +131,7 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
   static get observers() {
     return [
       '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash_local,' +
-      ' intervention.start, intervention.end)'
+        ' intervention.start, intervention.end)'
     ];
   }
 
@@ -226,9 +228,9 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
 
   // get original/initial intervention frs numbers
   _getCurrentFrs(): Fr[] {
-    return (this.intervention.frs_details &&
-            this.intervention.frs_details.frs instanceof Array)
-      ? this.intervention.frs_details.frs : [];
+    return this.intervention.frs_details && this.intervention.frs_details.frs instanceof Array
+      ? this.intervention.frs_details.frs
+      : [];
   }
 
   frNumbersUpdateHandler(e: CustomEvent) {
@@ -295,26 +297,28 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
     }
 
     // @ts-ignore
-    this.sendRequest({
+    sendRequest({
       endpoint: {url: url}
-    }).then((resp: FrsDetails) => {
-      this._frsDetailsSuccessHandler(resp);
-    }).catch((error: any) => {
-      this._frsDetailsErrorHandler(error.response);
-    });
+    })
+      .then((resp: FrsDetails) => {
+        this._frsDetailsSuccessHandler(resp);
+      })
+      .catch((error: any) => {
+        this._frsDetailsErrorHandler(error.response);
+      });
   }
 
   /*
-  * Frs details received, check frs consistency
-  */
+   * Frs details received, check frs consistency
+   */
   _frsDetailsSuccessHandler(frsDetails: FrsDetails) {
-
     frsDetails.currencies_match = this._frsCurrenciesMatch(frsDetails.frs);
 
     const inconsistencyMsg = this.checkFrsConsistency(frsDetails, this.intervention, true);
     this.set('_frsConsistencyWarning', inconsistencyMsg);
 
-    if (inconsistencyMsg) { // there are inconsistencies
+    if (inconsistencyMsg) {
+      // there are inconsistencies
       this.set('_lastFrsDetailsReceived', frsDetails);
 
       this._updateFrsInconsistenciesDialogMessage(inconsistencyMsg);
@@ -330,10 +334,11 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
    */
   _frsDetailsErrorHandler(responseErr: any) {
     this.frsDialogEl.stopSpinner();
-
+    const toastMsg =
+      responseErr && responseErr.error ? responseErr.error : 'Can not add/update FR numbers. Please try again later!';
     // show the invalid frs warning
     fireEvent(this, 'toast', {
-      text: responseErr.error,
+      text: toastMsg,
       showCloseBtn: true
     });
   }
@@ -368,13 +373,10 @@ class FundReservations extends (FrNumbersConsistencyMixin(EndpointsMixin(Polymer
     if (typeof frsDetails === 'undefined') {
       return;
     }
-    this._frsDetailsDebouncer = Debouncer.debounce(this._frsDetailsDebouncer,
-      timeOut.after(10),
-      () => {
-        this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
-      });
+    this._frsDetailsDebouncer = Debouncer.debounce(this._frsDetailsDebouncer, timeOut.after(10), () => {
+      this.set('_frsConsistencyWarning', this.checkFrsConsistency(frsDetails, this.intervention));
+    });
   }
-
 }
 
 window.customElements.define('fund-reservations', FundReservations);

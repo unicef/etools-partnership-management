@@ -20,7 +20,6 @@ import {GenericObject} from '../../../../../../../typings/globals.types';
  * @appliesMixin UtilsMixin
  */
 class DisaggregationTable extends UtilsMixin(PolymerElement) {
-
   static get is() {
     return 'disaggregation-table';
   }
@@ -126,18 +125,24 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
    * it will always be `0` and `false` in PMP.
    */
   @property({type: Number})
-  editable: number = 0;
+  editable = 0;
 
   @property({type: Object, observer: '_cloneData'})
   data!: GenericObject;
 
-  @property({type: Object, computed: '_computeViewData(formattedData, totals)'})
+  @property({
+    type: Object,
+    computed: '_computeViewData(formattedData, totals)'
+  })
   viewData!: GenericObject;
 
   @property({type: Object})
   formattedData!: GenericObject;
 
-  @property({type: Array, computed: '_computeMapping(editableBool, formattedData, mapping)'})
+  @property({
+    type: Array,
+    computed: '_computeMapping(editableBool, formattedData, mapping)'
+  })
   formattedMapping!: any[];
 
   @property({type: Boolean, computed: '_computeEditableBool(editable)'})
@@ -155,16 +160,17 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   @property({type: Object})
   labels!: GenericObject;
 
-  @property({type: Boolean, computed: '_computeLabelVisibility(indicatorType)'})
+  @property({
+    type: Boolean,
+    computed: '_computeLabelVisibility(indicatorType)'
+  })
   viewLabel!: boolean;
 
   @property({type: Object})
   totals!: GenericObject;
 
   static get observers() {
-    return [
-      '_resetFields(formattedData.disaggregation_reported_on)'
-    ];
+    return ['_resetFields(formattedData.disaggregation_reported_on)'];
   }
 
   connectedCallback() {
@@ -194,16 +200,16 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
   }
 
   _computeMapping(editableBool: boolean, formattedData: any, mapping: any) {
-    if (typeof editableBool === 'undefined' ||
-        typeof formattedData === 'undefined' ||
-        typeof mapping === 'undefined') {
+    if (typeof editableBool === 'undefined' || typeof formattedData === 'undefined' || typeof mapping === 'undefined') {
       return;
     }
     const reportedOn = formattedData.disaggregation_reported_on;
 
-    return editableBool ? mapping.filter(function(disagg: Disaggregation) {
-      return reportedOn.indexOf(disagg.id) !== -1;
-    }) : mapping;
+    return editableBool
+      ? mapping.filter(function (disagg: Disaggregation) {
+          return reportedOn.indexOf(disagg.id) !== -1;
+        })
+      : mapping;
   }
 
   _computeIndicatorType(data: any) {
@@ -226,7 +232,6 @@ class DisaggregationTable extends UtilsMixin(PolymerElement) {
       disaggregation: Object.assign({}, data.disaggregation, totals)
     });
   }
-
 }
 
 window.customElements.define(DisaggregationTable.is, DisaggregationTable);

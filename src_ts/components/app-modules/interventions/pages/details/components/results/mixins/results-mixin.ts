@@ -17,7 +17,6 @@ import {ResultCpOutputAndRamIndicatorsEl} from '../result-cp-output-and-ram-indi
  */
 function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ResultsClass extends baseClass {
-
     @property({type: Number})
     interventionId!: number;
 
@@ -30,12 +29,14 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     @property({type: Array})
     cpOutputs!: CpOutput[];
 
-    @property({type: Array, computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'})
+    @property({
+      type: Array,
+      computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'
+    })
     availableCpOutputs!: CpOutput[];
 
     @property({type: Array})
     alreadySelectedCpOutputs: [] = [];
-
 
     resultsStateChanged(state: RootState) {
       if (!isJsonStrMatch(this.cpOutputs, state.commonData!.cpOutputs)) {
@@ -44,13 +45,15 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _computeAvailableCpOutputs(cpOutputs: CpOutput[], alreadySelectedCpOutputs: number[], selectedCpStructure: string) {
-      if (isEmptyObject(cpOutputs) ||
-          typeof alreadySelectedCpOutputs === 'undefined' ||
-          typeof selectedCpStructure === 'undefined') {
+      if (
+        isEmptyObject(cpOutputs) ||
+        typeof alreadySelectedCpOutputs === 'undefined' ||
+        typeof selectedCpStructure === 'undefined'
+      ) {
         return;
       }
       const selectedCpStructureId = parseInt(selectedCpStructure, 10);
-      return cpOutputs.filter(function(cp) {
+      return cpOutputs.filter(function (cp) {
         const notSelected = alreadySelectedCpOutputs.indexOf(cp.id) === -1;
         let belongsToCpStructure = true;
         if (selectedCpStructureId > 0 && selectedCpStructureId !== parseInt(cp.country_programme, 10)) {
@@ -72,7 +75,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     _getSelectedCpOutputsIds(results: ExpectedResult[]) {
       const selectedCpOIds: number[] = [];
       if (results.length > 0) {
-        results.forEach(function(result) {
+        results.forEach(function (result) {
           if (result.cp_output) {
             selectedCpOIds.push(result.cp_output);
           }
@@ -83,16 +86,21 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     removeCpOutputRamIndicatorsDialog() {
       if (this.cpOutputRamIndicatorsEditElem) {
-        this.cpOutputRamIndicatorsEditElem.removeEventListener('new-expected-result-added',
-          this._handleNewResultAdded as any);
-        this.cpOutputRamIndicatorsEditElem.removeEventListener('expected-result-updated',
-          this._handleResultUpdated as any);
+        this.cpOutputRamIndicatorsEditElem.removeEventListener(
+          'new-expected-result-added',
+          this._handleNewResultAdded as any
+        );
+        this.cpOutputRamIndicatorsEditElem.removeEventListener(
+          'expected-result-updated',
+          this._handleResultUpdated as any
+        );
         document.querySelector('body')!.removeChild(this.cpOutputRamIndicatorsEditElem as any);
       }
     }
 
     createAddEditCpOutputRamIndicatorsElement() {
-      this.cpOutputRamIndicatorsEditElem = document.querySelector('body')!
+      this.cpOutputRamIndicatorsEditElem = document
+        .querySelector('body')!
         .querySelector('#cpOutputRamIndicatorsEditElem') as any;
 
       if (!this.cpOutputRamIndicatorsEditElem) {
@@ -102,18 +110,27 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this.cpOutputRamIndicatorsEditElem.set('toastEventSource', this);
 
         this._handleNewResultAdded = this._handleNewResultAdded.bind(this);
-        this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
-          this._handleNewResultAdded as any);
+        this.cpOutputRamIndicatorsEditElem.addEventListener(
+          'new-expected-result-added',
+          this._handleNewResultAdded as any
+        );
 
         this._handleResultUpdated = this._handleResultUpdated.bind(this);
-        this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated', this._handleResultUpdated as any);
+        this.cpOutputRamIndicatorsEditElem.addEventListener(
+          'expected-result-updated',
+          this._handleResultUpdated as any
+        );
 
         document.querySelector('body')!.appendChild(this.cpOutputRamIndicatorsEditElem as any);
       }
     }
 
-    openCpOutputAndRamIndicatorsDialog(expectedResultId?: number, cpOutputId?: string,
-      ramIndicatorsIds?: number[], editIndex?: number) {
+    openCpOutputAndRamIndicatorsDialog(
+      expectedResultId?: number,
+      cpOutputId?: string,
+      ramIndicatorsIds?: number[],
+      editIndex?: number
+    ) {
       if (this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem.resetData();
 
@@ -133,7 +150,7 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
            * cpOutputId is valid => edit operation, include curent cpOutput in the availableCpOutputsOptions
            * as user might want to edit only the ram indicators
            */
-          const currentCpOutputData = this.cpOutputs.find(function(cp: any) {
+          const currentCpOutputData = this.cpOutputs.find(function (cp: any) {
             return parseInt(cp.id, 10) === parseInt(cpOutputId, 10);
           });
           if (currentCpOutputData) {
@@ -183,13 +200,15 @@ function ResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     _canUpdateResult() {
       if (!this.get('dataItems')) {
-        logError('dataItems is undefined or null. You must have dataItems(Array of result_links) defined' +
-            ' to use this behavior.', 'results-behavior');
+        logError(
+          'dataItems is undefined or null. You must have dataItems(Array of result_links) defined' +
+            ' to use this behavior.',
+          'results-behavior'
+        );
         return false;
       }
       return true;
     }
-
   }
   return ResultsClass;
 }

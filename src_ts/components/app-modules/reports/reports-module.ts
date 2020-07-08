@@ -35,7 +35,6 @@ import {ReportRejectDialogEl} from './components/report-reject-dialog';
 import {ReportsListEl} from './pages/list/reports-list';
 declare const moment: any;
 
-
 /**
  * @polymer
  * @customElement
@@ -45,18 +44,17 @@ declare const moment: any;
  * @appliesMixin ReportDetailsMixin
  * @appliesMixin ScrollControlMixin
  */
-class ReportsModule extends connect(store)(ScrollControlMixin(
-  ModuleMainElCommonFunctionalityMixin(
-    ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))) {
-
+class ReportsModule extends connect(store)(
+  ScrollControlMixin(ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(ReportDetailsMixin(PolymerElement))))
+) {
   static get is() {
     return 'reports-module';
   }
 
   static get template() {
     return html`
-    ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
-    <style>
+      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      <style>
         :host {
           display: block;
         }
@@ -86,12 +84,12 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
         #export paper-item {
           --paper-item-selected: {
             font-weight: normal !important;
-          };
+          }
           /* Prevent first item highlighted by default */
           --paper-item-focused-before: {
             background: none;
             opacity: 0;
-          };
+          }
           --paper-item-focused-after: {
             background: none;
             opacity: 0;
@@ -100,16 +98,13 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
       </style>
 
       <app-route
-          route="{{route}}"
-          pattern="/list"
-          query-params="{{listPageQueryParams}}"
-          active="{{listActive}}"></app-route>
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"
+      ></app-route>
 
-      <app-route
-          route="{{route}}"
-          pattern="/:id/:tab"
-          active="{{tabsActive}}"
-          data="{{routeData}}"></app-route>
+      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
 
       <page-content-header with-tabs-visible="[[tabsActive]]">
         <div slot="page-title">
@@ -118,16 +113,14 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
           </template>
           <template is="dom-if" if="[[tabsActive]]">
             <div class="secondary-title">
-              <a target="_blank"
-                href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
+              <a target="_blank" href$="[[rootPath]]partners/[[report.partner_org_id]]/details">
                 [[report.partner_org_name]] - [[report.partner_vendor_number]]
               </a>
             </div>
 
             <span id="tooltip-trigger-pdtitle" class="tooltip-trigger">
-              <a class="primary"
-                href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports">
-                  [[report.programme_document.reference_number]]
+              <a class="primary" href$="[[rootPath]]interventions/[[report.programme_document.external_id]]/reports">
+                [[report.programme_document.reference_number]]
               </a>
             </span>
 
@@ -135,18 +128,19 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
             <!-- <sup>
               <report-status status="[[report.status]]"></report-status>
             </sup> -->
-            <paper-tooltip for="tooltip-trigger-pdtitle"
-                      position="bottom"
-                      fit-to-visible-bounds
-                      animation-delay="0"
-                      offset="0">
+            <paper-tooltip
+              for="tooltip-trigger-pdtitle"
+              position="bottom"
+              fit-to-visible-bounds
+              animation-delay="0"
+              offset="0"
+            >
               [[report.programme_document.title]]
             </paper-tooltip>
           </template>
         </div>
 
         <div slot="title-row-actions" class="content-header-actions move-to-the-right">
-
           <div class="action" hidden$="[[!listActive]]">
             <paper-menu-button id="export" close-on-activate horizontal-align="right">
               <paper-button slot="dropdown-trigger">
@@ -161,7 +155,10 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
           </div>
 
           <div hidden$="[[_hideActionBtns(tabsActive, report)]]">
-            <report-status status="[[report.review_overall_status]]" hidden$="[[statusIs(report.status, 'Sub')]]"></report-status>
+            <report-status
+              status="[[report.status]]"
+              hidden$="[[statusIs(report.status, 'Sub')]]"
+            ></report-status>
 
             <paper-menu-button close-on-activate class="no-right-padd" hidden$="[[!statusIs(report.status, 'Sub')]]">
               <paper-button slot="dropdown-trigger" class="primary-btn">
@@ -174,62 +171,66 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
             </paper-menu-button>
 
             <paper-menu-button close-on-activate horizontal-align="right">
-                <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
-                <paper-listbox slot="dropdown-content">
-                  <paper-item on-tap="_downloadAnexC">Download Report</paper-item>
-                  <paper-item on-tap="_goToActionPointModule">Add Action Point</paper-item>
-                  <paper-item on-tap="_downloadXls">Download XLS</paper-item>
-                  <paper-item on-tap="_downloadPdf">Download PDF</paper-item>
-                </paper-listbox>
-              </paper-menu-button>
-
+              <iron-icon slot="dropdown-trigger" icon="more-vert"></iron-icon>
+              <paper-listbox slot="dropdown-content">
+                <paper-item on-tap="_downloadAnexC">Download Report</paper-item>
+                <paper-item on-tap="_goToActionPointModule">Add Action Point</paper-item>
+                <paper-item on-tap="_downloadXls">Download XLS</paper-item>
+                <paper-item on-tap="_downloadPdf">Download PDF</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
           </div>
         </div>
 
         <template is="dom-if" if="[[tabsActive]]">
-          <etools-tabs slot="tabs"
-                      tabs="[[reportTabs]]"
-                      active-tab="{{routeData.tab}}"
-                      on-iron-select="_handleTabSelectAction"></etools-tabs>
+          <etools-tabs
+            slot="tabs"
+            tabs="[[reportTabs]]"
+            active-tab="{{routeData.tab}}"
+            on-iron-select="_handleTabSelectAction"
+          ></etools-tabs>
         </template>
       </page-content-header>
 
       <div id="main">
         <div id="pageContent">
-          <iron-pages id="reportsPages"
-                      selected="{{activePage}}"
-                      attr-for-selected="name"
-                      role="main">
-
+          <iron-pages id="reportsPages" selected="{{activePage}}" attr-for-selected="name" role="main">
             <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-              <reports-list id="list"
-                            name="list"
-                            active="[[listActive]]"
-                            url-params="[[preservedListQueryParams]]"></reports-list>
+              <reports-list
+                id="list"
+                name="list"
+                active="[[listActive]]"
+                url-params="[[preservedListQueryParams]]"
+              ></reports-list>
             </template>
 
             <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
-              <report-summary name="summary"
-                              report="[[report]]"
-                              report-attachments="[[reportAttachments]]"></report-summary>
+              <report-summary
+                name="summary"
+                report="[[report]]"
+                report-attachments="[[reportAttachments]]"
+              ></report-summary>
             </template>
 
             <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
-              <report-progress id="reportDetails"
-                              name="progress"
-                              report="[[report]]"
-                              report-attachments="[[reportAttachments]]"></report-progress>
+              <report-progress
+                id="reportDetails"
+                name="progress"
+                report="[[report]]"
+                report-attachments="[[reportAttachments]]"
+              ></report-progress>
             </template>
           </iron-pages>
-
-        </div> <!-- page content end -->
+        </div>
+        <!-- page content end -->
         <!-- No sidebar here -->
-      </div> <!-- main container end -->
+      </div>
+      <!-- main container end -->
     `;
   }
 
   @property({type: Array})
-  reportTabs: object[] = [
+  reportTabs: GenericObject[] = [
     {
       tab: 'progress',
       tabLabel: 'Results Reported',
@@ -249,13 +250,13 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
   reportRejectDialog!: ReportRejectDialogEl;
 
   @property({type: Object})
-  permissions!: object;
+  permissions!: GenericObject;
 
   @property({type: String})
   rootPath!: string;
 
   @property({type: String})
-  moduleName: string = 'reports';
+  moduleName = 'reports';
 
   private mockupListLoadedDebouncer!: Debouncer;
   private loadingReportDataDebouncer!: Debouncer;
@@ -275,19 +276,19 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
   ready() {
     super.ready();
 
-    this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer,
-      timeOut.after(500),
-      () => {
-        fireEvent(this, 'global-loading', {active: false});
-      }
-    );
+    this.mockupListLoadedDebouncer = Debouncer.debounce(this.mockupListLoadedDebouncer, timeOut.after(500), () => {
+      fireEvent(this, 'global-loading', {active: false});
+    });
   }
 
   connectedCallback() {
     super.connectedCallback();
 
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
@@ -349,16 +350,16 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
     }
     setTimeout(() => {
       if (isNaN(id)) {
-        fireEvent(this, 'toast', {text: 'Invalid report ID!', showCloseBtn: true});
+        fireEvent(this, 'toast', {
+          text: 'Invalid report ID!',
+          showCloseBtn: true
+        });
         this.set('report', null);
         return;
       }
-      this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer,
-        timeOut.after(50),
-        () => {
-          this.requestReportDetails.bind(this, id? id.toString() : '')();
-        }
-      );
+      this.loadingReportDataDebouncer = Debouncer.debounce(this.loadingReportDataDebouncer, timeOut.after(50), () => {
+        this.requestReportDetails.bind(this, id ? id.toString() : '')();
+      });
     }, 0);
   }
 
@@ -383,7 +384,7 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
   }
 
   _exportIndicators(type: string) {
-    const reportsList = (this.shadowRoot!.querySelector('#list') as ReportsListEl);
+    const reportsList = this.shadowRoot!.querySelector('#list') as ReportsListEl;
     if (reportsList instanceof PolymerElement === false) {
       return;
     }
@@ -420,8 +421,11 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
 
     params.export = type;
 
-    this.fireRequest('reportIndicatorsExport', {}, {method: 'GET', handleAs: 'blob', params: params})
-      .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
+    this.fireRequest(
+      'reportIndicatorsExport',
+      {},
+      {method: 'GET', handleAs: 'blob', params: params}
+    ).then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, 'Reports Indicators.' + type));
   }
 
   _downloadAnexC() {
@@ -448,8 +452,9 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
       return;
     }
 
-    this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'})
-      .then((blob: Blob) => this._handleBlobDataReceivedAndStartDownload(blob, filename));
+    this.fireRequest(endpoint, {reportId: this.report.id}, {method: 'GET', handleAs: 'blob'}).then((blob: Blob) =>
+      this._handleBlobDataReceivedAndStartDownload(blob, filename)
+    );
   }
 
   _handleBlobDataReceivedAndStartDownload(blob: Blob, filename: string) {
@@ -464,7 +469,13 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
       anchor.setAttribute('download', filename);
 
       //* anchor.click() doesn't work on ff, edge
-      anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+      anchor.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        })
+      );
 
       setTimeout(() => {
         window.URL.revokeObjectURL(url);
@@ -551,7 +562,6 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
           reportsDisplayList.set(['reports', index, 'reporting_period'], report.reporting_period);
           reportsDisplayList.set(['reports', index, 'sent_back_feedback'], report.sent_back_feedback);
         }
-
       }
     }
   }
@@ -559,7 +569,6 @@ class ReportsModule extends connect(store)(ScrollControlMixin(
   statusIs(currentStatus: string, status: string) {
     return currentStatus === status;
   }
-
 }
 
 window.customElements.define(ReportsModule.is, ReportsModule);

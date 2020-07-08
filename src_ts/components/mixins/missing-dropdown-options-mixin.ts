@@ -9,16 +9,13 @@ import {PolymerElement} from '@polymer/polymer';
  * @appliesMixin EndpointsMixin
  */
 function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
-
   class MissingDropdownOptionsClass extends EndpointsMixin(baseClass) {
-
     public setDropdownMissingOptionsAjaxDetails(dropdownEl: any, endpointName: any, params: any) {
-      const self = this;
-      setTimeout(function() {
+      setTimeout(() => {
         try {
           if (dropdownEl) {
-            const endpointUrl = self.getMissingOptionsEndpointUrl(endpointName);
-            params = (params) ? params : {};
+            const endpointUrl = this.getMissingOptionsEndpointUrl(endpointName);
+            params = params ? params : {};
 
             dropdownEl.set('ajaxParams', params);
             dropdownEl.set('url', endpointUrl);
@@ -40,11 +37,10 @@ function MissingDropdownOptionsMixin<T extends Constructor<PolymerElement>>(base
     }
 
     public getCleanEsmmOptions(options: any) {
-      return (options instanceof Array) ? options.slice(0) : [];
+      return options instanceof Array ? options.slice(0) : [];
     }
   }
   return MissingDropdownOptionsClass;
 }
 
 export default MissingDropdownOptionsMixin;
-

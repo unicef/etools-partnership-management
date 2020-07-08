@@ -10,14 +10,11 @@ import {fireEvent} from '../../utils/fire-custom-event';
  * @customElement
  */
 class SettingsModule extends PolymerElement {
-
   static get template() {
     // language=HTML
     return html`
-        ${pageLayoutStyles}
-      <style>
-
-      </style>
+      ${pageLayoutStyles}
+      <style></style>
 
       <page-content-header>
         <div slot="page-title">
@@ -30,16 +27,17 @@ class SettingsModule extends PolymerElement {
           <disaggregation-list></disaggregation-list>
         </div>
       </div>
-
     `;
   }
 
   connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
   }
-
 }
 
 window.customElements.define('settings-module', SettingsModule);

@@ -5,12 +5,12 @@ import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
 import {Agreement, MinimalAgreement} from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {addEditAgreement} from '../../../../actions/agreements.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
 import {GenericObject} from '../../../../typings/globals.types.js';
 import {fireEvent} from '../../../utils/fire-custom-event.js';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
-
 
 /**
  * @polymer
@@ -35,7 +35,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   agreement!: Agreement;
 
   @property({type: Object})
-  _partners!: {};
+  _partners!: GenericObject;
 
   @property({type: Number, notify: true, observer: '_agreementIdChanged'})
   agreementId: number | null = null;
@@ -44,20 +44,22 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   handleSuccResponseAdditionalCallback!: (response: any) => void;
 
   @property({type: String})
-  ajaxLoadingMsgSource: string = 'ag-data';
+  ajaxLoadingMsgSource = 'ag-data';
 
   _triggerAgreementRequest(options: any) {
     const ajaxMethod = options.method || 'GET';
-    return this.sendRequest(options).then((resp: any) => {
-      this._handleSuccResponse(resp, ajaxMethod);
-      return true;
-    }).catch((error: any) => {
-      if (error instanceof EtoolsRequestError === false) {
-        logError('handleErrorResponse', 'agreement-item-data', error);
-      }
-      this.handleErrorResponse(error, ajaxMethod, true);
-      return false;
-    });
+    return sendRequest(options)
+      .then((resp: any) => {
+        this._handleSuccResponse(resp, ajaxMethod);
+        return true;
+      })
+      .catch((error: any) => {
+        if (error instanceof EtoolsRequestError === false) {
+          logError('handleErrorResponse', 'agreement-item-data', error);
+        }
+        this.handleErrorResponse(error, ajaxMethod, true);
+        return false;
+      });
   }
 
   _agreementIdChanged(newId: string) {
@@ -68,7 +70,9 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
         loadingSource: this.ajaxLoadingMsgSource
       });
       this._triggerAgreementRequest({
-        endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: newId})
+        endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {
+          id: newId
+        })
       });
     }
   }
@@ -86,19 +90,23 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
     }
     if (ajaxMethod !== 'GET') {
       // 'agreement_number_status' is not retrieved from API
-      response.agreement_number_status =
-        this._computeAgrementNumberStatus(response.agreement_number,
-          response.status);
+      response.agreement_number_status = this._computeAgrementNumberStatus(response.agreement_number, response.status);
 
       store.dispatch(addEditAgreement(this._getMinimalAgreementData(response)));
 
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
       // update the agreement list in dexieDB
-      window.EtoolsPmpApp.DexieDb.table('agreements').put(response).then(function() {
-        fireEvent(self, 'reload-list');
-      });
+      window.EtoolsPmpApp.DexieDb.table('agreements')
+        .put(response)
+        .then(function () {
+          fireEvent(self, 'reload-list');
+        });
     }
-    fireEvent(this, 'global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: this.ajaxLoadingMsgSource
+    });
   }
 
   _getMinimalAgreementData(detail: Agreement) {
@@ -118,7 +126,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
     };
     let propName: string;
     for (propName in minimalAgrData) {
-      if (!detail.hasOwnProperty(propName)) {
+      if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
         logWarn('Mapping property not found');
       } else {
         minimalAgrData[propName] = detail[propName];
@@ -137,11 +145,18 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   // Update agreement status. In addition set a callback to be called after request is complete.
   updateAgreementStatus(data: any, callback?: any) {
     if (!data.agreementId) {
-      fireEvent(this, 'toast', {text: 'Invalid agreement ID', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'Invalid agreement ID',
+        showCloseBtn: true
+      });
     } else {
-      if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-      CONSTANTS.STATUSES.Suspended.toLowerCase(),
-      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(data.status) > -1) {
+      if (
+        [
+          CONSTANTS.STATUSES.Signed.toLowerCase(),
+          CONSTANTS.STATUSES.Suspended.toLowerCase(),
+          CONSTANTS.STATUSES.Terminated.toLowerCase()
+        ].indexOf(data.status) > -1
+      ) {
         // status change is allowed
         // set additional callback if any
         if (callback) {
@@ -153,9 +168,11 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
           loadingSource: this.ajaxLoadingMsgSource
         });
 
-        let requestOptions: any = {
+        const requestOptions: any = {
           method: 'PATCH',
-          endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId}),
+          endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {
+            id: data.agreementId
+          }),
           body: {
             status: data.status
           }
@@ -166,10 +183,11 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
         }
 
         this._triggerAgreementRequest(requestOptions);
-
       } else {
-        fireEvent(this, 'toast',
-          {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
+        fireEvent(this, 'toast', {
+          text: "Changing status to '" + data.status + "' is not allowed!",
+          showCloseBtn: true
+        });
       }
     }
   }
@@ -193,7 +211,10 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   // Save agreement data
   saveAgreement(agreement: GenericObject, succCallback: any) {
     if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
-      fireEvent(this, 'toast', {text: 'Invalid agreement data!', showCloseBtn: true});
+      fireEvent(this, 'toast', {
+        text: 'Invalid agreement data!',
+        showCloseBtn: true
+      });
       return Promise.resolve(false);
     } else {
       let endpoint = null;
@@ -201,7 +222,9 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
       if (agreement.id) {
         // prepare PATCH endpoint
-        endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: agreement.id});
+        endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {
+          id: agreement.id
+        });
       } else {
         // new agreement, use POST method for the same endpoint
         endpoint = this.getEndpoint(this.agreementEndpoints.CREATE);
@@ -223,7 +246,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
           loadingSource: this.ajaxLoadingMsgSource
         });
         // fire in the hole
-        const method = (isNew) ? 'POST' : 'PATCH';
+        const method = isNew ? 'POST' : 'PATCH';
         return this._triggerAgreementRequest({
           method: method,
           endpoint: endpoint,
@@ -244,15 +267,18 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       return;
     }
     const reqMethod = 'DELETE';
-    this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod}).then(() => {
-      this._handleAgreementDeleteSuccess(id);
-    }).catch((reqError: any) => {
-      this.handleErrorResponse(reqError, reqMethod, false);
-    });
+    this.fireRequest(this.agreementEndpoints.DELETE, {id: id}, {method: reqMethod})
+      .then(() => {
+        this._handleAgreementDeleteSuccess(id);
+      })
+      .catch((reqError: any) => {
+        this.handleErrorResponse(reqError, reqMethod, false);
+      });
   }
 
   _handleAgreementDeleteSuccess(id: string) {
-    window.EtoolsPmpApp.DexieDb.agreements.where('id')
+    window.EtoolsPmpApp.DexieDb.agreements
+      .where('id')
       .equals(parseInt(id, 10))
       .delete()
       .then((deleteCount: number) => this._handleAgreementDeleteFromDexieSuccess(deleteCount))
@@ -277,10 +303,10 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
 
   _handleAgreementDeleteFromDexieErr(dexieDeleteErr: any) {
     // Agreement dexie deleted issue
-    logError('Agreement delete from local dexie db failed!', 'agreement-item-data',
-      dexieDeleteErr);
+    logError('Agreement delete from local dexie db failed!', 'agreement-item-data', dexieDeleteErr);
     fireEvent(this, 'toast', {
-      text: 'The agreement was deleted from server database, but there was an issue on cleaning ' +
+      text:
+        'The agreement was deleted from server database, but there was an issue on cleaning ' +
         'agreement data from browser cache. Use refresh data functionality to update cached agreements data.',
       showCloseBtn: true
     });

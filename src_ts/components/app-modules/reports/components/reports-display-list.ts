@@ -16,15 +16,14 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../store';
 import {isJsonStrMatch, isEmptyObject} from '../../../utils/utils';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
 import {property} from '@polymer/decorators';
-
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin CommonMixin
  * @appliesMixin PaginationMixin
@@ -45,7 +44,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
           --paper-tooltip: {
             text-align: center;
             line-height: 1.4;
-          };
+          }
         }
 
         .pd-ref,
@@ -71,11 +70,9 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
         .tooltip-trigger {
           position: relative;
         }
-
       </style>
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
       <div id="list" class="paper-material" elevation="1">
-
         <template is="dom-if" if="[[!reports.length]]">
           <div class="row-h">
             <p>There are no reports yet.</p>
@@ -83,9 +80,12 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
         </template>
 
         <template is="dom-if" if="[[reports.length]]">
-          <etools-data-table-header id="listHeader" low-resolution-layout="[[lowResolutionLayout]]"
-                                    label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
-                                      of [[paginator.count]] results to show">
+          <etools-data-table-header
+            id="listHeader"
+            low-resolution-layout="[[lowResolutionLayout]]"
+            label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
+                                      of [[paginator.count]] results to show"
+          >
             <etools-data-table-column class="col-2">
               Report #
             </etools-data-table-column>
@@ -110,25 +110,22 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
 
           <template is="dom-repeat" items="[[reports]]" as="report" on-dom-change="_listDataChanged">
             <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]">
-
               <div slot="row-data">
                 <span class="col-data col-2" data-col-header-label="Report #">
                   <span id$="tooltip-trigger-[[report.id]]" class="tooltip-trigger">
-                    <a class="view-report"
+                    <a
+                      class="view-report"
                       href$="reports/[[report.id]]/progress"
-                      hidden$="[[!_canViewReport(report.status)]]">
+                      hidden$="[[!_canViewReport(report.status)]]"
+                    >
                       [[_getReportTitle(report)]]
                     </a>
                     <span hidden$="[[_canViewReport(report.status)]]">[[_getReportTitle(report)]]</span>
-                    <template
-                        is="dom-if"
-                        if="[[report.is_final]]">
+                    <template is="dom-if" if="[[report.is_final]]">
                       <span class="final-badge">final</span>
                     </template>
                   </span>
-                  <paper-tooltip for$="tooltip-trigger-[[report.id]]"
-                                position="right"
-                                fit-to-visible-bounds>
+                  <paper-tooltip for$="tooltip-trigger-[[report.id]]" position="right" fit-to-visible-bounds>
                     [[report.programme_document.title]]
                   </paper-tooltip>
                 </span>
@@ -137,9 +134,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                     [[_displayOrDefault(report.partner_name)]]
                   </span>
 
-                  <paper-tooltip for$="tooltip-partner-[[report.id]]"
-                                  position="right"
-                                  fit-to-visible-bounds>
+                  <paper-tooltip for$="tooltip-partner-[[report.id]]" position="right" fit-to-visible-bounds>
                     [[report.partner_vendor_number]]
                   </paper-tooltip>
                 </span>
@@ -154,9 +149,11 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                 </span>
                 <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
                   <span class="col-data col-2" data-col-header-label="PD/SSFA ref.#">
-                    <a class="pd-ref truncate"
+                    <a
+                      class="pd-ref truncate"
                       href$="interventions/[[report.programme_document.external_id]]/details"
-                      title$="[[getDisplayValue(report.programme_document.reference_number)]]">
+                      title$="[[getDisplayValue(report.programme_document.reference_number)]]"
+                    >
                       [[getDisplayValue(report.programme_document.reference_number)]]
                     </a>
                   </span>
@@ -169,60 +166,57 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                   <span>[[getDisplayValue(report.unicef_focal_points)]]</span>
                 </div>
               </div>
-
             </etools-data-table-row>
           </template>
 
           <etools-data-table-footer
-              low-resolution-layout="[[lowResolutionLayout]]"
-              page-size="[[paginator.page_size]]"
-              page-number="[[paginator.page]]"
-              total-results="[[paginator.count]]"
-              visible-range="{{paginator.visible_range}}"
-              on-page-size-changed="pageSizeChanged"
-              on-page-number-changed="pageNumberChanged">
+            low-resolution-layout="[[lowResolutionLayout]]"
+            page-size="[[paginator.page_size]]"
+            page-number="[[paginator.page]]"
+            total-results="[[paginator.count]]"
+            visible-range="{{paginator.visible_range}}"
+            on-page-size-changed="pageSizeChanged"
+            on-page-number-changed="pageNumberChanged"
+          >
           </etools-data-table-footer>
-
         </template>
       </div>
-
     `;
   }
 
-
   @property({type: Number})
-  interventionId: number = 0;
+  interventionId = 0;
 
   @property({type: Array})
   reports: [] = [];
 
   @property({type: Boolean})
-  noPdSsfaRef: boolean = false;
+  noPdSsfaRef = false;
 
   @property({type: Object, notify: true})
   queryParams!: GenericObject;
 
   @property({type: Number})
-  debounceInterval: number = 100;
+  debounceInterval = 100;
 
   @property({type: Boolean})
   waitQueryParamsInit!: boolean;
 
   @property({type: String})
-  _endpointName: string = 'reports';
+  _endpointName = 'reports';
 
   @property({type: Object})
-  _lastParamsUsed!: object;
+  _lastParamsUsed!: GenericObject;
 
   @property({type: Boolean})
-  lowResolutionLayout: boolean = false;
+  lowResolutionLayout = false;
 
   private _loadReportsDataDebouncer!: Debouncer;
 
   static get observers() {
     return [
       '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size,' +
-      ' paginator.page, queryParams.*, queryParams.status.length)'
+        ' paginator.page, queryParams.*, queryParams.status.length)'
     ];
   }
 
@@ -230,19 +224,25 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
     this.endStateChanged(state);
   }
 
-  _loadReportsData(prpCountries: any, interventionId: number, currentUser: User, _pageSize: number, _page: string, qParamsData: any) {
-    if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) ||
-      isEmptyObject(prpCountries)) {
+  _loadReportsData(
+    prpCountries: any,
+    interventionId: number,
+    currentUser: User,
+    _pageSize: number,
+    _page: string,
+    qParamsData: any
+  ) {
+    if (isEmptyObject(currentUser) || this._queryParamsNotInitialized(qParamsData) || isEmptyObject(prpCountries)) {
       return;
     }
 
-    this._loadReportsDataDebouncer = Debouncer.debounce(this._loadReportsDataDebouncer,
+    this._loadReportsDataDebouncer = Debouncer.debounce(
+      this._loadReportsDataDebouncer,
       timeOut.after(this.debounceInterval),
       () => {
         const params = this._prepareReqParamsObj(interventionId);
 
-        if (isJsonStrMatch(this._lastParamsUsed, params) ||
-          (this.noPdSsfaRef && !params.programme_document_ext)) {
+        if (isJsonStrMatch(this._lastParamsUsed, params) || (this.noPdSsfaRef && !params.programme_document_ext)) {
           return;
         }
 
@@ -254,11 +254,8 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
           loadingSource: 'reports-list'
         });
 
-        const activeReportsReq = this.getActiveRequestByKey(this._endpointName);
-        if (activeReportsReq) {
-          // abort previous req and then fire a new one with updated params
-          this.abortActiveRequest(activeReportsReq);
-        }
+        // abort previous req and then fire a new one with updated params
+        abortRequestByKey(this._endpointName);
 
         this.fireRequest('reports', {}, {params: params}, this._endpointName)
           .then((response: any) => {
@@ -266,7 +263,10 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
               this.set('reports', response.results);
               this.updatePaginatorTotalResults(response);
             }
-            fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
+            fireEvent(this, 'global-loading', {
+              active: false,
+              loadingSource: 'reports-list'
+            });
           })
           .catch((error: any) => {
             if (error.status === 0) {
@@ -276,9 +276,13 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
             logError('Reports list data request failed!', 'reports-list', error);
 
             parseRequestErrorsAndShowAsToastMsgs(error, this);
-            fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-list'});
+            fireEvent(this, 'global-loading', {
+              active: false,
+              loadingSource: 'reports-list'
+            });
           });
-      });
+      }
+    );
   }
 
   _prepareReqParamsObj(interventionId: number) {
@@ -298,8 +302,10 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
     const params: GenericObject = {};
     if (!isEmptyObject(this.queryParams)) {
       Object.keys(this.queryParams).forEach((k: any) => {
-        if ((this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
-          (this.queryParams[k] instanceof Array === false && this.queryParams[k])) {
+        if (
+          (this.queryParams[k] instanceof Array && this.queryParams[k].length > 0) ||
+          (this.queryParams[k] instanceof Array === false && this.queryParams[k])
+        ) {
           params[k] = this.queryParams[k];
         }
       });

@@ -10,7 +10,12 @@ import '../../../../../../layout/icons-actions.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../store';
 import {property} from '@polymer/decorators';
-import {Indicator, Location, Disaggregation, DisaggregationValue} from '../../../../../../../typings/intervention.types';
+import {
+  Indicator,
+  Location,
+  Disaggregation,
+  DisaggregationValue
+} from '../../../../../../../typings/intervention.types';
 import {GenericObject} from '../../../../../../../typings/globals.types';
 
 /**
@@ -18,7 +23,6 @@ import {GenericObject} from '../../../../../../../typings/globals.types';
  * @customElement
  */
 class AppliedIndicator extends connect(store)(PolymerElement) {
-
   static get template() {
     return html`
       ${gridLayoutStyles} ${SharedStyles}
@@ -36,14 +40,14 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
           --icons-actions: {
             background-color: #dfdfdf !important;
             margin-right: -8px;
-          };
+          }
           --list-row-wrapper-padding: 0 24px 0 0 !important;
 
           --list-row-collapse-wrapper: {
             padding: 16px 24px 16px 24px !important;
             max-height: 220px;
             overflow-y: auto;
-          };
+          }
 
           --icon-wrapper: {
             @apply --layout-horizontal;
@@ -56,7 +60,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
             background-color: var(--collapse-icon-bg-color, var(--primary-color));
             background-image: var(--collapse-icon-bg-image, none);
             background-size: 5.66px 5.66px;
-          };
+          }
         }
 
         .divider {
@@ -71,7 +75,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
           visibility: hidden;
         }
 
-        etools-data-table-row div[slot="row-data"]:hover icons-actions {
+        etools-data-table-row div[slot='row-data']:hover icons-actions {
           visibility: visible;
         }
 
@@ -79,7 +83,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
           font-weight: 600;
         }
 
-        .indicatorType{
+        .indicatorType {
           font-weight: 600;
           font-size: 16px;
           margin-right: 4px;
@@ -89,22 +93,26 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
       <etools-data-table-row>
         <div slot="row-data" class="p-relative">
           <div class="col-8">
-            <label class="indicatorType">[[_getIndicatorDisplayType(indicator.indicator.unit, indicator.indicator.display_type)]]</label>
+            <label class="indicatorType"
+              >[[_getIndicatorDisplayType(indicator.indicator.unit, indicator.indicator.display_type)]]</label
+            >
             <strong>[[_addInactivePrefix(indicator)]]</strong>
             [[_getIndicatorTitle(indicator)]]
           </div>
           <div class="col-2 right-align">
-            [[_displayBaselineOrTarget(indicator.baseline, indicator.indicator.unit,
-            indicator.indicator.display_type, indicator.cluster_indicator_id)]]
+            [[_displayBaselineOrTarget(indicator.baseline, indicator.indicator.unit, indicator.indicator.display_type,
+            indicator.cluster_indicator_id)]]
           </div>
           <div class="col-2 right-align">
-            [[_displayBaselineOrTarget(indicator.target, indicator.indicator.unit,
-            indicator.indicator.display_type, indicator.cluster_indicator_id)]]
+            [[_displayBaselineOrTarget(indicator.target, indicator.indicator.unit, indicator.indicator.display_type,
+            indicator.cluster_indicator_id)]]
           </div>
-          <icons-actions hidden$="[[!editMode]]"
-                        show-edit="[[indicator.is_active]]"
-                        show-deactivate="[[_showDeactivate(inAmendment, indicator.is_active)]]"
-                        show-delete="[[_showDelete(interventionStatus)]]">
+          <icons-actions
+            hidden$="[[!editMode]]"
+            show-edit="[[indicator.is_active]]"
+            show-deactivate="[[_showDeactivate(inAmendment, indicator.is_active)]]"
+            show-delete="[[_showDelete(interventionStatus)]]"
+          >
           </icons-actions>
         </div>
 
@@ -112,7 +120,9 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
           <div class="layout-horizontal w100">
             <div class="col-4">
               <div class="header-text">Section / Cluster</div>
-              <div>[[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]</div>
+              <div>
+                [[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]
+              </div>
               <div class="divider"></div>
 
               <div hidden$="[[indicator.cluster_indicator_id]]">
@@ -120,13 +130,18 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
                 <template is="dom-repeat" items="[[disaggregationNames]]">
                   <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
                 </template>
-                <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">—</div>
+                <div hidden$="[[!_lengthIs0(disaggregationNames.length)]]">
+                  —
+                </div>
               </div>
             </div>
             <div class="col-8 padd-left">
               <div class="header-text">Locations</div>
               <template is="dom-repeat" items="[[locationNames]]">
-                <div><span class="bolder-txt">[[item.name]]</span> [[item.adminLevel]]</div>
+                <div>
+                  <span class="bolder-txt">[[item.name]]</span>
+                  [[item.adminLevel]]
+                </div>
               </template>
             </div>
           </div>
@@ -162,11 +177,8 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   @property({type: String})
   interventionStatus!: string;
 
-
   static get observers() {
-    return [
-      'setIndicatorDetails(indicator, disaggregations, locations)'
-    ];
+    return ['setIndicatorDetails(indicator, disaggregations, locations)'];
   }
 
   stateChanged(state: RootState) {
@@ -211,18 +223,19 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   }
 
   _showDeactivate(inAmendment: boolean, indicIsActive: boolean) {
-    return (inAmendment && indicIsActive);
+    return inAmendment && indicIsActive;
   }
 
   _showDelete(interventionStatus: string) {
-    return (!interventionStatus ||
-        interventionStatus === CONSTANTS.STATUSES.Draft.toLowerCase());
+    return !interventionStatus || interventionStatus === CONSTANTS.STATUSES.Draft.toLowerCase();
   }
 
   setIndicatorDetails(indicator: any, disaggregations: any, locations: any) {
-    if (typeof indicator === 'undefined' ||
-        typeof disaggregations === 'undefined' ||
-        typeof locations === 'undefined') {
+    if (
+      typeof indicator === 'undefined' ||
+      typeof disaggregations === 'undefined' ||
+      typeof locations === 'undefined'
+    ) {
       return;
     }
     this._updateCollapsableIconBg(indicator);
@@ -247,12 +260,16 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
 
   _updateCollapsableIconBg(indicator: any) {
     if (indicator.cluster_indicator_id) {
-      this.updateStyles({'--collapse-icon-bg-color': 'var(--ternary-color)', '--collapse-icon-bg-image': 'none'});
+      this.updateStyles({
+        '--collapse-icon-bg-color': 'var(--ternary-color)',
+        '--collapse-icon-bg-image': 'none'
+      });
     } else {
       let hfBgImg = 'none';
       if (indicator.is_high_frequency) {
-        hfBgImg = 'linear-gradient(135deg, #066ac7 12.50%, #0099ff 12.50%, #0099ff 50%, #066ac7 50%, ' +
-            '#066ac7 62.50%, #0099ff 62.50%, #0099ff 100%)';
+        hfBgImg =
+          'linear-gradient(135deg, #066ac7 12.50%, #0099ff 12.50%, #0099ff 50%, #066ac7 50%, ' +
+          '#066ac7 62.50%, #0099ff 62.50%, #0099ff 100%)';
       }
       this.updateStyles({
         '--collapse-icon-bg-color': 'var(--primary-color)',
@@ -280,7 +297,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   getSectionName(sectionId: string) {
     let sectionName = '—';
     if (sectionId && !isEmptyObject(this.sections)) {
-      const section = this.sections.find(function(s: any) {
+      const section = this.sections.find(function (s: any) {
         return parseInt(s.id) === parseInt(sectionId);
       });
       if (section) {
@@ -303,7 +320,10 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
       return this.indicator.disaggregation.indexOf(d.id!) > -1;
     });
     const disaggregNames = disaggregs.map((d: any) => {
-      return {name: d.name, groups: this._getDisaggregGroups(d.disaggregation_values)};
+      return {
+        name: d.name,
+        groups: this._getDisaggregGroups(d.disaggregation_values)
+      };
     });
     this.disaggregationNames = disaggregNames;
   }
@@ -312,7 +332,7 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     if (!disaggregGroups || !disaggregGroups.length) {
       return '—';
     }
-    const groups = disaggregGroups.reduce(function(flattened: string, current: any) {
+    const groups = disaggregGroups.reduce(function (flattened: string, current: any) {
       return flattened + ', ' + current.value;
     }, '');
 
@@ -351,7 +371,6 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
     }
   }
 
-
   _displayBaselineOrTarget(item: any, unit: string, displayType: string, isCluster: boolean) {
     if (!item) {
       return '—';
@@ -376,13 +395,12 @@ class AppliedIndicator extends connect(store)(PolymerElement) {
   }
 
   _addInactivePrefix(indicator: any) {
-    return (!indicator || indicator.is_active) ? '' : '(inactive)';
+    return !indicator || indicator.is_active ? '' : '(inactive)';
   }
 
   _lengthIs0(length: number) {
     return length === 0;
   }
-
 }
 
 window.customElements.define('applied-indicator', AppliedIndicator);

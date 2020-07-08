@@ -9,14 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {Reducer} from 'redux';
-import {
-  UPDATE_DRAWER_STATE,
-  AppAction
-} from '../actions/app.js';
+import {UPDATE_DRAWER_STATE, AppAction} from '../actions/app.js';
 
 export class AppState {
-  page: string = '';
-  drawerOpened: boolean = false;
+  page = '';
+  drawerOpened = false;
 }
 
 const INITIAL_STATE = new AppState();

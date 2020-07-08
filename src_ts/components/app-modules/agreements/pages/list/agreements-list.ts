@@ -47,41 +47,34 @@ let _agreementsLastNavigated = '';
  * @appliesMixin ListsCommonMixin
  * @appliesMixin PaginationMixin
  */
-// @ts-ignore
-class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(
-  EndpointsMixin(PolymerElement)))))) {
-
+class AgreementsList extends connect(store)(
+  CommonMixin(ListFiltersMixin(ListsCommonMixin(PaginationMixin(EndpointsMixin(PolymerElement)))))
+) {
   static get template() {
     return html`
       ${SharedStyles} ${listFilterStyles} ${gridLayoutStyles}
       <style include="paper-material-styles data-table-styles">
-
         .ag-ref {
           @apply --text-btn-style;
           text-transform: none;
         }
-
       </style>
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
       <template is="dom-if" if="[[stampListData]]">
-        <agreements-list-data id="agreements"
-                              filtered-agreements="{{filteredAgreements}}"
-                              total-results="{{paginator.count}}"
-                              list-data-path="filteredAgreements"
-                              on-agreements-loaded="_requiredDataHasBeenLoaded"
-                              fire-data-loaded>
+        <agreements-list-data
+          id="agreements"
+          filtered-agreements="{{filteredAgreements}}"
+          total-results="{{paginator.count}}"
+          list-data-path="filteredAgreements"
+          on-agreements-loaded="_requiredDataHasBeenLoaded"
+          fire-data-loaded
+        >
         </agreements-list-data>
       </template>
 
       <div id="filters" class="paper-material" elevation="1">
-
         <div id="filters-fields">
-          <paper-input id="query"
-                      class="filter"
-                      type="search"
-                      placeholder="Search"
-                      autocomplete="off"
-                      value="{{q}}">
+          <paper-input id="query" class="filter" type="search" placeholder="Search" autocomplete="off" value="{{q}}">
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
@@ -89,6 +82,43 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
             <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
               <!-- esmm multi -->
               <etools-dropdown-multi
+                class="filter"
+                label="[[filter.filterName]]"
+                placeholder="Select"
+                disabled$="[[!filter.selectionOptions.length]]"
+                options="[[filter.selectionOptions]]"
+                option-value="[[filter.optionValue]]"
+                option-label="[[filter.optionLabel]]"
+                selected-values="{{filter.selectedValue}}"
+                data-filter-path$="[[filter.path]]"
+                on-etools-selected-items-changed="esmmValueChanged"
+                trigger-value-change-event
+                hide-search="[[filter.hideSearch]]"
+                min-width="[[filter.minWidth]]"
+                horizontal-align="left"
+                no-dynamic-align
+              >
+              </etools-dropdown-multi>
+            </template>
+
+            <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+              <datepicker-lite
+                id$="datepicker_[[filter.path]]"
+                class="filter date"
+                label="[[filter.filterName]]"
+                placeholder="Select"
+                value="{{filter.selectedValue}}"
+                on-date-has-changed="_filterDateHasChanged"
+                data-filter-path$="[[filter.path]]"
+                fire-date-has-changed
+                selected-date-display-format="D MMM YYYY"
+              >
+              </datepicker-lite>
+            </template>
+
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
+              <div class="filter">
+                <etools-dropdown
                   class="filter"
                   label="[[filter.filterName]]"
                   placeholder="Select"
@@ -96,53 +126,19 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                   options="[[filter.selectionOptions]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
-                  selected-values="{{filter.selectedValue}}"
-                  data-filter-path$="[[filter.path]]"
-                  on-etools-selected-items-changed="esmmValueChanged"
+                  selected="{{filter.selectedValue}}"
                   trigger-value-change-event
+                  on-etools-selected-item-changed="filterValueChanged"
+                  data-filter-path$="[[filter.path]]"
                   hide-search="[[filter.hideSearch]]"
                   min-width="[[filter.minWidth]]"
                   horizontal-align="left"
-                  no-dynamic-align>
-              </etools-dropdown-multi>
-            </template>
-
-            <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-              <datepicker-lite id$="datepicker_[[filter.path]]"
-                                class="filter date"
-                                label="[[filter.filterName]]"
-                                placeholder="Select"
-                                value="{{filter.selectedValue}}"
-                                on-date-has-changed="_filterDateHasChanged"
-                                data-filter-path$="[[filter.path]]"
-                                fire-date-has-changed
-                                selected-date-display-format="D MMM YYYY">
-              </datepicker-lite>
-            </template>
-
-            <template is="dom-if" if="[[filterTypeIs('etools-dropdown', filter.type)]]">
-                <div class="filter">
-                  <etools-dropdown
-                    class="filter"
-                    label="[[filter.filterName]]"
-                    placeholder="Select"
-                    disabled$="[[!filter.selectionOptions.length]]"
-                    options="[[filter.selectionOptions]]"
-                    option-value="[[filter.optionValue]]"
-                    option-label="[[filter.optionLabel]]"
-                    selected="{{filter.selectedValue}}"
-                    trigger-value-change-event
-                    on-etools-selected-item-changed="filterValueChanged"
-                    data-filter-path$="[[filter.path]]"
-                    hide-search="[[filter.hideSearch]]"
-                    min-width="[[filter.minWidth]]"
-                    horizontal-align="left"
-                    no-dynamic-align
-                    enable-none-option>
+                  no-dynamic-align
+                  enable-none-option
+                >
                 </etools-dropdown>
-                </div>
-              </template>
-
+              </div>
+            </template>
           </template>
         </div>
 
@@ -153,10 +149,9 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-                <paper-button on-tap="clearAllFilterValues"
-                      class="secondary-btn">
-                        CLEAR ALL
-                </paper-button>
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
+                CLEAR ALL
+              </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -168,15 +163,14 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
             </paper-listbox>
           </paper-menu-button>
         </div>
-
       </div>
 
       <div id="list" class="paper-material hidden" elevation="1">
-
         <etools-data-table-header
-            low-resolution-layout="[[lowResolutionLayout]]"
-            id="listHeader"
-            label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
+          low-resolution-layout="[[lowResolutionLayout]]"
+          id="listHeader"
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
+        >
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
             Reference No.
           </etools-data-table-column>
@@ -197,38 +191,47 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat"
-                  items="[[filteredAgreements]]" as="agreement"
-                  initial-count="10" on-dom-change="_listDataChanged">
+        <template
+          id="rows"
+          is="dom-repeat"
+          items="[[filteredAgreements]]"
+          as="agreement"
+          initial-count="10"
+          on-dom-change="_listDataChanged"
+        >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
               <span class="col-data col-2" data-col-header-label="Reference No.">
-                <a class="ag-ref truncate"
+                <a
+                  class="ag-ref truncate"
                   href="agreements/[[agreement.id]]/details"
                   title="[[getDisplayValue(agreement.agreement_number)]]"
-                  on-click="_triggerAgreementLoadingMsg">
+                  on-click="_triggerAgreementLoadingMsg"
+                >
                   [[getDisplayValue(agreement.agreement_number)]]
                 </a>
               </span>
-              <span class="col-data col-4" data-col-header-label="Partner Full Name" title="[[getDisplayValue(agreement.partner_name)]]">
+              <span
+                class="col-data col-4"
+                data-col-header-label="Partner Full Name"
+                title="[[getDisplayValue(agreement.partner_name)]]"
+              >
                 <span> [[getDisplayValue(agreement.partner_name)]] </span>
               </span>
               <span class="col-data col-2" data-col-header-label="Type">
-                  [[getDisplayValue(agreement.agreement_type)]]
+                [[getDisplayValue(agreement.agreement_type)]]
               </span>
               <span class="col-data col-2 capitalize" data-col-header-label="Status">
-                  [[getDisplayValue(agreement.status)]]
+                [[getDisplayValue(agreement.status)]]
               </span>
               <span class="col-data flex-c" data-col-header-label="Start Date">
-                  [[_checkAndShowAgreementDate(agreement.start)]]
+                [[_checkAndShowAgreementDate(agreement.start)]]
               </span>
               <span class="col-data flex-c" data-col-header-label="End Date">
-                  [[_checkAndShowAgreementDate(agreement.end)]]
+                [[_checkAndShowAgreementDate(agreement.end)]]
               </span>
-
             </div>
             <div slot="row-data-details">
-
               <div class="row-details-content col-2">
                 <span class="rdc-title">Signed By Partner Date</span>
                 <span>[[_checkAndShowAgreementDate(agreement.signed_by_partner_date)]]</span>
@@ -237,19 +240,18 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
                 <span class="rdc-title">Signed By UNICEF Date</span>
                 <span>[[_checkAndShowAgreementDate(agreement.signed_by_unicef_date)]]</span>
               </div>
-
             </div>
           </etools-data-table-row>
         </template>
 
         <etools-data-table-footer
-            low-resolution-layout="[[lowResolutionLayout]]"
-            page-size="{{paginator.page_size}}"
-            page-number="{{paginator.page}}"
-            total-results="[[paginator.count]]"
-            visible-range="{{paginator.visible_range}}">
+          low-resolution-layout="[[lowResolutionLayout]]"
+          page-size="{{paginator.page_size}}"
+          page-number="{{paginator.page}}"
+          total-results="[[paginator.count]]"
+          visible-range="{{paginator.visible_range}}"
+        >
         </etools-data-table-footer>
-
       </div>
     `;
   }
@@ -270,10 +272,10 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
   selectedCPStructures: [] = [];
 
   @property({type: String, observer: 'resetPageNumber'})
-  startDate: string = '';
+  startDate = '';
 
   @property({type: String, observer: 'resetPageNumber'})
-  endDate: string = '';
+  endDate = '';
 
   @property({type: Array})
   partnersDropdownData: [] = [];
@@ -288,7 +290,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
   agreementStatuses: LabelAndValue[] = [];
 
   @property({type: Boolean})
-  lowResolutionLayout: boolean = false;
+  lowResolutionLayout = false;
 
   @property({type: Array})
   _sortableFieldNames: string[] = ['agreement_number', 'partner_name', 'start', 'end'];
@@ -301,13 +303,13 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
 
   static get observers() {
     return [
-      'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
-      'selectedCPStructures.length)', // used for non removable filters
+      // used for non removable filters
+      'resetPageNumber(q, selectedAgTypes.length, selectedAgStatuses.length, ' + 'selectedCPStructures.length)',
       '_initFiltersMenuList(partnersDropdownData, agreementStatuses, agreementTypes, countryProgrammes)',
       '_updateUrlAndData(q, selectedAgTypes.length, selectedAgStatuses.length, ' +
-      'selectedPartners, selectedCPStructures.length,' +
-      'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded,' +
-      'initComplete, isSpecialConditionsPca)',
+        'selectedPartners, selectedCPStructures.length,' +
+        'startDate, endDate, paginator.page, paginator.page_size, sortOrder, requiredDataLoaded,' +
+        'initComplete, isSpecialConditionsPca)',
       '_init(active)'
     ];
   }
@@ -326,8 +328,12 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
     }
   }
 
-  _initFiltersMenuList(partnersDropdownData: number[], agreementStatuses: string[], agreementTypes: string[],
-    countryProgrammes: number[]) {
+  _initFiltersMenuList(
+    partnersDropdownData: number[],
+    agreementStatuses: string[],
+    agreementTypes: string[],
+    countryProgrammes: number[]
+  ) {
     if (!partnersDropdownData || !agreementStatuses || !agreementTypes || !countryProgrammes) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
@@ -400,7 +406,10 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
         filterName: 'Special Conditions PCA',
         type: 'etools-dropdown',
         singleSelection: true,
-        selectionOptions: [{value: 'true', label: 'Yes'}, {value: 'false', label: 'No'}],
+        selectionOptions: [
+          {value: 'true', label: 'Yes'},
+          {value: 'false', label: 'No'}
+        ],
         optionValue: 'value',
         optionLabel: 'label',
         selectedValue: null,
@@ -420,7 +429,10 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'ag-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'ag-page'
+    });
     this.listAttachedCallback(this.active, 'Loading...', 'ag-list');
   }
 
@@ -438,18 +450,16 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
       urlQueryParams.status = 'draft|signed|suspended';
     }
     this.set('initComplete', false);
-    this.setProperties(
-      {
-        q: urlQueryParams.q ? urlQueryParams.q : '',
-        selectedAgTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
-        selectedAgStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
-        selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
-        selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
-        startDate: urlQueryParams.start ? urlQueryParams.start : '',
-        endDate: urlQueryParams.end ? urlQueryParams.end : '',
-        isSpecialConditionsPca: urlQueryParams.special_conditions_pca
-      }
-    );
+    this.setProperties({
+      q: urlQueryParams.q ? urlQueryParams.q : '',
+      selectedAgTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
+      selectedAgStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
+      selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
+      selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
+      startDate: urlQueryParams.start ? urlQueryParams.start : '',
+      endDate: urlQueryParams.end ? urlQueryParams.end : '',
+      isSpecialConditionsPca: urlQueryParams.special_conditions_pca
+    });
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
@@ -460,44 +470,41 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
     this._updateSelectedFiltersValues();
   }
 
-
   _updateSelectedFiltersValues() {
-    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
-      timeOut.after(20),
-      () => {
-        const filtersValues = [
-          {
-            filterName: 'Type',
-            selectedValue: this.selectedAgTypes
-          },
-          {
-            filterName: 'Status',
-            selectedValue: this.selectedAgStatuses
-          },
-          {
-            filterName: 'CP Structure',
-            selectedValue: this.selectedCPStructures
-          },
-          {
-            filterName: 'Partner',
-            selectedValue: this.selectedPartners
-          },
-          {
-            filterName: 'Starts After',
-            selectedValue: this.startDate
-          },
-          {
-            filterName: 'Ends Before',
-            selectedValue: this.endDate
-          },
-          {
-            filterName: 'Special Conditions PCA',
-            selectedValue: this.isSpecialConditionsPca,
-            allowEmpty: true
-          }
-        ];
-        this.updateShownFilters(filtersValues);
-      });
+    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(20), () => {
+      const filtersValues = [
+        {
+          filterName: 'Type',
+          selectedValue: this.selectedAgTypes
+        },
+        {
+          filterName: 'Status',
+          selectedValue: this.selectedAgStatuses
+        },
+        {
+          filterName: 'CP Structure',
+          selectedValue: this.selectedCPStructures
+        },
+        {
+          filterName: 'Partner',
+          selectedValue: this.selectedPartners
+        },
+        {
+          filterName: 'Starts After',
+          selectedValue: this.startDate
+        },
+        {
+          filterName: 'Ends Before',
+          selectedValue: this.endDate
+        },
+        {
+          filterName: 'Special Conditions PCA',
+          selectedValue: this.isSpecialConditionsPca,
+          allowEmpty: true
+        }
+      ];
+      this.updateShownFilters(filtersValues);
+    });
   }
 
   // Updates URL state with new query string, and launches query
@@ -507,40 +514,36 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
 
       const qs = this._buildQueryString();
 
-      this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs,
-        this._filterListData.bind(this));
+      this._updateUrlAndDislayedData('agreements/list', _agreementsLastNavigated, qs, this._filterListData.bind(this));
 
-      _agreementsLastNavigated = qs || _agreementsLastNavigated;// TODO -test
+      _agreementsLastNavigated = qs || _agreementsLastNavigated; // TODO -test
     }
   }
 
   _filterListData(forceNoLoading?: boolean) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
-    this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
-      timeOut.after(this.debounceTime),
-      () => {
-        const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
-        if (!agreements) {
-          return;
-        }
-        agreements.query(
-          this.sortOrder.field,
-          this.sortOrder.direction,
-          this.q.trim().toLowerCase(),
-          this.selectedAgTypes,
-          this.selectedAgStatuses,
-          this.getFilterValuesByProperty(this.partnersDropdownData,
-            'label', this.selectedPartners, 'value'),
-          this.startDate,
-          this.endDate,
-          this.selectedCPStructures,
-          this._getIsSpecialConditionsPca(),
-          this.paginator.page,
-          this.paginator.page_size,
-          forceNoLoading ? false : this.showQueryLoading
-        );
-      });
+    this._queryDebouncer = Debouncer.debounce(this._queryDebouncer, timeOut.after(this.debounceTime), () => {
+      const agreements = this.shadowRoot!.querySelector('#agreements') as AgreementsListData;
+      if (!agreements) {
+        return;
+      }
+      agreements.query(
+        this.sortOrder.field,
+        this.sortOrder.direction,
+        this.q.trim().toLowerCase(),
+        this.selectedAgTypes,
+        this.selectedAgStatuses,
+        this.getFilterValuesByProperty(this.partnersDropdownData, 'label', this.selectedPartners, 'value'),
+        this.startDate,
+        this.endDate,
+        this.selectedCPStructures,
+        this._getIsSpecialConditionsPca(),
+        this.paginator.page,
+        this.paginator.page_size,
+        forceNoLoading ? false : this.showQueryLoading
+      );
+    });
   }
 
   // Outputs the query string for the list
@@ -565,8 +568,7 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
     const params = {
       agreement_type: this.selectedAgTypes,
       status: this.selectedAgStatuses,
-      partner_name: this.getFilterValuesByProperty(this.partnersDropdownData,
-        'label', this.selectedPartners, 'value'),
+      partner_name: this.getFilterValuesByProperty(this.partnersDropdownData, 'label', this.selectedPartners, 'value'),
       start: this.startDate,
       end: this.endDate,
       cpStructures: this.selectedCPStructures,
@@ -597,7 +599,6 @@ class AgreementsList extends connect(store)(CommonMixin(ListFiltersMixin(ListsCo
   _triggerAgreementLoadingMsg() {
     fireEvent(this, 'trigger-agreement-loading-msg');
   }
-
 }
 
 window.customElements.define('agreements-list', AgreementsList);

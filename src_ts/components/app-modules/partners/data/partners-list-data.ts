@@ -1,8 +1,8 @@
 declare const moment: any;
+import Dexie from 'dexie';
 import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store.js';
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import Dexie from 'dexie';
 import {isEmptyObject} from '../../../utils/utils';
 import {setPartners} from '../../../../actions/partners.js';
 import {fireEvent} from '../../../utils/fire-custom-event.js';
@@ -17,12 +17,11 @@ import {GenericObject} from '../../../../typings/globals.types';
  * @appliesMixin ListDataMixin
  */
 class PartnersListData extends ListDataMixin(PolymerElement) {
+  @property({type: String})
+  endpointName = 'partners';
 
   @property({type: String})
-  endpointName: string = 'partners';
-
-  @property({type: String})
-  dataLoadedEventName: string = 'partners-loaded';
+  dataLoadedEventName = 'partners-loaded';
 
   @property({type: Array, readOnly: true, notify: true})
   filteredPartners!: any[];
@@ -34,14 +33,13 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
   currentQuery: GenericObject | null = null;
 
   @property({type: Array, notify: true})
-  partnersDropdownData: any[] = [];// TODO - seems to not be used anymore
+  partnersDropdownData: any[] = []; // TODO - seems to not be used anymore
 
   @property({type: Array, notify: true})
-  partnersFilteredDropdownData: any[] = [];// TODO - seems to not be used anymore
+  partnersFilteredDropdownData: any[] = []; // TODO - seems to not be used anymore
 
   @property({type: Boolean})
-  prepareDropdownData: boolean = false;
-
+  prepareDropdownData = false;
 
   public _handleMyResponse(res: any) {
     this._handleResponse(res);
@@ -50,16 +48,28 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
     }
   }
 
-  public query(field: string, order: string, searchString: string, partnerTypes: string[], csoTypes: string[],
-    riskRatings: string[], seaRiskRatings: string[], seaDateBefore: string, seaDateAfter: string, pageNumber: number, pageSize: number, showHidden: boolean,
-    showQueryLoading: boolean) {
-
+  public query(
+    field: string,
+    order: string,
+    searchString: string,
+    partnerTypes: string[],
+    csoTypes: string[],
+    riskRatings: string[],
+    seaRiskRatings: string[],
+    seaDateBefore: string,
+    seaDateAfter: string,
+    pageNumber: number,
+    pageSize: number,
+    showHidden: boolean,
+    showQueryLoading: boolean
+  ) {
     // If an active query transaction exists, abort it and start
     // a new one
     if (this.currentQuery) {
       this.currentQuery.abort();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     if (showQueryLoading) {
@@ -71,7 +81,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
     }
 
     const partnersDexieTable = window.EtoolsPmpApp.DexieDb.partners;
-    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function() {
+    window.EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function () {
       self.currentQuery = Dexie.currentTransaction;
 
       let queryResult = partnersDexieTable;
@@ -83,7 +93,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
         queryResult = queryResult.reverse();
       }
 
-      queryResult = queryResult.filter(function(partner: any) {
+      queryResult = queryResult.filter(function (partner: any) {
         if (!isEmptyObject(partnerTypes) && partnerTypes.indexOf(partner.partner_type) === -1) {
           return false;
         }
@@ -100,13 +110,20 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (seaDateBefore && seaDateBefore.length &&
-          (!partner.psea_assessment_date || !moment.utc(partner.psea_assessment_date).isBefore(moment.utc(seaDateBefore)))) {
+        if (
+          seaDateBefore &&
+          seaDateBefore.length &&
+          (!partner.psea_assessment_date ||
+            !moment.utc(partner.psea_assessment_date).isBefore(moment.utc(seaDateBefore)))
+        ) {
           return false;
         }
 
-        if (seaDateAfter && seaDateAfter.length &&
-          (!partner.psea_assessment_date || !moment.utc(partner.psea_assessment_date).isAfter(moment.utc(seaDateAfter)))) {
+        if (
+          seaDateAfter &&
+          seaDateAfter.length &&
+          (!partner.psea_assessment_date || !moment.utc(partner.psea_assessment_date).isAfter(moment.utc(seaDateAfter)))
+        ) {
           return false;
         }
 
@@ -115,9 +132,11 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
           if (partner.vendor_number) {
             vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
           }
-          if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
+          if (
+            partner.name.toLowerCase().indexOf(searchString) < 0 &&
             partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
-            vnMatch) {
+            vnMatch
+          ) {
             return false;
           }
         }
@@ -132,9 +151,8 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
       // This special Dexie function allows the work of counting
       // the number of query results to be done in a parallel process,
       // instead of blocking the main query
-      // @ts-ignore
-      Dexie.ignoreTransaction(function() {
-        queryResult.count(function(count: number) {
+      Dexie.ignoreTransaction(function () {
+        queryResult.count(function (count: number) {
           // @ts-ignore
           self._setTotalResults(count);
         });
@@ -144,21 +162,22 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
         .offset((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .toArray();
-
-    }).then(function(result: any[]) {
-      // @ts-ignore
-      self._setFilteredPartners(result);
-      fireEvent(self, 'global-loading', {
-        active: false,
-        loadingSource: 'partners-list'
+    })
+      .then(function (result: any[]) {
+        // @ts-ignore
+        self._setFilteredPartners(result);
+        fireEvent(self, 'global-loading', {
+          active: false,
+          loadingSource: 'partners-list'
+        });
+      })
+      .catch(function (error: any) {
+        logError('Error querying partners!', 'partners-list-data', error);
+        fireEvent(self, 'global-loading', {
+          active: false,
+          loadingSource: 'partners-list'
+        });
       });
-    }).catch(function(error: any) {
-      logError('Error querying partners!', 'partners-list-data', error);
-      fireEvent(self, 'global-loading', {
-        active: false,
-        loadingSource: 'partners-list'
-      });
-    });
   }
 }
 

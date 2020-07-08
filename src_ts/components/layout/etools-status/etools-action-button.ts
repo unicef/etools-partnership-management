@@ -18,7 +18,6 @@ import {StatusAction} from '../../../typings/etools-status.types';
  * @customElement
  */
 class EtoolsActionButton extends PolymerElement {
-
   static get template() {
     return html`
       <style>
@@ -31,12 +30,12 @@ class EtoolsActionButton extends PolymerElement {
           padding: 0;
           margin: 0;
           height: 36px;
-          background-color: var(--etools-action-button-main-color, #0099FF);
+          background-color: var(--etools-action-button-main-color, #0099ff);
           color: var(--etools-action-button-text-color, #fff);
         }
 
         paper-button.grey {
-          background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, .54));
+          background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, 0.54));
         }
 
         paper-menu-button {
@@ -82,10 +81,9 @@ class EtoolsActionButton extends PolymerElement {
           min-width: 120px;
         }
 
-        iron-icon[icon="info-outline"] {
-          padding-left:5px;
+        iron-icon[icon='info-outline'] {
+          padding-left: 5px;
         }
-
       </style>
 
       <template is="dom-if" if="[[primaryAction]]">
@@ -97,7 +95,6 @@ class EtoolsActionButton extends PolymerElement {
 
           <template is="dom-if" if="[[secondaryActions.length]]">
             <paper-menu-button horizontal-align="right">
-
               <paper-icon-button icon="expand-more" slot="dropdown-trigger"></paper-icon-button>
               <paper-listbox slot="dropdown-content">
                 <div class="list-wrapper">
@@ -106,7 +103,6 @@ class EtoolsActionButton extends PolymerElement {
                   </template>
                 </div>
               </paper-listbox>
-
             </paper-menu-button>
           </template>
         </paper-button>
@@ -124,10 +120,10 @@ class EtoolsActionButton extends PolymerElement {
   secondaryActions: StatusAction[] = [];
 
   @property({type: Boolean})
-  disabled: boolean = false;
+  disabled = false;
 
   @property({type: Boolean})
-  showInfoIcon: boolean = false;
+  showInfoIcon = false;
 
   private _actionsChangedDebouncer!: Debouncer;
 
@@ -139,11 +135,9 @@ class EtoolsActionButton extends PolymerElement {
     if (typeof actions === 'undefined' && typeof actionsData === 'undefined') {
       return;
     }
-    this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer,
-      timeOut.after(10),
-      () => {
-        this._handleActionsChanged();
-      });
+    this._actionsChangedDebouncer = Debouncer.debounce(this._actionsChangedDebouncer, timeOut.after(10), () => {
+      this._handleActionsChanged();
+    });
   }
 
   _handleActionsChanged() {

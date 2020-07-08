@@ -24,9 +24,8 @@ import {property} from '@polymer/decorators';
  */
 class AppMenu extends connect(store)(
   // eslint-disable-next-line new-cap
-  GestureEventListeners(
-    EnvironmentFlagsMixin(PolymerElement))) {
-
+  GestureEventListeners(EnvironmentFlagsMixin(PolymerElement))
+) {
   public static get template() {
     // main template
     // language=HTML
@@ -34,18 +33,15 @@ class AppMenu extends connect(store)(
       ${pmpMainIcons} ${navMenuStyles}
 
       <div class="menu-header">
-      <span id="app-name">
-        Partnership <br>
-        Management
-      </span>
+        <span id="app-name">
+          Partnership <br />
+          Management
+        </span>
 
         <span class="ripple-wrapper main">
-          <iron-icon id="menu-header-top-icon"
-                     icon="pmp-main-icons:partnership-management"
-                     on-tap="_toggleSmallMenu">
-            
+          <iron-icon id="menu-header-top-icon" icon="pmp-main-icons:partnership-management" on-tap="_toggleSmallMenu">
           </iron-icon>
-        <paper-ripple class="circle" center></paper-ripple>
+          <paper-ripple class="circle" center></paper-ripple>
         </span>
 
         <paper-tooltip for="menu-header-top-icon" position="right">
@@ -53,19 +49,13 @@ class AppMenu extends connect(store)(
         </paper-tooltip>
 
         <span class="ripple-wrapper">
-        <iron-icon id="minimize-menu"
-                   icon="chevron-left"
-                   on-tap="_toggleSmallMenu"></iron-icon>
-        <paper-ripple class="circle" center></paper-ripple>
-      </span>
+          <iron-icon id="minimize-menu" icon="chevron-left" on-tap="_toggleSmallMenu"></iron-icon>
+          <paper-ripple class="circle" center></paper-ripple>
+        </span>
       </div>
 
       <div class="nav-menu">
-        <iron-selector selected="[[selectedOption]]"
-                       attr-for-selected="menu-name"
-                       selectable="a"
-                       role="navigation">
-
+        <iron-selector selected="[[selectedOption]]" attr-for-selected="menu-name" selectable="a" role="navigation">
           <a class="nav-menu-item" menu-name="partners" href$="[[rootPath]]partners/list">
             <iron-icon id="partners-icon" icon="social:people"></iron-icon>
             <paper-tooltip for="partners-icon" position="right">
@@ -115,16 +105,17 @@ class AppMenu extends connect(store)(
               <div class="name">Settings</div>
             </a>
           </template>
-
         </iron-selector>
 
         <div class="nav-menu-item section-title">
           <span>eTools Community Channels</span>
         </div>
 
-        <a class="nav-menu-item lighter-item no-transform"
-           href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/5e60ab16-cce5-4c21-8620-de0c4c6415de/ReportSectionfe8562e6ef8c4eddcb52?chromeless=1"
-           target="_blank">
+        <a
+          class="nav-menu-item lighter-item no-transform"
+          href="https://app.powerbi.com/groups/me/apps/2c83563f-d6fc-4ade-9c10-bbca57ed1ece/reports/5e60ab16-cce5-4c21-8620-de0c4c6415de/ReportSectionfe8562e6ef8c4eddcb52?chromeless=1"
+          target="_blank"
+        >
           <iron-icon id="power-bi-icon" icon="pmp-main-icons:power-bi"></iron-icon>
           <paper-tooltip for="power-bi-icon" position="right">
             Implementation Intelligence
@@ -140,9 +131,11 @@ class AppMenu extends connect(store)(
           <div class="name">Knowledge base</div>
         </a>
 
-        <a class="nav-menu-item lighter-item"
-           href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
-           target="_blank">
+        <a
+          class="nav-menu-item lighter-item"
+          href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
+          target="_blank"
+        >
           <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
           <paper-tooltip for="discussion-icon" position="right">
             Discussion
@@ -157,33 +150,34 @@ class AppMenu extends connect(store)(
           </paper-tooltip>
           <div class="name">Information</div>
         </a>
-
       </div>
     `;
   }
 
   @property({type: String})
-  selectedOption: string = '';
+  selectedOption = '';
 
   @property({type: String})
-  rootPath: string = '';
+  rootPath = '';
 
-  @property({type: Boolean, reflectToAttribute: true, observer: '_menuSizeChange'})
-  smallMenu: boolean = false;
+  @property({
+    type: Boolean,
+    reflectToAttribute: true,
+    observer: '_menuSizeChange'
+  })
+  smallMenu = false;
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
   }
 
-  // @ts-ignore
-  private _menuSizeChange(newVal: boolean, oldVal: boolean): void {
+  _menuSizeChange(newVal: boolean, oldVal: boolean): void {
     if (newVal !== oldVal) {
       setTimeout(() => fireEvent(this, 'resize-main-layout'));
     }
   }
 
-  // @ts-ignore
-  private _toggleSmallMenu(e: Event): void {
+  _toggleSmallMenu(e: Event): void {
     // console.log("aaaaaaaaaaaaa");
     e.stopImmediatePropagation();
     fireEvent(this, 'toggle-small-menu');

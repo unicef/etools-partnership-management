@@ -3,7 +3,7 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
-
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import '../../../../../layout/etools-form-element-wrapper.js';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import pmpEndpoints from '../../../../../endpoints/endpoints.js';
@@ -14,11 +14,10 @@ import {requiredFieldStarredStyles} from '../../../../../styles/required-field-s
 import {SharedStyles} from '../../../../../styles/shared-styles.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
-
 
 /**
  * @polymer
@@ -27,54 +26,59 @@ import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox.js';
  * @appliesMixin EndpointsMixin
  */
 class AttachmentDialog extends EndpointsMixin(PolymerElement) {
-
   static get template() {
     return html`
-    ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       <style>
         etools-dialog > .row-h {
           padding-top: 0;
         }
       </style>
 
-      <etools-dialog no-padding
-                      keep-dialog-open
-                      id="attachmentDialog"
-                      opened="{{opened}}"
-                      size="md"
-                      ok-btn-text="Save"
-                      dialog-title="Attachment"
-                      on-confirm-btn-clicked="_validateAndSaveAttachment"
-                      disable-confirm-btn="[[uploadInProgress]]"
-                      disable-dismiss-btn="[[uploadInProgress]]">
-
+      <etools-dialog
+        no-padding
+        keep-dialog-open
+        id="attachmentDialog"
+        opened="{{opened}}"
+        size="md"
+        ok-btn-text="Save"
+        dialog-title="Attachment"
+        on-confirm-btn-clicked="_validateAndSaveAttachment"
+        disable-confirm-btn="[[uploadInProgress]]"
+        disable-dismiss-btn="[[uploadInProgress]]"
+      >
         <div class="row-h col-5">
           <!-- Document Type -->
-          <etools-dropdown id="document-types"
-                            label="Document Type"
-                            placeholder="&#8212;"
-                            options="[[fileTypes]]"
-                            option-value="id"
-                            option-label="name"
-                            selected="{{attachment.type}}"
-                            hide-search
-                            required auto-validate
-                            error-message="Document type is required">
+          <etools-dropdown
+            id="document-types"
+            label="Document Type"
+            placeholder="&#8212;"
+            options="[[fileTypes]]"
+            option-value="id"
+            option-label="name"
+            selected="{{attachment.type}}"
+            hide-search
+            required
+            auto-validate
+            error-message="Document type is required"
+          >
           </etools-dropdown>
         </div>
         <div class="row-h flex-c">
           <!-- Attachment -->
-          <etools-upload id="attachment-upload"
-                          label="Attachment"
-                          accept=".doc,.docx,.pdf,.jpg,.png"
-                          file-url="[[attachment.attachment_document]]"
-                          upload-endpoint="[[uploadEndpoint]]"
-                          on-upload-finished="_attachmentUploadFinished"
-                          required
-                          auto-validate
-                          upload-in-progress="{{uploadInProgress}}"
-                          error-message="Attachment required"
-                          readonly="[[_readonlyAttachment(attachment.id)]]">
+          <etools-upload
+            id="attachment-upload"
+            label="Attachment"
+            accept=".doc,.docx,.pdf,.jpg,.png"
+            file-url="[[attachment.attachment_document]]"
+            upload-endpoint="[[uploadEndpoint]]"
+            on-upload-finished="_attachmentUploadFinished"
+            required
+            auto-validate
+            upload-in-progress="{{uploadInProgress}}"
+            error-message="Attachment required"
+            readonly="[[_readonlyAttachment(attachment.id)]]"
+          >
           </etools-upload>
         </div>
 
@@ -92,7 +96,11 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
   @property({type: Object})
   toastEventSource!: PolymerElement;
 
-  @property({type: Boolean, notify: true, observer: AttachmentDialog.prototype._resetFields})
+  @property({
+    type: Boolean,
+    notify: true,
+    observer: AttachmentDialog.prototype._resetFields
+  })
   opened!: boolean;
 
   @property({type: Number})
@@ -108,7 +116,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
   uploadEndpoint: string = pmpEndpoints.attachmentsUpload.url;
 
   @property({type: Boolean})
-  uploadInProgress: boolean = false;
+  uploadInProgress = false;
 
   private _validationSelectors: string[] = ['#document-types', '#attachment-upload'];
 
@@ -117,17 +125,19 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
   }
 
   startSpinner() {
-    (this.$.attachmentDialog as unknown as EtoolsDialog).startSpinner();
+    ((this.$.attachmentDialog as unknown) as EtoolsDialog).startSpinner();
   }
 
   stopSpinner() {
-    (this.$.attachmentDialog as unknown as EtoolsDialog).stopSpinner();
+    ((this.$.attachmentDialog as unknown) as EtoolsDialog).stopSpinner();
   }
 
   isValidAttachment() {
     let isValid = true;
     this._validationSelectors.forEach((selector: string) => {
-      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {validate(): boolean};
+      const el = this.shadowRoot!.querySelector(selector) as PolymerElement & {
+        validate(): boolean;
+      };
       if (el && !el.validate()) {
         isValid = false;
       }
@@ -174,11 +184,12 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
       body: attachment
     };
     this.startSpinner();
-    this.sendRequest(options)
+    sendRequest(options)
       .then((resp: any) => {
         this._handleResponse(resp, isNewAttachment);
         this.stopSpinner();
-      }).catch((error: any) => {
+      })
+      .catch((error: any) => {
         this._handleErrorResponse(error);
         this.stopSpinner();
       });
@@ -195,7 +206,7 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
 
   _attachmentUploadFinished(e: CustomEvent) {
     if (e.detail.success) {
-      const uploadResponse = JSON.parse(e.detail.success);
+      const uploadResponse = e.detail.success;
       this.set('attachment.attachment_document', uploadResponse.id);
     }
   }
@@ -206,7 +217,6 @@ class AttachmentDialog extends EndpointsMixin(PolymerElement) {
   _invalidChanged(e: CustomEvent) {
     this.set('attachment.active', !(e.target as PaperCheckboxElement).checked);
   }
-
 }
 
 window.customElements.define('attachment-dialog', AttachmentDialog);

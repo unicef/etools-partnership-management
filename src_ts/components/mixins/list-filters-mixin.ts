@@ -8,18 +8,16 @@ import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 declare const moment: any;
 /**
-  * @polymer
-  * @mixinFunction
-  */
+ * @polymer
+ * @mixinFunction
+ */
 function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ListFiltersClass extends baseClass {
-
     @property({type: Array})
     listFilterOptions!: ListFilterOption[];
 
     @property({type: Array})
     selectedFilters!: ListFilterOption[];
-
 
     /**
      * Init filter options properties.
@@ -34,7 +32,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     _isAlreadySelected(filter: any) {
-      const selectedOpt = this.selectedFilters.find(function(selectedFilter: ListFilterOption) {
+      const selectedOpt = this.selectedFilters.find(function (selectedFilter: ListFilterOption) {
         return selectedFilter.filterName === filter.filterName;
       });
       return !!selectedOpt;
@@ -50,15 +48,15 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
       } else {
         // remove
-        const idxInSelFilters = this.selectedFilters.findIndex((f: any)=> f.filterName === selectedOption.filterName);
+        const idxInSelFilters = this.selectedFilters.findIndex((f: any) => f.filterName === selectedOption.filterName);
         this._clearFilterSelection(selectedOption, idxInFilterOptions, idxInSelFilters);
 
         this._triggerUrlUpdateAndFiltering(this.listFilterOptions[idxInFilterOptions]);
 
         /* Once the shown filter will be removed from dom,
-        * the filterValueChanged won't execute,
-        * so we're triggering manually the url and filtering update above
-        */
+         * the filterValueChanged won't execute,
+         * so we're triggering manually the url and filtering update above
+         */
         this.removeFromShownFilters(idxInSelFilters);
       }
     }
@@ -110,9 +108,9 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     /*
-    * filterPath can be ['selectedFilters', idx] or
-    * ['listFilterOptions', idx]
-    */
+     * filterPath can be ['selectedFilters', idx] or
+     * ['listFilterOptions', idx]
+     */
     clearSelectedValueInFilter(filter: ListFilterOption, filterPath: [string, number]) {
       switch (filter.type) {
         case 'etools-dropdown-multi':
@@ -138,7 +136,6 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         this.notifyPath([...filterPath, 'selectedValue'].join('.'));
       }
     }
-
 
     // filter value changed, update filter path with the new value
     filterValueChanged(event: CustomEvent) {
@@ -190,17 +187,16 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return ['true', 'false'].indexOf(String(value)) > -1;
       }
 
-      if ((Array.isArray(value) && value.length === 0) && allowEmptyEsmm) {
+      if (Array.isArray(value) && value.length === 0 && allowEmptyEsmm) {
         return true;
       }
 
-      return value && ((typeof value === 'string' && value !== '')
-          || (Array.isArray(value) && value.length > 0));
+      return value && ((typeof value === 'string' && value !== '') || (Array.isArray(value) && value.length > 0));
     }
 
     _findInListFilterOptions(filterName: string) {
       return this.listFilterOptions instanceof Array
-        ? this.listFilterOptions.find(f => f.filterName === filterName)
+        ? this.listFilterOptions.find((f) => f.filterName === filterName)
         : null;
     }
 
@@ -220,25 +216,30 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         if (!filterObj) {
           return;
         }
-        const idxInFilterOptions = this.listFilterOptions.findIndex((f: ListFilterOption) =>
-          f.filterName === filterToUpdate.filterName);
+        const idxInFilterOptions = this.listFilterOptions.findIndex(
+          (f: ListFilterOption) => f.filterName === filterToUpdate.filterName
+        );
 
-        if ((filterObj.selected || this.filterHasSelectedValue(filterToUpdate.selectedValue, filterObj.type)) &&
-            !this._isAlreadySelected(filterObj)) {
+        if (
+          (filterObj.selected || this.filterHasSelectedValue(filterToUpdate.selectedValue, filterObj.type)) &&
+          !this._isAlreadySelected(filterObj)
+        ) {
           // filter not selected => select filter
           this.push('selectedFilters', JSON.parse(JSON.stringify(filterObj)));
           this.set(['listFilterOptions', idxInFilterOptions, 'selected'], true);
         }
 
         if (this._validFilterSelectedValue(filterToUpdate.selectedValue, filterObj.type, filterObj.allowEmpty)) {
-
           // search it in selected filters lists and update selected value
           if (this.selectedFilters instanceof Array && this.selectedFilters.length > 0) {
-            const idxInSelFilters = this.selectedFilters.findIndex(f => f.filterName === filterToUpdate.filterName);
+            const idxInSelFilters = this.selectedFilters.findIndex((f) => f.filterName === filterToUpdate.filterName);
 
             if (idxInSelFilters > -1) {
-              this.updateSelectedValueInFilter(filterObj.type, ['selectedFilters', idxInSelFilters],
-                filterToUpdate.selectedValue);
+              this.updateSelectedValueInFilter(
+                filterObj.type,
+                ['selectedFilters', idxInSelFilters],
+                filterToUpdate.selectedValue
+              );
               this._disableFilterIfNeccessary(filterToUpdate, idxInSelFilters, idxInFilterOptions);
             }
           }
@@ -251,8 +252,11 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         case 'etools-dropdown-multi':
         case 'dropdown':
         case 'etools-dropdown':
-          return selectedValue && ((typeof selectedValue === 'string' && selectedValue !== '')
-            || (Array.isArray(selectedValue) && selectedValue.length > 0));
+          return (
+            selectedValue &&
+            ((typeof selectedValue === 'string' && selectedValue !== '') ||
+              (Array.isArray(selectedValue) && selectedValue.length > 0))
+          );
         case 'datepicker':
           return !!selectedValue;
         case 'paper-toggle':
@@ -261,10 +265,15 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           return false;
       }
     }
-    _disableFilterIfNeccessary(filter: ListOrSelectedFilterOption, idxInSelFilters: number,
-      idxInFilterOptions: number) {
-
-      if (filter.hasOwnProperty('disabled')) {
+    _disableFilterIfNeccessary(
+      filter: ListOrSelectedFilterOption,
+      idxInSelFilters: number,
+      idxInFilterOptions: number
+    ) {
+      // if (filter.hasOwnProperty('disabled')) {
+      //   this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
+      // }
+      if (Object.prototype.hasOwnProperty.call(filter, 'disabled')) {
         this.set(['selectedFilters', idxInSelFilters, 'disabled'], filter.disabled);
       }
 
@@ -287,17 +296,14 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     getFilterValuesByProperty(filterOptions: ListFilterOption[], prop: string, selected: any, selectedProp: string) {
       const selectedValues = this._convertToInt(selected);
       selectedProp = selectedProp || 'id';
-      return (filterOptions && filterOptions.length && selectedValues && selectedValues.length)
-        ? filterOptions.filter(opt => selectedValues.indexOf(opt[selectedProp]) > -1).map(opt => opt[prop])
+      return filterOptions && filterOptions.length && selectedValues && selectedValues.length
+        ? filterOptions.filter((opt) => selectedValues.indexOf(opt[selectedProp]) > -1).map((opt) => opt[prop])
         : [];
     }
 
     _convertToInt(data: []) {
-      return (data instanceof Array)
-        ? data.map(d => parseInt(d, 10))
-        : [];
+      return data instanceof Array ? data.map((d) => parseInt(d, 10)) : [];
     }
-
   }
   return ListFiltersClass;
 }

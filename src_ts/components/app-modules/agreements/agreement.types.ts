@@ -10,19 +10,19 @@ class AgreementPermissionFields {
     }
   }
 
-  agreement_type: boolean = true;
-  amendments: boolean = false;
-  attachment: boolean = true;
-  authorized_officers: boolean = true;
-  country_programme: boolean = true;
-  end: boolean = true;
-  partner: boolean = true;
-  partner_manager: boolean = true;
-  signed_by_id: boolean = true;
-  signed_by_partner_date: boolean = true;
-  signed_by_unicef_date: boolean = true;
-  start: boolean = true;
-  special_conditions_pca: boolean = true;
+  agreement_type = true;
+  amendments = false;
+  attachment = true;
+  authorized_officers = true;
+  country_programme = true;
+  end = true;
+  partner = true;
+  partner_manager = true;
+  signed_by_id = true;
+  signed_by_partner_date = true;
+  signed_by_unicef_date = true;
+  start = true;
+  special_conditions_pca = true;
 
   _setEditPermissionsForNewAgreement() {
     this.agreement_type = true;
@@ -94,5 +94,3 @@ export class AgreementAmendment {
   types: string[] = [];
   signed_amendment_attachment: number | string | null = null;
 }
-
-

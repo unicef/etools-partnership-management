@@ -27,12 +27,10 @@ import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-butt
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
 class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
-
   static get template() {
     return html`
       ${gridLayoutStyles} ${SharedStyles}
-      <style
-          include="data-table-styles">
+      <style include="data-table-styles">
         [hidden] {
           display: none !important;
         }
@@ -46,7 +44,7 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
           --list-bg-color: #eeeeee;
           --icons-actions: {
             background-color: var(--list-second-bg-color);
-          };
+          }
         }
 
         .lborder {
@@ -112,7 +110,6 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
           border-top: 1px solid var(--list-divider-color);
           height: 49px;
         }
-
       </style>
 
       <div hidden$="[[!_emptyList(dataItems.length)]]">
@@ -123,38 +120,55 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
       <div class="lower-results-list" hidden$="[[_emptyList(dataItems.length)]]">
         <div class="header-container header-text border-b">
-          <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD Output or SSFA Expected Result</div>
+          <div class$="[[getColumnLength('result', thereAreIndicators)]]">
+            PD Output or SSFA Expected Result
+          </div>
           <div class="col flex-c">
             <div class="col col-8">Performance Indicator</div>
-            <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
-            <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Target</div>
+            <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">
+              Baseline
+            </div>
+            <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">
+              Target
+            </div>
           </div>
         </div>
 
         <template is="dom-repeat" items="{{dataItems}}">
-          <div class="layout-horizontal lower-result-row"
-              hidden$="[[allIndicatorsAreInactive(item.applied_indicators, showInactiveIndicators, forceVisibilityRecalc)]]">
+          <div
+            class="layout-horizontal lower-result-row"
+            hidden$="[[allIndicatorsAreInactive(item.applied_indicators, 
+                        showInactiveIndicators, forceVisibilityRecalc)]]"
+          >
             <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
-              <icons-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
-                            on-delete="_openDeleteConfirmation"></icons-actions>
+              <icons-actions
+                hidden$="[[!editMode]]"
+                data-args$="[[index]]"
+                on-edit="_editLowerResult"
+                on-delete="_openDeleteConfirmation"
+              ></icons-actions>
               <span>[[item.name]]</span>
             </div>
             <div class="flex-c lborder indicators-container">
               <div hidden="[[!item.applied_indicators.length]]">
-                <applied-indicators data-items="{{item.applied_indicators}}"
-                                    intervention-status="[[interventionStatus]]"
-                                    result-link-index="[[index]]"
-                                    cp-output-id="[[cpOutputId]]"
-                                    show-inactive-indicators="[[showInactiveIndicators]]"
-                                    edit-mode="[[editMode]]">
+                <applied-indicators
+                  data-items="{{item.applied_indicators}}"
+                  intervention-status="[[interventionStatus]]"
+                  result-link-index="[[index]]"
+                  cp-output-id="[[cpOutputId]]"
+                  show-inactive-indicators="[[showInactiveIndicators]]"
+                  edit-mode="[[editMode]]"
+                >
                 </applied-indicators>
               </div>
               <div class="add-btn-row flex-c" hidden$="[[!editMode]]">
-                <paper-icon-button icon="add-box"
-                                  title="Add Indicator"
-                                  on-tap="_addNewIndicator"
-                                  data-ll-result-id$="[[item.id]]"
-                                  disabled$="[[!editMode]]">
+                <paper-icon-button
+                  icon="add-box"
+                  title="Add Indicator"
+                  on-tap="_addNewIndicator"
+                  data-ll-result-id$="[[item.id]]"
+                  disabled$="[[!editMode]]"
+                >
                 </paper-icon-button>
               </div>
             </div>
@@ -163,19 +177,20 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
       </div>
 
       <div class="add-btn-row border-t" hidden$="[[!editMode]]">
-        <paper-icon-button icon="add-box"
-                          on-tap="_addNewLowerResult"
-                          title="Add PD or SSFA Expected Result"
-                          disabled$="[[!editMode]]">
+        <paper-icon-button
+          icon="add-box"
+          on-tap="_addNewLowerResult"
+          title="Add PD or SSFA Expected Result"
+          disabled$="[[!editMode]]"
+        >
           Add PD output or SSFA expected result
         </paper-icon-button>
       </div>
-
     `;
   }
 
   @property({type: String})
-  _deleteEpName: string = 'lowerResultsDelete';
+  _deleteEpName = 'lowerResultsDelete';
 
   @property({type: String})
   interventionStatus!: string;
@@ -184,26 +199,22 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
   cpOutputId!: number;
 
   @property({type: Boolean})
-  editMode: boolean = false;
+  editMode = false;
 
   @property({type: Number})
   expectedResultId!: number;
 
   @property({type: Boolean})
-  thereAreIndicators: boolean = false;
+  thereAreIndicators = false;
 
   @property({type: Boolean})
   showInactiveIndicators!: boolean;
 
   @property({type: Boolean})
-  forceVisibilityRecalc!: boolean
-
+  forceVisibilityRecalc!: boolean;
 
   static get observers() {
-    return [
-      '_dataItemsChanged(dataItems.*)',
-      '_makeSureDataItemsAreValid(dataItems)'
-    ];
+    return ['_dataItemsChanged(dataItems.*)', '_makeSureDataItemsAreValid(dataItems)'];
   }
 
   ready() {
@@ -238,8 +249,8 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
 
   allIndicatorsAreInactive(indicators: Indicator[]) {
     this.forceVisibilityRecalc = false;
-    const allIndicatorsAreDeactivated = indicators instanceof Array && indicators.length > 0 &&
-        indicators.every(i => !i.is_active);
+    const allIndicatorsAreDeactivated =
+      indicators instanceof Array && indicators.length > 0 && indicators.every((i) => !i.is_active);
     return allIndicatorsAreDeactivated ? !this.showInactiveIndicators : false;
   }
 
@@ -260,7 +271,9 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
   }
 
   _addNewLowerResult() {
-    fireEvent(this, 'add-new-lower-result', {expectedResultId: this.expectedResultId});
+    fireEvent(this, 'add-new-lower-result', {
+      expectedResultId: this.expectedResultId
+    });
   }
 
   _editLowerResult(e: CustomEvent) {
@@ -299,7 +312,6 @@ class ResultLinkLowerResults extends RepeatableDataSetsMixin(PolymerElement) {
     };
     fireEvent(this, 'open-indicator-dialog', resultMap);
   }
-
 }
 
 window.customElements.define('result-link-lower-results', ResultLinkLowerResults);

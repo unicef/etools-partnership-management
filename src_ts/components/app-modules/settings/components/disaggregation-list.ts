@@ -4,7 +4,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-content-panel/etools-content-panel';
 import '@unicef-polymer/etools-data-table/etools-data-table';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 
 import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
@@ -17,39 +17,35 @@ import {patchDisaggregation} from '../../../../actions/common-data';
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {Disaggregation} from '../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {EnvFlags, User} from '../../../../typings/globals.types';
 import {userIsPme} from '../../../user/user-permissions';
 import {property} from '@polymer/decorators/lib/decorators';
 import {AddDisaggregationDialogEl} from './add-disaggregation-dialog';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button/paper-toggle-button';
 
-
 /**
  * @polymer
  * @customElement
  * @mixinFunction
  * @appliesMixin EndpointsMixin
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EnvironmentFlagsMixin
  * @appliesMixin FrontendPaginationMixin
  */
-class DisaggregationList extends connect(store)(FrontendPaginationMixin(
-  EtoolsAjaxRequestMixin(
-    EnvironmentFlagsMixin(
-      EndpointsMixin(PolymerElement))))) {
-
+class DisaggregationList extends connect(store)(
+  FrontendPaginationMixin(EnvironmentFlagsMixin(EndpointsMixin(PolymerElement)))
+) {
   static get template() {
     // language=HTML
     return html`
-        ${gridLayoutStyles}
+      ${gridLayoutStyles}
       <style include="data-table-styles paper-material-styles">
         [hidden] {
           display: none !important;
         }
 
         #filters {
-          background-color: var(--primary-background-color, #FFFFFF);
+          background-color: var(--primary-background-color, #ffffff);
           padding: 8px 24px;
           margin-bottom: 24px;
           box-sizing: border-box;
@@ -58,26 +54,17 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
         .qFilter {
           max-width: 200px;
         }
-
       </style>
 
       <div id="filters" class="paper-material" elevation="1">
-        <paper-input id="query"
-                     class="qFilter"
-                     type="search"
-                     autocomplete="off"
-                     value="{{q}}"
-                     placeholder="Search">
+        <paper-input id="query" class="qFilter" type="search" autocomplete="off" value="{{q}}" placeholder="Search">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
       </div>
 
       <etools-content-panel panel-title="Disaggregations">
         <template is="dom-if" if="[[userIsPme(currentUser)]]">
-          <paper-icon-button slot="panel-btns"
-                             icon="add-box"
-                             on-tap="_addDisaggregation">
-          </paper-icon-button>
+          <paper-icon-button slot="panel-btns" icon="add-box" on-tap="_addDisaggregation"> </paper-icon-button>
         </template>
         <div hidden$="[[_emptyList(filteredDisaggregations)]]">
           <etools-data-table-header no-collapse no-title>
@@ -101,11 +88,12 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
                   [[_displayGroups(item.disaggregation_values)]]
                 </span>
                 <span class="col-data col-2">
-                  <paper-toggle-button id="showActive-[[item.id]]"
-                                       disabled="[[!userIsPme(currentUser)]]"
-                                       checked="{{item.active}}"
-                                       on-tap="_toggleActive">
-
+                  <paper-toggle-button
+                    id="showActive-[[item.id]]"
+                    disabled="[[!userIsPme(currentUser)]]"
+                    checked="{{item.active}}"
+                    on-tap="_toggleActive"
+                  >
                   </paper-toggle-button>
                 </span>
               </div>
@@ -113,11 +101,12 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
           </template>
 
           <etools-data-table-footer
-              page-size="[[pagination.pageSize]]"
-              page-number="[[pagination.pageNumber]]"
-              total-results="[[pagination.totalResults]]"
-              on-page-size-changed="_pageSizeChanged"
-              on-page-number-changed="_pageNumberChanged">
+            page-size="[[pagination.pageSize]]"
+            page-number="[[pagination.pageNumber]]"
+            total-results="[[pagination.totalResults]]"
+            on-page-size-changed="_pageSizeChanged"
+            on-page-number-changed="_pageNumberChanged"
+          >
           </etools-data-table-footer>
         </div>
         <div class="row-padding" hidden$="[[!_emptyList(filteredDisaggregations)]]">
@@ -137,9 +126,12 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
   filteredDisaggregations!: Disaggregation[];
 
   @property({type: String})
-  q: string = '';
+  q = '';
 
-  @property({type: Number, computed: '_computeResults(filteredDisaggregations)'})
+  @property({
+    type: Number,
+    computed: '_computeResults(filteredDisaggregations)'
+  })
   totalResults!: number;
 
   @property({type: Boolean})
@@ -181,10 +173,13 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
   }
 
   broadcastPatchDisaggregToOtherTabs(disaggregation: Disaggregation) {
-    localStorage.setItem('update-redux', JSON.stringify({
-      type: 'PATCH_DISAGGREGATION',
-      disaggregation: disaggregation
-    }));
+    localStorage.setItem(
+      'update-redux',
+      JSON.stringify({
+        type: 'PATCH_DISAGGREGATION',
+        disaggregation: disaggregation
+      })
+    );
     localStorage.removeItem('update-redux');
   }
 
@@ -206,21 +201,24 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
   }
 
   _toggleActive(e: any) {
-    const self = this;
-
     const requestParams = {
       method: 'PATCH',
-      endpoint: this.getEndpoint('patchDisaggregations', {id: e.model.item.id}),
+      endpoint: this.getEndpoint('patchDisaggregations', {
+        id: e.model.item.id
+      }),
       body: {active: e.model.item.active}
     };
 
-    this.sendRequest(requestParams).then(function(response: any) {
-      store.dispatch(patchDisaggregation(response));
-      self.broadcastPatchDisaggregToOtherTabs(response);
-    }).catch(function(error: any) {
-      (self.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e.model.item.active;
-      parseRequestErrorsAndShowAsToastMsgs(error, self);
-    });
+    return sendRequest(requestParams)
+      .then((response: any) => {
+        store.dispatch(patchDisaggregation(response));
+        this.broadcastPatchDisaggregToOtherTabs(response);
+      })
+      .catch((error: any) => {
+        (this.shadowRoot!.querySelector('#showActive-' + e.model.item.id) as PaperToggleButtonElement).checked = !e
+          .model.item.active;
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+      });
   }
 
   _computeResults(filteredDis: any) {
@@ -249,9 +247,11 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
     if (!groups || !groups.length) {
       return '-';
     }
-    return groups.map((g: any) => {
-      return g.value;
-    }).join('; ');
+    return groups
+      .map((g: any) => {
+        return g.value;
+      })
+      .join('; ');
   }
 
   _addDisaggregation() {
@@ -262,7 +262,6 @@ class DisaggregationList extends connect(store)(FrontendPaginationMixin(
   userIsPme(currentUser: User) {
     return userIsPme(currentUser);
   }
-
 }
 
 window.customElements.define('disaggregation-list', DisaggregationList);

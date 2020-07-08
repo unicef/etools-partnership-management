@@ -10,24 +10,23 @@ import {property} from '@polymer/decorators';
  * @customElement
  */
 class EtoolsFormElementWrapper extends PolymerElement {
-
   static get template() {
     return html`
-    ${SharedStyles} ${requiredFieldStarredStyles}
-    <style>
+      ${SharedStyles} ${requiredFieldStarredStyles}
+      <style>
         :host {
           width: 100%;
 
           max-width: var(--etools-form-element-wrapper-max-width, none);
           --paper-input-container-underline: {
             display: none;
-          };
+          }
           --paper-input-container-underline-focus: {
             display: none;
-          };
+          }
           --paper-input-container-underline-disabled: {
             display: none;
-          };
+          }
           --paper-input-prefix: {
             margin-right: 5px;
             margin-top: -2px;
@@ -56,12 +55,13 @@ class EtoolsFormElementWrapper extends PolymerElement {
         .placeholder {
           color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         }
-
       </style>
-      <paper-input-container always-float-label="[[alwaysFloatLabel]]"
-                            no-label-float="[[noLabelFloat]]"
-                            required$="[[required]]">
-        <label hidden$=[[!label]] slot="label">[[label]]</label>
+      <paper-input-container
+        always-float-label="[[alwaysFloatLabel]]"
+        no-label-float="[[noLabelFloat]]"
+        required$="[[required]]"
+      >
+        <label hidden$="[[!label]]" slot="label">[[label]]</label>
         <slot name="prefix" slot="prefix"></slot>
         <div slot="input" class="paper-input-input">
           <span class$="input-value [[_getPlaceholderClass(value)]]">
@@ -70,7 +70,6 @@ class EtoolsFormElementWrapper extends PolymerElement {
           <slot></slot>
         </div>
       </paper-input-container>
-
     `;
   }
 
@@ -78,19 +77,23 @@ class EtoolsFormElementWrapper extends PolymerElement {
   label!: string;
 
   @property({type: String})
-  value: string = '';
+  value = '';
 
   @property({type: Boolean})
-  alwaysFloatLabel: boolean = true;
+  alwaysFloatLabel = true;
 
   @property({type: Boolean})
   noLabelFloat!: boolean;
 
-  @property({type: Boolean, reflectToAttribute: true, observer: '_requiredChanged'})
+  @property({
+    type: Boolean,
+    reflectToAttribute: true,
+    observer: '_requiredChanged'
+  })
   required!: boolean;
 
   @property({type: Boolean})
-  noPlaceholder: boolean = false;
+  noPlaceholder = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -108,18 +111,19 @@ class EtoolsFormElementWrapper extends PolymerElement {
   }
 
   _getPlaceholderClass(value: string) {
-    const cssclass = ((typeof value === 'string' && value.trim() !== '')
-      ? ''
-      : (this.noPlaceholder ? '' : 'placeholder'));
+    const cssclass = typeof value === 'string' && value.trim() !== '' ? '' : this.noPlaceholder ? '' : 'placeholder';
     return cssclass + ' etools-form-element-wrapper';
   }
 
   _getDisplayValue(value: string) {
-    return (typeof value === 'string' && value.trim() !== '')
-      ? (value == '-' ? 'N/A' : value.trim())
-      : (this.noPlaceholder ? '' : '—');
+    return typeof value === 'string' && value.trim() !== ''
+      ? value == '-'
+        ? 'N/A'
+        : value.trim()
+      : this.noPlaceholder
+      ? ''
+      : '—';
   }
-
 }
 
 window.customElements.define('etools-form-element-wrapper', EtoolsFormElementWrapper);

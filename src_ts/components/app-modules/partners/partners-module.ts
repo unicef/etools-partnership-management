@@ -49,157 +49,165 @@ import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.j
 class PartnersModule extends connect(store)(
   // eslint-disable-next-line new-cap
   GestureEventListeners(
-    ScrollControlMixin(ModuleRoutingMixin(
-      ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement)))))) {
-
+    ScrollControlMixin(ModuleRoutingMixin(ModuleMainElCommonFunctionalityMixin(StaffMembersDataMixin(PolymerElement))))
+  )
+) {
   public static get template() {
     // main template
     // language=HTML
     return html`
-        ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
-        <style>
-          :host {
-              display: block;
-          }
-        </style>
+      ${pageLayoutStyles} ${SharedStyles} ${buttonsStyles} ${pageContentHeaderSlottedStyles}
+      <style>
+        :host {
+          display: block;
+        }
+      </style>
 
-        <app-route
-          route="{{route}}"
-          pattern="/list"
-          query-params="{{listPageQueryParams}}"
-          active="{{listActive}}"></app-route>
+      <app-route
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"
+      ></app-route>
 
-        <app-route
-          route="{{route}}"
-          pattern="/:id/:tab"
-          active="{{tabsActive}}"
-          data="{{routeData}}"></app-route>
+      <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
 
-        <page-content-header with-tabs-visible="[[tabsActive]]">
-          <div slot="page-title">
-            <template is="dom-if" if="[[listActive]]">
-              <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
-              <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
-            </template>
-            <template is="dom-if" if="[[tabsActive]]">
-              <span>[[partner.name]]</span>
-            </template>
-          </div>
+      <page-content-header with-tabs-visible="[[tabsActive]]">
+        <div slot="page-title">
+          <template is="dom-if" if="[[listActive]]">
+            <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
+            <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
+          </template>
+          <template is="dom-if" if="[[tabsActive]]">
+            <span>[[partner.name]]</span>
+          </template>
+        </div>
 
-          <div slot="title-row-actions" class="content-header-actions">
-            <div class="action" hidden$="[[!listActive]]">
-              <a target="_blank" href$="[[csvDownloadUrl]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
-              </a>
-            </div>
-            <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
-              <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
-                <iron-icon icon="add"></iron-icon>
-                Import Partner
+        <div slot="title-row-actions" class="content-header-actions">
+          <div class="action" hidden$="[[!listActive]]">
+            <a target="_blank" href$="[[csvDownloadUrl]]">
+              <paper-button>
+                <iron-icon icon="file-download"></iron-icon>
+                Export
               </paper-button>
-            </div>
+            </a>
           </div>
+          <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
+            <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+              <iron-icon icon="add"></iron-icon>
+              Import Partner
+            </paper-button>
+          </div>
+        </div>
 
-          <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-            <etools-tabs slot="tabs"
-                         tabs="[[partnerTabs]]"
-                         active-tab="{{routeData.tab}}"
-                         on-iron-select="_handleTabSelectAction"></etools-tabs>
-          </template>
-        </page-content-header>
+        <template is="dom-if" if="[[_showPageTabs(activePage)]]">
+          <etools-tabs
+            slot="tabs"
+            tabs="[[partnerTabs]]"
+            active-tab="{{routeData.tab}}"
+            on-iron-select="_handleTabSelectAction"
+          ></etools-tabs>
+        </template>
+      </page-content-header>
 
-        <div id="main">
-          <div id="pageContent">
+      <div id="main">
+        <div id="pageContent">
+          <etools-error-messages-box
+            id="errorsBox"
+            title="Errors Saving Partner"
+            errors="{{serverErrors}}"
+          ></etools-error-messages-box>
+          <iron-pages id="partnersPages" selected="{{activePage}}" attr-for-selected="name" role="main">
+            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+              <partners-list
+                id="list"
+                name="list"
+                show-only-government-type="[[showOnlyGovernmentType]]"
+                current-module="[[currentModule]]"
+                active="[[listActive]]"
+                csv-download-url="{{csvDownloadUrl}}"
+                url-params="[[preservedListQueryParams]]"
+              >
+              </partners-list>
+            </template>
 
-            <etools-error-messages-box id="errorsBox"
-                                       title="Errors Saving Partner"
-                                       errors="{{serverErrors}}"></etools-error-messages-box>
-            <iron-pages id="partnersPages"
-                        selected="{{activePage}}"
-                        attr-for-selected="name"
-                        role="main">
+            <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
+              <partner-overview name="overview" partner="[[partner]]"></partner-overview>
+            </template>
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-                <partners-list id="list"
-                               name="list"
-                               show-only-government-type="[[showOnlyGovernmentType]]"
-                               current-module="[[currentModule]]"
-                               active="[[listActive]]"
-                               csv-download-url="{{csvDownloadUrl}}"
-                               url-params="[[preservedListQueryParams]]">
-                </partners-list>
-              </template>
+            <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
+              <partner-details
+                id="partnerDetails"
+                name="details"
+                partner="[[partner]]"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+              ></partner-details>
+            </template>
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
-                <partner-overview name="overview" partner="[[partner]]"></partner-overview>
-              </template>
+            <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
+              <partner-financial-assurance
+                id="financialAssurance"
+                partner="[[partner]]"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                name="financial-assurance"
+              >
+              </partner-financial-assurance>
+            </template>
+          </iron-pages>
+        </div>
+        <!-- page content end -->
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-                <partner-details id="partnerDetails"
-                                 name="details"
-                                 partner="[[partner]]"
-                                 edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
-              </template>
+        <!-- sidebar content start -->
+        <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
+          <div id="sidebar">
+            <partner-status
+              on-save-partner="_validateAndTriggerPartnerSave"
+              on-delete-partner="_deletePartner"
+              active="[[!listActive]]"
+              partner="[[partner]]"
+              edit-mode$="[[_hasEditPermissions(permissions)]]"
+            >
+            </partner-status>
+          </div>
+          <!-- sidebar content end -->
+        </template>
+      </div>
+      <!-- main container end -->
 
-              <template is="dom-if" if="[[_pageEquals(activePage, 'financial-assurance')]]">
-                <partner-financial-assurance id="financialAssurance"
-                                             partner="[[partner]]"
-                                             edit-mode="[[_hasEditPermissions(permissions)]]"
-                                             name="financial-assurance">
-                </partner-financial-assurance>
-              </template>
-
-            </iron-pages>
-
-          </div> <!-- page content end -->
-
-          <!-- sidebar content start -->
-          <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
-            <div id="sidebar">
-              <partner-status
-                  on-save-partner="_validateAndTriggerPartnerSave"
-                  on-delete-partner="_deletePartner"
-                  active="[[!listActive]]"
-                  partner="[[partner]]"
-                  edit-mode$="[[_hasEditPermissions(permissions)]]">
-              </partner-status>
-            </div> <!-- sidebar content end -->
-          </template>
-        </div> <!-- main container end -->
-
-        <partner-item-data id="partnerData"
-                       partner-id="[[selectedPartnerId]]"
-                       partner="{{partner}}"
-                       error-event-name="partner-save-error">
-        </partner-item-data>
+      <partner-item-data
+        id="partnerData"
+        partner-id="[[selectedPartnerId]]"
+        partner="{{partner}}"
+        error-event-name="partner-save-error"
+      >
+      </partner-item-data>
     `;
   }
 
   @property({type: Array})
-  partnerTabs: EtoolsTab[] = [{
-    tab: 'overview',
-    tabLabel: 'Overview',
-    hidden: false
-  },
-  {
-    tab: 'details',
-    tabLabel: 'Partner Details',
-    hidden: false
-  },
-  {
-    tab: 'financial-assurance',
-    tabLabel: 'Assurance',
-    hidden: false
-  }];
+  partnerTabs: EtoolsTab[] = [
+    {
+      tab: 'overview',
+      tabLabel: 'Overview',
+      hidden: false
+    },
+    {
+      tab: 'details',
+      tabLabel: 'Partner Details',
+      hidden: false
+    },
+    {
+      tab: 'financial-assurance',
+      tabLabel: 'Assurance',
+      hidden: false
+    }
+  ];
 
   @property({type: String})
-  moduleName: string = 'partners';
+  moduleName = 'partners';
 
   @property({type: String})
-  csvDownloadUrl: string = '';
+  csvDownloadUrl = '';
 
   @property({type: Number})
   selectedPartnerId: number | null = null;
@@ -211,10 +219,10 @@ class PartnersModule extends connect(store)(
   permissions!: UserPermissions;
 
   @property({type: Boolean})
-  showOnlyGovernmentType: boolean = false;
+  showOnlyGovernmentType = false;
 
   @property({type: String})
-  currentModule: string = '';
+  currentModule = '';
 
   @property({type: Object})
   originalPartnerData!: Partner;
@@ -222,10 +230,7 @@ class PartnersModule extends connect(store)(
   newPartnerDialog!: NewPartnerDialog;
 
   public static get observers() {
-    return [
-      '_pageChanged(listActive, tabsActive, routeData, currentModule)',
-      '_observeRouteDataId(routeData.id)'
-    ];
+    return ['_pageChanged(listActive, tabsActive, routeData, currentModule)', '_observeRouteDataId(routeData.id)'];
   }
 
   public ready() {
@@ -237,7 +242,10 @@ class PartnersModule extends connect(store)(
   public connectedCallback() {
     super.connectedCallback();
     // deactivate main page loading msg triggered in app-shell
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'main-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'main-page'
+    });
     /**
      * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
      */
@@ -376,8 +384,10 @@ class PartnersModule extends connect(store)(
 
   public _partnerSaveError(event: CustomEvent) {
     event.stopImmediatePropagation();
-    if ((event.detail instanceof Array && event.detail.length > 0) ||
-        (typeof event.detail === 'string' && event.detail !== '')) {
+    if (
+      (event.detail instanceof Array && event.detail.length > 0) ||
+      (typeof event.detail === 'string' && event.detail !== '')
+    ) {
       fireEvent(this, 'set-server-errors', event.detail);
       this.scrollToTop();
     }
@@ -394,8 +404,7 @@ class PartnersModule extends connect(store)(
   public _createPartner(event: CustomEvent) {
     const partnerData = this.shadowRoot!.querySelector('#partnerData') as PartnerItemData;
     if (partnerData) {
-      partnerData.createPartner(event.detail, this._newPartnerCreated,
-        this._handleCreatePartnerError);
+      partnerData.createPartner(event.detail, this._newPartnerCreated, this._handleCreatePartnerError);
     }
   }
 
@@ -426,7 +435,6 @@ class PartnersModule extends connect(store)(
     fireEvent(this, 'clear-server-errors');
   }
 
-
   public _validateAndTriggerPartnerSave(event: CustomEvent) {
     event.stopImmediatePropagation();
     if (!this._hasEditPermissions(this.permissions)) {
@@ -441,15 +449,9 @@ class PartnersModule extends connect(store)(
   }
 
   public _getModifiedData(partner: any) {
-    const updatableFields = [
-      'alternate_name',
-      'shared_with',
-      'planned_engagement',
-      'basis_for_risk_rating'
-    ];
+    const updatableFields = ['alternate_name', 'shared_with', 'planned_engagement', 'basis_for_risk_rating'];
     const changes: any = {};
     updatableFields.forEach((fieldName) => {
-
       if (['shared_with', 'planned_engagement'].indexOf(fieldName) > -1) {
         if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
           changes[fieldName] = partner[fieldName];
@@ -481,7 +483,6 @@ class PartnersModule extends connect(store)(
       loadingSource: 'partners-page'
     });
   }
-
 }
 
 window.customElements.define('partners-module', PartnersModule);

@@ -8,6 +8,7 @@ import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
@@ -32,7 +33,7 @@ import {InterventionsListData} from '../../data/interventions-list-data.js';
 import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {fireEvent} from '../../../../utils/fire-custom-event.js';
-import {LabelAndValue, CpStructure, MinimalUser} from '../../../../../typings/globals.types.js';
+import {LabelAndValue, CpStructure, MinimalUser, GenericObject} from '../../../../../typings/globals.types.js';
 import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
 import {ListFilterOption} from '../../../../../typings/filter.types.js';
 import {partnersDropdownDataSelector} from '../../../../../reducers/partners.js';
@@ -50,56 +51,45 @@ let _interventionsLastNavigated = '';
  */
 
 class InterventionsList extends connect(store)(
-  ListFiltersMixin(
-    ListsCommonMixin(
-      CommonMixin(
-        PaginationMixin(
-          FrNumbersConsistencyMixin(
-            PolymerElement)))))) {
-
+  ListFiltersMixin(ListsCommonMixin(CommonMixin(PaginationMixin(FrNumbersConsistencyMixin(PolymerElement)))))
+) {
   static get template() {
     return html`
-    ${SharedStyles} ${gridLayoutStyles} ${listFilterStyles} ${frWarningsStyles}
-    <style
-        include="data-table-styles paper-material-styles">
-      :host {
-        @apply --layout-flex;
-        width: 100%;
-      }
+      ${SharedStyles} ${gridLayoutStyles} ${listFilterStyles} ${frWarningsStyles}
+      <style include="data-table-styles paper-material-styles">
+        :host {
+          @apply --layout-flex;
+          width: 100%;
+        }
 
-      .pd-ref {
-        @apply --text-btn-style;
-        text-transform: none;
-      }
-    </style>
-    <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
-    ${pmpCustomIcons}
-    <template is="dom-if" if="[[stampListData]]">
-      <interventions-list-data id="interventions"
-                              filtered-interventions="{{filteredInterventions}}"
-                              total-results="{{paginator.count}}"
-                              on-interventions-loaded="_requiredDataHasBeenLoaded"
-                              list-data-path="filteredInterventions"
-                              fire-data-loaded>
-      </interventions-list-data>
-    </template>
+        .pd-ref {
+          @apply --text-btn-style;
+          text-transform: none;
+        }
+      </style>
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      ${pmpCustomIcons}
+      <template is="dom-if" if="[[stampListData]]">
+        <interventions-list-data
+          id="interventions"
+          filtered-interventions="{{filteredInterventions}}"
+          total-results="{{paginator.count}}"
+          on-interventions-loaded="_requiredDataHasBeenLoaded"
+          list-data-path="filteredInterventions"
+          fire-data-loaded
+        >
+        </interventions-list-data>
+      </template>
 
-    <div id="filters" class="paper-material" elevation="1">
+      <div id="filters" class="paper-material" elevation="1">
+        <div id="filters-fields">
+          <paper-input id="query" class="filter" type="search" placeholder="Search" autocomplete="off" value="{{q}}">
+            <iron-icon icon="search" slot="prefix"></iron-icon>
+          </paper-input>
 
-      <div id="filters-fields">
-        <paper-input id="query"
-                    class="filter"
-                    type="search"
-                    placeholder="Search"
-                    autocomplete="off"
-                    value="{{q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
-
-        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-
-          <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
-            <etools-dropdown-multi
+          <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+            <template is="dom-if" if="[[filterTypeIs('etools-dropdown-multi', filter.type)]]">
+              <etools-dropdown-multi
                 class="filter"
                 label="[[filter.filterName]]"
                 placeholder="&#8212;"
@@ -114,185 +104,224 @@ class InterventionsList extends connect(store)(
                 hide-search="[[filter.hideSearch]]"
                 min-width="[[filter.minWidth]]"
                 horizontal-align="left"
-                no-dynamic-align>
-            </etools-dropdown-multi>
-          </template>
-
-          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-            <datepicker-lite id$="datepicker_[[filter.path]]"
-                              class="filter date"
-                              label="[[filter.filterName]]"
-                              placeholder="&#8212;"
-                              value="{{filter.selectedValue}}"
-                              on-date-has-changed="_filterDateHasChanged"
-                              data-filter-path$="[[filter.path]]"
-                              fire-date-has-changed
-                              selected-date-display-format="D MMM YYYY">
-            </datepicker-lite>
-          </template>
-
-        </template>
-      </div>
-
-      <div class="fixed-controls">
-
-        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right" allow-outside-scroll>
-          <paper-button class="button" slot="dropdown-trigger">
-            <iron-icon icon="filter-list"></iron-icon>
-            Filters
-          </paper-button>
-          <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilterValues"
-                    class="secondary-btn">
-                      CLEAR ALL
-              </paper-button>
-          </div>
-          <paper-listbox slot="dropdown-content" multi>
-            <template is="dom-repeat" items="[[listFilterOptions]]">
-              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
-                <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
-                <paper-item-body>[[item.filterName]]</paper-item-body>
-              </paper-icon-item>
+                no-dynamic-align
+              >
+              </etools-dropdown-multi>
             </template>
-          </paper-listbox>
-        </paper-menu-button>
 
+            <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+              <datepicker-lite
+                id$="datepicker_[[filter.path]]"
+                class="filter date"
+                label="[[filter.filterName]]"
+                placeholder="&#8212;"
+                value="{{filter.selectedValue}}"
+                on-date-has-changed="_filterDateHasChanged"
+                data-filter-path$="[[filter.path]]"
+                fire-date-has-changed
+                selected-date-display-format="D MMM YYYY"
+              >
+              </datepicker-lite>
+            </template>
+
+            <template is="dom-if" if="[[filterTypeIs('paper-toggle', filter.type)]]">
+              <div id="hiddenToggle" class="filter">
+                [[filter.filterName]]
+                <paper-toggle-button
+                  id="toggleFilter"
+                  checked="{{filter.selectedValue}}"
+                  data-filter-path$="[[filter.path]]"
+                  on-iron-change="toggleValueChanged"
+                ></paper-toggle-button>
+              </div>
+            </template>
+          </template>
+        </div>
+
+        <div class="fixed-controls">
+          <paper-menu-button id="filterMenu" ignore-select horizontal-align="right" allow-outside-scroll>
+            <paper-button class="button" slot="dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              Filters
+            </paper-button>
+            <div slot="dropdown-content" class="clear-all-filters">
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
+                CLEAR ALL
+              </paper-button>
+            </div>
+            <paper-listbox slot="dropdown-content" multi>
+              <template is="dom-repeat" items="[[listFilterOptions]]">
+                <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+                  <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+                  <paper-item-body>[[item.filterName]]</paper-item-body>
+                </paper-icon-item>
+              </template>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
       </div>
 
-    </div>
-
-    <div id="list" class="paper-material" elevation="1">
-
-      <etools-data-table-header
+      <div id="list" class="paper-material" elevation="1">
+        <etools-data-table-header
           low-resolution-layout="[[lowResolutionLayout]]"
           id="listHeader"
-          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show">
-        <etools-data-table-column class="col-2" field="number" sortable>
-          Reference #
-        </etools-data-table-column>
-        <etools-data-table-column class="col-3" field="partner_name" sortable>
-          Partner Name
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-c" field="document_type">
-          Document Type
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-c" field="status">
-          Status
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2" field="title">
-          Title
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-c" field="start" sortable>
-          Start Date
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-c" field="end" sortable>
-          End Date
-        </etools-data-table-column>
-      </etools-data-table-header>
+          label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
+        >
+          <etools-data-table-column class="col-2" field="number" sortable>
+            Reference #
+          </etools-data-table-column>
+          <etools-data-table-column class="col-3" field="partner_name" sortable>
+            Partner Name
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="document_type">
+            Document Type
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="status">
+            Status
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="title">
+            Title
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="start" sortable>
+            Start Date
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="end" sortable>
+            End Date
+          </etools-data-table-column>
+        </etools-data-table-header>
 
-      <template id="rows" is="dom-repeat" notify-dom-change items="[[filteredInterventions]]"
-                as="intervention" initial-count="10" on-dom-change="_listDataChanged">
-        <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
-          <div slot="row-data" class="p-relative">
-            <span class="col-data col-2" data-col-header-label="Reference #">
-              <a class="pd-ref truncate"
-                href="interventions/[[intervention.id]]/details"
-                title="[[getDisplayValue(intervention.number)]]"
-                on-click="_triggerInterventionLoadingMsg">
-                [[getDisplayValue(intervention.number)]]
-              </a>
-            </span>
-            <span class="col-data col-3" data-col-header-label="Partner Name" title="[[getDisplayValue(intervention.partner_name)]]">
+        <template
+          id="rows"
+          is="dom-repeat"
+          notify-dom-change
+          items="[[filteredInterventions]]"
+          as="intervention"
+          initial-count="10"
+          on-dom-change="_listDataChanged"
+        >
+          <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
+            <div slot="row-data" class="p-relative">
+              <span class="col-data col-2" data-col-header-label="Reference #">
+                <a
+                  class="pd-ref truncate"
+                  href="interventions/[[intervention.id]]/details"
+                  title="[[getDisplayValue(intervention.number)]]"
+                  on-click="_triggerInterventionLoadingMsg"
+                >
+                  [[getDisplayValue(intervention.number)]]
+                </a>
+              </span>
+              <span
+                class="col-data col-3"
+                data-col-header-label="Partner Name"
+                title="[[getDisplayValue(intervention.partner_name)]]"
+              >
                 <span>[[getDisplayValue(intervention.partner_name)]]</span>
-            </span>
-            <span class="col-data flex-c" data-col-header-label="Document Type">
+              </span>
+              <span class="col-data flex-c" data-col-header-label="Document Type">
                 [[getDisplayValue(intervention.document_type)]]
-            </span>
-            <span class="col-data flex-c capitalize" data-col-header-label="Status">
+              </span>
+              <span class="col-data flex-c capitalize" data-col-header-label="Status">
                 [[getDisplayValue(intervention.status)]]
-            </span>
-            <span class="col-data col-2" data-col-header-label="Title" title="[[getDisplayValue(intervention.title)]]">
+              </span>
+              <span
+                class="col-data col-2"
+                data-col-header-label="Title"
+                title="[[getDisplayValue(intervention.title)]]"
+              >
                 [[getDisplayValue(intervention.title)]]
-            </span>
-            <span class="col-data flex-c" data-col-header-label="Start Date">
-              <etools-info-tooltip class="fr-nr-warn"
-                                  custom-icon
-                                  icon-first
-                                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start,
-                                                  intervention.frs_earliest_start_date, intervention.status)]]">
-                <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
-                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
-              </etools-info-tooltip>
-            </span>
-            <span class="col-data flex-c" data-col-header-label="End Date">
-              <etools-info-tooltip class="fr-nr-warn"
-                                    custom-icon
-                                    icon-first
-                                    hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end,
-                                                    intervention.frs_latest_end_date, intervention.status)]]">
-                <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
-                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-                <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
-              </etools-info-tooltip>
-            </span>
-          </div>
-
-          <div slot="row-data-details" class="p-relative">
-
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Offices</span>
-              <span>[[getDisplayValue(intervention.offices_names)]]</span>
-            </div>
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Section</span>
-              <span>[[getDisplayValue(intervention.section_names)]]</span>
-            </div>
-            <div class="row-details-content col-2">
-              <span class="rdc-title">UNICEF Cash Contribution</span>
-              <etools-info-tooltip
-                  class$="fr-nr-warn [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
-                  icon-first
+              </span>
+              <span class="col-data flex-c" data-col-header-label="Start Date">
+                <etools-info-tooltip
+                  class="fr-nr-warn"
                   custom-icon
-                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent,
-                                  intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
-                <span slot="field">
-                  <span class="amount-currency">[[intervention.budget_currency]]</span>
-                  <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
-                </span>
-                <iron-icon icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]"
-                          slot="custom-icon"></iron-icon>
-                <span slot="message">
-                  <span>[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent,
-                          intervention.fr_currencies_are_consistent)]]</span>
-                </span>
-              </etools-info-tooltip>
-            </div>
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Total Budget</span>
-              <span>
-                <span class="amount-currency">[[intervention.budget_currency]]</span>
-                <span>[[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
+                  icon-first
+                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.start,
+                                                  intervention.frs_earliest_start_date, intervention.status)]]"
+                >
+                  <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+                </etools-info-tooltip>
+              </span>
+              <span class="col-data flex-c" data-col-header-label="End Date">
+                <etools-info-tooltip
+                  class="fr-nr-warn"
+                  custom-icon
+                  icon-first
+                  hide-tooltip$="[[_hideDateFrsWarningTooltip(intervention.end,
+                                                    intervention.frs_latest_end_date, intervention.status)]]"
+                >
+                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+                </etools-info-tooltip>
               </span>
             </div>
 
-          </div>
-        </etools-data-table-row>
-      </template>
+            <div slot="row-data-details" class="p-relative">
+              <div class="row-details-content col-2">
+                <span class="rdc-title">Offices</span>
+                <span>[[getDisplayValue(intervention.offices_names)]]</span>
+              </div>
+              <div class="row-details-content col-2">
+                <span class="rdc-title">Section</span>
+                <span>[[getDisplayValue(intervention.section_names)]]</span>
+              </div>
+              <div class="row-details-content col-2">
+                <span class="rdc-title">UNICEF Cash Contribution</span>
+                <etools-info-tooltip
+                  class$="fr-nr-warn 
+                            [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
+                  icon-first
+                  custom-icon
+                  hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent,
+                        intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]"
+                >
+                  <span slot="field">
+                    <span class="amount-currency">[[intervention.budget_currency]]</span>
+                    <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
+                  </span>
+                  <iron-icon
+                    icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]"
+                    slot="custom-icon"
+                  ></iron-icon>
+                  <span slot="message">
+                    <span
+                      >[[getIntListUnicefCashAmountTooltipMsg(intervention.all_currencies_are_consistent,
+                      intervention.fr_currencies_are_consistent)]]</span
+                    >
+                  </span>
+                </etools-info-tooltip>
+              </div>
+              <div class="row-details-content col-2">
+                <span class="rdc-title">Total Budget</span>
+                <span>
+                  <span class="amount-currency">[[intervention.budget_currency]]</span>
+                  <span>[[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
+                </span>
+              </div>
+            </div>
+          </etools-data-table-row>
+        </template>
 
-      <etools-data-table-footer
+        <etools-data-table-footer
           low-resolution-layout="[[lowResolutionLayout]]"
           page-size="{{paginator.page_size}}"
           page-number="{{paginator.page}}"
           total-results="[[paginator.count]]"
-          visible-range="{{paginator.visible_range}}">
-      </etools-data-table-footer>
-
-    </div>
+          visible-range="{{paginator.visible_range}}"
+        >
+        </etools-data-table-footer>
+      </div>
     `;
   }
 
-  @property({type: Array, notify: true, observer: InterventionsList.prototype._listChanged})
+  @property({
+    type: Array,
+    notify: true,
+    observer: InterventionsList.prototype._listChanged
+  })
   filteredInterventions!: ListItemIntervention[];
 
   @property({type: Array})
@@ -307,16 +336,34 @@ class InterventionsList extends connect(store)(
   @property({type: Array})
   selectedStatuses: string[] = [];
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._filtersChanged
+  })
   startDate!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._filtersChanged
+  })
   endDate!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._filtersChanged
+  })
   endAfter!: string;
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({
+    type: Boolean,
+    observer: InterventionsList.prototype._filtersChanged
+  })
+  contingency_pd!: boolean;
+
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._arrayFilterChanged
+  })
   cpOutputs: CpOutput[] = [];
 
   @property({type: Array})
@@ -326,7 +373,7 @@ class InterventionsList extends connect(store)(
   countryProgrammes!: CpStructure[];
 
   @property({type: Array})
-  sections!: object[];
+  sections!: GenericObject[];
 
   @property({type: Array})
   selectedSections: number[] = [];
@@ -334,43 +381,58 @@ class InterventionsList extends connect(store)(
   @property({type: Array})
   unicefUsersData!: MinimalUser[];
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._arrayFilterChanged
+  })
   selectedUnicefFocalPoints: number[] = [];
 
   @property({type: Array})
-  offices!: object[];
+  offices!: GenericObject[];
 
   @property({type: Array})
   selectedOffices: number[] = [];
 
   @property({type: Array})
-  donors!: object[];
+  donors!: GenericObject[];
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._arrayFilterChanged
+  })
   selectedDonors: string[] = [];
 
   @property({type: Array})
   partners: [] = [];
 
-  @property({type: Array, observer: InterventionsList.prototype._filtersChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._filtersChanged
+  })
   selectedPartners: [] = [];
 
   @property({type: Array})
-  grants!: object[];
+  grants!: GenericObject[];
 
-  @property({type: Array, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({
+    type: Array,
+    observer: InterventionsList.prototype._arrayFilterChanged
+  })
   selectedGrants: string[] = [];
 
   @property({type: String, notify: true})
   csvDownloadQs!: string;
 
   @property({type: Boolean})
-  lowResolutionLayout: boolean = false;
+  lowResolutionLayout = false;
 
   @property({type: String})
   _sortableFieldNames: string[] = ['number', 'partner_name', 'start', 'end'];
 
-  @property({type: String, observer: InterventionsList.prototype._arrayFilterChanged})
+  @property({
+    type: String,
+    observer: InterventionsList.prototype._arrayFilterChanged
+  })
   selectedCPStructures: string[] = [];
 
   _updateFiltersValsDebouncer!: Debouncer | null;
@@ -379,14 +441,15 @@ class InterventionsList extends connect(store)(
   static get observers() {
     return [
       '_filtersChanged(q, selectedStatuses.length, selectedDocumentTypes.length, ' +
-      'selectedSections.length, selectedOffices.length, ' +
-      'selectedCPStructures.length)', // used for non removable filters
+        'selectedSections.length, selectedOffices.length, contingency_pd' +
+        'selectedCPStructures.length)', // used for non removable filters
       '_initFiltersMenuList(cpOutputs, unicefUsersData, donors, partners, grants, countryProgrammes, offices, ' +
-      'documentTypes, sections, interventionStatuses)',
+        'documentTypes, sections, interventionStatuses)',
       '_updateUrlAndData(q, selectedDocumentTypes.length, selectedCpOutputs.length, selectedStatuses.length, ' +
-      'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
-      'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, selectedCPStructures.length, ' +
-      'paginator.page, paginator.page_size, sortOrder, requiredDataLoaded, initComplete)',
+        'selectedSections.length, selectedUnicefFocalPoints.length, selectedOffices.length, ' +
+        'selectedDonors.length, selectedPartners.length, selectedGrants.length, startDate, endDate, endAfter, ' +
+        'selectedCPStructures.length, contingency_pd, paginator.page, paginator.page_size, sortOrder, ' +
+        'requiredDataLoaded, initComplete)',
       '_init(active)'
     ];
   }
@@ -433,17 +496,38 @@ class InterventionsList extends connect(store)(
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'interv-page'
+    });
 
     this.listAttachedCallback(this.active, 'Loading...', 'pd-ssfa-list');
   }
 
-  _initFiltersMenuList(cpOutputs: number[], unicefUsersData: number[], donors: number[], partners: number[],
-    grants: number[], countryProgrammes: number[], offices: number[],
-    documentTypes: string[], sections: number[], interventionStatuses: string[]) {
-
-    if (!cpOutputs || !unicefUsersData || !donors || !partners || !grants || !countryProgrammes || !offices ||
-      !documentTypes || !sections || !interventionStatuses) {
+  _initFiltersMenuList(
+    cpOutputs: number[],
+    unicefUsersData: number[],
+    donors: number[],
+    partners: number[],
+    grants: number[],
+    countryProgrammes: number[],
+    offices: number[],
+    documentTypes: string[],
+    sections: number[],
+    interventionStatuses: string[]
+  ) {
+    if (
+      !cpOutputs ||
+      !unicefUsersData ||
+      !donors ||
+      !partners ||
+      !grants ||
+      !countryProgrammes ||
+      !offices ||
+      !documentTypes ||
+      !sections ||
+      !interventionStatuses
+    ) {
       // this is just to be safe, the method should only get triggered once when redux data is loaded
       return;
     }
@@ -589,6 +673,13 @@ class InterventionsList extends connect(store)(
         path: 'selectedUnicefFocalPoints',
         selected: false,
         minWidth: '400px'
+      }),
+      new ListFilterOption({
+        filterName: 'Contingency PD',
+        type: 'paper-toggle',
+        selectedValue: this.contingency_pd,
+        path: 'contingency_pd',
+        selected: true
       })
     ]);
     this._updateSelectedFiltersValues();
@@ -607,24 +698,23 @@ class InterventionsList extends connect(store)(
     }
 
     this.set('initComplete', false);
-    this.setProperties(
-      {
-        q: urlQueryParams.q ? urlQueryParams.q : '',
-        selectedDocumentTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
-        selectedStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
-        selectedCpOutputs: this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs),
-        selectedSections: this._getFilterUrlValuesAsArray(urlQueryParams.section),
-        selectedDonors: this._getFilterUrlValuesAsArray(urlQueryParams.donors),
-        selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
-        selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
-        selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
-        selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
-        selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
-        startDate: urlQueryParams.start ? urlQueryParams.start : '',
-        endDate: urlQueryParams.end ? urlQueryParams.end : '',
-        endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : ''
-      }
-    );
+    this.setProperties({
+      q: urlQueryParams.q ? urlQueryParams.q : '',
+      selectedDocumentTypes: this._getFilterUrlValuesAsArray(urlQueryParams.type),
+      selectedStatuses: this._getFilterUrlValuesAsArray(urlQueryParams.status),
+      selectedCpOutputs: this._getFilterUrlValuesAsArray(urlQueryParams.cp_outputs),
+      selectedSections: this._getFilterUrlValuesAsArray(urlQueryParams.section),
+      selectedDonors: this._getFilterUrlValuesAsArray(urlQueryParams.donors),
+      selectedPartners: this._getFilterUrlValuesAsArray(urlQueryParams.partners),
+      selectedGrants: this._getFilterUrlValuesAsArray(urlQueryParams.grants),
+      selectedUnicefFocalPoints: this._getFilterUrlValuesAsArray(urlQueryParams.unicef_focal_points),
+      selectedOffices: this._getFilterUrlValuesAsArray(urlQueryParams.offices),
+      selectedCPStructures: this._getFilterUrlValuesAsArray(urlQueryParams.cpStructures),
+      startDate: urlQueryParams.start ? urlQueryParams.start : '',
+      endDate: urlQueryParams.end ? urlQueryParams.end : '',
+      endAfter: urlQueryParams.endAfter ? urlQueryParams.endAfter : '',
+      contingency_pd: urlQueryParams.contingency_pd ? true : false
+    });
 
     this.setPaginationDataFromUrlParams(urlQueryParams);
 
@@ -638,65 +728,67 @@ class InterventionsList extends connect(store)(
 
   // update selected filters(present in URL) at page refresh
   _updateSelectedFiltersValues() {
-    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
-      timeOut.after(100),
-      () => {
-        const filtersValues = [
-          {
-            filterName: 'Status',
-            selectedValue: this.selectedStatuses
-          },
-          {
-            filterName: 'PD/SSFA Type',
-            selectedValue: this.selectedDocumentTypes
-          },
-          {
-            filterName: 'Sections',
-            selectedValue: this.selectedSections
-          },
-          {
-            filterName: 'Offices',
-            selectedValue: this.selectedOffices
-          },
-          {
-            filterName: 'CP Structure',
-            selectedValue: this.selectedCPStructures
-          },
-          {
-            filterName: 'Country Programme Output',
-            selectedValue: this.selectedCpOutputs
-          },
-          {
-            filterName: 'Donors',
-            selectedValue: this.selectedDonors
-          },
-          {
-            filterName: 'Partners',
-            selectedValue: this.selectedPartners
-          },
-          {
-            filterName: 'Grants',
-            selectedValue: this.selectedGrants
-          },
-          {
-            filterName: 'UNICEF focal point',
-            selectedValue: this.selectedUnicefFocalPoints
-          },
-          {
-            filterName: 'Starts After',
-            selectedValue: this.startDate
-          },
-          {
-            filterName: 'Ends After',
-            selectedValue: this.endAfter
-          },
-          {
-            filterName: 'Ends Before',
-            selectedValue: this.endDate
-          }
-        ];
-        this.updateShownFilters(filtersValues);
-      });
+    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(100), () => {
+      const filtersValues = [
+        {
+          filterName: 'Status',
+          selectedValue: this.selectedStatuses
+        },
+        {
+          filterName: 'PD/SSFA Type',
+          selectedValue: this.selectedDocumentTypes
+        },
+        {
+          filterName: 'Sections',
+          selectedValue: this.selectedSections
+        },
+        {
+          filterName: 'Offices',
+          selectedValue: this.selectedOffices
+        },
+        {
+          filterName: 'CP Structure',
+          selectedValue: this.selectedCPStructures
+        },
+        {
+          filterName: 'Country Programme Output',
+          selectedValue: this.selectedCpOutputs
+        },
+        {
+          filterName: 'Donors',
+          selectedValue: this.selectedDonors
+        },
+        {
+          filterName: 'Partners',
+          selectedValue: this.selectedPartners
+        },
+        {
+          filterName: 'Grants',
+          selectedValue: this.selectedGrants
+        },
+        {
+          filterName: 'UNICEF focal point',
+          selectedValue: this.selectedUnicefFocalPoints
+        },
+        {
+          filterName: 'Starts After',
+          selectedValue: this.startDate
+        },
+        {
+          filterName: 'Ends After',
+          selectedValue: this.endAfter
+        },
+        {
+          filterName: 'Ends Before',
+          selectedValue: this.endDate
+        },
+        {
+          filterName: 'Contingency PD',
+          selectedValue: this.contingency_pd
+        }
+      ];
+      this.updateShownFilters(filtersValues);
+    });
   }
 
   // Updates URL state with new query string, and launches query
@@ -704,8 +796,12 @@ class InterventionsList extends connect(store)(
     if (this._canFilterData()) {
       this.set('csvDownloadQs', this._buildCsvDownloadQueryString());
       const qs = this._buildQueryString();
-      this._updateUrlAndDislayedData('interventions/list', _interventionsLastNavigated, qs,
-        this._filterListData.bind(this));
+      this._updateUrlAndDislayedData(
+        'interventions/list',
+        _interventionsLastNavigated,
+        qs,
+        this._filterListData.bind(this)
+      );
       _interventionsLastNavigated = qs || _interventionsLastNavigated;
     }
   }
@@ -713,35 +809,34 @@ class InterventionsList extends connect(store)(
   _filterListData(forceNoLoading?: boolean) {
     // Query is debounced with a debounce time
     // set depending on what action the user takes
-    this._queryDebouncer = Debouncer.debounce(this._queryDebouncer,
-      timeOut.after(this.debounceTime),
-      () => {
-        const interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
-        if (!interventions) {
-          return;
-        }
-        interventions.query(
-          this.sortOrder.field,
-          this.sortOrder.direction,
-          this.q.toLowerCase(),
-          this.selectedDocumentTypes,
-          this.selectedCpOutputs.map((cpo: number) => String(cpo)),
-          this.selectedDonors,
-          this.getFilterValuesByProperty(this.partners, 'label', this.selectedPartners, 'value'),
-          this.selectedGrants,
-          this.selectedStatuses,
-          this.selectedSections.map((s: number) => String(s)),
-          this.selectedUnicefFocalPoints.map((ufc: number) => String(ufc)),
-          this.selectedOffices.map((o: number) => String(o)),
-          this.selectedCPStructures,
-          this.startDate,
-          this.endDate,
-          this.endAfter,
-          this.paginator.page,
-          this.paginator.page_size,
-          forceNoLoading ? false : this.showQueryLoading
-        );
-      });
+    this._queryDebouncer = Debouncer.debounce(this._queryDebouncer, timeOut.after(this.debounceTime), () => {
+      const interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
+      if (!interventions) {
+        return;
+      }
+      interventions.query(
+        this.sortOrder.field,
+        this.sortOrder.direction,
+        this.q.toLowerCase(),
+        this.selectedDocumentTypes,
+        this.selectedCpOutputs.map((cpo: number) => String(cpo)),
+        this.selectedDonors,
+        this.getFilterValuesByProperty(this.partners, 'label', this.selectedPartners, 'value'),
+        this.selectedGrants,
+        this.selectedStatuses,
+        this.selectedSections.map((s: number) => String(s)),
+        this.selectedUnicefFocalPoints.map((ufc: number) => String(ufc)),
+        this.selectedOffices.map((o: number) => String(o)),
+        this.selectedCPStructures,
+        this.contingency_pd,
+        this.startDate,
+        this.endDate,
+        this.endAfter,
+        this.paginator.page,
+        this.paginator.page_size,
+        forceNoLoading ? false : this.showQueryLoading
+      );
+    });
   }
 
   // Outputs the query string for the list
@@ -763,6 +858,7 @@ class InterventionsList extends connect(store)(
       start: this.startDate,
       end: this.endDate,
       endAfter: this.endAfter,
+      contingency_pd: this.contingency_pd,
       sort: this.sortOrder
     });
   }
@@ -799,8 +895,7 @@ class InterventionsList extends connect(store)(
   }
 
   _canShowListDatesFrsWarnings(status: string) {
-    return (status !== CONSTANTS.STATUSES.Draft.toLowerCase() &&
-      status !== CONSTANTS.STATUSES.Closed.toLowerCase());
+    return status !== CONSTANTS.STATUSES.Draft.toLowerCase() && status !== CONSTANTS.STATUSES.Closed.toLowerCase();
   }
 
   _hideDateFrsWarningTooltip(pdDate: string, frsDate: string, status: string) {
@@ -810,7 +905,6 @@ class InterventionsList extends connect(store)(
   _triggerInterventionLoadingMsg() {
     fireEvent(this, 'trigger-intervention-loading-msg');
   }
-
 }
 
 window.customElements.define('interventions-list', InterventionsList);

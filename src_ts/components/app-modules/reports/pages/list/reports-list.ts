@@ -23,7 +23,6 @@ import {GenericObject, LabelAndValue, MinimalUser} from '../../../../../typings/
 import {property} from '@polymer/decorators';
 import {CpOutput} from '../../../../../typings/intervention.types';
 
-
 /**
  * @polymer
  * @customElement
@@ -31,33 +30,31 @@ import {CpOutput} from '../../../../../typings/intervention.types';
  */
 // @ts-ignore
 class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
-
   static get is() {
     return 'reports-list';
   }
 
   static get template() {
     return html`
-    ${SharedStyles} ${listFilterStyles}
-    <style include="paper-material-styles">
-    </style>
+      ${SharedStyles} ${listFilterStyles}
+      <style include="paper-material-styles"></style>
 
-    <div id="filters" class="paper-material" elevation="1">
+      <div id="filters" class="paper-material" elevation="1">
+        <div id="filters-fields">
+          <paper-input
+            id="query"
+            class="filter"
+            type="search"
+            autocomplete="off"
+            value="{{queryParams.pd_ref_title}}"
+            placeholder="Search"
+          >
+            <iron-icon icon="search" slot="prefix"></iron-icon>
+          </paper-input>
 
-      <div id="filters-fields">
-
-        <paper-input id="query"
-                      class="filter"
-                      type="search"
-                      autocomplete="off"
-                      value="{{queryParams.pd_ref_title}}"
-                      placeholder="Search">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
-
-        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
-          <template is="dom-if" if="[[filter.singleSelection]]">
-            <etools-dropdown
+          <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+            <template is="dom-if" if="[[filter.singleSelection]]">
+              <etools-dropdown
                 class="filter"
                 label="[[filter.filterName]]"
                 placeholder="&#8212;"
@@ -73,11 +70,12 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
                 min-width="[[filter.minWidth]]"
                 horizontal-align="left"
                 no-dynamic-align
-                enable-none-option>
-            </etools-dropdown>
-          </template>
-          <template is="dom-if" if="[[!filter.singleSelection]]">
-            <etools-dropdown-multi
+                enable-none-option
+              >
+              </etools-dropdown>
+            </template>
+            <template is="dom-if" if="[[!filter.singleSelection]]">
+              <etools-dropdown-multi
                 class="filter"
                 label="[[filter.filterName]]"
                 placeholder="&#8212;"
@@ -92,43 +90,41 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
                 hide-search="[[filter.hideSearch]]"
                 min-width="[[filter.minWidth]]"
                 horizontal-align="left"
-                no-dynamic-align>
-            </etools-dropdown-multi>
-          </template>
-        </template>
-
-      </div>
-
-      <div class="fixed-controls">
-
-        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
-          <paper-button class="button" slot="dropdown-trigger">
-            <iron-icon icon="filter-list"></iron-icon>
-            Filters
-          </paper-button>
-          <div slot="dropdown-content" class="clear-all-filters">
-            <paper-button on-tap="clearAllFilterValues"
-                  class="secondary-btn">
-                    CLEAR ALL
-            </paper-button>
-          </div>
-          <paper-listbox slot="dropdown-content" multi>
-            <template is="dom-repeat" items="[[listFilterOptions]]">
-              <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
-                <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
-                <paper-item-body>[[item.filterName]]</paper-item-body>
-              </paper-icon-item>
+                no-dynamic-align
+              >
+              </etools-dropdown-multi>
             </template>
-          </paper-listbox>
-        </paper-menu-button>
+          </template>
+        </div>
 
+        <div class="fixed-controls">
+          <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+            <paper-button class="button" slot="dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              Filters
+            </paper-button>
+            <div slot="dropdown-content" class="clear-all-filters">
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
+                CLEAR ALL
+              </paper-button>
+            </div>
+            <paper-listbox slot="dropdown-content" multi>
+              <template is="dom-repeat" items="[[listFilterOptions]]">
+                <paper-icon-item on-tap="selectFilter" selected$="[[item.selected]]">
+                  <iron-icon icon="check" slot="item-icon" hidden$="[[!item.selected]]"></iron-icon>
+                  <paper-item-body>[[item.filterName]]</paper-item-body>
+                </paper-icon-item>
+              </template>
+            </paper-listbox>
+          </paper-menu-button>
+        </div>
       </div>
 
-    </div>
-
-    <reports-display-list query-params="[[queryParams]]"
-                          paginator="{{paginator}}"
-                          wait-query-params-init></reports-display-list>
+      <reports-display-list
+        query-params="[[queryParams]]"
+        paginator="{{paginator}}"
+        wait-query-params-init
+      ></reports-display-list>
     `;
   }
 
@@ -136,7 +132,7 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
   urlParams!: GenericObject;
 
   @property({type: Boolean})
-  active: boolean = false;
+  active = false;
 
   @property({type: String, notify: true})
   csvDownloadUrl!: string;
@@ -170,20 +166,19 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
     status: [],
     report_type: null,
     unicef_focal_points: []
-  }
+  };
 
   @property({type: Object})
   paginator: GenericObject = {
     page: 1,
     page_size: 10
-  }
+  };
 
   @property({type: Boolean})
-  _initComplete: boolean = false;
+  _initComplete = false;
 
   @property({type: String})
-  _prevFiltersChangedArgs!: string
-
+  _prevFiltersChangedArgs!: string;
 
   private _updateFiltersValsDebouncer!: Debouncer;
 
@@ -223,7 +218,10 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
      * Disable loading message for main list elements load,
      * triggered by parent element on stamp
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'reports-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'reports-page'
+    });
   }
 
   disconnectedCallback() {
@@ -231,11 +229,24 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
     this._initComplete = false;
   }
 
-  _initListFilters(partners: any[], cpOutputs: any[], sections: any[], unicefUsersData: any[],
-    reportStatuses: any[], reportTypes: any[]) {
-
-    if (!partners || partners.length === 0 || !cpOutputs || !sections ||
-        !unicefUsersData || unicefUsersData.length === 0 || !reportStatuses || !reportTypes) {
+  _initListFilters(
+    partners: any[],
+    cpOutputs: any[],
+    sections: any[],
+    unicefUsersData: any[],
+    reportStatuses: any[],
+    reportTypes: any[]
+  ) {
+    if (
+      !partners ||
+      partners.length === 0 ||
+      !cpOutputs ||
+      !sections ||
+      !unicefUsersData ||
+      unicefUsersData.length === 0 ||
+      !reportStatuses ||
+      !reportTypes
+    ) {
       return;
     }
     // init list filter options
@@ -324,37 +335,35 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
 
   // update selected filters(prezent in URL) at page refresh
   _updateSelectedFiltersValues() {
-    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer,
-      timeOut.after(100),
-      () => {
-        const filtersValues = [
-          {
-            filterName: 'Report Status',
-            selectedValue: this.queryParams.status
-          },
-          {
-            filterName: 'Report Type',
-            selectedValue: this.queryParams.report_type
-          },
-          {
-            filterName: 'Partner',
-            selectedValue: this.queryParams.external_partner_id
-          },
-          {
-            filterName: 'CP Output',
-            selectedValue: this.queryParams.cp_output
-          },
-          {
-            filterName: 'Section',
-            selectedValue: this.queryParams.section
-          },
-          {
-            filterName: 'UNICEF focal points',
-            selectedValue: this.queryParams.unicef_focal_points
-          }
-        ];
-        this.updateShownFilters(filtersValues);
-      });
+    this._updateFiltersValsDebouncer = Debouncer.debounce(this._updateFiltersValsDebouncer, timeOut.after(100), () => {
+      const filtersValues = [
+        {
+          filterName: 'Report Status',
+          selectedValue: this.queryParams.status
+        },
+        {
+          filterName: 'Report Type',
+          selectedValue: this.queryParams.report_type
+        },
+        {
+          filterName: 'Partner',
+          selectedValue: this.queryParams.external_partner_id
+        },
+        {
+          filterName: 'CP Output',
+          selectedValue: this.queryParams.cp_output
+        },
+        {
+          filterName: 'Section',
+          selectedValue: this.queryParams.section
+        },
+        {
+          filterName: 'UNICEF focal points',
+          selectedValue: this.queryParams.unicef_focal_points
+        }
+      ];
+      this.updateShownFilters(filtersValues);
+    });
   }
 
   _init(active: boolean) {
@@ -369,17 +378,16 @@ class ReportsList extends connect(store)(ListFiltersMixin(PolymerElement)) {
 
     this.setProperties({
       'queryParams.pd_ref_title': urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '',
-      'queryParams.external_partner_id':
-          urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null,
+      'queryParams.external_partner_id': urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null,
       'queryParams.cp_output': urlQueryParams.cp_output ? urlQueryParams.cp_output : null,
       'queryParams.section': urlQueryParams.section ? urlQueryParams.section : null,
       'queryParams.status': urlQueryParams.status ? urlQueryParams.status.split('|') : this.queryParams.status,
       'queryParams.unicef_focal_points': urlQueryParams.unicef_focal_points
-        ? urlQueryParams.unicef_focal_points.split('|') : [],
+        ? urlQueryParams.unicef_focal_points.split('|')
+        : [],
       'queryParams.report_type': urlQueryParams.report_type ? urlQueryParams.report_type : null,
       'paginator.page': urlQueryParams.page ? Number(urlQueryParams.page) : 1,
-      'paginator.page_size':
-          urlQueryParams.page_size ? Number(urlQueryParams.page_size) : CONSTANTS.DEFAULT_LIST_SIZE
+      'paginator.page_size': urlQueryParams.page_size ? Number(urlQueryParams.page_size) : CONSTANTS.DEFAULT_LIST_SIZE
     });
 
     this._updateSelectedFiltersValues();

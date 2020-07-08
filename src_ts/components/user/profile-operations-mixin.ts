@@ -5,7 +5,8 @@ import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
 import {updateCurrentUser} from '../../actions/common-data.js';
 import {fireEvent} from '../utils/fire-custom-event';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../utils/ajax-errors-parser.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {Constructor} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
@@ -18,15 +19,13 @@ import {property} from '@polymer/decorators';
  */
 function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class ProfileOperationsClass extends EndpointsMixin(UserDataMixin(baseClass)) {
-
     @property({type: Boolean})
-    _saveActionInProgress: boolean = false;
+    _saveActionInProgress = false;
 
     @property({type: String})
-    profileSaveLoadingMsgSource: string = 'profile-modal';
+    profileSaveLoadingMsgSource = 'profile-modal';
 
     protected _dispatchSaveProfileRequest(profile: any) {
-      const self = this;
       const config = {
         // @ts-ignore *defined in component
         endpoint: this.getEndpoint(this.endpointName),
@@ -34,12 +33,14 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
         body: profile
       };
 
-      this.sendRequest(config).then(function(resp: any) {
-        self._handleResponse(resp);
-      }).catch(function(error: any) {
-        parseRequestErrorsAndShowAsToastMsgs(error, self);
-        self._hideProfileSaveLoadingMsg();
-      });
+      sendRequest(config)
+        .then((resp: any) => {
+          this._handleResponse(resp);
+        })
+        .catch((error: any) => {
+          parseRequestErrorsAndShowAsToastMsgs(error, this);
+          this._hideProfileSaveLoadingMsg();
+        });
     }
 
     public saveProfile(profile: any) {
@@ -75,7 +76,6 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
         this.set('_saveActionInProgress', false);
       }
     }
-
   }
 
   return ProfileOperationsClass;

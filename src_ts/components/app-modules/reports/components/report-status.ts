@@ -16,7 +16,7 @@ class ReportStatus extends PolymerElement {
 
   static get template() {
     return html`
-    <style>
+      <style>
         :host {
           display: inline-block;
         }
@@ -28,25 +28,25 @@ class ReportStatus extends PolymerElement {
           margin-top: -2px;
         }
 
-        :host([status-type="default"]) iron-icon {
+        :host([status-type='default']) iron-icon {
           color: var(--primary-color);
         }
 
-        :host([status-type="submitted"]) iron-icon,
-        :host([status-type="success"]) iron-icon {
+        :host([status-type='submitted']) iron-icon,
+        :host([status-type='success']) iron-icon {
           color: var(--success-color);
         }
 
-        :host([status-type="no-status"]) iron-icon,
-        :host([status-type="error"]) iron-icon {
+        :host([status-type='no-status']) iron-icon,
+        :host([status-type='error']) iron-icon {
           color: var(--dark-error-color);
         }
 
-        :host([status-type="neutral"]) iron-icon {
+        :host([status-type='neutral']) iron-icon {
           color: var(--secondary-text-color);
         }
 
-        :host([status-type="warning"]) iron-icon {
+        :host([status-type='warning']) iron-icon {
           color: var(--warning-color);
         }
 
@@ -62,7 +62,6 @@ class ReportStatus extends PolymerElement {
         <span id="label">[[label]]</span>
       </template>
       <slot></slot>
-
     `;
   }
 
@@ -70,25 +69,32 @@ class ReportStatus extends PolymerElement {
   status!: string;
 
   @property({type: Boolean})
-  noLabel: boolean = false;
+  noLabel = false;
 
   @property({type: Boolean})
-  noIcon: boolean = false;
+  noIcon = false;
 
-  @property({type: String, computed: '_computeStatusType(status)', reflectToAttribute: true})
+  @property({
+    type: String,
+    computed: '_computeStatusType(status)',
+    reflectToAttribute: true
+  })
   statusType!: string;
 
-  @property({type: String, computed: '_computeLabel(status, final, reportType)'})
+  @property({
+    type: String,
+    computed: '_computeLabel(status, final, reportType)'
+  })
   label!: string;
 
   @property({type: String, computed: '_computeIcon(statusType)'})
   icon!: string;
 
   @property({type: Boolean})
-  final: boolean = false;
+  final = false;
 
   @property({type: String})
-  reportType: string = '';
+  reportType = '';
 
   _computeStatusType(status: null | undefined | string) {
     if (status === null || typeof status === 'undefined') {

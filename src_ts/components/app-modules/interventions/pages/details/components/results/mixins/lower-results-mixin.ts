@@ -11,16 +11,12 @@ import {PdLowerResultNameEl} from '../pd-lower-result-name';
  */
 function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class LowerResultsClass extends baseClass {
-
     @property({type: Object})
     lowerResultNameEditElem!: PdLowerResultNameEl;
 
-
     static get observers() {
       /* _makeSureDataItemsAreValid is a method from repeatable data sets mixin */
-      return [
-        '_makeSureDataItemsAreValid(dataItems)'
-      ];
+      return ['_makeSureDataItemsAreValid(dataItems)'];
     }
 
     ready() {
@@ -37,12 +33,18 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
       this._handleAddNewLowerResult = this._handleAddNewLowerResult.bind(this);
       this._handleEditLowerResult = this._handleEditLowerResult.bind(this);
 
-      this.addEventListener('add-new-lower-result', this._handleAddNewLowerResult as EventListenerOrEventListenerObject);
+      this.addEventListener(
+        'add-new-lower-result',
+        this._handleAddNewLowerResult as EventListenerOrEventListenerObject
+      );
       this.addEventListener('edit-lower-result', this._handleEditLowerResult as EventListenerOrEventListenerObject);
     }
 
     _removeLowerResultsListeners() {
-      this.removeEventListener('add-new-lower-result', this._handleAddNewLowerResult as EventListenerOrEventListenerObject);
+      this.removeEventListener(
+        'add-new-lower-result',
+        this._handleAddNewLowerResult as EventListenerOrEventListenerObject
+      );
       this.removeEventListener('edit-lower-result', this._handleEditLowerResult as EventListenerOrEventListenerObject);
     }
 
@@ -87,23 +89,23 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
       e.stopImmediatePropagation();
       try {
         if (!e.detail.expectedResultId) {
-          logError('Can not make changes if expected result ID is not specified.',
-            'lower-results-behavior');
+          logError('Can not make changes if expected result ID is not specified.', 'lower-results-behavior');
           return;
         }
         // @ts-ignore
         const expectedResultIndex = this._getDataIndex(e.detail.expectedResultId, this.dataItems);
         const validExpectedResultsIndex = expectedResultIndex >= 0;
         if (!validExpectedResultsIndex) {
-          logError('Result with ID: ' + e.detail.expectedResultId + ' not found.',
-            'lower-results-behavior');
+          logError('Result with ID: ' + e.detail.expectedResultId + ' not found.', 'lower-results-behavior');
           return;
         }
         if (!e.detail.lowerResultId) {
           this.push(['dataItems', expectedResultIndex, 'll_results'], e.detail.lowerResult);
         } else {
-          const lrIndex = this._getDataIndex(e.detail.lowerResultId, this.get(['dataItems', expectedResultIndex,
-            'll_results']));
+          const lrIndex = this._getDataIndex(
+            e.detail.lowerResultId,
+            this.get(['dataItems', expectedResultIndex, 'll_results'])
+          );
           const validIndex = lrIndex >= 0;
           if (!validIndex) {
             logError('Lower result with ID: ' + e.detail.lowerResultId + ' not found.', 'lower-results-behavior');
@@ -112,8 +114,7 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
           this.set(['dataItems', expectedResultIndex, 'll_results', lrIndex, 'name'], e.detail.lowerResult.name);
         }
       } catch (err) {
-        logError('Adding lower result in displayed list has failed!', 'lower-results-behavior',
-          err);
+        logError('Adding lower result in displayed list has failed!', 'lower-results-behavior', err);
       }
     }
 
@@ -139,7 +140,6 @@ function LowerResultsMixin<T extends Constructor<PolymerElement>>(baseClass: T) 
         this.lowerResultNameEditElem.openDialog();
       }
     }
-
   }
   return LowerResultsClass;
 }

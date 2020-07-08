@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
@@ -16,31 +16,26 @@ import {store} from '../../../../store';
 import {addDisaggregation} from '../../../../actions/common-data';
 import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles.js';
 import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
-
 
 /**
  * @polymer
  * @customElement
  * @mixinFunction
- * @appliesMixin EtoolsAjaxRequestMixin
  * @appliesMixin EndpointsMixin
  * @appliesMixin RepeatableDataSetsMixinMixin
  */
-class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(RepeatableDataSetsMixin(
-  EndpointsMixin(PolymerElement)))) {
-
+class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(EndpointsMixin(PolymerElement))) {
   static get template() {
     // language=HTML
     return html`
-        ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles}
-        ${actionIconBtnsStyles}
+      ${gridLayoutStyles} ${buttonsStyles} ${SharedStyles} ${requiredFieldStarredStyles} ${actionIconBtnsStyles}
       <style>
         paper-input {
-          width: 100%
+          width: 100%;
         }
 
         .groups {
@@ -62,18 +57,30 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
         etools-dialog paper-input.newGroup {
           --paper-input-container: {
             padding: 0 0 !important;
-          };
+          }
         }
-
       </style>
 
-      <etools-dialog keep-dialog-open id="etoolsDialog" size="lg" ok-btn-text="Save"
-                     dialog-title="Add Disaggregation" disable-confirm-btn="[[disableConfirmBtn]]"
-                     on-confirm-btn-clicked="_validateAndSaveDisaggregation">
+      <etools-dialog
+        keep-dialog-open
+        id="etoolsDialog"
+        size="lg"
+        ok-btn-text="Save"
+        dialog-title="Add Disaggregation"
+        disable-confirm-btn="[[disableConfirmBtn]]"
+        on-confirm-btn-clicked="_validateAndSaveDisaggregation"
+      >
         <div class="layout-horizontal flex-c row-padding-v">
           <div class="col col-4">
-            <paper-input id="disaggregateByEl" label="Disaggregation" value="{{disaggregation.name}}"
-                         required auto-validate error-message="Please add disaggregation" placeholder="&#8212;">
+            <paper-input
+              id="disaggregateByEl"
+              label="Disaggregation"
+              value="{{disaggregation.name}}"
+              required
+              auto-validate
+              error-message="Please add disaggregation"
+              placeholder="&#8212;"
+            >
             </paper-input>
           </div>
           <div class="col col-8">
@@ -81,18 +88,18 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
               <label class="paper-label">Disaggregation Group</label>
               <div class="layout-horizontal groups">
                 <template is="dom-repeat" items="[[dataItems]]">
-                  <paper-input class="newGroup" no-label-float
-                               label="New Group"
-                               value="{{item.value}}">
-                  </paper-input>
-                  <paper-icon-button class="action delete no-padding" icon="cancel"
-                                     on-tap="_openDeleteConfirmation"
-                                     data-args$="[[index]]"
-                                     title="Delete">
+                  <paper-input class="newGroup" no-label-float label="New Group" value="{{item.value}}"> </paper-input>
+                  <paper-icon-button
+                    class="action delete no-padding"
+                    icon="cancel"
+                    on-tap="_openDeleteConfirmation"
+                    data-args$="[[index]]"
+                    title="Delete"
+                  >
                   </paper-icon-button>
                 </template>
-                <paper-button class="secondary-btn" on-tap="_addNewGroup"
-                              title="Add Disaggregation Group">+Add
+                <paper-button class="secondary-btn" on-tap="_addNewGroup" title="Add Disaggregation Group"
+                  >+Add
                 </paper-button>
               </div>
             </div>
@@ -109,10 +116,10 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   dataItems!: [];
 
   @property({type: Object})
-  toastEventSource!: object;
+  toastEventSource!: HTMLElement;
 
   @property({type: Boolean})
-  disableConfirmBtn: boolean = false;
+  disableConfirmBtn = false;
 
   ready() {
     super.ready();
@@ -124,10 +131,13 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   }
 
   broadcastAddDisaggregToOtherTabs(disaggregation: Disaggregation) {
-    localStorage.setItem('update-redux', JSON.stringify({
-      type: 'ADD_DISAGGREGATION',
-      disaggregation: disaggregation
-    }));
+    localStorage.setItem(
+      'update-redux',
+      JSON.stringify({
+        type: 'ADD_DISAGGREGATION',
+        disaggregation: disaggregation
+      })
+    );
     localStorage.removeItem('update-redux');
   }
 
@@ -169,23 +179,23 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
       return;
     }
     this.startSpinner();
-    const self = this;
     const requestParams = {
       method: 'POST',
       endpoint: this.getEndpoint('disaggregations'),
       body: this._getBody()
     };
-    this.sendRequest(requestParams).then(function(response: any) {
-      self.disaggregation = response;
-      store.dispatch(addDisaggregation(response));
-      self.broadcastAddDisaggregToOtherTabs(response);
-      self.stopSpinner();
-      self.close();
-    }).catch(function(error: any) {
-      self.stopSpinner();
-      parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
-    });
-
+    return sendRequest(requestParams)
+      .then((response: any) => {
+        this.disaggregation = response;
+        store.dispatch(addDisaggregation(response));
+        this.broadcastAddDisaggregToOtherTabs(response);
+        this.stopSpinner();
+        this.close();
+      })
+      .catch((error: any) => {
+        this.stopSpinner();
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+      });
   }
 
   _getBody() {
@@ -208,7 +218,7 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   }
 
   _isEmpty(value: any) {
-    return (value === null || typeof value === 'undefined' || value === '');
+    return value === null || typeof value === 'undefined' || value === '';
   }
 
   validate() {
@@ -218,7 +228,6 @@ class AddDisaggregationDialog extends connect(store)(EtoolsAjaxRequestMixin(Repe
   resetValidations() {
     (this.shadowRoot!.querySelector('#disaggregateByEl') as PaperInputElement).invalid = false;
   }
-
 }
 
 window.customElements.define('add-disaggregation-dialog', AddDisaggregationDialog);

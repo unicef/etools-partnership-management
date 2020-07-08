@@ -12,7 +12,6 @@ import InterventionItemData from '../data/intervention-item-data.js';
 import InterventionDetails from '../pages/details/intervention-details.js';
 import InterventionReviewAndSign from '../pages/review-and-sign/intervention-review-and-sign';
 
-
 /**
  * PD/SSFA save functionality
  * @polymer
@@ -21,7 +20,6 @@ import InterventionReviewAndSign from '../pages/review-and-sign/intervention-rev
  */
 function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class SaveInterventionClass extends ModifiedInterventionFieldsMixin(baseClass as Constructor<PolymerElement>) {
-
     // --- *Defined in the component
     intervention!: Intervention;
     originalIntervention!: Intervention;
@@ -56,16 +54,19 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
       let interventionData = this._getModifiedFields();
       interventionData = this._prepareDataForSave(interventionData);
-      // @ts-ignore
-      return (this.$.interventionData as InterventionItemData).saveIntervention(interventionData, this._newInterventionSaved.bind(this))
-        .then((successfull: boolean) => {
-          if (successfull) {
-            store.dispatch({type: RESET_UNSAVED_UPLOADS});
-            return true;
-          } else {
-            return false;
-          }
-        });
+      return (
+        (this.$.interventionData as InterventionItemData)
+          // @ts-ignore
+          .saveIntervention(interventionData, this._newInterventionSaved.bind(this))
+          .then((successfull: boolean) => {
+            if (successfull) {
+              store.dispatch({type: RESET_UNSAVED_UPLOADS});
+              return true;
+            } else {
+              return false;
+            }
+          })
+      );
     }
 
     _getModifiedFields() {
@@ -84,7 +85,9 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
     _validateInterventionDetails() {
       let valid = false;
-      const intervDetailsEl = (this.shadowRoot!.querySelector('#interventionDetails')! as unknown as InterventionDetails);
+      const intervDetailsEl = (this.shadowRoot!.querySelector(
+        '#interventionDetails'
+      )! as unknown) as InterventionDetails;
 
       if (intervDetailsEl && typeof intervDetailsEl.validate === 'function') {
         valid = intervDetailsEl.validate();
@@ -92,8 +95,13 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
         // details element not stamped...
         // validate current data that belongs to details tab against permissions
         const detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
-        const detailsObjFields = ['unicef_focal_points', 'partner_focal_points',
-          'sections', 'flat_locations', 'offices'];
+        const detailsObjFields = [
+          'unicef_focal_points',
+          'partner_focal_points',
+          'sections',
+          'flat_locations',
+          'offices'
+        ];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           detailsPrimitiveFields.push('start', 'end');
         }
@@ -101,8 +109,9 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
           detailsPrimitiveFields.push('reference_number_year');
         }
 
-        valid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
-            this._validateInterventionObjectFields(detailsObjFields);
+        valid =
+          this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
+          this._validateInterventionObjectFields(detailsObjFields);
 
         this.set('_forceDetUiValidationOnAttach', true);
       }
@@ -112,14 +121,22 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
     _validateReviewAndSign() {
       let valid = false;
-      const reviewAndSignEl = (this.shadowRoot!.querySelector('#interventionReviewAndSign')! as unknown as InterventionReviewAndSign);
+      const reviewAndSignEl = (this.shadowRoot!.querySelector(
+        '#interventionReviewAndSign'
+      )! as unknown) as InterventionReviewAndSign;
       if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
         valid = reviewAndSignEl.validate();
       } else {
         // review and signed element not stamped...
         // validate current data that belongs to this tab against permissions
-        const reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
-          'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_attachment', 'submission_date'];
+        const reviewAndSignPrimitiveFields = [
+          'partner_authorized_officer_signatory',
+          'signed_by_partner_date',
+          'unicef_signatory',
+          'signed_by_unicef_date',
+          'signed_pd_attachment',
+          'submission_date'
+        ];
         valid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields);
         this.set('_forceReviewUiValidationOnAttach', true);
       }
@@ -175,11 +192,13 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
 
     _showErrorsWarning(validDetails: boolean, validReviewAndSign: boolean) {
       let msg = '';
-      if ((this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-          this.intervention.status === '') &&
-          this.intervention.signed_pd_attachment) {
-        msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
-            '(check DETAILS and REVIEW & SIGN tabs).';
+      if (
+        (this.intervention.status === CONSTANTS.STATUSES.Draft.toLowerCase() || this.intervention.status === '') &&
+        this.intervention.signed_pd_attachment
+      ) {
+        msg =
+          'Status of the PD/SSFA will change to signed once all required fields are completed ' +
+          '(check DETAILS and REVIEW & SIGN tabs).';
       } else {
         msg = 'Document can not be saved because of missing data';
         const tabs = [];
@@ -189,7 +208,7 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
         if (validReviewAndSign === false) {
           tabs.push('REVIEW & SIGN');
         }
-        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '.';
+        msg += ' from ' + (tabs.length > 1 ? tabs.join(', ') + ' tabs' : tabs[0] + ' tab') + '.';
       }
 
       fireEvent(this, 'toast', {text: msg, showCloseBtn: true});
@@ -211,6 +230,5 @@ function SaveInterventionMixin<T extends Constructor<PolymerElement>>(baseClass:
   }
   return SaveInterventionClass;
 }
-
 
 export default SaveInterventionMixin;

@@ -23,7 +23,6 @@ import {AssessmentDialog} from './assessment-dialog.js';
 import {IconsActionsEl} from '../../../../../layout/icons-actions.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event.js';
 
-
 /**
  * @customElement
  * @polymer
@@ -31,7 +30,6 @@ import {fireEvent} from '../../../../../utils/fire-custom-event.js';
  * @appliesMixin CommonMixin
  */
 class AssessmentsItems extends CommonMixin(PolymerElement) {
-
   static get template() {
     // language=HTML
     return html`
@@ -65,25 +63,21 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
         etools-data-table-row:hover icons-actions {
           visibility: visible;
         }
-
       </style>
 
-      <etools-content-panel
-        panel-title="Other Assessments ([[dataItems.length]])"
-        class="content-section">
-
+      <etools-content-panel panel-title="Other Assessments ([[dataItems.length]])" class="content-section">
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showArchived"
-                               checked="{{showArchived}}">
+          <paper-toggle-button id="showArchived" checked="{{showArchived}}">
             Show archived
           </paper-toggle-button>
-          <div class="separator" hidden$="[[!editMode]]">
-          </div>
-          <paper-icon-button icon="add-box"
-                             disabled="[[!editMode]]"
-                             hidden$="[[!editMode]]"
-                             title="Add other assessment"
-                             on-tap="_openAddAssessmentDialog">
+          <div class="separator" hidden$="[[!editMode]]"></div>
+          <paper-icon-button
+            icon="add-box"
+            disabled="[[!editMode]]"
+            hidden$="[[!editMode]]"
+            title="Add other assessment"
+            on-tap="_openAddAssessmentDialog"
+          >
           </paper-icon-button>
         </div>
 
@@ -104,7 +98,11 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
           </etools-data-table-header>
 
           <template is="dom-repeat" items="{{dataItems}}">
-            <etools-data-table-row secondary-bg-on-hover no-collapse hidden$="[[!_isVisible(item.active, showArchived)]]">
+            <etools-data-table-row
+              secondary-bg-on-hover
+              no-collapse
+              hidden$="[[!_isVisible(item.active, showArchived)]]"
+            >
               <div slot="row-data" class="p-relative">
                 <span class="col-data col-3">
                   [[item.type]]
@@ -125,23 +123,22 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
                   <span hidden$="[[!item.active]]" class="placeholder-style">&#8212;</span>
                   <iron-icon icon="check" hidden$="[[item.active]]"></iron-icon>
                 </span>
-                <icons-actions item-id$="[[item.id]]"
-                               hidden$="[[!editMode]]"
-                               on-edit="_editAssessment"
-                               show-delete="[[showDelete]]">
+                <icons-actions
+                  item-id$="[[item.id]]"
+                  hidden$="[[!editMode]]"
+                  on-edit="_editAssessment"
+                  show-delete="[[showDelete]]"
+                >
                 </icons-actions>
               </div>
             </etools-data-table-row>
-
           </template>
         </div>
 
         <div class="row-h no-assessments-warning" hidden$="[[!_emptyList(dataItems.length)]]">
           <p>There are no assessments added.</p>
         </div>
-
       </etools-content-panel>
-
     `;
   }
 
@@ -152,19 +149,23 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   partnerId: number | null = null;
 
   @property({type: Boolean, reflectToAttribute: true})
-  open: boolean = true;
+  open = true;
 
-  @property({type: Boolean, reflectToAttribute: true, observer: '_editModeChanged'})
+  @property({
+    type: Boolean,
+    reflectToAttribute: true,
+    observer: '_editModeChanged'
+  })
   editMode!: boolean;
 
   @property({type: Boolean})
-  showArchived: boolean = false;
+  showArchived = false;
 
   @property({type: Object})
   assessmentDialog!: AssessmentDialog;
 
   @property({type: Boolean})
-  showDelete: boolean = false;
+  showDelete = false;
 
   ready() {
     super.ready();
@@ -222,8 +223,9 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   }
 
   _editAssessment(e: CustomEvent) {
-    const assessment = this.dataItems
-      .find((a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id')));
+    const assessment = this.dataItems.find(
+      (a: any) => a.id === Number((e.target as IconsActionsEl).getAttribute('item-id'))
+    );
     this.assessmentDialog.initAssessment(JSON.parse(JSON.stringify(assessment)));
     this.assessmentDialog.opened = true;
   }
@@ -235,7 +237,6 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   _uploadFinished(e: CustomEvent) {
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
-
       const assessmentIndex = Number((e.target as any).getAttribute('data-args-index')); // TODO - who is e.target
       const uploadResponse = JSON.parse(e.detail.success);
       this.set(['dataItems', assessmentIndex, 'report_attachment'], uploadResponse.id);
@@ -250,9 +251,6 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
   _emptyList(length: number) {
     return length === 0;
   }
-
 }
 
 window.customElements.define('assessments-items', AssessmentsItems);
-
-

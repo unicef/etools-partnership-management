@@ -5,6 +5,7 @@ import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-date-time/calendar-lite';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import './hru-list.js';
 import CONSTANTS from '../../../../../../../../config/app-constants.js';
 import {fireEvent} from '../../../../../../../utils/fire-custom-event.js';
@@ -16,7 +17,7 @@ import EndpointsMixin from '../../../../../../../endpoints/endpoints-mixin.js';
 import {isEmptyObject} from '../../../../../../../utils/utils.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../../../../../store.js';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
@@ -28,83 +29,91 @@ import {GenericObject} from '../../../../../../../../typings/globals.types.js';
  * @appliesMixin EndpointsMixin
  */
 class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
-
   static get template() {
     return html`
-    ${gridLayoutStyles} ${buttonsStyles} ${requiredFieldStarredStyles}
-    <style include="data-table-styles">
-      *[hidden] {
-        display: none !important;
-      }
+      ${gridLayoutStyles} ${buttonsStyles} ${requiredFieldStarredStyles}
+      <style include="data-table-styles">
+        *[hidden] {
+          display: none !important;
+        }
 
-      #add-selected-date {
-        display: inline-block;
-        width: auto;
-        margin-top: 24px;
-        padding-right: 0;
-      }
+        #add-selected-date {
+          display: inline-block;
+          width: auto;
+          margin-top: 24px;
+          padding-right: 0;
+        }
 
-      .start-date {
-        padding-bottom: 24px;
-        max-width: 300px;
-      }
+        .start-date {
+          padding-bottom: 24px;
+          max-width: 300px;
+        }
 
-      calendar-lite {
-        position: relative;
-      }
-    </style>
+        calendar-lite {
+          position: relative;
+        }
+      </style>
 
-    <etools-dialog id="editHruDialog"
-                  size="lg"
-                  dialog-title="Add/Edit Dates for Humanitarian Report - UNICEF"
-                  on-confirm-btn-clicked="_saveHurData"
-                  ok-btn-text="Save"
-                  keep-dialog-open
-                  hidden$="[[datePickerOpen]]"
-                  spinner-text="Saving...">
-      <div class="start-date">
-      <datepicker-lite id="dtPickerStDate"
-                        label="Select start date"
-                        value="{{repStartDate}}"
-                        required
-                        min-date="[[minDate]]"
-                        auto-validate
-                        open="{{datePickerOpen}}"
-                        selected-date-display-format="D MMM YYYY">
-      </datepicker-lite>
-      </div>
-      <div>
-        Use the date picker to select end dates of humanitarian report requirements.
-      </div>
-
-      <div class="layout-horizontal row-padding-v">
-        <div class="col layout-vertical col-6">
-          <calendar-lite id="datepicker"
-                    date="[[prepareDatepickerDate(selectedDate)]]"
-                    pretty-date="{{selectedDate}}"
-                    format="YYYY-MM-DD"
-                    hide-header>
-          </calendar-lite>
-
-          <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
-            Add Selected Date to List
-          </paper-button>
+      <etools-dialog
+        id="editHruDialog"
+        size="lg"
+        dialog-title="Add/Edit Dates for Humanitarian Report - UNICEF"
+        on-confirm-btn-clicked="_saveHurData"
+        ok-btn-text="Save"
+        keep-dialog-open
+        hidden$="[[datePickerOpen]]"
+        spinner-text="Saving..."
+      >
+        <div class="start-date">
+          <datepicker-lite
+            id="dtPickerStDate"
+            label="Select start date"
+            value="{{repStartDate}}"
+            required
+            min-date="[[minDate]]"
+            auto-validate
+            open="{{datePickerOpen}}"
+            selected-date-display-format="D MMM YYYY"
+          >
+          </datepicker-lite>
         </div>
-        <div class="col col-6">
-          <div class="row-h" hidden$="[[!_empty(hruData.length)]]">No dates added.</div>
-          <hru-list id="hruList"
-                    class="flex-c"
-                    with-scroll
-                    hru-data="[[hruData]]"
-                    hidden$="[[_empty(hruData.length)]]"
-                    edit-mode
-                    in-amendment="[[inAmendment]]"
-                    on-delete-hru="_deleteHruDate">
-          </hru-list>
+        <div>
+          Use the date picker to select end dates of humanitarian report requirements.
         </div>
-      </div>
 
-    </etools-dialog>
+        <div class="layout-horizontal row-padding-v">
+          <div class="col layout-vertical col-6">
+            <calendar-lite
+              id="datepicker"
+              date="[[prepareDatepickerDate(selectedDate)]]"
+              pretty-date="{{selectedDate}}"
+              format="YYYY-MM-DD"
+              hide-header
+            >
+            </calendar-lite>
+
+            <paper-button id="add-selected-date" class="secondary-btn" on-click="_addToList">
+              Add Selected Date to List
+            </paper-button>
+          </div>
+          <div class="col col-6">
+            <div class="row-h" hidden$="[[!_empty(hruData.length)]]">
+              No dates added.
+            </div>
+            <hru-list
+              id="hruList"
+              class="flex-c"
+              with-scroll
+              hru-data="[[hruData]]"
+              hidden$="[[_empty(hruData.length)]]"
+              edit-mode
+              in-amendment="[[inAmendment]]"
+              on-delete-hru="_deleteHruDate"
+            >
+            </hru-list>
+          </div>
+        </div>
+      </etools-dialog>
     `;
   }
 
@@ -133,16 +142,13 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   toastMsgLoadingSource!: PolymerElement;
 
   @property({type: Number})
-  _hruEditedIndex: number = -1;
+  _hruEditedIndex = -1;
 
   @property({type: Boolean})
-  datePickerOpen: boolean = false;
-
+  datePickerOpen = false;
 
   static get observers() {
-    return [
-      'intervDataChanged(interventionStart, interventionId)'
-    ];
+    return ['intervDataChanged(interventionStart, interventionId)'];
   }
 
   stateChanged(state: RootState) {
@@ -196,13 +202,16 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   _addToList() {
     const alreadySelected = this.hruData.find((d: any) => d.end_date === this.selectedDate);
     if (alreadySelected) {
-      fireEvent(this.toastMsgLoadingSource, 'toast',
-        {text: 'This date is already added to the list.', showCloseBtn: true});
+      fireEvent(this.toastMsgLoadingSource, 'toast', {
+        text: 'This date is already added to the list.',
+        showCloseBtn: true
+      });
       return;
     }
     this.push('hruData', {
       end_date: moment(this.selectedDate).format('YYYY-MM-DD'),
-      due_date: this._oneDayAfterEndDate(this.selectedDate)});
+      due_date: this._oneDayAfterEndDate(this.selectedDate)
+    });
   }
 
   _oneDayAfterEndDate(endDt: string) {
@@ -235,7 +244,9 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
   }
 
   _computeStartDate(i: number) {
-    return moment(this.hruData[i-1].end_date).add(1, 'days').format('YYYY-MM-DD');
+    return moment(this.hruData[i - 1].end_date)
+      .add(1, 'days')
+      .format('YYYY-MM-DD');
   }
 
   _saveHurData() {
@@ -247,25 +258,26 @@ class EditHruDialog extends connect(store)(EndpointsMixin(PolymerElement)) {
     });
     const dialog = this.$.editHruDialog as EtoolsDialog;
     dialog.startSpinner();
-    this.sendRequest({
+    sendRequest({
       method: 'POST',
       endpoint: endpoint,
       body: {reporting_requirements: this.hruData}
-    }).then((response: any) => {
-      fireEvent(this, 'reporting-requirements-saved', response.reporting_requirements);
-      dialog.stopSpinner();
-      this.closeDialog();
-    }).catch((error: any) => {
-      logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
-      parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
-      dialog.stopSpinner();
-    });
+    })
+      .then((response: any) => {
+        fireEvent(this, 'reporting-requirements-saved', response.reporting_requirements);
+        dialog.stopSpinner();
+        this.closeDialog();
+      })
+      .catch((error: any) => {
+        logError('Failed to save/update HR data!', 'edit-hru-dialog', error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this.toastMsgLoadingSource);
+        dialog.stopSpinner();
+      });
   }
 
   prepareDatepickerDate(dateStr: string) {
     return prepareDatepickerDate(dateStr);
   }
-
 }
 
 window.customElements.define('edit-hru-dialog', EditHruDialog);

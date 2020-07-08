@@ -7,9 +7,8 @@ import {ResultLinkLowerResult, ExpectedResult} from '../../../../../../../../typ
 import {isEmptyObject} from '../../../../../../../utils/utils';
 import {gridLayoutStyles} from '../../../../../../../styles/grid-layout-styles';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {parseRequestErrorsAndShowAsToastMsgs} from '../../../../../../../utils/ajax-errors-parser.js';
+import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
-
 
 /**
  * @customElement
@@ -19,10 +18,9 @@ import {property} from '@polymer/decorators';
  * @appliesMixin CommonMixin
  */
 class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(PolymerElement)) {
-
   static get template() {
     return html`
-    ${gridLayoutStyles}
+      ${gridLayoutStyles}
       <style include="data-table-styles">
         :host {
           display: block;
@@ -34,8 +32,7 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
       </style>
 
       <div class="flex-c" hidden$="[[!reportingRequirements.length]]">
-        <etools-data-table-header no-collapse
-                                  no-title class="w100">
+        <etools-data-table-header no-collapse no-title class="w100">
           <etools-data-table-column class="col-2">Frequency</etools-data-table-column>
           <etools-data-table-column class="flex-c">Due Dates</etools-data-table-column>
         </etools-data-table-header>
@@ -55,15 +52,21 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
     `;
   }
 
-  @property({type: Array, observer: HumanitarianReportingReqCluster.prototype.reportingRequirementsChanged})
+  @property({
+    type: Array,
+    observer: HumanitarianReportingReqCluster.prototype.reportingRequirementsChanged
+  })
   reportingRequirements!: [];
 
-  // @ts-ignore
-  @property({type: String, observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged})
+  @property({
+    type: String,
+    // @ts-ignore
+    observer: HumanitarianReportingReqCluster.prototype.interventionIdChanged
+  })
   interventionId!: string;
 
   @property({type: Number, notify: true})
-  requirementsCount: number = 0;
+  requirementsCount = 0;
 
   @property({type: Array})
   expectedResults!: [];
@@ -84,16 +87,22 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
       return;
     }
 
-    this.fireRequest('hrClusterReportingRequirements', {}, {
-      method: 'POST',
-      body: {reportable_ids: clusterIndicIds}
-    }).then((response: any) => {
-      this.set('reportingRequirements', response);
-    }).catch((error: any) => {
-      logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
-      parseRequestErrorsAndShowAsToastMsgs(error, this);
-      this.reportingRequirements = [];
-    });
+    this.fireRequest(
+      'hrClusterReportingRequirements',
+      {},
+      {
+        method: 'POST',
+        body: {reportable_ids: clusterIndicIds}
+      }
+    )
+      .then((response: any) => {
+        this.set('reportingRequirements', response);
+      })
+      .catch((error: any) => {
+        logError('Failed to get hr cluster requirements from API!', 'humanitarian-reporting-req-cluster', error);
+        parseRequestErrorsAndShowAsToastMsgs(error, this);
+        this.reportingRequirements = [];
+      });
   }
 
   _getClusterIndicIds() {
@@ -126,7 +135,7 @@ class HumanitarianReportingReqCluster extends CommonMixin(EndpointsMixin(Polymer
       if (!dates.length) {
         return '';
       }
-      const formatedDates = dates.map(d => this.getDateDisplayValue(d));
+      const formatedDates = dates.map((d) => this.getDateDisplayValue(d));
       return formatedDates.join(', ');
     } else {
       return this.getDateDisplayValue(dates);

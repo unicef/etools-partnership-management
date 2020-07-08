@@ -23,7 +23,12 @@ import EnvironmentFlagsMixin from '../../../../environment-flags/environment-fla
 import MissingDropdownOptionsMixin from '../../../../mixins/missing-dropdown-options-mixin';
 import CONSTANTS from '../../../../../config/app-constants';
 import {Agreement} from '../../../agreements/agreement.types';
-import {Intervention, ExpectedResult, InterventionPermissionsFields, Location} from '../../../../../typings/intervention.types';
+import {
+  Intervention,
+  ExpectedResult,
+  InterventionPermissionsFields,
+  Location
+} from '../../../../../typings/intervention.types';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {LabelAndValue, Permission, GenericObject, Office, MinimalUser} from '../../../../../typings/globals.types';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -43,7 +48,11 @@ import './components/planned-visits.js';
 import {setPageDataPermissions} from '../../../../../actions/page-data.js';
 import './components/reporting-requirements/partner-reporting-requirements.js';
 import './components/grouped-locations-dialog.js';
-import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS, DECREASE_UNSAVED_UPLOADS} from '../../../../../actions/upload-status.js';
+import {
+  DECREASE_UPLOADS_IN_PROGRESS,
+  INCREASE_UNSAVED_UPLOADS,
+  DECREASE_UNSAVED_UPLOADS
+} from '../../../../../actions/upload-status.js';
 import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
 import {dateDiff, isFutureDate} from '../../../../utils/date-utils';
 import {property} from '@polymer/decorators';
@@ -55,7 +64,6 @@ import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure.js';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../styles/etools-cp-header-actions-bar-styles.js';
 import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
-
 
 /**
  * @polymer
@@ -70,395 +78,450 @@ import {PaperInputElement} from '@polymer/paper-input/paper-input.js';
 class InterventionDetails extends connect(store)(
   EnvironmentFlagsMixin(
     CommonMixin(
-      UploadsMixin(
-        FrNumbersConsistencyMixin(
-          StaffMembersDataMixin(
-            MissingDropdownOptionsMixin(PolymerElement))))))) {
-
+      UploadsMixin(FrNumbersConsistencyMixin(StaffMembersDataMixin(MissingDropdownOptionsMixin(PolymerElement))))
+    )
+  )
+) {
   static get template() {
     return html`
-      ${pmpCustomIcons}
-      ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
+      ${pmpCustomIcons} ${pageCommonStyles} ${gridLayoutStyles} ${SharedStyles} ${requiredFieldStarredStyles}
       ${buttonsStyles} ${frWarningsStyles} ${etoolsCpHeaderActionsBarStyles}
       <style>
-      :host {
-        @apply --layout-vertical;
-        width: 100%;
-      }
+        :host {
+          @apply --layout-vertical;
+          width: 100%;
+        }
 
-      paper-input,
-      agreement-selector,
-      etools-cp-structure,
-      #ref-year {
-        width: 100%;
-      }
+        paper-input,
+        agreement-selector,
+        etools-cp-structure,
+        #ref-year {
+          width: 100%;
+        }
 
-      .expiry-warning {
-        @apply --layout-vertical;
-        @apply --layout-flex;
-        @apply --layout-end-justified;
-        padding-bottom: 12px;
-        color: var(--error-color);
-      }
+        .expiry-warning {
+          @apply --layout-vertical;
+          @apply --layout-flex;
+          @apply --layout-end-justified;
+          padding-bottom: 12px;
+          color: var(--error-color);
+        }
 
-      paper-toggle-button {
-        font-size: 16px;
-      }
+        paper-toggle-button {
+          font-size: 16px;
+        }
 
-      div[no-left-padding] {
-        padding-left: 0px !important;
-      }
+        div[no-left-padding] {
+          padding-left: 0px !important;
+        }
 
-      .names-padding {
-        padding-right: 15px;
-      }
+        .names-padding {
+          padding-right: 15px;
+        }
 
-      .see-locations {
-        padding-right: 0;
-        min-width: 100px;
-        @apply --layout-end;
-        padding-bottom: 12px;
-      }
+        .see-locations {
+          padding-right: 0;
+          min-width: 100px;
+          @apply --layout-end;
+          padding-bottom: 12px;
+        }
 
-      .see-locations iron-icon {
-        margin-right: 0;
-        margin-bottom: 2px;
-        --iron-icon-height: 18px;
-        --iron-icon-width: 18px;
-      }
+        .see-locations iron-icon {
+          margin-right: 0;
+          margin-bottom: 2px;
+          --iron-icon-height: 18px;
+          --iron-icon-width: 18px;
+        }
 
-      .see-locations[disabled] {
-        background-color: transparent;
-      }
+        .see-locations[disabled] {
+          background-color: transparent;
+        }
 
-      paper-toggle-button#showInactive {
-        --paper-toggle-button-label-color: white;
-        --paper-toggle-button-checked-bar-color: white;
-        padding-right: 10px;
-      }
+        paper-toggle-button#showInactive {
+          --paper-toggle-button-label-color: white;
+          --paper-toggle-button-checked-bar-color: white;
+          padding-right: 10px;
+        }
 
-      .export-res-btn {
-        height: 28px;
-        margin-top: 4px;
-        margin-bottom: 6px;
-      }
-    </style>
+        .export-res-btn {
+          height: 28px;
+          margin-top: 4px;
+          margin-bottom: 6px;
+        }
+      </style>
 
-    <etools-content-panel class="content-section" panel-title="Partnership Information">
-      <div class="row-h">
-        <agreement-selector id="agreementSelector"
-                            agreement-id="{{intervention.agreement}}"
-                            partner-id="{{selectedPartnerId}}"
-                            selected-agreement="{{agreement}}"
-                            intervention="[[intervention]]"></agreement-selector>
-      </div>
-      <div class="row-h">
-        <div class="col col-6">
-          <etools-dropdown id="documentType"
-                          label="Document Type"
-                          placeholder="&#8212;"
-                          options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
-                          selected="{{intervention.document_type}}"
-                          hide-search
-                          readonly$="[[!permissions.edit.document_type]]"
-                          required$="[[permissions.required.document_type]]"
-                          auto-validate
-                          error-message="Document type is required">
-          </etools-dropdown>
-
+      <etools-content-panel class="content-section" panel-title="Partnership Information">
+        <div class="row-h">
+          <agreement-selector
+            id="agreementSelector"
+            agreement-id="{{intervention.agreement}}"
+            partner-id="{{selectedPartnerId}}"
+            selected-agreement="{{agreement}}"
+            intervention="[[intervention]]"
+          ></agreement-selector>
         </div>
+        <div class="row-h">
+          <div class="col col-6">
+            <etools-dropdown
+              id="documentType"
+              label="Document Type"
+              placeholder="&#8212;"
+              options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
+              selected="{{intervention.document_type}}"
+              hide-search
+              readonly$="[[!permissions.edit.document_type]]"
+              required$="[[permissions.required.document_type]]"
+              auto-validate
+              error-message="Document type is required"
+            >
+            </etools-dropdown>
+          </div>
 
-        <div class="col col-2" title$="[[intervention.number]]" hidden$="[[!_showRefYear(intervention.document_type,
-                                                                          intervention.status)]]">
-          <year-dropdown id="ref-year"
-                        label="Ref. Year"
-                        selected-year="{{intervention.reference_number_year}}">
-          </year-dropdown>
-        </div>
-        <div class="col flex-c">
-          <paper-input id="ref-nr"
-                      label="Reference Number"
-                      value="[[intervention.number]]"
-                      placeholder="&#8212;"
-                      readonly></paper-input>
-        </div>
-      </div>
-      <div class="row-h flex-c">
-        <!-- Title -->
-        <paper-input id="title"
-                    label="Title"
-                    value="{{intervention.title}}"
-                    placeholder="&#8212;"
-                    char-counter
-                    maxlength="256"
-                    readonly$="[[!permissions.edit.title]]"
-                    required$="[[permissions.required.title]]"
-                    on-focus="_activateAutoValidation"
-                    error-message="Please add a title"></paper-input>
-      </div>
-      <div class="row-h flex-c">
-        <div class="col col-6">
-          <etools-dropdown-multi id="unicefOffices"
-                                label="UNICEF Office(s)"
-                                placeholder="&#8212;"
-                                options="[[offices]]"
-                                option-label="name"
-                                option-value="id"
-                                selected-values="{{intervention.offices}}"
-                                readonly$="[[!permissions.edit.offices]]"
-                                required$="[[permissions.required.offices]]"
-                                auto-validate
-                                error-message="Please select intervention's office(s)">
-          </etools-dropdown-multi>
-        </div>
-        <div class="col col-6">
-          <etools-dropdown-multi id="unicefFocalPts"
-                                label="UNICEF Focal Point(s)"
-                                placeholder="&#8212;"
-                                options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
-                                option-label="name"
-                                option-value="id"
-                                selected-values="{{intervention.unicef_focal_points}}"
-                                readonly$="[[!permissions.edit.unicef_focal_points]]"
-                                required$="[[permissions.required.unicef_focal_points]]"
-                                auto-validate
-                                error-message="Please select UNICEF focal points">
-          </etools-dropdown-multi>
-        </div>
-      </div>
-      <div class="row-h flex-c">
-        <div class="col col-6">
-          <etools-dropdown-multi id="partnerFocalPts"
-                                label="Partner Focal Point(s)"
-                                placeholder="&#8212;"
-                                options="[[staffMembers]]"
-                                option-value="id"
-                                option-label="name"
-                                selected-values="{{intervention.partner_focal_points}}"
-                                readonly$="[[!permissions.edit.partner_focal_points]]"
-                                required$="[[permissions.required.partner_focal_points]]"
-                                auto-validate
-                                error-message="Please select partner focal points">
-          </etools-dropdown-multi>
-        </div>
-
-      </div>
-    </etools-content-panel>
-
-    <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c row-second-bg"  hidden$="[[!_showContingencyPd(agreement)]]">
-        <div class="col col-3">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}"
-                              disabled="[[!permissions.edit.contingency_pd]]">Contingency PD
-          </paper-toggle-button>
-        </div>
-        <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
-          <etools-upload label="Activation Letter"
-                        id="activationLetterUpload"
-                        file-url="{{intervention.activation_letter_attachment}}"
-                        upload-endpoint="[[uploadEndpoint]]"
-                        on-upload-finished="_activationLetterUploadFinished"
-                        on-upload-started="_onUploadStarted"
-                        hidden$="[[_isDraft(intervention.status)]]"
-                        show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status,
-                                          permissions.edit.activation_letter_attachment)]]"
-                        on-delete-file="_activationLetterDelete"
-                        on-change-unsaved-file="_onChangeUnsavedFile">
-          </etools-upload>
-        </div>
-      </div>
-      <div class="row-h row-second-bg" hidden$="[[_isContingencyAndDraft(intervention.contingency_pd, intervention.status)]]">
-        <div class="col col-3">
-          <!-- Start date -->
-          <etools-info-tooltip class="fr-nr-warn"
-                              icon-first
-                              custom-icon
-                              form-field-align
-                              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
-            <datepicker-lite slot="field"
-                              id="intStart"
-                              label="Start date"
-                              value="{{intervention.start}}"
-                              readonly$="[[!permissions.edit.start]]"
-                              required$="[[permissions.required.start]]"
-                              error-message="Please select start date"
-                              auto-validate
-                              selected-date-display-format="D MMM YYYY">
-            </datepicker-lite>
-            <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-            <span slot="message">[[_frsStartConsistencyWarning]]</span>
-          </etools-info-tooltip>
-
-        </div>
-        <div class="col col-3">
-          <etools-info-tooltip class="fr-nr-warn"
-                              custom-icon
-                              icon-first
-                              form-field-align
-                              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
-            <datepicker-lite slot="field"
-                              id="intEnd"
-                              label="End date"
-                              value="{{intervention.end}}"
-                              readonly$="[[!permissions.edit.end]]"
-                              required$="[[permissions.required.end]]"
-                              error-message="Please select end date"
-                              auto-validate
-                              selected-date-display-format="D MMM YYYY">
-            </datepicker-lite>
-            <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
-            <span slot="message">[[_frsEndConsistencyWarning]]</span>
-          </etools-info-tooltip>
-        </div>
-        <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
-          <etools-upload label="Termination Notice"
-                        file-url="[[intervention.termination_doc_attachment]]"
-                        readonly>
-          </etools-upload>
-        </div>
-        <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
-          <div class="expiry-warning">
-            <span>[[_daysUntilExpiry(intervention.end)]]</span>
+          <div
+            class="col col-2"
+            title$="[[intervention.number]]"
+            hidden$="[[!_showRefYear(intervention.document_type,
+                                                                          intervention.status)]]"
+          >
+            <year-dropdown id="ref-year" label="Ref. Year" selected-year="{{intervention.reference_number_year}}">
+            </year-dropdown>
+          </div>
+          <div class="col flex-c">
+            <paper-input
+              id="ref-nr"
+              label="Reference Number"
+              value="[[intervention.number]]"
+              placeholder="&#8212;"
+              readonly
+            ></paper-input>
           </div>
         </div>
-      </div>
-      <div class="row-h flex-c">
-        <etools-cp-structure id="cpStructure"
-                            module="interventions"
-                            app-module-item="[[intervention]]"
-                            selected-cp="{{intervention.country_programme}}"
-                            edit-mode="[[permissions.edit.country_programme]]"
-                            required="[[permissions.required.country_programme]]">
-        </etools-cp-structure>
-      </div>
+        <div class="row-h flex-c">
+          <!-- Title -->
+          <paper-input
+            id="title"
+            label="Title"
+            value="{{intervention.title}}"
+            placeholder="&#8212;"
+            char-counter
+            maxlength="256"
+            readonly$="[[!permissions.edit.title]]"
+            required$="[[permissions.required.title]]"
+            on-focus="_activateAutoValidation"
+            error-message="Please add a title"
+          ></paper-input>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <etools-dropdown-multi
+              id="unicefOffices"
+              label="UNICEF Office(s)"
+              placeholder="&#8212;"
+              options="[[offices]]"
+              option-label="name"
+              option-value="id"
+              selected-values="{{intervention.offices}}"
+              readonly$="[[!permissions.edit.offices]]"
+              required$="[[permissions.required.offices]]"
+              auto-validate
+              error-message="Please select intervention's office(s)"
+            >
+            </etools-dropdown-multi>
+          </div>
+          <div class="col col-6">
+            <etools-dropdown-multi
+              id="unicefFocalPts"
+              label="UNICEF Focal Point(s)"
+              placeholder="&#8212;"
+              options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
+              option-label="name"
+              option-value="id"
+              selected-values="{{intervention.unicef_focal_points}}"
+              readonly$="[[!permissions.edit.unicef_focal_points]]"
+              required$="[[permissions.required.unicef_focal_points]]"
+              auto-validate
+              error-message="Please select UNICEF focal points"
+            >
+            </etools-dropdown-multi>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <etools-dropdown-multi
+              id="partnerFocalPts"
+              label="Partner Focal Point(s)"
+              placeholder="&#8212;"
+              options="[[staffMembers]]"
+              option-value="id"
+              option-label="name"
+              selected-values="{{intervention.partner_focal_points}}"
+              readonly$="[[!permissions.edit.partner_focal_points]]"
+              required$="[[permissions.required.partner_focal_points]]"
+              auto-validate
+              error-message="Please select partner focal points"
+            >
+            </etools-dropdown-multi>
+          </div>
+        </div>
+      </etools-content-panel>
 
-      <div class="row-h flex-c">
-        <etools-dropdown-multi id="sections"
-                              label="Section(s)"
-                              placeholder="&#8212;"
-                              selected-values="{{intervention.sections}}"
-                              options="[[sections]]"
-                              option-label="name"
-                              option-value="id"
-                              readonly$="[[!permissions.edit.sections]]"
-                              required$="[[permissions.required.sections]]"
-                              auto-validate
-                              error-message="Please select a section">
-        </etools-dropdown-multi>
-      </div>
+      <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
+        <div class="row-h flex-c row-second-bg" hidden$="[[!_showContingencyPd(agreement)]]">
+          <div class="col col-3">
+            <paper-toggle-button
+              checked="{{intervention.contingency_pd}}"
+              disabled="[[!permissions.edit.contingency_pd]]"
+              >Contingency PD
+            </paper-toggle-button>
+          </div>
+          <div class="col col-9" hidden$="[[!intervention.contingency_pd]]">
+            <etools-upload
+              label="Activation Letter"
+              id="activationLetterUpload"
+              file-url="{{intervention.activation_letter_attachment}}"
+              upload-endpoint="[[uploadEndpoint]]"
+              on-upload-finished="_activationLetterUploadFinished"
+              on-upload-started="_onUploadStarted"
+              hidden$="[[_isDraft(intervention.status)]]"
+              show-delete-btn="[[showActivationLetterDeleteBtn(intervention.status,
+                                          permissions.edit.activation_letter_attachment)]]"
+              on-delete-file="_activationLetterDelete"
+              on-change-unsaved-file="_onChangeUnsavedFile"
+            >
+            </etools-upload>
+          </div>
+        </div>
+        <div
+          class="row-h row-second-bg"
+          hidden$="[[_isContingencyAndDraft(intervention.contingency_pd, intervention.status)]]"
+        >
+          <div class="col col-3">
+            <!-- Start date -->
+            <etools-info-tooltip
+              class="fr-nr-warn"
+              icon-first
+              custom-icon
+              form-field-align
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
+            >
+              <datepicker-lite
+                slot="field"
+                id="intStart"
+                label="Start date"
+                value="{{intervention.start}}"
+                readonly$="[[!permissions.edit.start]]"
+                required$="[[permissions.required.start]]"
+                error-message="Please select start date"
+                auto-validate
+                selected-date-display-format="D MMM YYYY"
+              >
+              </datepicker-lite>
+              <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+              <span slot="message">[[_frsStartConsistencyWarning]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip
+              class="fr-nr-warn"
+              custom-icon
+              icon-first
+              form-field-align
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
+            >
+              <datepicker-lite
+                slot="field"
+                id="intEnd"
+                label="End date"
+                value="{{intervention.end}}"
+                readonly$="[[!permissions.edit.end]]"
+                required$="[[permissions.required.end]]"
+                error-message="Please select end date"
+                auto-validate
+                selected-date-display-format="D MMM YYYY"
+              >
+              </datepicker-lite>
+              <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+              <span slot="message">[[_frsEndConsistencyWarning]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3" hidden$="[[!intervention.termination_doc_attachment]]">
+            <etools-upload label="Termination Notice" file-url="[[intervention.termination_doc_attachment]]" readonly>
+            </etools-upload>
+          </div>
+          <div class="col col-3" hidden$="[[!_showDaysUntilExpiry(intervention.status, agreement, intervention)]]">
+            <div class="expiry-warning">
+              <span>[[_daysUntilExpiry(intervention.end)]]</span>
+            </div>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <etools-cp-structure
+            id="cpStructure"
+            module="interventions"
+            app-module-item="[[intervention]]"
+            selected-cp="{{intervention.country_programme}}"
+            edit-mode="[[permissions.edit.country_programme]]"
+            required="[[permissions.required.country_programme]]"
+          >
+          </etools-cp-structure>
+        </div>
+
+        <div class="row-h flex-c">
+          <etools-dropdown-multi
+            id="sections"
+            label="Section(s)"
+            placeholder="&#8212;"
+            selected-values="{{intervention.sections}}"
+            options="[[sections]]"
+            option-label="name"
+            option-value="id"
+            readonly$="[[!permissions.edit.sections]]"
+            required$="[[permissions.required.sections]]"
+            auto-validate
+            error-message="Please select a section"
+          >
+          </etools-dropdown-multi>
+        </div>
+
+        <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+          <div class="row-h flex-c">
+            <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To" no-placeholder>
+              <template is="dom-repeat" items="[[intervention.cluster_names]]">
+                <span class="names-padding">[[item]]</span>
+              </template>
+              <span hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">—</span>
+            </etools-form-element-wrapper>
+          </div>
+        </template>
+
+        <div class="row-h flex-c">
+          <etools-dropdown-multi
+            id="locations"
+            label="Location(s)"
+            placeholder="&#8212;"
+            selected-values="{{intervention.flat_locations}}"
+            options="[[locations]]"
+            option-label="name"
+            option-value="id"
+            readonly$="[[!permissions.edit.flat_locations]]"
+            required$="[[permissions.required.flat_locations]]"
+            error-message="Please select locations"
+            disable-on-focus-handling
+          >
+          </etools-dropdown-multi>
+          <paper-button
+            class="secondary-btn see-locations"
+            on-click="_openLocationsDialog"
+            title="See all locations"
+            disabled$="[[_isEmpty(intervention.flat_locations.length)]]"
+          >
+            <iron-icon icon="add"></iron-icon>
+            See all
+          </paper-button>
+        </div>
+      </etools-content-panel>
 
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-        <div class="row-h flex-c">
-          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To" no-placeholder>
-             <template is="dom-repeat" items="[[intervention.cluster_names]]">
-               <span class="names-padding">[[item]]</span>
-             </template>
-             <span hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">—</span>
-           </etools-form-element-wrapper>
-        </div>
+        <etools-content-panel
+          class="content-section"
+          panel-title="PD Output or SSFA Expected Results ([[noOfPdOutputs]])"
+        >
+          <template is="dom-if" if="[[!newIntervention]]">
+            <div slot="panel-btns" class="cp-header-actions-bar">
+              <paper-button
+                title="Export results"
+                class="white-btn export-res-btn"
+                hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]"
+                on-click="exportExpectedResults"
+              >
+                Export
+              </paper-button>
+              <div
+                class="separator"
+                hidden$="[[!showSeparator(intervention.status, intervention.result_links,
+                                              permissions.edit.result_links)]]"
+              ></div>
+              <paper-toggle-button
+                id="showInactive"
+                hidden$="[[!thereAreInactiveIndicators]]"
+                checked="{{showInactiveIndicators}}"
+              >
+                Show Inactive
+              </paper-toggle-button>
+              <template is="dom-if" if="[[permissions.edit.result_links]]">
+                <paper-icon-button icon="add-box" title="Add" on-click="openCpOutputAndRamIndicatorsDialog">
+                </paper-icon-button>
+              </template>
+            </div>
+            <expected-results
+              id="expectedResults"
+              data-items="{{intervention.result_links}}"
+              selected-cp-structure="[[intervention.country_programme]]"
+              intervention-id="[[intervention.id]]"
+              intervention-status="[[intervention.status]]"
+              indicator-location-options="[[originalIntervention.flat_locations]]"
+              indicator-section-options="[[originalIntervention.sections]]"
+              show-inactive-indicators="[[showInactiveIndicators]]"
+              edit-mode="[[permissions.edit.result_links]]"
+              editable-cpo-ram-indicators="[[_canEditCpoRamIndicators(userEditPermission, intervention.status)]]"
+              on-indicators-changed="_onIndicatorsChanged"
+            >
+            </expected-results>
+          </template>
+          <template is="dom-if" if="[[newIntervention]]">
+            <div class="row-h">
+              <p>
+                You must save this PD/SSFA before you can add expected results.
+              </p>
+            </div>
+          </template>
+        </etools-content-panel>
       </template>
 
-      <div class="row-h flex-c">
-        <etools-dropdown-multi id="locations"
-                              label="Location(s)"
-                              placeholder="&#8212;"
-                              selected-values="{{intervention.flat_locations}}"
-                              options="[[locations]]"
-                              option-label="name"
-                              option-value="id"
-                              readonly$="[[!permissions.edit.flat_locations]]"
-                              required$="[[permissions.required.flat_locations]]"
-                              error-message="Please select locations"
-                              disable-on-focus-handling>
-        </etools-dropdown-multi>
-        <paper-button class="secondary-btn see-locations"
-                      on-click="_openLocationsDialog"
-                      title="See all locations"
-                      disabled$="[[_isEmpty(intervention.flat_locations.length)]]">
-          <iron-icon icon="add"></iron-icon>
-          See all
-        </paper-button>
-      </div>
+      <planned-budget
+        id="plannedBudget"
+        class="content-section"
+        planned-budget="{{intervention.planned_budget}}"
+        intervention-id="[[intervention.id]]"
+        intervention="[[intervention]]"
+      >
+      </planned-budget>
 
-    </etools-content-panel>
-
-    <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-      <etools-content-panel class="content-section"
-                            panel-title="PD Output or SSFA Expected Results ([[noOfPdOutputs]])">
-        <template is="dom-if" if="[[!newIntervention]]">
-          <div slot="panel-btns" class="cp-header-actions-bar">
-            <paper-button title="Export results" class="white-btn export-res-btn"
-             hidden$="[[!showExportResults(intervention.status, intervention.result_links)]]" on-click="exportExpectedResults">
-                   Export
-            </paper-button>
-            <div class="separator" hidden$="[[!showSeparator(intervention.status, intervention.result_links,
-                                              permissions.edit.result_links)]]"></div>
-            <paper-toggle-button id="showInactive"
-                                hidden$="[[!thereAreInactiveIndicators]]"
-                                checked="{{showInactiveIndicators}}">
-              Show Inactive
-            </paper-toggle-button>
-            <template is="dom-if" if="[[permissions.edit.result_links]]">
-              <paper-icon-button icon="add-box"
-                                title="Add"
-                                on-click="openCpOutputAndRamIndicatorsDialog">
-              </paper-icon-button>
-            </template>
-          </div>
-          <expected-results id="expectedResults"
-                            data-items="{{intervention.result_links}}"
-                            selected-cp-structure="[[intervention.country_programme]]"
-                            intervention-id="[[intervention.id]]"
-                            intervention-status="[[intervention.status]]"
-                            indicator-location-options="[[originalIntervention.flat_locations]]"
-                            indicator-section-options="[[originalIntervention.sections]]"
-                            show-inactive-indicators="[[showInactiveIndicators]]"
-                            edit-mode="[[permissions.edit.result_links]]"
-                            editable-cpo-ram-indicators="[[_canEditCpoRamIndicators(userEditPermission, intervention.status)]]"
-                            on-indicators-changed="_onIndicatorsChanged">
-          </expected-results>
-        </template>
-        <template is="dom-if" if="[[newIntervention]]">
-          <div class="row-h">
-            <p>You must save this PD/SSFA before you can add expected results.</p>
-          </div>
-        </template>
+      <etools-content-panel class="content-section" panel-title="Planned Programmatic Visits">
+        <planned-visits
+          id="plannedVisits"
+          data-items="{{intervention.planned_visits}}"
+          edit-mode="[[permissions.edit.planned_visits]]"
+          years="[[years]]"
+          intervention-status="[[intervention.status]]"
+          intervention-id="[[intervention.id]]"
+        >
+        </planned-visits>
       </etools-content-panel>
-    </template>
 
-    <planned-budget id="plannedBudget"
-                    class="content-section"
-                    planned-budget="{{intervention.planned_budget}}"
-                    intervention-id="[[intervention.id]]"
-                    intervention="[[intervention]]">
-    </planned-budget>
-
-    <etools-content-panel class="content-section" panel-title="Planned Programmatic Visits">
-      <planned-visits id="plannedVisits"
-                      data-items="{{intervention.planned_visits}}"
-                      edit-mode="[[permissions.edit.planned_visits]]"
-                      years="[[years]]"
-                      intervention-status="[[intervention.status]]"
-                      intervention-id="[[intervention.id]]">
-      </planned-visits>
-    </etools-content-panel>
-
-    <template is="dom-if"
-              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, permissions.view.reporting_requirements)]]"
-              restamp>
-
-      <partner-reporting-requirements class="content-section"
-                                      intervention-id="[[intervention.id]]"
-                                      intervention-start="[[intervention.start]]"
-                                      intervention-end="[[intervention.end]]"
-                                      expected-results="[[intervention.result_links]]">
-      </partner-reporting-requirements>
-    </template>
+      <template
+        is="dom-if"
+        if="[[_showReportingRequirements(environmentFlags.prp_mode_off, permissions.view.reporting_requirements)]]"
+        restamp
+      >
+        <partner-reporting-requirements
+          class="content-section"
+          intervention-id="[[intervention.id]]"
+          intervention-start="[[intervention.start]]"
+          intervention-end="[[intervention.end]]"
+          expected-results="[[intervention.result_links]]"
+        >
+        </partner-reporting-requirements>
+      </template>
     `;
   }
 
-  // @ts-ignore
-  @property({type: Object, notify: true, observer: InterventionDetails.prototype._interventionChanged})
+  @property({
+    type: Object,
+    notify: true,
+    // @ts-ignore
+    observer: InterventionDetails.prototype._interventionChanged
+  })
   intervention!: Intervention;
 
   @property({type: Boolean})
@@ -467,7 +530,11 @@ class InterventionDetails extends connect(store)(
   @property({type: Object})
   permissions!: Permission<InterventionPermissionsFields>;
 
-  @property({type: Number, notify: true, observer: InterventionDetails.prototype._selectedPartnerIdChanged})
+  @property({
+    type: Number,
+    notify: true,
+    observer: InterventionDetails.prototype._selectedPartnerIdChanged
+  })
   selectedPartnerId!: number;
 
   @property({type: Array})
@@ -492,13 +559,13 @@ class InterventionDetails extends connect(store)(
   years: [] = [];
 
   @property({type: Object})
-  agreement!: object;
+  agreement!: GenericObject;
 
   @property({type: Object})
   originalIntervention!: Intervention;
 
   @property({type: Boolean})
-  interventionRequiredField: boolean = false; // TODO is this used?
+  interventionRequiredField = false; // TODO is this used?
 
   @property({type: Boolean})
   newIntervention!: boolean;
@@ -507,10 +574,10 @@ class InterventionDetails extends connect(store)(
   fieldsResetted!: boolean;
 
   @property({type: String})
-  _frsStartConsistencyWarning: string = '';
+  _frsStartConsistencyWarning = '';
 
   @property({type: String})
-  _frsEndConsistencyWarning: string = '';
+  _frsEndConsistencyWarning = '';
 
   @property({type: Array})
   locations!: Location[];
@@ -519,10 +586,10 @@ class InterventionDetails extends connect(store)(
   noOfPdOutputs: string | number = '0';
 
   @property({type: Boolean})
-  thereAreInactiveIndicators: boolean = false;
+  thereAreInactiveIndicators = false;
 
   @property({type: Boolean})
-  showInactiveIndicators: boolean = false;
+  showInactiveIndicators = false;
 
   private locationsDialog!: GroupedLocationsDialog;
 
@@ -531,7 +598,7 @@ class InterventionDetails extends connect(store)(
       '_newInterventionFlagChanged(newIntervention)',
       '_setYears(intervention.start, intervention.end)',
       '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
-      'intervention.start, intervention.status)',
+        'intervention.start, intervention.status)',
       '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
       '_contingencyPDChanged(intervention.contingency_pd)',
       '_updateNoOfPdOutputs(intervention.result_links.*)',
@@ -574,7 +641,10 @@ class InterventionDetails extends connect(store)(
      * Disable loading message for details tab elements load,
      * triggered by parent element on stamp or by click event on tabs
      */
-    fireEvent(this, 'global-loading', {active: false, loadingSource: 'interv-page'});
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'interv-page'
+    });
     // @ts-ignore
     this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
     fireEvent(this, 'tab-content-attached');
@@ -604,9 +674,11 @@ class InterventionDetails extends connect(store)(
       this.thereAreInactiveIndicators = false;
       return;
     }
-    this.noOfPdOutputs = this.intervention.result_links.map((rl: ExpectedResult) => {
-      return rl.ll_results.length;
-    }).reduce((a: number, b: number) => a + b, 0);
+    this.noOfPdOutputs = this.intervention.result_links
+      .map((rl: ExpectedResult) => {
+        return rl.ll_results.length;
+      })
+      .reduce((a: number, b: number) => a + b, 0);
 
     if (!this.noOfPdOutputs) {
       this.thereAreInactiveIndicators = false;
@@ -616,15 +688,19 @@ class InterventionDetails extends connect(store)(
   }
 
   _getNoOfInactiveIndicators() {
-    return this.intervention.result_links.map((rl: ExpectedResult) => {
-      return rl.ll_results.map((llr) => {
-        return llr.applied_indicators.filter(i => !i.is_active).length;
-      }).reduce((a: number, b: number) => a + b, 0);
-    }).reduce((a: number, b: number) => a + b, 0);
+    return this.intervention.result_links
+      .map((rl: ExpectedResult) => {
+        return rl.ll_results
+          .map((llr) => {
+            return llr.applied_indicators.filter((i) => !i.is_active).length;
+          })
+          .reduce((a: number, b: number) => a + b, 0);
+      })
+      .reduce((a: number, b: number) => a + b, 0);
   }
 
   openCpOutputAndRamIndicatorsDialog() {
-    const expectedResultsElem = this.shadowRoot!.querySelector('#expectedResults') as unknown as ExpectedResultsEl;
+    const expectedResultsElem = (this.shadowRoot!.querySelector('#expectedResults') as unknown) as ExpectedResultsEl;
     if (!expectedResultsElem) {
       return;
     }
@@ -648,8 +724,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _isDraft(status: string) {
-    return status === CONSTANTS.STATUSES.Draft.toLowerCase() ||
-      status === '';
+    return status === CONSTANTS.STATUSES.Draft.toLowerCase() || status === '';
   }
 
   _isTerminated(status: string) {
@@ -663,12 +738,14 @@ class InterventionDetails extends connect(store)(
   }
 
   _contingencyPDChanged(newValue: boolean) {
-    if (newValue &&
-      this.intervention.status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
+    if (newValue && this.intervention.status === CONSTANTS.STATUSES.Signed.toLowerCase()) {
       this._updateDatesRequiredState(false);
     } else {
-      if ([CONSTANTS.STATUSES.Signed.toLowerCase(),
-      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(this.intervention.status) > -1) {
+      if (
+        [CONSTANTS.STATUSES.Signed.toLowerCase(), CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(
+          this.intervention.status
+        ) > -1
+      ) {
         this._updateDatesRequiredState(true);
       }
     }
@@ -722,13 +799,12 @@ class InterventionDetails extends connect(store)(
   }
 
   _resetValidations() {
-    (this.$.agreementSelector as unknown as AgreementSelector).resetValidations();
+    ((this.$.agreementSelector as unknown) as AgreementSelector).resetValidations();
     (this.$.documentType as EtoolsDropdownEl).resetInvalidState();
     (this.$.plannedBudget as PlannedBudgetEl).resetValidations();
     (this.$.cpStructure as EtoolsCpStructure).resetCpDropdownInvalidState();
 
-    const fields = ['documentType', 'unicefOffices', 'unicefFocalPts',
-      'partnerFocalPts', 'intStart', 'intEnd'];
+    const fields = ['documentType', 'unicefOffices', 'unicefFocalPts', 'partnerFocalPts', 'intStart', 'intEnd'];
     if (!this._isIE()) {
       fields.push('title');
     }
@@ -763,9 +839,12 @@ class InterventionDetails extends connect(store)(
   }
 
   _setYears(interventionStart: string, interventionEnd: string) {
-    if (typeof interventionStart === 'string' && interventionStart !== ''
-      && typeof interventionEnd === 'string' && interventionEnd !== '') {
-
+    if (
+      typeof interventionStart === 'string' &&
+      interventionStart !== '' &&
+      typeof interventionEnd === 'string' &&
+      interventionEnd !== ''
+    ) {
       let start = parseInt(interventionStart.substr(0, 4), 10);
       const end = parseInt(interventionEnd.substr(0, 4), 10) + 1;
       const years = [];
@@ -783,9 +862,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _selectedPartnerIdChanged(id: any, oldId: any) {
-    if (typeof oldId === 'number'
-      && id !== oldId
-      && !this.agreement) {
+    if (typeof oldId === 'number' && id !== oldId && !this.agreement) {
       // Prevent reset on changes caused by initialization of the fields
       this._resetDropdowns();
     }
@@ -799,7 +876,7 @@ class InterventionDetails extends connect(store)(
     // reset partner focal points options and value
     this.set('intervention.partner_focal_points', []);
     this.set('staffMembers', []);
-    const partnerFpDropDown = this.$.partnerFocalPts as unknown as EtoolsDropdownEl;
+    const partnerFpDropDown = (this.$.partnerFocalPts as unknown) as EtoolsDropdownEl;
     if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
       partnerFpDropDown.selected = null;
     }
@@ -838,7 +915,7 @@ class InterventionDetails extends connect(store)(
       this.set('intervention.document_type', null);
       return;
     }
-    const selIsInOptions = options.find(o => o.value === this.intervention.document_type);
+    const selIsInOptions = options.find((o) => o.value === this.intervention.document_type);
     if (!selIsInOptions) {
       this.set('intervention.document_type', null);
     }
@@ -846,8 +923,18 @@ class InterventionDetails extends connect(store)(
 
   validate() {
     let valid = true;
-    const fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices',
-      '#unicefFocalPts', '#partnerFocalPts', '#cpStructure', '#sections', '#plannedBudget', '#plannedVisits'];
+    const fieldSelectors = [
+      '#agreementSelector',
+      '#documentType',
+      '#title',
+      '#unicefOffices',
+      '#unicefFocalPts',
+      '#partnerFocalPts',
+      '#cpStructure',
+      '#sections',
+      '#plannedBudget',
+      '#plannedVisits'
+    ];
 
     if (this._isContingencyAndHasActivationLetter() || this.intervention.status === 'active') {
       fieldSelectors.push('#intStart', '#intEnd');
@@ -866,8 +953,7 @@ class InterventionDetails extends connect(store)(
   }
 
   _isContingencyAndHasActivationLetter() {
-    return this.intervention.contingency_pd &&
-      this.intervention.activation_letter_attachment;
+    return this.intervention.contingency_pd && this.intervention.activation_letter_attachment;
   }
 
   _isContingencyAndDraft(contingency: boolean, status: string) {
@@ -886,26 +972,41 @@ class InterventionDetails extends connect(store)(
   }
 
   _checkFrsStartConsistency(frsEarliestStartDate: string, interventionStart: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
-      || interventionStatus === 'closed') {
+    if (
+      this.newIntervention ||
+      this.emptyFrsList(this.intervention, 'interventionDetails') ||
+      interventionStatus === 'closed'
+    ) {
       this.set('_frsStartConsistencyWarning', null);
       (this.$.intStart as PolymerElement).updateStyles();
       return;
     }
-    this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-      frsEarliestStartDate, this.frsValidationFields.start_date, true));
+    this.set(
+      '_frsStartConsistencyWarning',
+      this.checkFrsAndIntervDateConsistency(
+        interventionStart,
+        frsEarliestStartDate,
+        this.frsValidationFields.start_date,
+        true
+      )
+    );
     (this.$.intStart as PolymerElement).updateStyles();
   }
 
   _checkFrsEndConsistency(frsLatestEndDate: string, interventionEnd: string, interventionStatus: string) {
-    if (this.newIntervention || this.emptyFrsList(this.intervention, 'interventionDetails')
-      || interventionStatus === 'closed') {
+    if (
+      this.newIntervention ||
+      this.emptyFrsList(this.intervention, 'interventionDetails') ||
+      interventionStatus === 'closed'
+    ) {
       this.set('_frsEndConsistencyWarning', '');
       (this.$.intEnd as PolymerElement).updateStyles();
       return;
     }
-    this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
-      frsLatestEndDate, this.frsValidationFields.end_date, true));
+    this.set(
+      '_frsEndConsistencyWarning',
+      this.checkFrsAndIntervDateConsistency(interventionEnd, frsLatestEndDate, this.frsValidationFields.end_date, true)
+    );
     (this.$.intEnd as PolymerElement).updateStyles();
   }
 
@@ -937,7 +1038,6 @@ class InterventionDetails extends connect(store)(
             clusterNames.add(indicator.cluster_name);
           }
         });
-
       });
     });
 
@@ -954,16 +1054,20 @@ class InterventionDetails extends connect(store)(
   }
 
   _canEditCpoRamIndicators(userEditPermission: boolean, status: string) {
-    return userEditPermission &&
-      [CONSTANTS.STATUSES.Draft.toLowerCase(),
-      CONSTANTS.STATUSES.Signed.toLowerCase(),
-      CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1;
+    return (
+      userEditPermission &&
+      [
+        CONSTANTS.STATUSES.Draft.toLowerCase(),
+        CONSTANTS.STATUSES.Signed.toLowerCase(),
+        CONSTANTS.STATUSES.Active.toLowerCase()
+      ].indexOf(status) > -1
+    );
   }
 
   _activationLetterUploadFinished(e: CustomEvent) {
     store.dispatch({type: DECREASE_UPLOADS_IN_PROGRESS});
     if (e.detail.success) {
-      const response = JSON.parse(e.detail.success);
+      const response = e.detail.success;
       this.set('intervention.activation_letter_attachment', response.id);
       store.dispatch({type: INCREASE_UNSAVED_UPLOADS});
     }
@@ -975,28 +1079,34 @@ class InterventionDetails extends connect(store)(
   }
 
   showActivationLetterDeleteBtn(status: string) {
-    return this._isDraft(status) && !!this.originalIntervention
-      && !this.originalIntervention.activation_letter_attachment;
+    return (
+      this._isDraft(status) && !!this.originalIntervention && !this.originalIntervention.activation_letter_attachment
+    );
   }
 
   showExportResults(status: string, resultLinks: []) {
-    return [CONSTANTS.STATUSES.Draft.toLowerCase(),
-    CONSTANTS.STATUSES.Signed.toLowerCase(),
-    CONSTANTS.STATUSES.Active.toLowerCase()].indexOf(status) > -1
-      && resultLinks && resultLinks.length;
+    return (
+      [
+        CONSTANTS.STATUSES.Draft.toLowerCase(),
+        CONSTANTS.STATUSES.Signed.toLowerCase(),
+        CONSTANTS.STATUSES.Active.toLowerCase()
+      ].indexOf(status) > -1 &&
+      resultLinks &&
+      resultLinks.length
+    );
   }
 
   showSeparator(status: string, resultLinks: [], resultLinkPermission: boolean) {
     return this.showExportResults(status, resultLinks) && resultLinkPermission;
-
   }
 
   exportExpectedResults() {
     // @ts-ignore
-    const endpoint = this.getEndpoint('expectedResultsExport', {intervention_id: this.intervention.id}).url;
+    const endpoint = this.getEndpoint('expectedResultsExport', {
+      intervention_id: this.intervention.id
+    }).url;
     window.open(endpoint, '_blank');
   }
-
 }
 
 window.customElements.define('intervention-details', InterventionDetails);

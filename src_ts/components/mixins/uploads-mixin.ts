@@ -10,7 +10,6 @@ import {property} from '@polymer/decorators';
  */
 function UploadsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class UploadsClass extends baseClass {
-
     @property({type: String})
     uploadEndpoint: string = pmpEdpoints.attachmentsUpload.url;
 
@@ -19,7 +18,6 @@ function UploadsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     @property({type: Number})
     unsavedUploads!: number;
-
 
     uploadsStateChanged(state: RootState) {
       if (state.uploadStatus!.unsavedUploads !== this.unsavedUploads) {

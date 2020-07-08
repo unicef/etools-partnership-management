@@ -1,9 +1,11 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin';
 import {fireEvent} from '../utils/fire-custom-event.js';
-import {getErrorsArray, tryGetResponseError} from '../utils/ajax-errors-parser.js';
-import {Constructor} from '../../typings/globals.types.js';
+import {getErrorsArray, tryGetResponseError} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
+import {Constructor, GenericObject} from '../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+
+const globalMessage = 'An error occurred. Please try again later.';
 
 /**
  * @polymer
@@ -11,22 +13,23 @@ import {property} from '@polymer/decorators';
  */
 function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
   class AjaxServerErrorsClass extends baseClass {
-
     @property({type: Array, notify: true})
     serverErrors!: [];
 
     @property({type: Object})
-    options!: object
+    options!: GenericObject;
 
     @property({type: Boolean})
-    useToastEvent: boolean = true;
+    useToastEvent = true;
 
-    @property({type: String, observer: AjaxServerErrorsClass.prototype._errorEventNameChange})
-    errorEventName: string|null = null;
+    @property({
+      type: String,
+      observer: AjaxServerErrorsClass.prototype._errorEventNameChange
+    })
+    errorEventName: string | null = null;
 
     @property({type: String})
-    ajaxLoadingMsgSource: string = '';
-
+    ajaxLoadingMsgSource = '';
 
     handleErrorResponse(response: any, ajaxMethod: string, redirectOn404: boolean) {
       if (redirectOn404 && response.status === 404) {
@@ -39,27 +42,22 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
         loadingSource: this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
       });
 
-      const errors = tryGetResponseError(response);
-
-      // @ts-ignore
-      let errorMessage = this.globalMessage;
-
       if (!ajaxMethod) {
         ajaxMethod = 'GET';
       }
 
       if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
-        this.set('serverErrors', getErrorsArray(errors, this.useToastEvent));
+        const errors = tryGetResponseError(response);
+        this.set('serverErrors', getErrorsArray(errors));
       }
-      this.serverErrors = this.serverErrors ? this.serverErrors : [];
+      this.serverErrors = this.serverErrors || [];
+
       if (this.useToastEvent) {
-        if (this.serverErrors.length > 1) {
-          errorMessage = this.serverErrors.join('\n');
-        }
-        fireEvent(this, 'toast', {text: errorMessage, showCloseBtn: true});
+        const toastMsg = this.serverErrors.length ? this.serverErrors.join('\n') : globalMessage;
+        fireEvent(this, 'toast', {text: toastMsg, showCloseBtn: true});
       } else {
         if (this.serverErrors.length === 0) {
-          this._fireAjaxErrorEvent(errorMessage);
+          this._fireAjaxErrorEvent(globalMessage);
         } else {
           this._fireAjaxErrorEvent(this.serverErrors);
         }
@@ -81,7 +79,6 @@ function AjaxServerErrorsMixin<T extends Constructor<PolymerElement>>(baseClass:
         this.set('useToastEvent', false);
       }
     }
-
   }
   return AjaxServerErrorsClass;
 }

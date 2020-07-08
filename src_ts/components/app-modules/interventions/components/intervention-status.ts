@@ -16,33 +16,37 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
  * @appliesMixin EtoolsStatusCommonMixin
  */
 class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
-
   static get template() {
     return html`
-    <style>
-      :host {
-        width: 100%;
-      }
-    </style>
-    <etools-status statuses="[[possibleStatuses]]"
-                  actions="[[possibleActions]]"
-                  on-intervention-draft-event="_setStatusDraft"
-                  on-intervention-suspend-event="_setStatusSuspended"
-                  on-intervention-terminate-event="_setStatusTerminated"
-                  on-intervention-unsuspend-event="_unsuspendIntervention"
-                  on-intervention-delete-event="_openDeleteConfirmation">
-    </etools-status>
+      <style>
+        :host {
+          width: 100%;
+        }
+      </style>
+      <etools-status
+        statuses="[[possibleStatuses]]"
+        actions="[[possibleActions]]"
+        on-intervention-draft-event="_setStatusDraft"
+        on-intervention-suspend-event="_setStatusSuspended"
+        on-intervention-terminate-event="_setStatusTerminated"
+        on-intervention-unsuspend-event="_unsuspendIntervention"
+        on-intervention-delete-event="_openDeleteConfirmation"
+      >
+      </etools-status>
     `;
   }
 
   @property({type: Number})
   interventionId!: number;
 
-  @property({type: String, observer: InterventionStatus.prototype._activeTabChanged})
+  @property({
+    type: String,
+    observer: InterventionStatus.prototype._activeTabChanged
+  })
   activeTab!: string;
 
   @property({type: Boolean})
-  newIntervention: boolean = false;
+  newIntervention = false;
 
   @property({type: String})
   interventionAgreementStatus!: string;
@@ -87,11 +91,10 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
   ];
 
   @property({type: String})
-  deleteWarningMessage: string = 'Are you sure you want to delete this PD/SSFA?';
+  deleteWarningMessage = 'Are you sure you want to delete this PD/SSFA?';
 
   @property({type: Object})
-  _terminationDialog!: EtoolsDialog & { resetValidations(): void }
-
+  _terminationDialog!: EtoolsDialog & {resetValidations(): void};
 
   ready() {
     super.ready();
@@ -203,18 +206,12 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         break;
 
       case CONSTANTS.STATUSES.Closed.toLowerCase():
-        if (this.activeTab === 'attachments') {
-          availableOptions.push('Save');
-        }
         break;
 
       case CONSTANTS.STATUSES.Ended.toLowerCase():
-        if (this.activeTab === 'attachments') {
-          availableOptions.push('Save');
-        }
         break;
 
-        // legacy version of 'ended'
+      // legacy version of 'ended'
       case 'implemented':
         if (this.activeTab === 'attachments') {
           availableOptions.push('Save');
@@ -321,7 +318,7 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
         activeStatus = CONSTANTS.STATUSES.Ended;
         break;
 
-        // legacy version of 'ended'
+      // legacy version of 'ended'
       case 'implemented':
         availableStatuses = [
           CONSTANTS.STATUSES.Draft,
@@ -373,23 +370,27 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
       return false;
     }
 
-    if (newStatus === CONSTANTS.STATUSES.Draft.toLowerCase() &&
-        this.status !== CONSTANTS.STATUSES.Draft.toLowerCase()) {
+    if (
+      newStatus === CONSTANTS.STATUSES.Draft.toLowerCase() &&
+      this.status !== CONSTANTS.STATUSES.Draft.toLowerCase()
+    ) {
       // if agreement was not saved (is new) or the status is already changed
       // from draft, stop status change
       return false;
     }
 
-    if (newStatus === CONSTANTS.STATUSES.Active.toLowerCase() &&
-        this.interventionAgreementStatus === CONSTANTS.STATUSES.Suspended.toLowerCase()) {
+    if (
+      newStatus === CONSTANTS.STATUSES.Active.toLowerCase() &&
+      this.interventionAgreementStatus === CONSTANTS.STATUSES.Suspended.toLowerCase()
+    ) {
       // prevent changing status from suspended to active is the agreement status is suspended
       return false;
     }
 
-    if ([CONSTANTS.STATUSES.Suspended.toLowerCase(),
-      CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1) {
-      if ([CONSTANTS.STATUSES.Active.toLowerCase(),
-        CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
+    if (
+      [CONSTANTS.STATUSES.Suspended.toLowerCase(), CONSTANTS.STATUSES.Terminated.toLowerCase()].indexOf(newStatus) > -1
+    ) {
+      if ([CONSTANTS.STATUSES.Active.toLowerCase(), CONSTANTS.STATUSES.Signed.toLowerCase()].indexOf(this.status) < 0) {
         // prevent suspending or terminating anything other than signed or active intervention
         return false;
       }
@@ -453,7 +454,6 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
     this._terminationDialog.set('terminationElSource', this);
   }
-
 }
 
 window.customElements.define('intervention-status', InterventionStatus);

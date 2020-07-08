@@ -7,9 +7,9 @@ declare global {
   interface Window {
     EtoolsPmpApp: any;
     EtoolsRequestCacheDb: any;
-    EtoolsSharedDb: any,
+    EtoolsSharedDb: any;
     EtoolsLogsLevel: any;
-    EtoolsEsmmFitIntoEl: any
+    EtoolsEsmmFitIntoEl: any;
   }
 }
 
@@ -20,7 +20,8 @@ window.EtoolsPmpApp.DexieDb = new Dexie('pmpApp');
 window.EtoolsPmpApp.DexieDb.version(1).stores({
   partners: 'id, name, rating, vendor_number',
   agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
-  interventions: 'id, number, partner_name, document_type, ' +
+  interventions:
+    'id, number, partner_name, document_type, ' +
     'cp_outputs, status, title, start, end, sections, unicef_focal_points, offices',
 
   // etools-ajax v2.0.0 requirements
@@ -84,7 +85,7 @@ export const tokenEndpointsHost = (host: string) => {
       case 'DEMO':
         return 'https://demo.partnerreportingportal.org';
       case 'STAGING':
-        return 'https://demo.partnerreportingportal.org';
+        return 'https://staging.partnerreportingportal.org';
       case null:
         return 'https://www.partnerreportingportal.org';
       default:
