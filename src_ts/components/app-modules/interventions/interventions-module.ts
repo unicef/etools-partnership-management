@@ -37,6 +37,7 @@ import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 
 /**
  * @polymer
@@ -105,6 +106,8 @@ class InterventionsModule extends connect(store)(
         active="{{listActive}}"
       ></app-route>
 
+      <app-route route="{{route}}" pattern="/new" active="{{newPageActive}}"></app-route>
+
       <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
 
       <page-content-header with-tabs-visible="[[tabsActive]]">
@@ -112,11 +115,13 @@ class InterventionsModule extends connect(store)(
           <template is="dom-if" if="[[listActive]]">
             PD/SSFAs
           </template>
-          <template is="dom-if" if="[[tabsActive]]">
-            <span class="no-capitalization" hidden$="[[!newInterventionActive]]">
+          <template is="dom-if" if="[[newPageActive]]">
+            <span class="no-capitalization">
               Add Programme Document or SSFA
             </span>
-            <span hidden$="[[newInterventionActive]]">
+          </template>
+          <template is="dom-if" if="[[tabsActive]]">
+            <span>
               <a class="primary" href$="[[rootPath]]partners/[[intervention.partner_id]]/overview" target="_blank"
                 >[[intervention.partner]]</a
               >
@@ -197,6 +202,10 @@ class InterventionsModule extends connect(store)(
               user-edit-permission="[[_hasEditPermissions(permissions, intervention)]]"
             >
             </intervention-details>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'new')]]" restamp>
+            <intervention-new on-create-intervention="onCreateIntervention"></intervention-new>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(activePage, 'review-and-sign')]]">
@@ -328,6 +337,9 @@ class InterventionsModule extends connect(store)(
   @property({type: Boolean})
   _forceReviewUiValidationOnAttach!: boolean;
 
+  @property({type: Boolean})
+  newPageActive!: boolean;
+
   @property({type: Object})
   reportsPrevParams!: GenericObject;
 
@@ -344,7 +356,7 @@ class InterventionsModule extends connect(store)(
 
   static get observers() {
     return [
-      '_pageChanged(listActive, tabsActive, routeData)',
+      '_pageChanged(listActive, tabsActive, newPageActive, routeData)',
       '_observeRouteDataId(routeData.id)',
       '_interventionChanged(intervention, permissions)',
       '_amendmentModeChanged(intervention.in_amendment, tabAttached, listActive)'
@@ -523,15 +535,15 @@ class InterventionsModule extends connect(store)(
     }
   }
 
-  _pageChanged(listActive: boolean, tabsActive: boolean, routeData: any) {
+  _pageChanged(listActive: boolean, tabsActive: boolean, newPageActive: boolean, routeData: any) {
     // Using isActiveModule will prevent wrong page import
-    if (!this.isActiveModule() || (!listActive && !tabsActive)) {
+    if (!this.isActiveModule() || (!listActive && !tabsActive && !newPageActive)) {
       return;
     }
 
     this.scrollToTopOnCondition(!listActive);
 
-    if (listActive) {
+    if (listActive || newPageActive) {
       this.reportsPrevParams = {};
     }
     this._pageChangeDebouncer = Debouncer.debounce(this._pageChangeDebouncer, timeOut.after(10), () => {
@@ -542,14 +554,15 @@ class InterventionsModule extends connect(store)(
         errMsgPrefixTmpl: '[intervention(s) ##page##]',
         loadingMsgSource: 'interv-page'
       };
-      this.setActivePage(
-        listActive,
-        routeData.tab,
-        fileImportDetails,
-        this._canAccessPdTab,
-        null,
-        this._resetRedirectToNewInterventionFlag
-      );
+      let page;
+      if (listActive) {
+        page = 'list';
+      } else if (newPageActive) {
+        page = 'new';
+      } else {
+        page = routeData.tab;
+      }
+      this.setActivePage(page, fileImportDetails, this._canAccessPdTab, null, this._resetRedirectToNewInterventionFlag);
     });
   }
 
@@ -650,9 +663,9 @@ class InterventionsModule extends connect(store)(
       return;
     }
     this.set('_redirectToNewIntervPageInProgress', true);
-    this._setNewInterventionObj();
+    // this._setNewInterventionObj();
     this.set('selectedInterventionId', null);
-    fireEvent(this, 'update-main-path', {path: 'interventions/new/details'});
+    fireEvent(this, 'update-main-path', {path: 'interventions/new'});
     this._handleInterventionSelectionLoadingMsg();
   }
 
@@ -700,8 +713,12 @@ class InterventionsModule extends connect(store)(
     this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
   }
 
-  _showInterventionSidebarStatus(listActive: boolean, tabAttached: boolean, activePage: string) {
-    return ['reports', 'progress'].indexOf(activePage) > -1 ? false : this._showSidebarStatus(listActive, tabAttached);
+  _showInterventionSidebarStatus(listActive: boolean, tabAttached: boolean, activePage: string): boolean {
+    const hideSidebar: boolean =
+      ['reports', 'progress'].indexOf(activePage) > -1 ||
+      this._pageEquals(activePage, 'new') ||
+      this._pageEquals(activePage, 'list');
+    return hideSidebar ? false : this._showSidebarStatus(listActive, tabAttached);
   }
 
   /**
@@ -737,6 +754,20 @@ class InterventionsModule extends connect(store)(
   _exportPD(url: string) {
     const csvDownloadUrl = url + '?' + this.csvDownloadQs;
     window.open(csvDownloadUrl, '_blank');
+  }
+
+  onCreateIntervention({detail}: CustomEvent) {
+    (this.$.interventionData as InterventionItemData)
+      // @ts-ignore
+      .saveIntervention(detail, this._newInterventionSaved.bind(this))
+      .then((successfull: boolean) => {
+        if (successfull) {
+          store.dispatch({type: RESET_UNSAVED_UPLOADS});
+          return true;
+        } else {
+          return false;
+        }
+      });
   }
 }
 
