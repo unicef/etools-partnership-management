@@ -172,7 +172,7 @@ class AgreementsList extends connect(store)(
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
           <etools-data-table-column class="col-2" field="agreement_number" sortable>
-            Reference No.
+            Agreement Reference Number
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="partner_name" sortable>
             Partner Full Name
@@ -201,7 +201,7 @@ class AgreementsList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <span class="col-data col-2" data-col-header-label="Reference No.">
+              <span class="col-data col-2" data-col-header-label="Agreement Reference Number">
                 <a
                   class="ag-ref truncate"
                   href="agreements/[[agreement.id]]/details"
