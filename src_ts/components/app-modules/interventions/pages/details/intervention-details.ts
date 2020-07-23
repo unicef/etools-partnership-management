@@ -189,7 +189,7 @@ class InterventionDetails extends connect(store)(
           <div class="col flex-c">
             <paper-input
               id="ref-nr"
-              label="Reference Number"
+              label="PD/SSFA Reference Number"
               value="[[intervention.number]]"
               placeholder="&#8212;"
               readonly
