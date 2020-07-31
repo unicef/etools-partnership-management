@@ -21,6 +21,7 @@ import {CommonDataAction} from './actions/common-data.js';
 import {PartnersState} from './reducers/partners.js';
 import {AgreementsState} from './reducers/agreements.js';
 import {PageDataState} from './reducers/page-data.js';
+import {interventions, InterventionsState} from './reducers/interventions.js';
 
 declare global {
   interface Window {
@@ -38,6 +39,7 @@ export interface RootState {
   partners?: PartnersState;
   agreements?: AgreementsState;
   pageData?: PageDataState;
+  interventions?: InterventionsState;
 }
 
 export type RootAction = AppAction | CommonDataAction;
@@ -62,7 +64,8 @@ export const store = createStore(
 // Initially loaded reducers.
 store.addReducers({
   // @ts-ignore
-  app
+  app,
+  interventions
 });
 
 window.addEventListener('storage', function (e) {

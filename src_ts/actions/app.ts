@@ -14,7 +14,16 @@ export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
 }
-export type AppAction = AppActionUpdateDrawerState;
+export interface AppActionShowToast extends Action<'SHOW_TOAST'> {
+  active: boolean;
+  message: string;
+  showCloseBtn: boolean;
+}
+
+export interface AppActionCloseToast extends Action<'CLOSE_TOAST'> {
+
+}
+export type AppAction = AppActionUpdateDrawerState | AppActionShowToast | AppActionCloseToast;
 
 export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
   return {

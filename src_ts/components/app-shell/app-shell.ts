@@ -94,6 +94,7 @@ import {GenericObject, User, UserPermissions} from '../../typings/globals.types.
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import get from 'lodash-es/get';
 setRootPath(BASE_URL);
 
 /**
@@ -345,6 +346,12 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
+    if (get(state, 'app.toastNotification.active')) {
+      fireEvent(this, 'toast', {
+        text: state.app!.toastNotification.message,
+        showCloseBtn: state.app!.toastNotification.showCloseBtn
+      });
+    }
   }
 
   // dev purpose - to be removed in the future
