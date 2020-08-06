@@ -22,6 +22,7 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Office, GenericObject} from '../../../../typings/globals.types';
+import {updateCurrentIntervention} from '../../../../actions/interventions';
 
 /**
  * @polymer
@@ -92,6 +93,7 @@ class InterventionItemData extends connect(store)(
     return sendRequest(options)
       .then(function (resp: any) {
         self._handleResponse(resp, ajaxMethod);
+        store.dispatch(updateCurrentIntervention(resp));
         return true;
       })
       .catch(function (error: any) {

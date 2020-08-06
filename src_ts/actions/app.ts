@@ -9,6 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {Action, ActionCreator} from 'redux';
+import {UPDATE_ROUTE_DETAILS} from './actionsConstants';
+import {RouteDetails} from '../components/utils/router';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
@@ -20,14 +22,26 @@ export interface AppActionShowToast extends Action<'SHOW_TOAST'> {
   showCloseBtn: boolean;
 }
 
-export interface AppActionCloseToast extends Action<'CLOSE_TOAST'> {
-
+export type AppActionCloseToast = Action<'CLOSE_TOAST'>;
+export interface AppActionUpdateRouteDetails extends Action<'UPDATE_ROUTE_DETAILS'> {
+  routeDetails: RouteDetails;
 }
-export type AppAction = AppActionUpdateDrawerState | AppActionShowToast | AppActionCloseToast;
+export type AppAction =
+  | AppActionUpdateDrawerState
+  | AppActionShowToast
+  | AppActionCloseToast
+  | AppActionUpdateRouteDetails;
 
 export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
   return {
     type: UPDATE_DRAWER_STATE,
     opened
+  };
+};
+
+export const updateStoreRouteDetails: ActionCreator<AppActionUpdateRouteDetails> = (routeDetails: any) => {
+  return {
+    type: UPDATE_ROUTE_DETAILS,
+    routeDetails
   };
 };
