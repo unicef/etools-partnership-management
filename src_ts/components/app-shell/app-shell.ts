@@ -391,11 +391,6 @@ class AppShell extends connect(store)(
     } else {
       this.route = JSON.parse(JSON.stringify(appLocRoute));
     }
-    this.forceInstalledRouterExecution();
-  }
-
-  forceInstalledRouterExecution() {
-    window.dispatchEvent(new CustomEvent('popstate'));
   }
 
   public routeChanged() {
