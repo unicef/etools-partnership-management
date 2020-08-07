@@ -55,10 +55,11 @@ export function template(this: InterventionNew): TemplateResult {
             option-label="name"
             required
             .selected="${this.selectedPartner && this.selectedPartner.id}"
-            auto-validate
             error-message="Partner is required"
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
+            @focus="${this.resetError}"
+            @tap="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -79,6 +80,8 @@ export function template(this: InterventionNew): TemplateResult {
             @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
             auto-validate
             error-message="Agreement required"
+            @focus="${this.resetError}"
+            @tap="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -96,7 +99,7 @@ export function template(this: InterventionNew): TemplateResult {
 
         <!--   Agreement Authorized Officers   -->
         <div class="col-6">
-          <etools-form-element-wrapper label="Agreement Authorized Officers" .value="${null}">
+          <etools-form-element-wrapper label="Agreement Authorized Officers" .value="${this.authorizedOfficers}">
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -142,10 +145,11 @@ export function template(this: InterventionNew): TemplateResult {
             .options="${this.documentTypesOptions}"
             .selected="${this.newIntervention.document_type}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('document_type', detail.selectedItem && detail.selectedItem.value)}"
+              this.setInterventionField('document_type', detail.selectedItem && detail.selectedItem.value, true)}"
             trigger-value-change-event
             hide-search
-            auto-validate
+            @focus="${this.resetError}"
+            @tap="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -163,7 +167,8 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             allow-outside-scroll
             hide-search
-            auto-validate
+            @focus="${this.resetError}"
+            @tap="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -171,12 +176,19 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   SPD is Humanitarian   -->
-        <div class="col-3">
-          <paper-toggle-button>This SPD is Humanitarian </paper-toggle-button>
+        <div class="col-3" ?hidden="${!this.isSSFA}">
+          <paper-toggle-button
+            @checked-changed="${({detail}: CustomEvent) => {
+              this.setInterventionField('humanitarian_flag', detail.value, true);
+              this.newIntervention.contingency_pd = false;
+            }}"
+          >
+            This SPD is Humanitarian
+          </paper-toggle-button>
         </div>
 
         <!--   Contingency Document   -->
-        <div class="col-3">
+        <div class="col-3" ?hidden="${!this.newIntervention.humanitarian_flag}">
           <paper-toggle-button
             @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
           >
@@ -189,7 +201,10 @@ export function template(this: InterventionNew): TemplateResult {
         <!--   UNPP Number Toggle   -->
         <paper-toggle-button
           ?checked="${this.hasUNPP}"
-          @checked-changed="${({detail}: CustomEvent) => (this.hasUNPP = detail.value)}"
+          @checked-changed="${({detail}: CustomEvent) => {
+            this.hasUNPP = detail.value;
+            this.setInterventionField('cfei_number', '', true);
+          }}"
         >
           I Have UNPP Number
         </paper-toggle-button>
@@ -201,6 +216,8 @@ export function template(this: InterventionNew): TemplateResult {
             ?hidden="${!this.hasUNPP}"
             label="UNPP CFEI Number"
             placeholder="&#8212;"
+            @value-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>
         </div>
       </div>
@@ -216,6 +233,8 @@ export function template(this: InterventionNew): TemplateResult {
             placeholder="&#8212;"
             required
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
+            @focus="${this.resetError}"
+            @tap="${this.resetError}"
           ></paper-input>
         </div>
       </div>
