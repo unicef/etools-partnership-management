@@ -2,6 +2,7 @@ type StaticAgreement = {
   agreement_number: string;
   agreement_number_status: string;
   agreement_type: string;
+  authorized_officers: PartnerStaffMember[];
   country_programme: number;
   end: string;
   id: number;

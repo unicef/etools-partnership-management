@@ -31,13 +31,22 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   @property() filteredAgreements: StaticAgreement[] = [];
   agreementsList: StaticAgreement[] = [];
-  selectedAgreement: StaticAgreement | null = null;
+  @property() selectedAgreement: StaticAgreement | null = null;
 
   @property() documentTypesOptions: LabelAndValue[] = [];
 
   @property() staffMembers: LabelAndValue<number>[] = [];
   get allStaffMembers(): string {
     return this.staffMembers.map((member: LabelAndValue<number>) => member.label).join(', ');
+  }
+
+  get authorizedOfficers(): string {
+    const officers: PartnerStaffMember[] = (this.selectedAgreement && this.selectedAgreement.authorized_officers) || [];
+    return officers.map(({first_name, last_name}: PartnerStaffMember) => `${first_name} ${last_name}`).join(', ');
+  }
+
+  get isSSFA(): boolean {
+    return this.newIntervention.document_type === CONSTANTS.DOCUMENT_TYPES.SPD;
   }
 
   availableYears: {value: number; label: number}[] = new Array(11)
@@ -127,16 +136,27 @@ export class InterventionNew extends connect(store)(LitElement) {
     }
   }
 
-  setInterventionField(field: string, value: any): void {
+  setInterventionField(field: string, value: any, requestUpdate?: boolean): void {
+    if (this.newIntervention[field] !== value && requestUpdate) {
+      this.requestUpdate();
+    }
     this.newIntervention[field] = value;
   }
 
   createIntervention(): void {
+    if (!this.validate()) {
+      fireEvent(this, 'toast', {text: 'Please fill all required fields'});
+      return;
+    }
     const partnerId: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
     this.newIntervention.partner = partnerId;
     const agreementId: number | null = (this.selectedAgreement && this.selectedAgreement.id) || null;
     this.newIntervention.agreement = agreementId;
     fireEvent(this, 'create-intervention', this.newIntervention);
+  }
+
+  resetError(event: any): void {
+    event.target.invalid = false;
   }
 
   private filterAgreements(partnerId: number | null): void {
@@ -177,6 +197,15 @@ export class InterventionNew extends connect(store)(LitElement) {
     } else {
       this.documentTypesOptions = [];
     }
+  }
+
+  private validate(): boolean {
+    let valid = true;
+    this.shadowRoot!.querySelectorAll('*[required]').forEach((element: any) => {
+      const fieldValid: boolean = element.validate();
+      valid = valid && fieldValid;
+    });
+    return valid;
   }
 
   static get styles(): CSSResultArray {
