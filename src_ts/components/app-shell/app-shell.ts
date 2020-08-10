@@ -394,7 +394,6 @@ class AppShell extends connect(store)(
   }
 
   public routeChanged() {
-    console.log('routeChanged');
     if (
       this.appLocRoute.path === this.route.path &&
       objectsAreTheSame(this.appLocRoute.__queryParams, this.route.__queryParams)

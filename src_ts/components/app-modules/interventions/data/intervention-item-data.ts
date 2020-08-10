@@ -93,7 +93,7 @@ class InterventionItemData extends connect(store)(
     return sendRequest(options)
       .then(function (resp: any) {
         self._handleResponse(resp, ajaxMethod);
-        store.dispatch(updateCurrentIntervention(resp));
+        // store.dispatch(updateCurrentIntervention(resp));
         return true;
       })
       .catch(function (error: any) {

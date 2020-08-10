@@ -113,11 +113,6 @@
     "typescript": "^3.9.5",
     "wct-mocha": "^1.1.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && tsc --skipLibCheck"
-    }
-  },
   "lint-staged": {
     "*.ts": [
       "eslint --fix"
