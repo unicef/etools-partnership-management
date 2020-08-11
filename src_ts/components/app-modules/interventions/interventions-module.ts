@@ -38,6 +38,7 @@ import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
+import './pages/intervention-tab-pages/intervention-tabs';
 
 /**
  * @polymer
@@ -110,178 +111,113 @@ class InterventionsModule extends connect(store)(
 
       <app-route route="{{route}}" pattern="/:id/:tab" active="{{tabsActive}}" data="{{routeData}}"></app-route>
 
-      <page-content-header with-tabs-visible="[[tabsActive]]">
-        <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            PD/SSFAs
-          </template>
-          <template is="dom-if" if="[[newPageActive]]">
-            <span class="no-capitalization">
-              Add Programme Document or SSFA
-            </span>
-          </template>
-          <template is="dom-if" if="[[tabsActive]]">
-            <span>
-              <a class="primary" href$="[[rootPath]]partners/[[intervention.partner_id]]/overview" target="_blank"
-                >[[intervention.partner]]</a
-              >
-              <span>: [[intervention.number]]</span>
-            </span>
-          </template>
-        </div>
+      <div hidden="[[showNewPMP(activePage)]]">
+        <page-content-header with-tabs-visible="[[tabsActive]]">
+          <div slot="page-title">
+            <template is="dom-if" if="[[listActive]]">
+              PD/SSFAs
+            </template>
+            <template is="dom-if" if="[[newPageActive]]">
+              <span class="no-capitalization">
+                Add Programme Document or SSFA
+              </span>
+            </template>
+            <template is="dom-if" if="[[tabsActive]]">
+              <span>
+                <a class="primary" href$="[[rootPath]]partners/[[intervention.partner_id]]/overview" target="_blank"
+                  >[[intervention.partner]]</a
+                >
+                <span>: [[intervention.number]]</span>
+              </span>
+            </template>
+          </div>
 
-        <div slot="title-row-actions" class="content-header-actions export-options">
-          <div class="action" hidden$="[[!listActive]]">
-            <paper-menu-button id="pdExportMenuBtn" close-on-activate>
-              <paper-button slot="dropdown-trigger">
-                <iron-icon icon="file-download"></iron-icon>
-                Export
+          <div slot="title-row-actions" class="content-header-actions export-options">
+            <div class="action" hidden$="[[!listActive]]">
+              <paper-menu-button id="pdExportMenuBtn" close-on-activate>
+                <paper-button slot="dropdown-trigger">
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+                <paper-listbox slot="dropdown-content">
+                  <paper-item on-tap="_exportPdBudget">PD Budget Export</paper-item>
+                  <paper-item on-tap="_exportPdResult">PD Result Export</paper-item>
+                  <paper-item on-tap="_exportPdLocations">PD Locations Export</paper-item>
+                </paper-listbox>
+              </paper-menu-button>
+            </div>
+
+            <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+              <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
+                <iron-icon icon="add"></iron-icon>
+                Add new PD/SSFA
               </paper-button>
-              <paper-listbox slot="dropdown-content">
-                <paper-item on-tap="_exportPdBudget">PD Budget Export</paper-item>
-                <paper-item on-tap="_exportPdResult">PD Result Export</paper-item>
-                <paper-item on-tap="_exportPdLocations">PD Locations Export</paper-item>
-              </paper-listbox>
-            </paper-menu-button>
+            </div>
           </div>
 
-          <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
-            <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
-              <iron-icon icon="add"></iron-icon>
-              Add new PD/SSFA
-            </paper-button>
+          <template is="dom-if" if="[[_showPageTabs(activePage)]]">
+            <etools-tabs
+              slot="tabs"
+              tabs="[[interventionTabs]]"
+              active-tab="{{routeData.tab}}"
+              on-iron-select="_handleTabSelectAction"
+            ></etools-tabs>
+          </template>
+        </page-content-header>
+
+        <div id="main">
+          <div id="pageContent">
+            <etools-error-messages-box
+              id="errorsBox"
+              title$="[[errorMsgBoxTitle]]"
+              errors="{{serverErrors}}"
+            ></etools-error-messages-box>
+
+            <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+              <interventions-list
+                id="list"
+                name="list"
+                active="[[listActive]]"
+                csv-download-qs="{{csvDownloadQs}}"
+                url-params="[[preservedListQueryParams]]"
+              >
+              </interventions-list>
+            </template>
+
+            <template is="dom-if" if="[[_pageEquals(activePage, 'new')]]" restamp>
+              <intervention-new on-create-intervention="onCreateIntervention"></intervention-new>
+            </template>
+
+            <template is="dom-if" if="[[_pageEquals(activePage, 'attachments')]]">
+              <intervention-attachments
+                id="intervAttachments"
+                name="attachments"
+                active="[[_isAttachementsTabActive(routeData.tab)]]"
+                intervention-id="[[intervention.id]]"
+                intervention-status="[[intervention.status]]"
+                new-intervention="[[newInterventionActive]]"
+              >
+              </intervention-attachments>
+            </template>
+
+            <template is="dom-if" if="[[_visibleTabContent(activePage, 'reports', newInterventionActive)]]" restamp>
+              <intervention-reports
+                id="interventionReports"
+                name="reports"
+                intervention-id="[[intervention.id]]"
+                active="[[_pageEquals(activePage, 'reports')]]"
+                prev-params="{{reportsPrevParams}}"
+              ></intervention-reports>
+            </template>
+
+            <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
+              <intervention-progress name="progress" intervention-id="[[intervention.id]]"></intervention-progress>
+            </template>
           </div>
+          <!-- main page content end -->
         </div>
-
-        <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-          <etools-tabs
-            slot="tabs"
-            tabs="[[interventionTabs]]"
-            active-tab="{{routeData.tab}}"
-            on-iron-select="_handleTabSelectAction"
-          ></etools-tabs>
-        </template>
-      </page-content-header>
-
-      <div id="main">
-        <div id="pageContent">
-          <etools-error-messages-box
-            id="errorsBox"
-            title$="[[errorMsgBoxTitle]]"
-            errors="{{serverErrors}}"
-          ></etools-error-messages-box>
-
-          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
-            <interventions-list
-              id="list"
-              name="list"
-              active="[[listActive]]"
-              csv-download-qs="{{csvDownloadQs}}"
-              url-params="[[preservedListQueryParams]]"
-            >
-            </interventions-list>
-          </template>
-
-          <template is="dom-if" if="[[_visibleTabContent(activePage, 'overview', newInterventionActive)]]">
-            <intervention-overview
-              name="overview"
-              intervention="[[intervention]]"
-              result-links="[[intervention.result_links]]"
-              intervention-agreement="[[agreement]]"
-            >
-            </intervention-overview>
-          </template>
-
-          <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-            <intervention-details
-              id="interventionDetails"
-              name="details"
-              intervention="{{intervention}}"
-              new-intervention="[[newInterventionActive]]"
-              original-intervention="[[originalIntervention]]"
-              user-edit-permission="[[_hasEditPermissions(permissions, intervention)]]"
-            >
-            </intervention-details>
-          </template>
-
-          <template is="dom-if" if="[[_pageEquals(activePage, 'new')]]" restamp>
-            <intervention-new on-create-intervention="onCreateIntervention"></intervention-new>
-          </template>
-
-          <template is="dom-if" if="[[_pageEquals(activePage, 'review-and-sign')]]">
-            <intervention-review-and-sign
-              id="interventionReviewAndSign"
-              name="review-and-sign"
-              intervention="{{intervention}}"
-              original-intervention="[[originalIntervention]]"
-              agreement="[[agreement]]"
-            >
-            </intervention-review-and-sign>
-          </template>
-
-          <template is="dom-if" if="[[_pageEquals(activePage, 'attachments')]]">
-            <intervention-attachments
-              id="intervAttachments"
-              name="attachments"
-              active="[[_isAttachementsTabActive(routeData.tab)]]"
-              intervention-id="[[intervention.id]]"
-              intervention-status="[[intervention.status]]"
-              new-intervention="[[newInterventionActive]]"
-            >
-            </intervention-attachments>
-          </template>
-
-          <template is="dom-if" if="[[_visibleTabContent(activePage, 'reports', newInterventionActive)]]" restamp>
-            <intervention-reports
-              id="interventionReports"
-              name="reports"
-              intervention-id="[[intervention.id]]"
-              active="[[_pageEquals(activePage, 'reports')]]"
-              prev-params="{{reportsPrevParams}}"
-            ></intervention-reports>
-          </template>
-
-          <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
-            <intervention-progress name="progress" intervention-id="[[intervention.id]]"></intervention-progress>
-          </template>
-
-          <intervention-item-data
-            id="interventionData"
-            intervention="{{intervention}}"
-            intervention-id="[[selectedInterventionId]]"
-            original-intervention="[[originalIntervention]]"
-            error-event-name="intervention-save-error"
-          ></intervention-item-data>
-
-          <agreement-item-data
-            id="agreement"
-            agreement-id="[[intervention.agreement]]"
-            agreement="{{agreement}}"
-          ></agreement-item-data>
-        </div>
-        <!-- main page content end -->
-
-        <!-- sidebar content start -->
-        <template is="dom-if" if="[[_showInterventionSidebarStatus(listActive, tabAttached, activePage)]]">
-          <div id="sidebar">
-            <intervention-status
-              status="[[intervention.status]]"
-              active="[[!listActive]]"
-              active-tab="[[routeData.tab]]"
-              intervention-id="[[intervention.id]]"
-              new-intervention="[[newInterventionActive]]"
-              intervention-agreement-status="[[agreement.status]]"
-              on-save-intervention="_validateAndSaveIntervention"
-              on-update-intervention-status="_updateInterventionStatus"
-              on-delete-intervention="_deleteIntervention"
-              on-terminate-pd="_terminatePd"
-              edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
-            >
-            </intervention-status>
-          </div>
-          <!-- sidebar content end -->
-        </template>
       </div>
+      <intervention-tabs store="[[getReduxStore()]]" hidden="[[!showNewPMP(activePage)]]"></intervention-tabs>
     `;
   }
 
@@ -358,13 +294,20 @@ class InterventionsModule extends connect(store)(
     return [
       '_pageChanged(listActive, tabsActive, newPageActive, routeData)',
       '_observeRouteDataId(routeData.id)',
-      '_interventionChanged(intervention, permissions)',
       '_amendmentModeChanged(intervention.in_amendment, tabAttached, listActive)'
     ];
   }
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
+  }
+
+  getReduxStore() {
+    return store;
+  }
+
+  showNewPMP(activePage: string) {
+    return ['details', 'overview', 'results', 'timing', 'management', 'attachments'].includes(activePage);
   }
 
   ready() {
@@ -384,7 +327,7 @@ class InterventionsModule extends connect(store)(
       active: false,
       loadingSource: 'main-page'
     });
-    this._showInterventionPageLoadingMessage();
+    // this._showInterventionPageLoadingMessage();
   }
 
   disconnectedCallback() {
@@ -402,7 +345,7 @@ class InterventionsModule extends connect(store)(
 
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.addEventListener('tab-content-attached', this._interventionPageAttached);
-    this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+    // this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
   }
@@ -703,9 +646,9 @@ class InterventionsModule extends connect(store)(
     return activeTab === 'attachments';
   }
 
-  _handleTabSelectAction(e: CustomEvent) {
-    this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-');
-  }
+  // _handleTabSelectAction(e: CustomEvent) {
+  //   this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-');
+  // }
 
   _interventionPageAttached() {
     // force styles updates according with intervention permissions
