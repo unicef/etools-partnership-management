@@ -187,32 +187,6 @@ class InterventionsModule extends connect(store)(
             <template is="dom-if" if="[[_pageEquals(activePage, 'new')]]" restamp>
               <intervention-new on-create-intervention="onCreateIntervention"></intervention-new>
             </template>
-
-            <template is="dom-if" if="[[_pageEquals(activePage, 'attachments')]]">
-              <intervention-attachments
-                id="intervAttachments"
-                name="attachments"
-                active="[[_isAttachementsTabActive(routeData.tab)]]"
-                intervention-id="[[intervention.id]]"
-                intervention-status="[[intervention.status]]"
-                new-intervention="[[newInterventionActive]]"
-              >
-              </intervention-attachments>
-            </template>
-
-            <template is="dom-if" if="[[_visibleTabContent(activePage, 'reports', newInterventionActive)]]" restamp>
-              <intervention-reports
-                id="interventionReports"
-                name="reports"
-                intervention-id="[[intervention.id]]"
-                active="[[_pageEquals(activePage, 'reports')]]"
-                prev-params="{{reportsPrevParams}}"
-              ></intervention-reports>
-            </template>
-
-            <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
-              <intervention-progress name="progress" intervention-id="[[intervention.id]]"></intervention-progress>
-            </template>
           </div>
           <!-- main page content end -->
         </div>
