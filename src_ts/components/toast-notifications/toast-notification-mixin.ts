@@ -5,6 +5,7 @@ import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';
 import {store} from '../../store';
+import get from 'lodash-es/get';
 
 /**
  * @polymer
@@ -92,9 +93,11 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
     }
 
     closeToast() {
-      store.dispatch({
-        type: 'CLOSE_TOAST'
-      });
+      if (get(store.getState(), 'app.toastNotification.active')) {
+        store.dispatch({
+          type: 'CLOSE_TOAST'
+        });
+      }
       this._toggleToast();
     }
 

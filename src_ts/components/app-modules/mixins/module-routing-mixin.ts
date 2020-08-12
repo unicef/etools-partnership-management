@@ -101,7 +101,15 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
      * @return {string}
      */
     _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: GenericObject | null) {
-      let baseUrl = currentModule + '/pages/' + page + '/';
+      let baseUrl = '';
+      if (
+        currentModule === 'interventions' &&
+        ['details', 'overview', 'timing', 'results', 'management', 'attachments'].includes(page)
+      ) {
+        baseUrl = currentModule + '/pages/intervention-tab-pages/intervention-' + page + '/';
+      } else {
+        baseUrl = currentModule + '/pages/' + page + '/';
+      }
       if (typeof appendBasePathAdditionalFolder === 'function') {
         // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
         baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
