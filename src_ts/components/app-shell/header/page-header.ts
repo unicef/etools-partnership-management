@@ -16,6 +16,7 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
+import {EtoolsUserModel} from '../../user/user-model';
 
 /**
  * @polymer
@@ -220,7 +221,7 @@ class PageHeader extends connect(store)(
   environment: string | null = _checkEnvironment();
 
   @property({type: Object})
-  profile: User | null = null;
+  profile: EtoolsUserModel | null = null;
 
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
@@ -251,8 +252,9 @@ class PageHeader extends connect(store)(
       this.users = [...state.commonData.unicefUsersData];
     }
     if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
-      this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
-
+      // bellow is original.... underneath is from ePD
+      //this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
+      this.profile = state.user!.data as EtoolsUserModel;
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
       }
