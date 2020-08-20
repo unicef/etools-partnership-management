@@ -111,7 +111,7 @@ export const getDomainByEnv = () => {
   if (isProductionServer()) {
     return 'https://etools.unicef.org/pmp';
   }
-  return 'https://etools-dev.unicef.org/pmp';
+  return `${location.origin}/pmp`;
 };
 
 export const tokenStorageKeys = {
