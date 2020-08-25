@@ -22,7 +22,6 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 import {Office, GenericObject} from '../../../../typings/globals.types';
-import {updateCurrentIntervention} from '../../../../actions/interventions';
 
 /**
  * @polymer
