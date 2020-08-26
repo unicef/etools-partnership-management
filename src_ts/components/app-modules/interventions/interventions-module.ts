@@ -281,7 +281,7 @@ class InterventionsModule extends connect(store)(
   }
 
   showNewPMP(activePage: string) {
-    return ['details', 'overview', 'results', 'timing', 'management', 'attachments'].includes(activePage);
+    return ['details', 'overview', 'results', 'timing', 'management', 'attachments', 'progress', 'reports'].includes(activePage);
   }
 
   ready() {
