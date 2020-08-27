@@ -11,6 +11,7 @@ import {Constructor, User, UserGroup, UserPermissions} from '../../typings/globa
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
+import {setUserData, setUserPermissions} from '../../actions/user';
 
 /**
  * @polymer
@@ -37,8 +38,9 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         endpoint: this.getEndpoint(this.endpointName)
       })
         .then((res: any) => {
+          console.log('USER DATAAAAAAAAAAAAAAAAAAAAAA', res);
           // TODO: check response to make sure it contains a valid user
-          this._setUserData(res);
+          store.dispatch(setUserData(res));
           store.dispatch(updateCurrentUser(res));
           this.checkDexieCountryIsUserCountry(res);
         })

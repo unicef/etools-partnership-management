@@ -1,35 +1,21 @@
-//this to eb removed!!!!!!!!!!!!!
-//use simple User model flrom global types
-
 import {Action, ActionCreator} from 'redux';
 // import {ThunkAction} from 'redux-thunk';
 // import {RootState} from '../store';
 import {AnyObject, User} from '../typings/globals.types';
 
-export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
-export const UPDATE_USER_PERMISSIONS = 'UPDATE_USER_PERMISSIONS';
+export const SET_USER_DATA = 'SET_USER_DATA';
+export const SET_USER_PERMISSIONS = 'SET_USER_PERMISSIONS';
 
-export interface UserActionUpdate extends Action<'UPDATE_USER_DATA'> {
-  data: User;
-}
-export interface UserActionUpdatePermissions extends Action<'UPDATE_USER_PERMISSIONS'> {
-  permissions: AnyObject;
-}
+export interface UserActionSet extends Action<'SET_USER_DATA'> {data: User}
+export interface UserActionSetPermissions extends Action<'SET_USER_PERMISSIONS'> {permissions: AnyObject}
 
-export type UserAction = UserActionUpdate | UserActionUpdatePermissions;
+export type UserAction = UserActionSet | UserActionSetPermissions;
 // @ts-ignore - for now
 // type ThunkResult = ThunkAction<void, RootState, undefined, UserAction>;
 
-export const updateUserData: ActionCreator<UserActionUpdate> = (data: User) => {
+export const setUserData: ActionCreator<UserActionSet> = (data: User) => {
   return {
-    type: UPDATE_USER_DATA,
+    type: SET_USER_DATA,
     data
-  };
-};
-
-export const updateUserPermissions: ActionCreator<UserActionUpdatePermissions> = (permissions: AnyObject) => {
-  return {
-    type: UPDATE_USER_PERMISSIONS,
-    permissions
   };
 };

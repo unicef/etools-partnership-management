@@ -16,7 +16,6 @@ import {fireEvent} from '../../utils/fire-custom-event';
 import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
-import {EtoolsUserModel} from '../../user/user-model';
 
 /**
  * @polymer
@@ -221,7 +220,7 @@ class PageHeader extends connect(store)(
   environment: string | null = _checkEnvironment();
 
   @property({type: Object})
-  profile: EtoolsUserModel | null = null;
+  profile: User | null = null;
 
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
@@ -242,6 +241,7 @@ class PageHeader extends connect(store)(
     if (!state.commonData) {
       return;
     }
+    console.log(state);
     if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
       this.offices = [...state.commonData.offices];
     }
@@ -251,10 +251,10 @@ class PageHeader extends connect(store)(
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
     }
-    if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
-      // bellow is original.... underneath is from ePD
+    if (state.user.data !== null && !isJsonStrMatch(state.user.data, this.profile)) {
+      // bellow is original.... refactored to state.user.data
       //this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
-      this.profile = state.user!.data as EtoolsUserModel;
+      this.profile = state.user!.data as User;
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
       }

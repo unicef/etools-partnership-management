@@ -10,7 +10,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {GenericObject} from '../../../typings/globals.types.js';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {EtoolsUserModel} from '../../user/user-model.js';
+import {User} from '../../../typings/globals.types';
 
 /**
  * @polymer
@@ -109,7 +109,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
   countrySelectorVisible = false;
 
   @property({type: Object})
-  userData!: EtoolsUserModel | null;
+  userData!: User | null;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -125,8 +125,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
     if (!state) {
       return;
     }
-
-    //imported from ePD
+    console.log(state);
     this.userData = state.user!.data;
     this.userDataChanged(this.userData);
   }
@@ -137,7 +136,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
     }
   }
 
-  userDataChanged(userData: EtoolsUserModel | null) {
+  userDataChanged(userData: User | null) {
     if (userData) {
       this.countries = userData.countries_available;
       this.currentCountry = userData.country;
