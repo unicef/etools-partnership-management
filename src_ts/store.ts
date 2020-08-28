@@ -23,6 +23,7 @@ import {AgreementsState} from './reducers/agreements.js';
 import {PageDataState} from './reducers/page-data.js';
 import {User} from './typings/globals.types.js';
 import {UserState} from './reducers/user.js';
+import {interventions, InterventionsState} from './reducers/interventions.js';
 
 declare global {
   interface Window {
@@ -41,6 +42,7 @@ export interface RootState {
   agreements?: AgreementsState;
   pageData?: PageDataState;
   user?: UserState;
+  interventions?: InterventionsState;
 }
 
 export type RootAction = AppAction | CommonDataAction | User | any;
@@ -65,7 +67,8 @@ export const store = createStore(
 // Initially loaded reducers.
 store.addReducers({
   // @ts-ignore
-  app
+  app,
+  interventions
 });
 
 window.addEventListener('storage', function (e) {
