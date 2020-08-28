@@ -325,7 +325,8 @@ class PartnersModule extends connect(store)(
       errMsgPrefixTmpl: '[partner(s) ##page##]',
       loadingMsgSource: 'partners-page'
     };
-    this.setActivePage(listActive, routeData.tab, fileImportDetails);
+    const page: string = listActive ? 'list' : routeData.tab;
+    this.setActivePage(page, fileImportDetails);
   }
 
   public _hasEditPermissions(permissions: UserPermissions) {
