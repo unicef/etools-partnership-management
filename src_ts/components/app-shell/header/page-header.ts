@@ -241,7 +241,6 @@ class PageHeader extends connect(store)(
     if (!state.commonData) {
       return;
     }
-    console.log(state);
     if (!isJsonStrMatch(state.commonData.offices, this.offices)) {
       this.offices = [...state.commonData.offices];
     }
@@ -251,13 +250,12 @@ class PageHeader extends connect(store)(
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
     }
-    if (state.user.data !== null && !isJsonStrMatch(state.user.data, this.profile)) {
+    if (state.user!.data as User !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
       // bellow is original.... refactored to state.user.data
-      //this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
-      this.profile = state.user!.data as User;
-      if (this.profile && this.profile.countries_available) {
-        this.countries = this._updateCountriesList(this.profile.countries_available);
-      }
+      this.profile = JSON.parse(JSON.stringify(state.user!.data));
+    }
+    if (this.profile && this.profile.countries_available) {
+      this.countries = this._updateCountriesList(this.profile.countries_available);
     }
   }
 

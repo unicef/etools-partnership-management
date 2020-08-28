@@ -114,7 +114,6 @@ function InterventionPermissionsMixin<T extends Constructor<PolymerElement>>(bas
     }
 
     _setPermissions(perm: Permission<InterventionPermissionsFields>) {
-      console.log('set permissions');
       this.set('intervention.permissions', perm);
       store.dispatch(setPageDataPermissions(perm));
       this._updateRelatedPermStyles();

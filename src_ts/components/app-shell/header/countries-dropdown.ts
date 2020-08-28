@@ -109,7 +109,7 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
   countrySelectorVisible = false;
 
   @property({type: Object})
-  userData!: User | null;
+  userData!: User;
 
   public connectedCallback() {
     super.connectedCallback();
@@ -125,9 +125,6 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
     if (!state) {
       return;
     }
-    console.log(state);
-    this.userData = state.user!.data;
-    this.userDataChanged(this.userData);
   }
 
   protected showCountrySelector(countries: any) {

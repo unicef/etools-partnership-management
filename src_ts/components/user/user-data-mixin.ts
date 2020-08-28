@@ -3,7 +3,7 @@ import {store} from '../../store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
-import {updateCurrentUser} from '../../actions/common-data';
+import {updateUserData} from '../../actions/user';
 import {isEmptyObject} from '../utils/utils';
 import {fireEvent} from '../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
@@ -11,7 +11,6 @@ import {Constructor, User, UserGroup, UserPermissions} from '../../typings/globa
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
-import {setUserData, setUserPermissions} from '../../actions/user';
 
 /**
  * @polymer
@@ -38,10 +37,9 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         endpoint: this.getEndpoint(this.endpointName)
       })
         .then((res: any) => {
-          console.log('USER DATAAAAAAAAAAAAAAAAAAAAAA', res);
           // TODO: check response to make sure it contains a valid user
-          store.dispatch(setUserData(res));
-          store.dispatch(updateCurrentUser(res));
+          this._setUserData(res);
+          store.dispatch(updateUserData(res));
           this.checkDexieCountryIsUserCountry(res);
         })
         .catch((error: any) => {

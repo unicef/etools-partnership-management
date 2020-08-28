@@ -31,6 +31,7 @@ import pageData from '../../reducers/page-data.js';
 import uploadStatus from '../../reducers/upload-status.js';
 import agreements from '../../reducers/agreements.js';
 import partners from '../../reducers/partners.js';
+import user from '../../reducers/user';
 
 store.addReducers({
   // @ts-ignore
@@ -38,7 +39,8 @@ store.addReducers({
   uploadStatus,
   partners,
   agreements,
-  pageData
+  pageData,
+  user
 });
 
 // These are the elements needed by this element.
