@@ -3,6 +3,7 @@ import {store} from '../../store';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EtoolsPageRefreshMixin from '@unicef-polymer/etools-behaviors/etools-page-refresh-mixin.js';
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
+import {updateCurrentUser} from '../../actions/common-data';
 import {updateUserData} from '../../actions/user';
 import {isEmptyObject} from '../utils/utils';
 import {fireEvent} from '../utils/fire-custom-event';
@@ -39,7 +40,11 @@ function UserDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         .then((res: any) => {
           // TODO: check response to make sure it contains a valid user
           this._setUserData(res);
+
+          // TODO - storing in state.user also to match with intervention-tab-pages expectations
+          store.dispatch(updateCurrentUser(res));
           store.dispatch(updateUserData(res));
+
           this.checkDexieCountryIsUserCountry(res);
         })
         .catch((error: any) => {

@@ -250,12 +250,12 @@ class PageHeader extends connect(store)(
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
     }
-    if (state.user!.data as User !== null && !isJsonStrMatch(state.user!.data, this.profile)) {
-      // bellow is original.... refactored to state.user.data
-      this.profile = JSON.parse(JSON.stringify(state.user!.data));
-    }
-    if (this.profile && this.profile.countries_available) {
-      this.countries = this._updateCountriesList(this.profile.countries_available);
+    if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
+      this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
+
+      if (this.profile && this.profile.countries_available) {
+        this.countries = this._updateCountriesList(this.profile.countries_available);
+      }
     }
   }
 

@@ -134,7 +134,3 @@ export interface ValidatableField extends PolymerElement {
   invalid: boolean;
   validate: () => any; // validate method for polymer form input elements
 }
-
-export interface AnyObject {
-  [key: string]: any;
-}
