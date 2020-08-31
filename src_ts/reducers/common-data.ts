@@ -80,7 +80,7 @@ export class CommonDataState {
   currentUser: User | null = null;
   disaggregations: Disaggregation[] = [];
   PRPCountryData: GenericObject[] = [];
-  genderEquityRatings: LabelAndValue[] = [
+  genderEquityRatings: LabelAndValue[] = [ // TODO - TBD if they will be loaded from bk
     {label: 'Principal', value: 'principal'},
     {label: 'Significant', value: 'significant'},
     {label: 'Marginal', value: 'marginal'},
