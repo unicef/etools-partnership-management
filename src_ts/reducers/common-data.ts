@@ -80,6 +80,12 @@ export class CommonDataState {
   currentUser: User | null = null;
   disaggregations: Disaggregation[] = [];
   PRPCountryData: GenericObject[] = [];
+  genderEquityRatings: LabelAndValue[] = [ // TODO - TBD if they will be loaded from bk
+    {label: 'Principal', value: 'principal'},
+    {label: 'Significant', value: 'significant'},
+    {label: 'Marginal', value: 'marginal'},
+    {label: 'None', value: 'none'}
+  ];
   reportStatuses: LabelAndValue[] = [
     // TODO: reports list filter statuses? To be confirmed by unicef team.
     {value: 'Acc', label: 'Accepted'},
