@@ -37,6 +37,7 @@ export const BASE_URL = '/pmp/';
 const PROD_DOMAIN = 'etools.unicef.org';
 const STAGING_DOMAIN = 'etools-staging.unicef.org';
 const DEV_DOMAIN = 'etools-dev.unicef.org';
+const TEST_DOMAIN = 'etools-test.unicef.io';
 const DEMO_DOMAIN = 'etools-demo.unicef.org';
 const LOCAL_DOMAIN = 'localhost:8082';
 export const AP_DOMAIN = '/ap/';
@@ -54,6 +55,9 @@ export const isStagingServer = () => {
 export const isDevServer = () => {
   return window.location.href.indexOf(DEV_DOMAIN) > -1;
 };
+export const isTestServer = () => {
+  return window.location.href.indexOf(TEST_DOMAIN) > -1;
+};
 export const isDemoServer = () => {
   return window.location.href.indexOf(DEMO_DOMAIN) > -1;
 };
@@ -65,6 +69,9 @@ export const _checkEnvironment = () => {
   }
   if (location.indexOf(DEMO_DOMAIN) > -1) {
     return 'DEMO';
+  }
+  if (location.indexOf(TEST_DOMAIN) > -1) {
+    return 'TEST';
   }
   if (location.indexOf(DEV_DOMAIN) > -1) {
     return 'DEVELOPMENT';
@@ -104,6 +111,9 @@ export const getDomainByEnv = () => {
   }
   if (isDevServer()) {
     return 'https://etools-dev.unicef.org/pmp';
+  }
+  if (isTestServer()) {
+    return 'https://etools-test.unicef.io/pmp';
   }
   if (isDemoServer()) {
     return 'https://etools-demo.unicef.org/pmp';
