@@ -31,7 +31,8 @@ import {
   UPDATE_ENV_FLAGS,
   UPDATE_CURRENT_USER,
   CommonDataAction,
-  UPDATE_SEA_RISK_RATINGS
+  UPDATE_SEA_RISK_RATINGS,
+  UPDATE_GENDER_EQUITY
 } from '../actions/common-data';
 import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
 import {
@@ -80,12 +81,7 @@ export class CommonDataState {
   currentUser: User | null = null;
   disaggregations: Disaggregation[] = [];
   PRPCountryData: GenericObject[] = [];
-  genderEquityRatings: LabelAndValue[] = [ // TODO - TBD if they will be loaded from bk
-    {label: 'Principal', value: 'principal'},
-    {label: 'Significant', value: 'significant'},
-    {label: 'Marginal', value: 'marginal'},
-    {label: 'None', value: 'none'}
-  ];
+  genderEquityRatings: LabelAndValue[] = [];
   reportStatuses: LabelAndValue[] = [
     // TODO: reports list filter statuses? To be confirmed by unicef team.
     {value: 'Acc', label: 'Accepted'},
@@ -305,6 +301,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         seaRiskRatings: action.seaRiskRatings
+      };
+
+    case UPDATE_GENDER_EQUITY:
+      return {
+        ...state,
+        genderEquityRatings: action.genderEquityRatings
       };
 
     default:
