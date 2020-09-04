@@ -183,6 +183,8 @@ documentContainer.innerHTML = `
         };
 
         --paper-tooltip-delay-in: 0;
+        
+        --ecp-header-title_-_text-align: left;
 
       }
 
