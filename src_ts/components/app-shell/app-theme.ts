@@ -37,6 +37,7 @@ documentContainer.innerHTML = `
         --dark-disabled-icon-color: rgba(0, 0, 0, 0.38);
 
         --light-divider-color: rgba(255, 255, 255, 0.12);
+        --light-hex-divider-color: #b8b8b8;
         --dark-divider-color: rgba(0, 0, 0, 0.12);
         --darker-divider-color: var(--medium-primary-text-color);
 
