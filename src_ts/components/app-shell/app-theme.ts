@@ -36,9 +36,9 @@ documentContainer.innerHTML = `
         --light-disabled-icon-color: var(--medium-primary-text-color);
         --dark-disabled-icon-color: rgba(0, 0, 0, 0.38);
 
-        --light-divider-color: rgba(255, 255, 255, 0.12);
+        --light-divider-color: rgba(0, 0, 0, 0.12);
         --light-hex-divider-color: #b8b8b8;
-        --dark-divider-color: rgba(0, 0, 0, 0.12);
+        --dark-divider-color: rgba(0, 0, 0, 0.40);
         --darker-divider-color: var(--medium-primary-text-color);
 
         --light-hover-color: rgba(255, 255, 255, 0.01);
@@ -184,7 +184,7 @@ documentContainer.innerHTML = `
         };
 
         --paper-tooltip-delay-in: 0;
-        
+
         --ecp-header-title_-_text-align: left;
 
       }
