@@ -45,6 +45,7 @@ export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 export const UPDATE_GENDER_EQUITY  = 'UPDATE_GENDER_EQUITY';
+export const UPDATE_RISK_TYPES  = 'UPDATE_RISK_TYPES';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: GenericObject[];
@@ -457,5 +458,12 @@ export const updateGenderEquity = (genderEquityRatings: LabelAndValue[]) => {
   return {
     type: UPDATE_GENDER_EQUITY,
     genderEquityRatings
+  };
+};
+
+export const updateRiskTypes = (riskTypes: LabelAndValue[]) => {
+  return {
+    type: UPDATE_RISK_TYPES,
+    riskTypes
   };
 };

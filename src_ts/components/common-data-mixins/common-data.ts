@@ -208,6 +208,10 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         if (this._validReqResponseData(response.gender_equity_sustainability_ratings)) {
           store.dispatch(commonDataActions.updateGenderEquity((response as any).gender_equity_sustainability_ratings));
         }
+        // set risk types
+        if (this._validReqResponseData(response.risk_types)) {
+          store.dispatch(commonDataActions.updateRiskTypes((response as any).risk_types));
+        }
       }
     }
 
