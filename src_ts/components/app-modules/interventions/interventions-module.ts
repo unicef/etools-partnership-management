@@ -13,7 +13,6 @@ import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin'
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import InterventionPageTabsMixin from './mixins/intervention-page-tabs-mixin';
 import InterventionPermissionsMixin from './mixins/intervention-permissions-mixin';
-import SaveInterventionMixin from './mixins/save-intervention-mixin';
 import '../../layout/page-content-header.js';
 import '../../layout/page-content-header-slotted-styles.js';
 import '../../layout/etools-error-messages-box.js';
@@ -56,7 +55,7 @@ class InterventionsModule extends connect(store)(
   InterventionPermissionsMixin(
     ScrollControlMixin(
       ModuleMainElCommonFunctionalityMixin(
-        ModuleRoutingMixin(InterventionPageTabsMixin(SaveInterventionMixin(EndpointsMixin(PolymerElement))))
+        ModuleRoutingMixin(InterventionPageTabsMixin(EndpointsMixin(PolymerElement)))
       )
     )
   )
@@ -114,13 +113,9 @@ class InterventionsModule extends connect(store)(
       <div hidden="[[showNewPMP(activePage)]]">
         <page-content-header with-tabs-visible="[[tabsActive]]">
           <div slot="page-title">
-            <template is="dom-if" if="[[listActive]]">
-              PD/SSFAs
-            </template>
+            <template is="dom-if" if="[[listActive]]"> PD/SSFAs </template>
             <template is="dom-if" if="[[newPageActive]]">
-              <span class="no-capitalization">
-                Add Programme Document or SSFA
-              </span>
+              <span class="no-capitalization"> Add Programme Document or SSFA </span>
             </template>
             <template is="dom-if" if="[[tabsActive]]">
               <span>
@@ -281,7 +276,9 @@ class InterventionsModule extends connect(store)(
   }
 
   showNewPMP(activePage: string) {
-    return ['details', 'overview', 'results', 'timing', 'management', 'attachments', 'progress', 'reports'].includes(activePage);
+    return ['details', 'overview', 'results', 'timing', 'management', 'attachments', 'progress', 'reports'].includes(
+      activePage
+    );
   }
 
   ready() {
