@@ -237,7 +237,7 @@ class InterventionDetails extends connect(store)(
               readonly$="[[!permissions.edit.cfei_number]]"
               required$="[[permissions.required.cfei_number]]"
               auto-validate
-              error-message="Please select UNICEF focal points"
+              error-message="Please select CFEI Number"
             >
             </paper-input>
           </div>
