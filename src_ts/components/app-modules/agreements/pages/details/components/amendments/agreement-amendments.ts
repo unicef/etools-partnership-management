@@ -111,7 +111,7 @@ class AgreementAmendments extends connect(store)(CommonMixin(PolymerElement)) {
         <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
           <etools-data-table-header id="listHeader" no-collapse no-title>
             <etools-data-table-column class="col-1">
-              Reference No. #
+              Agreement Reference Number
             </etools-data-table-column>
             <etools-data-table-column class="col-4">
               Amendment Type

@@ -125,7 +125,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
             <div class="col col-2">Current CP Cycle</div>
             <div class="col col-2">Current Year (Jan - Dec)</div>
             <div class="col col-2">Planned / M.R. / Completed</div>
-            <div class="col col-2">Planned / Completed</div>
+            <div class="col col-2">Required / Completed</div>
             <div class="col col-2">Required / Completed</div>
             <div class="col col-1 center-align ">SEA risk rating</div>
           </div>
@@ -220,12 +220,12 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
                 </div>
                 <div class="col col-2 right-align">
                   <etools-info-tooltip
-                    class$="fr-nr-warn 
+                    class$="fr-nr-warn
                             [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]] partner-overview"
                     icon-first
                     custom-icon
                     hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent,
-                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 
+                                      partnership.unicef_cash, partnership.frs_total_frs_amt, partnership,
                                       'interventionsList')]]"
                   >
                     <span slot="field" class$="[[getFrsValueNAClass(partnership.fr_currencies_are_consistent)]]">

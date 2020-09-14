@@ -168,7 +168,7 @@ class InterventionsList extends connect(store)(
           label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]] of [[paginator.count]] results to show"
         >
           <etools-data-table-column class="col-2" field="number" sortable>
-            Reference #
+            PD/SSFA Reference Number
           </etools-data-table-column>
           <etools-data-table-column class="col-3" field="partner_name" sortable>
             Partner Name
@@ -201,7 +201,7 @@ class InterventionsList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-2" data-col-header-label="Reference #">
+              <span class="col-data col-2" data-col-header-label="PD/SSFA Reference Number">
                 <a
                   class="pd-ref truncate"
                   href="interventions/[[intervention.id]]/details"
@@ -271,7 +271,7 @@ class InterventionsList extends connect(store)(
               <div class="row-details-content col-2">
                 <span class="rdc-title">UNICEF Cash Contribution</span>
                 <etools-info-tooltip
-                  class$="fr-nr-warn 
+                  class$="fr-nr-warn
                             [[getCurrencyMismatchClass(intervention.all_currencies_are_consistent)]] interventions-list"
                   icon-first
                   custom-icon
