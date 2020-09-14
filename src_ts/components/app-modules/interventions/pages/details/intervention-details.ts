@@ -217,7 +217,6 @@ class InterventionDetails extends connect(store)(
               id="unicefOffices"
               label="UNICEF Office(s)"
               placeholder="&#8212;"
-              value="{{intervention.cfei_number}}"
               options="[[offices]]"
               option-label="name"
               option-value="id"
@@ -234,6 +233,7 @@ class InterventionDetails extends connect(store)(
               id="cfei_number"
               label="CFEI Number"
               placeholder="&#8212;"
+              value="{{intervention.cfei_number}}"
               readonly$="[[!permissions.edit.cfei_number]]"
               required$="[[permissions.required.cfei_number]]"
               auto-validate
