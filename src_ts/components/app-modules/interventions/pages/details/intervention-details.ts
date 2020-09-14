@@ -217,6 +217,7 @@ class InterventionDetails extends connect(store)(
               id="unicefOffices"
               label="UNICEF Office(s)"
               placeholder="&#8212;"
+              value="{{intervention.cfei_number}}"
               options="[[offices]]"
               option-label="name"
               option-value="id"
@@ -228,6 +229,20 @@ class InterventionDetails extends connect(store)(
             >
             </etools-dropdown-multi>
           </div>
+          <div class="col col-6">
+            <paper-input
+              id="cfei_number"
+              label="CFEI Number"
+              placeholder="&#8212;"
+              readonly$="[[!permissions.edit.cfei_number]]"
+              required$="[[permissions.required.cfei_number]]"
+              auto-validate
+              error-message="Please select UNICEF focal points"
+            >
+            </paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-multi
               id="unicefFocalPts"
@@ -244,8 +259,6 @@ class InterventionDetails extends connect(store)(
             >
             </etools-dropdown-multi>
           </div>
-        </div>
-        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-multi
               id="partnerFocalPts"
@@ -470,9 +483,7 @@ class InterventionDetails extends connect(store)(
           </template>
           <template is="dom-if" if="[[newIntervention]]">
             <div class="row-h">
-              <p>
-                You must save this PD/SSFA before you can add expected results.
-              </p>
+              <p>You must save this PD/SSFA before you can add expected results.</p>
             </div>
           </template>
         </etools-content-panel>
