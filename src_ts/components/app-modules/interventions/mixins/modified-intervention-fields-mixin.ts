@@ -73,7 +73,8 @@ function ModifiedInterventionFieldsMixin<T extends Constructor<PolymerElement>>(
         'country_programme',
         'start',
         'end',
-        'activation_letter_attachment'
+        'activation_letter_attachment',
+        'cfei_number'
       ];
       // @ts-ignore
       if ((docType ? docType : this.intervention.docType) !== 'SSFA') {
