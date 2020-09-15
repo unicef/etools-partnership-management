@@ -26,13 +26,13 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
       super.connectedCallback();
       this.queueToast = this.queueToast.bind(this);
       // @ts-ignore
-      this.addEventListener('toast', this.queueToast);
+      document.body.addEventListener('toast', this.queueToast);
     }
 
     public disconnectedCallback() {
       super.disconnectedCallback();
 
-      this.removeEventListener('toast', this.queueToast as any);
+      document.body.removeEventListener('toast', this.queueToast as any);
       if (this._toast) {
         this._toast.removeEventListener('toast-confirm', this._toggleToast);
         this._toast.removeEventListener('toast-closed', this.dequeueToast);
