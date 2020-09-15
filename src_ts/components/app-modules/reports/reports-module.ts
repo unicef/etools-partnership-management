@@ -328,7 +328,8 @@ class ReportsModule extends connect(store)(
       errMsgPrefixTmpl: '[report(s) ##page##]',
       loadingMsgSource: 'reports-page'
     };
-    this.setActivePage(listActive, routeData.tab, fileImportDetails);
+    const page: string = listActive ? 'list' : routeData.tab;
+    this.setActivePage(page, fileImportDetails);
   }
 
   _handleTabSelectAction(e: CustomEvent) {

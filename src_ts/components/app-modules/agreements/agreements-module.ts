@@ -262,7 +262,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
       errMsgPrefixTmpl: '[agreement(s) ##page##]',
       loadingMsgSource: 'ag-page'
     };
-    this.setActivePage(listActive, 'details', fileImportDetails);
+    const page: string = listActive ? 'list' : 'details';
+    this.setActivePage(page, fileImportDetails);
   }
 
   // compute agreement details page title including partner name and agreement number

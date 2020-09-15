@@ -88,9 +88,9 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       }
     }
 
-    _getFilenamePrefix(listActive: boolean, fileImportDetails: GenericObject) {
+    _getFilenamePrefix(page: string, fileImportDetails: GenericObject) {
       // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
-      return (listActive ? fileImportDetails.filenamePrefix + 's' : fileImportDetails.filenamePrefix) + '-';
+      return (page === 'list' ? fileImportDetails.filenamePrefix + 's' : fileImportDetails.filenamePrefix) + '-';
     }
 
     /**
@@ -101,7 +101,15 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
      * @return {string}
      */
     _getFileBaseUrl(currentModule: string, page: string, appendBasePathAdditionalFolder?: GenericObject | null) {
-      let baseUrl = currentModule + '/pages/' + page + '/';
+      let baseUrl = '';
+      if (
+        currentModule === 'interventions' &&
+        ['details', 'overview', 'timing', 'results', 'management', 'attachments', 'progress', 'reports'].includes(page)
+      ) {
+        baseUrl = currentModule + '/pages/intervention-tab-pages/intervention-' + page + '/';
+      } else {
+        baseUrl = currentModule + '/pages/' + page + '/';
+      }
       if (typeof appendBasePathAdditionalFolder === 'function') {
         // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
         baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
@@ -130,16 +138,13 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
     }
 
     setActivePage(
-      listActive: boolean,
-      tab: string,
+      page: string,
       fileImportDetails: GenericObject,
       canAccessTab?: GenericObject,
       appendBasePathAdditionalFolder?: GenericObject | null,
       successfulImportCallback?: GenericObject
     ) {
-      const page = listActive ? 'list' : tab;
-
-      if (listActive) {
+      if (page === 'list' || page === 'new') {
         // clear server errors for the list
         fireEvent(this, 'clear-server-errors');
       } else {
@@ -152,7 +157,7 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
 
       if (page && page !== this.activePage) {
         // import main page element
-        const importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
+        const importFilenamePrefix = this._getFilenamePrefix(page, fileImportDetails);
 
         const baseUrl = this._getFileBaseUrl(
           fileImportDetails.filenamePrefix + 's',

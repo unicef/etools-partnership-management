@@ -224,7 +224,7 @@ class IndicatorDialog extends connect(store)(
   interventionStatus!: string;
 
   @property({type: Object})
-  currentUser!: User; // What???
+  currentUser!: User;
 
   static get observers() {
     return ['resetValidationsAndStyle(isCluster)'];

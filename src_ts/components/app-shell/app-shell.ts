@@ -14,7 +14,6 @@ import {afterNextRender} from '@polymer/polymer/lib/utils/render-status';
 import {setPassiveTouchGestures, setRootPath} from '@polymer/polymer/lib/utils/settings.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
-// import {installRouter} from 'pwa-helpers/router.js';
 
 // This element is connected to the Redux store.
 import {store, RootState} from '../../store.js';
@@ -22,7 +21,8 @@ import {store, RootState} from '../../store.js';
 // These are the actions needed by this element.
 import {
   // navigate,
-  updateDrawerState
+  updateDrawerState,
+  updateStoreRouteDetails
 } from '../../actions/app.js';
 
 // Lazy loading CommonData reducer.
@@ -31,6 +31,7 @@ import pageData from '../../reducers/page-data.js';
 import uploadStatus from '../../reducers/upload-status.js';
 import agreements from '../../reducers/agreements.js';
 import partners from '../../reducers/partners.js';
+import user from '../../reducers/user';
 
 store.addReducers({
   // @ts-ignore
@@ -38,7 +39,8 @@ store.addReducers({
   uploadStatus,
   partners,
   agreements,
-  pageData
+  pageData,
+  user
 });
 
 // These are the elements needed by this element.
@@ -87,13 +89,15 @@ import {BASE_URL} from '../../config/config';
 import {setInAmendment} from '../../actions/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import {fireEvent} from '../utils/fire-custom-event.js';
-import {objectsAreTheSame} from '../utils/utils.js';
+import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
 import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
+import get from 'lodash-es/get';
+import {EtoolsRouter} from '../utils/routes.js';
 setRootPath(BASE_URL);
 
 /**
@@ -330,10 +334,16 @@ class AppShell extends connect(store)(
     // @ts-ignore
     this.loadCommonData();
 
-    // installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname))));
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
     this.createToastNotificationElement();
+  }
+
+  updateReduxRouteDetails(path: string) {
+    const routeDetails = EtoolsRouter.getRouteDetails(path);
+    if (!isJsonStrMatch(routeDetails, get(store.getState(), 'app.routeDetails'))) {
+      store.dispatch(updateStoreRouteDetails(routeDetails));
+    }
   }
 
   public stateChanged(state: RootState) {
@@ -345,6 +355,12 @@ class AppShell extends connect(store)(
 
     // @ts-ignore EndpointsMixin
     this.envStateChanged(state);
+    if (get(state, 'app.toastNotification.active')) {
+      fireEvent(this, 'toast', {
+        text: state.app!.toastNotification.message,
+        showCloseBtn: state.app!.toastNotification.showCloseBtn
+      });
+    }
   }
 
   // dev purpose - to be removed in the future
@@ -359,6 +375,7 @@ class AppShell extends connect(store)(
    * and then routeChanged
    */
   public appLocRouteChanged(appLocRoute: any) {
+    this.updateReduxRouteDetails(appLocRoute.path);
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
         if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {

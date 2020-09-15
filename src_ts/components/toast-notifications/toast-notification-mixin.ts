@@ -4,6 +4,8 @@ import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';
+import {store} from '../../store';
+import get from 'lodash-es/get';
 
 /**
  * @polymer
@@ -60,8 +62,8 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
 
     public createToastNotificationElement() {
       this._toast = document.createElement('etools-toast') as any;
-      this._toggleToast = this._toggleToast.bind(this);
-      this._toast!.addEventListener('toast-confirm', this._toggleToast);
+      this.closeToast = this.closeToast.bind(this);
+      this._toast!.addEventListener('toast-confirm', this.closeToast);
       // @ts-ignore
       document.querySelector('body')!.appendChild(this._toast);
       this._toastAfterRenderSetup();
@@ -88,6 +90,15 @@ function ToastNotificationsMixin<T extends Constructor<PolymerElement>>(baseClas
         const toastProperties = this._toast!.prepareToastAndGetShowProperties(this._toastQueue[0]);
         this._showToast(toastProperties);
       }
+    }
+
+    closeToast() {
+      if (get(store.getState(), 'app.toastNotification.active')) {
+        store.dispatch({
+          type: 'CLOSE_TOAST'
+        });
+      }
+      this._toggleToast();
     }
 
     protected _toggleToast() {

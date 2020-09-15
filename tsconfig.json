@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2018", "dom", "esnext"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

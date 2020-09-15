@@ -21,6 +21,9 @@ import {CommonDataAction} from './actions/common-data.js';
 import {PartnersState} from './reducers/partners.js';
 import {AgreementsState} from './reducers/agreements.js';
 import {PageDataState} from './reducers/page-data.js';
+import {User} from './typings/globals.types.js';
+import {UserState} from './reducers/user.js';
+import {interventions, InterventionsState} from './reducers/interventions.js';
 
 declare global {
   interface Window {
@@ -38,9 +41,11 @@ export interface RootState {
   partners?: PartnersState;
   agreements?: AgreementsState;
   pageData?: PageDataState;
+  user?: UserState;
+  interventions?: InterventionsState;
 }
 
-export type RootAction = AppAction | CommonDataAction;
+export type RootAction = AppAction | CommonDataAction | User | any;
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
@@ -62,7 +67,8 @@ export const store = createStore(
 // Initially loaded reducers.
 store.addReducers({
   // @ts-ignore
-  app
+  app,
+  interventions
 });
 
 window.addEventListener('storage', function (e) {

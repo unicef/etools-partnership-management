@@ -9,6 +9,7 @@ const CONSTANTS = {
     PD: 'PD',
     SSFA: 'SSFA',
     SHPD: 'SHPD',
+    SPD: 'SPD',
     ProgrammeDocument: 'Programme Document',
     SmallScaleFundingAgreement: 'Small Scale Funding Agreement',
     SimplifiedHumanitarianProgrammeDocument: 'Simplified Humanitarian Programme Document'
