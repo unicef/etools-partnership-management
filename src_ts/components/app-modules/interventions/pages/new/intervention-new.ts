@@ -152,7 +152,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.newIntervention.partner = partnerId;
     const agreementId: number | null = (this.selectedAgreement && this.selectedAgreement.id) || null;
     this.newIntervention.agreement = agreementId;
-    fireEvent(this, 'create-intervention', this.newIntervention);
+    fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
   }
 
   resetError(event: any): void {

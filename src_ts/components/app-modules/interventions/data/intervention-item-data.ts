@@ -54,8 +54,7 @@ class InterventionItemData extends connect(store)(
 
   @property({
     type: Number,
-    notify: true,
-    observer: InterventionItemData.prototype._interventionIdChanged
+    notify: true
   })
   interventionId!: number;
 
@@ -114,20 +113,20 @@ class InterventionItemData extends connect(store)(
     });
   }
 
-  _interventionIdChanged(newId: any, _old: any) {
-    if (!newId) {
-      return;
-    }
+  // _interventionIdChanged(newId: any, _old: any) {
+  //   if (!newId) {
+  //     return;
+  //   }
 
-    fireEvent(this, 'global-loading', {
-      message: 'Loading...',
-      active: true,
-      loadingSource: this.ajaxLoadingMsgSource
-    });
-    this._triggerInterventionRequest({
-      endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})
-    });
-  }
+  //   fireEvent(this, 'global-loading', {
+  //     message: 'Loading...',
+  //     active: true,
+  //     loadingSource: this.ajaxLoadingMsgSource
+  //   });
+  //   this._triggerInterventionRequest({
+  //     endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})
+  //   });
+  // }
 
   _handleErrorResponse(response: any, ajaxMethod: string) {
     this.handleErrorResponse(response, ajaxMethod, true);
@@ -318,7 +317,6 @@ class InterventionItemData extends connect(store)(
     } else {
       let endpoint = null;
       let isNew = false;
-      let prepareMultipartData = false;
 
       if (intervention.id) {
         // prepare PATCH endpoint
@@ -330,17 +328,13 @@ class InterventionItemData extends connect(store)(
         endpoint = this.getEndpoint(this.pdEndpoints.CREATE);
         isNew = true;
       }
-      // remove id from data
+
       if (intervention.id) {
         delete intervention.id;
       }
       // set additional callback if any and only if is new intervention
       if (callback && isNew) {
         this.set('handleResponseAdditionalCallback', callback);
-      }
-
-      if (this._hasFiles(intervention.attachments, 'attachment')) {
-        prepareMultipartData = true;
       }
 
       if (Array.isArray(intervention.result_links)) {
@@ -353,19 +347,16 @@ class InterventionItemData extends connect(store)(
           return elem.year || elem.programmatic;
         });
       }
-      fireEvent(this, 'global-loading', {
-        message: 'Saving...',
-        active: true,
-        loadingSource: this.ajaxLoadingMsgSource
-      });
+      // fireEvent(this, 'global-loading', {
+      //   message: 'Saving...',
+      //   active: true,
+      //   loadingSource: this.ajaxLoadingMsgSource
+      // });
 
-      const method = isNew ? 'POST' : 'PATCH';
       return this._triggerInterventionRequest({
-        method: method,
+        method: isNew ? 'POST' : 'PATCH',
         endpoint: endpoint,
-        body: intervention,
-        multiPart: prepareMultipartData,
-        prepareMultipartData: prepareMultipartData
+        body: intervention
       });
     }
   }
