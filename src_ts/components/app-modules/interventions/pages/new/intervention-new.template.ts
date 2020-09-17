@@ -214,7 +214,7 @@ export function template(this: InterventionNew): TemplateResult {
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
-            label="UNPP CFEI Number"
+            label="UNPP CFEI/DSR Reference Number"
             placeholder="&#8212;"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
