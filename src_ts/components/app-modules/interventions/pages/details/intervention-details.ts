@@ -231,13 +231,13 @@ class InterventionDetails extends connect(store)(
           <div class="col col-6">
             <paper-input
               id="cfei_number"
-              label="CFEI Number"
+              label="CFEI/DSR Reference Number"
               placeholder="&#8212;"
               value="{{intervention.cfei_number}}"
               readonly$="[[!permissions.edit.cfei_number]]"
               required$="[[permissions.required.cfei_number]]"
               auto-validate
-              error-message="Please select CFEI Number"
+              error-message="Please select CFEI/DSR Reference Number"
             >
             </paper-input>
           </div>
