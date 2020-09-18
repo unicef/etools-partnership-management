@@ -3,7 +3,7 @@ import {LitElement, customElement, property, CSSResultArray, TemplateResult} fro
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../store';
-import {isJsonStrMatch} from '../../../../utils/utils';
+import {isJsonStrMatch, areEqual} from '../../../../utils/utils';
 import {csoPartnersSelector} from '../../../../../reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
@@ -105,7 +105,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   partnerChanged({detail}: CustomEvent): void {
     this.selectedPartner = detail.selectedItem;
     const id: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
-    this.newIntervention.partner = id;
+    this.setInterventionField('partner', id);
     this.filterAgreements(id);
     this.staffMembers = [];
     if (!this.selectedPartner) {
@@ -127,6 +127,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   agreementChanged({detail}: CustomEvent): void {
     this.selectedAgreement = detail.selectedItem;
     this.setDocTypes(this.selectedAgreement);
+    this.setInterventionField('agreement', this.selectedAgreement?.id);
     const docTypeApplicable = Boolean(
       this.newIntervention.document_type &&
         this.documentTypesOptions.find(({value}: LabelAndValue) => value === this.newIntervention.document_type)
@@ -136,11 +137,12 @@ export class InterventionNew extends connect(store)(LitElement) {
     }
   }
 
-  setInterventionField(field: string, value: any, requestUpdate?: boolean): void {
-    if (this.newIntervention[field] !== value && requestUpdate) {
-      this.requestUpdate();
+  setInterventionField(field: string, value: any): void {
+    if (areEqual(this.newIntervention[field], value)) {
+      return;
     }
     this.newIntervention[field] = value;
+    this.requestUpdate();
   }
 
   createIntervention(): void {
@@ -148,10 +150,6 @@ export class InterventionNew extends connect(store)(LitElement) {
       fireEvent(this, 'toast', {text: 'Please fill all required fields'});
       return;
     }
-    const partnerId: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
-    this.newIntervention.partner = partnerId;
-    const agreementId: number | null = (this.selectedAgreement && this.selectedAgreement.id) || null;
-    this.newIntervention.agreement = agreementId;
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
   }
 
@@ -210,5 +208,14 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   static get styles(): CSSResultArray {
     return [ColumnStyles, NewInterventionStyles];
+  }
+
+  cancel() {
+    this.newIntervention = {
+      reference_number_year: new Date().getFullYear()
+    };
+    this.selectedAgreement = null;
+    this.selectedPartner = null;
+    this.requestUpdate();
   }
 }

@@ -54,12 +54,12 @@ export function template(this: InterventionNew): TemplateResult {
             option-value="id"
             option-label="name"
             required
-            .selected="${this.selectedPartner && this.selectedPartner.id}"
+            .selected="${this.newIntervention?.partner}"
             error-message="Partner is required"
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
             @focus="${this.resetError}"
-            @tap="${this.resetError}"
+            @click="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -70,18 +70,18 @@ export function template(this: InterventionNew): TemplateResult {
             id="agreements"
             label="Agreement"
             placeholder="&#8212;"
-            .readonly="${!this.selectedPartner}"
+            .readonly="${!this.newIntervention?.partner}"
             .options="${this.filteredAgreements}"
             option-value="id"
             option-label="agreement_number_status"
             required
-            .selected="${this.selectedAgreement && this.selectedAgreement.id}"
+            .selected="${this.newIntervention?.agreement}"
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
             auto-validate
             error-message="Agreement required"
             @focus="${this.resetError}"
-            @tap="${this.resetError}"
+            @click="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -90,10 +90,7 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Vendor Number   -->
         <div class="col-6">
-          <etools-form-element-wrapper
-            label="Partner Vendor Number"
-            .value="${this.selectedPartner && this.selectedPartner.vendor_number}"
-          >
+          <etools-form-element-wrapper label="Partner Vendor Number" .value="${this.selectedPartner?.vendor_number}">
           </etools-form-element-wrapper>
         </div>
 
@@ -145,11 +142,11 @@ export function template(this: InterventionNew): TemplateResult {
             .options="${this.documentTypesOptions}"
             .selected="${this.newIntervention.document_type}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('document_type', detail.selectedItem && detail.selectedItem.value, true)}"
+              this.setInterventionField('document_type', detail.selectedItem?.value)}"
             trigger-value-change-event
             hide-search
             @focus="${this.resetError}"
-            @tap="${this.resetError}"
+            @click="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -168,7 +165,7 @@ export function template(this: InterventionNew): TemplateResult {
             allow-outside-scroll
             hide-search
             @focus="${this.resetError}"
-            @tap="${this.resetError}"
+            @click="${this.resetError}"
           >
           </etools-dropdown>
         </div>
@@ -179,7 +176,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-3" ?hidden="${!this.isSSFA}">
           <paper-toggle-button
             @checked-changed="${({detail}: CustomEvent) => {
-              this.setInterventionField('humanitarian_flag', detail.value, true);
+              this.setInterventionField('humanitarian_flag', detail.value);
               this.newIntervention.contingency_pd = false;
             }}"
           >
@@ -203,7 +200,7 @@ export function template(this: InterventionNew): TemplateResult {
           ?checked="${this.hasUNPP}"
           @checked-changed="${({detail}: CustomEvent) => {
             this.hasUNPP = detail.value;
-            this.setInterventionField('cfei_number', '', true);
+            this.setInterventionField('cfei_number', '');
           }}"
         >
           I Have UNPP Number
@@ -232,9 +229,10 @@ export function template(this: InterventionNew): TemplateResult {
             maxlength="256"
             placeholder="&#8212;"
             required
+            .value="${this.newIntervention?.title}"
             @value-changed="${({detail}: CustomEvent) => this.setInterventionField('title', detail && detail.value)}"
             @focus="${this.resetError}"
-            @tap="${this.resetError}"
+            @click="${this.resetError}"
           ></paper-input>
         </div>
       </div>
@@ -321,7 +319,7 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="buttons">
-        <paper-button>Cancel</paper-button>
+        <paper-button @click="${this.cancel}">Cancel</paper-button>
         <paper-button class="primary-btn" @click="${() => this.createIntervention()}">Create</paper-button>
       </div>
     </div>
