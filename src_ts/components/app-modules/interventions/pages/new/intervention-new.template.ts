@@ -140,12 +140,12 @@ export function template(this: InterventionNew): TemplateResult {
             id="documentType"
             label="Document Type"
             placeholder="&#8212;"
-            ?readonly="${!this.documentTypesOptions.length}"
+            ?readonly="${!this.documentTypes.length}"
             required
-            .options="${this.documentTypesOptions}"
+            .options="${this.documentTypes}"
             .selected="${this.newIntervention.document_type}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('document_type', detail.selectedItem && detail.selectedItem.value, true)}"
+              this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
             trigger-value-change-event
             hide-search
             @focus="${this.resetError}"
@@ -176,11 +176,12 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   SPD is Humanitarian   -->
-        <div class="col-3" ?hidden="${!this.isSSFA}">
+        <div class="col-3" ?hidden="${!this.isSPD}">
           <paper-toggle-button
+            ?checked="${this.newIntervention.humanitarian_flag}"
             @checked-changed="${({detail}: CustomEvent) => {
+              this.setInterventionField('contingency_pd', false, true);
               this.setInterventionField('humanitarian_flag', detail.value, true);
-              this.newIntervention.contingency_pd = false;
             }}"
           >
             This SPD is Humanitarian
@@ -190,7 +191,9 @@ export function template(this: InterventionNew): TemplateResult {
         <!--   Contingency Document   -->
         <div class="col-3" ?hidden="${!this.newIntervention.humanitarian_flag}">
           <paper-toggle-button
-            @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
+            ?checked="${this.newIntervention.contingency_pd}"
+            @checked-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField('contingency_pd', detail.value, true)}"
           >
             This is Contingency Document
           </paper-toggle-button>
