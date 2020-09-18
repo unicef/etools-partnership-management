@@ -683,21 +683,15 @@ class InterventionsModule extends connect(store)(
     const intervention = this.cleanUpBeforeSave(detail.intervention);
     (this.$.interventionData as InterventionItemData)
       // @ts-ignore
-      .saveIntervention(intervention, this._newInterventionSaved.bind(this))
-      .then((successfull: boolean) => {
-        if (successfull) {
-          store.dispatch({type: RESET_UNSAVED_UPLOADS});
-          return true;
-        } else {
-          return false;
-        }
-      });
+      .saveIntervention(intervention, this._newInterventionSaved.bind(this));
   }
 
   private cleanUpBeforeSave(intervention: Partial<Intervention>) {
     if (!intervention.cfei_number) {
+      // Errors out on bk otherwise
       delete intervention.cfei_number;
     }
+    return intervention;
   }
 }
 

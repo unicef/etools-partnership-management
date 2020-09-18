@@ -347,16 +347,22 @@ class InterventionItemData extends connect(store)(
           return elem.year || elem.programmatic;
         });
       }
-      // fireEvent(this, 'global-loading', {
-      //   message: 'Saving...',
-      //   active: true,
-      //   loadingSource: this.ajaxLoadingMsgSource
-      // });
+      fireEvent(this, 'global-loading', {
+        message: 'Saving...',
+        active: true,
+        loadingSource: this.ajaxLoadingMsgSource
+      });
 
       return this._triggerInterventionRequest({
         method: isNew ? 'POST' : 'PATCH',
         endpoint: endpoint,
         body: intervention
+      }).then(() => {
+        fireEvent(this, 'global-loading', {
+          message: 'Saving...',
+          active: false,
+          loadingSource: this.ajaxLoadingMsgSource
+        });
       });
     }
   }
