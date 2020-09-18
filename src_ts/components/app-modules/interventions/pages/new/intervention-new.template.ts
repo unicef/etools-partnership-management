@@ -3,9 +3,11 @@ import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {BASE_URL} from '../../../../../config/config';
+import {sharedStylesPolymer} from '../intervention-tab-pages/common/styles/shared-styles-polymer';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
+    ${sharedStylesPolymer()}
     <style>
       paper-button {
         --paper-button: {
@@ -45,7 +47,7 @@ export function template(this: InterventionNew): TemplateResult {
     <div class="form">
       <div class="row">
         <!--   Partner Organization   -->
-        <div class="col-6">
+        <div class="col-8">
           <etools-dropdown
             id="partner"
             label="Partner Organization"
@@ -65,7 +67,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Agreement   -->
-        <div class="col-3">
+        <div class="col-4">
           <etools-dropdown
             id="agreements"
             label="Agreement"
@@ -106,7 +108,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Staff Members   -->
-        <div class="col-12">
+        <div class="col-12 w100">
           <etools-form-element-wrapper label="Partner Staff Members" .value="${this.allStaffMembers}">
           </etools-form-element-wrapper>
         </div>
@@ -114,7 +116,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Focal Points   -->
-        <div class="col-4">
+        <div class="col-8">
           <etools-dropdown-multi
             label="Document Partner Focal Points"
             placeholder="&#8212;"
@@ -224,7 +226,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Document Title   -->
-        <div class="col-6">
+        <div class="col-12">
           <paper-input
             id="title"
             label="Document Title"
@@ -241,7 +243,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Office(s)   -->
-        <div class="col-2">
+        <div class="col-6">
           <etools-dropdown-multi
             id="unicefOffices"
             label="UNICEF Office(s)"
@@ -261,7 +263,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Sections   -->
-        <div class="col-4">
+        <div class="col-6">
           <etools-dropdown-multi
             id="unicefSections"
             label="UNICEF Sections"
@@ -283,7 +285,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Focal Points   -->
-        <div class="col-4">
+        <div class="col-6">
           <etools-dropdown-multi
             id="unicefFocalPoints"
             label="UNICEF Focal Points"
@@ -303,7 +305,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Budget Owner   -->
-        <div class="col-2">
+        <div class="col-6">
           <etools-dropdown
             id="unicefBudgetOwner"
             label="UNICEF Budget Owner"
