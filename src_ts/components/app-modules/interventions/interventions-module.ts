@@ -109,13 +109,9 @@ class InterventionsModule extends connect(store)(
 
       <page-content-header with-tabs-visible="[[tabsActive]]">
         <div slot="page-title">
-          <template is="dom-if" if="[[listActive]]">
-            PD/SSFAs
-          </template>
+          <template is="dom-if" if="[[listActive]]"> PD/SSFAs </template>
           <template is="dom-if" if="[[tabsActive]]">
-            <span class="no-capitalization" hidden$="[[!newInterventionActive]]">
-              Add Programme Document or SSFA
-            </span>
+            <span class="no-capitalization" hidden$="[[!newInterventionActive]]"> Add Programme Document or SSFA </span>
             <span hidden$="[[newInterventionActive]]">
               <a class="primary" href$="[[rootPath]]partners/[[intervention.partner_id]]/overview" target="_blank"
                 >[[intervention.partner]]</a
@@ -542,14 +538,16 @@ class InterventionsModule extends connect(store)(
         errMsgPrefixTmpl: '[intervention(s) ##page##]',
         loadingMsgSource: 'interv-page'
       };
-      this.setActivePage(
-        listActive,
-        routeData.tab,
-        fileImportDetails,
-        this._canAccessPdTab,
-        null,
-        this._resetRedirectToNewInterventionFlag
-      );
+      this.waitForEnvFlagsToLoad().then(() => {
+        this.setActivePage(
+          listActive,
+          routeData.tab,
+          fileImportDetails,
+          this._canAccessPdTab,
+          null,
+          this._resetRedirectToNewInterventionFlag
+        );
+      });
     });
   }
 
