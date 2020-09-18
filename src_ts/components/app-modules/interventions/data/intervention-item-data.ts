@@ -358,11 +358,13 @@ class InterventionItemData extends connect(store)(
         endpoint: endpoint,
         body: intervention
       }).then(() => {
-        fireEvent(this, 'global-loading', {
-          message: 'Saving...',
-          active: false,
-          loadingSource: this.ajaxLoadingMsgSource
-        });
+        setTimeout(() => {
+          fireEvent(this, 'global-loading', {
+            message: 'Saving...',
+            active: false,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
+        }, 300);
       });
     }
   }
