@@ -157,7 +157,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Reference Number Year   -->
-        <div class="col-2">
+        <div class="col-4">
           <etools-dropdown
             id="yearSelector"
             label="Reference Number Year"
@@ -178,7 +178,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   SPD is Humanitarian   -->
-        <div class="col-3" ?hidden="${!this.isSSFA}">
+        <div class="col-6" ?hidden="${!this.isSSFA}">
           <paper-toggle-button
             @checked-changed="${({detail}: CustomEvent) => {
               this.setInterventionField('humanitarian_flag', detail.value, true);
@@ -190,7 +190,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Contingency Document   -->
-        <div class="col-3" ?hidden="${!this.newIntervention.humanitarian_flag}">
+        <div class="col-6" ?hidden="${!this.newIntervention.humanitarian_flag}">
           <paper-toggle-button
             @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
           >
