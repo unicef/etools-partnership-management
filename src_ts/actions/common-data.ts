@@ -44,8 +44,9 @@ export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
 export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
-export const UPDATE_GENDER_EQUITY  = 'UPDATE_GENDER_EQUITY';
-export const UPDATE_RISK_TYPES  = 'UPDATE_RISK_TYPES';
+export const UPDATE_GENDER_EQUITY = 'UPDATE_GENDER_EQUITY';
+export const UPDATE_RISK_TYPES = 'UPDATE_RISK_TYPES';
+export const UPDATE_CASH_TRANSFER_MODALITIES = 'UPDATE_CASH_TRANSFER_MODALITIES';
 
 export interface CommonDataActionUpdateCountryProgrammes extends Action<'UPDATE_COUNTRY_PROGRAMMES'> {
   countryProgrammes: GenericObject[];
@@ -465,5 +466,12 @@ export const updateRiskTypes = (riskTypes: LabelAndValue[]) => {
   return {
     type: UPDATE_RISK_TYPES,
     riskTypes
+  };
+};
+
+export const updateCashTransferModalities = (cashTransferModalities: LabelAndValue[]) => {
+  return {
+    type: UPDATE_CASH_TRANSFER_MODALITIES,
+    cashTransferModalities
   };
 };

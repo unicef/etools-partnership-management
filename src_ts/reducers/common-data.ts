@@ -33,7 +33,8 @@ import {
   CommonDataAction,
   UPDATE_SEA_RISK_RATINGS,
   UPDATE_GENDER_EQUITY,
-  UPDATE_RISK_TYPES
+  UPDATE_RISK_TYPES,
+  UPDATE_CASH_TRANSFER_MODALITIES
 } from '../actions/common-data';
 import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
 import {
@@ -102,6 +103,7 @@ export class CommonDataState {
   partnerRiskRatings: LabelAndValue[] = [];
   envFlags: EnvFlags | null = null;
   riskTypes: LabelAndValue[] = [];
+  cashTransferModalities: LabelAndValue[] = [];
 }
 
 const INITIAL_STATE = new CommonDataState();
@@ -315,6 +317,12 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         riskTypes: action.riskTypes
+      };
+
+    case UPDATE_CASH_TRANSFER_MODALITIES:
+      return {
+        ...state,
+        cashTransferModalities: action.cashTransferModalities
       };
 
     default:
