@@ -183,6 +183,15 @@ class InterventionsModule extends connect(store)(
               <intervention-new on-create-intervention="onCreateIntervention"></intervention-new>
             </template>
           </div>
+
+          <intervention-item-data
+            id="interventionData"
+            intervention="{{intervention}}"
+            intervention-id="[[selectedInterventionId]]"
+            original-intervention="[[originalIntervention]]"
+            error-event-name="intervention-save-error"
+          ></intervention-item-data>
+
           <!-- main page content end -->
         </div>
       </div>
@@ -671,17 +680,18 @@ class InterventionsModule extends connect(store)(
   }
 
   onCreateIntervention({detail}: CustomEvent) {
+    const intervention = this.cleanUpBeforeSave(detail.intervention);
     (this.$.interventionData as InterventionItemData)
       // @ts-ignore
-      .saveIntervention(detail, this._newInterventionSaved.bind(this))
-      .then((successfull: boolean) => {
-        if (successfull) {
-          store.dispatch({type: RESET_UNSAVED_UPLOADS});
-          return true;
-        } else {
-          return false;
-        }
-      });
+      .saveIntervention(intervention, this._newInterventionSaved.bind(this));
+  }
+
+  private cleanUpBeforeSave(intervention: Partial<Intervention>) {
+    if (!intervention.cfei_number) {
+      // Errors out on bk otherwise
+      delete intervention.cfei_number;
+    }
+    return intervention;
   }
 }
 

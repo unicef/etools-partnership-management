@@ -85,6 +85,7 @@ export class Intervention {
   activation_letter_attachment: number | string | null = null;
   attachments: InterventionAttachment[] = [];
   permissions?: Permission<InterventionPermissionsFields>;
+  cfei_number?: string;
   [key: string]: any;
 
   // TODOO
