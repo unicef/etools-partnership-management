@@ -142,7 +142,7 @@ export function template(this: InterventionNew): TemplateResult {
             .options="${this.documentTypes}"
             .selected="${this.newIntervention.document_type}"
             @etools-selected-item-changed="${({detail}: CustomEvent) =>
-             this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
+              this.documentTypeChanged(detail.selectedItem && detail.selectedItem.value)}"
             trigger-value-change-event
             hide-search
             @focus="${this.resetError}"
@@ -189,8 +189,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-3" ?hidden="${!this.newIntervention.humanitarian_flag}">
           <paper-toggle-button
             ?checked="${this.newIntervention.contingency_pd}"
-            @checked-changed="${({detail}: CustomEvent) =>
-              this.setInterventionField('contingency_pd', detail.value, true)}"
+            @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
           >
             This is Contingency Document
           </paper-toggle-button>
@@ -216,6 +215,7 @@ export function template(this: InterventionNew): TemplateResult {
             ?hidden="${!this.hasUNPP}"
             label="UNPP CFEI/DSR Reference Number"
             placeholder="&#8212;"
+            .value="${this.newIntervention.cfei_number}"
             @value-changed="${({detail}: CustomEvent) =>
               this.setInterventionField('cfei_number', detail && detail.value)}"
           ></paper-input>

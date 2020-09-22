@@ -14,10 +14,11 @@ import {NewInterventionStyles} from './intervention-new.styles';
 import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
+import {Intervention} from '../../../../../typings/intervention.types';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
-  newIntervention: GenericObject = {
+  newIntervention: Partial<Intervention> = {
     reference_number_year: new Date().getFullYear()
   };
   @property() offices: Office[] = [];
@@ -117,10 +118,10 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   documentTypeChanged(type: string): void {
     if (type !== CONSTANTS.DOCUMENT_TYPES.SPD) {
-      this.newIntervention.humanitarian_flag = false;
-      this.newIntervention.contingency_pd = false;
+      this.setInterventionField('humanitarian_flag', false);
+      this.setInterventionField('contingency_pd', false);
     }
-    this.setInterventionField('document_type', type, true);
+    this.setInterventionField('document_type', type);
   }
 
   setInterventionField(field: string, value: any): void {
@@ -183,6 +184,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     };
     this.selectedAgreement = null;
     this.selectedPartner = null;
+    this.hasUNPP = false;
     this.requestUpdate();
   }
 }
