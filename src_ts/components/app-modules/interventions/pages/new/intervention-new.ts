@@ -134,7 +134,7 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   createIntervention(): void {
     if (!this.validate()) {
-      fireEvent(this, 'toast', {text: 'Please fill all required fields'});
+      fireEvent(this, 'toast', {text: 'Please fill all required fields', showCloseBtn: false});
       return;
     }
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
