@@ -36,7 +36,6 @@ import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
-import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 import './pages/intervention-tab-pages/intervention-tabs';
 
 /**

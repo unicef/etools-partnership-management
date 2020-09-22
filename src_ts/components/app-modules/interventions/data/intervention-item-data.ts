@@ -357,7 +357,7 @@ class InterventionItemData extends connect(store)(
         method: isNew ? 'POST' : 'PATCH',
         endpoint: endpoint,
         body: intervention
-      }).then(() => {
+      }).then((resp: boolean) => {
         setTimeout(() => {
           fireEvent(this, 'global-loading', {
             message: 'Saving...',
@@ -365,6 +365,7 @@ class InterventionItemData extends connect(store)(
             loadingSource: this.ajaxLoadingMsgSource
           });
         }, 300);
+        return resp;
       });
     }
   }

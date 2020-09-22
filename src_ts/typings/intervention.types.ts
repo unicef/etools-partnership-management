@@ -48,11 +48,11 @@ export interface Fr {
 
 export class Intervention {
   id: number | null = null;
-  agreement?: number;
-  document_type?: string;
+  agreement?: number | null;
+  document_type?: string | null;
   country_programme?: number;
   number?: string;
-  reference_number_year?: string | null = null;
+  reference_number_year?: string | null | number = null;
   prc_review_attachment?: number | string;
   signed_pd_attachment?: number | string;
   title?: string;

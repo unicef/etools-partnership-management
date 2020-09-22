@@ -3,7 +3,7 @@ import {LitElement, customElement, property, CSSResultArray, TemplateResult} fro
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../../../store';
-import {isJsonStrMatch} from '../../../../utils/utils';
+import {isJsonStrMatch, areEqual} from '../../../../utils/utils';
 import {csoPartnersSelector} from '../../../../../reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
@@ -14,10 +14,11 @@ import {NewInterventionStyles} from './intervention-new.styles';
 import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
+import {Intervention} from '../../../../../typings/intervention.types';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
-  newIntervention: GenericObject = {
+  newIntervention: Partial<Intervention> = {
     reference_number_year: new Date().getFullYear()
   };
   @property() offices: Office[] = [];
@@ -92,7 +93,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   partnerChanged({detail}: CustomEvent): void {
     this.selectedPartner = detail.selectedItem;
     const id: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
-    this.newIntervention.partner = id;
+    this.setInterventionField('partner', id);
     this.filterAgreements(id);
     this.staffMembers = [];
     if (!this.selectedPartner) {
@@ -117,17 +118,18 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   documentTypeChanged(type: string): void {
     if (type !== CONSTANTS.DOCUMENT_TYPES.SPD) {
-      this.newIntervention.humanitarian_flag = false;
-      this.newIntervention.contingency_pd = false;
+      this.setInterventionField('humanitarian_flag', false);
+      this.setInterventionField('contingency_pd', false);
     }
-    this.setInterventionField('document_type', type, true);
+    this.setInterventionField('document_type', type);
   }
 
-  setInterventionField(field: string, value: any, requestUpdate?: boolean): void {
-    if (this.newIntervention[field] !== value && requestUpdate) {
-      this.requestUpdate();
+  setInterventionField(field: string, value: any): void {
+    if (areEqual(this.newIntervention[field], value)) {
+      return;
     }
     this.newIntervention[field] = value;
+    this.requestUpdate();
   }
 
   createIntervention(): void {
@@ -135,10 +137,6 @@ export class InterventionNew extends connect(store)(LitElement) {
       fireEvent(this, 'toast', {text: 'Please fill all required fields'});
       return;
     }
-    const partnerId: number | null = (this.selectedPartner && this.selectedPartner.id) || null;
-    this.newIntervention.partner = partnerId;
-    const agreementId: number | null = (this.selectedAgreement && this.selectedAgreement.id) || null;
-    this.newIntervention.agreement = agreementId;
     fireEvent(this, 'create-intervention', {intervention: this.newIntervention});
   }
 
@@ -178,5 +176,15 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   static get styles(): CSSResultArray {
     return [ColumnStyles, NewInterventionStyles];
+  }
+
+  cancel() {
+    this.newIntervention = {
+      reference_number_year: new Date().getFullYear()
+    };
+    this.selectedAgreement = null;
+    this.selectedPartner = null;
+    this.hasUNPP = false;
+    this.requestUpdate();
   }
 }
