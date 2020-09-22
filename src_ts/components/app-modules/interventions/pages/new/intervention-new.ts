@@ -33,7 +33,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   agreementsList: StaticAgreement[] = [];
   @property() selectedAgreement: StaticAgreement | null = null;
 
-  @property() documentTypesOptions: LabelAndValue[] = [];
+  @property() documentTypes: LabelAndValue[] = [];
 
   @property() staffMembers: LabelAndValue<number>[] = [];
   get allStaffMembers(): string {
@@ -45,7 +45,7 @@ export class InterventionNew extends connect(store)(LitElement) {
     return officers.map(({first_name, last_name}: PartnerStaffMember) => `${first_name} ${last_name}`).join(', ');
   }
 
-  get isSSFA(): boolean {
+  get isSPD(): boolean {
     return this.newIntervention.document_type === CONSTANTS.DOCUMENT_TYPES.SPD;
   }
 
@@ -55,10 +55,6 @@ export class InterventionNew extends connect(store)(LitElement) {
       value: year + (-5 + index),
       label: year + (-5 + index)
     }));
-
-  private documentTypes: LabelAndValue[] = [];
-  private pcaDocTypes: LabelAndValue[] = [];
-  private ssfaDocTypes: LabelAndValue[] = [];
 
   protected render(): TemplateResult {
     return template.call(this);
@@ -81,15 +77,6 @@ export class InterventionNew extends connect(store)(LitElement) {
     }
     if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
       this.documentTypes = [...state.commonData!.interventionDocTypes];
-      this.documentTypes.forEach((type: LabelAndValue) => {
-        if (type.value !== CONSTANTS.DOCUMENT_TYPES.SSFA) {
-          this.pcaDocTypes.push(type);
-        }
-        if (type.value === CONSTANTS.DOCUMENT_TYPES.SSFA) {
-          this.ssfaDocTypes.push(type);
-        }
-      });
-      this.setDocTypes();
     }
     if (!isJsonStrMatch(this.unicefUsersData, state.commonData!.unicefUsersData)) {
       this.unicefUsersData = [...state.commonData!.unicefUsersData];
@@ -126,14 +113,14 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   agreementChanged({detail}: CustomEvent): void {
     this.selectedAgreement = detail.selectedItem;
-    this.setDocTypes(this.selectedAgreement);
-    const docTypeApplicable = Boolean(
-      this.newIntervention.document_type &&
-        this.documentTypesOptions.find(({value}: LabelAndValue) => value === this.newIntervention.document_type)
-    );
-    if (this.newIntervention.document_type && !docTypeApplicable) {
-      this.newIntervention.document_type = null;
+  }
+
+  documentTypeChanged(type: string): void {
+    if (type !== CONSTANTS.DOCUMENT_TYPES.SPD) {
+      this.newIntervention.humanitarian_flag = false;
+      this.newIntervention.contingency_pd = false;
     }
+    this.setInterventionField('document_type', type, true);
   }
 
   setInterventionField(field: string, value: any, requestUpdate?: boolean): void {
@@ -169,7 +156,6 @@ export class InterventionNew extends connect(store)(LitElement) {
       this.selectedAgreement = null;
       this.newIntervention.agreement = null;
       this.newIntervention.document_type = null;
-      this.setDocTypes();
     }
 
     this.filteredAgreements = this.agreementsList.filter((agreement: StaticAgreement) => {
@@ -179,24 +165,6 @@ export class InterventionNew extends connect(store)(LitElement) {
         agreement.agreement_type !== CONSTANTS.AGREEMENT_TYPES.MOU
       );
     });
-  }
-
-  private setDocTypes(agreement?: StaticAgreement | null): void {
-    if (agreement && agreement.agreement_type) {
-      switch (agreement.agreement_type) {
-        case CONSTANTS.AGREEMENT_TYPES.PCA:
-          this.documentTypesOptions = this.pcaDocTypes;
-          break;
-        case CONSTANTS.AGREEMENT_TYPES.SSFA:
-          this.documentTypesOptions = this.ssfaDocTypes;
-          break;
-        default:
-          this.documentTypesOptions = this.documentTypes;
-          break;
-      }
-    } else {
-      this.documentTypesOptions = [];
-    }
   }
 
   private validate(): boolean {
