@@ -114,6 +114,7 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   agreementChanged({detail}: CustomEvent): void {
     this.selectedAgreement = detail.selectedItem;
+    this.setInterventionField('agreement', this.selectedAgreement?.id);
   }
 
   documentTypeChanged(type: string): void {
