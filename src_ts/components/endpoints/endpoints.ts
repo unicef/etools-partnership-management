@@ -11,12 +11,12 @@ const pmpEdpoints = {
     url: '/api/v3/users/profile/'
   },
   agreements: {
-    template: '/api/v2/agreements/',
+    template: '/api/pmp/v3/agreements/',
     exp: 30 * 60 * 1000, // 30min
     cacheTableName: 'agreements'
   },
   agreementDetails: {
-    template: '/api/v2/agreements/<%=id%>/'
+    template: '/api/pmp/v3/agreements/<%=id%>/'
   },
   agreementDelete: {
     template: '/api/v2/agreements/delete/<%=id%>/'
@@ -59,7 +59,7 @@ const pmpEdpoints = {
     template: '/api/v2/partners/<%=id%>/staff-members/'
   },
   interventions: {
-    url: '/api/v2/interventions/',
+    url: '/api/pmp/v3/interventions/',
     exp: 10 * 60 * 1000,
     cacheTableName: 'interventions'
   },
@@ -91,7 +91,7 @@ const pmpEdpoints = {
     cachingKey: 'locations'
   },
   offices: {
-    url: '/api/offices',
+    url: '/api/offices/v3/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cachingKey: 'offices'
   },
