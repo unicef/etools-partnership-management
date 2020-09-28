@@ -136,7 +136,7 @@ documentContainer.innerHTML = `
         --ecp-content-bg-color: var(--primary-background-color);
         --ecp-header-bg: var(--primary-color);
         --ecp-header-title: {
-          font-size: 21px;
+          font-size: 18px;
           font-weight: bold;
           text-align: center;
         };
