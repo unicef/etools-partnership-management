@@ -99,10 +99,10 @@ documentContainer.innerHTML = `
         --etools-action-button-main-color: var(--primary-color);
         --etools-action-button-text-color: var(--light-primary-text-color);
         --etools-action-button-dropdown-higlight-bg: var(--list-second-bg-color);
-        --etools-action-button-divider-color: var(--light-divider-color);
+        --etools-action-button-divider-color: rgba(255, 255, 255, 0.12);
 
         /* etools-status styles */
-        --etools-status-divider-color: var(--dark-divider-color);
+        --etools-status-divider-color: var(--light-divider-color);
         --etools-status-icon-inactive-color: var(--medium-icon-color);
         --etools-status-icon-pending-color: var(--primary-color);
         --etools-status-icon-completed-color: var(--success-color);
