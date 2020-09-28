@@ -113,7 +113,7 @@ documentContainer.innerHTML = `
         /* list colors */
         --list-primary-color: var(--primary-color);
         --list-secondary-color: var(--primary-background-color);
-        --list-divider-color: var(--dark-divider-color);
+        --list-divider-color: var(--light-divider-color);
         --list-bg-color: var(--primary-background-color);
         --list-second-bg-color: var(--medium-theme-background-color);
         --list-text-color: var(--primary-text-color);

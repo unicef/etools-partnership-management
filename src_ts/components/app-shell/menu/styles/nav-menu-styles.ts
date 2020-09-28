@@ -13,7 +13,7 @@ export const navMenuStyles = html`
       height: 100%;
       overflow-y: var(--side-bar-scrolling);
       overflow-x: hidden;
-      border-right: 1px solid var(--dark-divider-color);
+      border-right: 1px solid var(--light-divider-color);
     }
 
     :host([small-menu]) {
