@@ -88,6 +88,11 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
       this.sections = [...state.commonData!.sections];
     }
+
+    //  this is in place to remove 'SSFA' doc types
+    this.documentTypes = this.documentTypes.filter((el) => {
+      return el.value !== 'SSFA' && el.label !== 'SSFA';
+    });
   }
 
   partnerChanged({detail}: CustomEvent): void {
