@@ -135,13 +135,19 @@ documentContainer.innerHTML = `
         --paper-toggle-button-checked-button-color: var(--primary-color);
 
         /* etools-panel styles */
-        --ecp-content-bg-color: var(--primary-background-color);
+        --ecp-content-bg-color:  #ffffff;
+        --epc-header: {
+          background-color: #ffffff;
+          border-bottom: 1px groove var(--dark-divider-color);
+        }
+        --epc-header-color: var(--primary-text-color);
         --ecp-header-bg: var(--primary-color);
         --ecp-header-title: {
           font-size: 18px;
           font-weight: bold;
           text-align: center;
         };
+
         --ecp-content: {
           padding: 0;
           overflow: hidden;
