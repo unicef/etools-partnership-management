@@ -339,8 +339,8 @@ class AppShell extends connect(store)(
     this.createToastNotificationElement();
   }
 
-  updateReduxRouteDetails(path: string) {
-    const routeDetails = EtoolsRouter.getRouteDetails(path);
+  updateReduxRouteDetails(appLocRoute: any) {
+    const routeDetails = EtoolsRouter.getRouteDetails(appLocRoute);
     if (!isJsonStrMatch(routeDetails, get(store.getState(), 'app.routeDetails'))) {
       store.dispatch(updateStoreRouteDetails(routeDetails));
     }
@@ -375,7 +375,7 @@ class AppShell extends connect(store)(
    * and then routeChanged
    */
   public appLocRouteChanged(appLocRoute: any) {
-    this.updateReduxRouteDetails(appLocRoute.path);
+    this.updateReduxRouteDetails(appLocRoute);
     if (this.route) {
       if (appLocRoute.path === this.route.path) {
         if (objectsAreTheSame(appLocRoute.__queryParams, this.route.__queryParams)) {
