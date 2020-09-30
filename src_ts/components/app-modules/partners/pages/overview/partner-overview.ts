@@ -78,7 +78,7 @@ class PartnerOverview extends EtoolsCurrency(CommonMixin(RiskRatingMixin(FrNumbe
 
         .row-h + .row-h {
           margin-top: 0;
-          border-top: 1px solid var(--dark-divider-color);
+          border-top: 1px solid var(--light-divider-color);
         }
 
         .full-width {
