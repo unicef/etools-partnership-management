@@ -76,7 +76,7 @@ const pmpEdpoints = {
     template: '/api/v2/interventions/attachments/<%=attId%>/'
   },
   dropdownsPmp: {
-    url: '/api/v2/dropdowns/pmp',
+    url: '/api/pmp/v3/dropdowns/dynamic/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cachingKey: 'dropdownsPmp'
   },
