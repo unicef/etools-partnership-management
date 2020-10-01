@@ -22,6 +22,8 @@
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-results/intervention-results.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-attachments/intervention-attachments.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js",
+    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-reports/intervention-reports.js",
+    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js",
 
     "src/components/app-modules/reports/reports-module.js",
     "src/components/app-modules/reports/pages/list/reports-list.js",
@@ -31,11 +33,7 @@
     "src/components/app-modules/settings/settings-module.js",
     "src/components/app-modules/not-found/not-found.js"
   ],
-  "sources": [
-    "src/**/*",
-    "images/**/*",
-    "package.json"
-  ],
+  "sources": ["src/**/*", "images/**/*", "package.json"],
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
@@ -49,10 +47,7 @@
   "builds": [
     {
       "name": "esm-bundled",
-      "browserCapabilities": [
-        "es2015",
-        "modules"
-      ],
+      "browserCapabilities": ["es2015", "modules"],
       "js": {
         "minify": true
       },
