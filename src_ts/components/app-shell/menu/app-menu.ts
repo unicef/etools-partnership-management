@@ -75,9 +75,9 @@ class AppMenu extends connect(store)(
           <a class="nav-menu-item" menu-name="interventions" href$="[[rootPath]]interventions/list">
             <iron-icon id="interventions-icon" icon="description"></iron-icon>
             <paper-tooltip for="interventions-icon" position="right">
-              PD/SSFA
+              PD/SPD
             </paper-tooltip>
-            <div class="name">PD/SSFA</div>
+            <div class="name">PD/SPD</div>
           </a>
 
           <a class="nav-menu-item" menu-name="government-partners" href$="[[rootPath]]government-partners/list">
