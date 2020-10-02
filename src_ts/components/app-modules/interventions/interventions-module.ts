@@ -324,7 +324,7 @@ class InterventionsModule extends connect(store)(
 
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.addEventListener('tab-content-attached', this._interventionPageAttached);
-    // this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+    this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
   }
@@ -625,9 +625,13 @@ class InterventionsModule extends connect(store)(
     return activeTab === 'attachments';
   }
 
-  // _handleTabSelectAction(e: CustomEvent) {
-  //   this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-');
-  // }
+  _handleTabSelectAction(e: CustomEvent) {
+     this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-', 'tabs');
+  }
+
+  _handleInterventionSelectionLoadingMsg() {
+    this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
+  }
 
   _interventionPageAttached() {
     // force styles updates according with intervention permissions
@@ -652,10 +656,6 @@ class InterventionsModule extends connect(store)(
       active: true,
       loadingSource: 'interv-page'
     });
-  }
-
-  _handleInterventionSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'details');
   }
 
   _exportPdBudget() {

@@ -87,7 +87,15 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
 
     _showTabChangeLoadingMsg(e: CustomEvent | null, loadingSource: string, tabPrefix: string, tab?: string) {
       const clickedTabName = tab ? tab : e!.detail.item.getAttribute('name');
-      const tabEl = this.shadowRoot!.querySelector(tabPrefix + clickedTabName);
+      const selector = tabPrefix + clickedTabName;
+      const tabEl = this.shadowRoot!.querySelector(selector);
+
+      if(tabEl && selector === 'intervention-tabs') {
+          if(tabEl.shadowRoot!.querySelector('intervention-details') !== null) {
+            return;
+          }
+      }
+
       if (tabEl instanceof PolymerElement) {
         // tab element already loaded, no need for loading messages
         return;
