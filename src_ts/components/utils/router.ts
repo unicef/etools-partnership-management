@@ -85,25 +85,20 @@ export class Router {
    * details about this route: name, sub-route name (if any), route params, query params, route path.
    * @param path
    */
-  getRouteDetails(path?: string): RouteDetails | null {
+  getRouteDetails(appLocRoute?: any): RouteDetails | null {
+    const path = appLocRoute.path;
     let routeDetails: RouteDetails | null = null;
     let locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
     logInfo(locationPath, 'Router.getRouteDetails.locationPath: ');
 
-    const qsStartIndex: number = locationPath.indexOf('?');
-    let qs = '';
-    if (qsStartIndex > -1) {
-      const loc = locationPath.split('?');
-      locationPath = loc[0];
-      qs = loc[1];
-    }
+    const qs = appLocRoute.__queryParams;
 
     for (let i = 0; i < this.routes.length; i++) {
       const match = locationPath.match(this.routes[i].regex);
       if (match) {
         const routeParams: RouteCallbackParams = {
           matchDetails: match.slice(0).map((matchVal: string) => decodeURIComponent(matchVal)),
-          queryParams: this.buildQueryParams(qs)
+          queryParams: qs
         };
         routeDetails = this.routes[i].handler.bind({}, routeParams)();
         break;

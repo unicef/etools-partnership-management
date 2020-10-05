@@ -120,20 +120,14 @@ class EtoolsToast extends PolymerElement {
     // clone detail obj
     const toastProperties = JSON.parse(JSON.stringify(detail));
 
-    toastProperties.duration = 0;
-    if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
-      if (detail.showCloseBtn === true) {
-        closeToastBtn.removeAttribute('hidden');
-      } else {
-        closeToastBtn.setAttribute('hidden', '');
-        if (!detail.duration) {
-          toastProperties.duration = 5000;
-        }
-      }
-      delete toastProperties.showCloseBtn;
+    if (toastProperties.showCloseBtn === true) {
+      toastProperties.duration = 0;
+      closeToastBtn.removeAttribute('hidden');
     } else {
       closeToastBtn.setAttribute('hidden', '');
+      toastProperties.duration = toastProperties.duration || 5000;
     }
+    delete toastProperties.showCloseBtn;
 
     return toastProperties;
   }

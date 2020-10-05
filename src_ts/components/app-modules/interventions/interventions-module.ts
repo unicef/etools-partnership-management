@@ -36,7 +36,6 @@ import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
-import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 import './pages/intervention-tab-pages/intervention-tabs';
 
 /**
@@ -113,7 +112,7 @@ class InterventionsModule extends connect(store)(
       <div hidden="[[showNewPMP(activePage)]]">
         <page-content-header with-tabs-visible="[[tabsActive]]">
           <div slot="page-title">
-            <template is="dom-if" if="[[listActive]]"> PD/SSFAs </template>
+            <template is="dom-if" if="[[listActive]]"> PD/SPDs </template>
             <template is="dom-if" if="[[newPageActive]]">
               <span class="no-capitalization"> Add Programme Document or SSFA </span>
             </template>
@@ -145,7 +144,7 @@ class InterventionsModule extends connect(store)(
             <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
-                Add new PD/SSFA
+                Add new PD/SPD
               </paper-button>
             </div>
           </div>
@@ -183,6 +182,15 @@ class InterventionsModule extends connect(store)(
               <intervention-new on-create-intervention="onCreateIntervention"></intervention-new>
             </template>
           </div>
+
+          <intervention-item-data
+            id="interventionData"
+            intervention="{{intervention}}"
+            intervention-id="[[selectedInterventionId]]"
+            original-intervention="[[originalIntervention]]"
+            error-event-name="intervention-save-error"
+          ></intervention-item-data>
+
           <!-- main page content end -->
         </div>
       </div>
@@ -671,17 +679,18 @@ class InterventionsModule extends connect(store)(
   }
 
   onCreateIntervention({detail}: CustomEvent) {
+    const intervention = this.cleanUpBeforeSave(detail.intervention);
     (this.$.interventionData as InterventionItemData)
       // @ts-ignore
-      .saveIntervention(detail, this._newInterventionSaved.bind(this))
-      .then((successfull: boolean) => {
-        if (successfull) {
-          store.dispatch({type: RESET_UNSAVED_UPLOADS});
-          return true;
-        } else {
-          return false;
-        }
-      });
+      .saveIntervention(intervention, this._newInterventionSaved.bind(this));
+  }
+
+  private cleanUpBeforeSave(intervention: Partial<Intervention>) {
+    if (!intervention.cfei_number) {
+      // Errors out on bk otherwise
+      delete intervention.cfei_number;
+    }
+    return intervention;
   }
 }
 

@@ -161,3 +161,11 @@ export function datesAreEqual(date1: any, date2: any) {
     date1.getFullYear() === date2.getFullYear()
   );
 }
+
+
+export function formatDate(date: Date, format: string) {
+  if (!date) {
+    return null;
+  }
+  return moment(date).format(format);
+}

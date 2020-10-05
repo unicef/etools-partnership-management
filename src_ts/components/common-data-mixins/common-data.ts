@@ -212,6 +212,10 @@ function CommonDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         if (this._validReqResponseData(response.risk_types)) {
           store.dispatch(commonDataActions.updateRiskTypes((response as any).risk_types));
         }
+        // set cash transfer options
+        if (this._validReqResponseData(response.cash_transfer_modalities)) {
+          store.dispatch(commonDataActions.updateCashTransferModalities((response as any).cash_transfer_modalities));
+        }
       }
     }
 

@@ -56,6 +56,8 @@ documentContainer.innerHTML = `
 
         --amendment-mode-color: rgba(139,0,216, .99); /* .99 is to fix chrome strange bg color transparency */
 
+        --main-border-color: #c1c1c1;
+
         --error-color: #ea4022;
         --light-error-color: #f1b8ae;
         --dark-error-color: #c5102a;
@@ -99,10 +101,10 @@ documentContainer.innerHTML = `
         --etools-action-button-main-color: var(--primary-color);
         --etools-action-button-text-color: var(--light-primary-text-color);
         --etools-action-button-dropdown-higlight-bg: var(--list-second-bg-color);
-        --etools-action-button-divider-color: var(--light-divider-color);
+        --etools-action-button-divider-color: rgba(255, 255, 255, 0.12);
 
         /* etools-status styles */
-        --etools-status-divider-color: var(--dark-divider-color);
+        --etools-status-divider-color: var(--light-divider-color);
         --etools-status-icon-inactive-color: var(--medium-icon-color);
         --etools-status-icon-pending-color: var(--primary-color);
         --etools-status-icon-completed-color: var(--success-color);
@@ -113,7 +115,7 @@ documentContainer.innerHTML = `
         /* list colors */
         --list-primary-color: var(--primary-color);
         --list-secondary-color: var(--primary-background-color);
-        --list-divider-color: var(--dark-divider-color);
+        --list-divider-color: var(--light-divider-color);
         --list-bg-color: var(--primary-background-color);
         --list-second-bg-color: var(--medium-theme-background-color);
         --list-text-color: var(--primary-text-color);
@@ -133,13 +135,19 @@ documentContainer.innerHTML = `
         --paper-toggle-button-checked-button-color: var(--primary-color);
 
         /* etools-panel styles */
-        --ecp-content-bg-color: var(--primary-background-color);
+        --ecp-content-bg-color:  #ffffff;
+        --epc-header: {
+          background-color: #ffffff;
+          border-bottom: 1px groove var(--dark-divider-color);
+        }
+        --epc-header-color: var(--primary-text-color);
         --ecp-header-bg: var(--primary-color);
         --ecp-header-title: {
-          font-size: 21px;
+          font-size: 18px;
           font-weight: bold;
           text-align: center;
         };
+
         --ecp-content: {
           padding: 0;
           overflow: hidden;
