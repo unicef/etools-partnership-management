@@ -632,7 +632,9 @@ class InterventionsModule extends connect(store)(
   }
 
   _handleInterventionSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
+    setTimeout(() => {
+      this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
+    });
   }
 
   _interventionPageAttached() {
