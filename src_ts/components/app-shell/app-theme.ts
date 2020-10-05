@@ -144,7 +144,7 @@ documentContainer.innerHTML = `
         --ecp-header-bg: var(--primary-color);
         --ecp-header-title: {
           font-size: 18px;
-          font-weight: bold;
+          font-weight: 500;
           text-align: center;
         };
 
