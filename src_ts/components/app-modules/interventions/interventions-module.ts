@@ -327,6 +327,7 @@ class InterventionsModule extends connect(store)(
     // this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
+    this.addEventListener('intervention-was-edited', this.updateDexieData as any);
   }
 
   _removeInterventionsModuleListeners() {
@@ -335,6 +336,7 @@ class InterventionsModule extends connect(store)(
     this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.removeEventListener('new-amendment-added', this._amendmentAddedHandler as any);
+    this.removeEventListener('intervention-was-edited', this.updateDexieData as any);
   }
 
   _createFinalizeAmendConfirmDialog() {
@@ -525,6 +527,17 @@ class InterventionsModule extends connect(store)(
         });
     }
     return;
+  }
+
+  updateDexieData(e: CustomEvent) {
+    const intervention = e.detail.intervention;
+    const intervDataComponent = this.$.interventionData as InterventionItemData;
+    intervDataComponent.updateInterventionsListInDexieDb(intervention);
+    intervDataComponent.updateAgreementInDexieDb(
+      intervention.agreement,
+      intervention.document_type,
+      intervention.status
+    );
   }
 
   _isNewIntervention() {
