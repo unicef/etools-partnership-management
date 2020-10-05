@@ -3,11 +3,11 @@ import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {BASE_URL} from '../../../../../config/config';
-import {sharedStylesPolymer} from '../intervention-tab-pages/common/styles/shared-styles-polymer';
+import {SharedStyles} from '../../../../styles/shared-styles';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
-    ${sharedStylesPolymer()}
+    ${SharedStyles}
     <style>
       paper-button {
         --paper-button: {
