@@ -626,7 +626,9 @@ class InterventionsModule extends connect(store)(
   }
 
   _handleTabSelectAction(e: CustomEvent) {
-     this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-', 'tabs');
+    setTimeout(() => {
+      this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-', 'tabs');
+    });
   }
 
   _handleInterventionSelectionLoadingMsg() {

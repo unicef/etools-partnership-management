@@ -90,15 +90,15 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
       const selector = tabPrefix + clickedTabName;
       const tabEl = this.shadowRoot!.querySelector(selector);
 
-      if(tabEl && selector === 'intervention-tabs') {
-          if(tabEl.shadowRoot!.querySelector('intervention-details') !== null) {
-            return;
-          }
-      }
-
-      if (tabEl instanceof PolymerElement) {
-        // tab element already loaded, no need for loading messages
-        return;
+      if(tabEl) {
+        if (tabEl instanceof PolymerElement) {
+          // tab element already loaded, no need for loading messages
+          return;
+        }
+        if(selector === 'intervention-tabs' && tabEl.shadowRoot!.querySelector('intervention-details') !== null) {
+          // intervention-tabs tab element already loaded, no need for loading messages
+          return;
+        }
       }
       fireEvent(this, 'global-loading', {
         message: 'Loading...',
