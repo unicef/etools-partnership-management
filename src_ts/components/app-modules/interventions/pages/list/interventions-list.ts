@@ -145,9 +145,7 @@ class InterventionsList extends connect(store)(
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
-                CLEAR ALL
-              </paper-button>
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn"> CLEAR ALL </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -173,21 +171,11 @@ class InterventionsList extends connect(store)(
           <etools-data-table-column class="col-3" field="partner_name" sortable>
             Partner Name
           </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="document_type">
-            Document Type
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="status">
-            Status
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2" field="title">
-            Title
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="start" sortable>
-            Start Date
-          </etools-data-table-column>
-          <etools-data-table-column class="flex-c" field="end" sortable>
-            End Date
-          </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="document_type"> Document Type </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="status"> Status </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="title"> Title </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="start" sortable> Start Date </etools-data-table-column>
+          <etools-data-table-column class="flex-c" field="end" sortable> End Date </etools-data-table-column>
         </etools-data-table-header>
 
         <template
@@ -460,6 +448,10 @@ class InterventionsList extends connect(store)(
     }
     if (!isJsonStrMatch(this.documentTypes, state.commonData!.interventionDocTypes)) {
       this.documentTypes = [...state.commonData!.interventionDocTypes];
+      // remove after SSFA is removed from backend
+      this.documentTypes = this.documentTypes.filter((doc) => {
+        return doc.label !== 'SSFA' && doc.value !== 'SSFA';
+      });
     }
     if (!isJsonStrMatch(this.interventionStatuses, state.commonData!.interventionStatuses)) {
       this.interventionStatuses = [...state.commonData!.interventionStatuses];
