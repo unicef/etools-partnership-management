@@ -30,6 +30,12 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
       return '-';
     }
+
+    // remove this after draft status is revised
+    mapStatus(value: string) {
+      return value === 'draft' ? 'development' : value;
+    }
+
     /**
      * Prepare date string and return it in a user readable format
      */

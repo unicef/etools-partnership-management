@@ -112,9 +112,9 @@ class InterventionsModule extends connect(store)(
       <div hidden="[[showNewPMP(activePage)]]">
         <page-content-header with-tabs-visible="[[tabsActive]]">
           <div slot="page-title">
-            <template is="dom-if" if="[[listActive]]"> PD/SSFAs </template>
+            <template is="dom-if" if="[[listActive]]"> PD/SPDs </template>
             <template is="dom-if" if="[[newPageActive]]">
-              <span class="no-capitalization"> Add Programme Document or SSFA </span>
+              <span class="no-capitalization"> Add Programme Document or Simplified Programme Document </span>
             </template>
             <template is="dom-if" if="[[tabsActive]]">
               <span>
@@ -144,7 +144,7 @@ class InterventionsModule extends connect(store)(
             <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
-                Add new PD/SSFA
+                Add new PD/SPD
               </paper-button>
             </div>
           </div>
@@ -324,7 +324,7 @@ class InterventionsModule extends connect(store)(
 
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
     this.addEventListener('tab-content-attached', this._interventionPageAttached);
-    // this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
+    this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
   }
@@ -625,9 +625,17 @@ class InterventionsModule extends connect(store)(
     return activeTab === 'attachments';
   }
 
-  // _handleTabSelectAction(e: CustomEvent) {
-  //   this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-');
-  // }
+  _handleTabSelectAction(e: CustomEvent) {
+    setTimeout(() => {
+      this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-', 'tabs');
+    });
+  }
+
+  _handleInterventionSelectionLoadingMsg() {
+    setTimeout(() => {
+      this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
+    });
+  }
 
   _interventionPageAttached() {
     // force styles updates according with intervention permissions
@@ -652,10 +660,6 @@ class InterventionsModule extends connect(store)(
       active: true,
       loadingSource: 'interv-page'
     });
-  }
-
-  _handleInterventionSelectionLoadingMsg() {
-    this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'details');
   }
 
   _exportPdBudget() {

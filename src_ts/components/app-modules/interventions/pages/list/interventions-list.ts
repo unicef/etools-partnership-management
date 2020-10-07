@@ -222,7 +222,7 @@ class InterventionsList extends connect(store)(
                 [[getDisplayValue(intervention.document_type)]]
               </span>
               <span class="col-data flex-c capitalize" data-col-header-label="Status">
-                [[getDisplayValue(intervention.status)]]
+                [[mapStatus(intervention.status)]]
               </span>
               <span
                 class="col-data col-2"
@@ -614,7 +614,7 @@ class InterventionsList extends connect(store)(
         hideSearch: true
       }),
       new ListFilterOption({
-        filterName: 'PD/SSFA Type',
+        filterName: 'PD/SPD Type',
         type: 'etools-dropdown-multi',
         optionValue: 'value',
         optionLabel: 'label',
@@ -735,7 +735,7 @@ class InterventionsList extends connect(store)(
           selectedValue: this.selectedStatuses
         },
         {
-          filterName: 'PD/SSFA Type',
+          filterName: 'PD/SPD Type',
           selectedValue: this.selectedDocumentTypes
         },
         {
