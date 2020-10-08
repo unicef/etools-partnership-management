@@ -39,7 +39,7 @@ const pmpEdpoints = {
     cachingKey: 'countries'
   },
   partners: {
-    url: '/api/v2/partners/',
+    url: '/api/pmp/v3/partners/',
     exp: 6 * 60 * 60 * 1000, // 6h
     cacheTableName: 'partners'
   },
