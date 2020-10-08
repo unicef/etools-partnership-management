@@ -23,6 +23,8 @@ documentContainer.innerHTML = `
         --medium-primary-text-color: #9D9D9D;
         --light-primary-text-color: rgba(255, 255, 255, 1);
 
+        --expand-icon-color: #4d4d4d;
+
         --secondary-text-color: rgba(0, 0, 0, 0.54);
         --light-secondary-text-color: rgba(255, 255, 255, 0.7);
         --dark-secondary-text-color: var(--secondary-text-color);
@@ -144,7 +146,7 @@ documentContainer.innerHTML = `
         --ecp-header-bg: var(--primary-color);
         --ecp-header-title: {
           font-size: 18px;
-          font-weight: bold;
+          font-weight: 500;
           text-align: center;
         };
 
