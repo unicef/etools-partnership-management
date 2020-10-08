@@ -180,7 +180,8 @@ class InterventionItemData extends connect(store)(
 
     if (ajaxMethod !== 'GET') {
       this.updateInterventionsListInDexieDb(response);
-      this.updateAgreementInDexieDb(response.agreement!, response.document_type!, response.status);
+      // TODO - in theory this is not needed anymore because SSFA agreements will no longer exist
+      // this.updateAgreementInDexieDb(response.agreement!, response.document_type!, response.status);
     }
   }
 

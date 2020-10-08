@@ -24,7 +24,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
 import {SharedStyles} from '../../styles/shared-styles.js';
 import {buttonsStyles} from '../../styles/buttons-styles.js';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject, isJsonStrMatch} from '../../utils/utils';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {setInAmendment, setPageDataPermissions} from '../../../actions/page-data';
@@ -37,6 +37,7 @@ import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
+import get from 'lodash-es/get';
 
 /**
  * @polymer
@@ -277,6 +278,17 @@ class InterventionsModule extends connect(store)(
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
+
+    if (!this.intervention) {
+      this.intervention = get(state, 'interventions.current');
+    } else {
+      const currentPD = get(state, 'interventions.current');
+      if (!isJsonStrMatch(this.intervention, currentPD)) {
+        this.updateDexieData(currentPD);
+        console.log('Updated Intervention list Dexie data');
+        this.intervention = currentPD;
+      }
+    }
   }
 
   getReduxStore() {
@@ -327,7 +339,6 @@ class InterventionsModule extends connect(store)(
     this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
-    this.addEventListener('intervention-was-edited', this.updateDexieData as any);
   }
 
   _removeInterventionsModuleListeners() {
@@ -336,7 +347,6 @@ class InterventionsModule extends connect(store)(
     this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
     this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
     this.removeEventListener('new-amendment-added', this._amendmentAddedHandler as any);
-    this.removeEventListener('intervention-was-edited', this.updateDexieData as any);
   }
 
   _createFinalizeAmendConfirmDialog() {
@@ -529,15 +539,8 @@ class InterventionsModule extends connect(store)(
     return;
   }
 
-  updateDexieData(e: CustomEvent) {
-    const intervention = e.detail.intervention;
-    const intervDataComponent = this.$.interventionData as InterventionItemData;
-    intervDataComponent.updateInterventionsListInDexieDb(intervention);
-    intervDataComponent.updateAgreementInDexieDb(
-      intervention.agreement,
-      intervention.document_type,
-      intervention.status
-    );
+  updateDexieData(intervention: Intervention) {
+    (this.$.interventionData as InterventionItemData).updateInterventionsListInDexieDb(intervention);
   }
 
   _isNewIntervention() {
