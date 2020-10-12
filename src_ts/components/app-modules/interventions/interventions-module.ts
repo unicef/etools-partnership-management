@@ -279,7 +279,7 @@ class InterventionsModule extends connect(store)(
   stateChanged(state: RootState) {
     this.envStateChanged(state);
 
-    if (!this.intervention) {
+    if (!this.intervention || get(this, 'intervention.id') !== get(state, 'interventions.current.id')) {
       this.intervention = get(state, 'interventions.current');
     } else {
       const currentPD = get(state, 'interventions.current');
