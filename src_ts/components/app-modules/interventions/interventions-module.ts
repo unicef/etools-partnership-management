@@ -115,7 +115,7 @@ class InterventionsModule extends connect(store)(
           <div slot="page-title">
             <template is="dom-if" if="[[listActive]]"> PD/SPDs </template>
             <template is="dom-if" if="[[newPageActive]]">
-              <span class="no-capitalization"> Add Programme Document or Simplified Programme Document </span>
+              <span class="no-capitalization"> Add Programme Document</span>
             </template>
             <template is="dom-if" if="[[tabsActive]]">
               <span>
