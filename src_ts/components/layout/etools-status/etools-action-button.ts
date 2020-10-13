@@ -29,13 +29,12 @@ class EtoolsActionButton extends PolymerElement {
           @apply --layout-horizontal;
           padding: 0;
           margin: 0;
-          height: 36px;
           background-color: var(--etools-action-button-main-color, #0099ff);
           color: var(--etools-action-button-text-color, #fff);
         }
 
         paper-button.grey {
-          background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, 0.54));
+          background-color: var(--etools-action-button-dropdown-higlight-bg, #eeeeee);
         }
 
         paper-menu-button {
@@ -43,14 +42,14 @@ class EtoolsActionButton extends PolymerElement {
         }
 
         paper-icon-button {
-          border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
+          border-left: 2px solid var(--etools-action-button-divider-color, #54a6fe);
         }
 
         .main-btn-part {
           @apply --layout-flex;
           text-align: center;
           font-weight: 500;
-          line-height: 34px;
+          line-height: 36px;
         }
 
         .list-wrapper {

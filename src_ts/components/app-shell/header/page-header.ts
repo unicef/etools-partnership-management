@@ -45,18 +45,18 @@ class PageHeader extends connect(store)(
         }
 
         countries-dropdown {
-          --countries-dropdown-color: var(--light-secondary-text-color);
+          --countries-dropdown-color: var(--light-header-text-color);
         }
 
         support-btn,
         etools-profile-dropdown,
         #refresh {
-          color: var(--light-secondary-text-color);
+          color: var(--light-header-text-color);
         }
 
         #menuButton {
           display: block;
-          color: var(--light-secondary-text-color);
+          color: var(--light-header-text-color);
         }
 
         .titlebar {
@@ -260,6 +260,7 @@ class PageHeader extends connect(store)(
   }
 
   public menuBtnClicked() {
+    console.log('aaaaaaaaaaaaaaa');
     store.dispatch(updateDrawerState(true));
   }
 

@@ -18,45 +18,44 @@ documentContainer.innerHTML = `
         --medium-theme-background-color: #eeeeee;
         --dark-theme-background-color: #233944;
 
-        --primary-text-color: rgba(0, 0, 0, 0.87);
+        --primary-text-color: #212121;
         --dark-primary-text-color: var(--primary-text-color);
         --medium-primary-text-color: #9D9D9D;
-        --light-primary-text-color: rgba(255, 255, 255, 1);
+        --light-primary-text-color: #fafafa;
 
         --expand-icon-color: #4d4d4d;
 
-        --secondary-text-color: rgba(0, 0, 0, 0.54);
-        --light-secondary-text-color: rgba(255, 255, 255, 0.7);
-        --dark-secondary-text-color: var(--secondary-text-color);
+        --secondary-text-color: #757575;
+        --light-secondary-text-color: #ffffff;
+        --light-header-text-color: #e4c7c8;
+        --dark-secondary-text-color: var(--secondary-text-color); /* why are 2 color variables using same value? */
 
-        --dark-disabled-text-color: rgba(0, 0, 0, 0.38);
+        --dark-disabled-text-color: rgba(0, 0, 0, 0.38);  /* unused */
         --light-disabled-text-color: var(--medium-primary-text-color);
 
-        --light-icon-color: rgba(255, 255, 255, 1);
+        --light-icon-color: #ffffff;
         --medium-icon-color: var(--medium-primary-text-color);
-        --dark-icon-color: rgba(0, 0, 0, 0.65);
+        --dark-icon-color: #595959;
         --light-disabled-icon-color: var(--medium-primary-text-color);
-        --dark-disabled-icon-color: rgba(0, 0, 0, 0.38);
+        --dark-disabled-icon-color: rgba(0, 0, 0, 0.38);  /* unused */
 
-        --light-divider-color: rgba(0, 0, 0, 0.12);
+        --light-divider-color: #e0e0e0;
         --light-hex-divider-color: #b8b8b8;
-        --dark-divider-color: rgba(0, 0, 0, 0.40);
+        --dark-divider-color: #999999;
         --darker-divider-color: var(--medium-primary-text-color);
 
-        --light-hover-color: rgba(255, 255, 255, 0.01);
-        --dark-hover-color: rgba(0, 0, 0, 0.01);
+        --light-hover-color: rgba(255, 255, 255, 0.01); /* unused */
+        --dark-hover-color: rgba(0, 0, 0, 0.01);  /* unused */
 
         --light-ink-color: rgba(255, 255, 255, 0.30);
         --dark-ink-color: rgba(0, 0, 0, 0.3);
-
-        --dark-theme-background-color: #233944;
 
         --header-color: #ffffff;
         --header-bg-color: var(--dark-theme-background-color);
         --nonprod-header-color: #a94442;
         --nonprod-text-warn-color: #e6e600;
 
-        --amendment-mode-color: rgba(139,0,216, .99); /* .99 is to fix chrome strange bg color transparency */
+        --amendment-mode-color: #8b00d6;
 
         --main-border-color: #c1c1c1;
 
@@ -103,7 +102,7 @@ documentContainer.innerHTML = `
         --etools-action-button-main-color: var(--primary-color);
         --etools-action-button-text-color: var(--light-primary-text-color);
         --etools-action-button-dropdown-higlight-bg: var(--list-second-bg-color);
-        --etools-action-button-divider-color: rgba(255, 255, 255, 0.12);
+        --etools-action-button-divider-color: #54a6fe;
 
         /* etools-status styles */
         --etools-status-divider-color: var(--light-divider-color);
