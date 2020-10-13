@@ -260,7 +260,6 @@ class PageHeader extends connect(store)(
   }
 
   public menuBtnClicked() {
-    console.log('aaaaaaaaaaaaaaa');
     store.dispatch(updateDrawerState(true));
   }
 
