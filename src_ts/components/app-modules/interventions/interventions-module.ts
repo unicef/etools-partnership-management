@@ -24,7 +24,7 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
 import {SharedStyles} from '../../styles/shared-styles.js';
 import {buttonsStyles} from '../../styles/buttons-styles.js';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
-import {isEmptyObject} from '../../utils/utils';
+import {isEmptyObject, isJsonStrMatch} from '../../utils/utils';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {setInAmendment, setPageDataPermissions} from '../../../actions/page-data';
@@ -37,6 +37,7 @@ import InterventionItemData from './data/intervention-item-data.js';
 import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
+import get from 'lodash-es/get';
 
 /**
  * @polymer
@@ -114,7 +115,7 @@ class InterventionsModule extends connect(store)(
           <div slot="page-title">
             <template is="dom-if" if="[[listActive]]"> PD/SPDs </template>
             <template is="dom-if" if="[[newPageActive]]">
-              <span class="no-capitalization"> Add Programme Document or Simplified Programme Document </span>
+              <span class="no-capitalization"> Add Programme Document</span>
             </template>
             <template is="dom-if" if="[[tabsActive]]">
               <span>
@@ -277,6 +278,17 @@ class InterventionsModule extends connect(store)(
 
   stateChanged(state: RootState) {
     this.envStateChanged(state);
+
+    if (!this.intervention || get(this, 'intervention.id') !== get(state, 'interventions.current.id')) {
+      this.intervention = get(state, 'interventions.current');
+    } else {
+      const currentPD = get(state, 'interventions.current');
+      if (!isJsonStrMatch(this.intervention, currentPD)) {
+        this.updateDexieData(currentPD);
+        console.log('Updated Intervention list Dexie data');
+        this.intervention = currentPD;
+      }
+    }
   }
 
   getReduxStore() {
@@ -525,6 +537,10 @@ class InterventionsModule extends connect(store)(
         });
     }
     return;
+  }
+
+  updateDexieData(intervention: Intervention) {
+    (this.$.interventionData as InterventionItemData).updateInterventionsListInDexieDb(intervention);
   }
 
   _isNewIntervention() {
