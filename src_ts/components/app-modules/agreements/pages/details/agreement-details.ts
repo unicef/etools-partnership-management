@@ -463,8 +463,9 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
     }
 
-    if (!isJsonStrMatch(this.agreementTypes, state.commonData!.agreementTypes)) {
-      this.agreementTypes = state.commonData!.agreementTypes;
+    const agreementTypes = (state.commonData!.agreementTypes || []).filter(ag => ag.value !== 'SSFA');
+    if (!isJsonStrMatch(this.agreementTypes, agreementTypes)) {
+      this.agreementTypes = agreementTypes;
     }
 
     this.uploadsStateChanged(state);
