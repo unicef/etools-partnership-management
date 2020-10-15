@@ -38,6 +38,9 @@ import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/d
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
+import {setStore} from './pages/intervention-tab-pages/utils/redux-store-access';
+
+setStore(store);
 
 /**
  * @polymer
@@ -195,7 +198,7 @@ class InterventionsModule extends connect(store)(
           <!-- main page content end -->
         </div>
       </div>
-      <intervention-tabs store="[[getReduxStore()]]" hidden="[[!showNewPMP(activePage)]]"></intervention-tabs>
+      <intervention-tabs hidden="[[!showNewPMP(activePage)]]"></intervention-tabs>
     `;
   }
 
@@ -289,10 +292,6 @@ class InterventionsModule extends connect(store)(
         this.intervention = currentPD;
       }
     }
-  }
-
-  getReduxStore() {
-    return store;
   }
 
   showNewPMP(activePage: string) {
