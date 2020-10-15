@@ -19,6 +19,9 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     @property({type: Array})
     selectedFilters!: ListFilterOption[];
 
+    @property({type: String})
+    q!: string;
+
     /**
      * Init filter options properties.
      * `filterOptions` object is particular for each list (see partners-list for example)
@@ -100,6 +103,9 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     clearAllFilterValues() {
+      //clear search input, not in selectedFilters
+      this.q = '';
+
       for (let i = 0; i < this.selectedFilters.length; i++) {
         if (!this.selectedFilters[i].disabled) {
           this.clearSelectedValueInFilter(this.selectedFilters[i], ['selectedFilters', i]);
