@@ -5,7 +5,6 @@ import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status
 import {fireEvent} from '../../../utils/fire-custom-event.js';
 import '../../../layout/etools-status/etools-status.js';
 import '../../../layout/etools-status/etools-status-common-mixin.js';
-import './pd-termination.js';
 import {property} from '@polymer/decorators';
 import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
@@ -105,8 +104,6 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
 
     this._triggerInterventionDeleteOnConfirm = this._triggerInterventionDeleteOnConfirm.bind(this);
     this.deleteConfirmDialog.addEventListener('close', this._triggerInterventionDeleteOnConfirm as any);
-
-    this._createTerminationDialog();
 
     // has to be run async for shadycss to load
     setTimeout(this.setPossibleStatuses.bind(this), 0);
@@ -446,13 +443,6 @@ class InterventionStatus extends EtoolsStatusCommonMixin(PolymerElement) {
     if (e.detail.confirmed) {
       fireEvent(this, 'delete-intervention', {id: this.interventionId});
     }
-  }
-
-  _createTerminationDialog() {
-    this._terminationDialog = document.createElement('pd-termination') as any;
-    document.querySelector('body')!.appendChild(this._terminationDialog);
-
-    this._terminationDialog.set('terminationElSource', this);
   }
 }
 
