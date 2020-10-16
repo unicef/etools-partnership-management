@@ -66,6 +66,10 @@ class InterventionsList extends connect(store)(
           @apply --text-btn-style;
           text-transform: none;
         }
+
+        .col_type {
+          white-space: pre-line;
+        }
       </style>
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
       ${pmpCustomIcons}
@@ -221,7 +225,7 @@ class InterventionsList extends connect(store)(
               <span class="col-data flex-c" data-col-header-label="Document Type">
                 [[getDisplayValue(intervention.document_type)]]
               </span>
-              <span class="col-data flex-c capitalize" data-col-header-label="Status">
+              <span class="col-data flex-c capitalize col_type" data-col-header-label="Status">
                 [[mapStatus(intervention)]]
               </span>
               <span
