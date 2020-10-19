@@ -2,6 +2,7 @@
 import {prettyDate} from '../utils/date-utils';
 import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
+import {ListItemIntervention} from '../../typings/intervention.types';
 
 /**
  * @polymer
@@ -31,9 +32,33 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return '-';
     }
 
-    // remove this after draft status is revised
-    mapStatus(value: string) {
-      return value === 'draft' ? 'development' : value;
+    mapStatus(intervention: ListItemIntervention) {
+      // to refactor this after draft status is revised
+      const status = intervention.status === 'draft' ? 'development' : intervention.status;
+      if (status === 'development') {
+        return status + this.getDevelopementStatusDetails(intervention);
+      }
+      return status;
+    }
+
+    private getDevelopementStatusDetails(data: ListItemIntervention) {
+      if (data.partner_accepted && data.unicef_accepted) {
+        return '\nIP & Unicef Accepted';
+      }
+      if (!data.partner_accepted && data.unicef_accepted) {
+        return '\nUnicef Accepted';
+      }
+      if (data.partner_accepted && !data.unicef_accepted) {
+        return '\nIP Accepted';
+      }
+      if (!data.unicef_court && !!data.date_sent_to_partner) {
+        return '\nSent to Partner';
+      }
+
+      if (data.unicef_court && !!data.date_draft_by_partner) {
+        return '\nSent to Unicef';
+      }
+      return '';
     }
 
     /**

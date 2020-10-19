@@ -129,6 +129,11 @@ export class ListItemIntervention {
   document_type?: string = '';
   unicef_focal_points: [] = [];
   [key: string]: any;
+  partner_accepted?: boolean;
+  unicef_accepted?: boolean;
+  unicef_court?: boolean;
+  date_sent_to_partner?: string;
+  date_draft_by_partner?: string;
 }
 
 export class SelectedSection {
