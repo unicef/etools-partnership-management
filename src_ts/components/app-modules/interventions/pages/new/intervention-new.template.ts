@@ -105,9 +105,27 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Staff Members   -->
-        <div class="col-12 w100">
+        <div class="col-8 w100">
           <etools-form-element-wrapper label="Partner Staff Members" .value="${this.allStaffMembers}">
           </etools-form-element-wrapper>
+        </div>
+        <div class="col-4">
+          <etools-dropdown-multi
+            label="CP Structures"
+            placeholder="&#8212;"
+            .options="${this.cpStructures}"
+            option-value="id"
+            option-label="name"
+            .selectedValues="${this.newIntervention.country_programmes || []}"
+            @etools-selected-items-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField(
+                'country_programmes',
+                detail.selectedItems.map(({id}: any) => id)
+              )}"
+            trigger-value-change-event
+            auto-validate
+          >
+          </etools-dropdown-multi>
         </div>
       </div>
 

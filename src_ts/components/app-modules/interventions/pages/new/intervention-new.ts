@@ -15,6 +15,8 @@ import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globa
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
 import {Intervention} from '../../../../../typings/intervention.types';
+import {CpStructure} from '../intervention-tab-pages/common/models/globals.types';
+import orderBy from 'lodash-es/orderBy';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
@@ -24,6 +26,16 @@ export class InterventionNew extends connect(store)(LitElement) {
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];
+
+  private _cpStructures: CpStructure[] = [];
+  @property({type: Array})
+  get cpStructures() {
+    return this._cpStructures;
+  }
+
+  set cpStructures(cps) {
+    this._cpStructures = orderBy<CpStructure>(cps, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
+  }
 
   @property() hasUNPP = false;
 
@@ -88,6 +100,9 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
       this.sections = [...state.commonData!.sections];
     }
+    if (!isJsonStrMatch(this.cpStructures, state.commonData!.countryProgrammes)) {
+      this.cpStructures = [...state.commonData!.countryProgrammes];
+    }
 
     //  this is in place to remove 'SSFA' doc types
     this.documentTypes = this.documentTypes.filter((el) => {
@@ -120,6 +135,9 @@ export class InterventionNew extends connect(store)(LitElement) {
   agreementChanged({detail}: CustomEvent): void {
     this.selectedAgreement = detail.selectedItem;
     this.setInterventionField('agreement', this.selectedAgreement?.id);
+    const cp = this.selectedAgreement?.country_programme;
+    console.log('agreementChanged', cp);
+    this.setInterventionField('country_programmes', cp ? [cp] : []);
   }
 
   documentTypeChanged(type: string): void {
@@ -131,6 +149,12 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   setInterventionField(field: string, value: any): void {
+    if (field == 'country_programmes') {
+      console.log('setInterventionField', value);
+    }
+    if (value === undefined) {
+      return;
+    }
     if (areEqual(this.newIntervention[field], value)) {
       return;
     }
