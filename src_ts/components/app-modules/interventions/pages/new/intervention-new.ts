@@ -136,7 +136,6 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.selectedAgreement = detail.selectedItem;
     this.setInterventionField('agreement', this.selectedAgreement?.id);
     const cp = this.selectedAgreement?.country_programme;
-    console.log('agreementChanged', cp);
     this.setInterventionField('country_programmes', cp ? [cp] : []);
   }
 
@@ -149,9 +148,6 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   setInterventionField(field: string, value: any): void {
-    if (field == 'country_programmes') {
-      console.log('setInterventionField', value);
-    }
     if (value === undefined) {
       return;
     }
