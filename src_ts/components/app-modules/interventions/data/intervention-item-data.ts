@@ -167,7 +167,7 @@ class InterventionItemData extends connect(store)(
   /**
    * Handle received data from request
    */
-  _handleResponse(response: any, ajaxMethod: string) {
+  _handleResponse(response: Intervention, ajaxMethod: string) {
     // @ts-ignore
     this._setIntervention(this._handleDataConversions(response));
 
@@ -178,30 +178,38 @@ class InterventionItemData extends connect(store)(
       this.set('handleResponseAdditionalCallback', null);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
     if (ajaxMethod !== 'GET') {
-      // update the interventions list in dexieDB
-      const mappedResponse = this._formatResponseDataForDexie(response);
-      window.EtoolsPmpApp.DexieDb.table('interventions')
-        .put(mappedResponse)
-        .then(() => {
-          fireEvent(self, 'reload-list');
-        });
+      this.updateInterventionsListInDexieDb(response);
+      // TODO - in theory this is not needed anymore because SSFA agreements will no longer exist
+      // this.updateAgreementInDexieDb(response.agreement!, response.document_type!, response.status);
+    }
+  }
 
-      if (
-        response.document_type &&
-        response.document_type === CONSTANTS.DOCUMENT_TYPES.SSFA &&
-        response.status !== CONSTANTS.STATUSES.Draft.toLowerCase()
-      ) {
-        sendRequest({
-          endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {
-            id: response.agreement
-          })
-        }).then((resp: any) => {
-          self.updateAgreeementStatus.bind(self, resp)();
-        });
-      }
+  updateInterventionsListInDexieDb(intervention: Intervention) {
+    const mappedResponse = this._formatResponseDataForDexie(intervention);
+    window.EtoolsPmpApp.DexieDb.table('interventions')
+      .put(mappedResponse)
+      .then(() => {
+        fireEvent(this, 'reload-list');
+      });
+  }
+
+  updateAgreementInDexieDb(agreementId: number, document_type: string, status: string) {
+    if (!agreementId) {
+      return;
+    }
+    if (
+      document_type &&
+      document_type === CONSTANTS.DOCUMENT_TYPES.SSFA &&
+      status !== CONSTANTS.STATUSES.Draft.toLowerCase()
+    ) {
+      sendRequest({
+        endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {
+          id: agreementId
+        })
+      }).then((resp: any) => {
+        this.updateAgreeementStatus.bind(this, resp)();
+      });
     }
   }
 
