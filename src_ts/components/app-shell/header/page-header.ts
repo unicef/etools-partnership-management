@@ -40,6 +40,10 @@ class PageHeader extends connect(store)(
           background-color: var(--header-bg-color);
         }
 
+        etools-app-selector {
+          --light-divider-color : #953c3a;
+        }
+
         .titlebar {
           color: var(--header-color);
         }

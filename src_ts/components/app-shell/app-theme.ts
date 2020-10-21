@@ -41,7 +41,7 @@ documentContainer.innerHTML = `
 
         --light-divider-color: #e0e0e0;
         --light-hex-divider-color: #b8b8b8;
-        --dark-divider-color: #999999;
+        --dark-divider-color: rgba(0, 0, 0, 0.4); /* to investigate more */
         --darker-divider-color: var(--medium-primary-text-color);
 
         --light-hover-color: rgba(255, 255, 255, 0.01); /* unused */
