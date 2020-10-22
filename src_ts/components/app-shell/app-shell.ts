@@ -333,7 +333,7 @@ class AppShell extends connect(store)(
     }
   }
 
-  connectedCallback() {
+  public connectedCallback() {
     super.connectedCallback();
 
     this.requestUserData();
