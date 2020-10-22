@@ -102,7 +102,7 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
               <span class="col-data col-2">
                 [[fr.fr_number]]
                 <a title="See more details" class="pl-5" target="_blank" href="[[getFRNumberLink(fr.fr_number)]]">
-                  <iron-icon icon="visibility"></iron-icon>
+                  <iron-icon icon="pmp-custom-icons:external-icon"></iron-icon>
                 </a>
               </span>
               <span class="col-data col-2 right-align">[[getDateDisplayValue(fr.start_date)]]</span>
