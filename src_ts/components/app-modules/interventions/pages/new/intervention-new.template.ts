@@ -91,13 +91,13 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Vendor Number   -->
-        <div class="col-6">
+        <div class="col-8">
           <etools-form-element-wrapper label="Partner Vendor Number" .value="${this.selectedPartner?.vendor_number}">
           </etools-form-element-wrapper>
         </div>
 
         <!--   Agreement Authorized Officers   -->
-        <div class="col-6">
+        <div class="col-4">
           <etools-form-element-wrapper label="Agreement Authorized Officers" .value="${this.authorizedOfficers}">
           </etools-form-element-wrapper>
         </div>
@@ -175,7 +175,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   SPD is Humanitarian   -->
-        <div class="col-6" ?hidden="${!this.isSPD}">
+        <div ?hidden="${!this.isSPD}">
           <paper-toggle-button
             ?checked="${this.newIntervention.humanitarian_flag}"
             @checked-changed="${({detail}: CustomEvent) => {
@@ -211,7 +211,7 @@ export function template(this: InterventionNew): TemplateResult {
         </paper-toggle-button>
 
         <!--   UNPP CFEI Number   -->
-        <div class="col-2">
+        <div class="col-3">
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
