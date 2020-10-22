@@ -98,6 +98,10 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';
+import {registerTranslateConfig, use} from 'lit-translate';
+
+registerTranslateConfig({loader: (lang: string) => fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())});
+
 setRootPath(BASE_URL);
 
 /**
@@ -301,6 +305,9 @@ class AppShell extends connect(store)(
   @property({type: String})
   appLocPath!: string;
 
+  @property({type: String})
+  selectedLanguage!: string;
+
   public static get observers() {
     return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
@@ -326,7 +333,7 @@ class AppShell extends connect(store)(
     }
   }
 
-  public connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
 
     this.requestUserData();
@@ -361,6 +368,15 @@ class AppShell extends connect(store)(
         showCloseBtn: state.app!.toastNotification.showCloseBtn
       });
     }
+
+    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      this.loadLocalization();
+    }
+  }
+
+  async loadLocalization () {
+    await use(this.selectedLanguage);
   }
 
   // dev purpose - to be removed in the future
