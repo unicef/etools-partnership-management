@@ -24,6 +24,8 @@ import {PageDataState} from './reducers/page-data.js';
 import {User} from './typings/globals.types.js';
 import {UserState} from './reducers/user.js';
 import {interventions, InterventionsState} from './reducers/interventions.js';
+import {ActiveLanguageState} from './reducers/active-language.js';
+import {LanguageAction} from './actions/active-language';
 
 declare global {
   interface Window {
@@ -43,9 +45,10 @@ export interface RootState {
   pageData?: PageDataState;
   user?: UserState;
   interventions?: InterventionsState;
+  activeLanguage?: ActiveLanguageState;
 }
 
-export type RootAction = AppAction | CommonDataAction | User | any;
+export type RootAction = AppAction | CommonDataAction | User |  LanguageAction | any;
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
