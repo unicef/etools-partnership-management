@@ -3,9 +3,11 @@ import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
 import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {BASE_URL} from '../../../../../config/config';
+import {SharedStyles} from '../../../../styles/shared-styles';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
+    ${SharedStyles}
     <style>
       paper-button {
         --paper-button: {
@@ -45,7 +47,7 @@ export function template(this: InterventionNew): TemplateResult {
     <div class="form">
       <div class="row">
         <!--   Partner Organization   -->
-        <div class="col-6">
+        <div class="col-8">
           <etools-dropdown
             id="partner"
             label="Partner Organization"
@@ -65,7 +67,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Agreement   -->
-        <div class="col-3">
+        <div class="col-4">
           <etools-dropdown
             id="agreements"
             label="Agreement"
@@ -89,13 +91,13 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Vendor Number   -->
-        <div class="col-6">
+        <div class="col-8">
           <etools-form-element-wrapper label="Partner Vendor Number" .value="${this.selectedPartner?.vendor_number}">
           </etools-form-element-wrapper>
         </div>
 
         <!--   Agreement Authorized Officers   -->
-        <div class="col-6">
+        <div class="col-4">
           <etools-form-element-wrapper label="Agreement Authorized Officers" .value="${this.authorizedOfficers}">
           </etools-form-element-wrapper>
         </div>
@@ -103,7 +105,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Staff Members   -->
-        <div class="col-12">
+        <div class="col-12 w100">
           <etools-form-element-wrapper label="Partner Staff Members" .value="${this.allStaffMembers}">
           </etools-form-element-wrapper>
         </div>
@@ -111,7 +113,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Focal Points   -->
-        <div class="col-4">
+        <div class="col-8">
           <etools-dropdown-multi
             label="Document Partner Focal Points"
             placeholder="&#8212;"
@@ -152,7 +154,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Reference Number Year   -->
-        <div class="col-2">
+        <div class="col-4">
           <etools-dropdown
             id="yearSelector"
             label="Reference Number Year"
@@ -173,7 +175,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   SPD is Humanitarian   -->
-        <div class="col-3" ?hidden="${!this.isSPD}">
+        <div ?hidden="${!this.isSPD}">
           <paper-toggle-button
             ?checked="${this.newIntervention.humanitarian_flag}"
             @checked-changed="${({detail}: CustomEvent) => {
@@ -186,7 +188,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   Contingency Document   -->
-        <div class="col-3" ?hidden="${!this.newIntervention.humanitarian_flag}">
+        <div class="col-6" ?hidden="${!this.newIntervention.humanitarian_flag}">
           <paper-toggle-button
             ?checked="${this.newIntervention.contingency_pd}"
             @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
@@ -209,7 +211,7 @@ export function template(this: InterventionNew): TemplateResult {
         </paper-toggle-button>
 
         <!--   UNPP CFEI Number   -->
-        <div class="col-2">
+        <div class="col-3">
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
@@ -224,7 +226,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Document Title   -->
-        <div class="col-6">
+        <div class="col-12">
           <paper-input
             id="title"
             label="Document Title"
@@ -242,7 +244,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Office(s)   -->
-        <div class="col-2">
+        <div class="col-6">
           <etools-dropdown-multi
             id="unicefOffices"
             label="UNICEF Office(s)"
@@ -262,7 +264,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Sections   -->
-        <div class="col-4">
+        <div class="col-6">
           <etools-dropdown-multi
             id="unicefSections"
             label="UNICEF Sections"
@@ -284,7 +286,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   UNICEF Focal Points   -->
-        <div class="col-4">
+        <div class="col-6">
           <etools-dropdown-multi
             id="unicefFocalPoints"
             label="UNICEF Focal Points"
@@ -304,7 +306,7 @@ export function template(this: InterventionNew): TemplateResult {
         </div>
 
         <!--   UNICEF Budget Owner   -->
-        <div class="col-2">
+        <div class="col-6">
           <etools-dropdown
             id="unicefBudgetOwner"
             label="UNICEF Budget Owner"
