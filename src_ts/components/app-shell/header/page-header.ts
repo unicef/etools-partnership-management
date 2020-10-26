@@ -123,7 +123,7 @@ class PageHeader extends connect(store)(
         .dropdowns {
           display: flex;
           margin-right: 5px;
-          max-width: 200px;
+          max-width: 280px;
         }
 
         .header {
