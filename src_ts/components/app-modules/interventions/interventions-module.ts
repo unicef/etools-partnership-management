@@ -12,14 +12,12 @@ import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import InterventionPageTabsMixin from './mixins/intervention-page-tabs-mixin';
-import InterventionPermissionsMixin from './mixins/intervention-permissions-mixin';
 import '../../layout/page-content-header.js';
 import '../../layout/page-content-header-slotted-styles.js';
 import '../../layout/etools-error-messages-box.js';
 import '../../layout/etools-tabs.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
-import './components/intervention-status.js';
 import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
 import {SharedStyles} from '../../styles/shared-styles.js';
 import {buttonsStyles} from '../../styles/buttons-styles.js';
@@ -27,14 +25,12 @@ import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-s
 import {isEmptyObject, isJsonStrMatch} from '../../utils/utils';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
-import {setInAmendment, setPageDataPermissions} from '../../../actions/page-data';
 import {store, RootState} from '../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
-import {createDynamicDialog, removeDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
@@ -51,16 +47,11 @@ setStore(store);
  * @appliesMixin ModuleMainElCommonFunctionalityMixin
  * @appliesMixin ModuleRoutingMixin
  * @appliesMixin InterventionPageTabsMixin
- * @appliesMixin InterventionPermissionsMixin
  * @appliesMixin SaveInterventionMixin
  */
 class InterventionsModule extends connect(store)(
-  InterventionPermissionsMixin(
-    ScrollControlMixin(
-      ModuleMainElCommonFunctionalityMixin(
-        ModuleRoutingMixin(InterventionPageTabsMixin(EndpointsMixin(PolymerElement)))
-      )
-    )
+  ScrollControlMixin(
+    ModuleMainElCommonFunctionalityMixin(ModuleRoutingMixin(InterventionPageTabsMixin(EndpointsMixin(PolymerElement))))
   )
 ) {
   static get template() {
@@ -272,11 +263,7 @@ class InterventionsModule extends connect(store)(
   private _pageChangeDebouncer!: Debouncer;
 
   static get observers() {
-    return [
-      '_pageChanged(listActive, tabsActive, newPageActive, routeData)',
-      '_observeRouteDataId(routeData.id)',
-      '_amendmentModeChanged(intervention.in_amendment, tabAttached, listActive)'
-    ];
+    return ['_pageChanged(listActive, tabsActive, newPageActive, routeData)', '_observeRouteDataId(routeData.id)'];
   }
 
   stateChanged(state: RootState) {
@@ -306,7 +293,6 @@ class InterventionsModule extends connect(store)(
       this._setNewInterventionObj();
     }
 
-    this._createFinalizeAmendConfirmDialog();
     this._initInterventionsModuleListeners();
   }
 
@@ -322,81 +308,20 @@ class InterventionsModule extends connect(store)(
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._removeFinalizeAmendConfirmDialog();
     this._removeInterventionsModuleListeners();
   }
 
   _initInterventionsModuleListeners() {
     this._interventionSaveErrors = this._interventionSaveErrors.bind(this);
-    this._interventionPageAttached = this._interventionPageAttached.bind(this);
     this._handleInterventionSelectionLoadingMsg = this._handleInterventionSelectionLoadingMsg.bind(this);
-    this._refreshInterventionPermissions = this._refreshInterventionPermissions.bind(this);
-    this._amendmentAddedHandler = this._amendmentAddedHandler.bind(this);
 
     this.addEventListener('intervention-save-error', this._interventionSaveErrors as any);
-    this.addEventListener('tab-content-attached', this._interventionPageAttached);
     this.addEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
-    this.addEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
-    this.addEventListener('new-amendment-added', this._amendmentAddedHandler as any);
   }
 
   _removeInterventionsModuleListeners() {
     this.removeEventListener('intervention-save-error', this._interventionSaveErrors as any);
-    this.removeEventListener('tab-content-attached', this._interventionPageAttached);
     this.removeEventListener('trigger-intervention-loading-msg', this._handleInterventionSelectionLoadingMsg);
-    this.removeEventListener('refresh-intervention-permissions', this._refreshInterventionPermissions as any);
-    this.removeEventListener('new-amendment-added', this._amendmentAddedHandler as any);
-  }
-
-  _createFinalizeAmendConfirmDialog() {
-    this._finalizeAmendmentConfirmationCallback = this._finalizeAmendmentConfirmationCallback.bind(this);
-    const dialog = document.createElement('div');
-    dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
-    dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
-    const conf: any = {
-      title: 'Finalize Amendment',
-      size: 'md',
-      okBtnText: 'Yes',
-      cancelBtnText: 'Cancel',
-      closeCallback: this._finalizeAmendmentConfirmationCallback,
-      content: dialog
-    };
-    this.finalizeAmendmentConfirmationDialog = createDynamicDialog(conf);
-  }
-
-  _removeFinalizeAmendConfirmDialog() {
-    if (this.finalizeAmendmentConfirmationDialog) {
-      this.finalizeAmendmentConfirmationDialog.removeEventListener(
-        'close',
-        this._finalizeAmendmentConfirmationCallback as any
-      );
-      removeDialog(this.finalizeAmendmentConfirmationDialog);
-    }
-  }
-
-  _showFinalizeAmendmentDialog() {
-    if (this.finalizeAmendmentConfirmationDialog) {
-      this.finalizeAmendmentConfirmationDialog.opened = true;
-    }
-  }
-
-  _amendmentModeChanged(amendmentModeActive: boolean, tabAttached: boolean, listActive: boolean) {
-    if (typeof amendmentModeActive === 'undefined' || !this.intervention || (!tabAttached && !listActive)) {
-      return;
-    }
-    if (listActive) {
-      store.dispatch(setInAmendment(false));
-      return;
-    }
-    if (this.selectedInterventionId === this.intervention.id) {
-      store.dispatch(setInAmendment(amendmentModeActive));
-    }
-  }
-
-  _amendmentAddedHandler(event: CustomEvent) {
-    event.stopImmediatePropagation();
-    // redirect to the details tab for editing
-    this.set('routeData.tab', 'details');
   }
 
   _interventionChanged(intervention: Intervention, permissions: UserPermissions) {
@@ -413,11 +338,7 @@ class InterventionsModule extends connect(store)(
       if (isNewIntervention) {
         this.set('intervention.reference_number_year', new Date().getFullYear());
       }
-      this.checkAndUpdateInterventionPermissions(
-        intervention,
-        this._hasEditPermissions(permissions),
-        isNewIntervention
-      );
+
       setTimeout(() => {
         // ensure intervention get/save/change status loading msgs close
         fireEvent(this, 'global-loading', {
@@ -511,31 +432,8 @@ class InterventionsModule extends connect(store)(
       }
       if (this.selectedInterventionId !== id) {
         this.set('selectedInterventionId', id);
-        store.dispatch(setInAmendment(false));
       }
     }, 0);
-  }
-
-  _finalizeAmendmentConfirmationCallback(event: CustomEvent) {
-    const preparedData: GenericObject = {
-      id: this.intervention.id,
-      in_amendment: false
-    };
-
-    if (event.detail.confirmed) {
-      return (this.$.interventionData as InterventionItemData)
-        .saveIntervention(preparedData as Intervention, this._newInterventionSaved.bind(this))
-        .then((successfull: boolean) => {
-          if (successfull) {
-            this.set('intervention.in_amendment', false);
-            return true;
-          } else {
-            this.set('intervention.in_amendment', true);
-            return false;
-          }
-        });
-    }
-    return;
   }
 
   updateDexieData(intervention: Intervention) {
@@ -544,28 +442,6 @@ class InterventionsModule extends connect(store)(
 
   _isNewIntervention() {
     return !this.intervention.id;
-  }
-
-  _refreshInterventionPermissions(e: CustomEvent) {
-    e.stopImmediatePropagation();
-    (this.$.interventionData as InterventionItemData)
-      ._reqInterventionDataWithoutRespHandling()
-      .then((resp: any) => {
-        if (!isEmptyObject(resp.permissions)) {
-          this.set('intervention.permissions', resp.permissions);
-          this.set('intervention.in_amendment', resp.in_amendment);
-          this.set('originalIntervention.in_amendment', resp.in_amendment);
-          store.dispatch(setPageDataPermissions(resp.permissions));
-        }
-      })
-      .then(() => {
-        this.checkAndUpdatePlannedBudgetPermissions(this.intervention.status);
-      });
-  }
-
-  _updateInterventionStatus(e: CustomEvent) {
-    e.stopImmediatePropagation();
-    (this.$.interventionData as InterventionItemData).updateInterventionStatus(e.detail);
   }
 
   _deleteIntervention(e: CustomEvent) {
@@ -600,14 +476,9 @@ class InterventionsModule extends connect(store)(
       return;
     }
     this.set('_redirectToNewIntervPageInProgress', true);
-    // this._setNewInterventionObj();
     this.set('selectedInterventionId', null);
     fireEvent(this, 'update-main-path', {path: 'interventions/new'});
     this._handleInterventionSelectionLoadingMsg();
-  }
-
-  _setNewInterventionObj() {
-    this.set('intervention', new Intervention());
   }
 
   _visibleTabContent(activePage: string, expectedPage: string, newInterventionActive: boolean) {
@@ -636,10 +507,6 @@ class InterventionsModule extends connect(store)(
     }
   }
 
-  _isAttachementsTabActive(activeTab: string) {
-    return activeTab === 'attachments';
-  }
-
   _handleTabSelectAction(e: CustomEvent) {
     setTimeout(() => {
       this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-', 'tabs');
@@ -650,20 +517,6 @@ class InterventionsModule extends connect(store)(
     setTimeout(() => {
       this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'tabs');
     });
-  }
-
-  _interventionPageAttached() {
-    // force styles updates according with intervention permissions
-    // (event handled is triggered by interventions tab elements)
-    this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
-  }
-
-  _showInterventionSidebarStatus(listActive: boolean, tabAttached: boolean, activePage: string): boolean {
-    const hideSidebar: boolean =
-      ['reports', 'progress'].indexOf(activePage) > -1 ||
-      this._pageEquals(activePage, 'new') ||
-      this._pageEquals(activePage, 'list');
-    return hideSidebar ? false : this._showSidebarStatus(listActive, tabAttached);
   }
 
   /**

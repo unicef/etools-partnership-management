@@ -266,52 +266,6 @@ class InterventionItemData extends connect(store)(
   }
 
   /**
-   * Update intervention status. In addition set a callback to be called after request is complete.
-   */
-  updateInterventionStatus(data: any, callback?: any) {
-    if (!data.interventionId) {
-      fireEvent(this, 'toast', {
-        text: 'Invalid intervention ID',
-        showCloseBtn: true
-      });
-    } else {
-      if (
-        [
-          CONSTANTS.STATUSES.Signed.toLowerCase(),
-          CONSTANTS.STATUSES.Suspended.toLowerCase(),
-          CONSTANTS.STATUSES.Terminated.toLowerCase()
-        ].indexOf(data.status) > -1
-      ) {
-        // status change is allowed
-        // set additional callback if any
-        if (callback) {
-          this.set('handleResponseAdditionalCallback', callback);
-        }
-        fireEvent(this, 'global-loading', {
-          message: 'Changing intervention status...',
-          active: true,
-          loadingSource: this.ajaxLoadingMsgSource
-        });
-        // fire in the hole
-        this._triggerInterventionRequest({
-          method: 'PATCH',
-          endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {
-            id: data.interventionId
-          }),
-          body: {
-            status: data.status
-          }
-        });
-      } else {
-        fireEvent(this, 'toast', {
-          text: "Changing status to '" + data.status + "' is not allowed!",
-          showCloseBtn: true
-        });
-      }
-    }
-  }
-
-  /**
    * Save intervention data
    */
   // TODO Intervention | any
