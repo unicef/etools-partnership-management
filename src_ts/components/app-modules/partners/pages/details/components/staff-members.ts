@@ -53,6 +53,12 @@ class StaffMembers extends PolymerElement {
           word-break: break-all;
           word-wrap: break-word;
         }
+
+        paper-toggle-button#showInactive {
+          font-size: 16px;
+          --paper-toggle-button-label-color: var(--primary-text-color);
+          --paper-toggle-button-checked-bar-color: var(--primary-color);
+        }
       </style>
 
       <etools-content-panel
@@ -61,9 +67,7 @@ class StaffMembers extends PolymerElement {
         show-expand-btn
       >
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showInactive" checked="{{showInactive}}">
-            Show Inactive
-          </paper-toggle-button>
+          <paper-toggle-button id="showInactive" checked="{{showInactive}}"> Show Inactive </paper-toggle-button>
           <div class="separator" hidden$="[[!editMode]]"></div>
           <paper-icon-button
             icon="add-box"

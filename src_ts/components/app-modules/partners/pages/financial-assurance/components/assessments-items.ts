@@ -63,13 +63,17 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
         etools-data-table-row:hover icons-actions {
           visibility: visible;
         }
+
+        paper-toggle-button#showArchived {
+          font-size: 16px;
+          --paper-toggle-button-label-color: var(--primary-text-color);
+          --paper-toggle-button-checked-bar-color: var(--primary-color);
+        }
       </style>
 
       <etools-content-panel panel-title="Other Assessments ([[dataItems.length]])" class="content-section">
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showArchived" checked="{{showArchived}}">
-            Show archived
-          </paper-toggle-button>
+          <paper-toggle-button id="showArchived" checked="{{showArchived}}"> Show archived </paper-toggle-button>
           <div class="separator" hidden$="[[!editMode]]"></div>
           <paper-icon-button
             icon="add-box"
