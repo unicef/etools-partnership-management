@@ -37,7 +37,6 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
         }
 
         etools-dropdown {
-          width: 160px;
 
           --paper-listbox: {
             max-height: 600px;
@@ -94,6 +93,8 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
         on-etools-selected-item-changed="_countrySelected"
         shown-options-limit="250"
         hide-search
+        min-width="160px"
+        auto-width
       ></etools-dropdown>
     `;
   }

@@ -3,6 +3,7 @@ import {prettyDate} from '../utils/date-utils';
 import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {ListItemIntervention} from '../../typings/intervention.types';
+import {get} from 'lit-translate';
 
 /**
  * @polymer
@@ -109,6 +110,11 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       }
       return field;
     }
+
+    _translate(textKey: string) {
+      return get(textKey);
+    }
+
   }
 
   return CommonClass;

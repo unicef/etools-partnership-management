@@ -1,3 +1,5 @@
+import {Callback} from './globals.types';
+
 export class ListFilterOption {
   constructor(item: ListFilterOption) {
     this.filterName = item.filterName;
@@ -16,7 +18,7 @@ export class ListFilterOption {
     this.disableMenuOption = item.disableMenuOption;
   }
 
-  filterName = '';
+  filterName: string | Callback = '';
   type = '';
   selectionOptions?: string[] | number[] | any[];
   optionValue?: string;

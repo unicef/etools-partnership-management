@@ -14,6 +14,8 @@ export type MixinFunction = <T extends Constructor<PolymerElement>>(
   new (...args: any[]): any;
 };
 
+export type Callback = (...args: any) => void;
+
 export interface GenericObject {
   [key: string]: any;
 }
