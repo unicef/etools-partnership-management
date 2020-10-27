@@ -58,8 +58,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
         paper-toggle-button#showArchived {
           font-size: 16px;
-          --paper-toggle-button-label-color: white;
-          --paper-toggle-button-checked-bar-color: white;
+          --paper-toggle-button-label-color: var(--primary-text-color);
+          --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
 
         icons-actions {
