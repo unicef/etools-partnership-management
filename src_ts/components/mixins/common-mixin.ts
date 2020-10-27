@@ -37,27 +37,27 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       // to refactor this after draft status is revised
       const status = intervention.status === 'draft' ? 'development' : intervention.status;
       if (status === 'development') {
-        return status + this.getDevelopementStatusDetails(intervention);
+        return 'development\n' + this.getDevelopementStatusDetails(intervention);
       }
       return status;
     }
 
     private getDevelopementStatusDetails(data: ListItemIntervention) {
       if (data.partner_accepted && data.unicef_accepted) {
-        return '\nIP & Unicef Accepted';
+        return 'IP & Unicef Accepted';
       }
       if (!data.partner_accepted && data.unicef_accepted) {
-        return '\nUnicef Accepted';
+        return 'Unicef Accepted';
       }
       if (data.partner_accepted && !data.unicef_accepted) {
-        return '\nIP Accepted';
+        return 'IP Accepted';
       }
       if (!data.unicef_court && !!data.date_sent_to_partner) {
-        return '\nSent to Partner';
+        return 'Sent to Partner';
       }
 
       if (data.unicef_court && !!data.date_draft_by_partner) {
-        return '\nSent to Unicef';
+        return 'Sent to Unicef';
       }
       return '';
     }

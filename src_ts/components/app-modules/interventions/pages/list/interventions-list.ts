@@ -225,6 +225,7 @@ class InterventionsList extends connect(store)(
               <span class="col-data flex-c" data-col-header-label="Document Type">
                 [[getDisplayValue(intervention.document_type)]]
               </span>
+              
               <span class="col-data flex-c capitalize col_type" data-col-header-label="Status">
                 [[mapStatus(intervention)]]
               </span>
