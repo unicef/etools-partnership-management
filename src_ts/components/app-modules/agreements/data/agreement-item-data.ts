@@ -114,6 +114,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       agreement_number: '',
       agreement_number_status: '',
       agreement_type: '',
+      authorized_officers: [],
       end: null,
       id: null,
       partner: null,
