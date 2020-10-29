@@ -35,11 +35,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
     mapStatus(intervention: ListItemIntervention) {
       // to refactor this after draft status is revised
-      const status = intervention.status === 'draft' ? 'development' : intervention.status;
-      if (status === 'development') {
-        return 'development\n' + this.getDevelopementStatusDetails(intervention);
-      }
-      return status;
+      return intervention.status === 'draft' ? 'development' : intervention.status;
     }
 
     private getDevelopementStatusDetails(data: ListItemIntervention) {
