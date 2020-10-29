@@ -1,7 +1,6 @@
 import * as a from '../actions/page-data.js';
-import {InterventionPermissionsFields} from '../typings/intervention.types';
-import {Permission} from '../typings/globals.types';
 import {Reducer, Action} from 'redux';
+import {InterventionPermissionsFields, Permission} from '@unicef-polymer/etools-types';
 
 export class PageDataState {
   permissions: Permission<InterventionPermissionsFields> | null = null;

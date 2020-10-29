@@ -1,4 +1,4 @@
-import {GenericObject} from '../../typings/globals.types';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 export const fireEvent = (el: any, eventName: string, eventDetail?: GenericObject | string) => {
   if (typeof el.dispatchEvent !== 'function') {

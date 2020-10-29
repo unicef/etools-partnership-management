@@ -8,9 +8,9 @@ import '@unicef-polymer/etools-data-table/etools-data-table.js';
 
 import CONSTANTS from '../../../../../../../config/app-constants';
 import CommonMixin from '../../../../../../mixins/common-mixin';
-import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../../../styles/shared-styles.js';
-import {buttonsStyles} from '../../../../../../styles/buttons-styles.js';
+import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../../styles/shared-styles';
+import {buttonsStyles} from '../../../../../../styles/buttons-styles';
 import '../../../../../../mixins/common-mixin.js';
 import './add-ag-amendment-dialog.js';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -18,8 +18,8 @@ import {store, RootState} from '../../../../../../../store';
 import {isJsonStrMatch} from '../../../../../../utils/utils';
 import {fireEvent} from '../../../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../../../typings/globals.types';
-import {AddAgAmendmentDialog} from './add-ag-amendment-dialog.js';
+import {AddAgAmendmentDialog} from './add-ag-amendment-dialog';
+import {LabelAndValue} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

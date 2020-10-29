@@ -8,10 +8,10 @@ import {updateUserData} from '../../actions/user';
 import {isEmptyObject} from '../utils/utils';
 import {fireEvent} from '../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {Constructor, User, UserGroup, UserPermissions} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {getAllPermissions} from './user-permissions';
+import {UserPermissions, UserGroup, User, Constructor} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

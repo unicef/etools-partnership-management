@@ -1,5 +1,5 @@
-import {Constructor, GenericObject} from '../../../../../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
+import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
 
 // import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin';
 

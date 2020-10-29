@@ -1,9 +1,9 @@
 /* eslint no-invalid-this: 0 */
 import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
-import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
+import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`

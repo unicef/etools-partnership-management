@@ -1,11 +1,11 @@
 import {ListFilterOption, ListOrSelectedFilterOption} from '../../typings/filter.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import {DomRepeatEvent, Constructor} from '../../typings/globals.types';
 import {EtoolsDropdownMultiEl} from '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
+import {Constructor} from '@unicef-polymer/etools-types';
 declare const moment: any;
 /**
  * @polymer
@@ -42,7 +42,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     // select/deselect a filter from ADD FILTER menu
-    selectFilter(e: DomRepeatEvent) {
+    selectFilter(e: any) {
       const selectedOption: ListFilterOption = e.model.item;
       const idxInFilterOptions: number = e.model.index;
       if (!this._isAlreadySelected(selectedOption)) {
@@ -103,7 +103,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     clearAllFilterValues() {
-      //clear search input, not in selectedFilters
+      // clear search input, not in selectedFilters
       this.q = '';
 
       for (let i = 0; i < this.selectedFilters.length; i++) {
@@ -217,7 +217,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
 
       filtersToUpdate.forEach((filterToUpdate) => {
         // check available filters
-        const filterObj = this._findInListFilterOptions(filterToUpdate.filterName);
+        const filterObj = this._findInListFilterOptions(filterToUpdate.filterName as string);
 
         if (!filterObj) {
           return;

@@ -27,7 +27,6 @@ import pmpEndpoints from '../../../../endpoints/endpoints.js';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import UploadsMixin from '../../../../mixins/uploads-mixin';
-import {Agreement} from '../../agreement.types.js';
 
 import '../../../../mixins/missing-dropdown-options-mixin.js';
 import '../../../../mixins/common-mixin.js';
@@ -48,11 +47,11 @@ import {isJsonStrMatch} from '../../../../utils/utils';
 import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../typings/globals.types';
 import {EtoolsCpStructure} from '../../../../layout/etools-cp-structure';
-import {MinimalStaffMember, StaffMember} from '../../../../../models/partners.models';
+import {MinimalStaffMember} from '../../../../../models/partners.models';
 import {GeneratePcaDialogEl} from './components/generate-PCA-dialog.js';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
+import {Agreement, LabelAndValue, PartnerStaffMember} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -463,7 +462,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
       this.partnersDropdownData = [...partnersDropdownDataSelector(state)];
     }
 
-    const agreementTypes = (state.commonData!.agreementTypes || []).filter(ag => ag.value !== 'SSFA');
+    const agreementTypes = (state.commonData!.agreementTypes || []).filter((ag: LabelAndValue) => ag.value !== 'SSFA');
     if (!isJsonStrMatch(this.agreementTypes, agreementTypes)) {
       this.agreementTypes = agreementTypes;
     }
@@ -671,14 +670,12 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     }
   }
 
-  _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: StaffMember[]) {
+  _getAvailableAuthOfficers(staffMembers: MinimalStaffMember[], agreementAuthorizedOfficers: PartnerStaffMember[]) {
     if (staffMembers instanceof Array && staffMembers.length) {
       return staffMembers;
     }
     if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
-      return agreementAuthorizedOfficers.map(function (s: StaffMember) {
-        return new MinimalStaffMember(s);
-      });
+      return agreementAuthorizedOfficers.map((s: PartnerStaffMember) => new MinimalStaffMember(s));
     }
     return [];
   }
@@ -701,7 +698,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _getReadonlyAuthorizedOfficers(agreement: Agreement, selection: [], staffMembers: MinimalStaffMember[]) {
-    let ao = [];
+    let ao: (MinimalStaffMember | PartnerStaffMember)[] = [];
     const aoSelected = selection instanceof Array && selection.length > 0;
     if (aoSelected) {
       const selectedIds = selection.map((s) => parseInt(s, 10));
@@ -714,7 +711,9 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     if (!ao || !ao.length) {
       return '';
     }
-    const names = ao.map((officer) => (aoSelected ? officer.name : officer.first_name + ' ' + officer.last_name));
+    const names = ao.map((officer: MinimalStaffMember | PartnerStaffMember) =>
+      aoSelected ? officer.name : officer.first_name + ' ' + officer.last_name
+    );
     return names.join(' | ');
   }
 
@@ -730,7 +729,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
     this._generatePCADialog.open();
   }
 
-  _initAuthorizedOfficers(authOfficers: StaffMember[]) {
+  _initAuthorizedOfficers(authOfficers: PartnerStaffMember[]) {
     if (authOfficers instanceof Array && authOfficers.length) {
       this.set(
         'authorizedOfficers',
@@ -773,7 +772,7 @@ class AgreementDetails extends connect(store)(CommonMixin(UploadsMixin(StaffMemb
   }
 
   _cancelAoEdit() {
-    this._initAuthorizedOfficers(this.agreement.authorized_officers!);
+    this._initAuthorizedOfficers(this.agreement.authorized_officers);
     (this.$.officers as any).resetInvalidState();
     this.set('allowAoEditForSSFA', false);
   }

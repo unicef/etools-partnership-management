@@ -17,11 +17,10 @@ import CommonMixin from '../../../../mixins/common-mixin';
 import {pageCommonStyles} from '../../../../styles/page-common-styles';
 import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import {isEmptyObject} from '../../../../utils/utils';
-import {CpOutput} from '../../../../../typings/intervention.types';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {PaperIconButtonElement} from '@polymer/paper-icon-button/paper-icon-button.js';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../typings/globals.types';
+import {GenericObject, CpOutput} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

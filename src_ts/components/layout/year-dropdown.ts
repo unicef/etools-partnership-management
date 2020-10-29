@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {SharedStyles} from '../styles/shared-styles.js';
-import {requiredFieldStarredStyles} from '../styles/required-field-styles.js';
+import {SharedStyles} from '../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 import {property} from '@polymer/decorators';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown';
 

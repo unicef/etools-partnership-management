@@ -13,19 +13,19 @@ import thunk, {ThunkMiddleware} from 'redux-thunk';
 import {lazyReducerEnhancer} from 'pwa-helpers/lazy-reducer-enhancer.js';
 
 import app, {AppState} from './reducers/app.js';
-import {AppAction} from './actions/app.js';
+import {AppAction} from './actions/app';
 
-import {CommonDataState} from './reducers/common-data.js';
-import {UploadStatusState} from './reducers/upload-status.js';
-import {CommonDataAction} from './actions/common-data.js';
-import {PartnersState} from './reducers/partners.js';
-import {AgreementsState} from './reducers/agreements.js';
-import {PageDataState} from './reducers/page-data.js';
-import {User} from './typings/globals.types.js';
-import {UserState} from './reducers/user.js';
-import {interventions, InterventionsState} from './reducers/interventions.js';
-import {ActiveLanguageState} from './reducers/active-language.js';
+import {CommonDataState} from './reducers/common-data';
+import {UploadStatusState} from './reducers/upload-status';
+import {CommonDataAction} from './actions/common-data';
+import {PartnersState} from './reducers/partners';
+import {AgreementsState} from './reducers/agreements';
+import {PageDataState} from './reducers/page-data';
+import {UserState} from './reducers/user';
+import {interventions, InterventionsState} from './reducers/interventions';
+import {ActiveLanguageState} from './reducers/active-language';
 import {LanguageAction} from './actions/active-language';
+import {User} from '@unicef-polymer/etools-types';
 
 declare global {
   interface Window {
@@ -48,7 +48,7 @@ export interface RootState {
   activeLanguage?: ActiveLanguageState;
 }
 
-export type RootAction = AppAction | CommonDataAction | User |  LanguageAction | any;
+export type RootAction = AppAction | CommonDataAction | User | LanguageAction | any;
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.

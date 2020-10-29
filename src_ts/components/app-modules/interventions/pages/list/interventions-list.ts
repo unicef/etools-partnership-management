@@ -17,7 +17,7 @@ import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../store.js';
+import {store, RootState} from '../../../../../store';
 import CONSTANTS from '../../../../../config/app-constants';
 import CommonMixin from '../../../../mixins/common-mixin';
 import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
@@ -29,14 +29,20 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import {listFilterStyles} from '../../../../styles/list-filter-styles';
 import {frWarningsStyles} from '../../styles/fr-warnings-styles';
 import '../../data/interventions-list-data.js';
-import {InterventionsListData} from '../../data/interventions-list-data.js';
-import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
-import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
-import {fireEvent} from '../../../../utils/fire-custom-event.js';
-import {LabelAndValue, CpStructure, MinimalUser, GenericObject} from '../../../../../typings/globals.types.js';
-import {CpOutput, ListItemIntervention} from '../../../../../typings/intervention.types.js';
-import {ListFilterOption} from '../../../../../typings/filter.types.js';
-import {partnersDropdownDataSelector} from '../../../../../reducers/partners.js';
+import {InterventionsListData} from '../../data/interventions-list-data';
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons';
+import {fireEvent} from '../../../../utils/fire-custom-event';
+import {ListFilterOption} from '../../../../../typings/filter.types';
+import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
+import {
+  CpOutput,
+  LabelAndValue,
+  ListItemIntervention,
+  MinimalUser,
+  GenericObject,
+  CountryProgram
+} from '@unicef-polymer/etools-types';
 
 let _interventionsLastNavigated = '';
 
@@ -149,9 +155,7 @@ class InterventionsList extends connect(store)(
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilterValues" class="secondary-btn">
-                CLEAR ALL
-              </paper-button>
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn"> CLEAR ALL </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">
@@ -374,7 +378,7 @@ class InterventionsList extends connect(store)(
   selectedCpOutputs: number[] = [];
 
   @property({type: Array})
-  countryProgrammes!: CpStructure[];
+  countryProgrammes!: CountryProgram[];
 
   @property({type: Array})
   sections!: GenericObject[];
@@ -814,7 +818,7 @@ class InterventionsList extends connect(store)(
     // Query is debounced with a debounce time
     // set depending on what action the user takes
     this._queryDebouncer = Debouncer.debounce(this._queryDebouncer, timeOut.after(this.debounceTime), () => {
-      const interventions = this.shadowRoot!.querySelector('#interventions') as InterventionsListData;
+      const interventions = (this.shadowRoot!.querySelector('#interventions') as unknown) as InterventionsListData;
       if (!interventions) {
         return;
       }
