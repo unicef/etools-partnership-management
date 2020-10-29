@@ -1,7 +1,5 @@
 import {Action, ActionCreator} from 'redux';
-// import {ThunkAction} from 'redux-thunk';
-// import {RootState} from '../store';
-import {GenericObject, User} from '../typings/globals.types';
+import {GenericObject, User} from '@unicef-polymer/etools-types';
 
 export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 export const UPDATE_USER_PERMISSIONS = 'UPDATE_USER_PERMISSIONS';

@@ -11,15 +11,14 @@ import {template} from './intervention-new.template';
 import '../../../../layout/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import {NewInterventionStyles} from './intervention-new.styles';
-import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
-import {Intervention} from '../../../../../typings/intervention.types';
+import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
   newIntervention: Partial<Intervention> = {
-    reference_number_year: new Date().getFullYear()
+    reference_number_year: `${new Date().getFullYear()}`
   };
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
@@ -130,10 +129,11 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.setInterventionField('document_type', type);
   }
 
-  setInterventionField(field: string, value: any): void {
+  setInterventionField(field: keyof Intervention, value: any): void {
     if (areEqual(this.newIntervention[field], value)) {
       return;
     }
+    // @ts-ignore
     this.newIntervention[field] = value;
     this.requestUpdate();
   }
@@ -158,8 +158,8 @@ export class InterventionNew extends connect(store)(LitElement) {
 
     if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId) {
       this.selectedAgreement = null;
-      this.newIntervention.agreement = null;
-      this.newIntervention.document_type = null;
+      this.newIntervention.agreement = undefined;
+      this.newIntervention.document_type = undefined;
     }
 
     this.filteredAgreements = this.agreementsList.filter((agreement: StaticAgreement) => {
@@ -186,7 +186,7 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   cancel() {
     this.newIntervention = {
-      reference_number_year: new Date().getFullYear()
+      reference_number_year: `${new Date().getFullYear()}`
     };
     this.selectedAgreement = null;
     this.selectedPartner = null;

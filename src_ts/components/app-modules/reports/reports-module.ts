@@ -16,7 +16,7 @@ import '../../layout/etools-tabs';
 import './components/report-status';
 import './components/report-rating-dialog';
 import './components/report-reject-dialog';
-import {GenericObject, User} from '../../../typings/globals.types';
+import {GenericObject, User} from '@unicef-polymer/etools-types';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin';

@@ -2,11 +2,10 @@ declare const moment: any;
 import Dexie from 'dexie';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
-import {ListItemIntervention} from '../../../../typings/intervention.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property, customElement} from '@polymer/decorators';
-import {GenericObject} from '../../../../typings/globals.types';
+import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

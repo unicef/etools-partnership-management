@@ -19,9 +19,8 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {updateAppState} from '../../../../utils/navigation-helper';
-import {GenericObject, LabelAndValue, MinimalUser} from '../../../../../typings/globals.types';
 import {property} from '@polymer/decorators';
-import {CpOutput} from '../../../../../typings/intervention.types';
+import {LabelAndValue, MinimalUser, CpOutput, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

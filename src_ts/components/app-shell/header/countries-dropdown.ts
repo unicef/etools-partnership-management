@@ -8,8 +8,8 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../typings/globals.types.js';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

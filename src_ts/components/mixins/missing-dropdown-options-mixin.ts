@@ -1,7 +1,7 @@
 import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
+import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

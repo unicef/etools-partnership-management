@@ -4,7 +4,7 @@ import UtilsMixin from '../../../../../../../mixins/utils-mixin';
 import DisaggregationsMixin from '../mixins/disaggregations';
 import {disaggregationTableStyles} from '../styles/disaggregation-table-styles';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

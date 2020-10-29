@@ -5,7 +5,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import {fireEvent} from '../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../typings/globals.types';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

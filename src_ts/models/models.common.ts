@@ -1,4 +1,4 @@
-import {GenericObject} from '../typings/globals.types';
+import {GenericObject} from '@unicef-polymer/etools-types';
 import pick from 'lodash-es/pick';
 import {copy} from '../components/utils/utils';
 

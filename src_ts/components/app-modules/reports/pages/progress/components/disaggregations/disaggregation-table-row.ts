@@ -2,11 +2,11 @@ import './disaggregation-table-cell-number.js';
 import './disaggregation-table-cell-percentage.js';
 import './disaggregation-table-cell-ratio.js';
 import '../../../../../../mixins/utils-mixin.js';
-import {disaggregationTableStyles} from './styles/disaggregation-table-styles.js';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {PolymerElement, html} from '@polymer/polymer';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

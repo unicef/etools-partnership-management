@@ -6,9 +6,8 @@ import './table-content/two-disaggregations';
 import './table-content/one-disaggregation';
 import './table-content/zero-disaggregations';
 import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
-import {Disaggregation} from '../../../../../../../typings/intervention.types';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../../typings/globals.types';
+import {Disaggregation, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * This element is a modified PRP element to fit PMP functionality regarding disaggregation data display.

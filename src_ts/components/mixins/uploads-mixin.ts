@@ -1,9 +1,9 @@
 import pmpEdpoints from '../endpoints/endpoints.js';
 import {store, RootState} from '../../store';
-import {DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS} from '../../actions/upload-status.js';
-import {Constructor} from '../../typings/globals.types.js';
+import {DECREASE_UNSAVED_UPLOADS, INCREASE_UPLOADS_IN_PROGRESS} from '../../actions/upload-status';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {Constructor} from '@unicef-polymer/etools-types';
 /**
  * @polymer
  * @mixinFunction
