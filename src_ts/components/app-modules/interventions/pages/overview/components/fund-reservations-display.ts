@@ -78,6 +78,11 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
         .pl-5 {
           padding-left: 5px;
         }
+        .lifted-up-icon {
+          bottom: 0.4rem;
+          --iron-icon-width: 14px;
+          --iron-icon-height: 14px;
+        }
       </style>
 
       <template is="dom-if" if="[[!frsDetails.frs.length]]">
@@ -102,7 +107,7 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
               <span class="col-data col-2">
                 [[fr.fr_number]]
                 <a title="See more details" class="pl-5" target="_blank" href="[[getFRNumberLink(fr.fr_number)]]">
-                  <iron-icon icon="pmp-custom-icons:external-icon"></iron-icon>
+                  <iron-icon class="lifted-up-icon" icon="pmp-custom-icons:external-icon"></iron-icon>
                 </a>
               </span>
               <span class="col-data col-2 right-align">[[getDateDisplayValue(fr.start_date)]]</span>
