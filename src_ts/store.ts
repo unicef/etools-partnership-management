@@ -22,7 +22,6 @@ import {PartnersState} from './reducers/partners';
 import {AgreementsState} from './reducers/agreements';
 import {PageDataState} from './reducers/page-data';
 import {UserState} from './reducers/user';
-import {interventions, InterventionsState} from './reducers/interventions';
 import {ActiveLanguageState} from './reducers/active-language';
 import {LanguageAction} from './actions/active-language';
 import {User} from '@unicef-polymer/etools-types';
@@ -44,7 +43,7 @@ export interface RootState {
   agreements?: AgreementsState;
   pageData?: PageDataState;
   user?: UserState;
-  interventions?: InterventionsState;
+  interventions?: any;
   activeLanguage?: ActiveLanguageState;
 }
 
@@ -70,8 +69,7 @@ export const store = createStore(
 // Initially loaded reducers.
 store.addReducers({
   // @ts-ignore
-  app,
-  interventions
+  app
 });
 
 window.addEventListener('storage', function (e) {
