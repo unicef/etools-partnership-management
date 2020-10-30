@@ -1,5 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-label/iron-label.js';
+import '@polymer/iron-icons/iron-icons.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
@@ -74,6 +75,9 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
         div[simple-header] {
           color: var(--list-secondary-text-color, #757575);
         }
+        .pl-5 {
+          padding-left: 5px;
+        }
       </style>
 
       <template is="dom-if" if="[[!frsDetails.frs.length]]">
@@ -84,30 +88,23 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
 
       <div class="list-container" hidden$="[[_noFrs(frsDetails)]]">
         <etools-data-table-header id="listHeader" no-title hidden$="[[!frsDetails.frs.length]]">
-          <etools-data-table-column class="col-2">
-            FR#
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2 right-align">
-            FR Posting Date
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2 right-align">
-            FR Currency
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2 right-align">
-            FR Amount
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2 right-align">
-            Actual Disburs.
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2 right-align">
-            Outstanding DCT
-          </etools-data-table-column>
+          <etools-data-table-column class="col-2"> FR# </etools-data-table-column>
+          <etools-data-table-column class="col-2 right-align"> FR Posting Date </etools-data-table-column>
+          <etools-data-table-column class="col-2 right-align"> FR Currency </etools-data-table-column>
+          <etools-data-table-column class="col-2 right-align"> FR Amount </etools-data-table-column>
+          <etools-data-table-column class="col-2 right-align"> Actual Disburs. </etools-data-table-column>
+          <etools-data-table-column class="col-2 right-align"> Outstanding DCT </etools-data-table-column>
         </etools-data-table-header>
 
         <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
           <etools-data-table-row>
             <div slot="row-data">
-              <span class="col-data col-2">[[fr.fr_number]]</span>
+              <span class="col-data col-2">
+                [[fr.fr_number]]
+                <a title="See more details" class="pl-5" target="_blank" href="[[getFRNumberLink(fr.fr_number)]]">
+                  <iron-icon icon="pmp-custom-icons:external-icon"></iron-icon>
+                </a>
+              </span>
               <span class="col-data col-2 right-align">[[getDateDisplayValue(fr.start_date)]]</span>
               <span class="col-data col-2 right-align">
                 <etools-info-tooltip
@@ -166,9 +163,7 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
                   </div>
                 </template>
               </div>
-              <div class="flex-c" hidden$="[[!_isEmpty(fr.line_item_details)]]">
-                There are no details to display.
-              </div>
+              <div class="flex-c" hidden$="[[!_isEmpty(fr.line_item_details)]]">There are no details to display.</div>
             </div>
           </etools-data-table-row>
         </template>
@@ -297,6 +292,10 @@ class FundReservationsDisplay extends EtoolsCurrency(CommonMixin(FrNumbersConsis
 
   _isEmpty(value: any) {
     return isEmptyObject(value);
+  }
+
+  getFRNumberLink(frNumber: string) {
+    return `https://mappsprd.unicef.org:44300/sap/bc/ui5_ui5/sap/zhact_etools_fr/index.html?Belnr=${frNumber}`;
   }
 }
 
