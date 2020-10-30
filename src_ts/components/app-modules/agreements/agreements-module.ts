@@ -3,15 +3,13 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/app-route/app-route.js';
 import '@polymer/paper-button/paper-button.js';
-import {store} from '../../../store.js';
+import {store} from '../../../store';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin.js';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin.js';
 import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
 import CONSTANTS from '../../../config/app-constants.js';
 import ModuleRoutingMixin from '../mixins/module-routing-mixin.js';
 
-import {EtoolsTab, UserPermissions, GenericObject} from '../../../typings/globals.types';
-import {Agreement, AgreementAmendment} from './agreement.types.js';
 import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box.js';
 import '../../layout/page-content-header';
@@ -19,13 +17,14 @@ import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-s
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {SharedStyles} from '../../styles/shared-styles';
 import {buttonsStyles} from '../../styles/buttons-styles';
-import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status.js';
+import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 import './data/agreement-item-data.js';
 import './pages/components/agreement-status.js';
-import {fireEvent} from '../../utils/fire-custom-event.js';
+import {fireEvent} from '../../utils/fire-custom-event';
 import AgreementItemData from './data/agreement-item-data.js';
 import AgreementDetails from './pages/details/agreement-details.js';
 import {property} from '@polymer/decorators';
+import {GenericObject, UserPermissions, EtoolsTab, Agreement, AgreementAmendment} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -377,8 +376,8 @@ class AgreementsModule extends AgreementsModuleRequiredMixins {
     return true;
   }
 
-  _prepareNewAgreementDataForSave(agreement: Agreement): Agreement {
-    let newAgreement: Agreement = {
+  _prepareNewAgreementDataForSave(agreement: Agreement): Partial<Agreement> {
+    let newAgreement: Partial<Agreement> = {
       id: null,
       status: '',
       agreement_type: agreement.agreement_type,

@@ -8,14 +8,22 @@ import {store, RootState} from '../../../store';
 import {_checkEnvironment} from '../../../config/config';
 import {updateDrawerState} from '../../../actions/app';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
+import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
+import {use} from 'lit-translate';
+import {setLanguage} from '../../../actions/active-language.js';
+import {activeLanguage} from '../../../reducers/active-language.js';
+
+store.addReducers({
+  activeLanguage
+});
 
 /**
  * @polymer
@@ -48,6 +56,38 @@ class PageHeader extends connect(store)(
           --countries-dropdown-color: var(--light-secondary-text-color);
         }
 
+        etools-dropdown {
+
+            --paper-listbox: {
+              max-height: 600px;
+            }
+
+            --esmm-icons: {
+              color: var(--light-secondary-text-color);
+              cursor: pointer;
+            }
+
+            --paper-input-container-underline: {
+              display: none;
+            }
+
+            --paper-input-container-underline-focus: {
+              display: none;
+            }
+
+            --paper-input-container-underline-disabled: {
+              display: none;
+            }
+
+            --paper-input-container-input: {
+              color: var(--light-secondary-text-color);
+              cursor: pointer;
+              min-height: 24px;
+              text-align: right;
+              line-height: 21px; /* for IE */
+            }
+        }
+
         support-btn,
         etools-profile-dropdown,
         #refresh {
@@ -78,6 +118,31 @@ class PageHeader extends connect(store)(
         #app-logo {
           height: 32px;
           width: auto;
+        }
+
+        .dropdowns {
+          display: flex;
+          margin-right: 5px;
+          max-width: 280px;
+        }
+
+        .header {
+          flex-wrap: wrap;
+          height: 100%;
+          justify-content: space-between;
+        }
+
+        .nav-menu-button {
+          min-width: 70px;
+        }
+
+        .header__item {
+          display: flex;
+          align-items: center;
+        }
+
+        .header__right-group {
+          justify-content: space-evenly;
         }
 
         .envWarning {
@@ -151,23 +216,41 @@ class PageHeader extends connect(store)(
       }
       </style>
 
-      <app-toolbar sticky class="content-align">
-        <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
-        <div class="titlebar content-align">
-          <etools-app-selector id="app-selector"></etools-app-selector>
-          <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
-          <template is="dom-if" if="[[environment]]">
-            <div class="envWarning">
-              <span class='envLong'> - </span>[[environment]]
-              <span class='envLong'>TESTING ENVIRONMENT<span>
-            </div>
-          </template>
+      <app-toolbar sticky class="content-align header">
+        <div class="header__item">
+          <paper-icon-button id="menuButton" icon="menu" on-tap="menuBtnClicked"></paper-icon-button>
+          <div class="titlebar content-align">
+            <etools-app-selector id="app-selector"></etools-app-selector>
+            <img id="app-logo" src$="[[rootPath]]images/etools-logo-color-white.svg">
+            <template is="dom-if" if="[[environment]]">
+              <div class="envWarning">
+                <span class='envLong'> - </span>[[environment]]
+                <span class='envLong'>TESTING ENVIRONMENT<span>
+              </div>
+            </template>
+          </div>
         </div>
-        <div class="content-align">
-          <countries-dropdown id="countries" countries="[[countries]]"
-                              current-country="[[profile.country]]">
-          </countries-dropdown>
 
+        <div class="header__item header__right-group">
+          <div class="dropdowns">
+              <etools-dropdown
+                selected="[[selectedLanguage]]"
+                options="[[languages]]"
+                option-label="display_name"
+                option-value="value"
+                on-etools-selected-item-changed="languageChanged"
+                trigger-value-change-event
+                hide-search
+                allow-outside-scroll
+                no-label-float
+                min-width="160px"
+                auto-width
+              ></etools-dropdown>
+
+              <countries-dropdown id="countries" countries="[[countries]]" current-country="[[profile.country]]">
+              </countries-dropdown>
+
+          </div>
           <support-btn></support-btn>
 
           <etools-profile-dropdown
@@ -228,6 +311,11 @@ class PageHeader extends connect(store)(
   @property({type: Object})
   userProfileDialog!: GenericObject;
 
+  languages: GenericObject[] = [{value: 'en', display_name: 'English'}];
+
+  @property({type: String})
+  selectedLanguage!: string;
+
   public static get observers() {
     return ['_updateCountriesList(profile.countries_available)', '_profileChanged(profile)'];
   }
@@ -249,6 +337,9 @@ class PageHeader extends connect(store)(
     }
     if (!isJsonStrMatch(state.commonData.unicefUsersData, this.users)) {
       this.users = [...state.commonData.unicefUsersData];
+    }
+    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
     }
     if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
       this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
@@ -293,6 +384,20 @@ class PageHeader extends connect(store)(
     });
 
     return countriesList;
+  }
+
+  languageChanged(e: CustomEvent): void {
+    if (!e.detail.selectedItem) {
+      return;
+    }
+
+    const language = e.detail.selectedItem.value;
+    if (language !== this.selectedLanguage) {
+      localStorage.setItem('defaultLanguage', language);
+      use(language)
+        .finally(() => store.dispatch(setLanguage(language)))
+        .then(() => location.reload());
+    }
   }
 
   // @ts-ignore

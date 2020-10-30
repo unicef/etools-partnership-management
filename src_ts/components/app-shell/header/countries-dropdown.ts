@@ -8,8 +8,8 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../../utils/fire-custom-event.js';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../typings/globals.types.js';
 import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -37,7 +37,6 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
         }
 
         etools-dropdown {
-          width: 160px;
 
           --paper-listbox: {
             max-height: 600px;
@@ -94,6 +93,8 @@ class CountriesDropdown extends connect(store)(EtoolsPageRefreshMixin(EndpointsM
         on-etools-selected-item-changed="_countrySelected"
         shown-options-limit="250"
         hide-search
+        min-width="160px"
+        auto-width
       ></etools-dropdown>
     `;
   }

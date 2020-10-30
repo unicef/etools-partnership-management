@@ -1,4 +1,4 @@
-import {GenericObject} from '../typings/globals.types';
+import {GenericObject} from '@unicef-polymer/etools-types';
 import {ModelsCommon} from './models.common';
 
 export class PartnerAssessment {

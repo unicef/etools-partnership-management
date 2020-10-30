@@ -16,7 +16,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
-import {store, RootState} from '../../store.js';
+import {store, RootState} from '../../store';
 
 // These are the actions needed by this element.
 import {
@@ -92,12 +92,16 @@ import {fireEvent} from '../utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
-import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
+import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';
+import {registerTranslateConfig, use} from 'lit-translate';
+
+registerTranslateConfig({loader: (lang: string) => fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())});
+
 setRootPath(BASE_URL);
 
 /**
@@ -301,6 +305,9 @@ class AppShell extends connect(store)(
   @property({type: String})
   appLocPath!: string;
 
+  @property({type: String})
+  selectedLanguage!: string;
+
   public static get observers() {
     return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
@@ -361,6 +368,15 @@ class AppShell extends connect(store)(
         showCloseBtn: state.app!.toastNotification.showCloseBtn
       });
     }
+
+    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      this.loadLocalization();
+    }
+  }
+
+  async loadLocalization () {
+    await use(this.selectedLanguage);
   }
 
   // dev purpose - to be removed in the future

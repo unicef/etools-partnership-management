@@ -4,13 +4,12 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import pmpEndpoints from '../../../../../../endpoints/endpoints.js';
-import {AgreementAmendment} from '../../../../agreement.types';
 import {SharedStyles} from '../../../../../../styles/shared-styles';
 import {gridLayoutStyles} from '../../../../../../styles/grid-layout-styles';
 import {requiredFieldStarredStyles} from '../../../../../../styles/required-field-styles';
 import {fireEvent} from '../../../../../../utils/fire-custom-event.js';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../../../typings/globals.types.js';
+import {AgreementAmendment, LabelAndValue} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

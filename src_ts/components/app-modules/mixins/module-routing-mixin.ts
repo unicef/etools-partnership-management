@@ -1,5 +1,4 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {GenericObject, Constructor} from '../../../typings/globals.types'; // TODO - load using tsconfig
 import '../../../typings/globals.types.js';
 
 import {PolymerElement} from '@polymer/polymer/polymer-element';
@@ -8,6 +7,7 @@ import {getDomainByEnv} from '../../../config/config';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
 import {Route} from '../../../typings/route.types';
+import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 /**
  * Module main elements common functionality
  * @polymer

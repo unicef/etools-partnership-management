@@ -4,12 +4,12 @@ import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog'
 import EtoolsStatusCommonMixin from '../../../layout/etools-status/etools-status-common-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
 import {isEmptyObject} from '../../../utils/utils';
-import {fireEvent} from '../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-import {StatusAction, Status} from '../../../../typings/etools-status.types.js';
-import {Partner} from '../../../../models/partners.models.js';
-import {GenericObject} from '../../../../typings/globals.types';
+import {StatusAction, Status} from '../../../../typings/etools-status.types';
+import {Partner} from '../../../../models/partners.models';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

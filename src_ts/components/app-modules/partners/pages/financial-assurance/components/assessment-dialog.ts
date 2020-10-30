@@ -17,10 +17,10 @@ import {fireEvent} from '../../../../../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../../typings/globals.types.js';
 import {PartnerAssessment} from '../../../../../../models/partners.models.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {PaperCheckboxElement} from '@polymer/paper-checkbox/paper-checkbox';
+import {LabelAndValue} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

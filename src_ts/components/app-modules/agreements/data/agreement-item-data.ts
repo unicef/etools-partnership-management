@@ -1,16 +1,15 @@
-import {store} from '../../../../store.js';
+import {store} from '../../../../store';
 import {PolymerElement} from '@polymer/polymer';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import AjaxServerErrorsMixin from '../../../mixins/ajax-server-errors-mixin.js';
-import {Agreement, MinimalAgreement} from '../agreement.types.js';
 import CONSTANTS from '../../../../config/app-constants.js';
-import {addEditAgreement} from '../../../../actions/agreements.js';
+import {addEditAgreement} from '../../../../actions/agreements';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {EtoolsRequestError} from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin.js';
-import {GenericObject} from '../../../../typings/globals.types.js';
-import {fireEvent} from '../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
+import {Agreement, MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -110,18 +109,19 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
   }
 
   _getMinimalAgreementData(detail: Agreement) {
-    const minimalAgrData: MinimalAgreement = {
+    const minimalAgrData: Partial<MinimalAgreement> = {
       agreement_number: '',
       agreement_number_status: '',
       agreement_type: '',
-      end: null,
+      authorized_officers: [],
+      end: '',
       id: null,
       partner: null,
-      partner_name: null,
+      partner_name: '',
       signed_by: null,
-      signed_by_partner_date: null,
-      signed_by_unicef_date: null,
-      start: null,
+      signed_by_partner_date: '',
+      signed_by_unicef_date: '',
+      start: '',
       status: ''
     };
     let propName: string;
@@ -129,6 +129,7 @@ class AgreementItemData extends AjaxServerErrorsMixin(EndpointsMixin(PolymerElem
       if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
         logWarn('Mapping property not found');
       } else {
+        // @ts-ignore
         minimalAgrData[propName] = detail[propName];
       }
     }

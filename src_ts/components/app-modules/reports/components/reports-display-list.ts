@@ -7,7 +7,6 @@ import './report-status';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {GenericObject, User} from '../../../../typings/globals.types';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../mixins/common-mixin';
 import PaginationMixin from '../../../mixins/pagination-mixin';
@@ -19,6 +18,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
 import {property} from '@polymer/decorators';
+import {GenericObject, User} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

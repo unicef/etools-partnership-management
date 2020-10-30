@@ -10,8 +10,8 @@
 
 import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
-import {RootState} from '../store.js';
-import {GenericObject, LabelAndValue} from '../typings/globals.types.js';
+import {RootState} from '../store';
+import {GenericObject, LabelAndValue} from '@unicef-polymer/etools-types';
 
 export const UPDATE_COUNTRY_PROGRAMMES = 'UPDATE_COUNTRY_PROGRAMMES';
 export const UPDATE_DISAGGREGATIONS = 'UPDATE_DISAGGREGATIONS';

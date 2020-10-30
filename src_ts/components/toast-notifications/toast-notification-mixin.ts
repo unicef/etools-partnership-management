@@ -1,6 +1,6 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import './etools-toast';
-import {Constructor, GenericObject} from '../../typings/globals.types';
+import {GenericObject, Constructor} from '@unicef-polymer/etools-types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {EtoolsToastEl} from './etools-toast';

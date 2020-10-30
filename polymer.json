@@ -33,7 +33,7 @@
     "src/components/app-modules/settings/settings-module.js",
     "src/components/app-modules/not-found/not-found.js"
   ],
-  "sources": ["src/**/*", "images/**/*", "package.json"],
+  "sources": ["src/**/*", "images/**/*", "assets/**", "package.json"],
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",

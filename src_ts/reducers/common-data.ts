@@ -36,21 +36,22 @@ import {
   UPDATE_RISK_TYPES,
   UPDATE_CASH_TRANSFER_MODALITIES
 } from '../actions/common-data';
-import {CpOutput, Disaggregation, Location} from '../typings/intervention.types';
-import {
-  LabelAndValue,
-  CpStructure,
-  Country,
-  IdAndName,
-  GenericObject,
-  MinimalUser,
-  User,
-  EnvFlags,
-  Office
-} from '../typings/globals.types';
 import {RootState} from '../store';
 import {createSelector} from 'reselect';
 import {copy} from '../components/utils/utils';
+import {
+  Disaggregation,
+  EnvFlags,
+  IdAndName,
+  LabelAndValue,
+  MinimalUser,
+  CpOutput,
+  CountryProgram,
+  GenericObject,
+  Office,
+  User,
+  Country
+} from '@unicef-polymer/etools-types';
 
 export class CommonDataState {
   fileTypes: IdAndName[] = [];
@@ -61,7 +62,7 @@ export class CommonDataState {
     username: string;
   }[] = [];
   cpOutputs: CpOutput[] = [];
-  countryProgrammes: CpStructure[] = [];
+  countryProgrammes: CountryProgram[] = [];
   interventionDocTypes: LabelAndValue[] = [];
   interventionStatuses: LabelAndValue[] = [];
   sections: GenericObject[] = [];

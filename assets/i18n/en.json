@@ -1,0 +1,36 @@
+{
+  "INTERVENTIONS_LIST": {
+    "TITLE": "PDs/SPDs List",
+    "TABLE_TITLE": "PDs/SPDs",
+    "COLUMNS": {
+      "REFERENCE_NO": "PD/SSFA Reference Number",
+      "PARTNER_NAME": "Partner Name",
+      "DOC_TYPE": "Document Type",
+      "STATUS": "Status",
+      "TITLE": "Title",
+      "START_DATE": "Start Date",
+      "END_DATE": "End Date"
+    },
+    "FILTERS": {
+		"CP_STRUCTURE": "CP Structure",
+		"COUNTRY_PROGRAMME_OUTPUT": "Country Programme Output",
+		"DONORS": "Donors",
+		"PARTNERS": "Partners",
+		"ENDS_BEFORE": "Ends Before",
+		"GRANTS": "Grants",
+		"OFFICES": "Offices",
+		"PD_TYPE": "PD/SPD Type",
+		"SECTIONS": "Sections",
+		"STARTS_AFTER": "Starts After",
+		"ENDS_AFTER": "Ends After",
+		"STATUS": "Status",
+		"UNICEF_FOCAL_POINT": "UNICEF focal point",
+		"CONTINGENCY_PD": "Contingency PD"
+    },
+    "INTERVENTION": {
+      "DETAILS": {
+
+      }
+    }
+  }
+}

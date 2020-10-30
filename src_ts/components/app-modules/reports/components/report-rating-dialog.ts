@@ -9,10 +9,10 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import {GenericObject} from '../../../../typings/globals.types';
 import {RootState, store} from '../../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /*
   status: 'accepted'/'sent back'

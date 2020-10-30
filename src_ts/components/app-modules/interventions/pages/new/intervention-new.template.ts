@@ -1,9 +1,9 @@
 /* eslint no-invalid-this: 0 */
 import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
-import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
+import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -233,7 +233,7 @@ export function template(this: InterventionNew): TemplateResult {
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
-            label="UNPP CFEI/DSR Reference Number"
+            label="UNPP CFEI/DSR Ref Number"
             placeholder="&#8212;"
             .value="${this.newIntervention.cfei_number}"
             @value-changed="${({detail}: CustomEvent) =>

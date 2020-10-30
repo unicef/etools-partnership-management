@@ -15,23 +15,23 @@ import '../../../../layout/etools-form-element-wrapper.js';
 import '../../../../layout/etools-error-messages-box.js';
 import '../../../../layout/icons-actions.js';
 
-import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../styles/shared-styles.js';
-import {riskRatingStyles} from '../../../../styles/risk-rating-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 
-import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {store, RootState} from '../../../../../store.js';
+import {store, RootState} from '../../../../../store';
 
 import './components/edit-core-values-assessment';
 import './components/staff-members';
-import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 import {convertDate} from '../../../../utils/date-utils';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../typings/globals.types.js';
 import {EditCoreValuesAssessmentEl} from './components/edit-core-values-assessment';
-import {Partner} from '../../../../../models/partners.models.js';
+import {Partner} from '../../../../../models/partners.models';
+import {LabelAndValue} from '@unicef-polymer/etools-types';
 declare const moment: any;
 
 /**
@@ -58,8 +58,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
 
         paper-toggle-button#showArchived {
           font-size: 16px;
-          --paper-toggle-button-label-color: white;
-          --paper-toggle-button-checked-bar-color: white;
+          --paper-toggle-button-label-color: var(--primary-text-color);
+          --paper-toggle-button-checked-bar-color: var(--primary-color);
         }
 
         icons-actions {
@@ -144,9 +144,7 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
           <div class="col col-4">
             <!-- HACT Risk rating -->
             <etools-form-element-wrapper label="HACT Risk Rating" no-placeholder>
-              <span class$="[[getRiskRatingClass(partner.rating)]]">
-                [[getRiskRatingValue(partner.rating)]]
-              </span>
+              <span class$="[[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </etools-form-element-wrapper>
           </div>
           <div class="col col-4">
@@ -200,12 +198,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
               <div>Date Last Assessed</div>
               <div>(from VISION)</div>
             </etools-data-table-column>
-            <etools-data-table-column class="col-6">
-              Core Values Assessment
-            </etools-data-table-column>
-            <etools-data-table-column class="col-2">
-              Archived
-            </etools-data-table-column>
+            <etools-data-table-column class="col-6"> Core Values Assessment </etools-data-table-column>
+            <etools-data-table-column class="col-2"> Archived </etools-data-table-column>
           </etools-data-table-header>
           <template is="dom-repeat" items="{{partner.core_values_assessments}}">
             <etools-data-table-row

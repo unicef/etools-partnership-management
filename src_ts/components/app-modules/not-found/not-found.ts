@@ -1,7 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@polymer/iron-flex-layout/iron-flex-layout';
-import {SharedStyles} from '../../styles/shared-styles.js';
+import {SharedStyles} from '../../styles/shared-styles';
 
 /**
  * @polymer

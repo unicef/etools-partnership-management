@@ -1,6 +1,6 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {Constructor} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
+import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

@@ -7,19 +7,19 @@ import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin.js';
 import RepeatableDataSetsMixin from '../../../mixins/repeatable-data-sets-mixin.js';
 
-import {gridLayoutStyles} from '../../../styles/grid-layout-styles.js';
+import {gridLayoutStyles} from '../../../styles/grid-layout-styles';
 import {buttonsStyles} from '../../../styles/buttons-styles';
-import {SharedStyles} from '../../../styles/shared-styles.js';
-import {requiredFieldStarredStyles} from '../../../styles/required-field-styles.js';
+import {SharedStyles} from '../../../styles/shared-styles';
+import {requiredFieldStarredStyles} from '../../../styles/required-field-styles';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store} from '../../../../store';
 import {addDisaggregation} from '../../../../actions/common-data';
-import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles.js';
-import {Disaggregation, DisaggregationValue} from '../../../../typings/intervention.types';
+import {actionIconBtnsStyles} from '../../../styles/action-icon-btns-styles';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import {PaperInputElement} from '@polymer/paper-input/paper-input';
+import {Disaggregation, DisaggregationValue} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -110,7 +110,7 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
   }
 
   @property({type: Object, observer: '_disaggregationChanged'})
-  disaggregation!: Disaggregation;
+  disaggregation!: Partial<Disaggregation>;
 
   @property({type: Array})
   dataItems!: [];
@@ -142,7 +142,11 @@ class AddDisaggregationDialog extends connect(store)(RepeatableDataSetsMixin(End
   }
 
   initializeDisaggregation() {
-    this.disaggregation = new Disaggregation();
+    this.disaggregation = {
+      name: '',
+      active: true,
+      disaggregation_values: []
+    };
   }
 
   open() {

@@ -4,9 +4,9 @@ import EndpointsMixin from '../endpoints/endpoints-mixin';
 import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {fireEvent} from '../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {Constructor, GenericObject} from '../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -35,7 +35,7 @@ function ListDataMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     fireDataLoaded = false;
 
     @property({type: Object})
-    _refreshInterval: GenericObject | null = null;
+    _refreshInterval: number | null = null;
 
     // Defined in the element that uses this mixin
     endpointName!: string;
