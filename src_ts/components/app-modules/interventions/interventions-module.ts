@@ -5,8 +5,6 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import CONSTANTS from '../../../config/app-constants';
-import {GenericObject, UserPermissions} from '../../../typings/globals.types';
-import {Intervention} from '../../../typings/intervention.types';
 import EndpointsMixin from '../../endpoints/endpoints-mixin';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import ModuleMainElCommonFunctionalityMixin from '../mixins/module-common-mixin';
@@ -18,9 +16,9 @@ import '../../layout/etools-error-messages-box.js';
 import '../../layout/etools-tabs.js';
 import './data/intervention-item-data.js';
 import '../agreements/data/agreement-item-data.js';
-import {pageLayoutStyles} from '../../styles/page-layout-styles.js';
-import {SharedStyles} from '../../styles/shared-styles.js';
-import {buttonsStyles} from '../../styles/buttons-styles.js';
+import {pageLayoutStyles} from '../../styles/page-layout-styles';
+import {SharedStyles} from '../../styles/shared-styles';
+import {buttonsStyles} from '../../styles/buttons-styles';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 import {isEmptyObject, isJsonStrMatch} from '../../utils/utils';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
@@ -29,13 +27,14 @@ import {store, RootState} from '../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {Agreement} from '../agreements/agreement.types';
 import InterventionItemData from './data/intervention-item-data.js';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import './pages/intervention-tab-pages/intervention-tabs';
 import get from 'lodash-es/get';
 import {setStore} from './pages/intervention-tab-pages/utils/redux-store-access';
+import {Agreement, Intervention, UserPermissions, GenericObject} from '@unicef-polymer/etools-types';
 
+// @ts-ignore
 setStore(store);
 
 /**
@@ -259,7 +258,7 @@ class InterventionsModule extends connect(store)(
   @property({type: String})
   rootPath!: string;
 
-  private finalizeAmendmentConfirmationDialog!: EtoolsDialog;
+  finalizeAmendmentConfirmationDialog!: EtoolsDialog;
   private _pageChangeDebouncer!: Debouncer;
 
   static get observers() {
@@ -290,6 +289,7 @@ class InterventionsModule extends connect(store)(
   ready() {
     super.ready();
     if (this.newInterventionActive) {
+      // @ts-ignore
       this._setNewInterventionObj();
     }
 

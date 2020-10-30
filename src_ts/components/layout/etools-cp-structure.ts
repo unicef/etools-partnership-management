@@ -9,7 +9,7 @@ import {store, RootState} from '../../store';
 import {SharedStyles} from '../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../styles/required-field-styles';
 import {isJsonStrMatch, isEmptyObject} from '../utils/utils';
-import {CpStructure, GenericObject} from '../../typings/globals.types';
+import {CountryProgram, GenericObject} from '@unicef-polymer/etools-types';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
 
@@ -54,10 +54,10 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
   }
 
   @property({type: Array})
-  countryProgrammes!: CpStructure[];
+  countryProgrammes!: CountryProgram[];
 
   @property({type: Array})
-  sortedCountryProgrammes!: CpStructure[];
+  sortedCountryProgrammes!: CountryProgram[];
 
   @property({type: String, notify: true})
   selectedCp!: string;
@@ -86,7 +86,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
     }
   }
 
-  _getCurrentCountryProgramme(cpOptions: CpStructure[]) {
+  _getCurrentCountryProgramme(cpOptions: CountryProgram[]) {
     if (isEmptyObject(cpOptions)) {
       return null;
     }
@@ -96,7 +96,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
       return cpOptions[0];
     } else {
       // more than 1 cp available, use first one found that is active, not special and not future
-      return cpOptions.find((cp: CpStructure) => cp.active && !cp.future && !cp.special);
+      return cpOptions.find((cp: CountryProgram) => cp.active && !cp.future && !cp.special);
     }
   }
 
@@ -110,7 +110,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
     this.set('selectedCp', currentCP ? currentCP.id : null);
   }
 
-  _countryProgrammesChanged(_countryProgrammes: CpStructure[], appModuleItem: any) {
+  _countryProgrammesChanged(_countryProgrammes: CountryProgram[], appModuleItem: any) {
     this.cpInitDebouncer = Debouncer.debounce(this.cpInitDebouncer, timeOut.after(10), () => {
       if (appModuleItem) {
         this._prepareCpsForDisplay();
@@ -161,8 +161,8 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
       return false;
     }
 
-    return this.countryProgrammes.some((cp: CpStructure) => {
-      return parseInt(cp.id, 10) === parseInt(cpId, 10) && cp.expired;
+    return this.countryProgrammes.some((cp: CountryProgram) => {
+      return parseInt((cp.id as unknown) as string, 10) === parseInt(cpId, 10) && cp.expired;
     });
   }
 

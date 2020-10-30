@@ -1,6 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../typings/globals.types';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
@@ -8,6 +7,7 @@ import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import clone from 'lodash-es/clone';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 class HactEditDialog extends EndpointsMixin(PolymerElement) {
   static get template() {

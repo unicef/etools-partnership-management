@@ -18,7 +18,6 @@ import '../../layout/etools-tabs';
 import '../../layout/etools-error-messages-box';
 import {pageContentHeaderSlottedStyles} from '../../layout/page-content-header-slotted-styles';
 
-import {UserPermissions, EtoolsTab} from '../../../typings/globals.types';
 import {RESET_UNSAVED_UPLOADS} from '../../../actions/upload-status';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
@@ -32,9 +31,10 @@ import './components/partner-status.js';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {Partner} from '../../../models/partners.models';
-import {PartnerItemData} from './data/partner-item-data.js';
-import {NewPartnerDialog} from './components/new-partner-dialog.js';
+import {PartnerItemData} from './data/partner-item-data';
+import {NewPartnerDialog} from './components/new-partner-dialog';
 import StaffMembersDataMixin from '../partners/mixins/staff-members-data-mixin.js';
+import {EtoolsTab, UserPermissions} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

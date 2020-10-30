@@ -1,8 +1,7 @@
 import {Reducer} from 'redux';
 import {UPDATE_USER_DATA, UPDATE_USER_PERMISSIONS} from '../actions/user';
-import {User} from '../typings/globals.types';
 import {RootAction} from '../store';
-import {GenericObject} from '../typings/globals.types';
+import {GenericObject, User} from '@unicef-polymer/etools-types';
 
 export interface UserState {
   data: User | null;

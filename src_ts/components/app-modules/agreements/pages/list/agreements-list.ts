@@ -1,5 +1,5 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store, RootState} from '../../../../../store.js';
+import {store, RootState} from '../../../../../store';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import {PolymerElement, html} from '@polymer/polymer';
@@ -23,18 +23,18 @@ import ListFiltersMixin from '../../../../mixins/list-filters-mixin';
 import PaginationMixin from '../../../../mixins/pagination-mixin.js';
 import EndpointsMixin from '../../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../../mixins/common-mixin';
-import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils.js';
+import {isEmptyObject, isJsonStrMatch} from '../../../../utils/utils';
 
-import {SharedStyles} from '../../../../styles/shared-styles.js';
-import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {listFilterStyles} from '../../../../styles/list-filter-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import '../../data/agreements-list-data.js';
-import {partnersDropdownDataSelector} from '../../../../../reducers/partners.js';
-import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {partnersDropdownDataSelector} from '../../../../../reducers/partners';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 import {AgreementsListData} from '../../data/agreements-list-data';
 import {property} from '@polymer/decorators';
-import {LabelAndValue, CpStructure} from '../../../../../typings/globals.types.js';
-import {ListFilterOption} from '../../../../../typings/filter.types.js';
+import {ListFilterOption} from '../../../../../typings/filter.types';
+import {CountryProgram, LabelAndValue} from '@unicef-polymer/etools-types';
 
 let _agreementsLastNavigated = '';
 /**
@@ -281,7 +281,7 @@ class AgreementsList extends connect(store)(
   partnersDropdownData: [] = [];
 
   @property({type: Array})
-  countryProgrammes: CpStructure[] = [];
+  countryProgrammes: CountryProgram[] = [];
 
   @property({type: Array})
   agreementTypes: LabelAndValue[] = [];

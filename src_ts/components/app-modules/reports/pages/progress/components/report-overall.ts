@@ -3,9 +3,9 @@ import '../../../../../layout/etools-form-element-wrapper.js';
 import '../../../../../styles/grid-layout-styles.js';
 
 import '../../../components/report-status.js';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

@@ -7,14 +7,14 @@ import '@unicef-polymer/etools-loading/etools-loading.js';
 
 import '../../../components/report-status.js';
 import './disaggregations/disaggregation-table.js';
-import {isEmptyObject} from '../../../../../utils/utils.js';
+import {isEmptyObject} from '../../../../../utils/utils';
 import {PolymerElement, html} from '@polymer/polymer';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin.js';
 import UtilsMixin from '../../../../../mixins/utils-mixin.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

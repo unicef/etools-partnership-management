@@ -16,7 +16,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
-import {store, RootState} from '../../store.js';
+import {store, RootState} from '../../store';
 
 // These are the actions needed by this element.
 import {
@@ -92,7 +92,7 @@ import {fireEvent} from '../utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
-import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
+import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';

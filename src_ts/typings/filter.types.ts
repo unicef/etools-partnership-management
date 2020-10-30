@@ -1,4 +1,4 @@
-import {Callback} from './globals.types';
+import {Callback} from '@unicef-polymer/etools-types';
 
 export class ListFilterOption {
   constructor(item: ListFilterOption) {

@@ -9,19 +9,19 @@ import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '../../../../../endpoints/endpoints.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../../styles/shared-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../styles/shared-styles';
 import '../../../../../layout/icons-actions.js';
 
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
-import {store} from '../../../../../../store.js';
-import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../actions/upload-status.js';
+import {store} from '../../../../../../store';
+import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../actions/upload-status';
 import {property} from '@polymer/decorators';
-import {PartnerAssessment} from '../../../../../../models/partners.models.js';
-import {AssessmentDialog} from './assessment-dialog.js';
+import {PartnerAssessment} from '../../../../../../models/partners.models';
+import {AssessmentDialog} from './assessment-dialog';
 import {IconsActionsEl} from '../../../../../layout/icons-actions.js';
-import {fireEvent} from '../../../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 
 /**
  * @customElement

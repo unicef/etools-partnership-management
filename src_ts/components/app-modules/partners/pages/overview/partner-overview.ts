@@ -7,17 +7,17 @@ import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import RiskRatingMixin from '../../../../mixins/risk-rating-mixin.js';
 
-import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
 
 import FrNumbersConsistencyMixin from '../../../interventions/mixins/fr-numbers-consistency-mixin.js';
-import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons.js';
-import {frWarningsStyles} from '../../../interventions/styles/fr-warnings-styles.js';
+import {pmpCustomIcons} from '../../../../styles/custom-iconsets/pmp-icons';
+import {frWarningsStyles} from '../../../interventions/styles/fr-warnings-styles';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {Partner} from '../../../../../models/partners.models.js';
+import {Partner} from '../../../../../models/partners.models';
 
 /**
  * @polymer

@@ -1,9 +1,9 @@
 // import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 import {RootState} from '../../store';
 import {PolymerElement} from '@polymer/polymer';
-import {Constructor} from '../../typings/globals.types';
 import {InterventionsModule} from '../app-modules/interventions/interventions-module';
 import {property} from '@polymer/decorators';
+import {Constructor} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -28,8 +28,11 @@ function AmendmentModeUIMixin<T extends Constructor<PolymerElement>>(baseClass: 
       /**
        * For now amendment mode is PD specific, but if needed can be used on any page with this method code updated
        */
-      const intervElem = (this.shadowRoot!.querySelector('#interventions') as unknown) as InterventionsModule;
-      if (intervElem) {
+      const intervElem = (this.shadowRoot!.querySelector('#interventions') as unknown) as InterventionsModule & {
+        _showFinalizeAmendmentDialog: () => void;
+      };
+      // TODO: Check if method is valid! Can not find it using search!
+      if (intervElem && intervElem._showFinalizeAmendmentDialog) {
         intervElem._showFinalizeAmendmentDialog();
       }
     }

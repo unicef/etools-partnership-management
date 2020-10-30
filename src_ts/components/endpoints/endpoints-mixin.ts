@@ -5,10 +5,10 @@ import {EtoolsRequestEndpoint, sendRequest} from '@unicef-polymer/etools-ajax/et
 import pmpEndpoints from './endpoints.js';
 import {tokenEndpointsHost, tokenStorageKeys, getTokenEndpoints} from '../../config/config';
 import {isJsonStrMatch} from '../utils/utils';
-import {Constructor, User, GenericObject} from '../../typings/globals.types';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {Constructor, GenericObject, User} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

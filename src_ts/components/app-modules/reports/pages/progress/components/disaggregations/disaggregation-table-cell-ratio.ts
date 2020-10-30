@@ -3,9 +3,9 @@ import '@polymer/app-layout/app-grid/app-grid-style.js';
 
 import './disaggregation-field.js';
 import UtilsMixin from '../../../../../../mixins/utils-mixin.js';
-import {disaggregationTableStyles} from './styles/disaggregation-table-styles.js';
+import {disaggregationTableStyles} from './styles/disaggregation-table-styles';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

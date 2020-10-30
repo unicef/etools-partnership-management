@@ -1,5 +1,5 @@
 import {UPDATE_CURRENT_INTERVENTION} from '../actions/actionsConstants';
-import {Intervention} from '../typings/intervention.types';
+import {Intervention} from '@unicef-polymer/etools-types';
 
 export interface InterventionsState {
   current: Intervention | null;

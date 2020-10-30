@@ -14,7 +14,7 @@ import '../header/countries-dropdown';
 import ProfileOperationsMixin from '../../user/profile-operations-mixin';
 import {isJsonStrMatch} from '../../utils/utils';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {GenericObject, User, MinimalUser, LabelAndValue} from '../../../typings/globals.types';
+import {GenericObject, LabelAndValue, MinimalUser, User} from '@unicef-polymer/etools-types';
 import '../../layout/support-btn';
 import {property} from '@polymer/decorators';
 import {use} from 'lit-translate';
@@ -392,11 +392,11 @@ class PageHeader extends connect(store)(
     }
 
     const language = e.detail.selectedItem.value;
-    if(language !== this.selectedLanguage) {
+    if (language !== this.selectedLanguage) {
       localStorage.setItem('defaultLanguage', language);
-      use(language).finally(() => store.dispatch(setLanguage(language))).then(
-        () => location.reload()
-      );
+      use(language)
+        .finally(() => store.dispatch(setLanguage(language)))
+        .then(() => location.reload());
     }
   }
 

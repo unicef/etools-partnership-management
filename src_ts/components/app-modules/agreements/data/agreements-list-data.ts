@@ -1,17 +1,16 @@
 import {PolymerElement} from '@polymer/polymer';
 import ListDataMixin from '../../../mixins/list-data-mixin';
-import {store} from '../../../../store.js';
+import {store} from '../../../../store';
 
 declare const moment: any;
 import Dexie from 'dexie';
 
 import {isEmptyObject} from '../../../utils/utils';
 import {setAgreements} from '../../../../actions/agreements';
-import {MinimalAgreement} from '../agreement.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../typings/globals.types';
+import {MinimalAgreement, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -113,7 +112,10 @@ class AgreementsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if (!isEmptyObject(cpStructures) && cpStructures.indexOf(agreement.country_programme!) === -1) {
+        if (
+          !isEmptyObject(cpStructures) &&
+          cpStructures.indexOf((agreement.country_programme as unknown) as string) === -1
+        ) {
           return false;
         }
 
