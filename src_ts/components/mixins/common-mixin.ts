@@ -37,7 +37,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       return intervention.status === 'draft' ? 'development' : intervention.status;
     }
 
-    private getDevelopementStatusDetails(data: ListItemIntervention) {
+    getDevelopementStatusDetails(data: ListItemIntervention) {
       if (data.partner_accepted && data.unicef_accepted) {
         return 'IP & Unicef Accepted';
       }
