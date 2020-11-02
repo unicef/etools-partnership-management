@@ -152,6 +152,7 @@ export class InterventionPermissionsFields {
   offices = false;
   unicef_focal_points = false;
   partner_focal_points = false;
+  cfei_number = false;
 
   // details - PD or SSFA Details
   contingency_pd = false;
