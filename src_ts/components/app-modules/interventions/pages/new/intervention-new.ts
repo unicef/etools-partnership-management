@@ -50,7 +50,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   availableYears: {value: number; label: number}[] = new Array(11)
-    .fill(this.newIntervention.reference_number_year)
+    .fill(Number(this.newIntervention.reference_number_year))
     .map((year: number, index: number) => ({
       value: year + (-5 + index),
       label: year + (-5 + index)
