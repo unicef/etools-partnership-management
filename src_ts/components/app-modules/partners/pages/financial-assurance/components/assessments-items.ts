@@ -12,7 +12,8 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import '../../../../../layout/icons-actions.js';
-
+import '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
+import {IconsActionsEl} from '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
 import {store} from '../../../../../../store';
@@ -20,7 +21,6 @@ import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../.
 import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../../models/partners.models';
 import {AssessmentDialog} from './assessment-dialog';
-import {IconsActionsEl} from '../../../../../layout/icons-actions.js';
 import {fireEvent} from '../../../../../utils/fire-custom-event';
 
 /**
