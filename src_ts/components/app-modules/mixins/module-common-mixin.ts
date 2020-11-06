@@ -1,6 +1,5 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
 import {ListQueryParams} from '../../../typings/route.types'; // TODO - load using tsconfig
-import '../../../typings/globals.types.js';
 import {PolymerElement} from '@polymer/polymer';
 
 import {fireEvent} from '../../utils/fire-custom-event';

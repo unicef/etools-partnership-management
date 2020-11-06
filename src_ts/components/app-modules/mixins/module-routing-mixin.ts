@@ -1,5 +1,4 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import '../../../typings/globals.types.js';
 
 import {PolymerElement} from '@polymer/polymer/polymer-element';
 import {fireEvent} from '../../utils/fire-custom-event';
