@@ -1,4 +1,7 @@
 import Dexie from 'dexie';
+import {encryption} from '../components/utils/crypto';
+import {middleware} from '../components/utils/dexie-encrypt';
+
 /**
  * PMP app Dexie DB configuration.
  * For db versioning check: http://dexie.org/docs/Tutorial/Design
@@ -17,6 +20,10 @@ window.EtoolsLogsLevel = 'INFO';
 window.EtoolsPmpApp = window.EtoolsPmpApp || {};
 
 window.EtoolsPmpApp.DexieDb = new Dexie('pmpApp');
+const tables = ['partners'];
+
+middleware(window.EtoolsPmpApp.DexieDb, encryption, tables).then(() => {
+
 window.EtoolsPmpApp.DexieDb.version(1).stores({
   partners: 'id, name, rating, vendor_number',
   agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
@@ -27,6 +34,7 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
   // etools-ajax v2.0.0 requirements
   listsExpireMapTable: '&name, expire',
   ajaxDefaultDataTable: '&cacheKey, data, expire'
+  });
 });
 
 // configure app dexie db to be used for caching
