@@ -11,7 +11,6 @@ import CommonMixin from '../../../../../mixins/common-mixin.js';
 
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
-import '../../../../../layout/icons-actions.js';
 import '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
 import {IconsActionsEl} from '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
 import './assessment-dialog.js';
