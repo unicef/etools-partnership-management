@@ -113,7 +113,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           !self._filterFound(intervention, 'donors', true, donors) ||
           !self._filterFound(intervention, 'partner_name', false, partners) ||
           !self._filterFound(intervention, 'grants', true, grants) ||
-          !self._filterFound(intervention, 'country_programme', false, cpStructures)
+          !self._filterFound(intervention, 'country_programmes', true, cpStructures) // TODO - test after bk ready & export url
         ) {
           return false;
         }
