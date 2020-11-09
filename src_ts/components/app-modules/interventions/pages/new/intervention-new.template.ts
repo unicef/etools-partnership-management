@@ -148,6 +148,21 @@ export function template(this: InterventionNew): TemplateResult {
           >
           </etools-dropdown-multi>
         </div>
+        <div class="col-4">
+          <etools-dropdown
+            id="currency"
+            label="Document Currency"
+            placeholder="&#8212;"
+            .options="${this.currencies}"
+            .selected="${this.newIntervention?.planned_budget?.currency}"
+            trigger-value-change-event
+            @etools-selected-item-changed="${({detail}: CustomEvent) =>
+              this.setCurrency(detail.selectedItem && detail.selectedItem.value)}"
+            option-value="value"
+            option-label="label"
+          >
+          </etools-dropdown>
+        </div>
       </div>
 
       <div class="row">
