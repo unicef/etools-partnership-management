@@ -26,7 +26,7 @@ declare const moment: any;
 import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
-import '../../../../layout/monitoring-visits-list.js';
+import '../../../interventions/pages/intervention-tab-pages/intervention-overview/monitoring-visits-list/monitoring-visits-list';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
 import {PartnerAssessment} from '../../../../../models/partners.models';

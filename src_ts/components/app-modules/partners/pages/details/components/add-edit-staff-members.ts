@@ -4,7 +4,7 @@ import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 
-import '../../../../../layout/etools-form-element-wrapper';
+import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
