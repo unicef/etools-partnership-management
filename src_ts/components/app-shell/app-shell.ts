@@ -100,7 +100,9 @@ import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 
-registerTranslateConfig({loader: (lang: string) => fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())});
+const translationConfig = registerTranslateConfig({loader: (lang: string) =>
+  fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())
+});
 
 setRootPath(BASE_URL);
 
@@ -132,6 +134,7 @@ class AppShell extends connect(store)(
     )
   )
 ) {
+
   public static get template() {
     // main template
     // language=HTML
@@ -308,18 +311,23 @@ class AppShell extends connect(store)(
   @property({type: String})
   selectedLanguage!: string;
 
+  @property({type: Boolean})
+  currentLanguageIsSet!: boolean;
+
   public static get observers() {
     return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
 
   ready() {
+
     super.ready();
 
     this._initListeners();
     this._createLeavePageDialog();
-    window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
-    this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
-
+    if(this.$.appHeadLayout) {
+      window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+      this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
+    }
     if (this.module !== 'not-found') {
       /*
        * Activate the global loading with default message.
@@ -335,7 +343,6 @@ class AppShell extends connect(store)(
 
   public connectedCallback() {
     super.connectedCallback();
-
     this.requestUserData();
     // trigger common data load requests
     // @ts-ignore
@@ -376,7 +383,32 @@ class AppShell extends connect(store)(
   }
 
   async loadLocalization () {
-    await use(this.selectedLanguage);
+    this.waitForTranslationsToLoad().then(async() => {
+      await use(this.selectedLanguage);
+      this.currentLanguageIsSet = true;
+    });
+  }
+
+  waitForTranslationsToLoad() {
+    return new Promise((resolve) => {
+      const translationsCheck = setInterval(() => {
+        if (translationConfig) {
+          clearInterval(translationsCheck);
+          resolve(true);
+        }
+      }, 50);
+    });
+  }
+
+  waitForTranslationsAndLanguageToLoad() {
+    return new Promise((resolve) => {
+      const translationAndLanguageCheck = setInterval(() => {
+        if (translationConfig && this.currentLanguageIsSet) {
+          clearInterval(translationAndLanguageCheck);
+          resolve(true);
+        }
+      }, 50);
+    });
   }
 
   // dev purpose - to be removed in the future
@@ -517,6 +549,7 @@ class AppShell extends connect(store)(
   private _canAccessPage(module: string) {
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
+
     const defer: any = {};
     defer.promise = new Promise(function (resolve, reject) {
       defer.resolve = resolve;
@@ -553,11 +586,13 @@ class AppShell extends connect(store)(
     }
 
     this._canAccessPage(routePage).then((accessGranted: boolean) => {
-      if (!accessGranted) {
-        this._pageNotFound();
-      } else {
-        this.set('module', routePage);
-      }
+      this.waitForTranslationsAndLanguageToLoad().then(() => {
+        if (!accessGranted) {
+          this._pageNotFound();
+        } else {
+          this.set('module', routePage);
+        }
+      });
     });
 
     // Close a non-persistent drawer when the module & route are changed.
