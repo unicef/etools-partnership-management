@@ -20,7 +20,7 @@ import {
 } from '../../../../../actions/upload-status';
 import {store, RootState} from '../../../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
-import '../../../../layout/etools-form-element-wrapper.js';
+import '../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 import '../../../../layout/etools-cp-structure.js';
 import '../../../../layout/year-dropdown.js';
 import pmpEndpoints from '../../../../endpoints/endpoints.js';
