@@ -209,7 +209,7 @@ class InterventionsList extends connect(store)(
         >
           <etools-data-table-row low-resolution-layout="[[lowResolutionLayout]]" details-opened="[[detailsOpened]]">
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-2" data-col-header-label="PD/SSFA Reference Number">
+              <span class="col-data col-2" data-col-header-label="PD/SPD Reference Number">
                 <a
                   class="pd-ref truncate"
                   href="interventions/[[intervention.id]]/details"

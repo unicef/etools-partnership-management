@@ -22,7 +22,7 @@ class ReportOverall extends PolymerElement {
 
       <div class="row-h">
         <div class="col col-5">
-          <etools-form-element-wrapper label="PD output or SSFA expected result" value="[[lowerResultTitle]]">
+          <etools-form-element-wrapper label="PD/SPD output/expected result" value="[[lowerResultTitle]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-2">

@@ -173,7 +173,7 @@ export class EtoolsCpStructure extends connect(store)(PolymerElement) {
         msg = 'Agreement ' + this.appModuleItem ? this.appModuleItem!.agreement_number : '';
         break;
       case 'interventions':
-        msg = 'PD/SSFA ' + this.appModuleItem ? this.appModuleItem!.number : '';
+        msg = 'PD/SPD ' + this.appModuleItem ? this.appModuleItem!.number : '';
         break;
     }
     return msg + ' has an old/expired CP Structure!';

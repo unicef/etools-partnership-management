@@ -22,15 +22,15 @@ function FrNumbersConsistencyMixin<T extends Constructor<PolymerElement>>(superC
       amountsCannotBeCompared: 'FRs Amount and UNICEF Cash Contribution can not be compared.',
       tooManyFrsCurencies: 'More than 1 FR currency is available.',
       amountAndDisbursementNotDisplayed: 'Totals for FR amount and Actual Disbursement can not be displayed.',
-      currencyMismatch: 'FR currency does not match PD/SSFA currency.',
+      currencyMismatch: 'FR currency does not match PD/SPD currency.',
       cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
       addedFrsCurrenciesMismatch:
-        'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
+        'The currency of the PD/SPD and the FR are not the same and cannot be ' +
         'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
         'as the FR.\n',
       amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
-      dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
-      warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.',
+      dateTmpl: 'FR <<field_name>> is not the same as PD/SPD <<field_name>>.',
+      warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SPD <<pd_fields>>.',
       FCmultiCurrFlagErrorMsg: 'There are multiple transaction currencies in VISION'
     };
     @property({type: Object})

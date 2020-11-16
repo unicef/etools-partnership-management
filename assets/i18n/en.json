@@ -14,7 +14,7 @@
     "TITLE": "PDs/SPDs List",
     "TABLE_TITLE": "PDs/SPDs",
     "COLUMNS": {
-      "REFERENCE_NO": "PD/SSFA Reference Number",
+      "REFERENCE_NO": "PD/SPD Reference Number",
       "PARTNER_NAME": "Partner Name",
       "DOC_TYPE": "Document Type",
       "STATUS": "Status",
@@ -305,7 +305,7 @@
       "FINANCIAL": "Financial",
       "CASH_TRANSFER_MOD": "Cash Transfer Modality(ies)",
       "HEADQUARTERS_CONTRIBUTION": "Headquarters Contribution (automatic 7% for INGO)",
-      "DOCUMENT_CURRENCY": "Document currency"
+      "DOCUMENT_CURRENCY": "Document Currency"
     },
     "FUND_RESERVATIONS": {
       "FUND_RESERVATIONS": "Fund Reservations",
