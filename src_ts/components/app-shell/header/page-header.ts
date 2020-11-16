@@ -341,8 +341,8 @@ class PageHeader extends connect(store)(
     if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
       this.selectedLanguage = state.activeLanguage!.activeLanguage;
     }
-    if (state.commonData.currentUser !== null && !isJsonStrMatch(state.commonData.currentUser, this.profile)) {
-      this.profile = JSON.parse(JSON.stringify(state.commonData.currentUser));
+    if (state) {
+      this.profile = state.user!.data;
 
       if (this.profile && this.profile.countries_available) {
         this.countries = this._updateCountriesList(this.profile.countries_available);
