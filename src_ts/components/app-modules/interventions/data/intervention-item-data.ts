@@ -482,7 +482,7 @@ class InterventionItemData extends connect(store)(
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'PD/SSFA successfully deleted.',
+        text: 'PD/SPD successfully deleted.',
         showCloseBtn: true
       });
     } else {

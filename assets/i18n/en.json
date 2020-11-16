@@ -14,7 +14,7 @@
     "TITLE": "PDs/SPDs List",
     "TABLE_TITLE": "PDs/SPDs",
     "COLUMNS": {
-      "REFERENCE_NO": "PD/SSFA Reference Number",
+      "REFERENCE_NO": "PD/SPD Reference Number",
       "PARTNER_NAME": "Partner Name",
       "DOC_TYPE": "Document Type",
       "STATUS": "Status",
