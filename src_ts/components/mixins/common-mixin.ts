@@ -51,7 +51,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return 'Sent to Partner';
       }
 
-      if (data.unicef_court && !!data.date_draft_by_partner) {
+      if (data.unicef_court && !!data.submission_date) {
         return 'Sent to Unicef';
       }
       return '';
