@@ -103,7 +103,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
             </etools-data-table-column>
             <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
               <etools-data-table-column class="col-2">
-                PD/SSFA ref.#
+                PD/SPD ref.#
               </etools-data-table-column>
             </template>
           </etools-data-table-header>
@@ -148,7 +148,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                   [[getDisplayValue(report.reporting_period)]]
                 </span>
                 <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-                  <span class="col-data col-2" data-col-header-label="PD/SSFA ref.#">
+                  <span class="col-data col-2" data-col-header-label="PD/SPD ref.#">
                     <a
                       class="pd-ref truncate"
                       href$="interventions/[[report.programme_document.external_id]]/details"

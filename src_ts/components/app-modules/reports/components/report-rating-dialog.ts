@@ -46,7 +46,7 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
       >
         <div id="content-box" hidden$="[[isSRReport]]">
           <p>
-            Rate the overall progress of this PD/SSFA in light of this report and monitoring visits.
+            Rate the overall progress of this PD/SPD in light of this report and monitoring visits.
           </p>
           <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
             <paper-radio-button name="Met"> Met</paper-radio-button>
