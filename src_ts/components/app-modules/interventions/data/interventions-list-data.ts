@@ -36,6 +36,8 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
 
     let foundValues;
     if (multiple) {
+      filterValues = filterValues.map((f: any) => String(f));
+
       // case for intervention properties values like: offices, sections, cp outputs (array of values)
       foundValues = intervention[prop].filter(function (propVal: any) {
         return filterValues.indexOf(String(propVal)) > -1;
@@ -113,7 +115,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           !self._filterFound(intervention, 'donors', true, donors) ||
           !self._filterFound(intervention, 'partner_name', false, partners) ||
           !self._filterFound(intervention, 'grants', true, grants) ||
-          !self._filterFound(intervention, 'country_programmes', true, cpStructures) // TODO - test after bk ready & export url
+          !self._filterFound(intervention, 'country_programmes', true, cpStructures)
         ) {
           return false;
         }
