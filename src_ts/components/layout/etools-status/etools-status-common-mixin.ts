@@ -38,7 +38,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     minimumDistanceFromWindowTop = 76;
 
     @property({type: String})
-    sectionName!: string; // PD/SSFA, Partners, Agreements
+    sectionName!: string; // PD/SPD, Partners, Agreements
 
     @property({type: Array})
     possibleStatuses!: Status[];
