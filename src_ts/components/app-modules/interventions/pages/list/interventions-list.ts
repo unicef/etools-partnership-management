@@ -886,7 +886,7 @@ class InterventionsList extends connect(store)(
       cp_outputs: this.selectedCpOutputs,
       start: this.startDate,
       end: this.endDate,
-      endAfter: this.endAfter,
+      end_after: this.endAfter,
       search: this.q
     };
     return this._buildExportQueryString(params);
