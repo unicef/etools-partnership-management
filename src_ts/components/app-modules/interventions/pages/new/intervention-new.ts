@@ -19,7 +19,8 @@ import orderBy from 'lodash-es/orderBy';
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
   newIntervention: Partial<Intervention> = {
-    reference_number_year: `${new Date().getFullYear()}`
+    reference_number_year: `${new Date().getFullYear()}`,
+    planned_budget: {currency: 'USD'}
   };
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
@@ -45,6 +46,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   @property() selectedAgreement: StaticAgreement | null = null;
 
   @property() documentTypes: LabelAndValue[] = [];
+  @property() currencies: LabelAndValue[] = [];
 
   @property() staffMembers: LabelAndValue<number>[] = [];
   get allStaffMembers(): string {
@@ -101,6 +103,9 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.cpStructures, state.commonData!.countryProgrammes)) {
       this.cpStructures = [...state.commonData!.countryProgrammes];
     }
+    if (!isJsonStrMatch(this.currencies, state.commonData!.currencies)) {
+      this.currencies = [...state.commonData!.currencies];
+    }
 
     //  this is in place to remove 'SSFA' doc types
     this.documentTypes = this.documentTypes.filter((el) => {
@@ -154,6 +159,18 @@ export class InterventionNew extends connect(store)(LitElement) {
     }
     // @ts-ignore
     this.newIntervention[field] = value;
+    this.requestUpdate();
+  }
+
+  setCurrency(value: string) {
+    if (value === undefined) {
+      return;
+    }
+    if (this.newIntervention.planned_budget?.currency === value) {
+      return;
+    }
+    // @ts-ignore
+    this.newIntervention.planned_budget?.currency = value;
     this.requestUpdate();
   }
 
