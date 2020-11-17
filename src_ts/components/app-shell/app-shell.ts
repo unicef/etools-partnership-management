@@ -27,7 +27,6 @@ import {
 
 // Lazy loading CommonData reducer.
 import commonData from '../../reducers/common-data.js';
-import pageData from '../../reducers/page-data.js';
 import uploadStatus from '../../reducers/upload-status.js';
 import agreements from '../../reducers/agreements.js';
 import partners from '../../reducers/partners.js';
@@ -39,7 +38,6 @@ store.addReducers({
   uploadStatus,
   partners,
   agreements,
-  pageData,
   user
 });
 
@@ -61,7 +59,6 @@ import {AppMenuMixin} from './menu/mixins/app-menu-mixin.js';
 import CommonDataMixin from '../common-data-mixins/common-data.js';
 import ToastNotificationsMixin from '../toast-notifications/toast-notification-mixin.js';
 import ScrollControlMixin from '../mixins/scroll-control-mixin.js';
-import AmendmentModeUIMixin from '../amendment-mode/amendment-mode-UI-mixin.js';
 import UserDataMixin from '../user/user-data-mixin';
 
 import './menu/app-menu.js';
@@ -86,7 +83,6 @@ import {RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from '../../actions/up
 setPassiveTouchGestures(true);
 
 import {BASE_URL} from '../../config/config';
-import {setInAmendment} from '../../actions/page-data.js';
 import UploadsMixin from '../mixins/uploads-mixin.js';
 import {fireEvent} from '../utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
@@ -126,9 +122,7 @@ class AppShell extends connect(store)(
     GestureEventListeners(
       AppMenuMixin(
         ToastNotificationsMixin(
-          ScrollControlMixin(
-            AmendmentModeUIMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
-          )
+          ScrollControlMixin(UtilsMixin(LoadingMixin(UserDataMixin(CommonDataMixin(PolymerElement)))))
         )
       )
     )
@@ -226,9 +220,9 @@ class AppShell extends connect(store)(
             </template>
           </main>
 
-          <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
+          <page-footer></page-footer>
 
-          <div id="floating-footer" hidden$="[[!amendmentModeActive]]">
+          <div id="floating-footer" hidden>
             <strong> AMENDMENT MODE </strong>
             | All fields in the details tab are now open for editing. Please save before clicking "I am done".
             <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
@@ -319,12 +313,11 @@ class AppShell extends connect(store)(
   }
 
   ready() {
-
     super.ready();
 
     this._initListeners();
     this._createLeavePageDialog();
-    if(this.$.appHeadLayout) {
+    if (this.$.appHeadLayout) {
       window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
       this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
     }
@@ -364,7 +357,6 @@ class AppShell extends connect(store)(
     // TODO: _page is gonna be user with pwa router, not used right now (future improvement)
     // this._page = state.app!.page;
     this._drawerOpened = state.app!.drawerOpened;
-    this.amdStateChanged(state);
     this.uploadsStateChanged(state);
 
     // @ts-ignore EndpointsMixin
@@ -382,7 +374,7 @@ class AppShell extends connect(store)(
     }
   }
 
-  async loadLocalization () {
+  async loadLocalization() {
     this.waitForTranslationsToLoad().then(async() => {
       await use(this.selectedLanguage);
       this.currentLanguageIsSet = true;
@@ -612,7 +604,6 @@ class AppShell extends connect(store)(
       bubbles: true,
       composed: true
     });
-    store.dispatch(setInAmendment(false));
   }
 
   // @ts-ignore

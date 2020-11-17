@@ -20,7 +20,6 @@ import {UploadStatusState} from './reducers/upload-status';
 import {CommonDataAction} from './actions/common-data';
 import {PartnersState} from './reducers/partners';
 import {AgreementsState} from './reducers/agreements';
-import {PageDataState} from './reducers/page-data';
 import {UserState} from './reducers/user';
 import {ActiveLanguageState} from './reducers/active-language';
 import {LanguageAction} from './actions/active-language';
@@ -41,7 +40,6 @@ export interface RootState {
   uploadStatus?: UploadStatusState;
   partners?: PartnersState;
   agreements?: AgreementsState;
-  pageData?: PageDataState;
   user?: UserState;
   interventions?: any;
   activeLanguage?: ActiveLanguageState;
