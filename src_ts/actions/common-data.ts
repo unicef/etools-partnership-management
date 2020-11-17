@@ -43,7 +43,6 @@ export const UPDATE_SECTIONS = 'UPDATE_SECTIONS';
 export const UPDATE_UNICEF_USERS = 'UPDATE_UNICEF_USERS';
 export const UPDATE_USER_COUNTRY_DATA = 'UPDATE_USER_COUNTRY_DATA';
 export const UPDATE_ENV_FLAGS = 'UPDATE_ENV_FLAGS';
-export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 export const UPDATE_GENDER_EQUITY = 'UPDATE_GENDER_EQUITY';
 export const UPDATE_RISK_TYPES = 'UPDATE_RISK_TYPES';
 export const UPDATE_CASH_TRANSFER_MODALITIES = 'UPDATE_CASH_TRANSFER_MODALITIES';
@@ -165,10 +164,6 @@ export interface CommonDataActionUpdateEnvFlags extends Action<'UPDATE_ENV_FLAGS
   envFlags: GenericObject;
 }
 
-export interface CommonDataActionUpdateCurrentUser extends Action<'UPDATE_CURRENT_USER'> {
-  user: GenericObject;
-}
-
 export type CommonDataAction =
   | CommonDataActionUpdateCountryProgrammes
   | CommonDataActionUpdateDisaggregations
@@ -198,8 +193,7 @@ export type CommonDataAction =
   | CommonDataActionUpdateUnicefUsers
   | CommonDataActionUpdateUserCountryData
   | CommonDataActionUpdatePRPCountries
-  | CommonDataActionUpdateEnvFlags
-  | CommonDataActionUpdateCurrentUser;
+  | CommonDataActionUpdateEnvFlags;
 
 // @ts-ignore - for now
 type ThunkResult = ThunkAction<void, RootState, undefined, CommonDataAction>;
@@ -445,13 +439,6 @@ export const updateEnvFlags: ActionCreator<CommonDataActionUpdateEnvFlags> = (en
   return {
     type: UPDATE_ENV_FLAGS,
     envFlags
-  };
-};
-
-export const updateCurrentUser: ActionCreator<CommonDataActionUpdateCurrentUser> = (user: GenericObject) => {
-  return {
-    type: UPDATE_CURRENT_USER,
-    user
   };
 };
 
