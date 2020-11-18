@@ -1,7 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import {DomRepeatEvent} from '../../../typings/globals.types';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
@@ -164,7 +163,7 @@ class EtoolsActionButton extends PolymerElement {
     this.set('secondaryActions', secondaryActions);
   }
 
-  _handleSecondaryClick(event: DomRepeatEvent) {
+  _handleSecondaryClick(event: any) {
     const action = event.model.item;
     fireEvent(this, action.event);
   }

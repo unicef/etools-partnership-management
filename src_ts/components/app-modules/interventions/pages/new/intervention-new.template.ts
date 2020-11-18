@@ -1,9 +1,9 @@
 /* eslint no-invalid-this: 0 */
 import {TemplateResult, html} from 'lit-element';
 import {InterventionNew} from './intervention-new';
-import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
+import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -91,13 +91,13 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Vendor Number   -->
-        <div class="col-6">
+        <div class="col-8">
           <etools-form-element-wrapper label="Partner Vendor Number" .value="${this.selectedPartner?.vendor_number}">
           </etools-form-element-wrapper>
         </div>
 
         <!--   Agreement Authorized Officers   -->
-        <div class="col-6">
+        <div class="col-4">
           <etools-form-element-wrapper label="Agreement Authorized Officers" .value="${this.authorizedOfficers}">
           </etools-form-element-wrapper>
         </div>
@@ -105,9 +105,27 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   Partner Staff Members   -->
-        <div class="col-12 w100">
+        <div class="col-8 w100">
           <etools-form-element-wrapper label="Partner Staff Members" .value="${this.allStaffMembers}">
           </etools-form-element-wrapper>
+        </div>
+        <div class="col-4">
+          <etools-dropdown-multi
+            label="CP Structures"
+            placeholder="&#8212;"
+            .options="${this.cpStructures}"
+            option-value="id"
+            option-label="name"
+            .selectedValues="${this.newIntervention.country_programmes || []}"
+            @etools-selected-items-changed="${({detail}: CustomEvent) =>
+              this.setInterventionField(
+                'country_programmes',
+                detail.selectedItems.map(({id}: any) => id)
+              )}"
+            trigger-value-change-event
+            auto-validate
+          >
+          </etools-dropdown-multi>
         </div>
       </div>
 
@@ -129,6 +147,21 @@ export function template(this: InterventionNew): TemplateResult {
             auto-validate
           >
           </etools-dropdown-multi>
+        </div>
+        <div class="col-4">
+          <etools-dropdown
+            id="currency"
+            label="Document Currency"
+            placeholder="&#8212;"
+            .options="${this.currencies}"
+            .selected="${this.newIntervention?.planned_budget?.currency}"
+            trigger-value-change-event
+            @etools-selected-item-changed="${({detail}: CustomEvent) =>
+              this.setCurrency(detail.selectedItem && detail.selectedItem.value)}"
+            option-value="value"
+            option-label="label"
+          >
+          </etools-dropdown>
         </div>
       </div>
 
@@ -175,7 +208,7 @@ export function template(this: InterventionNew): TemplateResult {
 
       <div class="row">
         <!--   SPD is Humanitarian   -->
-        <div class="col-6" ?hidden="${!this.isSPD}">
+        <div ?hidden="${!this.isSPD}">
           <paper-toggle-button
             ?checked="${this.newIntervention.humanitarian_flag}"
             @checked-changed="${({detail}: CustomEvent) => {
@@ -211,11 +244,11 @@ export function template(this: InterventionNew): TemplateResult {
         </paper-toggle-button>
 
         <!--   UNPP CFEI Number   -->
-        <div class="col-2">
+        <div class="col-3">
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
-            label="UNPP CFEI/DSR Reference Number"
+            label="UNPP CFEI/DSR Ref Number"
             placeholder="&#8212;"
             .value="${this.newIntervention.cfei_number}"
             @value-changed="${({detail}: CustomEvent) =>

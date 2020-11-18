@@ -7,7 +7,6 @@ import './report-status';
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
 import {timeOut} from '@polymer/polymer/lib/utils/async';
 import {fireEvent} from '../../../utils/fire-custom-event';
-import {GenericObject, User} from '../../../../typings/globals.types';
 import EndpointsMixin from '../../../endpoints/endpoints-mixin';
 import CommonMixin from '../../../mixins/common-mixin';
 import PaginationMixin from '../../../mixins/pagination-mixin';
@@ -19,6 +18,7 @@ import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {abortRequestByKey} from '@unicef-polymer/etools-ajax/etools-iron-request';
 import {property} from '@polymer/decorators';
+import {GenericObject, User} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -103,7 +103,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
             </etools-data-table-column>
             <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
               <etools-data-table-column class="col-2">
-                PD/SSFA ref.#
+                PD/SPD ref.#
               </etools-data-table-column>
             </template>
           </etools-data-table-header>
@@ -148,7 +148,7 @@ class ReportsDisplayList extends connect(store)(PaginationMixin(CommonMixin(Endp
                   [[getDisplayValue(report.reporting_period)]]
                 </span>
                 <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
-                  <span class="col-data col-2" data-col-header-label="PD/SSFA ref.#">
+                  <span class="col-data col-2" data-col-header-label="PD/SPD ref.#">
                     <a
                       class="pd-ref truncate"
                       href$="interventions/[[report.programme_document.external_id]]/details"

@@ -27,16 +27,16 @@ import ListFiltersMixin from '../../../../mixins/list-filters-mixin.js';
 
 import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 
-import {SharedStyles} from '../../../../styles/shared-styles.js';
-import {listFilterStyles} from '../../../../styles/list-filter-styles.js';
-import {partnerStatusStyles} from '../../../../styles/partner-status-styles.js';
+import {SharedStyles} from '../../../../styles/shared-styles';
+import {listFilterStyles} from '../../../../styles/list-filter-styles';
+import {partnerStatusStyles} from '../../../../styles/partner-status-styles';
 
 import '../../data/partners-list-data.js';
 import {isJsonStrMatch} from '../../../../utils/utils';
 import {fireEvent} from '../../../../utils/fire-custom-event';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../typings/globals.types';
 import {PartnersListDataEl} from '../../data/partners-list-data.js';
+import {LabelAndValue} from '@unicef-polymer/etools-types';
 
 let _partnersLastNavigated = '';
 

@@ -102,7 +102,7 @@ const pmpEdpoints = {
     url: '/api/v2/reports/countryprogramme/'
   },
   sections: {
-    url: '/api/v2/reports/sections/',
+    url: '/api/sections/v3/',
     exp: 6 * 60 * 60 * 1000,
     cachingKey: 'sections'
   },

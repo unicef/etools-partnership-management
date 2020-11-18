@@ -9,9 +9,9 @@ import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/
 declare const moment: any;
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import {GenericObject} from '../../../../typings/globals.types';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {store, RootState} from '../../../../store';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

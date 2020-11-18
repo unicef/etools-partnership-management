@@ -8,20 +8,21 @@ import CONSTANTS from '../../../../config/app-constants';
 import {RootState} from '../../../../store';
 import {isJsonStrMatch} from '../../../utils/utils';
 import {connect} from 'pwa-helpers/connect-mixin';
-import {
-  ListItemIntervention,
-  SelectedSection,
-  FrsDetails,
-  Intervention,
-  InterventionAttachment,
-  PlannedVisit,
-  ExpectedResult
-} from '../../../../typings/intervention.types';
-import {Agreement, MinimalAgreement} from '../../agreements/agreement.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError, logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property} from '@polymer/decorators';
-import {Office, GenericObject} from '../../../../typings/globals.types';
+import {
+  ExpectedResult,
+  FrsDetails,
+  InterventionAttachment,
+  ListItemIntervention,
+  PlannedVisit,
+  Intervention,
+  Office,
+  GenericObject,
+  Agreement,
+  MinimalAgreement
+} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -219,18 +220,18 @@ class InterventionItemData extends connect(store)(
   }
 
   _getMinimalAgreementData(detail: Agreement) {
-    const minimalAgrData: MinimalAgreement = {
+    const minimalAgrData: Partial<MinimalAgreement> = {
       agreement_number: '',
       agreement_number_status: '',
       agreement_type: '',
-      end: null,
+      end: '',
       id: null,
       partner: null,
-      partner_name: null,
+      partner_name: '',
       signed_by: null,
-      signed_by_partner_date: null,
-      signed_by_unicef_date: null,
-      start: null,
+      signed_by_partner_date: '',
+      signed_by_unicef_date: '',
+      start: '',
       status: ''
     };
     let propName: string;
@@ -238,6 +239,7 @@ class InterventionItemData extends connect(store)(
       if (!Object.prototype.hasOwnProperty.call(detail, propName)) {
         logWarn('Mapping property not found');
       } else {
+        // @ts-ignore
         minimalAgrData[propName] = detail[propName];
       }
     }
@@ -260,55 +262,9 @@ class InterventionItemData extends connect(store)(
     return hasF;
   }
 
-  _fileField(intervention: Intervention, property: string) {
+  _fileField(intervention: Intervention, property: keyof Intervention) {
     // TODO
     return intervention[property] instanceof File;
-  }
-
-  /**
-   * Update intervention status. In addition set a callback to be called after request is complete.
-   */
-  updateInterventionStatus(data: any, callback?: any) {
-    if (!data.interventionId) {
-      fireEvent(this, 'toast', {
-        text: 'Invalid intervention ID',
-        showCloseBtn: true
-      });
-    } else {
-      if (
-        [
-          CONSTANTS.STATUSES.Signed.toLowerCase(),
-          CONSTANTS.STATUSES.Suspended.toLowerCase(),
-          CONSTANTS.STATUSES.Terminated.toLowerCase()
-        ].indexOf(data.status) > -1
-      ) {
-        // status change is allowed
-        // set additional callback if any
-        if (callback) {
-          this.set('handleResponseAdditionalCallback', callback);
-        }
-        fireEvent(this, 'global-loading', {
-          message: 'Changing intervention status...',
-          active: true,
-          loadingSource: this.ajaxLoadingMsgSource
-        });
-        // fire in the hole
-        this._triggerInterventionRequest({
-          method: 'PATCH',
-          endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {
-            id: data.interventionId
-          }),
-          body: {
-            status: data.status
-          }
-        });
-      } else {
-        fireEvent(this, 'toast', {
-          text: "Changing status to '" + data.status + "' is not allowed!",
-          showCloseBtn: true
-        });
-      }
-    }
   }
 
   /**
@@ -385,7 +341,7 @@ class InterventionItemData extends connect(store)(
     dexieObject.cso_contribution = 0;
 
     dexieObject.id = responseDetail.id;
-    dexieObject.country_programme = responseDetail.country_programme;
+    dexieObject.country_programmes = responseDetail.country_programmes;
     dexieObject.end = responseDetail.end;
     dexieObject.title = responseDetail.title;
     dexieObject.start = responseDetail.start;
@@ -474,7 +430,10 @@ class InterventionItemData extends connect(store)(
   }
 
   _getSelectedSections(responseDetail: any) {
-    let selectedSections = new SelectedSection([], []);
+    let selectedSections = {
+      sectionIds: [],
+      section_names: [] as string[]
+    };
 
     const sections = responseDetail.sections;
 
@@ -487,7 +446,7 @@ class InterventionItemData extends connect(store)(
           sectionNames.push(section.name);
         }
       });
-      selectedSections = new SelectedSection(interventionSectionIds, sectionNames);
+      selectedSections = {sectionIds: interventionSectionIds, section_names: sectionNames};
     }
     return selectedSections;
   }
@@ -523,7 +482,7 @@ class InterventionItemData extends connect(store)(
     if (deleteCount === 1) {
       fireEvent(this, 'reload-list');
       fireEvent(this, 'toast', {
-        text: 'PD/SSFA successfully deleted.',
+        text: 'PD/SPD successfully deleted.',
         showCloseBtn: true
       });
     } else {

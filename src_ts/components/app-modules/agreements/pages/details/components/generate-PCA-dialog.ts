@@ -4,8 +4,8 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@unicef-polymer/etools-dialog/etools-dialog.js';
 import {property} from '@polymer/decorators';
-import {LabelAndValue} from '../../../../../../typings/globals.types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog.js';
+import {LabelAndValue} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

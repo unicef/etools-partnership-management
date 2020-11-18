@@ -9,10 +9,10 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
 import {property} from '@polymer/decorators/lib/decorators';
 import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
-import {GenericObject} from '../../../../typings/globals.types';
 import {RootState, store} from '../../../../store';
 import {connect} from 'pwa-helpers/connect-mixin';
 import CONSTANTS from '../../../../config/app-constants.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /*
   status: 'accepted'/'sent back'
@@ -46,7 +46,7 @@ class ReportRatingDialog extends connect(store)(EndpointsMixin(PolymerElement)) 
       >
         <div id="content-box" hidden$="[[isSRReport]]">
           <p>
-            Rate the overall progress of this PD/SSFA in light of this report and monitoring visits.
+            Rate the overall progress of this PD/SPD in light of this report and monitoring visits.
           </p>
           <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
             <paper-radio-button name="Met"> Met</paper-radio-button>

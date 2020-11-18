@@ -1,12 +1,11 @@
 // import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
-import {ListQueryParams} from '../../../typings/route.types.js'; // TODO - load using tsconfig
-import '../../../typings/globals.types.js';
+import {ListQueryParams} from '../../../typings/route.types'; // TODO - load using tsconfig
 import {PolymerElement} from '@polymer/polymer';
 
-import {fireEvent} from '../../utils/fire-custom-event.js';
+import {fireEvent} from '../../utils/fire-custom-event';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor, GenericObject} from '../../../typings/globals.types.js';
 import {property} from '@polymer/decorators';
+import {Constructor, GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * Module main elements common functionality
@@ -90,12 +89,12 @@ function ModuleMainElCommonFunctionalityMixin<T extends Constructor<PolymerEleme
       const selector = tabPrefix + clickedTabName;
       const tabEl = this.shadowRoot!.querySelector(selector);
 
-      if(tabEl) {
+      if (tabEl) {
         if (tabEl instanceof PolymerElement) {
           // tab element already loaded, no need for loading messages
           return;
         }
-        if(selector === 'intervention-tabs' && tabEl.shadowRoot!.querySelector('intervention-details') !== null) {
+        if (selector === 'intervention-tabs' && tabEl.shadowRoot!.querySelector('intervention-details') !== null) {
           // intervention-tabs tab element already loaded, no need for loading messages
           return;
         }

@@ -5,18 +5,18 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-label/iron-label.js';
 import {EtoolsCurrency} from '@unicef-polymer/etools-currency-amount-input/mixins/etools-currency-mixin.js';
 
-import '../../../../layout/etools-form-element-wrapper.js';
+import '../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 
 import './sent-bk-comments.js';
 import CommonMixin from '../../../../mixins/common-mixin.js';
 import {PolymerElement, html} from '@polymer/polymer';
-import {fireEvent} from '../../../../utils/fire-custom-event.js';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 import CONSTANTS from '../../../../../config/app-constants.js';
-import {pageCommonStyles} from '../../../../styles/page-common-styles.js';
-import {gridLayoutStyles} from '../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../styles/shared-styles.js';
+import {pageCommonStyles} from '../../../../styles/page-common-styles';
+import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../styles/shared-styles';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

@@ -16,7 +16,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
 
 // This element is connected to the Redux store.
-import {store, RootState} from '../../store.js';
+import {store, RootState} from '../../store';
 
 // These are the actions needed by this element.
 import {
@@ -92,12 +92,18 @@ import {fireEvent} from '../utils/fire-custom-event.js';
 import {objectsAreTheSame, isJsonStrMatch} from '../utils/utils.js';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer.js';
 import {property} from '@polymer/decorators';
-import {GenericObject, User, UserPermissions} from '../../typings/globals.types.js';
+import {GenericObject, UserPermissions, User} from '@unicef-polymer/etools-types';
 import {createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
 import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';
+import {registerTranslateConfig, use} from 'lit-translate';
+
+const translationConfig = registerTranslateConfig({loader: (lang: string) =>
+  fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())
+});
+
 setRootPath(BASE_URL);
 
 /**
@@ -128,6 +134,7 @@ class AppShell extends connect(store)(
     )
   )
 ) {
+
   public static get template() {
     // main template
     // language=HTML
@@ -301,18 +308,26 @@ class AppShell extends connect(store)(
   @property({type: String})
   appLocPath!: string;
 
+  @property({type: String})
+  selectedLanguage!: string;
+
+  @property({type: Boolean})
+  currentLanguageIsSet!: boolean;
+
   public static get observers() {
     return ['_routePageChanged(routeData.module)', '_scrollToTopOnPageChange(module)'];
   }
 
   ready() {
+
     super.ready();
 
     this._initListeners();
     this._createLeavePageDialog();
-    window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
-    this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
-
+    if(this.$.appHeadLayout) {
+      window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout!.shadowRoot!.querySelector('#contentContainer');
+      this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
+    }
     if (this.module !== 'not-found') {
       /*
        * Activate the global loading with default message.
@@ -328,7 +343,6 @@ class AppShell extends connect(store)(
 
   public connectedCallback() {
     super.connectedCallback();
-
     this.requestUserData();
     // trigger common data load requests
     // @ts-ignore
@@ -361,6 +375,40 @@ class AppShell extends connect(store)(
         showCloseBtn: state.app!.toastNotification.showCloseBtn
       });
     }
+
+    if (!isJsonStrMatch(state.activeLanguage!.activeLanguage, this.selectedLanguage)) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      this.loadLocalization();
+    }
+  }
+
+  async loadLocalization () {
+    this.waitForTranslationsToLoad().then(async() => {
+      await use(this.selectedLanguage);
+      this.currentLanguageIsSet = true;
+    });
+  }
+
+  waitForTranslationsToLoad() {
+    return new Promise((resolve) => {
+      const translationsCheck = setInterval(() => {
+        if (translationConfig) {
+          clearInterval(translationsCheck);
+          resolve(true);
+        }
+      }, 50);
+    });
+  }
+
+  waitForTranslationsAndLanguageToLoad() {
+    return new Promise((resolve) => {
+      const translationAndLanguageCheck = setInterval(() => {
+        if (translationConfig && this.currentLanguageIsSet) {
+          clearInterval(translationAndLanguageCheck);
+          resolve(true);
+        }
+      }, 50);
+    });
   }
 
   // dev purpose - to be removed in the future
@@ -501,6 +549,7 @@ class AppShell extends connect(store)(
   private _canAccessPage(module: string) {
     // TODO: (future task) use defer method from utils mixin
     // (NOTE: not all utils behavior functionality is needed)
+
     const defer: any = {};
     defer.promise = new Promise(function (resolve, reject) {
       defer.resolve = resolve;
@@ -537,11 +586,13 @@ class AppShell extends connect(store)(
     }
 
     this._canAccessPage(routePage).then((accessGranted: boolean) => {
-      if (!accessGranted) {
-        this._pageNotFound();
-      } else {
-        this.set('module', routePage);
-      }
+      this.waitForTranslationsAndLanguageToLoad().then(() => {
+        if (!accessGranted) {
+          this._pageNotFound();
+        } else {
+          this.set('module', routePage);
+        }
+      });
     });
 
     // Close a non-persistent drawer when the module & route are changed.

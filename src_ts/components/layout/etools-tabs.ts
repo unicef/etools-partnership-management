@@ -5,8 +5,8 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-tabs/paper-tabs';
 
-import {EtoolsTab} from '../../typings/globals.types';
 import {property} from '@polymer/decorators';
+import {EtoolsTab} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer

@@ -1,5 +1,5 @@
 import * as a from '../actions/agreements.js';
-import {MinimalAgreement} from '../components/app-modules/agreements/agreement.types.js';
+import {MinimalAgreement} from '@unicef-polymer/etools-types';
 
 export class AgreementsState {
   list: MinimalAgreement[] = [];

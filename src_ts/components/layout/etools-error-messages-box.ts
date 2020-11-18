@@ -3,7 +3,7 @@ import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-l
 import '@unicef-polymer/etools-content-panel/etools-content-panel.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-button/paper-button.js';
-import {buttonsStyles} from '../styles/buttons-styles.js';
+import {buttonsStyles} from '../styles/buttons-styles';
 import {property} from '@polymer/decorators';
 
 /**

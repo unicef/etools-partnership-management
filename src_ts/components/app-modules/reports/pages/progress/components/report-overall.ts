@@ -1,11 +1,11 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import '../../../../../layout/etools-form-element-wrapper.js';
+import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 import '../../../../../styles/grid-layout-styles.js';
 
 import '../../../components/report-status.js';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../typings/globals.types.js';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -22,7 +22,7 @@ class ReportOverall extends PolymerElement {
 
       <div class="row-h">
         <div class="col col-5">
-          <etools-form-element-wrapper label="PD output or SSFA expected result" value="[[lowerResultTitle]]">
+          <etools-form-element-wrapper label="PD/SPD output/expected result" value="[[lowerResultTitle]]">
           </etools-form-element-wrapper>
         </div>
         <div class="col col-2">

@@ -9,19 +9,18 @@ import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '../../../../../endpoints/endpoints.js';
 import CommonMixin from '../../../../../mixins/common-mixin.js';
 
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
-import {SharedStyles} from '../../../../../styles/shared-styles.js';
-import '../../../../../layout/icons-actions.js';
-
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
+import {IconsActionsEl} from '../../../../interventions/pages/intervention-tab-pages/common/layout/icons-actions';
 import './assessment-dialog.js';
 import {etoolsCpHeaderActionsBarStyles} from '../../../../../styles/etools-cp-header-actions-bar-styles';
-import {store} from '../../../../../../store.js';
-import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../actions/upload-status.js';
+import {store} from '../../../../../../store';
+import {DECREASE_UPLOADS_IN_PROGRESS, INCREASE_UNSAVED_UPLOADS} from '../../../../../../actions/upload-status';
 import {property} from '@polymer/decorators';
-import {PartnerAssessment} from '../../../../../../models/partners.models.js';
-import {AssessmentDialog} from './assessment-dialog.js';
-import {IconsActionsEl} from '../../../../../layout/icons-actions.js';
-import {fireEvent} from '../../../../../utils/fire-custom-event.js';
+import {PartnerAssessment} from '../../../../../../models/partners.models';
+import {AssessmentDialog} from './assessment-dialog';
+import {fireEvent} from '../../../../../utils/fire-custom-event';
 
 /**
  * @customElement
@@ -63,13 +62,17 @@ class AssessmentsItems extends CommonMixin(PolymerElement) {
         etools-data-table-row:hover icons-actions {
           visibility: visible;
         }
+
+        paper-toggle-button#showArchived {
+          font-size: 16px;
+          --paper-toggle-button-label-color: var(--primary-text-color);
+          --paper-toggle-button-checked-bar-color: var(--primary-color);
+        }
       </style>
 
       <etools-content-panel panel-title="Other Assessments ([[dataItems.length]])" class="content-section">
         <div slot="panel-btns" class="cp-header-actions-bar">
-          <paper-toggle-button id="showArchived" checked="{{showArchived}}">
-            Show archived
-          </paper-toggle-button>
+          <paper-toggle-button id="showArchived" checked="{{showArchived}}"> Show archived </paper-toggle-button>
           <div class="separator" hidden$="[[!editMode]]"></div>
           <paper-icon-button
             icon="add-box"

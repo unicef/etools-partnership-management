@@ -70,7 +70,7 @@ class DataRefreshDialog extends EtoolsPageRefreshMixin(PolymerElement) {
             </div>
             <div class="col col-6">
               <paper-checkbox checked="{{interventionsSelected}}">
-                PD/SSFA
+                PD/SPD
               </paper-checkbox>
             </div>
           </div>

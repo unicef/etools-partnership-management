@@ -2,11 +2,10 @@ declare const moment: any;
 import Dexie from 'dexie';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
-import {ListItemIntervention} from '../../../../typings/intervention.types';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {logError} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 import {property, customElement} from '@polymer/decorators';
-import {GenericObject} from '../../../../typings/globals.types';
+import {GenericObject, ListItemIntervention} from '@unicef-polymer/etools-types';
 
 /**
  * @polymer
@@ -37,6 +36,8 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
 
     let foundValues;
     if (multiple) {
+      filterValues = filterValues.map((f: any) => String(f));
+
       // case for intervention properties values like: offices, sections, cp outputs (array of values)
       foundValues = intervention[prop].filter(function (propVal: any) {
         return filterValues.indexOf(String(propVal)) > -1;
@@ -114,7 +115,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           !self._filterFound(intervention, 'donors', true, donors) ||
           !self._filterFound(intervention, 'partner_name', false, partners) ||
           !self._filterFound(intervention, 'grants', true, grants) ||
-          !self._filterFound(intervention, 'country_programme', false, cpStructures)
+          !self._filterFound(intervention, 'country_programmes', true, cpStructures)
         ) {
           return false;
         }

@@ -2,11 +2,11 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@unicef-polymer/etools-upload/etools-upload.js';
 
-import '../../../../../layout/etools-form-element-wrapper.js';
-import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles.js';
+import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
+import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {property} from '@polymer/decorators';
-import {GenericObject} from '../../../../../../typings/globals.types.js';
-import {SharedStyles} from '../../../../../styles/shared-styles.js';
+import {SharedStyles} from '../../../../../styles/shared-styles';
+import {GenericObject} from '@unicef-polymer/etools-types';
 
 class SrDetails extends PolymerElement {
   static get is() {

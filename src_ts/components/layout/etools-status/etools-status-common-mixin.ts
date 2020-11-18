@@ -4,11 +4,11 @@ import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 import ScrollControlMixin from '../../mixins/scroll-control-mixin';
 import {removeDialog, createDynamicDialog} from '@unicef-polymer/etools-dialog/dynamic-dialog';
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-import {Constructor} from '../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
 import {Status, StatusAction} from '../../../typings/etools-status.types';
 import EtoolsDialog from '@unicef-polymer/etools-dialog';
+import {Constructor} from '@unicef-polymer/etools-types';
 declare const ShadyCSS: any;
 
 /**
@@ -38,7 +38,7 @@ function EtoolsStatusCommonMixin<T extends Constructor<PolymerElement>>(baseClas
     minimumDistanceFromWindowTop = 76;
 
     @property({type: String})
-    sectionName!: string; // PD/SSFA, Partners, Agreements
+    sectionName!: string; // PD/SPD, Partners, Agreements
 
     @property({type: Array})
     possibleStatuses!: Status[];

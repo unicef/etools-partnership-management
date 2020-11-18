@@ -8,22 +8,33 @@ import {csoPartnersSelector} from '../../../../../reducers/partners';
 import CONSTANTS from '../../../../../config/app-constants';
 import {ColumnStyles} from '../../../../styles/column-styles';
 import {template} from './intervention-new.template';
-import '../../../../layout/etools-form-element-wrapper';
+import '../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import {NewInterventionStyles} from './intervention-new.styles';
-import {GenericObject, LabelAndValue, Office} from '../../../../../typings/globals.types';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import pmpEndpoints from '../../../../endpoints/endpoints';
-import {Intervention} from '../../../../../typings/intervention.types';
+import {LabelAndValue, GenericObject, Office, Intervention} from '@unicef-polymer/etools-types';
+import orderBy from 'lodash-es/orderBy';
 
 @customElement('intervention-new')
 export class InterventionNew extends connect(store)(LitElement) {
   newIntervention: Partial<Intervention> = {
-    reference_number_year: new Date().getFullYear()
+    reference_number_year: `${new Date().getFullYear()}`,
+    planned_budget: {currency: 'USD'}
   };
   @property() offices: Office[] = [];
   @property() unicefUsersData: GenericObject[] = [];
   @property() sections: GenericObject[] = [];
+
+  private _cpStructures: any[] = [];
+  @property({type: Array})
+  get cpStructures() {
+    return this._cpStructures;
+  }
+
+  set cpStructures(cps) {
+    this._cpStructures = orderBy<any>(cps, ['future', 'active', 'special'], ['desc', 'desc', 'asc']);
+  }
 
   @property() hasUNPP = false;
 
@@ -35,6 +46,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   @property() selectedAgreement: StaticAgreement | null = null;
 
   @property() documentTypes: LabelAndValue[] = [];
+  @property() currencies: LabelAndValue[] = [];
 
   @property() staffMembers: LabelAndValue<number>[] = [];
   get allStaffMembers(): string {
@@ -51,7 +63,7 @@ export class InterventionNew extends connect(store)(LitElement) {
   }
 
   availableYears: {value: number; label: number}[] = new Array(11)
-    .fill(this.newIntervention.reference_number_year)
+    .fill(Number(this.newIntervention.reference_number_year))
     .map((year: number, index: number) => ({
       value: year + (-5 + index),
       label: year + (-5 + index)
@@ -88,6 +100,12 @@ export class InterventionNew extends connect(store)(LitElement) {
     if (!isJsonStrMatch(this.sections, state.commonData!.sections)) {
       this.sections = [...state.commonData!.sections];
     }
+    if (!isJsonStrMatch(this.cpStructures, state.commonData!.countryProgrammes)) {
+      this.cpStructures = [...state.commonData!.countryProgrammes];
+    }
+    if (!isJsonStrMatch(this.currencies, state.commonData!.currencies)) {
+      this.currencies = [...state.commonData!.currencies];
+    }
 
     //  this is in place to remove 'SSFA' doc types
     this.documentTypes = this.documentTypes.filter((el) => {
@@ -120,6 +138,8 @@ export class InterventionNew extends connect(store)(LitElement) {
   agreementChanged({detail}: CustomEvent): void {
     this.selectedAgreement = detail.selectedItem;
     this.setInterventionField('agreement', this.selectedAgreement?.id);
+    const cp = this.selectedAgreement?.country_programme;
+    this.setInterventionField('country_programmes', cp ? [cp] : []);
   }
 
   documentTypeChanged(type: string): void {
@@ -130,11 +150,27 @@ export class InterventionNew extends connect(store)(LitElement) {
     this.setInterventionField('document_type', type);
   }
 
-  setInterventionField(field: string, value: any): void {
+  setInterventionField(field: keyof Intervention, value: any): void {
+    if (value === undefined) {
+      return;
+    }
     if (areEqual(this.newIntervention[field], value)) {
       return;
     }
+    // @ts-ignore
     this.newIntervention[field] = value;
+    this.requestUpdate();
+  }
+
+  setCurrency(value: string) {
+    if (value === undefined) {
+      return;
+    }
+    if (this.newIntervention.planned_budget?.currency === value) {
+      return;
+    }
+    // @ts-ignore
+    this.newIntervention.planned_budget?.currency = value;
     this.requestUpdate();
   }
 
@@ -158,8 +194,8 @@ export class InterventionNew extends connect(store)(LitElement) {
 
     if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId) {
       this.selectedAgreement = null;
-      this.newIntervention.agreement = null;
-      this.newIntervention.document_type = null;
+      this.newIntervention.agreement = undefined;
+      this.newIntervention.document_type = undefined;
     }
 
     this.filteredAgreements = this.agreementsList.filter((agreement: StaticAgreement) => {
@@ -186,7 +222,7 @@ export class InterventionNew extends connect(store)(LitElement) {
 
   cancel() {
     this.newIntervention = {
-      reference_number_year: new Date().getFullYear()
+      reference_number_year: `${new Date().getFullYear()}`
     };
     this.selectedAgreement = null;
     this.selectedPartner = null;

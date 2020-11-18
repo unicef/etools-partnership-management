@@ -4,7 +4,7 @@ import '@polymer/paper-checkbox/paper-checkbox';
 import '@polymer/iron-icons/communication-icons';
 import '@unicef-polymer/etools-dialog/etools-dialog';
 
-import '../../../../../layout/etools-form-element-wrapper';
+import '../../../../interventions/pages/intervention-tab-pages/common/layout/etools-form-element-wrapper';
 import {gridLayoutStyles} from '../../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../../styles/shared-styles';
 import {requiredFieldStarredStyles} from '../../../../../styles/required-field-styles';
@@ -15,7 +15,6 @@ import EtoolsDialog from '@unicef-polymer/etools-dialog/etools-dialog';
 import EndpointsMixin from '../../../../../endpoints/endpoints-mixin';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import {ValidatableField} from '../../../../../../typings/globals.types';
 
 /**
  * @polymer
@@ -64,9 +63,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
           </div>
           <div class="col col-3 right-align">
             <etools-form-element-wrapper no-placeholder>
-              <paper-checkbox checked="{{item.active}}">
-                Active Staff
-              </paper-checkbox>
+              <paper-checkbox checked="{{item.active}}"> Active Staff </paper-checkbox>
             </etools-form-element-wrapper>
           </div>
         </div>
@@ -160,7 +157,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
     let valid = true;
 
     this.fieldSelectors.forEach((s) => {
-      const el: ValidatableField | null = this.shadowRoot!.querySelector(s);
+      const el: (Element & {validate: () => boolean}) | null = this.shadowRoot!.querySelector(s);
       if (el && !el.validate()) {
         valid = false;
       }
@@ -171,7 +168,7 @@ class AddEditStaffMembers extends EndpointsMixin(PolymerElement) {
 
   resetValidations() {
     this.fieldSelectors.forEach((s) => {
-      const el: ValidatableField | null = this.shadowRoot!.querySelector(s);
+      const el: (Element & {invalid: boolean}) | null = this.shadowRoot!.querySelector(s);
       if (el) {
         el.invalid = false;
       }

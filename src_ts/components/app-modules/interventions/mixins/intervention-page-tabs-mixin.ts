@@ -1,7 +1,7 @@
 import EnvironmentFlagsMixin from '../../../environment-flags/environment-flags-mixin';
-import {Constructor, EtoolsTab} from '../../../../typings/globals.types';
 import {PolymerElement} from '@polymer/polymer';
 import {property} from '@polymer/decorators';
+import {Constructor, EtoolsTab} from '@unicef-polymer/etools-types';
 
 /**
  * Interventions details tabs functionality
