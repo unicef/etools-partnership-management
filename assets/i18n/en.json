@@ -321,7 +321,8 @@
       "DATE_REVIEW_PERFORMED": "Date Review Performed",
       "FINAL_REVIEW_POP": {
         "FINAL_PARTNERSHIP_REV_ATT": "Final Partnership Review Attachment",
-        "CORRECT_FILE_ERR": "Please, select correct file"
+        "CORRECT_FILE_ERR": "Please, select correct file",
+        "DATE_REQUIRED": "Date is required"
       }
     }
   },
