@@ -149,7 +149,8 @@
       "SUPPLY_AGREEMENT": "Supply Agreement",
       "TOTAL_SUPPLY_BUDGET": "TOTAL SUPPLY BUDGET:",
       "NO_SUPPLY_AGREEMENTS": "There are no supply agreements added.",
-      "SUPPLIES_UPLOADED": "Supplies uploaded successfully"
+      "SUPPLIES_UPLOADED": "Supplies uploaded successfully",
+      "UNICEF_PRODUCT_NUMBER": "Unicef Product Number"
     },
     "SUPPLY_AGREEMENT_DIALOG": {
       "ADD_SUPPLY_AGREEMENT": "Add Supply Agreement",
@@ -157,7 +158,8 @@
       "CP_OUTPUT": "CP Output",
       "ENTER_PRICE_UNIT": "Enter price / unit",
       "ENTER_NUMBER_UNITS": "Enter number of units",
-      "ENTER_TITLE": "Enter title"
+      "ENTER_TITLE": "Enter title",
+      "ENTER_UNICEF_PRODUCT_NUMBER": "Enter product number"
     }
   },
   "INDICATOR_DIALOG": {
