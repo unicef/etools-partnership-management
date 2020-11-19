@@ -55,7 +55,7 @@ documentContainer.innerHTML = `
         --nonprod-header-color: #a94442;
         --nonprod-text-warn-color: #e6e600;
 
-        --amendment-mode-color: #8b00d6;
+        --amendment-mode-color: rgba(139,0,216, .99); /* .99 is to fix chrome strange bg color transparency */
 
         --main-border-color: #c1c1c1;
 
