@@ -149,7 +149,8 @@
       "SUPPLY_AGREEMENT": "Supply Agreement",
       "TOTAL_SUPPLY_BUDGET": "TOTAL SUPPLY BUDGET:",
       "NO_SUPPLY_AGREEMENTS": "There are no supply agreements added.",
-      "SUPPLIES_UPLOADED": "Supplies uploaded successfully"
+      "SUPPLIES_UPLOADED": "Supplies uploaded successfully",
+      "UNICEF_PRODUCT_NUMBER": "Unicef Product Number"
     },
     "SUPPLY_AGREEMENT_DIALOG": {
       "ADD_SUPPLY_AGREEMENT": "Add Supply Agreement",
