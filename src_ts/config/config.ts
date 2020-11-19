@@ -32,7 +32,11 @@ window.EtoolsPmpApp.DexieDb.version(1).stores({
 // configure app dexie db to be used for caching
 window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || window.EtoolsPmpApp.DexieDb;
 
-export const BASE_URL = '/pmp/';
+const getBasePath = () => {
+  return document.getElementsByTagName('base')[0].href;
+};
+
+export const BASE_URL = '/' + getBasePath().replace(window.location.origin, '').slice(1, -1) + '/';
 
 const PROD_DOMAIN = 'etools.unicef.org';
 const STAGING_DOMAIN = 'etools-staging.unicef.org';
@@ -103,25 +107,7 @@ export const tokenEndpointsHost = (host: string) => {
 };
 
 export const getDomainByEnv = () => {
-  if (window.location.port === '8082') {
-    return 'http://localhost:8082/pmp';
-  }
-  if (isStagingServer()) {
-    return 'https://etools-staging.unicef.org/pmp';
-  }
-  if (isDevServer()) {
-    return 'https://etools-dev.unicef.org/pmp';
-  }
-  if (isTestServer()) {
-    return 'https://etools-test.unicef.io/pmp';
-  }
-  if (isDemoServer()) {
-    return 'https://etools-demo.unicef.org/pmp';
-  }
-  if (isProductionServer()) {
-    return 'https://etools.unicef.org/pmp';
-  }
-  return `${location.origin}/pmp`;
+  return `${window.location.origin}/pmp`;
 };
 
 export const tokenStorageKeys = {
