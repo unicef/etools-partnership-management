@@ -158,7 +158,8 @@
       "CP_OUTPUT": "CP Output",
       "ENTER_PRICE_UNIT": "Enter price / unit",
       "ENTER_NUMBER_UNITS": "Enter number of units",
-      "ENTER_TITLE": "Enter title"
+      "ENTER_TITLE": "Enter title",
+      "ENTER_UNICEF_PRODUCT_NUMBER": "Enter product number"
     }
   },
   "INDICATOR_DIALOG": {
