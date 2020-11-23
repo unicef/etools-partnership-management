@@ -103,7 +103,7 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
           <div class="col col-12">
             <etools-form-element-wrapper
               label="Financial contribution during reporting period"
-              value="[[displayCurrencyAmount(report.financial_contribution_to_date, '0.00')]]&nbsp;[[getDisplayValue(report.financial_contribution_currency)]]"
+              value="[[getFinancialContributionText(report)]]"
             >
             </etools-form-element-wrapper>
           </div>
@@ -188,6 +188,12 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
    */
   isPrpSRReport(repType: string) {
     return repType === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+  }
+
+  getFinancialContributionText(report: GenericObject) {
+    return `${this.displayCurrencyAmount(report.financial_contribution_to_date, '0.00')} ${this.getDisplayValue(
+      report.financial_contribution_currency
+    )}`;
   }
 
   _displayOrDefault(val: string) {
