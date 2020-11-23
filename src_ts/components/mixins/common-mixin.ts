@@ -38,6 +38,9 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
     }
 
     getDevelopementStatusDetails(data: ListItemIntervention) {
+      if (!['development', 'draft'].includes(data.status)) {
+        return '';
+      }
       if (data.partner_accepted && data.unicef_accepted) {
         return 'IP & Unicef Accepted';
       }
