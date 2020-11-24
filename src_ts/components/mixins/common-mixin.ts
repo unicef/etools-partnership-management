@@ -15,7 +15,7 @@ function CommonMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
      * Ex: partners and agreements lists data values.
      */
     // TODO - apply single responsability
-    getDisplayValue(value: any, separator: string, skipSpaces: boolean) {
+    getDisplayValue(value: any, separator?: string, skipSpaces?: boolean) {
       if (typeof value === 'string' && value !== '') {
         return value;
       } else if (Array.isArray(value) && value.length > 0) {
