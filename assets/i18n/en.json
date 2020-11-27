@@ -8,35 +8,61 @@
     "TOTAL_C": "TOTAL",
     "DESCRIPTION": "Description",
     "ERR_OCCURRED": "An error occurred. Try again.",
-    "REQUIRED_FIELD": "This field is required"
+    "REQUIRED_FIELD": "This field is required",
+    "CANCEL": "Cancel",
+    "YES": "Yes",
+    "FILTERS": "Filters",
+    "CLEAR_ALL": "CLEAR ALL",
+    "COMMENT_MODE": "Comment Mode"
+  },
+  "INTERVENTION_ACTIONS": {
+    "SEND": "Send",
+    "CONTINUE": "Continue",
+    "SEND_FOR_SIGNATURE": "Are you sure you want to send for signature?",
+    "SEND_FOR_ACCEPT_REVIEW": "Are you sure you want to send for Accept & Review?",
+    "CANCEL_PROMPT": "Are you sure you want to cancel?",
+    "SEND_TO_PARTNER_PROMPT": "Are you sure you want to send to partner?",
+    "SEND_TO_UNICEF_PROMPT": "Are you sure you want to send to UNICEF?",
+    "TERMINATE_PROMPT": "Are you sure you want to terminate?",
+    "ARE_YOU_SURE_PROMPT": "Are you sure you want to "
+  },
+  "INTERVENTION_TABS": {
+    "OVERVIEW_TAB": "Overview",
+    "DETAILS_TAB": "Details",
+    "RESULTS_TAB": "Results",
+    "TIMING_TAB": "Timing",
+    "MANAGEMENT_TAB": "Management",
+    "ATTACHMENTS_TAB": "Attachments",
+    "PROGRESS_TAB": "Progress",
+    "REPORTS_TAB": "Reports"
+  },
+  "ARE_YOU_SURE": {
+    "ARE_YOU_SURE_PROMPT": "Are you sure you want to delete this item?",
+    "DELETE_CONFIRMATION": "Delete confirmation",
+    "DELETE_FROM_SERVER": "Deleting items from server...",
+    "DELETE_FAILED": "Deleting items from server action has failed!"
   },
   "INTERVENTIONS_LIST": {
     "TITLE": "PDs/SPDs List",
     "TABLE_TITLE": "PDs/SPDs",
     "COLUMNS": {
-      "REFERENCE_NO": "PD/SPD Reference Number",
-      "PARTNER_NAME": "Partner Name",
-      "DOC_TYPE": "Document Type",
+      "REFERENCE_NO": "Reference No.",
+      "PARTNER_ORG_NAME": "Partner Org Name",
+      "DOC_TYPE": "Doc Type",
       "STATUS": "Status",
       "TITLE": "Title",
       "START_DATE": "Start Date",
       "END_DATE": "End Date"
     },
     "FILTERS": {
-		"CP_STRUCTURE": "CP Structure",
-		"COUNTRY_PROGRAMME_OUTPUT": "Country Programme Output",
-		"DONORS": "Donors",
-		"PARTNERS": "Partners",
-		"ENDS_BEFORE": "Ends Before",
-		"GRANTS": "Grants",
-		"OFFICES": "Offices",
-		"PD_TYPE": "PD/SPD Type",
-		"SECTIONS": "Sections",
-		"STARTS_AFTER": "Starts After",
-		"ENDS_AFTER": "Ends After",
-		"STATUS": "Status",
-		"UNICEF_FOCAL_POINT": "UNICEF focal point",
-		"CONTINGENCY_PD": "Contingency PD"
+      "SEARCH_RECORDS": "Search records",
+      "STATUS": "Status",
+      "PD_TYPE": "PD/SPD Type",
+      "PARTNER_ORG": "Partner Org",
+      "CONTINGENCY_PD": "Contingency PD",
+      "ENDS_BEFORE": "Ends Before",
+      "STARTS_AFTER": "Starts After",
+      "ENDS_AFTER": "Ends After"
     }
   },
   "INTERVENTION_OVERVIEW": {
@@ -57,6 +83,7 @@
     "NO_ACTIVITIES": "There are no activities."
   },
   "INTERVENTION_DETAILS": {
+    "DOCUMENT_DETAILS": "Document Details",
     "DOCUMENT_TYPE": "Document Type",
     "UNPP_CFEI_DSR": "UNPP CFEI/DSR Ref Number",
     "HUMANITARIAN": "Humanitarian",
@@ -94,7 +121,12 @@
     "TECHNICAL_GUIDANCE": "Technical Guidance",
     "CAPACITY_DEVELOPMENT": "Capacity Development",
     "OTHER_PARTNERS_INVOLVED": "Other Partners Involved",
-    "OTHER_INFORMATION": "Other Information"
+    "OTHER_INFORMATION": "Other Information",
+    "GROUPED_LOCATIONS":{
+      "LOCATIONS_PD_COVERS": "Locations PD/SPD Covers",
+      "GROUP_LOCATIONS_BY": "Group Locations By",
+      "LOCATIONS_UNABLE_TO_GROUP": "Locations unable to group: "
+    }
   },
   "INTERVENTION_RESULTS": {
     "BUDGET_CURRENCY": "Budget Currency",
@@ -107,7 +139,26 @@
     "PARTNER_CONTRIB": "% Partner Contrib",
     "TOTAL_CASH_AMT": "Total Cash Amt",
     "TOTAL_AMT": "Total Amt (Cash + Supply)",
-    "RESULTS_STRUCTURE": "Results Structure",
+    "PD_INDICATORS": "PD Indicators",
+    "BASELINE": "Baseline",
+    "TARGET": "Target",
+    "DEACTIVATE_PROMPT": "This is an irreversible action, are you sure you want to deactivate this indicator?",
+    "DEACTIVATE": "Deactivate",
+    "DELETE_PROMPT": "Are you sure you want to delete this indicator?",
+    "RESULTS_STRUCTURE": {
+      "RESULTS_STRUCTURE": "Results Structure",
+      "CSO_CASH": "CSO Cash",
+      "UNICEF_CASH": "UNICEF Cash",
+      "PERCENT_PARTNER": "%Partner",
+      "TIME_PERIODS": "Time Periods",
+      "OTHER_NOTES": "Other Notes",
+      "DELETE_ACTIVITY_PROMPT": "Are you sure you want to delete this activity?",
+      "COUNTRY_PROGRAME_OUTPUT": "Country Program Output",
+      "RAM_INDICATORS": "Ram Indicators",
+      "UNASSOCIATED_TO_CP_OUTPUT": "Unassociated to CP Output! Please associate before moving forward",
+      "ADD_PD_OUTPUT": "Add PD Output",
+      "PD_ACTIVITIES": "PD Activities"
+    },
     "EXPORT_RESULTS": "Export results",
     "EXPORT": "Export",
     "SHOW_INACTIVE": "Show Inactive",
@@ -126,7 +177,7 @@
       "EFFECTIVE_EFFICIENT_PROG_MGM": "Effective and Efficient Programme Management",
       "TOTAL": "TOTAL:",
       "ITEM_PD_CURRENCY": "Item (all prices in PD currency)",
-      "UNICEF_CASH": "Unicef Cash",
+      "UNICEF_CASH": "UNICEF Cash",
       "PARTNER_CONTRIBUTION": "Partner Contribution",
       "TITLE_1": "In-country management and support staff",
       "DESCRIPTION_1": "Contribution for In-country management and support staff prorated to their contribution to the programme (representation, planning, coordination, logistics, administration, finance)",
@@ -137,6 +188,16 @@
       "ACTIVITY_DIALOG": {
         "EDIT_ACTIVITY": "Edit activity"
       }
+    },
+    "ACTIVITY_DATA_DIALOG": {
+      "ACTIVITY_DATA": "Activity Data",
+      "ACTIVITY_NAME": "Activity Name",
+      "OTHER_NOTES": "Other Notes",
+      "CSO_CASH_BUDGET": "CSO Cash Budget",
+      "UNICEF_CASH_BUDGET": "UNICEF Cash Budget",
+      "USE_INPUT_LEVEL": "Use Input-level",
+      "FILL_ALL_ACTIVITY_ITEMS": "Please fill all Activity Items names",
+      "FILL_ACTIVITY_TIME": "Please select an Activity time frame."
     },
     "SUPPLY_AGREEMENT": {
       "NUMBER_UNITS": "Number of Units",
@@ -150,16 +211,12 @@
       "TOTAL_SUPPLY_BUDGET": "TOTAL SUPPLY BUDGET:",
       "NO_SUPPLY_AGREEMENTS": "There are no supply agreements added.",
       "SUPPLIES_UPLOADED": "Supplies uploaded successfully",
-      "UNICEF_PRODUCT_NUMBER": "Unicef Product Number"
+      "UNICEF_PRODUCT_NUMBER": "UNICEF Product Number"
     },
     "SUPPLY_AGREEMENT_DIALOG": {
       "ADD_SUPPLY_AGREEMENT": "Add Supply Agreement",
       "EDIT_SUPPLY_AGREEMENT": "Edit Supply Agreement",
-      "CP_OUTPUT": "CP Output",
-      "ENTER_PRICE_UNIT": "Enter price / unit",
-      "ENTER_NUMBER_UNITS": "Enter number of units",
-      "ENTER_TITLE": "Enter title",
-      "ENTER_UNICEF_PRODUCT_NUMBER": "Enter product number"
+      "CP_OUTPUT": "CP Output"
     }
   },
   "INDICATOR_DIALOG": {
@@ -228,6 +285,8 @@
       "ACTIVATION_LETTER": "Activation Letter"
     },
     "ACTIVITY_TIMEFRAMES": {
+      "ACTIVITY_TIMEFRAMES": "Activity Timeframes",
+      "NO_ACTIVITIES": "No Activities",
       "ACTIVITY_TIMES": "Activity Times (click to select/deselect)",
       "ACTIVITY_TIMES_MSG": "Activity Timeframes will be available after Start and End date are set."
     }
@@ -316,7 +375,14 @@
       "CANCEL_BTN": "No",
       "ADD_UPDATE_FR_NUMBER_ERR": "Can not add/update FR numbers. Please try again later!",
       "NO_FR_NUM_ADDED": "There are no fund reservations numbers added.",
-      "CAN_NOT_ADD_FR_NUM": "You can not add FR Numbers. The PD/SPD needs to be saved first."
+      "CAN_NOT_ADD_FR_NUM": "You can not add FR Numbers. The PD/SPD needs to be saved first.",
+      "FR_DIALOG": {
+        "ADD_UPDATE_FR_NUMBERS": "Add/Update FR Numbers",
+        "FILL_FR_NUMBER": "Please fill FR Number or remove the field",
+        "ADD_FR_NUM": "Add FR Number",
+        "DELETE_FR_PROMPT": "Are you sure you want to delete this FR Number?",
+        "NO_FUND_RESERVATIONS_ADDED": "There are no fund reservations numbers added."
+      }
     },
     "FINAL_REVIEW": {
       "FINAL_PARTNERSHIP_REVIEW": "Final Partnership Review",
