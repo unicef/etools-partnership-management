@@ -3,7 +3,7 @@ import {isEmptyObject} from '../utils/utils';
 
 import EndpointsMixin from '../endpoints/endpoints-mixin.js';
 import UserDataMixin from './user-data-mixin.js';
-import {updateCurrentUser} from '../../actions/common-data';
+import {updateUserData} from '../../actions/user';
 import {fireEvent} from '../utils/fire-custom-event';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {parseRequestErrorsAndShowAsToastMsgs} from '@unicef-polymer/etools-ajax/ajax-error-parser.js';
@@ -63,7 +63,7 @@ function ProfileOperationsMixin<T extends Constructor<PolymerElement>>(baseClass
     }
 
     protected _handleResponse(response: any) {
-      store.dispatch(updateCurrentUser(response));
+      store.dispatch(updateUserData(response));
       this._hideProfileSaveLoadingMsg();
     }
 
