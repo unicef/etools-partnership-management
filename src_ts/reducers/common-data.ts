@@ -29,7 +29,6 @@ import {
   UPDATE_FILE_TYPES,
   UPDATE_PRP_COUNTRIES,
   UPDATE_ENV_FLAGS,
-  UPDATE_CURRENT_USER,
   CommonDataAction,
   UPDATE_SEA_RISK_RATINGS,
   UPDATE_GENDER_EQUITY,
@@ -49,7 +48,6 @@ import {
   CountryProgram,
   GenericObject,
   Office,
-  User,
   Country
 } from '@unicef-polymer/etools-types';
 
@@ -81,7 +79,6 @@ export class CommonDataState {
   agreementTypes: LabelAndValue[] = [];
   agreementStatuses: LabelAndValue[] = [];
   countryData: Country | null = null;
-  currentUser: User | null = null;
   disaggregations: Disaggregation[] = [];
   PRPCountryData: GenericObject[] = [];
   genderEquityRatings: LabelAndValue[] = [];
@@ -258,12 +255,6 @@ const commonData: Reducer<CommonDataState, CommonDataAction> = (state = INITIAL_
       return {
         ...state,
         disaggregations: disaggregsCopy
-      };
-
-    case UPDATE_CURRENT_USER:
-      return {
-        ...state,
-        currentUser: action.user
       };
 
     case UPDATE_LOCATION_TYPES:
