@@ -313,6 +313,7 @@ class PageHeader extends connect(store)(
 
   languages: GenericObject[] = [
     {value: 'en', display_name: 'English'},
+    {value: 'ro', display_name: 'Romanian'},
     {value: 'ar', display_name: 'Arabic'}
   ];
 
