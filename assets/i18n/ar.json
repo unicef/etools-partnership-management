@@ -438,5 +438,11 @@
     "ACHIEVEMENT_IN_REPORTING_PERIOD": "Achievement in reporting period:",
     "RAM_INDICATORS": "RAM Indicators",
     "PMP_NOT_SYNCED": "PMP is not synced with PRP"
+  },
+  "NAV_BAR": {
+    "COMMUNITY_CHANNELS": "eTools Community Channels",
+    "KNOLEDGE_BASE": "Knowledge base",
+    "DISCUSSION": "Discussion",
+    "INFORMATION": "Information"
   }
 }
