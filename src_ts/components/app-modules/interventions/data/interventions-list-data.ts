@@ -119,7 +119,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
           return false;
         }
 
-        if ((contingency_pd && !intervention.contingency_pd) || (!contingency_pd && intervention.contingency_pd)) {
+        if (contingency_pd && !intervention.contingency_pd) {
           return false;
         }
 

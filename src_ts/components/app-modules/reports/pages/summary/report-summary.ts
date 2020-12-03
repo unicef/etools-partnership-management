@@ -92,8 +92,17 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
         <div class="row-h">
           <div class="col col-12">
             <etools-form-element-wrapper
-              label="Partner Contribution to Date"
+              label="Non-financial contribution during reporting period"
               value="[[getDisplayValue(report.partner_contribution_to_date)]]"
+            >
+            </etools-form-element-wrapper>
+          </div>
+        </div>
+        <div class="row-h">
+          <div class="col col-12">
+            <etools-form-element-wrapper
+              label="Financial contribution during reporting period"
+              value="[[getFinancialContributionText(report)]]"
             >
             </etools-form-element-wrapper>
           </div>
@@ -119,13 +128,9 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
         <div class="row-padding" hidden$="[[isPrpSRReport(report.report_type)]]">
           <template is="dom-repeat" items="[[reportAttachments]]">
             <div class="att">
-              <iron-label for="file_[[index]]">
-                [[item.type]]
-              </iron-label>
+              <iron-label for="file_[[index]]"> [[item.type]] </iron-label>
 
-              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank">
-                [[item.file_name]]
-              </a>
+              <a class="primary" id="file_[[index]]" href="[[item.path]]" target="_blank"> [[item.file_name]] </a>
             </div>
           </template>
         </div>
@@ -178,6 +183,12 @@ class ReportSummary extends CommonMixin(EtoolsCurrency(PolymerElement)) {
    */
   isPrpSRReport(repType: string) {
     return repType === CONSTANTS.REQUIREMENTS_REPORT_TYPE.SR;
+  }
+
+  getFinancialContributionText(report: GenericObject) {
+    return `${this.displayCurrencyAmount(report.financial_contribution_to_date, '0.00')} ${this.getDisplayValue(
+      report.financial_contribution_currency
+    )}`;
   }
 
   _displayOrDefault(val: string) {
