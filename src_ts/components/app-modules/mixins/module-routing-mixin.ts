@@ -103,7 +103,17 @@ function ModuleRoutingMixin<T extends Constructor<PolymerElement>>(baseClass: T)
       let baseUrl = '';
       if (
         currentModule === 'interventions' &&
-        ['details', 'overview', 'timing', 'results', 'management', 'attachments', 'progress', 'reports'].includes(page)
+        [
+          'details',
+          'overview',
+          'timing',
+          'results',
+          'management',
+          'attachments',
+          'review',
+          'progress',
+          'reports'
+        ].includes(page)
       ) {
         baseUrl = currentModule + '/pages/intervention-tab-pages/intervention-' + page + '/';
       } else {
