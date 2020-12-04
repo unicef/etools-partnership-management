@@ -24,6 +24,7 @@
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-timing/intervention-timing.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-reports/intervention-reports.js",
     "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-progress/intervention-progress.js",
+    "src/components/app-modules/interventions/pages/intervention-tab-pages/intervention-review/intervention-review.js",
 
     "src/components/app-modules/reports/reports-module.js",
     "src/components/app-modules/reports/pages/list/reports-list.js",

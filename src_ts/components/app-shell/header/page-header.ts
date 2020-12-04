@@ -311,7 +311,11 @@ class PageHeader extends connect(store)(
   @property({type: Object})
   userProfileDialog!: GenericObject;
 
-  languages: GenericObject[] = [{value: 'en', display_name: 'English'}];
+  languages: GenericObject[] = [
+    {value: 'en', display_name: 'English'},
+    {value: 'ro', display_name: 'Romanian'},
+    {value: 'ar', display_name: 'Arabic'}
+  ];
 
   @property({type: String})
   selectedLanguage!: string;
@@ -394,9 +398,13 @@ class PageHeader extends connect(store)(
     const language = e.detail.selectedItem.value;
     if (language !== this.selectedLanguage) {
       localStorage.setItem('defaultLanguage', language);
-      use(language)
-        .finally(() => store.dispatch(setLanguage(language)))
-        .then(() => location.reload());
+      const body = document.querySelector('body');
+      if (language === 'ar') {
+        body!.setAttribute('dir', 'rtl');
+      } else if (body!.getAttribute('dir')) {
+        body!.removeAttribute('dir');
+      }
+      use(language).finally(() => store.dispatch(setLanguage(language)));
     }
   }
 
