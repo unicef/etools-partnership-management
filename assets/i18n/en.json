@@ -438,5 +438,11 @@
     "ACHIEVEMENT_IN_REPORTING_PERIOD": "Achievement in reporting period:",
     "RAM_INDICATORS": "RAM Indicators",
     "PMP_NOT_SYNCED": "PMP is not synced with PRP"
+  },
+  "INTERVENTION_REVIEWS": {
+    "OVERALL_APPROVAL": "Review Approved",
+    "EMPTY_REVIEW": "You don't have any review available",
+    "REVIEW_CREATED": "Date review created",
+    "REVIEW_TYPE": "Review type"
   }
 }
