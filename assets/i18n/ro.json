@@ -30,9 +30,9 @@
     "OVERVIEW_TAB": "General",
     "DETAILS_TAB": "Detalii",
     "RESULTS_TAB": "Rezultate",
-    "TIMING_TAB": "Timing",
+    "TIMING_TAB": "Cronologie",
     "MANAGEMENT_TAB": "Management",
-    "ATTACHMENTS_TAB": "Atasamante",
+    "ATTACHMENTS_TAB": "Atasamente",
     "PROGRESS_TAB": "Progres",
     "REPORTS_TAB": "Rapoarte"
   },
@@ -61,7 +61,7 @@
       "PARTNER_ORG": "Org Partener",
       "CONTINGENCY_PD": "PD de contingenta",
       "ENDS_BEFORE": "Finalizat inainte de",
-      "STARTS_AFTER": "Starts dupa",
+      "STARTS_AFTER": "Incepe dupa",
       "ENDS_AFTER": "Finalizat dupa"
     }
   },
@@ -70,13 +70,13 @@
     "DOCUMENT_TITLE": "Titlu Document",
     "TIMELINE": "Cronologie",
     "SECTIONS": "Sectiuni",
-    "TOTAL_VAL_EFF_PROG_MGMT_COST": "Total value of the Effective Programme management Cost",
-    "TOTAL_VALUE_UNICEF_CONTRIB_EFF": "% Total value of Unicef's contribution that is Effective and Efficient Programme Management Cost",
+    "TOTAL_VAL_EFF_PROG_MGMT_COST": "Costul total a Managementului Eficient al Programului",
+    "TOTAL_VALUE_UNICEF_CONTRIB_EFF": "% Valoarea totala a contributiei UNICEF care este costul Managementului Eficient al Programului",
     "UNICEF_CASH_CONTRIBUTION": "Contributie numerar UNICEF",
     "UNICEF_SUPPLY_CONTRIB": "Contribuție cu aprovizionare UNICEF",
     "TOTAL_UNICEF_CONTRIB": "Total Contributie UNICEF",
-    "PARTNER_HACT_RR": "Partner HACT Risk Rating",
-    "PARTNER_PSEA_RR": "Partner PSEA Risk Rating",
+    "PARTNER_HACT_RR": "Ratingul de risc HACT al Partenerului",
+    "PARTNER_PSEA_RR": "Ratingul de risc PSEA al Partenerului",
     "IMPLEMENTATION_STATUS": "Status Implementare",
     "NO_FUND_RESERVATIONS": "Nu sunt rezervari de fonduri pentru aceasta interventie.",
     "MONITORING_ACTIVITIES": "Activitati de Monitorizare",
@@ -91,7 +91,7 @@
     "PARTNER_DETAILS": "Detalii Partener",
     "PARTNER_ORGANIZATION": "Organizatie Partner",
     "AGREEMENTS": "Acorduri",
-    "PARTNER_VENDOR_NUMBER": "Partner Vendor Number",
+    "PARTNER_VENDOR_NUMBER": "Numar referinta al Partenerului",
     "AGREEMENT_AUTHORIZED_OFFICERS": "Ofiteri Autorizati ai Acordului",
     "PARTNER_FOCAL_POINTS": "Persoane de interes ale Partenerului",
     "UNICEF_DETAILS": "Detalii UNICEF",
@@ -114,9 +114,9 @@
     "GENDER_RATING": "Rating dupa sex",
     "GENDER_NARATIVE": "Narațiune de Gen",
     "SUSTAINABILITY_RATING": "Rating dupa sustenabilitate",
-    "SUSTAINABILITY_NARRATIVE": "Sustainability Narrative",
+    "SUSTAINABILITY_NARRATIVE": "Naratiune de Sustenabilitate",
     "EQUITY_RATING": "Rating de echitate",
-    "EQUITY_NARATIVE": "Equity Narrative",
+    "EQUITY_NARATIVE": "Naratiune de Echitate",
     "TECHNICAL_GUIDANCE_CAPACITY_MISCELLANEOUS": "Îndrumări Tehnice, Dezvoltarea Capacității, Diverse",
     "TECHNICAL_GUIDANCE": "Îndrumări Tehnice",
     "CAPACITY_DEVELOPMENT": "Dezvoltarea Capacității",
@@ -138,7 +138,7 @@
     "TOTAL_SUPPLY": "Total Livrabile",
     "PARTNER_CONTRIB": "% Contributie Partener",
     "TOTAL_CASH_AMT": "Total Valoare Numerar",
-    "TOTAL_AMT": "Total (Numerar + Supply)",
+    "TOTAL_AMT": "Total (Numerar + Livrabile)",
     "PD_INDICATORS": "Indicatori PD",
     "BASELINE": "Val. de baza",
     "TARGET": "Target",
@@ -170,11 +170,11 @@
     "REMOVE_PD_MSG": "Doriti sa stergeti acest rezultat al PD-ului?",
     "CONFIRM_BTN_TXT": "Da",
     "REMOVE_CP_OUTPUT_MSG": "Doriti sa stergeti acest rezultat al CP-ului?",
-    "RESULT_VIEW": "Viziune Rezultat",
-    "COMBINED_VIEW": "Viziune Combinat",
-    "BUDGET_VIEW": "Viziune Buget",
+    "RESULT_VIEW": "Vizualizare Rezultat",
+    "COMBINED_VIEW": "Vizualizare Combinat",
+    "BUDGET_VIEW": "Vizualizare Buget",
     "EFF_EFF_PROG_MGM": {
-      "EFFECTIVE_EFFICIENT_PROG_MGM": "Managementul Programului Eficient",
+      "EFFECTIVE_EFFICIENT_PROG_MGM": "Management Eficient al Programului",
       "TOTAL": "TOTAL:",
       "ITEM_PD_CURRENCY": "Element (toate preturile in valuta PD)",
       "UNICEF_CASH": "Numerar UNICEF",
@@ -267,14 +267,14 @@
   },
   "INTERVENTION_TIMING": {
     "TIMING_OVERVIEW": {
-      "DATE_CREATED": "Data Creat",
+      "DATE_CREATED": "Data Creare",
       "DATE_FIRST_SENT_PARTNER": "Data Prima Oara Trimis la Partener",
       "DATE_FIRST_DRAFT_PARTNER": "Data primului draft al Partenerului",
       "PRC_SUBMISSION_DATE": "Data Depunere PRC",
       "PRC_REVIEW_DATE": "Data Revizuire PRC",
       "DATE_PARTNER_SIGNED": "Data Semnatura Partener",
       "DATE_UNICEF_SIGNED": "Data Semnatura UNICEF",
-      "DATE_LAST_AMENDED": "Data Ultimul Amendament"
+      "DATE_LAST_AMENDED": "Data Ultimului Amendament"
     },
     "INTERVENTION_DATES": {
       "PROGRAMME_DOC_DATES": "Date Document",
@@ -406,7 +406,8 @@
       "CONFIRM_BTN_TEXT": "Da",
       "DELETE_ATTACHMENTS_PROMPT": "Sunteti sigur ca doriti sa stergeti acest atasament?",
       "INT_ATT_DIALOG": {
-        "ATTACHMENT": "Atasament"
+        "ATTACHMENT": "Atasament",
+        "SELECT_DOC_TYPE": "Selectati Tipul de Document"
       }
     }
   },
@@ -437,5 +438,11 @@
     "ACHIEVEMENT_IN_REPORTING_PERIOD": "Realizare în perioada de raportare:",
     "RAM_INDICATORS": "Indicatori RAM",
     "PMP_NOT_SYNCED": "PMP nu este sincronizat cu PRP"
+  },
+  "NAV_BAR": {
+    "COMMUNITY_CHANNELS": "Canalele Comunității eTools",
+    "KNOLEDGE_BASE": "Bază de cunoștințe",
+    "DISCUSSION": "Discutii",
+    "INFORMATION": "Informatii"
   }
 }

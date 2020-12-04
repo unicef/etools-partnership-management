@@ -444,11 +444,5 @@
     "KNOLEDGE_BASE": "Knowledge base",
     "DISCUSSION": "Discussion",
     "INFORMATION": "Information"
-  },
-  "INTERVENTION_REVIEWS": {
-    "OVERALL_APPROVAL": "Review Approved",
-    "EMPTY_REVIEW": "You don't have any review available",
-    "REVIEW_CREATED": "Date review created",
-    "REVIEW_TYPE": "Review type"
   }
 }
