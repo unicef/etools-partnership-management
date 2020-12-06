@@ -74,5 +74,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - upgrade--polymer3
-                - prepare-for-deploy
+                - epd
