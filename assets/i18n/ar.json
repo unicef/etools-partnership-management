@@ -1,8 +1,10 @@
 {
   "GENERAL": {
     "ADD": "Add",
+    "ADD_UPDATE": "Add/Update",
     "SAVE": "Save",
     "DELETE": "Delete",
+    "EDIT": "Edit",
     "TITLE": "Title",
     "TOTAL": "Total",
     "TOTAL_C": "TOTAL",
@@ -13,7 +15,9 @@
     "YES": "Yes",
     "FILTERS": "Filters",
     "CLEAR_ALL": "CLEAR ALL",
-    "COMMENT_MODE": "Comment Mode"
+    "COMMENT_MODE": "Comment Mode",
+    "LOADING": "Loading...",
+    "SAVING_DATA": "Saving data..."
   },
   "INTERVENTION_ACTIONS": {
     "SEND": "Send",
@@ -34,7 +38,8 @@
     "MANAGEMENT_TAB": "Management",
     "ATTACHMENTS_TAB": "Attachments",
     "PROGRESS_TAB": "Progress",
-    "REPORTS_TAB": "Reports"
+    "REPORTS_TAB": "Reports",
+    "DISAGGREGATIONS_TAB": "Disaggregations"
   },
   "ARE_YOU_SURE": {
     "ARE_YOU_SURE_PROMPT": "Are you sure you want to delete this item?",
@@ -217,6 +222,25 @@
       "ADD_SUPPLY_AGREEMENT": "Add Supply Agreement",
       "EDIT_SUPPLY_AGREEMENT": "Edit Supply Agreement",
       "CP_OUTPUT": "CP Output"
+    },
+    "PD_INDICATOR": {
+      "LOCATIONS": "Locations",
+      "SECTION_CLUSTER": "Section/Cluster",
+      "DISAGGREGATION": "Disaggregation"
+    },
+    "CP_OUTPUT_DIALOG": {
+      "INDICATORS_FOR_CP_OUTPUT": "Indicators for CP Output:",
+      "ADD_CP_OUTPUT": "Add CP Output",
+      "CP_OUTPUT": "CP Output",
+      "RAM_INDICATORS": "Ram Indicators",
+      "CAN_NOT_SAVE_IND": "Can not save indicators!"
+    },
+    "PD_OUTPUT_DIALOG": {
+      "PD_OUTPUT": "PD Output",
+      "PD_OUTPUT_NAME": "PD Output Name",
+      "ERR_SAVE_PD_OUTPUT": "Can not save PD Output!",
+      "ASSOCIATE_PROMPT": "Please associate PD with CP Output before moving forward",
+      "ASSOCIATE_MSG": "You have to add a CP Output to the Results Structure and then you will be able to associate it to the PD Output"
     }
   },
   "INDICATOR_DIALOG": {
@@ -263,7 +287,9 @@
     "DISAGREG_ALREADY_SELECTED": "Disaggregation already selected",
     "DISAGREG_BY": "Disaggregate By",
     "DISAGREG_GROUPS": "Disaggregation Groups",
-    "NO_DISAGREG_ADDED": "There are no disaggregations added."
+    "NO_DISAGREG_ADDED": "There are no disaggregations added.",
+    "EDIT_INDICATOR": "Edit Indicator",
+    "ADD_INDICATOR": "Add Indicator"
   },
   "INTERVENTION_TIMING": {
     "TIMING_OVERVIEW": {
@@ -381,7 +407,8 @@
         "FILL_FR_NUMBER": "Please fill FR Number or remove the field",
         "ADD_FR_NUM": "Add FR Number",
         "DELETE_FR_PROMPT": "Are you sure you want to delete this FR Number?",
-        "NO_FUND_RESERVATIONS_ADDED": "There are no fund reservations numbers added."
+        "NO_FUND_RESERVATIONS_ADDED": "There are no fund reservations numbers added.",
+        "FR_NUMBER": "FR Number"
       }
     },
     "FINAL_REVIEW": {
@@ -421,6 +448,8 @@
     "PD_SPD_REF_NUM": "PD/SPD ref.#",
     "FINAL": "final",
     "UNICEF_FOCAL_POINTS": "UNICEF Focal Points",
+    "PD_DURATION": "PD Duration",
+    "CASH_TRANSFERED": "Cash Transfered",
     "DISBURSEMENT_AMOUNTS": "Disbursement amounts in multiple currencies.",
     "UNICEF_CASH": "UNICEF Cash",
     "FR_CURRENCY_NOT_MATCH": "FR currency does not match PD/SPD currency.",
