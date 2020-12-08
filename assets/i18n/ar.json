@@ -28,7 +28,13 @@
     "SEND_TO_PARTNER_PROMPT": "Are you sure you want to send to partner?",
     "SEND_TO_UNICEF_PROMPT": "Are you sure you want to send to UNICEF?",
     "TERMINATE_PROMPT": "Are you sure you want to terminate?",
-    "ARE_YOU_SURE_PROMPT": "Are you sure you want to "
+    "ARE_YOU_SURE_PROMPT": "Are you sure you want to ",
+    "ACCEPT": "Accept",
+    "ACCEPT_PROMPT": "Are you sure you want to accept?",
+    "UNLOCK": "Unlock",
+    "UNLOCK_PROMPT": "Are you sure you want to unlock?",
+    "REVIEW": "Review",
+    "REVIEW_PROMPT": "Are you sure you want to review?"
   },
   "INTERVENTION_TABS": {
     "OVERVIEW_TAB": "Overview",

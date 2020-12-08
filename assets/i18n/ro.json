@@ -28,7 +28,13 @@
     "SEND_TO_PARTNER_PROMPT": "Sunteti sigur ca doriti sa trimiteti catre partener?",
     "SEND_TO_UNICEF_PROMPT": "Sunteti sigur ca doriti sa trimiteti catre UNICEF?",
     "TERMINATE_PROMPT": "Sunteti sigur ca doriti sa terminati?",
-    "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa "
+    "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa ",
+    "ACCEPT": "Accepta",
+    "ACCEPT_PROMPT": "Sunteti sigur ca doriti sa acceptati?",
+    "UNLOCK": "Deblocheaza",
+    "UNLOCK_PROMPT": "Sunteti sigur ca doriti sa deblocati?",
+    "REVIEW": "Revizuieste",
+    "REVIEW_PROMPT": "Sunteti sigur ca doriti sa revizuiti?"
   },
   "INTERVENTION_TABS": {
     "OVERVIEW_TAB": "General",
