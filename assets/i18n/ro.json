@@ -29,7 +29,7 @@
     "SEND_TO_UNICEF": "Trimite la UNICEF",
     "SIGN": "Semneaza",
     "TERMINATE": "Termina",
-    "REJECT_REVIEW": "Respinge Revizuirea",
+    "REJECT_REVIEW": "Respinge Revizia",
     "ACCEPT": "Accept",
     "UNLOCK": "Unlock",
     "REVIEW": "Review",
@@ -45,10 +45,11 @@
     "REVIEW_PROMPT": "Sunteti sigur ca doriti sa revizuiti?"
   },
   "INTERVENTION_REVIEWS": {
-    "OVERALL_APPROVAL": "Review Approved",
-    "EMPTY_REVIEW": "You don't have any review available",
-    "REVIEW_CREATED": "Date review created",
-    "REVIEW_TYPE": "Review type"
+    "INTERVENTION_REVIEW": "Revizie/Evaluare Interventie",
+    "OVERALL_APPROVAL": "Revizie Aprobata",
+    "EMPTY_REVIEW": "Nu este nici o revizie disponibila",
+    "REVIEW_CREATED": "Data Crearii",
+    "REVIEW_TYPE": "Tipul Reviziei"
   },
   "INTERVENTION_TABS": {
     "OVERVIEW_TAB": "General",

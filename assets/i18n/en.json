@@ -45,6 +45,7 @@
     "REVIEW_PROMPT": "Are you sure you want to review?"
   },
   "INTERVENTION_REVIEWS": {
+    "INTERVENTION_REVIEW": "Intervention Review",
     "OVERALL_APPROVAL": "Review Approved",
     "EMPTY_REVIEW": "You don't have any review available",
     "REVIEW_CREATED": "Date review created",
