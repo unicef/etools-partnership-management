@@ -1,8 +1,10 @@
 {
   "GENERAL": {
     "ADD": "Adauga",
+    "ADD_UPDATE": "Adauga/Modifica",
     "SAVE": "Salveaza",
     "DELETE": "Sterge",
+    "EDIT": "Editeaza",
     "TITLE": "Titlu",
     "TOTAL": "Total",
     "TOTAL_C": "TOTAL",
@@ -13,7 +15,9 @@
     "YES": "Da",
     "FILTERS": "Filtre",
     "CLEAR_ALL": "ELIMINA TOT",
-    "COMMENT_MODE": "Mod Comentariu"
+    "COMMENT_MODE": "Mod Comentariu",
+    "LOADING": "Se incarca...",
+    "SAVING_DATA": "Se salveaza datele..."
   },
   "INTERVENTION_ACTIONS": {
     "SEND": "Trimite",
@@ -24,7 +28,13 @@
     "SEND_TO_PARTNER_PROMPT": "Sunteti sigur ca doriti sa trimiteti catre partener?",
     "SEND_TO_UNICEF_PROMPT": "Sunteti sigur ca doriti sa trimiteti catre UNICEF?",
     "TERMINATE_PROMPT": "Sunteti sigur ca doriti sa terminati?",
-    "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa "
+    "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa ",
+    "ACCEPT": "Accepta",
+    "ACCEPT_PROMPT": "Sunteti sigur ca doriti sa acceptati?",
+    "UNLOCK": "Deblocheaza",
+    "UNLOCK_PROMPT": "Sunteti sigur ca doriti sa deblocati?",
+    "REVIEW": "Revizuieste",
+    "REVIEW_PROMPT": "Sunteti sigur ca doriti sa revizuiti?"
   },
   "INTERVENTION_TABS": {
     "OVERVIEW_TAB": "General",
@@ -34,7 +44,8 @@
     "MANAGEMENT_TAB": "Management",
     "ATTACHMENTS_TAB": "Atasamente",
     "PROGRESS_TAB": "Progres",
-    "REPORTS_TAB": "Rapoarte"
+    "REPORTS_TAB": "Rapoarte",
+    "DISAGGREGATIONS_TAB": "Dezagregari"
   },
   "ARE_YOU_SURE": {
     "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa stergeti acest element?",
@@ -217,6 +228,25 @@
       "ADD_SUPPLY_AGREEMENT": "Adauga Acord privind livrabile",
       "EDIT_SUPPLY_AGREEMENT": "Editeaza Acordul privind livrabilele",
       "CP_OUTPUT": "Realizari CP"
+    },
+    "PD_INDICATOR": {
+      "LOCATIONS": "Locatii",
+      "SECTION_CLUSTER": "Sectiune/Grup",
+      "DISAGGREGATION": "Dezagregare"
+    },
+    "CP_OUTPUT_DIALOG": {
+      "INDICATORS_FOR_CP_OUTPUT": "Indicatori pentru Realizari CP:",
+      "ADD_CP_OUTPUT": "Adauga Realizari CP",
+      "CP_OUTPUT": "Realizari CP",
+      "RAM_INDICATORS": "Indicatori Ram",
+      "CAN_NOT_SAVE_IND": "Nu se pot salva indicatorii!"
+    },
+    "PD_OUTPUT_DIALOG": {
+      "PD_OUTPUT": "Realizari PD",
+      "PD_OUTPUT_NAME": "Nume Realizari PD",
+      "ERR_SAVE_PD_OUTPUT": "Nu se poate salva aceasta Realizare PD!",
+      "ASSOCIATE_PROMPT": "Va rugam sa asociati Realizarile PD cu CP inainte de a merge mai departe",
+      "ASSOCIATE_MSG": "Trebuie sa adaugati o Realizare CP la Structura Rezultatelor iar apoi veti putea sa o asociati cu o Realizare PD"
     }
   },
   "INDICATOR_DIALOG": {
@@ -263,7 +293,9 @@
     "DISAGREG_ALREADY_SELECTED": "Dezagregare deja selectata",
     "DISAGREG_BY": "Dezagregeaza dupa",
     "DISAGREG_GROUPS": "Grupuri Dezagregare",
-    "NO_DISAGREG_ADDED": "Nu sunt dezagregari adaugate."
+    "NO_DISAGREG_ADDED": "Nu sunt dezagregari adaugate.",
+    "EDIT_INDICATOR": "Editeaza Indicator",
+    "ADD_INDICATOR": "Adauga Indicator"
   },
   "INTERVENTION_TIMING": {
     "TIMING_OVERVIEW": {
@@ -381,7 +413,8 @@
         "FILL_FR_NUMBER": "Va rugam introduceti un numar FR sau stergeti campul",
         "ADD_FR_NUM": "Adauga Numar FR",
         "DELETE_FR_PROMPT": "Sunteti sigur ca doriti sa stergeti acest numar FR?",
-        "NO_FUND_RESERVATIONS_ADDED": "There are no fund reservations numbers added."
+        "NO_FUND_RESERVATIONS_ADDED": "Nu sunt rezervari de fonduri adaugate.",
+        "FR_NUMBER": "Numar FR"
       }
     },
     "FINAL_REVIEW": {
@@ -421,6 +454,8 @@
     "PD_SPD_REF_NUM": "PD/SPD ref.#",
     "FINAL": "final",
     "UNICEF_FOCAL_POINTS": "Persoane de interes ale UNICEF",
+    "PD_DURATION": "Durata PD",
+    "CASH_TRANSFERED": "Numerar Transferat",
     "DISBURSEMENT_AMOUNTS": "Sume de debursare în mai multe valute.",
     "UNICEF_CASH": "Numerar UNICEF",
     "FR_CURRENCY_NOT_MATCH": "Valuta FR nu este aceeasi cu cea din PD/SPD.",

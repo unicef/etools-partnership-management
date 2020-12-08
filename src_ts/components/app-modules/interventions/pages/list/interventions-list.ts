@@ -179,7 +179,7 @@ class InterventionsList extends connect(store)(
             [[_translate('INTERVENTIONS_LIST.COLUMNS.REFERENCE_NO')]]
           </etools-data-table-column>
           <etools-data-table-column class="col-3" field="partner_name" sortable>
-            [[_translate('INTERVENTIONS_LIST.COLUMNS.PARTNER_NAME')]]
+            [[_translate('INTERVENTIONS_LIST.COLUMNS.PARTNER_ORG_NAME')]]
           </etools-data-table-column>
           <etools-data-table-column class="flex-c" field="document_type">
             [[_translate('INTERVENTIONS_LIST.COLUMNS.DOC_TYPE')]]
