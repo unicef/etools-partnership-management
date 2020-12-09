@@ -17,7 +17,8 @@
     "CLEAR_ALL": "ELIMINA TOT",
     "COMMENT_MODE": "Mod Comentariu",
     "LOADING": "Se incarca...",
-    "SAVING_DATA": "Se salveaza datele..."
+    "SAVING_DATA": "Se salveaza datele...",
+    "ENTER_MESSAGE_HERE": "Introduceti Mesajul Aici"
   },
   "INTERVENTION_ACTIONS": {
     "SEND": "Trimite",

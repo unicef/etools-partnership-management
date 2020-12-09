@@ -17,7 +17,8 @@
     "CLEAR_ALL": "CLEAR ALL",
     "COMMENT_MODE": "Comment Mode",
     "LOADING": "Loading...",
-    "SAVING_DATA": "Saving data..."
+    "SAVING_DATA": "Saving data...",
+    "ENTER_MESSAGE_HERE": "Enter Message Here"
   },
   "INTERVENTION_ACTIONS": {
     "SEND": "Send",
