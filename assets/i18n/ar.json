@@ -17,11 +17,23 @@
     "CLEAR_ALL": "CLEAR ALL",
     "COMMENT_MODE": "Comment Mode",
     "LOADING": "Loading...",
-    "SAVING_DATA": "Saving data..."
+    "SAVING_DATA": "Saving data...",
+    "ENTER_MESSAGE_HERE": "Enter Message Here"
   },
   "INTERVENTION_ACTIONS": {
     "SEND": "Send",
     "CONTINUE": "Continue",
+    "EXPORT_COMMENTS": "Export Comments",
+    "EXPORT_CSV": "Export CSV",
+    "EXPORT_PDF": "Export PDF",
+    "SEND_TO_PARTNER": "Send To Partner",
+    "SEND_TO_UNICEF": "Send To UNICEF",
+    "SIGN": "Sign",
+    "TERMINATE": "Terminate",
+    "REJECT_REVIEW": "Reject Review",
+    "ACCEPT": "Accept",
+    "UNLOCK": "Unlock",
+    "REVIEW": "Review",
     "SEND_FOR_SIGNATURE": "Are you sure you want to send for signature?",
     "SEND_FOR_ACCEPT_REVIEW": "Are you sure you want to send for Accept & Review?",
     "CANCEL_PROMPT": "Are you sure you want to cancel?",
@@ -29,12 +41,17 @@
     "SEND_TO_UNICEF_PROMPT": "Are you sure you want to send to UNICEF?",
     "TERMINATE_PROMPT": "Are you sure you want to terminate?",
     "ARE_YOU_SURE_PROMPT": "Are you sure you want to ",
-    "ACCEPT": "Accept",
     "ACCEPT_PROMPT": "Are you sure you want to accept?",
-    "UNLOCK": "Unlock",
     "UNLOCK_PROMPT": "Are you sure you want to unlock?",
-    "REVIEW": "Review",
     "REVIEW_PROMPT": "Are you sure you want to review?"
+  },
+  "INTERVENTION_REVIEWS": {
+    "REVIEW_TAB": "Review",
+    "INTERVENTION_REVIEW": "Intervention Review",
+    "OVERALL_APPROVAL": "Review Approved",
+    "EMPTY_REVIEW": "You don't have any review available",
+    "REVIEW_CREATED": "Date review created",
+    "REVIEW_TYPE": "Review type"
   },
   "INTERVENTION_TABS": {
     "OVERVIEW_TAB": "Overview",

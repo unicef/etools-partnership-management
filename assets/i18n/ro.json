@@ -17,24 +17,41 @@
     "CLEAR_ALL": "ELIMINA TOT",
     "COMMENT_MODE": "Mod Comentariu",
     "LOADING": "Se incarca...",
-    "SAVING_DATA": "Se salveaza datele..."
+    "SAVING_DATA": "Se salveaza datele...",
+    "ENTER_MESSAGE_HERE": "Introduceti Mesajul Aici"
   },
   "INTERVENTION_ACTIONS": {
     "SEND": "Trimite",
     "CONTINUE": "Continua",
+    "EXPORT_COMMENTS": "Exporta Comentariile",
+    "EXPORT_CSV": "Exporta CSV",
+    "EXPORT_PDF": "Exporta PDF",
+    "SEND_TO_PARTNER": "Trimite la Partener",
+    "SEND_TO_UNICEF": "Trimite la UNICEF",
+    "SIGN": "Semneaza",
+    "TERMINATE": "Termina",
+    "REJECT_REVIEW": "Respinge Evaluarea",
+    "ACCEPT": "Accepta",
+    "UNLOCK": "Deblocheaza",
+    "REVIEW": "Evalueaza",
     "SEND_FOR_SIGNATURE": "Sunteti sigur ca doriti sa trimiteti spre semnare?",
-    "SEND_FOR_ACCEPT_REVIEW": "Sunteti sigur ca doriti sa trimiti spre acceptare si revizuire?",
+    "SEND_FOR_ACCEPT_REVIEW": "Sunteti sigur ca doriti sa trimiti spre acceptare si evaluare?",
     "CANCEL_PROMPT": "Sunteti sigur ca doriti sa anulati?",
     "SEND_TO_PARTNER_PROMPT": "Sunteti sigur ca doriti sa trimiteti catre partener?",
     "SEND_TO_UNICEF_PROMPT": "Sunteti sigur ca doriti sa trimiteti catre UNICEF?",
     "TERMINATE_PROMPT": "Sunteti sigur ca doriti sa terminati?",
-    "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa ",
-    "ACCEPT": "Accepta",
+    "ARE_YOU_SURE_PROMPT": "Sunteti sigur ca doriti sa executati actiunea: ",
     "ACCEPT_PROMPT": "Sunteti sigur ca doriti sa acceptati?",
-    "UNLOCK": "Deblocheaza",
     "UNLOCK_PROMPT": "Sunteti sigur ca doriti sa deblocati?",
-    "REVIEW": "Revizuieste",
-    "REVIEW_PROMPT": "Sunteti sigur ca doriti sa revizuiti?"
+    "REVIEW_PROMPT": "Sunteti sigur ca doriti sa evaluati?"
+  },
+  "INTERVENTION_REVIEWS": {
+    "REVIEW_TAB": "Evaluare",
+    "INTERVENTION_REVIEW": "Evaluare Interventie",
+    "OVERALL_APPROVAL": "Evaluare Aprobata",
+    "EMPTY_REVIEW": "Nu este nici o evaluare disponibila",
+    "REVIEW_CREATED": "Data Crearii",
+    "REVIEW_TYPE": "Tipul Evaluarii"
   },
   "INTERVENTION_TABS": {
     "OVERVIEW_TAB": "General",
