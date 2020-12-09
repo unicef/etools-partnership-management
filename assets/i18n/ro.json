@@ -96,7 +96,7 @@
   "INTERVENTION_DETAILS": {
     "DOCUMENT_DETAILS": "Detalii Document",
     "DOCUMENT_TYPE": "Tip Document",
-    "UNPP_CFEI_DSR": "UNPP CFEI/DSR Ref Number",
+    "UNPP_CFEI_DSR": "Numar de Referinta UNPP CFEI/DSR",
     "HUMANITARIAN": "Umanitar",
     "CONTINGENCY": "Contingenta",
     "PARTNER_DETAILS": "Detalii Partener",
@@ -206,9 +206,13 @@
       "OTHER_NOTES": "Alte Note",
       "CSO_CASH_BUDGET": "Buget Numerar CSO",
       "UNICEF_CASH_BUDGET": "Buget Numerar UNICEF",
-      "USE_INPUT_LEVEL": "Use Input-level",
+      "USE_INPUT_LEVEL": "Utilizati inregistrarea pe nivele",
       "FILL_ALL_ACTIVITY_ITEMS": "Va rugam completati toate denumirile Activitatilor",
-      "FILL_ACTIVITY_TIME": "Vă rugăm să selectați un interval de timp pentru Activitate"
+      "FILL_ACTIVITY_TIME": "Vă rugăm să selectați un interval de timp pentru Activitate",
+      "ITEM_DESCRIPTION": "Descriere",
+      "CSO_CONTRIB": "Contrib CSO",
+      "UNICEF_CASH": "Numerar UNICEF",
+      "TOTAL_CASH": "Total Numerar"
     },
     "SUPPLY_AGREEMENT": {
       "NUMBER_UNITS": "Numar Unitati",

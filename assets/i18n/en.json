@@ -208,7 +208,11 @@
       "UNICEF_CASH_BUDGET": "UNICEF Cash Budget",
       "USE_INPUT_LEVEL": "Use Input-level",
       "FILL_ALL_ACTIVITY_ITEMS": "Please fill all Activity Items names",
-      "FILL_ACTIVITY_TIME": "Please select an Activity time frame."
+      "FILL_ACTIVITY_TIME": "Please select an Activity time frame.",
+      "ITEM_DESCRIPTION": "Item Description",
+      "CSO_CONTRIB": "CSO Contrib",
+      "UNICEF_CASH": "UNICEF Cash",
+      "TOTAL_CASH": "Total Cash"
     },
     "SUPPLY_AGREEMENT": {
       "NUMBER_UNITS": "Number of Units",
