@@ -96,9 +96,22 @@ import get from 'lodash-es/get';
 import {EtoolsRouter} from '../utils/routes.js';
 import {registerTranslateConfig, use} from 'lit-translate';
 
-const translationConfig = registerTranslateConfig({loader: (lang: string) =>
-  fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())
-});
+
+function fetchLangFiles(lang: string) {
+  return Promise.allSettled([
+    fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json()),
+    fetch(
+      `src/components/app-modules/interventions/pages/intervention-tab-pages/assets/i18n/${lang}.json`
+    ).then((res: any) => res.json())
+  ]).then((response: any) => {
+    return Object.assign(response[0].value, response[1].value);
+  });
+}
+const translationConfig = registerTranslateConfig({loader: (lang: string) => fetchLangFiles(lang)});
+
+// const translationConfig = registerTranslateConfig({loader: (lang: string) =>
+//   fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())
+// });
 
 setRootPath(BASE_URL);
 
