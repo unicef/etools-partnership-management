@@ -1,5 +1,6 @@
 {
   "GENERAL": {
+    "ADD": "Adauga",
     "ADD_UPDATE": "Adauga/Modifica",
     "SAVE": "Salveaza",
     "DELETE": "Sterge",
