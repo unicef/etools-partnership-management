@@ -109,10 +109,6 @@ function fetchLangFiles(lang: string) {
 }
 const translationConfig = registerTranslateConfig({loader: (lang: string) => fetchLangFiles(lang)});
 
-// const translationConfig = registerTranslateConfig({loader: (lang: string) =>
-//   fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())
-// });
-
 setRootPath(BASE_URL);
 
 /**
