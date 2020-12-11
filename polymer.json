@@ -34,7 +34,8 @@
     "src/components/app-modules/settings/settings-module.js",
     "src/components/app-modules/not-found/not-found.js"
   ],
-  "sources": ["src/**/*", "images/**/*", "assets/**", "package.json"],
+  "sources": ["src/**/*", "images/**/*", "assets/**", "package.json",
+    "src/components/app-modules/interventions/pages/intervention-tab-pages/assets/**"],
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
