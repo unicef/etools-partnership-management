@@ -7,11 +7,16 @@ jobs:
       - image: node:11.9.0
     steps:
       - checkout
+      - run:
+          name: "Pull Submodule"
+          command: |
+            git submodule init
+            git submodule update --checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install npm wee
-          command: rm -rf node_modules/etools-* & npm install
+          command: rm -rf node_modules/@unicef-polymer/etools-* & npm install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -19,6 +24,7 @@ jobs:
       - run:
           name: Polymer3 Build
           command: npm run build
+          no_output_timeout: 16m
       - run:
           name: Run Tests
           command: |
@@ -74,5 +80,4 @@ workflows:
                 - master
                 - staging
                 - develop
-                - upgrade--polymer3
-                - prepare-for-deploy
+                - epd
