@@ -11,10 +11,15 @@
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "outDir": "src"
+    "outDir": "src",
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": [
-    "src_ts/**/*.ts"
+    "src_ts/**/*.ts",
+    "src_ts/components/app-modules/interventions/pages/intervention-tab-pages/assets/i18n/en.json",
+    "src_ts/components/app-modules/interventions/pages/intervention-tab-pages/assets/i18n/ro.json",
+    "src_ts/components/app-modules/interventions/pages/intervention-tab-pages/assets/i18n/ar.json"
   ],
   "exclude": []
 }
