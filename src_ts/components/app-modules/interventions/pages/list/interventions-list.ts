@@ -93,7 +93,14 @@ class InterventionsList extends connect(store)(
 
       <div id="filters" class="paper-material" elevation="1">
         <div id="filters-fields">
-          <paper-input id="query" class="filter" type="search" placeholder="Search" autocomplete="off" value="{{q}}">
+          <paper-input
+            id="query"
+            class="filter"
+            type="search"
+            placeholder="[[_translate('INTERVENTIONS_LIST.SEARCH')]]"
+            autocomplete="off"
+            value="{{q}}"
+          >
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
@@ -152,10 +159,12 @@ class InterventionsList extends connect(store)(
           <paper-menu-button id="filterMenu" ignore-select horizontal-align="right" allow-outside-scroll>
             <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
-              Filters
+              [[_translate('GENERAL.FILTERS')]]
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button on-tap="clearAllFilterValues" class="secondary-btn"> CLEAR ALL </paper-button>
+              <paper-button on-tap="clearAllFilterValues" class="secondary-btn"
+                >[[_translate('GENERAL.CLEAR_ALL')]]</paper-button
+              >
             </div>
             <paper-listbox slot="dropdown-content" multi>
               <template is="dom-repeat" items="[[listFilterOptions]]">

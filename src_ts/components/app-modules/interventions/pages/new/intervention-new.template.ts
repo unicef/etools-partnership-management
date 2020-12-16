@@ -4,6 +4,7 @@ import {InterventionNew} from './intervention-new';
 import {BASE_URL} from '../../../../../config/config';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {LabelAndValue, Office, GenericObject} from '@unicef-polymer/etools-types';
+import {translate} from 'lit-translate';
 
 export function template(this: InterventionNew): TemplateResult {
   return html`
@@ -42,7 +43,7 @@ export function template(this: InterventionNew): TemplateResult {
     </style>
 
     <!--   Header   -->
-    <div class="title">Enter initial details</div>
+    <div class="title">${translate('NEW_INTERVENTION.INITIAL_DETAILS')}</div>
 
     <div class="form">
       <div class="row">
@@ -50,14 +51,14 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-8">
           <etools-dropdown
             id="partner"
-            label="Partner Organization"
+            label=${translate('NEW_INTERVENTION.PARTNER_ORGANIZATION')}
             placeholder="&#8212;"
             .options="${this.partnersDropdownData}"
             option-value="id"
             option-label="name"
             required
             .selected="${this.newIntervention?.partner}"
-            error-message="Partner is required"
+            error-message=${translate('NEW_INTERVENTION.PARTNER_REQUIRED')}
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.partnerChanged(event)}"
             @focus="${this.resetError}"
@@ -70,7 +71,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <etools-dropdown
             id="agreements"
-            label="Agreement"
+            label=${translate('NEW_INTERVENTION.AGREEMENT')}
             placeholder="&#8212;"
             .readonly="${!this.newIntervention?.partner}"
             .options="${this.filteredAgreements}"
@@ -81,7 +82,7 @@ export function template(this: InterventionNew): TemplateResult {
             trigger-value-change-event
             @etools-selected-item-changed="${(event: CustomEvent) => this.agreementChanged(event)}"
             auto-validate
-            error-message="Agreement required"
+            error-message=${translate('NEW_INTERVENTION.AGREEMENT_REQUIRED')}
             @focus="${this.resetError}"
             @click="${this.resetError}"
           >
@@ -92,13 +93,19 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Vendor Number   -->
         <div class="col-8">
-          <etools-form-element-wrapper label="Partner Vendor Number" .value="${this.selectedPartner?.vendor_number}">
+          <etools-form-element-wrapper
+            label=${translate('NEW_INTERVENTION.PARTNER_VENDOR_NUMBER')}
+            .value="${this.selectedPartner?.vendor_number}"
+          >
           </etools-form-element-wrapper>
         </div>
 
         <!--   Agreement Authorized Officers   -->
         <div class="col-4">
-          <etools-form-element-wrapper label="Agreement Authorized Officers" .value="${this.authorizedOfficers}">
+          <etools-form-element-wrapper
+            label=${translate('NEW_INTERVENTION.AGREEMENT_AUTH_OFFICERS')}
+            .value="${this.authorizedOfficers}"
+          >
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -106,12 +113,15 @@ export function template(this: InterventionNew): TemplateResult {
       <div class="row">
         <!--   Partner Staff Members   -->
         <div class="col-8 w100">
-          <etools-form-element-wrapper label="Partner Staff Members" .value="${this.allStaffMembers}">
+          <etools-form-element-wrapper
+            label=${translate('NEW_INTERVENTION.PARTNER_STAFF_MEMBERS')}
+            .value="${this.allStaffMembers}"
+          >
           </etools-form-element-wrapper>
         </div>
         <div class="col-4">
           <etools-dropdown-multi
-            label="CP Structures"
+            label=${translate('NEW_INTERVENTION.CP_STRUCTURES')}
             placeholder="&#8212;"
             .options="${this.cpStructures}"
             option-value="id"
@@ -133,7 +143,7 @@ export function template(this: InterventionNew): TemplateResult {
         <!--   Partner Focal Points   -->
         <div class="col-8">
           <etools-dropdown-multi
-            label="Document Partner Focal Points"
+            label=${translate('NEW_INTERVENTION.DOC_PARTNER_FOCAL_POINTS')}
             placeholder="&#8212;"
             .readonly="${!this.staffMembers.length}"
             .options="${this.staffMembers}"
@@ -151,7 +161,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <etools-dropdown
             id="currency"
-            label="Document Currency"
+            label=${translate('NEW_INTERVENTION.DOCUMENT_CURRENCY')}
             placeholder="&#8212;"
             .options="${this.currencies}"
             .selected="${this.newIntervention?.planned_budget?.currency}"
@@ -170,7 +180,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <etools-dropdown
             id="documentType"
-            label="Document Type"
+            label=${translate('NEW_INTERVENTION.DOC_TYPE')}
             placeholder="&#8212;"
             ?readonly="${!this.documentTypes.length}"
             required
@@ -190,7 +200,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-4">
           <etools-dropdown
             id="yearSelector"
-            label="Reference Number Year"
+            label=${translate('NEW_INTERVENTION.REF_NUM_YEAR')}
             required
             .options="${this.availableYears}"
             .selected="${this.newIntervention.reference_number_year}"
@@ -216,7 +226,7 @@ export function template(this: InterventionNew): TemplateResult {
               this.setInterventionField('humanitarian_flag', detail.value);
             }}"
           >
-            This SPD is Humanitarian
+            ${translate('NEW_INTERVENTION.SPD_HUMANITARIAN')}
           </paper-toggle-button>
         </div>
 
@@ -226,7 +236,7 @@ export function template(this: InterventionNew): TemplateResult {
             ?checked="${this.newIntervention.contingency_pd}"
             @checked-changed="${({detail}: CustomEvent) => this.setInterventionField('contingency_pd', detail.value)}"
           >
-            This is Contingency Document
+            ${translate('NEW_INTERVENTION.CONTINGENCY_DOC')}
           </paper-toggle-button>
         </div>
       </div>
@@ -240,7 +250,7 @@ export function template(this: InterventionNew): TemplateResult {
             this.setInterventionField('cfei_number', '');
           }}"
         >
-          I Have UNPP Number
+          ${translate('NEW_INTERVENTION.UNPP_NUMBER')}
         </paper-toggle-button>
 
         <!--   UNPP CFEI Number   -->
@@ -248,7 +258,7 @@ export function template(this: InterventionNew): TemplateResult {
           <paper-input
             id="unppNumber"
             ?hidden="${!this.hasUNPP}"
-            label="UNPP CFEI/DSR Ref Number"
+            label=${translate('NEW_INTERVENTION.UNPP_CFEI_DSR_REF_NUM')}
             placeholder="&#8212;"
             .value="${this.newIntervention.cfei_number}"
             @value-changed="${({detail}: CustomEvent) =>
@@ -262,7 +272,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-12">
           <paper-input
             id="title"
-            label="Document Title"
+            label=${translate('NEW_INTERVENTION.DOC_TITLE')}
             char-counter
             maxlength="256"
             placeholder="&#8212;"
@@ -280,7 +290,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-6">
           <etools-dropdown-multi
             id="unicefOffices"
-            label="UNICEF Office(s)"
+            label=${translate('NEW_INTERVENTION.UNICEF_OFFICES')}
             placeholder="&#8212;"
             .options="${this.offices}"
             option-label="name"
@@ -300,7 +310,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-6">
           <etools-dropdown-multi
             id="unicefSections"
-            label="UNICEF Sections"
+            label=${translate('NEW_INTERVENTION.UNICEF_SECTIONS')}
             placeholder="&#8212;"
             .options="${this.sections}"
             option-label="name"
@@ -322,7 +332,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-6">
           <etools-dropdown-multi
             id="unicefFocalPoints"
-            label="UNICEF Focal Points"
+            label=${translate('NEW_INTERVENTION.UNICEF_FOCAL_POINTS')}
             placeholder="&#8212;"
             .options="${this.unicefUsersData}"
             option-label="name"
@@ -342,7 +352,7 @@ export function template(this: InterventionNew): TemplateResult {
         <div class="col-6">
           <etools-dropdown
             id="unicefBudgetOwner"
-            label="UNICEF Budget Owner"
+            label=${translate('NEW_INTERVENTION.UNICEF_BUDGET_OWNER')}
             placeholder="&#8212;"
             .options="${this.unicefUsersData}"
             option-label="name"
@@ -357,8 +367,10 @@ export function template(this: InterventionNew): TemplateResult {
       </div>
 
       <div class="buttons">
-        <paper-button @click="${this.cancel}">Cancel</paper-button>
-        <paper-button class="primary-btn" @click="${() => this.createIntervention()}">Create</paper-button>
+        <paper-button @click="${this.cancel}">${translate('GENERAL.CANCEL')}</paper-button>
+        <paper-button class="primary-btn" @click="${() => this.createIntervention()}"
+          >${translate('GENERAL.CREATE')}</paper-button
+        >
       </div>
     </div>
   `;
