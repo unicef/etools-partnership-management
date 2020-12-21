@@ -6,9 +6,9 @@ RUN node -v
 RUN npm -v
 
 RUN apk add git
+
 RUN npm install -g --unsafe-perm polymer-cli
 RUN npm install -g typescript
-
 
 
 WORKDIR /tmp
@@ -21,6 +21,11 @@ ADD . /code/
 WORKDIR /code
 
 RUN cp -a /tmp/node_modules /code/node_modules
+
+# Necessary for circle ci
+WORKDIR /code
+RUN git submodule init && git submodule update --checkout
+
 RUN npm run build
 
 
