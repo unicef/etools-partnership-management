@@ -1,3 +1,4 @@
 [submodule "src_ts/components/app-modules/interventions/pages/intervention-tab-pages"]
 	path = src_ts/components/app-modules/interventions/pages/intervention-tab-pages
 	url = git@github.com:unicef/intervention-tab-pages.git
+	branch = master
