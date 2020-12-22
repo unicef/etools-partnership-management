@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Polymer3 Build
           command: npm run build
-          no_output_timeout: 16m
+          no_output_timeout: 19m
       - run:
           name: Run Tests
           command: |
