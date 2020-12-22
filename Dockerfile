@@ -1,7 +1,6 @@
 FROM node:14.15.1-alpine3.12 as builder
 RUN apk update
 RUN apk add --update bash
-RUN apt-get install ssh-client
 
 RUN node -v
 RUN npm -v
