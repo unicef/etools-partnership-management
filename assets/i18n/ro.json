@@ -18,11 +18,43 @@
     "COMMENT_MODE": "Mod Comentariu",
     "LOADING": "Se incarca...",
     "SAVING_DATA": "Se salveaza datele...",
-    "ENTER_MESSAGE_HERE": "Introduceti Mesajul Aici"
+    "ENTER_MESSAGE_HERE": "Introduceti Mesajul Aici",
+    "CREATE": "Creaza"
+  },
+  "NEW_INTERVENTION": {
+    "INITIAL_DETAILS": "Introduceti detaliile initiale",
+    "PARTNER_ORGANIZATION": "Organizatie Partener",
+    "PARTNER_REQUIRED": "Partenerul este necesar",
+    "AGREEMENT": "Acord",
+    "AGREEMENT_REQUIRED": "Acord necesar",
+    "PARTNER_VENDOR_NUMBER": "Numar referinta al Partenerului",
+    "AGREEMENT_AUTH_OFFICERS": "Ofiteri Autorizati ai Acordului",
+    "PARTNER_STAFF_MEMBERS": "Membrii Staff ai Partenerului",
+    "CP_STRUCTURES": "Structuri CP",
+    "DOC_PARTNER_FOCAL_POINTS": "Document Persoane de interes al Partnerului",
+    "DOCUMENT_CURRENCY": "Valută Document",
+    "DOC_TYPE": "Tip Document",
+    "REF_NUM_YEAR": "Numar de Referinta An",
+    "SPD_HUMANITARIAN": "Acest SPD este Umanitar",
+    "CONTINGENCY_DOC": "Acesta este Document de Contingenta",
+    "UNPP_NUMBER": "Am Numar UNPP",
+    "UNPP_CFEI_DSR_REF_NUM": "UNPP CFEI/DSR Ref Number",
+    "DOC_TITLE": "Titlu Document",
+    "UNICEF_OFFICES": "Birou(ri) UNICEF",
+    "UNICEF_SECTIONS": "Sectiuni UNICEF",
+    "UNICEF_FOCAL_POINTS": "Persoane de interes ale UNICEF",
+    "UNICEF_BUDGET_OWNER": "Responsabil UNICEF al Bugetului"
   },
   "INTERVENTIONS_LIST": {
+    "ADD_PROGRAMME_DOCUMENT": "Adauga Documentul Programului",
     "TITLE": "Lista PD/SPD",
     "TABLE_TITLE": "PD/SPD",
+    "SEARCH": "Cauta",
+    "ADD_NEW_PD": "Adauga un nou PD/SPD",
+    "EXPORT": "Exporta",
+    "PD_BUDGET_EXPORT": "Exporta Buget PD",
+    "PD_RESULT_EXPORT": "Exporta Rezultate PD",
+    "PD_LOCATIONS_EXPORT": "Exporta Locatii PD",
     "COLUMNS": {
       "REFERENCE_NO": "Num. Referinta",
       "PARTNER_ORG_NAME": "Nume Org Partener",
@@ -40,7 +72,15 @@
       "CONTINGENCY_PD": "PD de contingenta",
       "ENDS_BEFORE": "Finalizat inainte de",
       "STARTS_AFTER": "Incepe dupa",
-      "ENDS_AFTER": "Finalizat dupa"
+      "ENDS_AFTER": "Finalizat dupa",
+      "CP_STRUCTURE": "Structuri CP",
+      "COUNTRY_PROGRAMME_OUTPUT": "Rezultat Program de Tara",
+      "DONORS": "Donatori",
+      "PARTNERS": "Parteneri",
+      "GRANTS": "Subventii",
+      "OFFICES": "Birouri",
+      "SECTIONS": "Sectiuni",
+      "UNICEF_FOCAL_POINT": "Persoane de interes ale UNICEF"
     }
   }
 }

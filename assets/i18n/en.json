@@ -18,11 +18,43 @@
     "COMMENT_MODE": "Comment Mode",
     "LOADING": "Loading...",
     "SAVING_DATA": "Saving data...",
-    "ENTER_MESSAGE_HERE": "Enter Message Here"
+    "ENTER_MESSAGE_HERE": "Enter Message Here",
+    "CREATE": "Create"
+  },
+  "NEW_INTERVENTION": {
+    "INITIAL_DETAILS": "Enter initial details",
+    "PARTNER_ORGANIZATION": "Partner Organization",
+    "PARTNER_REQUIRED": "Partner is required",
+    "AGREEMENT": "Agreement",
+    "AGREEMENT_REQUIRED": "Agreement required",
+    "PARTNER_VENDOR_NUMBER": "Partner Vendor Number",
+    "AGREEMENT_AUTH_OFFICERS": "Agreement Authorized Officers",
+    "PARTNER_STAFF_MEMBERS": "Partner Staff Members",
+    "CP_STRUCTURES": "CP Structures",
+    "DOC_PARTNER_FOCAL_POINTS": "Document Partner Focal Points",
+    "DOCUMENT_CURRENCY": "Document Currency",
+    "DOC_TYPE": "Document Type",
+    "REF_NUM_YEAR": "Reference Number Year",
+    "SPD_HUMANITARIAN": "This SPD is Humanitarian",
+    "CONTINGENCY_DOC": "This is Contingency Document",
+    "UNPP_NUMBER": "I Have UNPP Number",
+    "UNPP_CFEI_DSR_REF_NUM": "UNPP CFEI/DSR Ref Number",
+    "DOC_TITLE": "Document Title",
+    "UNICEF_OFFICES": "UNICEF Office(s)",
+    "UNICEF_SECTIONS": "UNICEF Sections",
+    "UNICEF_FOCAL_POINTS": "UNICEF Focal Points",
+    "UNICEF_BUDGET_OWNER": "UNICEF Budget Owner"
   },
   "INTERVENTIONS_LIST": {
+    "ADD_PROGRAMME_DOCUMENT": "Add Programme Document",
     "TITLE": "PDs/SPDs List",
     "TABLE_TITLE": "PDs/SPDs",
+    "SEARCH": "Search",
+    "ADD_NEW_PD": "Add new PD/SPD",
+    "EXPORT": "Export",
+    "PD_BUDGET_EXPORT": "PD Budget Export",
+    "PD_RESULT_EXPORT": "PD Result Export",
+    "PD_LOCATIONS_EXPORT": "PD Locations Export",
     "COLUMNS": {
       "REFERENCE_NO": "Reference No.",
       "PARTNER_ORG_NAME": "Partner Org Name",
@@ -40,7 +72,15 @@
       "CONTINGENCY_PD": "Contingency PD",
       "ENDS_BEFORE": "Ends Before",
       "STARTS_AFTER": "Starts After",
-      "ENDS_AFTER": "Ends After"
+      "ENDS_AFTER": "Ends After",
+      "CP_STRUCTURE": "CP Structure",
+      "COUNTRY_PROGRAMME_OUTPUT": "Country Programme Output",
+      "DONORS": "Donors",
+      "PARTNERS": "Partners",
+      "GRANTS": "Grants",
+      "OFFICES": "Offices",
+      "SECTIONS": "Sections",
+      "UNICEF_FOCAL_POINT": "UNICEF focal point"
     }
   }
 }
