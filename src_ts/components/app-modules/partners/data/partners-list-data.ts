@@ -1,4 +1,4 @@
-declare const moment: any;
+declare const dayjs: any;
 import Dexie from 'dexie';
 import {PolymerElement} from '@polymer/polymer';
 import {store} from '../../../../store';
@@ -114,7 +114,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
           seaDateBefore &&
           seaDateBefore.length &&
           (!partner.psea_assessment_date ||
-            !moment.utc(partner.psea_assessment_date).isBefore(moment.utc(seaDateBefore)))
+            !dayjs.utc(partner.psea_assessment_date).isBefore(dayjs.utc(seaDateBefore)))
         ) {
           return false;
         }
@@ -122,7 +122,7 @@ class PartnersListData extends ListDataMixin(PolymerElement) {
         if (
           seaDateAfter &&
           seaDateAfter.length &&
-          (!partner.psea_assessment_date || !moment.utc(partner.psea_assessment_date).isAfter(moment.utc(seaDateAfter)))
+          (!partner.psea_assessment_date || !dayjs.utc(partner.psea_assessment_date).isAfter(dayjs.utc(seaDateAfter)))
         ) {
           return false;
         }

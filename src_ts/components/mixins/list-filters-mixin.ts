@@ -6,7 +6,7 @@ import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown';
 import {PaperToggleButtonElement} from '@polymer/paper-toggle-button';
 import DatePickerLite from '@unicef-polymer/etools-date-time/datepicker-lite';
 import {Constructor} from '@unicef-polymer/etools-types';
-declare const moment: any;
+declare const dayjs: any;
 /**
  * @polymer
  * @mixinFunction
@@ -185,7 +185,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
         return;
       }
       const selectedDate = event.detail.date;
-      this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
+      this.set(filterPath, dayjs(selectedDate).format('YYYY-MM-DD'));
     }
 
     _validFilterSelectedValue(value: any, type: string, allowEmptyEsmm?: boolean) {

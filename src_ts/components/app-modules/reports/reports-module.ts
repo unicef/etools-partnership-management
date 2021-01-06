@@ -33,7 +33,7 @@ import {property} from '@polymer/decorators/lib/decorators';
 import {ReportRatingDialogEl} from './components/report-rating-dialog';
 import {ReportRejectDialogEl} from './components/report-reject-dialog';
 import {ReportsListEl} from './pages/list/reports-list';
-declare const moment: any;
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -440,7 +440,7 @@ class ReportsModule extends connect(store)(
   }
 
   _getCurrentDateTime() {
-    return moment(new Date()).format('ddd D MMM h-mm-ss YYYY');
+    return dayjs(new Date()).format('ddd D MMM h-mm-ss YYYY');
   }
 
   _downloadPdf() {

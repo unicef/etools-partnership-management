@@ -1,4 +1,4 @@
-declare const moment: any;
+declare const dayjs: any;
 import Dexie from 'dexie';
 import ListDataMixin from '../../../mixins/list-data-mixin';
 import {PolymerElement} from '@polymer/polymer';
@@ -127,7 +127,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         if (
           startDate &&
           startDate.length &&
-          (!intervention.start || !moment.utc(intervention.start).isAfter(moment.utc(startDate)))
+          (!intervention.start || !dayjs.utc(intervention.start).isAfter(dayjs.utc(startDate)))
         ) {
           return false;
         }
@@ -135,7 +135,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         if (
           endDate &&
           endDate.length &&
-          (!intervention.end || !moment.utc(intervention.end).isBefore(moment.utc(endDate)))
+          (!intervention.end || !dayjs.utc(intervention.end).isBefore(dayjs.utc(endDate)))
         ) {
           return false;
         }
@@ -143,7 +143,7 @@ class InterventionsListData extends ListDataMixin(PolymerElement) {
         if (
           endAfter &&
           endAfter.length &&
-          (!intervention.end || !moment.utc(intervention.end).isSameOrAfter(moment.utc(endAfter)))
+          (!intervention.end || !dayjs.utc(intervention.end).isSameOrAfter(dayjs.utc(endAfter)))
         ) {
           return false;
         }

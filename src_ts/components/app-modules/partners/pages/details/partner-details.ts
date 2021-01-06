@@ -32,7 +32,7 @@ import {property} from '@polymer/decorators';
 import {EditCoreValuesAssessmentEl} from './components/edit-core-values-assessment';
 import {Partner} from '../../../../../models/partners.models';
 import {LabelAndValue} from '@unicef-polymer/etools-types';
-declare const moment: any;
+declare const dayjs: any;
 
 /**
  * @polymer
@@ -373,9 +373,9 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
       return;
     }
     const datesFormat = 'YYYY-MM-DD';
-    const today = moment.utc().format(datesFormat);
+    const today = dayjs.utc().format(datesFormat);
     const assessmentDate = convertDate(assessmentDateString);
-    const assessmentExpDate = moment(assessmentDate).add(60, 'months');
+    const assessmentExpDate = dayjs(assessmentDate).add(60, 'months');
 
     const daysUntilExpire = assessmentExpDate.diff(today, 'days');
 
@@ -383,8 +383,8 @@ class PartnerDetails extends connect(store)(CommonMixin(RiskRatingMixin(PolymerE
     if (daysUntilExpire < 1) {
       notifMessage = 'The ' + assessmentType + ' is expired (' + assessmentExpDate.format(datesFormat) + ')';
     } else {
-      const notifStartDate = moment(assessmentDate).add(57, 'months');
-      if (moment(today).isAfter(notifStartDate)) {
+      const notifStartDate = dayjs(assessmentDate).add(57, 'months');
+      if (dayjs(today).isAfter(notifStartDate)) {
         notifMessage = 'The ' + assessmentType + ' will expire in ' + daysUntilExpire + ' days';
       }
     }

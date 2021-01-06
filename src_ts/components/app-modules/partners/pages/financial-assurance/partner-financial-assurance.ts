@@ -22,7 +22,7 @@ import {gridLayoutStyles} from '../../../../styles/grid-layout-styles';
 import {SharedStyles} from '../../../../styles/shared-styles';
 import {riskRatingStyles} from '../../../../styles/risk-rating-styles';
 
-declare const moment: any;
+declare const dayjs: any;
 import {AP_DOMAIN} from '../../../../../config/config';
 
 import './components/assessments-items.js';
@@ -626,13 +626,13 @@ class PartnerFinancialAssurance extends EtoolsCurrency(
     }
     let engagements = this.allEngagements;
     engagements = engagements
-      .sort((a, b) => moment(b.status_date) - moment(a.status_date))
+      .sort((a, b) => dayjs(b.status_date) - dayjs(a.status_date))
       .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
     this.set('engagements', engagements);
   }
 
   public _getYear() {
-    return moment().year();
+    return dayjs().year();
   }
 
   // TODO: polymer 3 - is this still needed?
