@@ -102,7 +102,7 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
       this.set(['listFilterOptions', idx, 'selected'], false);
     }
 
-    clearAllFilterValues() {
+    clearAllFilters() {
       // clear search input, not in selectedFilters
       this.q = '';
 
@@ -111,6 +111,12 @@ function ListFiltersMixin<T extends Constructor<PolymerElement>>(baseClass: T) {
           this.clearSelectedValueInFilter(this.selectedFilters[i], ['selectedFilters', i]);
         }
       }
+      this.listFilterOptions.forEach((o: ListFilterOption, i: number) => {
+        if (!o.disabled) {
+          this.untickFilter(i);
+        }
+      });
+      this.selectedFilters = [];
     }
 
     /*
